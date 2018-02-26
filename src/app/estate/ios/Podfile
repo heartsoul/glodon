@@ -1,0 +1,25 @@
+source 'https://github.com/CocoaPods/Specs.git'
+# ignore all warnings from all pods
+inhibit_all_warnings!
+workspace 'estate.xcworkspace'
+
+platform :ios, '8.0'
+
+target 'estate' do
+  pod 'AFNetworking'
+  pod 'FMDB'
+  pod 'JSONKit-NoWarning','1.2'
+  pod 'libextobjc/EXTScope', '~> 0.4'
+  pod 'WebViewJavascriptBridge', '~> 4.1'
+  pod 'KVOController', '~> 1.0.3'
+  pod 'MBProgressHUD', '~> 0.9'
+  pod 'MJRefresh'
+  pod 'SDWebImage'
+  pod 'Masonry'
+  #集成腾讯的错误收集分析工具'Bugly'
+  pod 'Bugly'
+  pod 'FLEX', '~> 2.0', :configurations => ['Debug']
+  # Your 'node_modules' directory is probably in the root of your project,
+  # but if not, adjust the `:path` accordingly
+  project './estate.xcodeproj'
+end

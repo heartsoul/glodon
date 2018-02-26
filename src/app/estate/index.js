@@ -1,4 +1,23 @@
-import { AppRegistry } from 'react-native';
-import App from './App';
+// import { AppRegistry } from 'react-native';
+// import App from './App';
 
-AppRegistry.registerComponent('estate', () => App);
+// AppRegistry.registerComponent('estate', () => App);
+
+
+'use strict';
+import React, { Component } from 'react';
+import {
+  AppRegistry
+} from 'react-native';
+
+import Guide from './react/common/guide/guide';
+
+export default class GuideView extends Component {
+  render() {
+    return (
+      <Guide />
+    );
+  }
+}
+
+AppRegistry.registerComponent('estate', () => GuideView);
