@@ -5,10 +5,12 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  Button,
   View,
   TouchableOpacity,
 } from 'react-native';
-import {GLDLoginViewController} from '../login/login'
+import { StackNavigator } from 'react-navigation';
+import GLDLoginViewController from '../login/login'
 
 let image1 = require('./image/1.png');
 let image2 = require('./image/2.png');
@@ -17,7 +19,7 @@ let image4 = require('./image/4.png');
 let image5 = require('./image/5.png');
 import Util from '../tool/utils';
 
-export default class extends Component {
+export default class extends React.Component {
   constructor() {
       super();
     };
@@ -38,17 +40,15 @@ export default class extends Component {
         <Image source={image5} style={styles.backgroundImage} >
         </Image>
         <TouchableOpacity style={styles.btn} onPress={() => {
-                            this.props.navigation.navigate('GLDLoginViewController');
+                            this.props.navigation.replace('Login');
                         }} >
                         
             <Text style={styles.btnText}>立即体验</Text>
       </TouchableOpacity>
       </View>
       </ScrollView>
-      <TouchableOpacity style={styles.skipBtn} onPress={() => {
-                            this.props.navigation.navigate('GLDLoginViewController');
-                        }} >
-                        
+      <TouchableOpacity style={styles.skipBtn} onPress={() => this.props.navigation.replace('Login')}
+        >
             <Text style={styles.skipBtnText}>跳过</Text>
       </TouchableOpacity>
       </View>

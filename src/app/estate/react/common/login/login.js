@@ -11,8 +11,8 @@ import {
   TextInput,
   TouchableHighlight,
   Alert,
-  NativeModules,
-  NativeEventEmitter,
+  // NativeModules,
+  // NativeEventEmitter,
 } from 'react-native';
 
 //var RNBridgeModule = NativeModules.GLDRNBridgeModule;//你的类名
@@ -27,8 +27,8 @@ class GLDLoginViewController extends Component {
       this.state = {  
           disabled : false,  
           pressed : false, 
-          username : props.userName,
-          password : props.password,
+          username : '',// props.userName,
+          password : '',//props.password,
           focusUserName:1,// 焦点 0: 没有 1:
           focusPassword:0,// 焦点 0: 没有 1:
           events:'',
@@ -38,7 +38,7 @@ class GLDLoginViewController extends Component {
 
    componentDidMount(){
     console.log('componentDidMount');
-       NativeModule.addListener('test',(data)=>this._getNotice(data));
+       // NativeModule.addListener('test',(data)=>this._getNotice(data));
    }
 
    _getNotice (body) {//body 看你传什么
@@ -50,7 +50,7 @@ class GLDLoginViewController extends Component {
    componentWillUnmount() {
     console.log('componentWillUnmount');
        //删除监听
-       this.NativeModule.remove()
+       // this.NativeModule.remove()
    }
   
   _confirm(){
@@ -148,7 +148,7 @@ class GLDLoginViewController extends Component {
   }
   render() {
     return (
-      <View style={{backgroundColor:'#ffffff',flex:1,marginLeft:20,marginRight:20}}>
+      <View style={{backgroundColor:'#ffffff',flex:1,marginLeft:0,marginRight:0}}>
       <Text style={[styles.style_login_title]}>
         登录
       </Text>
