@@ -1,5 +1,6 @@
 'use strict';
- import React, { Component } from 'react';
+ import React, { Component } from 'react'
+  import request from '../../utils/request'
 
 import {
   AppRegistry,
@@ -11,16 +12,63 @@ import {
   TextInput,
   TouchableHighlight,
   Alert,
-  // NativeModules,
-  // NativeEventEmitter,
+  NativeModules,
+  NativeEventEmitter,
 } from 'react-native';
 
-//var RNBridgeModule = NativeModules.GLDRNBridgeModule;//你的类名
-//const NativeModule = new NativeEventEmitter(RNBridgeModule);
+var RNBridgeModule = NativeModules.GLDRNBridgeModule;//你的类名
+const NativeModule = new NativeEventEmitter(RNBridgeModule);
+const API_HOST = 'http://sg.glodon.com/api';
 
+function logout() {
+  request(API_HOST+'/logout', {
+    method: 'GET',
+  });
+  request(API_HOST+'/uaa/logout', {
+    method: 'GET',
+  });
+}
+
+
+function account() {
+  return request(API_HOST+'/admin/account',{
+          method:'get'
+        });
+}
+
+function login(username,pwd) {
+  
+  logout(); // 先退出一下再说
+   let url = API_HOST+"/uaa/login";
+    fetch(url , {  
+      headers: {"Content-Type":"application/x-www-form-urlencoded","X-Requested-With":"XMLHttpRequest"},
+       credentials:'include',  
+      method:'post',
+       body: 'username='+username+'&password='+pwd, 
+      } ,
+    ).then((response) => { 
+       console.log(response); 
+      // alert(response);
+      // 登录成功就获取用户信息
+       let accountRet = account();
+      // if(accountRet) {
+        let navigator = this.props.navigator;
+        if (navigator) {
+            navigator.push('HomePage');
+        }
+     // }
+     // let accountRet = request('http://sg.glodon.com/api/admin/account',{
+     //      method:'get'
+     //    })
+     // console.log(accountRet);
+    })
+  return request('http://sg.glodon.com/api/admin/account',{
+          method:'get'
+        });
+}
 //import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-class GLDLoginViewController extends Component {
+class GLDLoginViewController extends React.Component {
     constructor(props){  
       super(props);  
       /*用来指示是否显示Loading提示符号*/  
@@ -38,7 +86,7 @@ class GLDLoginViewController extends Component {
 
    componentDidMount(){
     console.log('componentDidMount');
-       // NativeModule.addListener('test',(data)=>this._getNotice(data));
+       NativeModule.addListener('test',(data)=>this._getNotice(data));
    }
 
    _getNotice (body) {//body 看你传什么
@@ -50,7 +98,7 @@ class GLDLoginViewController extends Component {
    componentWillUnmount() {
     console.log('componentWillUnmount');
        //删除监听
-       // this.NativeModule.remove()
+       this.NativeModule.remove()
    }
   
   _confirm(){
@@ -108,12 +156,14 @@ class GLDLoginViewController extends Component {
     console.log('_onPasswordChangeText'+text);
     this.setState({password:text});
   }
+
+
  _loginAction() {
     // body...
  // Alert.alert('提示','确认登录',[{text:"我知道了", onPress:this._confirm},{text:"我知道了1", onPress:this._confirm},{text:"我知道了2", onPress:this._confirm}]);
     // RNBridgeModule.RNInvokeOCCallBack({
     //     "caller": "gldrn",
-    //     "name": "version",
+    //     "name": "push",
     //     "ver": "1.0",
     //     "data": {}
     //   },
@@ -133,7 +183,7 @@ class GLDLoginViewController extends Component {
     //     "caller": "gldrn",
     //     "name": "alert",
     //     "ver": "1.0",
-    //     "data": {}
+    //     "data": {"title":"登录", "message":"是否确认登录？"}
     //   },
     //   (data, request) => {
     //     console.log(request);
@@ -145,6 +195,15 @@ class GLDLoginViewController extends Component {
     //       });
     //     }
     //   });
+    //uaa/login
+    
+    // let url = "https://sg.glodon.com/api/uaa/login";
+  //  login('18800105362','123qwe!@#');
+  let navigator = this.props.navigation;
+        if (navigator) {
+            navigator.replace('HomePage');
+        }
+        return;
   }
   render() {
     return (

@@ -4,7 +4,8 @@ import { Button, View, Text } from 'react-native';
 import { StackNavigator } from 'react-navigation'; // 1.0.0-beta.27
 import Guide from './react/common/guide/guide';
 import GLDLoginViewController from './react/common/login/login'
-
+import HomePage from './react/common/business/home/home'
+import TestPage from './react/common/business/home/test'
 class HomeScreen extends React.Component {
   render() {
     return (
@@ -51,9 +52,13 @@ const RootStack = StackNavigator(
     Login: {
       screen: GLDLoginViewController
     },
+    HomePage: {
+      screen : HomePage
+    },
   },
   {
     initialRouteName: 'Guide',
+    headerMode:"none",
   }
 );
 

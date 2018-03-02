@@ -23,3 +23,6 @@ target 'estate' do
   # but if not, adjust the `:path` accordingly
   project './estate.xcodeproj'
 end
+target 'CKSecurityTool' do
+  project './CKSecurityTool/CKSecurityTool.xcodeproj'
+end
