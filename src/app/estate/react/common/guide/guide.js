@@ -8,6 +8,8 @@ import {
   Button,
   View,
   TouchableOpacity,
+  SafeAreaView,
+  StatusBar
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import GLDLoginViewController from '../login/login'
@@ -25,7 +27,13 @@ export default class extends React.Component {
     };
   render() {
     return (
+    //  <SafeAreaView>
+      
       <View>
+        <StatusBar
+          barStyle="light-content"
+           backgroundColor="#ecf0f1"
+        />
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         bounces={false}
@@ -52,7 +60,7 @@ export default class extends React.Component {
             <Text style={styles.skipBtnText}>跳过</Text>
       </TouchableOpacity>
       </View>
-      
+    //  </SafeAreaView>
     );
   }
 };

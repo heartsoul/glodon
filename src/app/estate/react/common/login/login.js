@@ -14,7 +14,11 @@ import {
   Alert,
   NativeModules,
   NativeEventEmitter,
+  SafeAreaView,
+  StatusBar
 } from 'react-native';
+var Dimensions = require('Dimensions');  
+var {width,height} = Dimensions.get('window'); 
 
 var RNBridgeModule = NativeModules.GLDRNBridgeModule;//你的类名
 const NativeModule = new NativeEventEmitter(RNBridgeModule);
@@ -207,10 +211,16 @@ class GLDLoginViewController extends React.Component {
   }
   render() {
     return (
+      
       <View style={{backgroundColor:'#ffffff',flex:1,marginLeft:0,marginRight:0}}>
-      <Text style={[styles.style_login_title]}>
+      <StatusBar
+          barStyle="light-content"
+           backgroundColor="#ecf0f1"
+        />
+      {/* <Text style={[styles.style_login_title]}>
         登录
-      </Text>
+      </Text> */}
+      <Image source={require('../res/images/login/icon_login_top_bg.png')}  style={[styles.style_login_image]}/>
       <Text style={[styles.style_input_title,(this.state.focusUserName == 1 || this.state.username.length > 0) ? {color:'rgb(153,153,146)'}:{color:'transparent'},,{marginTop:68}]}>
         账户名
       </Text>
@@ -247,16 +257,22 @@ class GLDLoginViewController extends React.Component {
               style={this.state.focusPassword == 1 ? styles.style_input_line : styles.style_input_line_gray} 
               /> 
               <View>
-      <TouchableHighlight onPress={this._loginAction} underlayColor='#1AA667' activeOpacity={1.0} style={this.state.disabled ? styles.style_loginTextViewDisabled: (this.state.pressed ? styles.style_loginTextViewPressed : styles.style_loginTextView)} onHideUnderlay={()=>{this.setState({pressed: false})}} onShowUnderlay={()=>{this.setState({pressed: true})}} >
+      <TouchableHighlight onPress={this._loginAction} underlayColor='#0099f3' activeOpacity={1.0} style={this.state.disabled ? styles.style_loginTextViewDisabled: (this.state.pressed ? styles.style_loginTextViewPressed : styles.style_loginTextView)} onHideUnderlay={()=>{this.setState({pressed: false})}} onShowUnderlay={()=>{this.setState({pressed: true})}} >
         <Text style={styles.style_loginText} >
             登 录
+        </Text>
+      </TouchableHighlight>
+
+      <TouchableHighlight onPress={this._fogotAction} underlayColor='#0099f3' activeOpacity={0.75} style={styles.style_fogotTextView} >
+        <Text style={styles.style_fogotText} >
+            忘记密码
         </Text>
       </TouchableHighlight>
       </View>
       </View>
     );
   }
-}
+};
 
 const styles = StyleSheet.create({
   style_login_title:{
@@ -266,11 +282,18 @@ const styles = StyleSheet.create({
     marginTop:80,
     marginLeft:0,
   },
+  style_login_image:{
+     height:width*759/1125,
+     width:width,
+     marginTop:0,
+     marginLeft:0,
+     resizeMode:'contain'
+   },
   style_input_title:{
    fontSize:12,
     height:14,
     width:76,
-    marginTop:12,
+    marginTop:5,
     marginLeft:20,
   },  
   style_image:{
@@ -296,7 +319,7 @@ const styles = StyleSheet.create({
   },
   style_input_line:{
     height:2,
-    backgroundColor:'rgb(51,206,136)',
+    backgroundColor:'#00baf3',
     marginLeft:20,
     marginRight:20,
   },
@@ -331,6 +354,19 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     textAlign:'right',
   },
+
+  style_fogotText: {
+    overflow: 'hidden',
+    height: 20,
+    marginTop: 10,
+    marginLeft: 20,
+    marginRight: 20,
+    alignItems: 'center',
+    textAlign: 'center',
+    fontSize: 14,
+    color: '#000'
+  },
+
   style_loginText: {
     overflow: 'hidden',
     height: 20,
@@ -343,10 +379,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff'
   },
+  style_fogotTextView: {
+    overflow: 'hidden',
+    height: 40,
+    // backgroundColor: '#0FF',
+    marginTop: 10,
+    width: 100,
+    marginLeft:width/2 - 50,
+  },
   style_loginTextView: {
     overflow: 'hidden',
     height: 40,
-    backgroundColor: '#33ce88',
+    backgroundColor: '#00baf3',
     borderRadius: 20,
     marginTop: 40,
     marginLeft: 20,
@@ -355,7 +399,7 @@ const styles = StyleSheet.create({
   style_loginTextViewPressed: {
     overflow: 'hidden',
     height: 40,
-    backgroundColor: '#1AA667',
+    backgroundColor: '#33baf3',
     borderRadius: 20,
     marginTop: 40,
     marginLeft: 20,

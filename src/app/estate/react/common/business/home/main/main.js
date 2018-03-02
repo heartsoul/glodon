@@ -6,13 +6,16 @@ import {
   View
 } from 'react-native';
 export default class extends React.Component {
+  static navigationOptions = {
+    title: 'Home',
+  };
   constructor() {
       super();
     };
   render() {
     return (
       <View>
-      <Text> 我 </Text>
+      <Text> home </Text>
       </View>
       
     );

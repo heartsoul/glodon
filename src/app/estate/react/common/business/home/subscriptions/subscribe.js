@@ -6,6 +6,9 @@ import {
   View
 } from 'react-native';
 export default class extends React.Component {
+  static navigationOptions = {
+    title: '订阅',
+  };
   constructor() {
       super();
     };

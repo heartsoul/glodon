@@ -75,7 +75,7 @@ const MessageNav = StackNavigator(
     headerMode:"screen",
   }
 );
-const meNav = StackNavigator(
+const MeNav = StackNavigator(
   {
     EEEE: {
       screen: MeTab,
@@ -121,19 +121,20 @@ const RootStack = TabNavigator(
         tabBarLabel: '我'
       },
     },
+  
   },
   {
     navigationOptions: ({ navigation }) => ({
       
     }),
     tabBarOptions: {
-      activeTintColor: 'tomato',
-      inactiveTintColor: 'gray',
+      activeTintColor: '#00baf3',
+      inactiveTintColor: '#477493',
     },
     // tabBarComponent: 'TabBarBottom',
     tabBarPosition: 'bottom',
     animationEnabled: true,
-    swipeEnabled: true,
+    swipeEnabled: false,
   }
 );
 
