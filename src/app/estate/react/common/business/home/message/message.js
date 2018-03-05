@@ -9,7 +9,9 @@ import {
 } from 'react-native';
 export default class extends React.Component {
   static navigationOptions = {
-    title: '消息',
+    title: '消息1',
+    headerTintColor:"#FFF",
+    headerStyle:{backgroundColor:"#00baf3"},
   };
   
   constructor() {
@@ -18,15 +20,11 @@ export default class extends React.Component {
   render() {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
-        <StatusBar
-          barStyle="dark-content"
-          backgroundColor="#ecf0f1"
-        />
-      <StatusBar
-          barStyle="dark-content"
-          backgroundColor="#ecf0f1"
-        />
       <View>
+      <StatusBar
+          barStyle="light-content"
+          backgroundColor="#ecf0f1"
+        />
       <Text> 消息 </Text>
       </View>
       </SafeAreaView>

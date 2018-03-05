@@ -12,22 +12,30 @@ import {
   TextInput,
   TouchableHighlight,
   Alert,
-  NativeModules,
-  NativeEventEmitter,
+   NativeModules,
+  // NativeEventEmitter,
   SafeAreaView,
   StatusBar
 } from 'react-native';
 var Dimensions = require('Dimensions');  
 var {width,height} = Dimensions.get('window'); 
 
-var RNBridgeModule = NativeModules.GLDRNBridgeModule;//你的类名
-const NativeModule = new NativeEventEmitter(RNBridgeModule);
+ var RNBridgeModule = NativeModules.GLDRNBridgeModule;//你的类名
+// const NativeModule = new NativeEventEmitter(RNBridgeModule);
 const API_HOST = 'http://sg.glodon.com/api';
-
+// const API_HOST = 'http://192.168.73.73:8080';
 function logout() {
   request(API_HOST+'/logout', {
     method: 'GET',
   });
+  // request(API_HOST+'/uaa/logout', {
+  //   method: 'GET',
+  // });
+}
+function logout1() {
+  // request(API_HOST+'/logout', {
+  //   method: 'GET',
+  // });
   request(API_HOST+'/uaa/logout', {
     method: 'GET',
   });
@@ -40,35 +48,38 @@ function account() {
         });
 }
 
-function login(username,pwd) {
+function login(username,pwd,successReturn) {
   
-  logout(); // 先退出一下再说
+  //  logout(); // 先退出一下再说
    let url = API_HOST+"/uaa/login";
     fetch(url , {  
       headers: {"Content-Type":"application/x-www-form-urlencoded","X-Requested-With":"XMLHttpRequest"},
-       credentials:'include',  
+      // credentials:'include',  
       method:'post',
        body: 'username='+username+'&password='+pwd, 
       } ,
     ).then((response) => { 
        console.log(response); 
+      //  reutrn;
       // alert(response);
       // 登录成功就获取用户信息
        let accountRet = account();
-      // if(accountRet) {
-        let navigator = this.props.navigator;
-        if (navigator) {
-            navigator.push('HomePage');
-        }
-     // }
+       console.log(accountRet);
+      if(accountRet) {
+        // let navigator = this.props.navigator;
+        // if (navigator) {
+        //     navigator.push('HomePage');
+        // }
+        successReturn();
+     }
      // let accountRet = request('http://sg.glodon.com/api/admin/account',{
      //      method:'get'
      //    })
-     // console.log(accountRet);
+    //  console.log(accountRet);
     })
-  return request('http://sg.glodon.com/api/admin/account',{
-          method:'get'
-        });
+  // return request('http://sg.glodon.com/api/admin/account',{
+  //         method:'get'
+  //       });
 }
 //import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -86,26 +97,27 @@ class GLDLoginViewController extends React.Component {
           events:'',
           msg:'',
       };
+      // this._loginAction= this._loginAction.bind(this);
     }
 
-   componentDidMount(){
+   componentDidMount = () => {
     console.log('componentDidMount');
-       NativeModule.addListener('test',(data)=>this._getNotice(data));
+      //  NativeModule.addListener('test',(data)=>this._getNotice(data));
    }
 
-   _getNotice (body) {//body 看你传什么
+   _getNotice = (body) => {//body 看你传什么
     console.log('_getNotice:');
       console.log('_getNotice:'+body);
        this.forceUpdate();//重新渲染
    }
 
-   componentWillUnmount() {
+   componentWillUnmount = () => {
     console.log('componentWillUnmount');
        //删除监听
-       this.NativeModule.remove()
+      //  this.NativeModule.remove()
    }
   
-  _confirm(){
+  _confirm = () => {
     console.log('_confirm');
     
   }
@@ -136,33 +148,57 @@ class GLDLoginViewController extends React.Component {
     //         })
     //     });
     // }
-  _onUserNameChangeText(text){
+  _onUserNameChangeText = (text) => {
     console.log('_onUserNameChangeText'+text);
     this.setState({username:text});
   }
-  _onUserNameBlur(){
+  _onUserNameBlur = () => {
     this.setState({focusUserName:0});
   }
-  _onPasswordBlur(){
+  _onPasswordBlur = () => {
     this.setState({focusPassword:0});
   }
-  _onUserNameFocus() {
+  _onUserNameFocus = () =>  {
     this.setState({
       focusUserName:1
     });
   }
-  _onPasswordFocus(){
+  _onPasswordFocus = () => {
     this.setState({
       focusPassword:1
     });
   }
-  _onPasswordChangeText(text){
+  _onPasswordChangeText = (text) => {
     console.log('_onPasswordChangeText'+text);
     this.setState({password:text});
   }
+  _fogotAction = () => {
+    alert("logout");
+    logout(); // 先退出一下再说
+  }
+  _fogotAction1 = () => {
+    alert("logout");
+    logout1(); // 先退出一下再说
+    RNBridgeModule.RNInvokeOCCallBack({
+      "caller": "gldrn",
+      "name": "clearCookie",
+      "ver": "1.0",
+      "data": {"title":"登录", "message":"是否确认登录？"}
+    },
+    (data, request) => {
+      console.log(request);
+      alert(data);
+      // if (data) {
+      //   console.log(data);
+      // } else {
+      //   this.setState({
+      //     events: data
+      //   });
+      // }
+    });
+  }
 
-
- _loginAction() {
+ _loginAction = () => {
     // body...
  // Alert.alert('提示','确认登录',[{text:"我知道了", onPress:this._confirm},{text:"我知道了1", onPress:this._confirm},{text:"我知道了2", onPress:this._confirm}]);
     // RNBridgeModule.RNInvokeOCCallBack({
@@ -183,31 +219,39 @@ class GLDLoginViewController extends React.Component {
     //   });
 
 
-    // RNBridgeModule.RNInvokeOCCallBack({
-    //     "caller": "gldrn",
-    //     "name": "alert",
-    //     "ver": "1.0",
-    //     "data": {"title":"登录", "message":"是否确认登录？"}
-    //   },
-    //   (data, request) => {
-    //     console.log(request);
-    //     if (data) {
-    //       console.log(data);
-    //     } else {
-    //       this.setState({
-    //         events: data
-    //       });
-    //     }
-    //   });
+    RNBridgeModule.RNInvokeOCCallBack({
+        "caller": "gldrn",
+        "name": "clearCookie",
+        "ver": "1.0",
+        "data": {"title":"登录", "message":"是否确认登录？"}
+      },
+      (data, request) => {
+        console.log(request);
+        // if (data) {
+        //   console.log(data);
+        // } else {
+        //   this.setState({
+        //     events: data
+        //   });
+        // }
+        let navigator = this.props.navigation;
+        var ret = login(this.state.username,this.state.password, ()=> {
+          if (navigator) {
+              navigator.replace('HomePage');
+          }
+        });
+    console.log(ret);
+  // console.log(this.props)
+    if(ret) {
+    
+  }
+      });
     //uaa/login
     
     // let url = "https://sg.glodon.com/api/uaa/login";
-  //  login('18800105362','123qwe!@#');
-  let navigator = this.props.navigation;
-        if (navigator) {
-            navigator.replace('HomePage');
-        }
-        return;
+    
+  
+  
   }
   render() {
     return (
@@ -216,11 +260,10 @@ class GLDLoginViewController extends React.Component {
       <StatusBar
           barStyle="light-content"
            backgroundColor="#ecf0f1"
-        />
-      {/* <Text style={[styles.style_login_title]}>
-        登录
-      </Text> */}
-      <Image source={require('../res/images/login/icon_login_top_bg.png')}  style={[styles.style_login_image]}/>
+        /> 
+        
+        <Image source={require('../res/images/login/icon_login_top_bg.png')}  style={[styles.style_login_image]}/>
+
       <Text style={[styles.style_input_title,(this.state.focusUserName == 1 || this.state.username.length > 0) ? {color:'rgb(153,153,146)'}:{color:'transparent'},,{marginTop:68}]}>
         账户名
       </Text>
@@ -264,6 +307,11 @@ class GLDLoginViewController extends React.Component {
       </TouchableHighlight>
 
       <TouchableHighlight onPress={this._fogotAction} underlayColor='#0099f3' activeOpacity={0.75} style={styles.style_fogotTextView} >
+        <Text style={styles.style_fogotText} >
+            忘记密码
+        </Text>
+      </TouchableHighlight>
+      <TouchableHighlight onPress={this._fogotAction1} underlayColor='#0099f3' activeOpacity={0.75} style={styles.style_fogotTextView} >
         <Text style={styles.style_fogotText} >
             忘记密码
         </Text>

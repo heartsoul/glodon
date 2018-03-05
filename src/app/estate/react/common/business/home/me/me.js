@@ -10,6 +10,8 @@ import {
 export default class extends React.Component {
   static navigationOptions = {
     title: '我',
+    headerTintColor:"#FFF",
+    headerStyle:{backgroundColor:"#00baf3"}
   };
   constructor() {
       super();

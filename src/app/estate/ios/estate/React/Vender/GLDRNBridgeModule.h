@@ -19,6 +19,8 @@ extern const NSStringRNAPI RNAPI_alert;
 extern const NSStringRNAPI RNAPI_test;
 extern const NSStringRNAPI RNAPI_push;
 extern const NSStringRNAPI RNAPI_present;
+extern const NSStringRNAPI RNAPI_clearCookie;
+
 
 typedef void (^FinishJSApiBlock)(NSDictionary* outData, NSDictionary* inData);
 typedef void (^FailedJSApiBlock)(NSDictionary* errorData, NSDictionary* inData);

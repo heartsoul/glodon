@@ -55,7 +55,7 @@ export default class extends React.Component {
       </TouchableOpacity>
       </View>
       </ScrollView>
-      <TouchableOpacity style={styles.skipBtn} onPress={() => this.props.navigation.replace('HomePage')}
+      <TouchableOpacity style={styles.skipBtn} onPress={() => this.props.navigation.replace('Login')}
         >
             <Text style={styles.skipBtnText}>跳过</Text>
       </TouchableOpacity>
