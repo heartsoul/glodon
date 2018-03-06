@@ -6,6 +6,7 @@ import Guide from './react/common/guide/guide';
 import GLDLoginViewController from './react/common/login/login'
 import HomePage from './react/common/business/home/home'
 import TestPage from './react/common/business/home/test'
+import BaseStorage from './react/common/base/store+base'
 class HomeScreen extends React.Component {
   render() {
     return (

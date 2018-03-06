@@ -6,6 +6,10 @@ import MeTab from './me/me';
 import MessageTab from './message/message';
 import NewTab from './new/new';
 import SubscribeTab from './subscriptions/subscribe';
+import TenantList from '../navigation/tenant/tenantSimpleList'
+import ProjectList from '../navigation/project/projectList'
+import QualityMain from '../quality/qualityMain'
+
 // class HomeScreen extends React.Component {
 //   render() {
 //     return (
@@ -65,8 +69,20 @@ const mainNav = StackNavigator(
   {
     AAAA: {
       screen: MainTab,
-      title:"home"
+      title:"首页"
     },
+    TenantList: {
+      screen:TenantList,
+      title:"租户列表"
+    },
+    ProjectList: {
+      screen:ProjectList,
+      title:"项目列表"
+    },
+    QualityMain: {
+      screen:QualityMain,
+      title:"质检清单"
+    }
   },
   {
     initialRouteName: 'AAAA',
@@ -247,6 +263,12 @@ const RootStack1 = StackNavigator(
 );
 
 export default class extends React.Component {
+  static navigationOptions = {
+    title: '首页',
+    tabBarVisible:false,
+    headerTintColor:"#FFF",
+    headerStyle:{backgroundColor:"#00baf3"},
+}
   render() {
     return <RootStack1 />;
   }

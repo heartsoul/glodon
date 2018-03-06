@@ -8,10 +8,11 @@
 const initState = {
     showModal: false,
     dictionary: {},
-  };
-  export default {
+
+};
+export default {
     namespace: 'loginUserManager',
     state: {
-      ...initState,
+        ...initState,
     },
-  };
+};

@@ -19,6 +19,7 @@ const NSStringRNAPI RNAPI_test = @"test";
 const NSStringRNAPI RNAPI_push = @"push";
 const NSStringRNAPI RNAPI_present = @"present";
 const NSStringRNAPI RNAPI_clearCookie = @"clearCookie";
+const NSStringRNAPI RNAPI_saveCookie = @"saveCookie";
 @interface NSDictionary(GLDRNBridgeModuleRequest)
 
 @end
@@ -195,7 +196,7 @@ const NSStringRNAPI RNAPI_clearCookie = @"clearCookie";
 {
     self = [super init];
     if (self) {
-        _apiSet = [NSMutableArray arrayWithObjects:RNAPI_version,RNAPI_alert,RNAPI_test,RNAPI_push,RNAPI_present,RNAPI_clearCookie,nil];
+        _apiSet = [NSMutableArray arrayWithObjects:RNAPI_version,RNAPI_alert,RNAPI_test,RNAPI_push,RNAPI_present,RNAPI_clearCookie,RNAPI_saveCookie,nil];
     }
     return self;
 }
@@ -271,11 +272,12 @@ const NSStringRNAPI RNAPI_clearCookie = @"clearCookie";
   });
 }
 + (void)api_clearCookie:(NSDictionary*)dictionary finishBlock:(FinishJSApiBlock) finishBlock {
-  // 响应
-  finishBlock([dictionary successedResponseCode:@"0" message:@"" data:@{}],dictionary);
+ [[self class] clearCookie:dictionary];
   // 执行
   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    [[self class] clearCookie:dictionary];
+    
+    // 响应
+    finishBlock([dictionary successedResponseCode:@"0" message:@"" data:@{}],dictionary);
   });
 }
 
@@ -285,6 +287,27 @@ const NSStringRNAPI RNAPI_clearCookie = @"clearCookie";
             NSLog(@"\n%@:%@", cookie.name, cookie.value);
     if ([cookie.path isEqualToString:@"/"]&&[cookie.name isEqualToString:@"JSESSIONID"]) {
 //      userModel.access_token = [NSString stringWithFormat:@"%@=%@", cookie.name, cookie.value];
+      //continue;
+    }
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+  }
+}
++ (void)api_saveCookie:(NSDictionary*)dictionary finishBlock:(FinishJSApiBlock) finishBlock {
+  [[self class] saveCookie:dictionary];
+  // 执行
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    // 响应
+    finishBlock([dictionary successedResponseCode:@"0" message:@"" data:@{}],dictionary);
+  });
+}
+
++ (void)saveCookie:(NSDictionary*)data {
+  NSArray * allCookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+  for (NSHTTPCookie * cookie in allCookies) {
+    NSLog(@"\n%@:%@", cookie.name, cookie.value);
+    if ([cookie.path isEqualToString:@"/"]&&[cookie.name isEqualToString:@"JSESSIONID"]) {
+      NSLog(@"%@",[NSString stringWithFormat:@"%@=%@", cookie.name, cookie.value]);
+      //      userModel.access_token = [NSString stringWithFormat:@"%@=%@", cookie.name, cookie.value];
       //continue;
     }
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];

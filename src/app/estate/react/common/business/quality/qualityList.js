@@ -3,13 +3,13 @@
  */
 'use strict';
 import React, {Component,} from "react";
-import {ActivityIndicator, Animated, FlatList, ScrollView, StyleSheet, Text, View,StatusBar,Image,TouchableOpacity} from "react-native";
-import * as USERAPI from "../../../login/api+user"; 
+import {ActivityIndicator, Animated, FlatList, ScrollView, StyleSheet, Text, View,StatusBar,Image} from "react-native";
+import * as API from "../service/api/api+quality"; 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-export default class tenantSimpleList extends Component {
+export default class qualityList extends Component {
     static navigationOptions = {
-        title: '租户列表',
+        title: '质检清单',
         tabBarVisible:false,
         headerTintColor:"#FFF",
         headerStyle:{backgroundColor:"#00baf3"},
@@ -25,22 +25,23 @@ export default class tenantSimpleList extends Component {
             dataArray: [],
         }
     }
-
+    _keyExtractor = (item, index) => index;
     //网络请求
     fetchData = ()=> {
-      let userTenants = global.storage.userInfo["accountInfo"]["userTenants"];
-        if(userTenants) {
-                let data = userTenants;
+        // 这个是js的访问网络的方法
+        API.getQualityInspectionAll(global.storage.projectId, 0,35).then(
+            (responseData) => {
+                let data = responseData.data.content;
                 let dataBlob = [];
                 let i = 0;
-                data.map(function (item) {
+                data.forEach(item => {
                     dataBlob.push({
                         key: ""+i,
                         value: item,
                     })
-                    i++;
-                    
+                    i++; 
                 });
+            
                 this.setState({
                     //复制数据源
                     dataArray: dataBlob,
@@ -48,41 +49,46 @@ export default class tenantSimpleList extends Component {
                 });
                 data = null;
                 dataBlob = null;
-        } else {
-            this.setState({
-                            error: true,
-                            errorInfo: {"errorInfo":"未登录"},
-                        });
-        }
-        //这个是js的访问网络的方法
-        // fetch(REQUEST_URL)
-        //     .then((response) => response.json())
-        //     .then((responseData) => {
-        //         let data = responseData.items;
-        //         let dataBlob = [];
-        //         let i = 0;
-        //         data.map(function (item) {
-        //             dataBlob.push({
-        //                 key: i,
-        //                 value: item,
-        //             })
-        //             i++;
-        //         });
-        //         this.setState({
-        //             //复制数据源
-        //             dataArray: dataBlob,
-        //             isLoading: false,
-        //         });
-        //         data = null;
-        //         dataBlob = null;
-        //     })
-        //     .catch((error) => {
-        //         this.setState({
-        //             error: true,
-        //             errorInfo: error
-        //         })
-        //     })
-        //     .done();
+            }
+        );
+        // {
+        //     "content": [{
+        //         "id": 5212498,
+        //         "code": "201801031653",
+        //         "name": "201801031653",
+        //         "simpleName": null,
+        //         "parentDeptId": 800,
+        //         "parentDeptName": "广联达科技股份有限公司",
+        //         "deptId": 5212498,
+        //         "responder": null,
+        //         "scale": null,
+        //         "projectTypeCode": "Estate_Project_Type_House",
+        //         "projectTypeName": "住宅",
+        //         "countryCode": null,
+        //         "regionCode": "Estate_Project_Region_NortheastChina",
+        //         "regionName": "东北",
+        //         "address": null,
+        //         "plannedDuration": 0,
+        //         "plannedStart": null,
+        //         "plannedEnd": null,
+        //         "actualDuration": 0,
+        //         "actualStart": null,
+        //         "actualEnd": null,
+        //         "projectStatusCode": null,
+        //         "projectStatusName": null,
+        //         "description": null,
+        //         "attachmentInfo": null,
+        //         "concerned": false
+        //     }],
+        //     "totalElements": 385,
+        //     "last": false,
+        //     "totalPages": 15,
+        //     "sort": null,
+        //     "first": false,
+        //     "numberOfElements": 26,
+        //     "size": 26,
+        //     "number": 1
+        // }
     }
 
     componentDidMount() {
@@ -122,36 +128,19 @@ export default class tenantSimpleList extends Component {
             </View>
         );
     }
-  //点击列表点击每一行
-    _clickItem = (item,index) => {
-        //   alert(item.value.tenantId);
-         USERAPI.setCurrentTenant(item.value.tenantId).then((responseData)=>{
-            let navigator = this.props.navigation;
-        
-          if (navigator) {
-            navigator.navigate("ProjectList");
-          }
-         });
-    }
+
     //返回itemView
-    renderItemView = ({item,index}) => {
+    renderItemView({item}) {
         return (
-            <TouchableOpacity key={index} activeOpacity={0.5}  onPress={() => this._clickItem(item,index)}>
-                <View style={styles.containerView}>
-                 <Image
-          source={require("../../../res/images/icon_choose_tenant_item.png")}
+            <View style={styles.containerView}>
+             <Image
+          source={require("../../res/images/icon_choose_project_item.png")}
           style={styles.image}/> 
-                 <Text style={styles.content}> {item.value.tenantName}({item.value.tenantId},{item.value.id})</Text>
-                </View>
-            </TouchableOpacity>
+                 <Text style={styles.content}>{item.value.description}({item.value.qcState},{item.value.id})</Text>
+            </View>
         );
     }
-    createEmptyView() {
-        return (
-         <Text style={{fontSize: 40, alignSelf: 'center'}}>还没有数据哦！</Text>
-        );
-      }
-      _keyExtractor = (item, index) => index;
+
     renderData() {
         return (
             <ScrollView >
@@ -159,21 +148,16 @@ export default class tenantSimpleList extends Component {
           barStyle="light-content"
           backgroundColor="#ecf0f1"
         />
-        <Text style={{color:"transparent",height:30}}> 租户列表 </Text>
+        <Text style={{color:"transparent",height:30}}> 项目列表 </Text>
                 <AnimatedFlatList
                     data={this.state.dataArray}
-                    keyExtractor={this._keyExtractor}
                     renderItem={this.renderItemView}
-                    ListEmptyComponent={this.createEmptyView}
-                    getItemLayout={(data, index) => ({
-                        length: 60, offset: (44 + 1) * index, index
-                      })}
+                    keyExtractor={this._keyExtractor}
                 />
             </ScrollView>
         );
     }
 
-   
     render() {
         //第一次加载等待的view
         if (this.state.isLoading && !this.state.error) {
