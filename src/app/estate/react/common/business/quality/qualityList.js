@@ -160,8 +160,9 @@ export default class qualityList extends Component {
                             null
                         ) : (
                             <View style={[styles.contentActionView]} >
-                 <TouchableHighlight style={[styles.contentActionButton,styles.contentActionButtonDelete]}><Text style={styles.contentActionButtonText}>删除</Text>
-                 </TouchableHighlight><TouchableHighlight style={styles.contentActionButton}><Text style={styles.contentActionButtonText}>提交</Text></TouchableHighlight>
+                 <TouchableHighlight onPress={()=>{alert('删除')}} style={[styles.contentActionButton,styles.contentActionButtonDelete]}><Text style={styles.contentActionButtonText}>删除</Text>
+                 </TouchableHighlight>
+                 <TouchableHighlight onPress={()=>{alert('提交')}} style={styles.contentActionButton}><Text style={styles.contentActionButtonText}>提交</Text></TouchableHighlight>
                  </View>
                         )
                     }
