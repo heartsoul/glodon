@@ -128,7 +128,17 @@ export default class qualityList extends Component {
             </View>
         );
     }
+    _header = () => {
+        return <Text style={[styles.txt,{backgroundColor:'black'}]}>这是头部</Text>;
+    }
 
+    _footer = () => {
+        return <Text style={[styles.txt,{backgroundColor:'black'}]}>这是尾部</Text>;
+    }
+
+    _separator = () => {
+        return <View style={{height:2,backgroundColor:'yellow'}}/>;
+    }
     //返回itemView
     renderItemView({item}) {
         return (
@@ -153,6 +163,7 @@ export default class qualityList extends Component {
                     data={this.state.dataArray}
                     renderItem={this.renderItemView}
                     keyExtractor={this._keyExtractor}
+                    ItemSeparatorComponent={this._separator}
                 />
             </ScrollView>
         );

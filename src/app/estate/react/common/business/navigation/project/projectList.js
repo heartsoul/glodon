@@ -3,10 +3,11 @@
  */
 'use strict';
 import React, {Component,} from "react";
-import {ActivityIndicator, Animated, FlatList, ScrollView, StyleSheet, Text, View,StatusBar,Image,TouchableHighlight} from "react-native";
+import {ActivityIndicator, Animated, FlatList,SectionList, 
+    ScrollView, StyleSheet, 
+    Text, View,StatusBar,Image,TouchableHighlight} from "react-native";
 import * as USERAPI from "../../../login/api+user"; 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-
 export default class projectList extends Component {
     static navigationOptions = {
         title: '项目列表',
@@ -136,22 +137,55 @@ export default class projectList extends Component {
           navigator.navigate("QualityMain");
         }
     }
+    
+    _separator = () => {
+        return <View style={{height:1,backgroundColor:'#ededed',marginLeft:40}}/>;
+    }
     //返回itemView
     renderItemView = ({item,index}) => {
         const _ = this;
         return (
             <TouchableHighlight key={index} activeOpacity={0.5} onPress={()=>_._itemClick(item,index)}>
             <View style={styles.containerView}>
-             <Image
-          source={require("../../../res/images/icon_choose_project_item.png")}
-          style={styles.image}/> 
                  <Text style={styles.content}> {item.value.name}({item.value.id})</Text>
             </View>
             </TouchableHighlight>
         );
     }
 
-    renderData() {
+    //返回itemView
+    renderItemSimpleView = ({item,index}) => {
+        const _ = this;
+        return (
+            <TouchableHighlight key={index} activeOpacity={0.5} onPress={()=>_._itemClick(item,index)}>
+            <View style={styles.containerSimpleView}>
+             <Image
+          source={require("../../../res/images/icon_choose_project_item.png")}
+          style={styles.image}/> 
+                 <Text style={styles.contentSimple}> {item.value.name}({item.value.id})</Text>
+            </View>
+            </TouchableHighlight>
+        );
+    }
+
+    renderData = () => {
+        return (
+            <ScrollView style={{backgroundColor:"#FFFFFF"}}>
+                <StatusBar
+          barStyle="light-content"
+          backgroundColor="#ecf0f1"
+        />
+                <AnimatedFlatList
+                    data={this.state.dataArray}
+                    renderItem={this.renderItemView}
+                    keyExtractor={this._keyExtractor}
+                    ItemSeparatorComponent={this._separator}
+                />
+            </ScrollView>
+        );
+    }
+
+    renderDataSimple = () => {
         return (
             <ScrollView >
                 <StatusBar
@@ -161,20 +195,24 @@ export default class projectList extends Component {
         <Text style={{color:"transparent",height:30}}> 项目列表 </Text>
                 <AnimatedFlatList
                     data={this.state.dataArray}
-                    renderItem={this.renderItemView}
+                    renderItem={this.renderItemSimpleView}
                     keyExtractor={this._keyExtractor}
                 />
             </ScrollView>
         );
     }
 
-    render() {
+    render = () =>  {
         //第一次加载等待的view
         if (this.state.isLoading && !this.state.error) {
             return this.renderLoadingView();
         } else if (this.state.error) {
             //请求失败view
             return this.renderErrorView(this.state.errorInfo);
+        }
+        if(this.state.dataArray.length < 5) {
+            //加载数据
+        return this.renderDataSimple();
         }
         //加载数据
         return this.renderData();
@@ -187,10 +225,9 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-        height:180
+        backgroundColor: '#FFFFFF',
     },
-    containerView:{
+    containerSimpleView:{
         flex: 1,
         borderRadius:8,
         // borderWidth:1,
@@ -209,11 +246,26 @@ const styles = StyleSheet.create({
         shadowRadius:3, // iOS
 
     },
+    containerView:{
+        flex: 1,
+        height:50,
+        marginLeft: 40,
+        marginRight: 40,
+        // backgroundColor: '#FFF',
+    },
     title: {
         fontSize: 15,
         color: 'blue',
     },
     content: {
+        left: 0,
+        top:15,
+        alignItems: "center",
+        textAlign: "left",
+        fontSize: 15,
+        color: 'black',
+    },
+    contentSimple: {
         left: 60,
         top: -20,
         fontSize: 15,
