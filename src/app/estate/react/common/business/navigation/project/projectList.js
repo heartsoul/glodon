@@ -5,7 +5,7 @@
 import React, {Component,} from "react";
 import {ActivityIndicator, Animated, FlatList,SectionList, 
     ScrollView, StyleSheet, 
-    Text, View,StatusBar,Image,TouchableHighlight} from "react-native";
+    Text, View,StatusBar,Image,TouchableHighlight,RefreshControl} from "react-native";
 import * as USERAPI from "../../../login/api+user"; 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 export default class projectList extends Component {
@@ -20,34 +20,54 @@ export default class projectList extends Component {
         super(props);
         this.state = {
             isLoading: true,
+            refreshing:false,
             //网络请求状态
             error: false,
             errorInfo: "",
             dataArray: [],
+            page:0,
+            hasMore:true,
         }
     }
     _keyExtractor = (item, index) => index;
     //网络请求
-    fetchData = ()=> {
+    fetchData = (page)=> {
         // 这个是js的访问网络的方法
-        USERAPI.getProjects(0,35).then(
+        USERAPI.getProjects(page,35).then(
             (responseData) => {
                 let data = responseData.data.content;
+                let last = responseData.data.last;
+
                 let dataBlob = [];
-                let i = 0;
-                data.forEach(item => {
-                    dataBlob.push({
-                        key: ""+i,
-                        value: item,
-                    })
-                    i++; 
-                });
-            
-                this.setState({
-                    //复制数据源
-                    dataArray: dataBlob,
-                    isLoading: false,
-                });
+                if(data.length > 0) {
+                    if(page > 0) {
+                        dataBlob = this.state.dataArray;
+                    }
+                    let i = 0;
+                    data.forEach(item => {
+                        dataBlob.push({
+                            key: ""+i,
+                            value: item,
+                        })
+                        i++; 
+                    });
+                    // alert(2);
+                    this.setState({
+                        //复制数据源
+                        dataArray: dataBlob,
+                        isLoading: false,
+                        refreshing:false,
+                        page:page+1,
+                        hasMore:last?false:true
+                    });
+                } else {
+                    // alert(3);
+                    this.setState({
+                        isLoading: false,
+                        refreshing:false,
+                    });
+                }
+                
                 data = null;
                 dataBlob = null;
             }
@@ -94,7 +114,7 @@ export default class projectList extends Component {
 
     componentDidMount() {
         //请求数据
-        this.fetchData();
+        this.fetchData(0);
     }
 
     //加载等待的view
@@ -137,7 +157,7 @@ export default class projectList extends Component {
           navigator.navigate("QualityMain");
         }
     }
-    
+
     _separator = () => {
         return <View style={{height:1,backgroundColor:'#ededed',marginLeft:40}}/>;
     }
@@ -167,21 +187,61 @@ export default class projectList extends Component {
             </TouchableHighlight>
         );
     }
-
+    _onEndReached = () => {
+        // if(!this.setState.hasMore) {
+        //     return;
+        // }
+        console.log(this.state.refreshing);
+        if(this.state.refreshing) {
+            return;
+        }
+        this.setState({
+            refreshing: true,
+        });
+        const timer = setTimeout(() => {
+            clearTimeout(timer);
+            this.fetchData(this.state.page);
+        }, 1500);
+    }
+    _onRefreshing = () => {
+        console.log(this.state.refreshing);
+        if(this.state.refreshing) {
+            return;
+        }
+        //设置刷新状态为正在刷新
+        this.setState({
+            refreshing: true,
+            page:0,
+        });
+        //延时加载
+        const timer = setTimeout(() => {
+            clearTimeout(timer);
+            this.fetchData(this.state.page);
+        }, 1500);
+    }
     renderData = () => {
         return (
-            <ScrollView style={{backgroundColor:"#FFFFFF"}}>
+            <View style={{backgroundColor:"#FFFFFF"}}>
                 <StatusBar
           barStyle="light-content"
           backgroundColor="#ecf0f1"
         />
-                <AnimatedFlatList
+                <FlatList
                     data={this.state.dataArray}
                     renderItem={this.renderItemView}
                     keyExtractor={this._keyExtractor}
                     ItemSeparatorComponent={this._separator}
+                    onEndReached={this._onEndReached}
+                    onRefresh={this._onRefreshing}
+                    refreshing={this.state.refreshing}
+                     onEndReachedThreshold={5}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                        />
+                    }
                 />
-            </ScrollView>
+            </View>
         );
     }
 

@@ -52,20 +52,29 @@ export default class qualityList extends Component {
             errorInfo: "",
             dataArray: [],
             sectionArray:[],
+            qcState:'',
+            currentPage:0,
+            hasMore:true
         }
     }
     _keyExtractor = (item, index) => index;
     //网络请求
     fetchData = (qcState)=> {
+        this._fetchData(qcState, 0);
+    }
+    //网络请求
+    _fetchData = (qcState,page)=> {
         // 这个是js的访问网络的方法
-        API.getQualityInspectionAll(global.storage.projectId,qcState, 0,35).then(
+        API.getQualityInspectionAll(global.storage.projectId,qcState, page,35).then(
             (responseData) => {
                 let data = responseData.data.content;
                 let dataBlob = [];
                 let groupMap = new Map();
                 let i = 0,j=0;
                 let sectionLob = [];
-                
+                if(page !=0) {
+                    groupMap = this.state.groupMap;
+                }
                 data.forEach(item => {
                     item.showTime = ""+ formatUnixtimestamp(item.inspectionDate);
                     item.index = i;
@@ -89,11 +98,13 @@ export default class qualityList extends Component {
                         data: value,
                     });
                  });
-            
+
                 this.setState({
                     //复制数据源
                     sectionArray: sectionLob,
+                    groupMap:groupMap,
                     isLoading: false,
+                    currentPage:page + 1
                 });
                 data = null;
                 dataBlob = null;
@@ -179,7 +190,16 @@ export default class qualityList extends Component {
             </View>
     }
     _onFilter = (qcState) => {
+        this.state.currentPage = 0;
+        this.state.hasMore = true;
+        this.state.qcState = qcState;
         this.fetchData(qcState);
+    }
+    _onEndReached = () => {
+        this._fetchData(this.state.qcState,this.state.currentPage + 1);
+    }
+    _onRefresh = () => {
+        this._onFilter(this.state.qcState);
     }
     renderData() {
         return (
@@ -212,6 +232,10 @@ export default class qualityList extends Component {
                             refreshing={false}
                         />
                     }
+                    // refreshing={refreshing}
+                    // onRefresh={this._onRefresh}
+                    onEndReached={this._onEndReached}
+                    onEndReachedThreshold={0.1}
                 />
             </ScrollView>
             </View>
