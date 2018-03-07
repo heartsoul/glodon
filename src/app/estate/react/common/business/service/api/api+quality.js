@@ -40,11 +40,31 @@ const api_qualityInspection_all = 'quality/{deptId}/qualityInspection/all'; // G
     // @GET("quality/{deptId}/qualityInspection/all/qcState/summary")
     // Observable<List<ClassifyNum>> getStatusNum(@Path("deptId") long deptId,@Query("qualityCheckpointId")long qualityCheckpointId,@Query("qualityCheckpointName")String qualityCheckpointName, @Header("cookie") String cookie);
 
+function demoData(size){
+    let ret = [];
+    let ts = 1518853268; // 2018-03-07 10:21:08
+    let te = 1520389268; // //2018-03-07 10:21:08
+    let tstep = te - ts;
+    
+    let CLASSIFY_STATES = ["",   "staged",  "unrectified","unreviewed","inspected","reviewed","delayed","accepted"];
+    for(let i = 0; i < size; i++) {
+        let t = parseInt(Math.random()*(tstep)+ts);
+        ret.push({
+            "id":"100"+i,
+            "description":"description "+i,
+            "qcState":CLASSIFY_STATES[i%CLASSIFY_STATES.length],
+            "inspectionDate": t,
+            "updateTime": t + 1000,
+        });
+    }
+    return ret;
+}
 
+export async function getQualityInspectionAll(projectId,qcState,page, size) {
+    return {"data":{"content":demoData(100)}};
 
-export async function getQualityInspectionAll(projectId,page, size) {
     let api = "/quality/"+projectId+"/qualityInspection/all";
-    return requestJSON(api + '?sort=updateTime,desc&page=' + page + '&size=' + size, {
+    return requestJSON(api + '?sort=updateTime,desc&page=' + page + '&size=' + size +"&qcState="+qcState, {
         method: 'GET',
     });
 }
