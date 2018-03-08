@@ -105,7 +105,10 @@ export function requestJSON(url, options) {
             console.log(data);
             return { data };
         })
-        .catch(err => ({ err }));
+        .catch(err => ({
+            err
+            // alert(err);
+            }));
 }
 
 /**

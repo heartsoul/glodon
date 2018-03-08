@@ -203,24 +203,22 @@ export default class qualityList extends Component {
     }
     renderData() {
         return (
-            <View>
-            
-                <StatusBar
+        <View style={styles.contentList}>
+        <StatusBar
           barStyle="light-content"
           backgroundColor="#ecf0f1"
         />
         <ScrollView pagingEnabled={false}
         horizontal={true} style={styles.contentHeader} >
-        <Button style={styles.headerButton} onPress={()=>this._onFilter('')} title="全部" ></Button>
-        <Button style={styles.headerButton} onPress={()=>this._onFilter('staged')} title="待提交" ></Button>
-        <Button style={styles.headerButton} onPress={()=>this._onFilter('unrectified')} title="待整改" ></Button>
-        <Button style={styles.headerButton} onPress={()=>this._onFilter('unreviewed')} title="待复查" ></Button>
-        <Button style={styles.headerButton} onPress={()=>this._onFilter('inspected')} title="已检查" ></Button>
-        <Button style={styles.headerButton} onPress={()=>this._onFilter('reviewed')} title="已复查" ></Button>
-        <Button style={styles.headerButton} onPress={()=>this._onFilter('delayed')} title="已延迟" ></Button>
-        <Button style={styles.headerButton} onPress={()=>this._onFilter('accepted')} title="已验收" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState==''?'#000099' : '#999999'} onPress={()=>this._onFilter('')} title="全部" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='staged'?'#000099' : '#999999'} onPress={()=>this._onFilter('staged')} title="待提交" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='unrectified'?'#000099' : '#999999'} onPress={()=>this._onFilter('unrectified')} title="待整改" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='unreviewed'?'#000099' : '#999999'} onPress={()=>this._onFilter('unreviewed')} title="待复查" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='inspected'?'#000099' : '#999999'} onPress={()=>this._onFilter('inspected')} title="已检查" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='reviewed'?'#000099' : '#999999'} onPress={()=>this._onFilter('reviewed')} title="已复查" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='delayed'?'#000099' : '#999999'} onPress={()=>this._onFilter('delayed')} title="已延迟" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='accepted'?'#000099' : '#999999'} onPress={()=>this._onFilter('accepted')} title="已验收" ></Button>
         </ScrollView >
-        <ScrollView style={styles.contentList}>
                 <AnimatedSectionList
                     sections={this.state.sectionArray}
                     renderItem={this.renderItemView}
@@ -237,7 +235,6 @@ export default class qualityList extends Component {
                     onEndReached={this._onEndReached}
                     onEndReachedThreshold={0.1}
                 />
-            </ScrollView>
             </View>
         );
     }
