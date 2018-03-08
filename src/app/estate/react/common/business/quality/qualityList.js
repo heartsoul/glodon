@@ -5,7 +5,7 @@
 import React, {Component,} from "react";
 import {ActivityIndicator, Animated, SectionList,FlatList,
      ScrollView, StyleSheet, Text, View,StatusBar,Image,
-     RefreshControl,Button,TouchableHighlight} from "react-native";
+     RefreshControl,Button,TouchableHighlight,TouchableOpacity} from "react-native";
 import * as API from "../service/api/api+quality"; 
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
@@ -251,7 +251,9 @@ export default class qualityList extends Component {
         <Button style={styles.headerButton} color={this.state.qcState=='delayed'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('delayed')} title="已延迟" ></Button>
         <Button style={styles.headerButton} color={this.state.qcState=='accepted'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('accepted')} title="已验收" ></Button>
         </ScrollView >
+        {/* var sectionList; */}
                 <AnimatedSectionList
+                    ref = {ref=>this.sectionList=ref}
                     sections={this.state.sectionArray}
                     renderItem={this.renderItemView}
                     keyExtractor={this._keyExtractor}
@@ -267,6 +269,10 @@ export default class qualityList extends Component {
                     onEndReached={this._onEndReached}
                     onEndReachedThreshold={0.1}
                 />
+                <TouchableOpacity style={styles.topBtn} onPress={() => this.sectionList.scrollToIndex({ viewPosition: 0, index: 0})}
+        >
+            <Text style={styles.topBtnText}>置顶</Text>
+      </TouchableOpacity>
             </View>
         );
     }
@@ -287,6 +293,12 @@ export default class qualityList extends Component {
 const styles = StyleSheet.create({
     contentHeader:{},
     contentList:{},
+    topBtn:{
+
+    },
+    topBtnText:{
+        
+    },
     headerButton:{
         color:'#333333',
         fontSize:14,

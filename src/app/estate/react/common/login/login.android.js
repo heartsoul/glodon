@@ -20,7 +20,7 @@ import {
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 
-var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
+// var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
 // const NativeModule = new NativeEventEmitter(RNBridgeModule);
 
 
@@ -126,39 +126,39 @@ class GLDLoginViewController extends React.Component {
   _fogotAction = () => {
     alert("logout");
     USERAPI.loginOut(); // 先退出一下再说
-    RNBridgeModule.RNInvokeOCCallBack(
-      {
-        caller: "gldrn",
-        name: "clearCookie",
-        ver: "1.0",
-        data: { title: "登录", message: "是否确认登录？" }
-      },
-      (data, request) => {
-        console.log(request);
-        alert(data);
-        // if (data) {
-        //   console.log(data);
-        // } else {
-        //   this.setState({
-        //     events: data
-        //   });
-        // }
-      }
-    );
+    // RNBridgeModule.RNInvokeOCCallBack(
+    //   {
+    //     caller: "gldrn",
+    //     name: "clearCookie",
+    //     ver: "1.0",
+    //     data: { title: "登录", message: "是否确认登录？" }
+    //   },
+    //   (data, request) => {
+    //     console.log(request);
+    //     alert(data);
+    //     // if (data) {
+    //     //   console.log(data);
+    //     // } else {
+    //     //   this.setState({
+    //     //     events: data
+    //     //   });
+    //     // }
+    //   }
+    // );
   };
   _loadUserInfo = () => {
     loadUserInfo(()=>{});
   }
   _loginAction = () => {
-    RNBridgeModule.RNInvokeOCCallBack(
-      {
-        caller: "gldrn",
-        name: "clearCookie",
-        ver: "1.0",
-        data: { title: "登录", message: "是否确认登录？" }
-      },
-      (data, request) => {
-        console.log(request);
+    // RNBridgeModule.RNInvokeOCCallBack(
+    //   {
+    //     caller: "gldrn",
+    //     name: "clearCookie",
+    //     ver: "1.0",
+    //     data: { title: "登录", message: "是否确认登录？" }
+    //   },
+    //   (data, request) => {
+    //     console.log(request);
         // if (data) {
         //   console.log(data);
         // } else {
@@ -172,8 +172,8 @@ class GLDLoginViewController extends React.Component {
             navigator.replace("HomePage");
           }
         });
-      }
-    );
+      // }
+    //  );
   };
   render() {
     return (
