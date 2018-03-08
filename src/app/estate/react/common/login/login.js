@@ -186,15 +186,15 @@ class GLDLoginViewController extends React.Component {
             }
           } else {
             if (navigator) {
+              navigator.replace("HomePage");
+              // const navigateAction = NavigationActions.navigate({
+              //   routeName: 'HomePage',
+              //   params: {},
 
-              const navigateAction = NavigationActions.navigate({
-                routeName: 'HomePage',
-                params: {},
-
-                // navigate can have a nested navigate action that will be run inside the child router
-                action: NavigationActions.navigate({ routeName: 'TenantList' }),
-              });
-              navigator.dispatch(navigateAction);
+              //   // navigate can have a nested navigate action that will be run inside the child router
+              //   action: NavigationActions.navigate({ routeName: 'TenantList' }),
+              // });
+              // navigator.dispatch(navigateAction);
               //navigator.replace("HomePage");
             }
           }
