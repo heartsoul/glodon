@@ -2,48 +2,17 @@
  * Created by JokAr on 2017/4/12.
  */
 'use strict';
-import React, {Component,} from "react";
+import React, {Component,PureComponent} from "react";
 import {ActivityIndicator, Animated, SectionList,FlatList,
      ScrollView, StyleSheet, Text, View,StatusBar,Image,
      RefreshControl,Button,TouchableHighlight,TouchableOpacity} from "react-native";
 import * as API from "../service/api/api+quality"; 
+import QualityListCell from "./qualityListCell"; 
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
-const CLASSIFY_STATES_COLOR = ["gray","orange","red","red","green","green","red","green"];
-const CLASSIFY_STATES = ["","staged","unrectified","unreviewed","inspected","reviewed","delayed","accepted"];
-const CLASSIFY_NAMES = ["全部","待提交","待整改","待复查","已检查","已复查","已延迟","已验收"];
-function toQcStateShow(qcState) {
-    let index = CLASSIFY_STATES.indexOf(qcState);
-    if(index > 0) {
-        return CLASSIFY_NAMES[index];
-    }
-    return "";
-}
-function toQcStateShowColor(qcState) {
-    let index = CLASSIFY_STATES.indexOf(qcState);
-    if(index > 0) {
-        return CLASSIFY_STATES_COLOR[index];
-    }
-    return "";
-}
-function formatUnixtimestamp(inputTime) {  
-    var date = new Date(inputTime*1000);  
-    var y = date.getFullYear();    
-    var m = date.getMonth() + 1;    
-    m = m < 10 ? ('0' + m) : m;    
-    var d = date.getDate();    
-    d = d < 10 ? ('0' + d) : d;    
-    var h = date.getHours();  
-    h = h < 10 ? ('0' + h) : h;  
-    var minute = date.getMinutes();  
-    var second = date.getSeconds();  
-    minute = minute < 10 ? ('0' + minute) : minute;    
-    second = second < 10 ? ('0' + second) : second;   
-    return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;    
-}; 
-export default class qualityList extends Component {
+ 
+export default class qualityList extends PureComponent {
     static navigationOptions = {
         title: '质检清单',
         tabBarVisible:false,
@@ -76,6 +45,7 @@ export default class qualityList extends Component {
         API.getQualityInspectionAll(global.storage.projectId,qcState, page,35).then(
             (responseData) => {
                 let data = responseData.data.content;
+                let hasData = responseData.data.last == false;
                 let dataBlob = [];
                 let groupMap = new Map();
                 let i = 0,j=0;
@@ -84,9 +54,13 @@ export default class qualityList extends Component {
                     groupMap = this.state.groupMap;
                 }
                 data.forEach(item => {
-                    item.showTime = ""+ formatUnixtimestamp(item.inspectionDate);
+                    item.showTime = ""+ API.formatUnixtimestamp(item.updateTime);
                     item.index = i;
-                    item.qcStateShow = ""+toQcStateShow(item.qcState);
+                    item.qcStateShow = ""+API.toQcStateShow(item.qcState);
+                    if(item.files && item.files.size > 0) {
+                        item.url = item.files[0].url;
+                        console.log(item.url);
+                    }
                     let groupTime = item.showTime.substring(0,10);
                     let dataBlob = groupMap.get(groupTime);
                     if(dataBlob == undefined) {
@@ -112,7 +86,9 @@ export default class qualityList extends Component {
                     sectionArray: sectionLob,
                     groupMap:groupMap,
                     isLoading: false,
-                    currentPage:page + 1
+                    refreshing:false,
+                    currentPage:page + 1,
+                    hasMore:hasData
                 });
                 data = null;
                 dataBlob = null;
@@ -124,7 +100,7 @@ export default class qualityList extends Component {
 
     componentDidMount() {
         //请求数据
-        this.fetchData('');
+        this._onRefresh();
     }
 
     //加载等待的view
@@ -138,7 +114,7 @@ export default class qualityList extends Component {
                 <ActivityIndicator
                     animating={true}
                     style={[styles.gray, {height: 80}]}
-                    color='red'
+                    color='green'
                     size="large"
                 />
             </View>
@@ -159,58 +135,11 @@ export default class qualityList extends Component {
             </View>
         );
     }
-    _toQcStateShowColor = (qcState)=> {
-        // console.log(qcState);
-        let ret = toQcStateShowColor(qcState);
-        // console.log(ret);
-
-        if(ret == 'red') {
-            return 1;
-        }
-        if(ret == 'orange') {
-            return 2;
-        }
-        return 0;
-    }
+    
     //返回itemView
     renderItemView=({item,index})=> {
         return (
-            <View style={[styles.containerView,]}>
-             <Image
-          source={require("../../res/images/icon_time_black.png")}
-          style={styles.imageTime}/> 
-                 <Text style={styles.contentTime}>{item.value.showTime}</Text>
-                 {
-                    this._toQcStateShowColor(item.value.qcState) == 1 ? (
-<Text style={[styles.contentStatus,{color:'red'}]}>{item.value.qcStateShow}</Text>
-                    ) : (this._toQcStateShowColor(item.value.qcState) == 2 ? (
-<Text style={[styles.contentStatus,{color:'orange'}]}>{item.value.qcStateShow}</Text>
-
-                    ) : (
-                        <Text style={[styles.contentStatus]}>{item.value.qcStateShow}</Text>
-                    ))
-                    
-                 }
-                 
-                 <View style={styles.contentView}>
-                 <Image
-          source={require("../../res/images/icon_choose_project_item.png")}
-          style={styles.image}/> 
-                 <Text style={styles.content}>{item.value.description}</Text>
-                 </View>
-                 {
-                       index % 2 ==0 ? (
-                            null
-                        ) : (
-                            <View style={[styles.contentActionView]} >
-                 <TouchableHighlight onPress={()=>{alert('删除')}} style={[styles.contentActionButton,styles.contentActionButtonDelete]}><Text style={styles.contentActionButtonTextDelete}>删除</Text>
-                 </TouchableHighlight>
-                 <TouchableHighlight onPress={()=>{alert('提交')}} style={styles.contentActionButton}><Text style={styles.contentActionButtonText}>提交</Text></TouchableHighlight>
-                 </View>
-                        )
-                    }
-                 
-            </View>
+            <QualityListCell item={item} index={index} />
         );
     }
     _sectionComp = (info) => {
@@ -222,15 +151,29 @@ export default class qualityList extends Component {
             </View>
     }
     _onFilter = (qcState) => {
-        this.state.currentPage = 0;
-        this.state.hasMore = true;
-        this.state.qcState = qcState;
+        this.setState({
+            refreshing: true,
+            currentPage:0,
+            hasMore:true,
+            qcState:qcState,
+            isLoading:true,
+        });
         this.fetchData(qcState);
     }
     _onEndReached = () => {
-        this._fetchData(this.state.qcState,this.state.currentPage + 1);
+        if(this.state.refreshing || this.state.isLoading||this.state.hasMore == false) {
+            return;
+        }
+        this.setState({
+            refreshing: true,
+        });
+        this._fetchData(this.state.qcState,this.state.currentPage);
     }
     _onRefresh = () => {
+        // this.setState({
+        //     refreshing: true,
+        //     currentPage:0,
+        // });
         this._onFilter(this.state.qcState);
     }
     renderData() {
@@ -253,35 +196,36 @@ export default class qualityList extends Component {
         </ScrollView >
         {/* var sectionList; */}
                 <AnimatedSectionList
-                    ref = {ref=>this.sectionList=ref}
+                    ref = 'sectionList'
                     sections={this.state.sectionArray}
                     renderItem={this.renderItemView}
-                    keyExtractor={this._keyExtractor}
+                    // keyExtractor={this._keyExtractor}
                     renderSectionHeader={this._sectionComp}
-                    ItemSeparatorComponent={this._separator}
+                   // ItemSeparatorComponent={this._separator}
                     refreshControl={
                         <RefreshControl
-                            refreshing={false}
+                            refreshing={this.state.refreshing}
                         />
                     }
-                    // refreshing={refreshing}
+                    // refreshing={this.state.refreshing}
                     // onRefresh={this._onRefresh}
                     onEndReached={this._onEndReached}
-                    onEndReachedThreshold={0.1}
+                    onEndReachedThreshold={10}
                 />
-                <TouchableOpacity style={styles.topBtn} onPress={() => this.sectionList.scrollToIndex({ viewPosition: 0, index: 0})}
+                {/* <TouchableOpacity style={styles.topBtn} onPress={() => this.refs.sectionList.scrollToIndex({animated: true, viewPosition: 0, index: 0})}
         >
             <Text style={styles.topBtnText}>置顶</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
             </View>
         );
     }
 
     render() {
         //第一次加载等待的view
-        if (this.state.isLoading && !this.state.error) {
-            return this.renderLoadingView();
-        } else if (this.state.error) {
+        // if (this.state.isLoading && !this.state.error) {
+        //     return this.renderLoadingView();
+        // } else 
+        if (this.state.error) {
             //请求失败view
             return this.renderErrorView(this.state.errorInfo);
         }
@@ -293,11 +237,25 @@ export default class qualityList extends Component {
 const styles = StyleSheet.create({
     contentHeader:{},
     contentList:{},
+    gray:{
+        top:100,
+        left:width/2 - 30,
+        position:'absolute',
+    },
     topBtn:{
-
+        width:50,
+        height:25,
+        backgroundColor:'#0007',
+        borderRadius:8,
+        justifyContent:'center',
+        alignItems:'center',
+        top:height-100,
+        left:width - 60,
+        position:'absolute',
     },
     topBtnText:{
-        
+        fontSize:12,
+        color:'#fff'
     },
     headerButton:{
         color:'#333333',
@@ -310,41 +268,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
         // height:180
-    },
-    contentActionView: {
-        height:40,
-    },
-    contentActionButtonText: {
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        marginTop: 6,
-        marginLeft: 5,
-        color:'#00baf3'
-    },
-    contentActionButtonTextDelete: {
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        marginTop: 6,
-        marginLeft: 5,
-        color:'#FF0000'
-    },
-    
-    contentActionButton:{
-        width:80,
-        left:width-140,
-        backgroundColor:'#FFFFFF',
-        // flex:1,
-        top: -30,
-        height:30,
-        borderRadius:15,
-        borderColor:'#eeeeee',
-        borderWidth:1,
-    },
-    contentActionButtonDelete:{
-        left:width-100 - 140,
-        top:0,
     },
     containerView:{
         flex: 1,
@@ -364,48 +287,7 @@ const styles = StyleSheet.create({
         shadowOpacity:0.15, // iOS
         shadowRadius:3, // iOS
     },
-    title: {
-        fontSize: 15,
-        color: 'blue',
-    },
-    content: {
-        left: 80,
-        top: -50,
-        fontSize: 15,
-        color: 'black',
-    },
-    contentView: {
-        left: 0,
-        top: -10,
-        backgroundColor: '#ededed',
-        overflow:'hidden',
-        borderRadius:8,
-    },
-    image:{
-        left:10,
-        top:10,
-        width:60,
-        height:60,
-    },
-    imageTime:{
-        left:10,
-        top:10,
-        width:20,
-        height:20,
-    },
-    contentTime: {
-        left: 35,
-        top: -8,
-        fontSize: 14,
-        color: 'black',
-    },
-    contentStatus: {
-        right: 10,
-        top: -28,
-        textAlign:'right',
-        fontSize: 15,
-        color: 'green',
-    },
+   
     groupHeaderView: {
         // backgroundColor:'#eee',
         height:40,

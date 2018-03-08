@@ -42,8 +42,8 @@ const api_qualityInspection_all = 'quality/{deptId}/qualityInspection/all'; // G
 
 function demoData(size){
     let ret = [];
-    let ts = 1518853268; // 2018-03-07 10:21:08
-    let te = 1520389268; // //2018-03-07 10:21:08
+    let ts = 1518853268000; // 2018-03-07 10:21:08
+    let te = 1520389268000; // //2018-03-07 10:21:08
     let tstep = te - ts;
     
     let CLASSIFY_STATES = ["",   "staged",  "unrectified","unreviewed","inspected","reviewed","delayed","accepted"];
@@ -61,10 +61,47 @@ function demoData(size){
 }
 
 export async function getQualityInspectionAll(projectId,qcState,page, size) {
-    return {"data":{"content":demoData(30)}};
+    // return {"data":{"content":demoData(30)}};
 
     let api = "/quality/"+projectId+"/qualityInspection/all";
     return requestJSON(api + '?sort=updateTime,desc&page=' + page + '&size=' + size +"&qcState="+qcState, {
         method: 'GET',
     });
 }
+
+
+const CLASSIFY_STATES_COLOR = ["gray","orange","red","red","green","green","red","green"];
+const CLASSIFY_STATES = ["","staged","unrectified","unreviewed","inspected","reviewed","delayed","accepted"];
+const CLASSIFY_NAMES = ["全部","待提交","待整改","待复查","已检查","已复查","已延迟","已验收"];
+
+export function toQcStateShow(qcState) {
+    let index = CLASSIFY_STATES.indexOf(qcState);
+    if(index > 0) {
+        return CLASSIFY_NAMES[index];
+    }
+    return "";
+}
+export function toQcStateShowColor(qcState) {
+    let index = CLASSIFY_STATES.indexOf(qcState);
+    if(index > 0) {
+        return CLASSIFY_STATES_COLOR[index];
+    }
+    return "";
+}
+export function formatUnixtimestamp(inputTime) {  
+    
+    var date = new Date(inputTime);  
+    console.log(inputTime);
+    var y = date.getFullYear();    
+    var m = date.getMonth() + 1;    
+    m = m < 10 ? ('0' + m) : m;    
+    var d = date.getDate();    
+    d = d < 10 ? ('0' + d) : d;    
+    var h = date.getHours();  
+    h = h < 10 ? ('0' + h) : h;  
+    var minute = date.getMinutes();  
+    var second = date.getSeconds();  
+    minute = minute < 10 ? ('0' + minute) : minute;    
+    second = second < 10 ? ('0' + second) : second;   
+    return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;    
+};
