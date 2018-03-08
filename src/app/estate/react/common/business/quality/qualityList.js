@@ -42,7 +42,7 @@ export default class qualityList extends PureComponent {
     //网络请求
     _fetchData = (qcState,page)=> {
         // 这个是js的访问网络的方法
-        API.getQualityInspectionAll(global.storage.projectId,qcState, page,35).then(
+        API.getQualityInspectionAll(global.storage.loadProject(),qcState, page,35).then(
             (responseData) => {
                 let data = responseData.data.content;
                 let hasData = responseData.data.last == false;

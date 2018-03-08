@@ -5,8 +5,10 @@ import {
   Text,
   View,
   StatusBar,
+  Button,
   SafeAreaView
 } from 'react-native';
+import * as USERAPI from "../../../login/api+user";
 export default class extends React.Component {
   static navigationOptions = {
     title: '我',
@@ -16,6 +18,20 @@ export default class extends React.Component {
   constructor() {
       super();
     };
+    _logout=()=>{
+      global.storage.logout();
+      USERAPI.loginOut().then(()=>{
+        USERAPI.uaaLoginOut().then(()=>{
+
+        });
+        let navigator = this.props.navigation;
+        
+          if (navigator) {
+            navigator.replace("Logout");
+          }
+      });
+
+    }
   render() {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
@@ -25,6 +41,7 @@ export default class extends React.Component {
         />
       <View>
       <Text> 我 </Text>
+      <Button title="退出" onPress={()=>{this._logout()}}></Button>
       </View>
       </SafeAreaView>
     );

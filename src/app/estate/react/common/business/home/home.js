@@ -9,7 +9,7 @@ import SubscribeTab from './subscriptions/subscribe';
 import TenantList from '../navigation/tenant/tenantSimpleList'
 import ProjectList from '../navigation/project/projectList'
 import QualityMain from '../quality/qualityMain'
-
+import GLDLoginViewController from '../../login/login'
 // class HomeScreen extends React.Component {
 //   render() {
 //     return (
@@ -131,6 +131,10 @@ const MeNav = StackNavigator(
     EEEE: {
       screen: MeTab,
       title:"me"
+    },
+    Logout: {
+      screen: GLDLoginViewController,
+      title:"logout"
     },
   },
   {

@@ -49,7 +49,15 @@ export default class extends React.Component {
       this.fetchData();
   }
   fetchData = ()=> {
-    this._loadUserInfo();
+    console.log(global.storage.loadTenant);
+    console.log(global.storage.loadProject);
+
+    if(global.storage.loadTenant && global.storage.loadProject) {
+
+    } else {
+      // this._loadUserInfo();
+    }
+    
   }
   render() {
     return (

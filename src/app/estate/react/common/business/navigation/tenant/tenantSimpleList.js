@@ -35,7 +35,7 @@ export default class tenantSimpleList extends Component {
                 let i = 0;
                 data.map(function (item) {
                     dataBlob.push({
-                        key: ""+i,
+                        key: "A0"+i,
                         value: item,
                     })
                     i++;
@@ -127,7 +127,7 @@ export default class tenantSimpleList extends Component {
         //   alert(item.value.tenantId);
          USERAPI.setCurrentTenant(item.value.tenantId).then((responseData)=>{
             let navigator = this.props.navigation;
-        
+        global.storage.saveTenant(item.value.tenantId);
           if (navigator) {
             navigator.navigate("ProjectList");
           }
@@ -162,7 +162,6 @@ export default class tenantSimpleList extends Component {
         <Text style={{color:"transparent",height:30}}> 租户列表 </Text>
                 <AnimatedFlatList
                     data={this.state.dataArray}
-                    keyExtractor={this._keyExtractor}
                     renderItem={this.renderItemView}
                     ListEmptyComponent={this.createEmptyView}
                     getItemLayout={(data, index) => ({

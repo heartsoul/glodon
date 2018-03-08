@@ -32,7 +32,44 @@ export default class BaseStorage {
             // sync: require('./sync')
         });
     }
-
+    setItem =(key,value)=> {
+        // this.storage.save({
+        //     key: key,  // 注意:请不要在key中使用_下划线符号!
+        //     data: {'value':value},
+            
+        //     // 如果不指定过期时间，则会使用defaultExpires参数
+        //     // 如果设为null，则永不过期
+        //     expires: null
+        //   });
+    }
+    getItem=(key)=> {
+        // // 读取
+        // this.storage.load({
+        //     key: key,
+        // }).then(ret => {
+        //     // 如果找到数据，则在then方法中返回
+        //     // 注意：这是异步返回的结果（不了解异步请自行搜索学习）
+        //     // 你只能在then这个方法内继续处理ret数据
+        //     // 而不能在then以外处理
+        //     // 也没有办法“变成”同步返回
+        //     // 你也可以使用“看似”同步的async/await语法
+        //     return ret.value;
+        // }).catch(err => {
+        //     //如果没有找到数据且没有sync方法，
+        //     //或者有其他异常，则在catch中返回
+        //     // console.warn(err.message);
+        //     switch (err.name) {
+        //         case 'NotFoundError':
+        //             // TODO;
+        //             break;
+        //         case 'ExpiredError':
+        //             // TODO
+        //             break;
+        //     }
+        //     return null;
+        // });
+    }
+    
     version() {
         console.log('BaseStorage version 1.0.0.0');
     }
@@ -91,7 +128,7 @@ class GLDStorage extends BaseStorage {
     }
     saveLoginToken=(token)=> {
         this.loginToken = token;
-        this.storage.setItem('loginToken', this.loginToken);
+        this.setItem('loginToken', this.loginToken);
     }
     loginToken=()=> {
         return this.loginToken;
@@ -101,30 +138,39 @@ class GLDStorage extends BaseStorage {
     }
     logout=()=> {
         this.loginToken = '';
-        this.storage.setItem('loginToken', this.loginToken);
+        this.currentProject = undefined;
+        this.currentTenant = undefined;
+        this.guide = undefined;
+        this.storage.remove({key:'loginToken'});
+        this.storage.remove({key:'currentProject'});
+        this.storage.remove({key:'currentTenant'});
+        this.storage.remove({key:'guide'});
     }
     saveGuide=()=> {
         this.guide = "1";
-        this.storage.setItem('guide', this.guide);
+        this.setItem('guide', this.guide);
     }
     isGuide=()=> {
-        this.guide = this.storage.getItem('guide');
+        this.guide = this.getItem('guide');
         return this.guide == "1";
     }
     saveTenant=(tenant)=> {
-        this.currentTenant = tenant;
-        this.storage.setItem('currentTenant', this.currentTenant);
+        this.currentTenant = ""+tenant;
+        this.setItem('currentTenant', this.currentTenant);
     }
     loadTenant=()=> {
-        this.currentTenant = this.storage.getItem('currentTenant');
+        // this.currentTenant = this.getItem('currentTenant');
+        console.log(this.currentTenant);
         return this.currentTenant;
     }
     saveProject=(project)=> {
-        this.currentProject = project;
-        this.storage.setItem('currentProject', this.currentProject);
+        console.log(project);
+        this.currentProject = ""+project;
+        this.setItem('currentProject', ""+project);
     }
     loadProject=()=> {
-        this.currentProject = this.storage.getItem('currentProject');
+        // this.currentProject = this.getItem('currentProject');
+        console.log(this.currentProject);
         return this.currentProject;
     }
     

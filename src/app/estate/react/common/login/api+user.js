@@ -45,7 +45,7 @@ export async function getProjects(page, size) {
 export async function setCurrentTenant(tenantId) {
     return requestJSON(api_user_currentTenant, {
         method: 'PUT',
-        body: JSON.stringify({ 'tenantId': tenantId }),
+        body: JSON.stringify({ 'tenantId': parseInt(tenantId) }),
     });
 }
 

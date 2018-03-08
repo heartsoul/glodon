@@ -46,7 +46,7 @@ export default class projectList extends Component {
                     let i = 0;
                     data.forEach(item => {
                         dataBlob.push({
-                            key: ""+i,
+                            key: "P0"+i,
                             value: item,
                         })
                         i++; 
@@ -150,11 +150,11 @@ export default class projectList extends Component {
         );
     }
     _itemClick = (item,index) => {
-        global.storage.projectId = item.value.id;
+        global.storage.saveProject(""+item.value.id);
         let navigator = this.props.navigation;
         
         if (navigator) {
-          navigator.navigate("QualityMain");
+          navigator.popToTop();
         }
     }
 
@@ -247,7 +247,7 @@ export default class projectList extends Component {
 
     renderDataSimple = () => {
         return (
-            <ScrollView >
+            <View >
                 <StatusBar
           barStyle="light-content"
           backgroundColor="#ecf0f1"
@@ -256,9 +256,8 @@ export default class projectList extends Component {
                 <AnimatedFlatList
                     data={this.state.dataArray}
                     renderItem={this.renderItemSimpleView}
-                    keyExtractor={this._keyExtractor}
                 />
-            </ScrollView>
+            </View>
         );
     }
 

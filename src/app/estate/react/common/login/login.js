@@ -17,6 +17,7 @@ import {
   SafeAreaView,
   StatusBar
 } from "react-native";
+import { NavigationActions } from 'react-navigation';
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 
@@ -62,6 +63,12 @@ function loadUserInfo(successReturn) {
 //import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 class GLDLoginViewController extends React.Component {
+  static navigationOptions = {
+    title: '用户登录',
+    tabBarVisible:false,
+    headerTintColor:"#FFF",
+    headerStyle:{backgroundColor:"#00baf3"},
+}
   constructor(props) {
     super(props);
     /*用来指示是否显示Loading提示符号*/
@@ -168,8 +175,28 @@ class GLDLoginViewController extends React.Component {
         // }
         let navigator = this.props.navigation;
         var ret = login(this.state.username, this.state.password, () => {
-          if (navigator) {
-            navigator.replace("HomePage");
+          console.log(global.storage.loadTenant);
+    console.log(global.storage.loadProject);
+          
+          if (false && global.storage.loadTenant() && global.storage.loadProject()) {
+            if (navigator) {
+              USERAPI.setCurrentTenant(global.storage.loadTenant()).then((responseData) => {
+                navigator.replace("HomePage");
+              });
+            }
+          } else {
+            if (navigator) {
+
+              const navigateAction = NavigationActions.navigate({
+                routeName: 'HomePage',
+                params: {},
+
+                // navigate can have a nested navigate action that will be run inside the child router
+                action: NavigationActions.navigate({ routeName: 'TenantList' }),
+              });
+              navigator.dispatch(navigateAction);
+              //navigator.replace("HomePage");
+            }
           }
         });
       }
