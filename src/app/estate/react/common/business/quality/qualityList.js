@@ -11,12 +11,20 @@ var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
+const CLASSIFY_STATES_COLOR = ["gray","orange","red","red","green","green","red","green"];
 const CLASSIFY_STATES = ["","staged","unrectified","unreviewed","inspected","reviewed","delayed","accepted"];
 const CLASSIFY_NAMES = ["全部","待提交","待整改","待复查","已检查","已复查","已延迟","已验收"];
 function toQcStateShow(qcState) {
     let index = CLASSIFY_STATES.indexOf(qcState);
     if(index > 0) {
         return CLASSIFY_NAMES[index];
+    }
+    return "";
+}
+function toQcStateShowColor(qcState) {
+    let index = CLASSIFY_STATES.indexOf(qcState);
+    if(index > 0) {
+        return CLASSIFY_STATES_COLOR[index];
     }
     return "";
 }
@@ -151,15 +159,39 @@ export default class qualityList extends Component {
             </View>
         );
     }
+    _toQcStateShowColor = (qcState)=> {
+        // console.log(qcState);
+        let ret = toQcStateShowColor(qcState);
+        // console.log(ret);
+
+        if(ret == 'red') {
+            return 1;
+        }
+        if(ret == 'orange') {
+            return 2;
+        }
+        return 0;
+    }
     //返回itemView
-    renderItemView({item,index}) {
+    renderItemView=({item,index})=> {
         return (
             <View style={[styles.containerView,]}>
              <Image
           source={require("../../res/images/icon_time_black.png")}
           style={styles.imageTime}/> 
                  <Text style={styles.contentTime}>{item.value.showTime}</Text>
-                 <Text style={styles.contentStatus}>{item.value.qcStateShow}</Text>
+                 {
+                    this._toQcStateShowColor(item.value.qcState) == 1 ? (
+<Text style={[styles.contentStatus,{color:'red'}]}>{item.value.qcStateShow}</Text>
+                    ) : (this._toQcStateShowColor(item.value.qcState) == 2 ? (
+<Text style={[styles.contentStatus,{color:'orange'}]}>{item.value.qcStateShow}</Text>
+
+                    ) : (
+                        <Text style={[styles.contentStatus]}>{item.value.qcStateShow}</Text>
+                    ))
+                    
+                 }
+                 
                  <View style={styles.contentView}>
                  <Image
           source={require("../../res/images/icon_choose_project_item.png")}
@@ -171,7 +203,7 @@ export default class qualityList extends Component {
                             null
                         ) : (
                             <View style={[styles.contentActionView]} >
-                 <TouchableHighlight onPress={()=>{alert('删除')}} style={[styles.contentActionButton,styles.contentActionButtonDelete]}><Text style={styles.contentActionButtonText}>删除</Text>
+                 <TouchableHighlight onPress={()=>{alert('删除')}} style={[styles.contentActionButton,styles.contentActionButtonDelete]}><Text style={styles.contentActionButtonTextDelete}>删除</Text>
                  </TouchableHighlight>
                  <TouchableHighlight onPress={()=>{alert('提交')}} style={styles.contentActionButton}><Text style={styles.contentActionButtonText}>提交</Text></TouchableHighlight>
                  </View>
@@ -210,14 +242,14 @@ export default class qualityList extends Component {
         />
         <ScrollView pagingEnabled={false}
         horizontal={true} style={styles.contentHeader} >
-        <Button style={styles.headerButton} color={this.state.qcState==''?'#000099' : '#999999'} onPress={()=>this._onFilter('')} title="全部" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='staged'?'#000099' : '#999999'} onPress={()=>this._onFilter('staged')} title="待提交" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='unrectified'?'#000099' : '#999999'} onPress={()=>this._onFilter('unrectified')} title="待整改" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='unreviewed'?'#000099' : '#999999'} onPress={()=>this._onFilter('unreviewed')} title="待复查" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='inspected'?'#000099' : '#999999'} onPress={()=>this._onFilter('inspected')} title="已检查" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='reviewed'?'#000099' : '#999999'} onPress={()=>this._onFilter('reviewed')} title="已复查" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='delayed'?'#000099' : '#999999'} onPress={()=>this._onFilter('delayed')} title="已延迟" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='accepted'?'#000099' : '#999999'} onPress={()=>this._onFilter('accepted')} title="已验收" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState==''?'#00baf3' : '#333333'} onPress={()=>this._onFilter('')} title="全部" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='staged'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('staged')} title="待提交" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='unrectified'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('unrectified')} title="待整改" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='unreviewed'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('unreviewed')} title="待复查" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='inspected'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('inspected')} title="已检查" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='reviewed'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('reviewed')} title="已复查" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='delayed'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('delayed')} title="已延迟" ></Button>
+        <Button style={styles.headerButton} color={this.state.qcState=='accepted'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('accepted')} title="已验收" ></Button>
         </ScrollView >
                 <AnimatedSectionList
                     sections={this.state.sectionArray}
@@ -274,19 +306,28 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
-        marginTop: 5,
+        marginTop: 6,
         marginLeft: 5,
-        color:'#0000FF'
+        color:'#00baf3'
     },
+    contentActionButtonTextDelete: {
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        marginTop: 6,
+        marginLeft: 5,
+        color:'#FF0000'
+    },
+    
     contentActionButton:{
         width:80,
         left:width-140,
-        backgroundColor:'#EEEEEE',
+        backgroundColor:'#FFFFFF',
         // flex:1,
         top: -30,
         height:30,
         borderRadius:15,
-        borderColor:'gray',
+        borderColor:'#eeeeee',
         borderWidth:1,
     },
     contentActionButtonDelete:{
