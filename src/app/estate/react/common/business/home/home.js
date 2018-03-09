@@ -132,10 +132,6 @@ const MeNav = StackNavigator(
       screen: MeTab,
       title:"me"
     },
-    Logout: {
-      screen: GLDLoginViewController,
-      title:"logout"
-    },
   },
   {
     initialRouteName: 'EEEE',
@@ -266,14 +262,17 @@ const RootStack1 = StackNavigator(
   }
 );
 
-export default class extends React.Component {
+export default class TTT extends React.Component {
   static navigationOptions = {
     title: '首页',
     tabBarVisible:false,
     headerTintColor:"#FFF",
     headerStyle:{backgroundColor:"#00baf3"},
 }
+componentDidMount = () => {
+  global.storage.homeNavigation = this.props.navigation;
+}
   render() {
-    return <RootStack1 />;
+    return <RootStack1 ref={nav => { this.navigator = nav;}} />;
   }
 };

@@ -87,6 +87,7 @@ class GLDStorage extends BaseStorage {
         this.guide = '0';
         this.currentTenant = "0";
         this.currentProject = "0";
+        this.homeNavigation = null;
         // this.storage.load({
         //     key: 'loginToken',
 
@@ -138,9 +139,9 @@ class GLDStorage extends BaseStorage {
     }
     logout=()=> {
         this.loginToken = '';
-        this.currentProject = undefined;
-        this.currentTenant = undefined;
-        this.guide = undefined;
+        this.currentProject = "0";
+        this.currentTenant = "0";
+        this.guide = "1";
         this.storage.remove({key:'loginToken'});
         this.storage.remove({key:'currentProject'});
         this.storage.remove({key:'currentTenant'});
@@ -172,6 +173,26 @@ class GLDStorage extends BaseStorage {
         // this.currentProject = this.getItem('currentProject');
         console.log(this.currentProject);
         return this.currentProject;
+    }
+    gotoLogin=()=> {
+        this.homeNavigation.replace("Login");
+    }
+    hasChoose=()=> {
+        return this.loadTenant() != "0" && this.loadProject() != "0";
+    }
+    gotoMain = (navigation) => {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
+        if (this.hasChoose()) {
+            navigator.replace("HomePage");
+        } else {
+            navigator.replace("ChoosePage");
+        }
     }
     
 }

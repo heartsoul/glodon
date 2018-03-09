@@ -24,11 +24,7 @@ export default class extends React.Component {
         USERAPI.uaaLoginOut().then(()=>{
 
         });
-        let navigator = this.props.navigation;
-        
-          if (navigator) {
-            navigator.replace("Logout");
-          }
+        global.storage.gotoLogin();
       });
 
     }

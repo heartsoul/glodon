@@ -151,11 +151,7 @@ export default class projectList extends Component {
     }
     _itemClick = (item,index) => {
         global.storage.saveProject(""+item.value.id);
-        let navigator = this.props.navigation;
-        
-        if (navigator) {
-          navigator.popToTop();
-        }
+        global.storage.gotoMain();
     }
 
     _separator = () => {

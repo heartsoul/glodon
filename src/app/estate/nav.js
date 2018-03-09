@@ -7,8 +7,7 @@ import GLDLoginViewController from './react/common/login/login'
 import HomePage from './react/common/business/home/home'
 import TestPage from './react/common/business/home/test'
 import BaseStorage from './react/common/base/store+base'
-import TenantList from './react/common/business/navigation/tenant/tenantSimpleList'
-import ProjectList from './react/common/business/navigation/project/projectList'
+import ChoosePage from './react/common/business/navigation/chooseHome'
 class HomeScreen extends React.Component {
   render() {
     return (
@@ -43,11 +42,8 @@ class DetailsScreen extends React.Component {
 
 const RootStack = StackNavigator(
   {
-    Home: {
-      screen: HomeScreen,
-    },
-    Details: {
-      screen: DetailsScreen,
+    ChoosePage: {
+      screen: ChoosePage,
     },
     Guide: {
       screen: Guide,
@@ -55,25 +51,14 @@ const RootStack = StackNavigator(
     Login: {
       screen: GLDLoginViewController
     },
-    LoginMain: {
-      screen: GLDLoginViewController
-    },
     HomePage: {
       screen : HomePage
-    },
-    TenantList: {
-      screen:TenantList,
-      title:"租户列表"
-    },
-    ProjectList: {
-      screen:ProjectList,
-      title:"项目列表"
     },
   },
   {
     initialRouteName: global.storage.isGuide() ? 'Guide' : 'Login',
     headerMode:"none",
-  }
+  },
 );
 
 export default class Nav extends React.Component {

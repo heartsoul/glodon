@@ -20,6 +20,7 @@ const NSStringRNAPI RNAPI_push = @"push";
 const NSStringRNAPI RNAPI_present = @"present";
 const NSStringRNAPI RNAPI_clearCookie = @"clearCookie";
 const NSStringRNAPI RNAPI_saveCookie = @"saveCookie";
+const NSStringRNAPI RNAPI_callNative = @"callNative"; // 调用原生功能
 @interface NSDictionary(GLDRNBridgeModuleRequest)
 
 @end
@@ -252,6 +253,21 @@ const NSStringRNAPI RNAPI_saveCookie = @"saveCookie";
     //    [[self class] performSelector:@selector(test:) withObject:@{@"title":@"Tip", @"msg":@"hello world", @"buttons":@[]} afterDelay:10];
     
     //    [GLDRNBridgeModule emitEventWithName:RNAPI_alert andPayload:@{@"title":@"Tip", @"msg":@"hello world", @"buttons":@[]}];
+}
+
++ (void)api_callNative:(NSDictionary*)dictionary finishBlock:(FinishJSApiBlock) finishBlock {
+  [[self class] callNative:dictionary];
+  // 执行
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    
+    // 响应
+    finishBlock([dictionary successedResponseCode:@"0" message:@"" data:@{}],dictionary);
+  });
+}
+
+
++ (void)callNative:(NSDictionary*)data {
+  NSLog(@"callNative:%@",@"successed");
 }
 
 + (void)api_push:(NSDictionary *)dictionary finishBlock:(FinishJSApiBlock) finishBlock {
