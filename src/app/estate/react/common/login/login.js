@@ -1,5 +1,5 @@
 "use strict";
-import React, { Component, StatusBar } from "react";
+import React, { Component } from "react";
 import request from "../../utils/request";
 import * as USERAPI from "./api+user";
 import {
@@ -216,9 +216,8 @@ class GLDLoginViewController extends React.Component {
       >
         <StatusBar
           barStyle="light-content"
-          backgroundColor="#FF0000"
+          backgroundColor="#00baf3"
           translucent={true}
-          hidden={true}
         />
         <Image
           source={require("../res/images/login/icon_login_top_bg.png")}
