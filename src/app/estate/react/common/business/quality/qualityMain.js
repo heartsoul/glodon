@@ -45,17 +45,6 @@ class DetailsScreen extends React.Component {
       // style: {  // 样式
       //    marginVertical: 0, 
       // },
-      headerRight: (  
-        <Button  
-            title='🔍'  
-            onPress={()=>this.props.navigation.navigate("DrawerToggle")}  
-        />  
-    ),
-      //没有作用
-      onItemPress : (route) => {
-      	 console.log('-------->' + JSON.stringify(route))
-      },
-      
    },
 
 });
@@ -114,7 +103,7 @@ const RootStack1 = StackNavigator(
         tabBarVisible:false,
         headerTintColor:"#FFF",
         headerStyle:{backgroundColor:"#00baf3"},
-        gesturesEnabled:false,
+        // gesturesEnabled:false,
       headerRight: (
         <Button onPress={()=>global.storage.qualityNavigation.navigate('DrawerToggle')} title="菜单" color="#fff" />
       ),
