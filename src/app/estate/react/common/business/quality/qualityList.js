@@ -31,7 +31,8 @@ export default class qualityList extends PureComponent {
             sectionArray:[],
             qcState:'',
             currentPage:0,
-            hasMore:true
+            hasMore:true,
+            refreshing:true,
         }
     }
     _keyExtractor = (item, index) => index;
@@ -207,10 +208,10 @@ export default class qualityList extends PureComponent {
                             refreshing={this.state.refreshing}
                         />
                     }
-                    // refreshing={this.state.refreshing}
-                    // onRefresh={this._onRefresh}
+                    onRefresh={this._onRefresh}
+                    refreshing={this.state.refreshing}
                     onEndReached={this._onEndReached}
-                    onEndReachedThreshold={10}
+                    onEndReachedThreshold={1}
                 />
                 {/* <TouchableOpacity style={styles.topBtn} onPress={() => this.refs.sectionList.scrollToIndex({animated: true, viewPosition: 0, index: 0})}
         >

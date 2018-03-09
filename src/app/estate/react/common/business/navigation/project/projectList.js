@@ -46,7 +46,7 @@ export default class projectList extends Component {
                     let i = 0;
                     data.forEach(item => {
                         dataBlob.push({
-                            key: "P0"+i,
+                            key: "P0"+item.id,
                             value: item,
                         })
                         i++; 
@@ -182,7 +182,7 @@ export default class projectList extends Component {
              <Image
           source={require("../../../res/images/icon_choose_project_item.png")}
           style={styles.image}/> 
-                 <Text style={styles.contentSimple}> {item.value.name}({item.value.id})</Text>
+                 <Text style={styles.contentSimple}> {item.value.name}</Text>
             </View>
             </TouchableHighlight>
         );
@@ -229,12 +229,11 @@ export default class projectList extends Component {
                 <FlatList
                     data={this.state.dataArray}
                     renderItem={this.renderItemView}
-                    keyExtractor={this._keyExtractor}
                     ItemSeparatorComponent={this._separator}
                     onEndReached={this._onEndReached}
                     onRefresh={this._onRefreshing}
                     refreshing={this.state.refreshing}
-                     onEndReachedThreshold={5}
+                     onEndReachedThreshold={0.1}
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.refreshing}

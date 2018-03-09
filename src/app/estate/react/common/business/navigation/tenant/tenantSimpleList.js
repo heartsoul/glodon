@@ -141,7 +141,7 @@ export default class tenantSimpleList extends Component {
                  <Image
           source={require("../../../res/images/icon_choose_tenant_item.png")}
           style={styles.image}/> 
-                 <Text style={styles.content}> {item.value.tenantName}({item.value.tenantId},{item.value.id})</Text>
+                 <Text style={styles.content}> {item.value.tenantName}</Text>
                 </View>
             </TouchableOpacity>
         );
