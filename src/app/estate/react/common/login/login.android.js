@@ -168,8 +168,12 @@ class GLDLoginViewController extends React.Component {
         // }
         let navigator = this.props.navigation;
         var ret = login(this.state.username, this.state.password, () => {
-          if (navigator) {
-            navigator.replace("HomePage");
+          if(global.storage.hasChoose()) {
+            USERAPI.setCurrentTenant(this.loadTenant()).then((responseData) => {
+              global.storage.gotoMain(navigator); 
+            });
+          } else {
+            global.storage.gotoMain(navigator); 
           }
         });
       // }
