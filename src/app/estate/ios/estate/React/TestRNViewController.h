@@ -10,4 +10,5 @@
 
 @interface TestRNViewController : UINavigationController
 - (IBAction)openRNPage:(id)sender;
++ (void)callPhotoTest;
 @end

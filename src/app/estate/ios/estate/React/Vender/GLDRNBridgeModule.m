@@ -197,7 +197,7 @@ const NSStringRNAPI RNAPI_callNative = @"callNative"; // 调用原生功能
 {
     self = [super init];
     if (self) {
-        _apiSet = [NSMutableArray arrayWithObjects:RNAPI_version,RNAPI_alert,RNAPI_test,RNAPI_push,RNAPI_present,RNAPI_clearCookie,RNAPI_saveCookie,nil];
+        _apiSet = [NSMutableArray arrayWithObjects:RNAPI_version,RNAPI_alert,RNAPI_test,RNAPI_push,RNAPI_present,RNAPI_clearCookie,RNAPI_saveCookie,RNAPI_callNative,nil];
     }
     return self;
 }
@@ -256,10 +256,10 @@ const NSStringRNAPI RNAPI_callNative = @"callNative"; // 调用原生功能
 }
 
 + (void)api_callNative:(NSDictionary*)dictionary finishBlock:(FinishJSApiBlock) finishBlock {
-  [[self class] callNative:dictionary];
+ 
   // 执行
   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    
+     [[self class] callNative:dictionary];
     // 响应
     finishBlock([dictionary successedResponseCode:@"0" message:@"" data:@{}],dictionary);
   });
@@ -268,6 +268,8 @@ const NSStringRNAPI RNAPI_callNative = @"callNative"; // 调用原生功能
 
 + (void)callNative:(NSDictionary*)data {
   NSLog(@"callNative:%@",@"successed");
+  
+  [TestRNViewController callPhotoTest];
 }
 
 + (void)api_push:(NSDictionary *)dictionary finishBlock:(FinishJSApiBlock) finishBlock {
@@ -366,12 +368,14 @@ RCT_EXPORT_METHOD(RNInvokeOCCallBack:(NSDictionary *)dictionary callback:(RCTRes
     if(![dictionary isValidCall]) {
         // 非法调用，调用格式多不正确
         callback(@[[dictionary errorResponseInvalidCall], dictionary]);
+        NSLog(@"非法调用：%@",dictionary);
         return;
     }
     
     if(![self isValidApi:[dictionary getCallName]]) {
         // api 不受支持
         callback(@[[dictionary errorResponseNotFound], dictionary]);
+        NSLog(@"非法调用：%@",dictionary);
         return;
     }
     [[self class] api_excute:dictionary finishBlock:^(NSDictionary *outData, NSDictionary *inData) {

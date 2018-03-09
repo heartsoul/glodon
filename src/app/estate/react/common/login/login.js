@@ -154,6 +154,20 @@ class GLDLoginViewController extends React.Component {
       }
     );
   };
+  _nativeAction = () => {
+    RNBridgeModule.RNInvokeOCCallBack(
+      {
+        caller: "gldrn",
+        name: "callNative",
+        ver: "1.0",
+        data: { subName: "photo", message: "调用相机" }
+      },
+      (data, request) => {
+        console.log(data);
+        console.log(request);
+      }
+    );
+  };
   _loadUserInfo = () => {
     loadUserInfo(()=>{});
   }
@@ -282,6 +296,14 @@ class GLDLoginViewController extends React.Component {
             }}
           >
             <Text style={styles.style_loginText}>登 录 </Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            onPress={this._nativeAction}
+            underlayColor="#0099f3"
+            activeOpacity={0.75}
+            style={styles.style_fogotTextView}
+          >
+            <Text style={styles.style_fogotText}>原生调用 </Text>
           </TouchableHighlight>
 
           <TouchableHighlight

@@ -1635,7 +1635,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\nif [[ \"$CONFIGURATION\" == \"Release\" ]]; then\n# if [[ \"$CONFIGURATION\" == \"Debug\" ]]; then\necho \"开始RN打包\"\necho \"当前目录\"\npwd\ncd ..\necho \"执行目录\"\npwd\nreact-native bundle --entry-file index.js  --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios/\necho \"结束RN打包\"\nfi";
+			shellScript = "# if [[ \"$CONFIGURATION\" == \"Release\" ]]; then\nif [[ \"$CONFIGURATION\" == \"Debug\" ]]; then\necho \"开始RN打包\"\necho \"当前目录\"\npwd\ncd ..\necho \"执行目录\"\npwd\nreact-native bundle --entry-file index.js  --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios/\necho \"结束RN打包\"\nfi";
 		};
 		247E2B072043CD5300016F63 /* [AU] Set Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
