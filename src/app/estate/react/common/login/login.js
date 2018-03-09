@@ -1,5 +1,5 @@
 "use strict";
-import React, { Component } from "react";
+import React, { Component, StatusBar } from "react";
 import request from "../../utils/request";
 import * as USERAPI from "./api+user";
 import {
@@ -18,6 +18,7 @@ import {
   StatusBar
 } from "react-native";
 import { NavigationActions, StackRouter} from 'react-navigation';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 
@@ -60,7 +61,7 @@ function loadUserInfo(successReturn) {
     
   });
 }
-//import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 
 class GLDLoginViewController extends React.Component {
  // static router = StackRouter({routeName:'loginVC'}, {});
@@ -203,6 +204,8 @@ class GLDLoginViewController extends React.Component {
   };
   render() {
     return (
+      <KeyboardAwareScrollView>
+       
       <View
         style={{
           backgroundColor: "#ffffff",
@@ -211,7 +214,12 @@ class GLDLoginViewController extends React.Component {
           marginRight: 0
         }}
       >
-        <StatusBar barStyle="light-content" backgroundColor="#ecf0f1" />
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="#FF0000"
+          translucent={true}
+          hidden={true}
+        />
         <Image
           source={require("../res/images/login/icon_login_top_bg.png")}
           style={[styles.style_login_image]}
@@ -326,6 +334,7 @@ class GLDLoginViewController extends React.Component {
           
         </View>
       </View>
+      </KeyboardAwareScrollView>
     );
   }
 }

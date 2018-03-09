@@ -124,10 +124,7 @@ export default class qualityList extends PureComponent {
     renderLoadingView() {
         return (
             <View style={styles.container}>
-            <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <ActivityIndicator
                     animating={true}
                     style={[styles.gray, {height: 80}]}
@@ -142,10 +139,7 @@ export default class qualityList extends PureComponent {
     renderErrorView(error) {
         return (
             <View style={styles.container}>
-            <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <Text>
                     Fail: {error}
                 </Text>
@@ -196,10 +190,7 @@ export default class qualityList extends PureComponent {
     renderData() {
         return (
         <View style={styles.contentList}>
-        <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+        <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         <ScrollView pagingEnabled={false}
         horizontal={true} style={styles.contentHeader} >
         <Button style={styles.headerButton} color={this.state.qcState==''?'#00baf3' : '#333333'} onPress={()=>this._onFilter('')} title="全部" ></Button>

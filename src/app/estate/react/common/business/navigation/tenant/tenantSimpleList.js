@@ -94,10 +94,7 @@ export default class tenantSimpleList extends Component {
     renderLoadingView() {
         return (
             <View style={styles.container}>
-            <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <ActivityIndicator
                     animating={true}
                     style={[styles.gray, {height: 80}]}
@@ -112,10 +109,7 @@ export default class tenantSimpleList extends Component {
     renderErrorView(error) {
         return (
             <View style={styles.container}>
-            <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <Text>
                     Fail: {error}
                 </Text>
@@ -155,10 +149,7 @@ export default class tenantSimpleList extends Component {
     renderData() {
         return (
             <ScrollView >
-                <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         <Text style={{color:"transparent",height:30}}> 租户列表 </Text>
                 <AnimatedFlatList
                     data={this.state.dataArray}

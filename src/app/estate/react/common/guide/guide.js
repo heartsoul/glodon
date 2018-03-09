@@ -30,10 +30,7 @@ export default class extends React.Component {
     //  <SafeAreaView>
       
       <View>
-        <StatusBar
-          barStyle="light-content"
-           backgroundColor="#ecf0f1"
-        />
+        <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         bounces={false}

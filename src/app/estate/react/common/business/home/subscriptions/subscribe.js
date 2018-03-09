@@ -18,10 +18,7 @@ export default class extends React.Component {
   render() {
     return (
       <View>
-        <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+        <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
       <Text> 订阅 </Text>
       </View>
       

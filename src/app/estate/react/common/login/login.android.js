@@ -17,6 +17,7 @@ import {
   SafeAreaView,
   StatusBar
 } from "react-native";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 
@@ -181,6 +182,7 @@ class GLDLoginViewController extends React.Component {
   };
   render() {
     return (
+      <KeyboardAwareScrollView>
       <View
         style={{
           backgroundColor: "#ffffff",
@@ -189,7 +191,7 @@ class GLDLoginViewController extends React.Component {
           marginRight: 0
         }}
       >
-        <StatusBar barStyle="light-content" backgroundColor="#ecf0f1" />
+        <StatusBar barStyle="light-content" translucent={true} backgroundColor="transparent" />
         <Image
           source={require("../res/images/login/icon_login_top_bg.png")}
           style={[styles.style_login_image]}
@@ -284,18 +286,10 @@ class GLDLoginViewController extends React.Component {
           >
             <Text style={styles.style_fogotText}>忘记密码 </Text>
           </TouchableHighlight>
-{/*           
-          <TouchableHighlight
-            onPress={this._loadUserInfo}
-            underlayColor="#0099f3"
-            activeOpacity={0.75}
-            style={styles.style_fogotTextView}
-          >
-            <Text style={styles.style_fogotText}>用户信息 </Text>
-          </TouchableHighlight> */}
           
         </View>
       </View>
+      </KeyboardAwareScrollView>
     );
   }
 }

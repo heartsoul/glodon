@@ -1635,7 +1635,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# if [[ \"$CONFIGURATION\" == \"Release\" ]]; then\nif [[ \"$CONFIGURATION\" == \"Debug\" ]]; then\necho \"开始RN打包\"\necho \"当前目录\"\npwd\ncd ..\necho \"执行目录\"\npwd\nreact-native bundle --entry-file index.js  --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios/\necho \"结束RN打包\"\nfi";
+			shellScript = "# if [[ \"$CONFIGURATION\" == \"Release\" ]]; then\nif [[ \"$CONFIGURATION\" == \"Debug1\" ]]; then\necho \"开始RN打包\"\necho \"当前目录\"\npwd\ncd ..\necho \"执行目录\"\npwd\nreact-native bundle --entry-file index.js  --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios/\necho \"结束RN打包\"\nfi";
 		};
 		247E2B072043CD5300016F63 /* [AU] Set Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1860,7 +1860,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 5BWXTQUBDE;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = estate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1871,7 +1871,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.soul.estate;
 				PRODUCT_NAME = estate;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "0774c7dd-a786-4d85-bb42-5c65ab38d911";
+				PROVISIONING_PROFILE_SPECIFIER = "dev-5BWXTQUBDE.org.soul.*";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

@@ -121,10 +121,7 @@ export default class projectList extends Component {
     renderLoadingView() {
         return (
             <View style={styles.container}>
-            <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <ActivityIndicator
                     animating={true}
                     style={[styles.gray, {height: 80}]}
@@ -139,10 +136,7 @@ export default class projectList extends Component {
     renderErrorView(error) {
         return (
             <View style={styles.container}>
-            <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <Text>
                     Fail: {error}
                 </Text>
@@ -163,7 +157,7 @@ export default class projectList extends Component {
         return (
             <TouchableHighlight key={index} activeOpacity={0.5} onPress={()=>_._itemClick(item,index)}>
             <View style={styles.containerView}>
-                 <Text style={styles.content}> {item.value.name}({item.value.id})</Text>
+                 <Text style={styles.content}> {item.value.name})</Text>
             </View>
             </TouchableHighlight>
         );
@@ -218,10 +212,7 @@ export default class projectList extends Component {
     renderData = () => {
         return (
             <View style={{backgroundColor:"#FFFFFF"}}>
-                <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <FlatList
                     data={this.state.dataArray}
                     renderItem={this.renderItemView}
@@ -243,10 +234,7 @@ export default class projectList extends Component {
     renderDataSimple = () => {
         return (
             <View >
-                <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+               <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         <Text style={{color:"transparent",height:30}}> 项目列表 </Text>
                 <AnimatedFlatList
                     data={this.state.dataArray}

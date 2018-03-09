@@ -31,10 +31,7 @@ export default class extends React.Component {
   render() {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
-      <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+      <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
       <View>
       <Text> 我 </Text>
       <Button title="退出" onPress={()=>{this._logout()}}></Button>

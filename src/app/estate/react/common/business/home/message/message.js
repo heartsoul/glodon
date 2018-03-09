@@ -21,10 +21,7 @@ export default class extends React.Component {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
       <View>
-      <StatusBar
-          barStyle="light-content"
-          backgroundColor="#ecf0f1"
-        />
+      <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
       <Text> 消息 </Text>
       </View>
       </SafeAreaView>
