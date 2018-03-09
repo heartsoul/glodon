@@ -91,7 +91,7 @@ export function toQcStateShowColor(qcState) {
 export function formatUnixtimestamp(inputTime) {  
     
     var date = new Date(inputTime);  
-    console.log(inputTime);
+    // console.log(inputTime);
     var y = date.getFullYear();    
     var m = date.getMonth() + 1;    
     m = m < 10 ? ('0' + m) : m;    

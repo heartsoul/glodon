@@ -13,12 +13,27 @@ var { width, height } = Dimensions.get("window");
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
  
 export default class qualityList extends PureComponent {
-    static navigationOptions = {
+    static navigationOptions =  {
+        // const navigate = navigation || {};
+    //   gotoS = ()=> {
+    //     console.log(global.storage.qualityNavigation);
+    //     console.log(navigation);
+    //     global.storage.qualityNavigation.navigate('DrawerToggle');
+    //   }
+    //   return {
         title: '质检清单',
-        tabBarVisible:false,
-        headerTintColor:"#FFF",
-        headerStyle:{backgroundColor:"#00baf3"},
-    }
+          tabBarVisible:false,
+          headerTintColor:"#FFF",
+          headerStyle:{backgroundColor:"#00baf3"},
+          gesturesEnabled:false,
+        headerRight: (
+          <Button onPress={()=>console.log(navigation)} title="搜索" color="#fff" />
+        ),
+    //   };
+      };
+    //   componentDidMount = () => {
+    //     global.storage.qualityNavigation = this.props.navigation;
+    //   }
 
     constructor(props) {
         super(props);
@@ -60,7 +75,7 @@ export default class qualityList extends PureComponent {
                     item.qcStateShow = ""+API.toQcStateShow(item.qcState);
                     if(item.files && item.files.size > 0) {
                         item.url = item.files[0].url;
-                        console.log(item.url);
+                       // console.log(item.url);
                     }
                     let groupTime = item.showTime.substring(0,10);
                     let dataBlob = groupMap.get(groupTime);
@@ -102,6 +117,7 @@ export default class qualityList extends PureComponent {
     componentDidMount() {
         //请求数据
         this._onRefresh();
+        global.storage.qualityNavigation = this.props.navigation;
     }
 
     //加载等待的view

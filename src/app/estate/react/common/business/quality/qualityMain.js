@@ -9,11 +9,11 @@ class DetailsScreen extends React.Component {
           <Text>Details Screen</Text>
           <Button
             title="Go to Details... again"
-            onPress={() => this.props.navigation.close()}
+            onPress={() => this.props.navigation.navigate('Notifications')}
           />
           <Button
-            title="Go back"
-            onPress={() => this.props.navigation.open()}
+            title="展开/合并"
+            onPress={() => this.props.navigation.navigate("DrawerToggle")}
           />
         </View>
       );
@@ -29,11 +29,11 @@ class DetailsScreen extends React.Component {
     },
 },{
     drawerWidth: 200, // 抽屉宽
-    drawerPosition: 'left', // 抽屉在左边还是右边
+    drawerPosition: 'right', // 抽屉在左边还是右边
     // contentComponent: CustomDrawerContentComponent,  // 自定义抽屉组件
     contentOptions: {
       initialRouteName: 'Home', // 默认页面组件
-      activeItemKey : 'Notifications',
+      activeItemKey : 'Home',
       labelStyle : {//标签样式
           color : 'red',
            height : 30,
@@ -42,9 +42,15 @@ class DetailsScreen extends React.Component {
       activeBackgroundColor: '#ff8500', // 选中背景颜色
       inactiveTintColor: '#666',  // 未选中文字颜色
       inactiveBackgroundColor: '#fff', // 未选中背景颜色
-      style: {  // 样式
-         marginVertical: 0, 
-      },
+      // style: {  // 样式
+      //    marginVertical: 0, 
+      // },
+      headerRight: (  
+        <Button  
+            title='🔍'  
+            onPress={()=>this.props.navigation.navigate("DrawerToggle")}  
+        />  
+    ),
       //没有作用
       onItemPress : (route) => {
       	 console.log('-------->' + JSON.stringify(route))
@@ -80,21 +86,12 @@ const RootStack1 = StackNavigator(
       
     },
     {
+      navigationOptions: {
+        // gesturesEnabled: false,
+      },
       initialRouteName: 'Home',
       headerMode:"none",
       header:{
-        headerLeft: (  
-            <Button  
-                title='打开抽屉'  
-                onPress={()=>alert(1)}  
-            />  
-        ),
-        headerRight: (  
-            <Button  
-                title='打开抽屉'  
-                onPress={()=>alert(1)}  
-            />  
-        ),
         cardStack: {
             gesturesEnabled: false,
     },
@@ -105,13 +102,25 @@ const RootStack1 = StackNavigator(
   );
   
   export default class extends React.Component {
-    static navigationOptions = {
-        title: '质检清单',
+    static navigationOptions =  {
+      // const navigate = navigation || {};
+  //   gotoS = ()=> {
+  //     console.log(global.storage.qualityNavigation);
+  //     console.log(navigation);
+  //     global.storage.qualityNavigation.navigate('DrawerToggle');
+  //   }
+  //   return {
+      title: '质检清单',
         tabBarVisible:false,
         headerTintColor:"#FFF",
         headerStyle:{backgroundColor:"#00baf3"},
-    }
+        gesturesEnabled:false,
+      headerRight: (
+        <Button onPress={()=>global.storage.qualityNavigation.navigate('DrawerToggle')} title="菜单" color="#fff" />
+      ),
+  //   };
+    };
     render() {
-      return <RootStack1 />;
+      return <RootStack />;
     }
   };
