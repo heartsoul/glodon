@@ -70,9 +70,9 @@ export async function getQualityInspectionAll(projectId,qcState,page, size) {
 }
 
 
-const CLASSIFY_STATES_COLOR = ["gray","orange","red","red","green","green","red","green"];
-const CLASSIFY_STATES = ["","staged","unrectified","unreviewed","inspected","reviewed","delayed","accepted"];
-const CLASSIFY_NAMES = ["全部","待提交","待整改","待复查","已检查","已复查","已延迟","已验收"];
+export const CLASSIFY_STATES_COLOR = ["gray","orange","red","red","green","green","red","green"];
+export const CLASSIFY_STATES = ["","staged","unrectified","unreviewed","inspected","reviewed","delayed","accepted"];
+export const CLASSIFY_NAMES = ["全部","待提交","待整改","待复查","已检查","已复查","已延迟","已验收"];
 
 export function toQcStateShow(qcState) {
     let index = CLASSIFY_STATES.indexOf(qcState);

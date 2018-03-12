@@ -188,20 +188,24 @@ export default class qualityList extends PureComponent {
         // });
         this._onFilter(this.state.qcState);
     }
+    _onSegmentedBarChange= (index)=>{
+        this.setState({qcState:API.CLASSIFY_STATES[index]});
+        this._onRefresh();
+    }
     renderData() {
         return (
-        <View style={styles.contentList}>
-        <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-        <SegmentedBar onPress={()=>alert(1)} justifyItem='scrollable'>
-  <SegmentedBar.Item title='全部' />
-  <SegmentedBar.Item title='待提交' />
-  <SegmentedBar.Item onPress={()=>alert(2)} title='待整改' />
-  <SegmentedBar.Item title='待复查' />
-  <SegmentedBar.Item title='已检查' />
-  <SegmentedBar.Item title='已复查' />
-  <SegmentedBar.Item title='已延迟' />
-  <SegmentedBar.Item title='已验收' />/>
-</SegmentedBar>    
+            <View style={styles.contentList}>
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                <SegmentedBar onChange={(index) => this._onSegmentedBarChange(index)} justifyItem='scrollable'>
+                    <SegmentedBar.Item title='全部' />
+                    <SegmentedBar.Item badge={29} title='待提交' />
+                    <SegmentedBar.Item badge={5} title='待整改' />
+                    <SegmentedBar.Item badge={'...'} title='待复查' />
+                    <SegmentedBar.Item title='已检查' />
+                    <SegmentedBar.Item title='已复查' />
+                    <SegmentedBar.Item title='已延迟' />
+                    <SegmentedBar.Item title='已验收' />
+                </SegmentedBar>
 
 
         {/* <ScrollView pagingEnabled={false}
