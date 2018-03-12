@@ -8,9 +8,9 @@ import {
   TouchableHighlight
   
 } from 'react-native';
-
+import {SegmentedBar, Carousel} from 'teaset';
 //import * as USERAPI from "../../login/api+user";
-
+import Swiper from "./mainSwiper";
 export default class extends React.Component {
   static navigationOptions = {
     title: '首页',
@@ -63,32 +63,40 @@ export default class extends React.Component {
     return (
       <View>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-      <Text> home </Text>
+      <Text> ========================== </Text>
       <TouchableHighlight
             onPress={this._loadUserInfo}
             underlayColor="#0099f3"
             activeOpacity={0.75}
            // style={styles.style_fogotTextView}
           >
-            <Text style={styles.style_fogotText}>选择租户 </Text>
+            <Text style={styles.style_fogotText}>》》选择租户 </Text>
           </TouchableHighlight>
+          <Text> ========================== </Text>
+          <Text> ========================== </Text>
           <TouchableHighlight
             onPress={this._loadProjectInfo}
             underlayColor="#0099f3"
             activeOpacity={0.75}
            // style={styles.style_fogotTextView}
           >
-            <Text style={styles.style_fogotText}>选择项目 </Text>
+            <Text style={styles.style_fogotText}>》》选择项目 </Text>
           </TouchableHighlight>
+          <Text> ========================== </Text>
+          <Text> ========================== </Text>
           <TouchableHighlight
             onPress={this._loadQuality}
             underlayColor="#0099f3"
             activeOpacity={0.75}
            // style={styles.style_fogotTextView}
           >
-            <Text style={styles.style_fogotText}>质检清单 </Text>
+            <Text style={styles.style_fogotText}>》》质检清单 </Text>
           </TouchableHighlight>
-
+          <Text> ========================== </Text>
+          <SegmentedBar justifyItem='scrollable'>
+  <SegmentedBar.Item title='Apple' />
+  <SegmentedBar.Item title='Banana' />
+</SegmentedBar>
       </View>
       
     );
@@ -96,5 +104,7 @@ export default class extends React.Component {
 };
 
 var styles = StyleSheet.create({
-    
+  style_fogotText: {
+    color:'green',
+  }
 });

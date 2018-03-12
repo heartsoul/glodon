@@ -157,7 +157,7 @@ export default class projectList extends Component {
         return (
             <TouchableHighlight key={index} activeOpacity={0.5} onPress={()=>_._itemClick(item,index)}>
             <View style={styles.containerView}>
-                 <Text style={styles.content}> {item.value.name})</Text>
+                 <Text style={styles.content}> {item.value.name}</Text>
             </View>
             </TouchableHighlight>
         );

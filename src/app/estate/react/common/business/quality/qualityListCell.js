@@ -7,7 +7,7 @@ import {Animated, StyleSheet, Text, View ,Image,
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 
-const projectImage = require("../../res/images/icon_choose_project_item.png");
+const projectImage =  require("../../res/images/icon_choose_project_item.png");
 const projectTimeImage = require("../../res/images/icon_time_black.png");
 
 

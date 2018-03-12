@@ -8,6 +8,7 @@ import {ActivityIndicator, Animated, SectionList,FlatList,
      RefreshControl,Button,TouchableHighlight,TouchableOpacity} from "react-native";
 import * as API from "../service/api/api+quality"; 
 import QualityListCell from "./qualityListCell"; 
+import {SegmentedBar} from 'teaset';
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
@@ -191,7 +192,19 @@ export default class qualityList extends PureComponent {
         return (
         <View style={styles.contentList}>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-        <ScrollView pagingEnabled={false}
+        <SegmentedBar onPress={()=>alert(1)} justifyItem='scrollable'>
+  <SegmentedBar.Item title='全部' />
+  <SegmentedBar.Item title='待提交' />
+  <SegmentedBar.Item onPress={()=>alert(2)} title='待整改' />
+  <SegmentedBar.Item title='待复查' />
+  <SegmentedBar.Item title='已检查' />
+  <SegmentedBar.Item title='已复查' />
+  <SegmentedBar.Item title='已延迟' />
+  <SegmentedBar.Item title='已验收' />/>
+</SegmentedBar>    
+
+
+        {/* <ScrollView pagingEnabled={false}
         horizontal={true} style={styles.contentHeader} >
         <Button style={styles.headerButton} color={this.state.qcState==''?'#00baf3' : '#333333'} onPress={()=>this._onFilter('')} title="全部" ></Button>
         <Button style={styles.headerButton} color={this.state.qcState=='staged'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('staged')} title="待提交" ></Button>
@@ -201,7 +214,7 @@ export default class qualityList extends PureComponent {
         <Button style={styles.headerButton} color={this.state.qcState=='reviewed'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('reviewed')} title="已复查" ></Button>
         <Button style={styles.headerButton} color={this.state.qcState=='delayed'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('delayed')} title="已延迟" ></Button>
         <Button style={styles.headerButton} color={this.state.qcState=='accepted'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('accepted')} title="已验收" ></Button>
-        </ScrollView >
+        </ScrollView > */}
         {/* var sectionList; */}
                 <AnimatedSectionList
                     ref = 'sectionList'
