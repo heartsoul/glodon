@@ -2,6 +2,9 @@ import React from 'react';
 import { Button, View, Text, Image } from 'react-native';
 import { StackNavigator, DrawerNavigator} from 'react-navigation'; // 1.0.0-beta.27
 import QualityList from './qualityList'
+import {SegmentedBar, Drawer, Label} from 'teaset';
+var Dimensions = require("Dimensions");
+var { width, height } = Dimensions.get("window");
 class DetailsScreen extends React.Component {
     render() {
       return (
@@ -89,7 +92,14 @@ const RootStack1 = StackNavigator(
       
     }
   );
-  
+  let view = (
+    <View style={{backgroundColor: "green", height: height, width:200}}>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <Label type='detail' size='xl' text='Drawer' />
+      </View>
+    </View>
+  );
+  let drawer = null;
   export default class extends React.Component {
     static navigationOptions =  {
       // const navigate = navigation || {};
@@ -105,7 +115,9 @@ const RootStack1 = StackNavigator(
         headerStyle:{backgroundColor:"#00baf3"},
         // gesturesEnabled:false,
       headerRight: (
-        <Button onPress={()=>global.storage.qualityNavigation.navigate('DrawerToggle')} title="菜单" color="#fff" />
+        //let drawer = null; Drawer.open(view, 'left');
+        <Button onPress={()=>global.storage.qualityNavigation.navigate('DrawerToggle')
+      } title="菜单" color="#fff" />
       ),
   //   };
     };

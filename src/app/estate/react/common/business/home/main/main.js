@@ -102,11 +102,11 @@ export default class extends React.Component {
   {this.renderSlide('#fcf8e3')}
   {this.renderSlide('#f2dede')}
 </Projector> */}
-<Carousel style={{height: 238}} carousel={false} scrollEnabled={false}>
+<Carousel ref={'carousel'} style={{height: 238}} carousel={false} scrollEnabled={false}>
   <Image style={styles.topImage} resizeMode='cover' source={require('./img/1.jpg')} />
   <Image style={styles.topImage} resizeMode='cover' source={require('./img/2.jpg')} />
 </Carousel>
-          <SegmentedView type='projector'>
+          <SegmentedView type='projector' onChange={(index) => this.refs.carousel.scrollToNextPage()}>
   <SegmentedView.Sheet title='质量检查' badge={1}>
     <View style={{alignItems: 'center'}}>
     <View style={{height:20}}/>

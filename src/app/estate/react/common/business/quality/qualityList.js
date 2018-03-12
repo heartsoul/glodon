@@ -8,11 +8,12 @@ import {ActivityIndicator, Animated, SectionList,FlatList,
      RefreshControl,Button,TouchableHighlight,TouchableOpacity} from "react-native";
 import * as API from "../service/api/api+quality"; 
 import QualityListCell from "./qualityListCell"; 
-import {SegmentedBar} from 'teaset';
+import {SegmentedBar, Drawer, Label} from 'teaset';
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
- 
+  
+//   drawer.close(); //如需要可代码手动关上抽屉
 export default class qualityList extends PureComponent {
     static navigationOptions =  {
         // const navigate = navigation || {};
@@ -51,6 +52,7 @@ export default class qualityList extends PureComponent {
             refreshing:true,
         }
     }
+    
     _keyExtractor = (item, index) => index;
     //网络请求
     fetchData = (qcState)=> {
