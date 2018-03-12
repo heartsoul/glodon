@@ -118,6 +118,7 @@ export default class extends React.Component {
           >
             <Text style={styles.style_fogotText}>》》质检清单 </Text>
           </TouchableHighlight>
+          <View style={{height:40}}/>
       <View style={{height:20}}/>
       <Button type={'primary'} size={'md'} onPress={() => alert('Hello world')} style={{height:50}} title="图纸"/>
       <View style={{height:20}}/>
