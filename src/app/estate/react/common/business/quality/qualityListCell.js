@@ -101,7 +101,8 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginTop: 6,
         marginLeft: 5,
-        color:'#FF0000'
+        color:'#FF0000',
+        elevation:100, // android
     },
     
     contentActionButton:{
@@ -125,15 +126,15 @@ const styles = StyleSheet.create({
         // borderWidth:1,
         // borderColor:"#0F0",
         // height:119,
-        marginTop: 5,
+        marginTop: 25,
         
         marginBottom: 5,
         marginLeft: 20,
         marginRight: 20,
         backgroundColor: '#FFF',
-        elevation:100, // android 
+        elevation:5, // android 
         shadowColor:"#333", // iOS
-        shadowOffset:{width:3,height:7}, // iOS
+       // shadowOffset:{width:3,height:7}, // iOS
         shadowOpacity:0.15, // iOS
         shadowRadius:3, // iOS
     },

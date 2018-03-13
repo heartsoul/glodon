@@ -188,22 +188,30 @@ const NSStringRNAPI RNAPI_callNative = @"callNative"; // 调用原生功能
 @end
 
 @interface GLDRNBridgeModule()
-@property(atomic,readonly,strong) NSMutableArray<NSStringRNAPI> * apiSet;
 @end
 
 @implementation GLDRNBridgeModule
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _apiSet = [NSMutableArray arrayWithObjects:RNAPI_version,RNAPI_alert,RNAPI_test,RNAPI_push,RNAPI_present,RNAPI_clearCookie,RNAPI_saveCookie,RNAPI_callNative,nil];
-    }
-    return self;
+NSArray* apiSet() {
+  static NSArray * apiSet;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    apiSet = @[RNAPI_version,RNAPI_alert,RNAPI_test,RNAPI_push,RNAPI_present,RNAPI_clearCookie,RNAPI_saveCookie,RNAPI_callNative];
+  });
+  return apiSet;
 }
 
+//- (instancetype)init
+//{
+//    self = [super init];
+//    if (self) {
+//        _apiSet = ;
+//    }
+//    return self;
+//}
+
+
 - (BOOL)isValidApi:(NSStringRNAPI)api {
-    return [_apiSet containsObject:api];
+    return [apiSet() containsObject:api];
 }
 
 + (void)api_excute:(NSDictionary *)dictionary finishBlock:(FinishJSApiBlock)finishBlock {

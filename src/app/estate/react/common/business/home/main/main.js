@@ -65,7 +65,15 @@ export default class extends React.Component {
     return (
       <View>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-      
+        <TouchableHighlight
+            onPress={this._loadQuality}
+            underlayColor="#0099f3"
+            activeOpacity={0.75}
+           // style={styles.style_fogotTextView}
+          >
+            <Text style={styles.style_fogotText}>》》质检清单 </Text>
+          </TouchableHighlight>
+          <View style={{height:40}}/>
       {/* <Text> ========================== </Text>
       <TouchableHighlight
             onPress={this._loadUserInfo}
@@ -138,12 +146,16 @@ export default class extends React.Component {
     </View>
   </SegmentedView.Sheet>
   <SegmentedView.Sheet title='材设进场'>
-    <View style={{alignItems: 'center',}}>
-    <View style={{height:20}}/>
-      <Button type={'primary'} size={'md'} style={{height:50}} title="材设清单"/>
-      <View style={{height:20}}/>
-      <Button type={'primary'} size={'md'} style={{height:50}} title="模型预览"/>
-    </View>
+  <View style={{height:20}}/>
+    <TouchableHighlight
+            onPress={this._loadQuality}
+            underlayColor="#0099f3"
+            activeOpacity={0.75}
+           // style={styles.style_fogotTextView}
+          >
+            <Text style={styles.style_fogotText}>》》质检清单 </Text>
+          </TouchableHighlight>
+          <View style={{height:40}}/>
   </SegmentedView.Sheet>
 </SegmentedView>
       </View>
