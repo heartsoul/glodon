@@ -188,11 +188,11 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
-        if (this.hasChoose()) {
+       // if (this.hasChoose()) {
             navigator.replace("HomePage");
-        } else {
-            navigator.replace("ChoosePage");
-        }
+       // } else {
+       //     navigator.replace("ChoosePage");
+       // }
     }
     
 }

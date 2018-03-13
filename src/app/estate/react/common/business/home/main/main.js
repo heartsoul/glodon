@@ -1,5 +1,5 @@
 'use strict';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,168 +8,144 @@ import {
   TouchableHighlight,
   Image,
 } from 'react-native';
-import {SegmentedView, Label,Projector,Button,Carousel} from 'teaset';
+import { SegmentedBar, Label, SegmentedView, Button, Carousel } from 'teaset';
 //import * as USERAPI from "../../login/api+user";
+import { NavigationPage } from 'teaset'
 import Swiper from "./mainSwiper";
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 export default class extends React.Component {
   static navigationOptions = {
     title: '首页',
-    headerTintColor:"#FFF",
-    headerStyle:{backgroundColor:"#00baf3"},
-    tabBarVisible:true
+    headerTintColor: "#FFF",
+    headerStyle: { backgroundColor: "#00baf3" },
+    tabBarVisible: true
   };
   constructor() {
-      super();
-    };
-    _loadUserInfo = () => {
-      let navigator = this.props.navigation;
-        
-          if (navigator) {
-            navigator.navigate("TenantList");
-          }
-    }
-    _loadProjectInfo = () => {
-      let navigator = this.props.navigation;
-        
-          if (navigator) {
-            navigator.navigate("ProjectList");
-          }
-    }
-    _loadQuality = () => {
-      let navigator = this.props.navigation;
-        
-          if (navigator) {
-            navigator.navigate("QualityMain");
-          }
-    }
-    
+    super();
+  };
+  _loadUserInfo = () => {
+    let navigator = this.props.navigation;
 
-    componentDidMount() {
-      //请求数据
-      this.fetchData();
+    if (navigator) {
+      navigator.navigate("TenantList");
+    }
   }
-  fetchData = ()=> {
+  _loadProjectInfo = () => {
+    let navigator = this.props.navigation;
+
+    if (navigator) {
+      navigator.navigate("ProjectList");
+    }
+  }
+  _loadQuality = () => {
+    let navigator = this.props.navigation;
+
+    if (navigator) {
+      navigator.navigate("QualityMain");
+    }
+  }
+
+
+  componentDidMount() {
+    //请求数据
+    this.fetchData();
+  }
+  fetchData = () => {
     console.log(global.storage.loadTenant);
     console.log(global.storage.loadProject);
 
-    if(global.storage.loadTenant && global.storage.loadProject) {
+    if (global.storage.loadTenant && global.storage.loadProject) {
 
     } else {
       // this._loadUserInfo();
     }
-    
+
+  }
+  scrollToPage = (index) => {
+    if(parseInt(''+index) != parseInt(''+this.refs.carousel.activeIndex)) {
+      this.refs.carousel.scrollToPage(index);
+    }
   }
   render() {
     return (
       <View>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-        <TouchableHighlight
-            onPress={this._loadQuality}
-            underlayColor="#0099f3"
-            activeOpacity={0.75}
-           // style={styles.style_fogotTextView}
-          >
-            <Text style={styles.style_fogotText}>》》质检清单 </Text>
-          </TouchableHighlight>
-          <View style={{height:40}}/>
-      {/* <Text> ========================== </Text>
-      <TouchableHighlight
-            onPress={this._loadUserInfo}
-            underlayColor="#0099f3"
-            activeOpacity={0.75}
-           // style={styles.style_fogotTextView}
-          >
-            <Text style={styles.style_fogotText}>》》选择租户 </Text>
-          </TouchableHighlight>
-          <Text> ========================== </Text>
-          <Text> ========================== </Text>
-          <TouchableHighlight
-            onPress={this._loadProjectInfo}
-            underlayColor="#0099f3"
-            activeOpacity={0.75}
-           // style={styles.style_fogotTextView}
-          >
-            <Text style={styles.style_fogotText}>》》选择项目 </Text>
-          </TouchableHighlight>
-          <Text> ========================== </Text>
-          <Text> ========================== </Text>
-          <TouchableHighlight
-            onPress={this._loadQuality}
-            underlayColor="#0099f3"
-            activeOpacity={0.75}
-           // style={styles.style_fogotTextView}
-          >
-            <Text style={styles.style_fogotText}>》》质检清单 </Text>
-          </TouchableHighlight>
-          <Text> ========================== </Text> */}
-          {/* <Projector style={{height: 238}} index={0}>
-  {this.renderSlide('#dff0d8')}
-  {this.renderSlide('#d9edf7')}
-  {this.renderSlide('#fcf8e3')}
-  {this.renderSlide('#f2dede')}
-</Projector> */}
-<Carousel ref={'carousel'} style={{height: 238}} carousel={false} scrollEnabled={false}>
-  <Image style={styles.topImage} resizeMode='cover' source={require('./img/1.jpg')} />
-  <Image style={styles.topImage} resizeMode='cover' source={require('./img/2.jpg')} />
-</Carousel>
-          <SegmentedView type='projector' onChange={(index) => this.refs.carousel.scrollToNextPage()}>
-  <SegmentedView.Sheet title='质量检查' badge={1}>
-    <View style={{alignItems: 'center'}}>
-    <View style={{height:20}}/>
-    <TouchableHighlight
-            onPress={this._loadQuality}
-            underlayColor="#0099f3"
-            activeOpacity={0.75}
-           // style={styles.style_fogotTextView}
-          >
-            <Text style={styles.style_fogotText}>》》质检清单 </Text>
-          </TouchableHighlight>
-          <View style={{height:40}}/>
-      <View style={{height:20}}/>
-      <Button type={'primary'} size={'md'} onPress={() => alert('Hello world')} style={{height:50}} title="图纸"/>
-      <View style={{height:20}}/>
-      <Button type={'primary'} size={'md'} style={{height:50}} title="模型"/>
-      <View style={{height:20}}/>
-      <Button type={'primary'} size={'md'} style={{height:50}} title="质检项目"/>
-      <View style={{height:20}}/>
-      <TouchableHighlight
-            onPress={this._loadUserInfo}
-            underlayColor="#0099f3"
-            activeOpacity={0.75}
-           // style={styles.style_fogotTextView}
-          >
-            <Text style={styles.style_fogotText}>》》选择租户 </Text>
-          </TouchableHighlight>
-
-    </View>
-  </SegmentedView.Sheet>
-  <SegmentedView.Sheet title='材设进场'>
-  <View style={{height:20}}/>
-    <TouchableHighlight
-            onPress={this._loadQuality}
-            underlayColor="#0099f3"
-            activeOpacity={0.75}
-           // style={styles.style_fogotTextView}
-          >
-            <Text style={styles.style_fogotText}>》》质检清单 </Text>
-          </TouchableHighlight>
-          <View style={{height:40}}/>
-  </SegmentedView.Sheet>
-</SegmentedView>
+        <Carousel ref={'carousel'} style={{ height: 238 }} carousel={false} scrollEnabled={false}>
+          <Image style={styles.topImage} resizeMode='cover' source={require('./img/1.jpg')} />
+          <Image style={styles.topImage} resizeMode='cover' source={require('./img/2.jpg')} />
+        </Carousel>
+        <SegmentedView style={{flex: 0,height:400}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
+          <SegmentedView.Sheet title='质量检查'>
+          <View style={styles.tabContent}>
+            <Button type={'primary'} size={'md'} onPress={() => this._loadQuality()} style={{ height: 50, marginBottom:40}} title="质检清单" />
+            <View style={styles.spliteItem} />
+            <Button type={'primary'} size={'md'} onPress={() => this._loadQuality()} style={{ height: 50 }} title="图纸" />
+            <View style={styles.spliteItem} />
+            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="模型" />
+            <View style={styles.spliteItem} />
+            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="质检项目" />
+            <View style={styles.spliteItem} />
+            <Button type={'primary'} size={'md'} onPress={() => this._loadUserInfo()} style={{ height: 50 }} title="选择租户" />
+          </View>
+          </SegmentedView.Sheet>
+          <SegmentedView.Sheet title='材设进场'>
+          <View style={styles.tabContent}>
+            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="模型" />
+            <View style={styles.spliteItem} />
+            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="质检项目" />
+          </View>
+          </SegmentedView.Sheet>
+        </SegmentedView>
+        {/* <SegmentedBar onChange={(index) => { this.scrollToPage(index) }} justifyItem='scrollable'>
+          <SegmentedBar.Item title='质量检查' />
+          <SegmentedBar.Item title='材设进场' />
+        </SegmentedBar>
+        <Carousel ref={'carouselContent'} style={{ height: 238 }} onChange={(index) => this.scrollToPage(index)} carousel={false} scrollEnabled={false}>
+          <View style={styles.tabContent}>
+            <Button type={'primary'} size={'md'} onPress={() => this._loadQuality()} style={{ height: 50 }} title="质检清单" />
+            <View style={styles.spliteItem} />
+            <Button type={'primary'} size={'md'} onPress={() => this._loadQuality()} style={{ height: 50 }} title="图纸" />
+            <View style={styles.spliteItem} />
+            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="模型" />
+            <View style={styles.spliteItem} />
+            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="质检项目" />
+            <View style={styles.spliteItem} />
+            <Button type={'primary'} size={'md'} onPress={() => this._loadUserInfo()} style={{ height: 50 }} title="选择租户" />
+          </View>
+          <View style={styles.tabContent}>
+            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="模型" />
+            <View style={styles.spliteItem} />
+            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="质检项目" />
+          </View>
+        </Carousel> */}
       </View>
-      
+
     );
   }
 };
 
 var styles = StyleSheet.create({
   style_fogotText: {
-    color:'green',
+    color: 'green',
   },
-  topImage:{
-    width: width, 
+  topImage: {
+    width: width,
     height: 238,
-  }
+  },
+  spliteItem: {
+    width: 10,
+  },
+  tabContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent:'flex-start',
+    // flex: 1,
+    marginLeft: 20,
+    marginTop: 40,
+    marginRight: 20,
+    marginBottom: 40
+  },
+
 });

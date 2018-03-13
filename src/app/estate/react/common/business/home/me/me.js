@@ -9,7 +9,8 @@ import {
   SafeAreaView
 } from 'react-native';
 import * as USERAPI from "../../../login/api+user";
-export default class extends React.Component {
+import {NavigationPage} from 'teaset'
+export default class extends NavigationPage {
   static navigationOptions = {
     title: '我',
     headerTintColor:"#FFF",

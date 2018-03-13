@@ -277,11 +277,11 @@ const styles = StyleSheet.create({
         height:60,
         marginTop: 5,
         
-        marginBottom: 5,
+        marginBottom: 10,
         marginLeft: 40,
         marginRight: 40,
         backgroundColor: '#FFF',
-        elevation:100, // android 
+        elevation:5, // android 
         shadowColor:"#333", // iOS
         shadowOffset:{width:3,height:7}, // iOS
         shadowOpacity:0.15, // iOS

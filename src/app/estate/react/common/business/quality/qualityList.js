@@ -208,20 +208,6 @@ export default class qualityList extends PureComponent {
                     <SegmentedBar.Item title='已延迟' />
                     <SegmentedBar.Item title='已验收' />
                 </SegmentedBar>
-
-
-        {/* <ScrollView pagingEnabled={false}
-        horizontal={true} style={styles.contentHeader} >
-        <Button style={styles.headerButton} color={this.state.qcState==''?'#00baf3' : '#333333'} onPress={()=>this._onFilter('')} title="全部" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='staged'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('staged')} title="待提交" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='unrectified'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('unrectified')} title="待整改" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='unreviewed'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('unreviewed')} title="待复查" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='inspected'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('inspected')} title="已检查" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='reviewed'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('reviewed')} title="已复查" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='delayed'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('delayed')} title="已延迟" ></Button>
-        <Button style={styles.headerButton} color={this.state.qcState=='accepted'?'#00baf3' : '#333333'} onPress={()=>this._onFilter('accepted')} title="已验收" ></Button>
-        </ScrollView > */}
-        {/* var sectionList; */}
                 <AnimatedSectionList
                     ref = 'sectionList'
                     sections={this.state.sectionArray}
