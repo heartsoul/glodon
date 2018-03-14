@@ -1,8 +1,23 @@
 import React from 'react';
 import { Button, View, Text, Image } from 'react-native';
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'; // 1.0.0-beta.27
-import { TabView} from 'teaset'
-
+import { TabView,Theme} from 'teaset'
+//Theme.set(Theme.themes.black);
+const primaryColor = '#00baf3';
+Theme.set({
+    primaryColor: primaryColor,
+    btnPrimaryColor:primaryColor,
+    btnPrimaryBorderColor: primaryColor,
+    sbBtnActiveTitleColor: primaryColor,
+  // sbBtnActiveTextFontSize: 13,
+    sbIndicatorLineColor: primaryColor,
+    tvBarBtnIconTintColor: '#8f8f8f',
+    tvBarBtnIconActiveTintColor: primaryColor,
+    tvBarBtnTitleColor: '#8f8f8f',
+    // tvBarBtnTextFontSize: 10,
+    tvBarBtnActiveTitleColor: primaryColor,
+    // backButtonTitle: '返回',
+  });
 import MainTab from './main/main';
 import MeTab from './me/me';
 import MessageTab from './message/message';

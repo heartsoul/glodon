@@ -9,6 +9,7 @@ import Storage from 'react-native-storage';
 export default class BaseStorage {
     constructor() {
         super.constructor();
+       
         this.storage = new Storage({
             // 最大容量，默认值1000条数据循环存储
             size: 1000,

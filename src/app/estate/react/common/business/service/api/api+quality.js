@@ -59,10 +59,10 @@ function demoData(size){
     }
     return ret;
 }
-
+// var dataLast =  {"data":{"content":demoData(1000),'last':false}};
 export async function getQualityInspectionAll(projectId,qcState,page, size) {
-     return {"data":{"content":demoData(1000),'last':false}};
-
+    //  return {"data":{"content":demoData(1000),'last':false}};
+   // return dataLast;
     let api = "/quality/"+projectId+"/qualityInspection/all";
     return requestJSON(api + '?sort=updateTime,desc&page=' + page + '&size=' + size +"&qcState="+qcState, {
         method: 'GET',

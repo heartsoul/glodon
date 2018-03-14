@@ -5,8 +5,10 @@
 import React, {Component,} from "react";
 import {ActivityIndicator, Animated, FlatList,SectionList, 
     ScrollView, StyleSheet, 
-    Text, View,StatusBar,Image,TouchableHighlight,RefreshControl} from "react-native";
+    Text, View,StatusBar,Image,TouchableOpacity,RefreshControl} from "react-native";
 import * as USERAPI from "../../../login/api+user"; 
+var Dimensions = require("Dimensions");
+var { width, height } = Dimensions.get("window");
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 export default class projectList extends Component {
     static navigationOptions = {
@@ -155,11 +157,11 @@ export default class projectList extends Component {
     renderItemView = ({item,index}) => {
         const _ = this;
         return (
-            <TouchableHighlight key={index} activeOpacity={0.5} onPress={()=>_._itemClick(item,index)}>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={()=>_._itemClick(item,index)}>
             <View style={styles.containerView}>
                  <Text style={styles.content}> {item.value.name}</Text>
             </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         );
     }
 
@@ -167,14 +169,16 @@ export default class projectList extends Component {
     renderItemSimpleView = ({item,index}) => {
         const _ = this;
         return (
-            <TouchableHighlight key={index} activeOpacity={0.5} onPress={()=>_._itemClick(item,index)}>
             <View style={styles.containerSimpleView}>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={()=>_._itemClick(item,index)}>
+            <View>
              <Image
           source={require("../../../res/images/icon_choose_project_item.png")}
           style={styles.image}/> 
                  <Text style={styles.contentSimple}> {item.value.name}</Text>
+                 </View>
+            </TouchableOpacity>
             </View>
-            </TouchableHighlight>
         );
     }
     _onEndReached = () => {
@@ -211,9 +215,9 @@ export default class projectList extends Component {
     }
     renderData = () => {
         return (
-            <View style={{backgroundColor:"#FFFFFF"}}>
+            <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <FlatList
+                <FlatList style={{width:width}}
                     data={this.state.dataArray}
                     renderItem={this.renderItemView}
                     ItemSeparatorComponent={this._separator}
@@ -233,10 +237,10 @@ export default class projectList extends Component {
 
     renderDataSimple = () => {
         return (
-            <View >
+            <View style={styles.container}>
                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         <Text style={{color:"transparent",height:30}}> 项目列表 </Text>
-                <AnimatedFlatList
+                <AnimatedFlatList style={{width:width}}
                     data={this.state.dataArray}
                     renderItem={this.renderItemSimpleView}
                 />

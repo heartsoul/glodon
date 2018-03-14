@@ -194,6 +194,9 @@ export default class qualityList extends PureComponent {
         this.setState({qcState:API.CLASSIFY_STATES[index]});
         this._onRefresh();
     }
+    _emptyView= ()=>{
+        return (<View style={{alignItems:'center',justifyContent:'center',height:height-44-20-49}}><Text style={{color:'gray'}}>暂无数据</Text></View>);
+    }
     renderData() {
         return (
             <View style={styles.contentList}>
@@ -220,10 +223,12 @@ export default class qualityList extends PureComponent {
                             refreshing={this.state.refreshing}
                         />
                     }
+                    stickySectionHeadersEnabled={false}
                     onRefresh={this._onRefresh}
                     refreshing={this.state.refreshing}
                     onEndReached={this._onEndReached}
                     onEndReachedThreshold={1}
+                    ListEmptyComponent={this._emptyView}
                 />
                 {/* <TouchableOpacity style={styles.topBtn} onPress={() => this.refs.sectionList.scrollToIndex({animated: true, viewPosition: 0, index: 0})}
         >
