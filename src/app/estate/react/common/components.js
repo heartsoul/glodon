@@ -13,6 +13,7 @@ import SubscribePage from './business/home/subscriptions/subscribe';
 import TenantPage from './business/navigation/tenant/tenantSimpleList';
 import ProjectPage from './business/navigation/project/projectList';
 import QualityMainPage from './business/quality/qualityMain';
+import WebPage from './business/home/new/webView';
 var GlodonRN = {
     GuidePage,
     LoginPage,
@@ -27,6 +28,7 @@ var GlodonRN = {
     TenantPage,
     ProjectPage,
     QualityMainPage,
+    WebPage,
 };
 
 module.exports = GlodonRN;

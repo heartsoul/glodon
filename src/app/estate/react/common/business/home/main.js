@@ -158,7 +158,7 @@ class Page extends React.Component {
           </View>
         }
         iconContainerStyle={{ justifyContent: 'flex-end' }}
-        onPress={() => alert('Custom button press')}
+        onPress={() => global.storage.pushNext(null,'WebPage')}
       />
 
       <TabView.Sheet

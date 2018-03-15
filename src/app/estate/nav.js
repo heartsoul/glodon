@@ -8,7 +8,7 @@ import { StackNavigator } from 'react-navigation'; // 1.0.0-beta.27
 // import TestPage from './react/common/business/home/test'
 // import BaseStorage from './react/common/base/store+base'
 // import ChoosePage from './react/common/business/navigation/chooseHome'
-import {LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage} from './react/common/components'
+import {LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage,WebPage} from './react/common/components'
 class HomeScreen extends React.Component {
   render() {
     return (
@@ -65,6 +65,10 @@ const RootStack = StackNavigator(
     QualityMainPage: {
       screen : QualityMainPage
     },
+    WebPage: {
+      screen : WebPage
+    },
+    
   },
   {
     initialRouteName: global.storage.isGuide() ? 'Guide' : 'Login',
