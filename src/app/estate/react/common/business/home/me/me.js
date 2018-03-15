@@ -29,6 +29,9 @@ export default class extends NavigationPage {
       });
 
     }
+    _goto=()=>{
+      
+    }
   render() {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
@@ -36,6 +39,7 @@ export default class extends NavigationPage {
       <View>
       <Text> 我 </Text>
       <Button title="退出" onPress={()=>{this._logout()}}></Button>
+      <Button title="测试" onPress={()=>{this._goto()}}></Button>
       </View>
       </SafeAreaView>
     );

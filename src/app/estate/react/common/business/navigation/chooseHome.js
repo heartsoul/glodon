@@ -15,7 +15,7 @@ const RootStack = StackNavigator(
     },
     {
       initialRouteName: 'TenantList',
-      headerMode:"screen",
+      headerMode:"none",
     }
   );
   export default class extends React.Component {

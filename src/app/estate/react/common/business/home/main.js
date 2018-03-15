@@ -1,24 +1,30 @@
 import React from 'react';
 import { Button, View, Text, Image } from 'react-native';
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'; // 1.0.0-beta.27
-import { TabView,Theme} from 'teaset'
+import { TabView,Theme,BasePage, NavigationPage,TeaNavigator} from 'teaset'
 //Theme.set(Theme.themes.black);
 const primaryColor = '#00baf3';
 Theme.set({
-    primaryColor: primaryColor,
-    btnPrimaryColor:primaryColor,
-    btnPrimaryBorderColor: primaryColor,
-    sbBtnActiveTitleColor: primaryColor,
+  primaryColor: primaryColor,
+  btnPrimaryColor: primaryColor,
+  btnPrimaryBorderColor: primaryColor,
+  sbBtnActiveTitleColor: primaryColor,
   // sbBtnActiveTextFontSize: 13,
-    sbIndicatorLineColor: primaryColor,
-    tvBarBtnIconTintColor: '#8f8f8f',
-    tvBarBtnIconActiveTintColor: primaryColor,
-    tvBarBtnTitleColor: '#8f8f8f',
-    // tvBarBtnTextFontSize: 10,
-    tvBarBtnActiveTitleColor: primaryColor,
-    // backButtonTitle: '返回',
+  sbIndicatorLineColor: primaryColor,
+  tvBarBtnIconTintColor: '#8f8f8f',
+  tvBarBtnIconActiveTintColor: primaryColor,
+  tvBarBtnTitleColor: '#8f8f8f',
+  // tvBarBtnTextFontSize: 10,
+  tvBarBtnActiveTitleColor: primaryColor,
+  // backButtonTitle: '返回',
+  navColor: primaryColor,
+  // navTintColor: '#fff',
+  // navTitleColor: '#fff',
+  // navTitleFontSize: 18,
+  // navButtonFontSize: 15,
+  navSeparatorColor: primaryColor,
   });
-import MainTab from './main/main';
+import HomeTab from './home/home';
 import MeTab from './me/me';
 import MessageTab from './message/message';
 import SubscribeTab from './subscriptions/subscribe';
@@ -64,10 +70,32 @@ const MeNav = StackNavigator(
   }
 );
 
+class MinePage extends NavigationPage {
+  static defaultProps = {
+    ...NavigationPage.defaultProps,
+    title: '我',
+    showBackButton: false,
+  };
+  renderPage(){
+    return <MeTab />
+  }
+}
+
+class HomePage extends NavigationPage {
+  static defaultProps = {
+    ...NavigationPage.defaultProps,
+    title: '首页',
+    showBackButton: false,
+  };
+  renderPage(){
+    return <HomeTab />
+  }
+}
+
 const MainNav = StackNavigator(
   {
     AAAA: {
-      screen: MainTab,
+      screen: HomeTab,
       title: "首页"
     },
     TenantList: {
@@ -89,16 +117,7 @@ const MainNav = StackNavigator(
   }
 );
 
-export default class homePage extends React.Component {
-  static navigationOptions = {
-    title: '首页',
-    tabBarVisible: false,
-    headerTintColor: "#FFF",
-    headerStyle: { backgroundColor: "#00baf3" },
-  }
-  componentDidMount = () => {
-    global.storage.homeNavigation = this.props.navigation;
-  }
+class Page extends React.Component {
   render() {
     return (<TabView style={{ flex: 1 }} type='projector'>
       <TabView.Sheet
@@ -106,7 +125,7 @@ export default class homePage extends React.Component {
         icon={require('../../res/images/home/icon_main_main_page.png')}
         activeIcon={require('../../res/images/home/icon_main_page_selected.png')}
       >
-        <MainNav />
+        <HomePage />
       </TabView.Sheet>
       <TabView.Sheet
         title='订阅'
@@ -156,9 +175,38 @@ export default class homePage extends React.Component {
         activeIcon={require('../../res/images/home/icon_main_mine_selected.png')}
       // badge={'new'}
       >
-        <MeNav />
+        <TeaNavigator rootView={<MinePage />} />
       </TabView.Sheet>
     </TabView>);
   }
+}
+const PPNav = StackNavigator(
+  {
+    PPPP: {
+      screen: Page,
+      title: "xxxx"
+    },
+  },
+  {
+    initialRouteName: 'PPPP',
+    headerMode: "none",
+  }
+);
+export default class mainPage extends React.Component {
+  static navigationOptions = {
+    title: '首页',
+    tabBarVisible: false,
+    headerTintColor: "#FFF",
+    headerStyle: { backgroundColor: "#00baf3" },
+    header: null
+  }
+  componentDidMount = () => {
+    global.storage.homeNavigation = this.props.navigation;
+    global.storage.page = this.refs.page;
+  }
+  render() {
+    return <Page ref={'page'}/>;
+  }
+  
 };
 

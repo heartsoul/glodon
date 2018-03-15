@@ -11,10 +11,9 @@ import {
 import { SegmentedBar, Label, SegmentedView, Button, Carousel } from 'teaset';
 //import * as USERAPI from "../../login/api+user";
 import { NavigationPage } from 'teaset'
-import Swiper from "./mainSwiper";
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
-export default class extends React.Component {
+export default class extends NavigationPage {
   static navigationOptions = {
     title: '首页',
     headerTintColor: "#FFF",
@@ -25,25 +24,27 @@ export default class extends React.Component {
     super();
   };
   _loadUserInfo = () => {
-    let navigator = this.props.navigation;
-
-    if (navigator) {
-      navigator.navigate("TenantList");
-    }
+     let navigator = this.props.navigation;
+    // if (navigator) {
+    //   navigator.navigate("TenantList");
+    // }
+    global.storage.pushNext(navigator,"TenantPage")
   }
   _loadProjectInfo = () => {
     let navigator = this.props.navigation;
 
-    if (navigator) {
-      navigator.navigate("ProjectList");
-    }
+    // if (navigator) {
+    //   navigator.navigate("ProjectList");
+    // }
+    global.storage.pushNext(navigator,"ProjectPage")
   }
   _loadQuality = () => {
     let navigator = this.props.navigation;
 
-    if (navigator) {
-      navigator.navigate("QualityMain");
-    }
+    // if (navigator) {
+    //   navigator.navigate("QualityMain");
+    // }
+    global.storage.pushNext(navigator,"QualityMainPage")
   }
 
 

@@ -121,10 +121,9 @@ export default class tenantSimpleList extends Component {
         //   alert(item.value.tenantId);
          USERAPI.setCurrentTenant(item.value.tenantId).then((responseData)=>{
             let navigator = this.props.navigation;
-        global.storage.saveTenant(item.value.tenantId);
-          if (navigator) {
-            navigator.navigate("ProjectList");
-          }
+             global.storage.saveTenant(item.value.tenantId);
+             global.storage.pushNext(navigator, "ProjectPage")
+
          });
     }
     //返回itemView

@@ -2,206 +2,75 @@
  * Created by JokAr on 2017/4/12.
  */
 'use strict';
-import React, {Component,PureComponent} from "react";
-import {ActivityIndicator, Animated, SectionList,FlatList,
-     ScrollView, StyleSheet, Text, View,StatusBar,Image,
-     RefreshControl,Button,TouchableHighlight,TouchableOpacity} from "react-native";
-import * as API from "../service/api/api+quality"; 
-import QualityListCell from "./qualityListCell"; 
-import {SegmentedBar, Drawer, Label} from 'teaset';
+import React, { Component, PureComponent } from "react";
+import {
+    ActivityIndicator, Animated, SectionList, FlatList,
+    ScrollView, StyleSheet, Text, View, StatusBar, Image,
+    RefreshControl, Button, TouchableHighlight, TouchableOpacity
+} from "react-native";
+import { LargeList } from "react-native-largelist";
+import * as API from "../service/api/api+quality";
+import QualityListCell from "./qualityListCell";
+import QualityListView from "./qualityListView";
+import { SegmentedBar,SegmentedView, Drawer, Label } from 'teaset';
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
-  
+
 //   drawer.close(); //如需要可代码手动关上抽屉
 export default class qualityList extends PureComponent {
-    static navigationOptions =  {
-        // const navigate = navigation || {};
-    //   gotoS = ()=> {
-    //     console.log(global.storage.qualityNavigation);
-    //     console.log(navigation);
-    //     global.storage.qualityNavigation.navigate('DrawerToggle');
-    //   }
-    //   return {
+    static navigationOptions = {
         title: '质检清单',
-          tabBarVisible:false,
-          headerTintColor:"#FFF",
-          headerStyle:{backgroundColor:"#00baf3"},
-          gesturesEnabled:false,
-        headerRight: (
-          <Button onPress={()=>console.log(navigation)} title="搜索" color="#fff" />
-        ),
-    //   };
-      };
-    //   componentDidMount = () => {
-    //     global.storage.qualityNavigation = this.props.navigation;
-    //   }
+        tabBarVisible: false,
+        headerTintColor: "#FFF",
+        headerStyle: { backgroundColor: "#00baf3" },
+        gesturesEnabled: false,
+    };
+    
 
     constructor(props) {
         super(props);
+        
         this.state = {
-            isLoading: true,
             //网络请求状态
             error: false,
             errorInfo: "",
-            dataArray: [],
-            sectionArray:[],
-            qcState:'',
-            currentPage:0,
-            hasMore:true,
-            refreshing:true,
-        }
-    }
-    
-    _keyExtractor = (item, index) => index;
-    //网络请求
-    fetchData = (qcState)=> {
-        this._fetchData(qcState, 0);
-    }
-    //网络请求
-    _fetchData = (qcState,page)=> {
-        // 这个是js的访问网络的方法
-        API.getQualityInspectionAll(global.storage.loadProject(),qcState, page,35).then(
-            (responseData) => {
-                let data = responseData.data.content;
-                let hasData = responseData.data.last == false;
-                let dataBlob = [];
-                let groupMap = new Map();
-                let i = 0,j=0;
-                let sectionLob = [];
-                if(page !=0) {
-                    groupMap = this.state.groupMap;
-                }
-                data.forEach(item => {
-                    item.showTime = ""+ API.formatUnixtimestamp(item.updateTime);
-                    item.index = i;
-                    item.qcStateShow = ""+API.toQcStateShow(item.qcState);
-                    if(item.files && item.files.size > 0) {
-                        item.url = item.files[0].url;
-                       // console.log(item.url);
-                    }
-                    let groupTime = item.showTime.substring(0,10);
-                    let dataBlob = groupMap.get(groupTime);
-                    if(dataBlob == undefined) {
-                        dataBlob = [];
-                        groupMap.set(groupTime,dataBlob);
-                    }
-                    dataBlob.push({
-                        key: ""+item.id,
-                        value: item,
-                    });
-                    i++;
-                });
-            
-                groupMap.forEach(function (value, key, map) {
-                    sectionLob.push({
-                        key: key,
-                        data: value,
-                    });
-                 });
-
-                this.setState({
-                    //复制数据源
-                    sectionArray: sectionLob,
-                    groupMap:groupMap,
-                    isLoading: false,
-                    refreshing:false,
-                    currentPage:page + 1,
-                    hasMore:hasData
-                });
-                data = null;
-                dataBlob = null;
-                sectionLob = null;
-                groupMap = null;
-            }
-        );
-    }
-
-    componentDidMount() {
-        //请求数据
-        this._onRefresh();
-        global.storage.qualityNavigation = this.props.navigation;
-    }
-
-    //加载等待的view
-    renderLoadingView() {
-        return (
-            <View style={styles.container}>
-            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <ActivityIndicator
-                    animating={true}
-                    style={[styles.gray, {height: 80}]}
-                    color='green'
-                    size="large"
-                />
-            </View>
-        );
-    }
-
-    //加载失败view
-    renderErrorView(error) {
-        return (
-            <View style={styles.container}>
-            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <Text>
-                    Fail: {error}
-                </Text>
-            </View>
-        );
-    }
-    
-    //返回itemView
-    renderItemView=({item,index})=> {
-        return (
-            <QualityListCell item={item} index={index} />
-        );
-    }
-    _sectionComp = (info) => {
-        var txt = info.section.key;
-        return <View style={styles.groupHeaderView}>
-            <View style={styles.headerLine}></View> 
-        <Text
-            style={styles.groupTitle}>{txt}</Text>
-            </View>
-    }
-    _onFilter = (qcState) => {
-        this.setState({
-            refreshing: true,
-            currentPage:0,
-            hasMore:true,
-            qcState:qcState,
+            qcState: '',
             isLoading:true,
-        });
-        this.fetchData(qcState);
+            activeIndex:0,
+            qualityView: [{},{},{},{},{},{},{},{}],
+           }
     }
-    _onEndReached = () => {
-        if(this.state.refreshing || this.state.isLoading||this.state.hasMore == false) {
-            return;
-        }
-        this.setState({
-            refreshing: true,
-        });
-        this._fetchData(this.state.qcState,this.state.currentPage);
+    _keyExtractor = (item, index) => index;
+  
+    componentDidMount=()=> {
+        //请求数据
+        // this._onRefresh();
+        global.storage.qualityNavigation = this.props.navigation;
+        // this.refs.sectionList.fetchData(API.CLASSIFY_STATES[0]);
+        // this._onSegmentedBarChange(0);
     }
-    _onRefresh = () => {
-        // this.setState({
-        //     refreshing: true,
-        //     currentPage:0,
-        // });
-        this._onFilter(this.state.qcState);
+
+    _onSegmentedBarChange = (index) => {
+        this.setState({activeIndex:index});
+        this.state.qualityView[index].fetchData(API.CLASSIFY_STATES[index]);
     }
-    _onSegmentedBarChange= (index)=>{
-        this.setState({qcState:API.CLASSIFY_STATES[index]});
-        this._onRefresh();
-    }
-    _emptyView= ()=>{
-        return (<View style={{alignItems:'center',justifyContent:'center',height:height-44-20-49}}><Text style={{color:'gray'}}>暂无数据</Text></View>);
+    _toTop = () =>{
+        // this.state.sectionList.scrollToOffset({animated: true, offset:0});
     }
     renderData() {
+           
         return (
-            <View style={styles.contentList}>
+            <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <SegmentedBar onChange={(index) => this._onSegmentedBarChange(index)} justifyItem='scrollable'>
+                {/* <SegmentedBar style={styles.contentHeader} ref = {'segmentedBar'} onChange={(index) => this._onSegmentedBarChange(index)} justifyItem='scrollable'>
+                   {
+                    //    API.CLASSIFY_NAMES.map((item,index)=>{
+                    //        return (
+                    //         <SegmentedBar.Item key={item} title={item} />
+                    //        );
+                    //    })
+                   }
                     <SegmentedBar.Item title='全部' />
                     <SegmentedBar.Item badge={29} title='待提交' />
                     <SegmentedBar.Item badge={5} title='待整改' />
@@ -210,28 +79,23 @@ export default class qualityList extends PureComponent {
                     <SegmentedBar.Item title='已复查' />
                     <SegmentedBar.Item title='已延迟' />
                     <SegmentedBar.Item title='已验收' />
+
                 </SegmentedBar>
-                <AnimatedSectionList
-                    ref = 'sectionList'
-                    sections={this.state.sectionArray}
-                    renderItem={this.renderItemView}
-                    // keyExtractor={this._keyExtractor}
-                    renderSectionHeader={this._sectionComp}
-                   // ItemSeparatorComponent={this._separator}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.state.refreshing}
-                        />
-                    }
-                    stickySectionHeadersEnabled={false}
-                    onRefresh={this._onRefresh}
-                    refreshing={this.state.refreshing}
-                    onEndReached={this._onEndReached}
-                    onEndReachedThreshold={1}
-                    ListEmptyComponent={this._emptyView}
-                />
-                {/* <TouchableOpacity style={styles.topBtn} onPress={() => this.refs.sectionList.scrollToIndex({animated: true, viewPosition: 0, index: 0})}
-        >
+                <QualityListView  ref='sectionList'  qcState = {''} />  */}
+                <SegmentedView style={{flex:1}} justifyItem={'scrollable'} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}> 
+                 {
+                       API.CLASSIFY_STATUS_LIST.map((item,index)=>{
+                           return (
+                               <SegmentedView.Sheet key={item.name} title={item.name}>
+                                <QualityListView ref={ (e) => {
+                                    this.state.qualityView[index] = e
+                                    } } style={{flex:1}} qcState={''+item.state} loadData={index ==0 ? true: false} /> 
+                            </SegmentedView.Sheet>
+                           );
+                       })
+                   }
+           </SegmentedView>
+                {/* <TouchableOpacity style={styles.topBtn} onPress={this._toTop.bind(this)}>
             <Text style={styles.topBtnText}>置顶</Text>
       </TouchableOpacity> */}
             </View>
@@ -239,45 +103,51 @@ export default class qualityList extends PureComponent {
     }
 
     render() {
-        //第一次加载等待的view
-        // if (this.state.isLoading && !this.state.error) {
-        //     return this.renderLoadingView();
-        // } else 
-        if (this.state.error) {
-            //请求失败view
-            return this.renderErrorView(this.state.errorInfo);
-        }
         //加载数据
         return this.renderData();
     }
 }
 
 const styles = StyleSheet.create({
-    contentHeader:{},
-    contentList:{},
-    gray:{
-        top:100,
-        left:width/2 - 30,
-        position:'absolute',
+    contentHeader: {
+        // flex:1,
+        height:30,
+        top:0,
     },
-    topBtn:{
-        width:50,
-        height:25,
-        backgroundColor:'#0007',
-        borderRadius:8,
-        justifyContent:'center',
-        alignItems:'center',
-        top:height-100,
-        left:width - 60,
-        position:'absolute',
+    contentList: {
+     flex:1,
+         backgroundColor:'#ffffff',
+        //  height:120,
     },
-    topBtnText:{
-        fontSize:12,
-        color:'#fff'
+    dataList: {
+        // flex: 1,
+        top:0, 
+        height:height,
+        backgroundColor:'green',
     },
-    headerButton:{
-        color:'#333333',
-        fontSize:14,
+    gray: {
+        top: 100,
+        left: width / 2 - 30,
+        position: 'absolute',
+    },
+    topBtn: {
+        width: 50,
+        height: 25,
+        backgroundColor: '#0007',
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        top: height - 100,
+        left: width - 60,
+        position: 'absolute',
+    },
+    topBtnText: {
+        fontSize: 12,
+        color: '#fff'
+    },
+    headerButton: {
+        color: '#333333',
+        fontSize: 14,
     },
     container: {
         flex: 1,
@@ -287,45 +157,45 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
         // height:180
     },
-    containerView:{
+    containerView: {
         flex: 1,
-        borderRadius:8,
+        borderRadius: 8,
         // borderWidth:1,
         // borderColor:"#0F0",
         // height:119,
         marginTop: 5,
-        
+
         marginBottom: 5,
         marginLeft: 20,
         marginRight: 20,
         backgroundColor: '#FFF',
-        elevation:100, // android 
-        shadowColor:"#333", // iOS
-        shadowOffset:{width:3,height:7}, // iOS
-        shadowOpacity:0.15, // iOS
-        shadowRadius:3, // iOS
+        elevation: 100, // android 
+        shadowColor: "#333", // iOS
+        shadowOffset: { width: 3, height: 7 }, // iOS
+        shadowOpacity: 0.15, // iOS
+        shadowRadius: 3, // iOS
     },
-   
+
     groupHeaderView: {
         // backgroundColor:'#eee',
-        height:40,
+        height: 40,
     },
     headerLine: {
-        backgroundColor:'#999',
-        height:1,
-         top: 19,
-         marginLeft:20,
-         marginRight:20,
+        backgroundColor: '#999',
+        height: 1,
+        top: 19,
+        marginLeft: 20,
+        marginRight: 20,
     },
     groupTitle: {
-        height: 20, 
-        textAlign: 'center', 
-        textAlignVertical: 'center', 
-        color: '#999', 
+        height: 20,
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        color: '#999',
         fontSize: 14,
         width: 100,
-        top:10,
-        left:width/2-50,
-        backgroundColor:'#ededed',
+        top: 10,
+        left: width / 2 - 50,
+        backgroundColor: '#ededed',
     }
 });

@@ -59,10 +59,10 @@ function demoData(size){
     }
     return ret;
 }
-// var dataLast =  {"data":{"content":demoData(1000),'last':false}};
+var dataLast =  {"data":{"content":demoData(1000),'last':false}};
 export async function getQualityInspectionAll(projectId,qcState,page, size) {
     //  return {"data":{"content":demoData(1000),'last':false}};
-   // return dataLast;
+//    return dataLast;
     let api = "/quality/"+projectId+"/qualityInspection/all";
     return requestJSON(api + '?sort=updateTime,desc&page=' + page + '&size=' + size +"&qcState="+qcState, {
         method: 'GET',
@@ -73,6 +73,15 @@ export async function getQualityInspectionAll(projectId,qcState,page, size) {
 export const CLASSIFY_STATES_COLOR = ["gray","orange","red","red","green","green","red","green"];
 export const CLASSIFY_STATES = ["","staged","unrectified","unreviewed","inspected","reviewed","delayed","accepted"];
 export const CLASSIFY_NAMES = ["全部","待提交","待整改","待复查","已检查","已复查","已延迟","已验收"];
+export const CLASSIFY_STATUS_LIST = [{name:CLASSIFY_NAMES[0],state:CLASSIFY_STATES[0],color:CLASSIFY_STATES_COLOR[0]}
+,{name:CLASSIFY_NAMES[1],state:CLASSIFY_STATES[1],color:CLASSIFY_STATES_COLOR[1]}
+,{name:CLASSIFY_NAMES[2],state:CLASSIFY_STATES[2],color:CLASSIFY_STATES_COLOR[2]}
+,{name:CLASSIFY_NAMES[3],state:CLASSIFY_STATES[3],color:CLASSIFY_STATES_COLOR[3]}
+,{name:CLASSIFY_NAMES[4],state:CLASSIFY_STATES[4],color:CLASSIFY_STATES_COLOR[4]}
+,{name:CLASSIFY_NAMES[5],state:CLASSIFY_STATES[5],color:CLASSIFY_STATES_COLOR[5]}
+,{name:CLASSIFY_NAMES[6],state:CLASSIFY_STATES[6],color:CLASSIFY_STATES_COLOR[6]}
+,{name:CLASSIFY_NAMES[7],state:CLASSIFY_STATES[7],color:CLASSIFY_STATES_COLOR[7]}
+];
 
 export function toQcStateShow(qcState) {
     let index = CLASSIFY_STATES.indexOf(qcState);

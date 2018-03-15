@@ -2,12 +2,13 @@
 import React from 'react';
 import { Button, View, Text } from 'react-native';
 import { StackNavigator } from 'react-navigation'; // 1.0.0-beta.27
-import Guide from './react/common/guide/guide';
-import GLDLoginViewController from './react/common/login/login'
-import HomePage from './react/common/business/home/home'
-import TestPage from './react/common/business/home/test'
-import BaseStorage from './react/common/base/store+base'
-import ChoosePage from './react/common/business/navigation/chooseHome'
+// import Guide from './react/common/guide/guide';
+// import GLDLoginViewController from './react/common/login/login'
+// import MainPage from './react/common/business/home/main'
+// import TestPage from './react/common/business/home/test'
+// import BaseStorage from './react/common/base/store+base'
+// import ChoosePage from './react/common/business/navigation/chooseHome'
+import {LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage} from './react/common/components'
 class HomeScreen extends React.Component {
   render() {
     return (
@@ -40,28 +41,40 @@ class DetailsScreen extends React.Component {
   }
 }
 
+// LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage
 const RootStack = StackNavigator(
   {
     ChoosePage: {
-      screen: ChoosePage,
+      screen: TenantPage,
     },
     Guide: {
-      screen: Guide,
+      screen: GuidePage,
     },
     Login: {
-      screen: GLDLoginViewController
+      screen: LoginPage
     },
-    HomePage: {
-      screen : HomePage
+    MainPage: {
+      screen : MainPage
+    },
+    ProjectPage: {
+      screen : ProjectPage
+    },
+    TenantPage: {
+      screen : TenantPage
+    },
+    QualityMainPage: {
+      screen : QualityMainPage
     },
   },
   {
     initialRouteName: global.storage.isGuide() ? 'Guide' : 'Login',
-    headerMode:"none",
+    // initialRouteName: 'MainPage',
+    // headerMode:"none",
   },
 );
 
 export default class Nav extends React.Component {
+  
   render() {
     return <RootStack />;
   }

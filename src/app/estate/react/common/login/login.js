@@ -70,6 +70,7 @@ class GLDLoginViewController extends React.Component {
     tabBarVisible:false,
     headerTintColor:"#FFF",
     headerStyle:{backgroundColor:"#00baf3"},
+    header:null,
 }
   constructor(props) {
     super(props);
@@ -191,13 +192,19 @@ class GLDLoginViewController extends React.Component {
         // }
         let navigator = this.props.navigation;
         var ret = login(this.state.username, this.state.password, () => {
-          if(global.storage.hasChoose()) {
-            USERAPI.setCurrentTenant(this.loadTenant()).then((responseData) => {
-              global.storage.gotoMain(navigator); 
-            });
-          } else {
-            global.storage.gotoMain(navigator); 
-          }
+          global.storage.hasChoose((ret) => {
+            console.log("login1"+ret);
+            if (ret) {
+              global.storage.loadTenant((tenant) => {
+                console.log("login2"+tenant);
+                USERAPI.setCurrentTenant(tenant).then((responseData) => {
+                  global.storage.gotoMain(navigator);
+                });
+              })
+            } else {
+              global.storage.gotoMain(navigator);
+            }
+          });
         });
       }
     );
