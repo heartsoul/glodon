@@ -12,7 +12,9 @@ import MessagePage from './business/home/message/message';
 import SubscribePage from './business/home/subscriptions/subscribe';
 import TenantPage from './business/navigation/tenant/tenantSimpleList';
 import ProjectPage from './business/navigation/project/projectList';
+import BimFileChooserPage from './business/navigation/bim/bimFileChooser';
 import QualityMainPage from './business/quality/qualityMain';
+
 import WebPage from './business/home/new/webView';
 var GlodonRN = {
     GuidePage,
@@ -27,6 +29,7 @@ var GlodonRN = {
     SubscribePage,
     TenantPage,
     ProjectPage,
+    BimFileChooserPage,
     QualityMainPage,
     WebPage,
 };

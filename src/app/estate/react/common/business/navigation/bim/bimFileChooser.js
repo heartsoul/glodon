@@ -6,13 +6,16 @@ import React, {Component,} from "react";
 import {ActivityIndicator, Animated, FlatList,SectionList, 
     ScrollView, StyleSheet, 
     Text, View,StatusBar,Image,TouchableOpacity,RefreshControl} from "react-native";
-import * as USERAPI from "../../../login/api+user"; 
+    import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'; // 1.0.0-beta.27
+import * as MODELAPI from "../../service/api/api+model"; 
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-export default class projectList extends Component {
+
+
+export default class BimFileChooser extends Component {
     static navigationOptions = {
-        title: '项目列表',
+        title: '图纸选择',
         tabBarVisible:false,
         headerTintColor:"#FFF",
         headerStyle:{backgroundColor:"#00baf3"},
@@ -29,16 +32,40 @@ export default class projectList extends Component {
             dataArray: [],
             page:0,
             hasMore:true,
+            projectId:global.storage.projectId,
+            latestVersion:global.storage.projectIdVersionId,
+            fileId:global.storage.fileId,
         }
     }
     _keyExtractor = (item, index) => index;
-    //网络请求
+    
     fetchData = (page)=> {
+        if (this.state.projectId === 0 || this.state.latestVersion === '') {
+            global.storage.loadProject((projectId) => {
+                global.storage.projectId = projectId;
+                // 这个是js的访问网络的方法
+                MODELAPI.getModelLatestVersion(projectId).then((responseData) => {
+                    let latestVersion = responseData.data.data.versionId;
+                    global.storage.projectIdVersionId = latestVersion;
+                    this.setState({
+                        projectId: projectId,
+                        latestVersion: latestVersion,
+                    });
+                    this.fetchDataInner(page,projectId,latestVersion);
+                });
+            });
+        } else {
+            this.fetchDataInner(page,this.state.projectId,this.state.latestVersion);
+        }
+        
+    }
+    //网络请求
+    fetchDataInner = (page,projectId,latestVersion)=> {        
         // 这个是js的访问网络的方法
-        USERAPI.getProjects(page,35).then(
+        MODELAPI.getModelBimFileChildren(projectId,latestVersion,page,this.state.fileId).then(
             (responseData) => {
-                let data = responseData.data.content;
-                let last = responseData.data.last;
+                let data = responseData.data.data.items;
+                let last = false;
 
                 let dataBlob = [];
                 if(data.length > 0) {
@@ -48,7 +75,7 @@ export default class projectList extends Component {
                     let i = 0;
                     data.forEach(item => {
                         dataBlob.push({
-                            key: "P0"+item.id,
+                            key: "P0"+item.fileId,
                             value: item,
                         })
                         i++; 
@@ -74,49 +101,11 @@ export default class projectList extends Component {
                 dataBlob = null;
             }
         );
-        // {
-        //     "content": [{
-        //         "id": 5212498,
-        //         "code": "201801031653",
-        //         "name": "201801031653",
-        //         "simpleName": null,
-        //         "parentDeptId": 800,
-        //         "parentDeptName": "广联达科技股份有限公司",
-        //         "deptId": 5212498,
-        //         "responder": null,
-        //         "scale": null,
-        //         "projectTypeCode": "Estate_Project_Type_House",
-        //         "projectTypeName": "住宅",
-        //         "countryCode": null,
-        //         "regionCode": "Estate_Project_Region_NortheastChina",
-        //         "regionName": "东北",
-        //         "address": null,
-        //         "plannedDuration": 0,
-        //         "plannedStart": null,
-        //         "plannedEnd": null,
-        //         "actualDuration": 0,
-        //         "actualStart": null,
-        //         "actualEnd": null,
-        //         "projectStatusCode": null,
-        //         "projectStatusName": null,
-        //         "description": null,
-        //         "attachmentInfo": null,
-        //         "concerned": false
-        //     }],
-        //     "totalElements": 385,
-        //     "last": false,
-        //     "totalPages": 15,
-        //     "sort": null,
-        //     "first": false,
-        //     "numberOfElements": 26,
-        //     "size": 26,
-        //     "number": 1
-        // }
     }
 
     componentDidMount() {
         //请求数据
-        this.fetchData(0);
+         this.fetchData(1);
     }
 
     //加载等待的view
@@ -147,8 +136,18 @@ export default class projectList extends Component {
     }
     _itemClick = (item,index) => {
         let navigator = this.props.navigation;
-        global.storage.saveProject(""+item.value.id);
-        global.storage.gotoMain(navigator);
+        global.storage.fileId = item.value.fileId;
+        if(item.value.folder === true) {
+            global.storage.pushNext(navigator,"BimFileChooserPage");
+        } else {
+            MODELAPI.getModelBimFileToken(this.state.projectId,this.state.latestVersion,item.value.fileId).then((responseData)=>{
+                let token = responseData.data.data;
+                global.storage.bimToken = token;
+                global.storage.pushNext(navigator,"WebPage");
+            });
+            
+        }
+        
     }
 
     _separator = () => {

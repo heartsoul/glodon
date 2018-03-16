@@ -36,7 +36,7 @@ export default class extends NavigationPage {
     // if (navigator) {
     //   navigator.navigate("ProjectList");
     // }
-    global.storage.pushNext(navigator,"ProjectPage")
+    global.storage.pushNext(navigator,"ProjectPage");
   }
   _loadQuality = () => {
     let navigator = this.props.navigation;
@@ -44,9 +44,25 @@ export default class extends NavigationPage {
     // if (navigator) {
     //   navigator.navigate("QualityMain");
     // }
+    global.storage.projectIdVersionId = '';
+    global.storage.fileId = '';
+    global.storage.bimToken = {};
+
     global.storage.pushNext(navigator,"QualityMainPage")
+   
   }
 
+  _fileChoose = () => {
+    let navigator = this.props.navigation;
+
+    // if (navigator) {
+    //   navigator.navigate("QualityMain");
+    // }
+    global.storage.projectIdVersionId = '';
+    global.storage.pushNext(navigator,"BimFileChooserPage");
+  }
+
+  
 
   componentDidMount() {
     //请求数据
@@ -81,7 +97,7 @@ export default class extends NavigationPage {
           <View style={styles.tabContent}>
             <Button type={'primary'} size={'md'} onPress={() => this._loadQuality()} style={{ height: 50, marginBottom:40}} title="质检清单" />
             <View style={styles.spliteItem} />
-            <Button type={'primary'} size={'md'} onPress={() => this._loadQuality()} style={{ height: 50 }} title="图纸" />
+            <Button type={'primary'} size={'md'} onPress={() => this._fileChoose()} style={{ height: 50 }} title="图纸" />
             <View style={styles.spliteItem} />
             <Button type={'primary'} size={'md'} style={{ height: 50 }} title="模型" />
             <View style={styles.spliteItem} />

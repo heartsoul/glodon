@@ -112,6 +112,10 @@ class GLDStorage extends BaseStorage {
         this.currentTenant = "0";
         this.currentProject = "0";
         this.homeNavigation = null;
+        this.bimToken = {};
+        this.fileId = '';
+        this.projectIdVersionId = '';
+        this.projectId = 0;
         // this.storage.load({
         //     key: 'loginToken',
 
@@ -288,6 +292,7 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
+        console.log("pushNext:"+name);
          navigator.navigate(name);
     }
     

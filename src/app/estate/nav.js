@@ -8,7 +8,7 @@ import { StackNavigator } from 'react-navigation'; // 1.0.0-beta.27
 // import TestPage from './react/common/business/home/test'
 // import BaseStorage from './react/common/base/store+base'
 // import ChoosePage from './react/common/business/navigation/chooseHome'
-import {LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage,WebPage} from './react/common/components'
+import * as GLD from './react/common/components'
 class HomeScreen extends React.Component {
   render() {
     return (
@@ -45,28 +45,34 @@ class DetailsScreen extends React.Component {
 const RootStack = StackNavigator(
   {
     ChoosePage: {
-      screen: TenantPage,
+      screen: GLD.TenantPage,
     },
     Guide: {
-      screen: GuidePage,
+      screen: GLD.GuidePage,
     },
     Login: {
-      screen: LoginPage
+      screen: GLD.LoginPage
     },
     MainPage: {
-      screen : MainPage
+      screen : GLD.MainPage
     },
     ProjectPage: {
-      screen : ProjectPage
+      screen : GLD.ProjectPage
     },
     TenantPage: {
-      screen : TenantPage
+      screen : GLD.TenantPage
     },
     QualityMainPage: {
-      screen : QualityMainPage
+      screen : GLD.QualityMainPage
+    },
+    QualityMainPage: {
+      screen : GLD.QualityMainPage
     },
     WebPage: {
-      screen : WebPage
+      screen : GLD.WebPage
+    },
+    BimFileChooserPage: {
+      screen : GLD.BimFileChooserPage
     },
     
   },
