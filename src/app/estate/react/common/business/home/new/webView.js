@@ -15,17 +15,91 @@ var {
   height: deviceHeight,
   width: deviceWidth
 } = Dimensions.get('window');
+const cmdString = "\
+function callMessage(action, data, callbackName) { \
+  let actionIn = 'unknown'; let dataIn = {}; let callbackNameIn = 'defaultReturn';\
+  if(action) { actionIn = action;} else {alert('无效调用');return;}\
+  if(data) { dataIn = data;}\
+  if(callbackName) { callbackNameIn = callbackName; } \
+  let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});\
+  console.log('执行命令：'+cmd);\
+  window.postMessage(cmd);\
+}\
+window.modelEvent = {\
+  defaultReturn : function(data) {console.log('执行命令成功:'+data);},\
+  loadDotsData : function() { callMessage('loadDotsData');},\
+  invalidateToken : function() { callMessage('invalidateToken');},\
+  cancelPosition : function() { callMessage('cancelPosition');},\
+  getPosition : function(jsonData) { callMessage('getPosition', jsonData);},\
+  getPositionInfo : function(jsonData) { callMessage('getPositionInfo', jsonData);},\
+};\
+//document.addEventListener('message', function(e) {eval(e.data);});\
+";
 
 //默认应用的容器组件
 export default class GLDWebView extends Component {
-  static navigationOptions = {
-    title: '浏览器',
+  static navigationOptions = ({navigation, screenProps}) => ({
+    title: navigation.state.params?navigation.state.params.title : '图纸',
     headerTintColor: "#FFF",
-    headerStyle: { backgroundColor: "#00baf3" }
-  };
+    headerStyle: { backgroundColor: "#00baf3" },
+    headerRight:(  
+      <Text  onPress={()=>navigation.state.params.rightNavigatePress()} style={{marginLeft:5, width:30, textAlign:"center"}} >  
+          测试 
+      </Text>  
+  )  
+  });
+  componentDidMount=()=> {
+    console.log(this.props.navigation.state.params);
+    //请求数据
+     this.props.navigation.setParams({title:this.props.navigation.state.params.title, rightNavigatePress:this._rightAction }) 
+  }
+  
+  _rightAction = ()=> {
+    console.log("执行js window.modelEvent.loadDotsData();");
+    this.refs.webview.injectJavaScript('javascript:window.modelEvent.loadDotsData();')
+  }
+  onMessage =(e)=> {
+    console.log(e.nativeEvent.data);
+    let action = e.nativeEvent.data;
+    if(action) {
+      switch (action) {
+        case 'loadDotsData':
+          {
+
+          }
+          break;
+        case 'invalidateToken':
+        {
+
+        }
+        case 'cancelPosition':
+        {
+          
+        }
+        case 'getPosition':
+        {
+          
+        }
+        break;
+        case 'getPositionInfo':
+        {
+          
+        }
+        break;
+        default:
+          break;
+      }
+    }
+  }
+  //在WebView中注册该回调方法
+  
+  onNavigationStateChange(event){
+    console.log('onNavigationStateChange:');
+    console.log(event); //打印出event中属性
+    }
   //渲染
   render() {
-   let url = "http://192.168.81.30/app.html?param=" + global.storage.bimToken + "&show=true";
+   let url = "http://192.168.81.30/app.html?param=" + global.storage.bimToken + "&show=false";
     // let url = "https://sg.glodon.com";
     console.log("web view:" + url);
     return (
@@ -33,11 +107,14 @@ export default class GLDWebView extends Component {
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         <View style={styles.container}>
           <WebView bounces={false}
+            ref="webview"
+            onNavigationStateChange={()=>this.onNavigationStateChange}
             scalesPageToFit={true}
             javaScriptEnabled={true}
-            domStorageEnabled={true}
-            // onMessage={}
-             injectedJavaScript="window.modelEvent = {};"
+            domStorageEnabled={false}
+             onMessage={(e)=>this.onMessage(e)}
+             injectedJavaScript={cmdString}
+           //  onLoadEnd ={()=>this.refs.webview.postMessage('javascript:window.modelEvent.loadDotsData();')}
             source={{ uri: url, method: 'GET' }}
             style={{ width: deviceWidth, height: deviceHeight }}>
           </WebView>

@@ -143,7 +143,7 @@ export default class BimFileChooser extends Component {
             MODELAPI.getModelBimFileToken(this.state.projectId,this.state.latestVersion,item.value.fileId).then((responseData)=>{
                 let token = responseData.data.data;
                 global.storage.bimToken = token;
-                global.storage.pushNext(navigator,"WebPage");
+                global.storage.pushNext(navigator,"WebPage",{title:item.value.name});
             });
             
         }

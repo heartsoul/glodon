@@ -284,7 +284,7 @@ class GLDStorage extends BaseStorage {
             }
         })
     }
-    pushNext = (navigation, name = "MainPage") => {
+    pushNext = (navigation, name = "MainPage", params = {}) => {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
@@ -293,7 +293,7 @@ class GLDStorage extends BaseStorage {
             return;
         }
         console.log("pushNext:"+name);
-         navigator.navigate(name);
+         navigator.navigate(name, params);
     }
     
 }
