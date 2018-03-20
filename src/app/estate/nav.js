@@ -77,6 +77,9 @@ const RootStack = StackNavigator(
     NewPage: {
       screen : GLD.NewPage
     },
+    SettingPage: {
+      screen : GLD.SettingPage 
+    },
   },
   {
     initialRouteName: global.storage.isGuide() ? 'Guide' : 'Login',

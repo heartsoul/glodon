@@ -15,6 +15,7 @@ import TenantPage from './business/navigation/tenant/tenantSimpleList';
 import ProjectPage from './business/navigation/project/projectList';
 import BimFileChooserPage from './business/navigation/bim/bimFileChooser';
 import QualityMainPage from './business/quality/qualityMain';
+import SettingPage from './business/home/me/setting'
 
 import WebPage from './business/home/new/webView';
 var GlodonRN = {
@@ -34,6 +35,7 @@ var GlodonRN = {
     BimFileChooserPage,
     QualityMainPage,
     WebPage,
+    SettingPage,
 };
 
 module.exports = GlodonRN;
