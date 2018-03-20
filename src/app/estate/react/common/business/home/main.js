@@ -32,7 +32,7 @@ import SubscribeTab from './subscriptions/subscribe';
 class MinePage extends NavigationPage {
   static defaultProps = {
     ...NavigationPage.defaultProps,
-    title: '我',
+    title: '',
     showBackButton: false,
   };
   renderPage() {
