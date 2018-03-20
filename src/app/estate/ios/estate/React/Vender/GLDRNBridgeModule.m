@@ -217,8 +217,7 @@ NSArray* apiSet() {
 + (void)api_excute:(NSDictionary *)dictionary finishBlock:(FinishJSApiBlock)finishBlock {
     @try {
         NSString * apiMethod = [NSString stringWithFormat:@"api_%@:finishBlock:", [dictionary getCallName]];
-        CallName]];
-        
+      
         SEL sel = NSSelectorFromString(apiMethod);
         if ([[self class] respondsToSelector:sel]) {
 #pragma clang diagnostic push
