@@ -74,7 +74,9 @@ const RootStack = StackNavigator(
     BimFileChooserPage: {
       screen : GLD.BimFileChooserPage
     },
-    
+    NewPage: {
+      screen : GLD.NewPage
+    },
   },
   {
     initialRouteName: global.storage.isGuide() ? 'Guide' : 'Login',

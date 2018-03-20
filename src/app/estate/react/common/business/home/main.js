@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, View, Text, Image } from 'react-native';
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'; // 1.0.0-beta.27
-import { TabView,Theme,BasePage, NavigationPage,TeaNavigator} from 'teaset'
+import { TabView, Theme, BasePage, NavigationPage, TeaNavigator } from 'teaset'
 //Theme.set(Theme.themes.black);
 const primaryColor = '#00baf3';
 Theme.set({
@@ -23,52 +23,11 @@ Theme.set({
   // navTitleFontSize: 18,
   // navButtonFontSize: 15,
   navSeparatorColor: primaryColor,
-  });
+});
 import HomeTab from './home/home';
 import MeTab from './me/me';
 import MessageTab from './message/message';
 import SubscribeTab from './subscriptions/subscribe';
-import TenantList from '../navigation/tenant/tenantSimpleList'
-import ProjectList from '../navigation/project/projectList'
-import QualityMain from '../quality/qualityMain'
-
-const SubscribeNav = StackNavigator(
-  {
-    BBBB: {
-      screen: SubscribeTab,
-      title: "home"
-    },
-  },
-  {
-    initialRouteName: 'BBBB',
-    headerMode: "screen",
-  }
-);
-const MessageNav = StackNavigator(
-  {
-    DDDD: {
-      screen: MessageTab,
-      title: "home"
-    },
-  },
-  {
-    initialRouteName: 'DDDD',
-    headerMode: "screen",
-  }
-);
-
-const MeNav = StackNavigator(
-  {
-    EEEE: {
-      screen: MeTab,
-      title: "me"
-    },
-  },
-  {
-    initialRouteName: 'EEEE',
-    headerMode: "screen",
-  }
-);
 
 class MinePage extends NavigationPage {
   static defaultProps = {
@@ -76,10 +35,32 @@ class MinePage extends NavigationPage {
     title: '我',
     showBackButton: false,
   };
-  renderPage(){
+  renderPage() {
     return <MeTab />
   }
 }
+
+class SubscribePage extends NavigationPage {
+  static defaultProps = {
+    ...NavigationPage.defaultProps,
+    title: "订阅",
+    showBackButton: false,
+  };
+  renderPage() {
+    return <SubscribeTab />
+  }
+}
+class MessagePage extends NavigationPage {
+  static defaultProps = {
+    ...NavigationPage.defaultProps,
+    title: "消息",
+    showBackButton: false,
+  };
+  renderPage() {
+    return <MessageTab />
+  }
+}
+
 
 class HomePage extends NavigationPage {
   static defaultProps = {
@@ -87,37 +68,14 @@ class HomePage extends NavigationPage {
     title: '首页',
     showBackButton: false,
   };
-  renderPage(){
+  renderPage() {
     return <HomeTab />
   }
 }
-
-const MainNav = StackNavigator(
-  {
-    AAAA: {
-      screen: HomeTab,
-      title: "首页"
-    },
-    TenantList: {
-      screen: TenantList,
-      title: "租户列表"
-    },
-    ProjectList: {
-      screen: ProjectList,
-      title: "项目列表"
-    },
-    QualityMain: {
-      screen: QualityMain,
-      title: "质检清单"
-    }
-  },
-  {
-    initialRouteName: 'AAAA',
-    headerMode: "screen",
-  }
-);
-
 class Page extends React.Component {
+  constructor() {
+    super();
+  }
   render() {
     return (<TabView style={{ flex: 1 }} type='projector'>
       <TabView.Sheet
@@ -133,7 +91,7 @@ class Page extends React.Component {
         activeIcon={require('../../res/images/home/icon_main_subscribe_selected.png')}
         badge={1}
       >
-        <SubscribeNav />
+        <SubscribePage />
       </TabView.Sheet>
       <TabView.Sheet
         type='button'
@@ -158,7 +116,7 @@ class Page extends React.Component {
           </View>
         }
         iconContainerStyle={{ justifyContent: 'flex-end' }}
-        onPress={() => global.storage.pushNext(null,'WebPage')}
+        onPress={() => global.storage.pushNext(null, 'NewPage')}
       />
 
       <TabView.Sheet
@@ -167,7 +125,7 @@ class Page extends React.Component {
         activeIcon={require('../../res/images/home/icon_main_message_selected.png')}
         badge={9}
       >
-        <MessageNav />
+        <MessagePage />
       </TabView.Sheet>
       <TabView.Sheet
         title='我'
@@ -175,23 +133,11 @@ class Page extends React.Component {
         activeIcon={require('../../res/images/home/icon_main_mine_selected.png')}
       // badge={'new'}
       >
-        <TeaNavigator rootView={<MinePage />} />
+        <MinePage />
       </TabView.Sheet>
     </TabView>);
   }
 }
-const PPNav = StackNavigator(
-  {
-    PPPP: {
-      screen: Page,
-      title: "xxxx"
-    },
-  },
-  {
-    initialRouteName: 'PPPP',
-    headerMode: "none",
-  }
-);
 export default class mainPage extends React.Component {
   static navigationOptions = {
     title: '首页',
@@ -203,10 +149,11 @@ export default class mainPage extends React.Component {
   componentDidMount = () => {
     global.storage.homeNavigation = this.props.navigation;
     global.storage.page = this.refs.page;
+    this.page
   }
   render() {
-    return <Page ref={'page'}/>;
+    return <Page ref={'page'} />;
   }
-  
+
 };
 

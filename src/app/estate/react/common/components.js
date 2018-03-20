@@ -8,6 +8,7 @@ import BaseStorage from './base/store+base';
 import ChoosePage from './business/navigation/chooseHome';
 import HomePage from './business/home/home/home';
 import MinePage from './business/home/me/me';
+import NewPage from './business/home/new/new';
 import MessagePage from './business/home/message/message';
 import SubscribePage from './business/home/subscriptions/subscribe';
 import TenantPage from './business/navigation/tenant/tenantSimpleList';
@@ -25,6 +26,7 @@ var GlodonRN = {
     ChoosePage,
     HomePage,
     MinePage,
+    NewPage,
     MessagePage,
     SubscribePage,
     TenantPage,
