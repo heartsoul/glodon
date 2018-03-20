@@ -42,9 +42,15 @@ export default class extends NavigationPage {
     let navigator = this.props.navigation;
     global.storage.pushNext(navigator,'SettingPage');
   }
+  _gotoTask=()=>{
+
+  }
+  _gotoPlan=()=>{
+
+  }
   render() {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
+      <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         <View>
           <View style={{backgroundColor:'#00baf3'}}>
@@ -55,17 +61,17 @@ export default class extends NavigationPage {
             <Image source={require('../../../res/images/icon_mine_wave.png')} style={styles.mineWave}/>
 
           </View>
+          <View style={{backgroundColor:'#ffffff'}}>
+            <MineItemView icon = {require('../../../res/images/icon_mine_permission.png')} title='我的任务' onPress={()=>this._gotoTask()}></MineItemView>
+            <View style={styles.mineItemLine}></View>
+          
+            <MineItemView icon = {require('../../../res/images/icon_mine_plan.png')} title='我的计划' onPress={()=>this._gotoPlan()}></MineItemView>
+            <View style={styles.mineItemLine}></View>
+          
+            <MineItemView icon = {require('../../../res/images/icon_mine_setting.png')} title='设置' onPress={()=>this._gotoSetting()}></MineItemView>
 
-          <MineItemView icon = {require('../../../res/images/icon_mine_permission.png')} title='我的任务'></MineItemView>
-          <View style={styles.mineItemLine}></View>
-          
-          <MineItemView icon = {require('../../../res/images/icon_mine_plan.png')} title='我的计划' onPress={()=>this._gotoSetting()}></MineItemView>
-          <View style={styles.mineItemLine}></View>
-          
-          <MineItemView icon = {require('../../../res/images/icon_mine_setting.png')} title='设置' onPress={()=>this._gotoSetting()}></MineItemView>
-          
-          <Button title="退出" onPress={()=>{this._logout()}}></Button>
-          <Button title="测试" onPress={()=>{this._goto()}}></Button>
+          </View>
+
         </View>
       </SafeAreaView>
     );
@@ -90,7 +96,11 @@ class MineItemView extends Component{
 }
 
 var styles = StyleSheet.create({
-
+    container:{
+      backgroundColor:'#ecf0f1',
+      width:width,
+      height:height
+    },
     mineAvatar:{
       width:90,
       height:90,
@@ -134,6 +144,7 @@ var styles = StyleSheet.create({
     },
     mineItemLine:{
       height:1,
+      marginLeft:22,
       backgroundColor:'#f7f7f7'
     }
     
