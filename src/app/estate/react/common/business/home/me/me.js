@@ -43,7 +43,7 @@ export default class extends NavigationPage {
     global.storage.pushNext(navigator,'SettingPage');
   }
   _gotoTask=()=>{
-
+      
   }
   _gotoPlan=()=>{
 
@@ -56,7 +56,7 @@ export default class extends NavigationPage {
           <View style={{backgroundColor:'#00baf3'}}>
             <Image source={require('../../../res/images/icon_mine_default_header.png')} style={styles.mineAvatar}/>
         
-            <Text style={styles.mineName}>cwj</Text>
+            <Text style={styles.mineName}>{global.storage.userInfo.accountInfo.name}</Text>
 
             <Image source={require('../../../res/images/icon_mine_wave.png')} style={styles.mineWave}/>
 
@@ -97,7 +97,7 @@ class MineItemView extends Component{
 
 var styles = StyleSheet.create({
     container:{
-      backgroundColor:'#ecf0f1',
+      backgroundColor:'#f5f8f9',
       width:width,
       height:height
     },
