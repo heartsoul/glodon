@@ -11,10 +11,12 @@
     "react": "16.2.0",
     "react-dom": "^16.2.0",
     "react-native": "0.53.0",
+    "react-native-gallery": "0.0.17",
     "react-native-keyboard-aware-scroll-view": "^0.4.4",
     "react-native-largelist": "^1.2.7",
     "react-native-storage": "^0.2.2",
-    "react-navigation": "^1.2.0",
+    "react-native-swiper": "^1.5.13",
+    "react-navigation": "^1.5.8",
     "teaset": "^0.5.5"
   },
   "devDependencies": {

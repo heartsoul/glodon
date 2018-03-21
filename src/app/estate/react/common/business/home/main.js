@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, View, Text, Image } from 'react-native';
+import { Button, View, Text, Image,TouchableOpacity } from 'react-native';
+import { withNavigation } from 'react-navigation';
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'; // 1.0.0-beta.27
 import { TabView, Theme, BasePage, NavigationPage, TeaNavigator } from 'teaset'
 //Theme.set(Theme.themes.black);
@@ -28,7 +29,7 @@ import HomeTab from './home/home';
 import MeTab from './me/me';
 import MessageTab from './message/message';
 import SubscribeTab from './subscriptions/subscribe';
-
+import NavigationItem from '../../../components/views/NavigationItem'
 class MinePage extends NavigationPage {
   static defaultProps = {
     ...NavigationPage.defaultProps,
@@ -61,15 +62,34 @@ class MessagePage extends NavigationPage {
   }
 }
 
+class SearchaBarItem extends React.Component {
+  render() {
+    return  <TouchableOpacity  onPress={()=>this.props.navigation.navigate("SearchPage")} >  
+          <Image resizeMode='center' source={require('./../../res/images/icon_search_white.png')} />
+    </TouchableOpacity> 
+  }
+}
+
+// withNavigation returns a component that wraps SearchaBarItem and passes in the
+// navigation prop
+var SearchButton =  withNavigation(SearchaBarItem);
 
 class HomePage extends NavigationPage {
   static defaultProps = {
     ...NavigationPage.defaultProps,
-    title: '首页',
+    title: global.storage ? global.storage.currentProject?''+global.storage.currentProject:'首页' : '首页',
     showBackButton: false,
   };
+  constructor() {
+    super();
+  };
+  
+  renderNavigationRightView = () => {
+    // console.log(renderNavigationRightView);
+    return <SearchButton/>
+  }
   renderPage() {
-    return <HomeTab />
+    return <HomeTab style={{backgroundColor:'#FFFFFF'}} />
   }
 }
 class Page extends React.Component {

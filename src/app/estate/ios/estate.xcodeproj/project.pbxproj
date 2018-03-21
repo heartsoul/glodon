@@ -107,7 +107,7 @@
 		247E2C6320464F1800016F63 /* TestRNViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2C6120464F1800016F63 /* TestRNViewController.m */; };
 		247E2C6620466D8D00016F63 /* TestRNViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 247E2C6520466D8D00016F63 /* TestRNViewController.storyboard */; };
 		247E2C6920466E2F00016F63 /* TestRNXXViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2C6820466E2F00016F63 /* TestRNXXViewController.m */; };
-		248E0CFE205FA0F10053F5AA /* GLDRNPhotoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0CFD205FA0F10053F5AA /* GLDRNPhotoManager.m */; };
+		248E0CFE205FA0F10053F5AA /* GLDPhotoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0CFD205FA0F10053F5AA /* GLDPhotoManager.m */; };
 		248E0D01205FB1440053F5AA /* GLDDemoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D00205FB1440053F5AA /* GLDDemoManager.m */; };
 		248E0D2A2060A4760053F5AA /* RNTSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D292060A4760053F5AA /* RNTSwitch.m */; };
 		248E0D2D2060A54F0053F5AA /* RNTSwitchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D2C2060A54F0053F5AA /* RNTSwitchManager.m */; };
@@ -505,8 +505,8 @@
 		247E2C6520466D8D00016F63 /* TestRNViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TestRNViewController.storyboard; sourceTree = "<group>"; };
 		247E2C6720466E2F00016F63 /* TestRNXXViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRNXXViewController.h; sourceTree = "<group>"; };
 		247E2C6820466E2F00016F63 /* TestRNXXViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRNXXViewController.m; sourceTree = "<group>"; };
-		248E0CFC205FA0F10053F5AA /* GLDRNPhotoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLDRNPhotoManager.h; sourceTree = "<group>"; };
-		248E0CFD205FA0F10053F5AA /* GLDRNPhotoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDRNPhotoManager.m; sourceTree = "<group>"; };
+		248E0CFC205FA0F10053F5AA /* GLDPhotoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLDPhotoManager.h; sourceTree = "<group>"; };
+		248E0CFD205FA0F10053F5AA /* GLDPhotoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDPhotoManager.m; sourceTree = "<group>"; };
 		248E0CFF205FB1440053F5AA /* GLDDemoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLDDemoManager.h; sourceTree = "<group>"; };
 		248E0D00205FB1440053F5AA /* GLDDemoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDDemoManager.m; sourceTree = "<group>"; };
 		248E0D282060A4760053F5AA /* RNTSwitch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTSwitch.h; sourceTree = "<group>"; };
@@ -1056,8 +1056,8 @@
 		248E0CE0205FA09D0053F5AA /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				248E0CFC205FA0F10053F5AA /* GLDRNPhotoManager.h */,
-				248E0CFD205FA0F10053F5AA /* GLDRNPhotoManager.m */,
+				248E0CFC205FA0F10053F5AA /* GLDPhotoManager.h */,
+				248E0CFD205FA0F10053F5AA /* GLDPhotoManager.m */,
 				248E0CFF205FB1440053F5AA /* GLDDemoManager.h */,
 				248E0D00205FB1440053F5AA /* GLDDemoManager.m */,
 				248E0D282060A4760053F5AA /* RNTSwitch.h */,
@@ -1653,7 +1653,7 @@
 				247E2BEB2046373400016F63 /* UIImage+UIColor.m in Sources */,
 				247E2BD12046373300016F63 /* UIColor+DarkAddition.m in Sources */,
 				248E0D2A2060A4760053F5AA /* RNTSwitch.m in Sources */,
-				248E0CFE205FA0F10053F5AA /* GLDRNPhotoManager.m in Sources */,
+				248E0CFE205FA0F10053F5AA /* GLDPhotoManager.m in Sources */,
 				247E2BEF2046373400016F63 /* NetManager.m in Sources */,
 				247E2C6320464F1800016F63 /* TestRNViewController.m in Sources */,
 				247E2BF62046373400016F63 /* ParserFactory.m in Sources */,

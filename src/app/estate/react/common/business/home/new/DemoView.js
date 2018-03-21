@@ -27,7 +27,7 @@ DemoView.propTypes = {
      * 背景色
      */
 
-    backgroudColor: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
+    backgroudColor: PropTypes.string,
     /**
     * 标题相关属性
     */
@@ -39,7 +39,7 @@ DemoView.propTypes = {
         /**
          * 标题颜色
          */
-        color: PropTypes.number | PropTypes.string,
+        color: PropTypes.string,
     }),
     /**
     * 响应事件

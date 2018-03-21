@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  StatusBar
+  StatusBar,
+  SafeAreaView
 } from 'react-native';
 export default class extends React.Component {
   static navigationOptions = {
@@ -13,19 +14,27 @@ export default class extends React.Component {
     headerStyle:{backgroundColor:"#00baf3"}
   };
   constructor() {
-      super();
-    };
-  render() {
-    return (
-      <View>
-        <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-      <Text> 订阅 </Text>
-      </View>
-      
-    );
-  }
+    super();
+  };
+render() {
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
+    <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+    <View style={{flex:1,alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
+    <Text style={styles.text}> 敬请期待 </Text>
+    </View>
+    </SafeAreaView>
+    
+  );
+}
 };
 
 var styles = StyleSheet.create({
-    
+  container:{
+    flex:1,
+  },
+  text:{
+    fontSize:18,
+    color:'gray'
+  },
 });

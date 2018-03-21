@@ -9,15 +9,11 @@ import {
   Switch,
   requireNativeComponent,
 } from 'react-native';
-// import { GLDUISwith } from './GLDUISwith';
+import ImageChooserView from './ImageChooserView';
 import MapView from './MapView';
 import SwitchView from './SwitchView';
 import DemoView from './DemoView';
-// const GLDUISwith = require('GLDUISwith');
 
-// var GLDUISwith = requireNativeComponent('GLDUISwith', null);
-//  module.exports = GLDUISwith;
-// var GLDRCTPhotoView = NativeModules.GLDRCTPhotoView;
 export default class extends React.Component {
   static navigationOptions = ({navigation, screenProps}) => ({
     title: '新建',
@@ -28,11 +24,11 @@ export default class extends React.Component {
           提交   
       </Text>  
     ),
-    headerLeft:(  
-      <Text  onPress={()=>navigation.goBack()} style={{marginLeft:20, color:'#FFFFFF' , width:60, textAlign:"left"}} >  
-          返回   
-      </Text>  
-    )
+    // headerLeft:(  
+    //   <Text  onPress={()=>navigation.goBack()} style={{marginLeft:20, color:'#FFFFFF' , width:60, textAlign:"left"}} >  
+    //       返回   
+    //   </Text>  
+    // )
   });
   componentDidMount=()=> {
     console.log(this.props.navigation.state.params);
@@ -57,12 +53,13 @@ export default class extends React.Component {
     return (
       <View>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-      <Text> 新建sd  dsds  </Text>
-      <MapView style={{ top:100,left:20,width:200,height:200 }} region={region}
+      <Text> 新建  </Text>
+      <ImageChooserView style={{ top:10,left:20,width:200,height:200 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
+      <MapView style={{ top:30,left:20,width:200,height:200 }} region={region}
         zoomEnabled={true} />
-        <Text> 新建sd  dsds  </Text>
+        
         <SwitchView style={{ top:100,left:20,width:200,height:200 }} /> 
-
+        
         <DemoView style={{ top:10,left:20,width:200,height:30 }} backgroundColor="#00baf3" onChange={()=>alert('收到')} />
       </View>
       

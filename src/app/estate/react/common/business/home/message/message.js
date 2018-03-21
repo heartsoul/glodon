@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 export default class extends React.Component {
   static navigationOptions = {
-    title: '消息1',
+    title: '消息',
     headerTintColor:"#FFF",
     headerStyle:{backgroundColor:"#00baf3"},
   };
@@ -20,9 +20,9 @@ export default class extends React.Component {
   render() {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
-      <View>
       <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-      <Text> 消息 </Text>
+      <View style={{flex:1,alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
+      <Text style={styles.text}> 敬请期待 </Text>
       </View>
       </SafeAreaView>
       
@@ -31,5 +31,11 @@ export default class extends React.Component {
 };
 
 var styles = StyleSheet.create({
-    
+    container:{
+      flex:1,
+    },
+    text:{
+      fontSize:18,
+      color:'gray'
+    },
 });

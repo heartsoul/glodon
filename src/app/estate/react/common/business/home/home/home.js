@@ -7,19 +7,16 @@ import {
   StatusBar,
   TouchableHighlight,
   Image,
+  ImageBackground,
 } from 'react-native';
+import ModelItemView from './ModelItemView'
+import NavigationItem from '../../../../components/views/NavigationItem'
 import { SegmentedBar, Label, SegmentedView, Button, Carousel } from 'teaset';
 //import * as USERAPI from "../../login/api+user";
 import { NavigationPage } from 'teaset'
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 export default class extends NavigationPage {
-  static navigationOptions = {
-    title: '首页',
-    headerTintColor: "#FFF",
-    headerStyle: { backgroundColor: "#00baf3" },
-    tabBarVisible: true
-  };
   constructor() {
     super();
   };
@@ -38,12 +35,8 @@ export default class extends NavigationPage {
     // }
     global.storage.pushNext(navigator,"ProjectPage");
   }
-  _loadQuality = () => {
+  _loadQualityForm = () => {
     let navigator = this.props.navigation;
-
-    // if (navigator) {
-    //   navigator.navigate("QualityMain");
-    // }
     global.storage.projectIdVersionId = '';
     global.storage.fileId = '';
     global.storage.bimToken = {};
@@ -51,17 +44,32 @@ export default class extends NavigationPage {
     global.storage.pushNext(navigator,"QualityMainPage")
    
   }
+  _loadEquipmentForm = () => {
+    let navigator = this.props.navigation;
+    global.storage.projectIdVersionId = '';
+    global.storage.fileId = '';
+    global.storage.bimToken = {};
+
+    global.storage.pushNext(navigator,"EquipmentMainPage")
+   
+  }
 
   _fileChoose = () => {
     let navigator = this.props.navigation;
 
-    // if (navigator) {
-    //   navigator.navigate("QualityMain");
-    // }
     global.storage.projectIdVersionId = '';
     global.storage.pushNext(navigator,"BimFileChooserPage");
   }
-
+  _moduleChoose = () => {
+    let navigator = this.props.navigation;
+    global.storage.projectIdVersionId = '';
+    global.storage.pushNext(navigator,"ModelFileChooserPage");
+  }
+  _projectChoose = () => {
+    let navigator = this.props.navigation;
+    global.storage.projectIdVersionId = '';
+    global.storage.pushNext(navigator,"ProjectChooserPage");
+  }
   
 
   componentDidMount() {
@@ -86,56 +94,36 @@ export default class extends NavigationPage {
   }
   render() {
     return (
-      <View>
+      <View style={{backgroundColor:'#FFFFFE'}}>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+        <ImageBackground style={{ height: 238 }} resizeMode='center' source={require('./../../../res/images/icon_main_page_top_bg.png')}>
         <Carousel ref={'carousel'} style={{ height: 238 }} carousel={false} scrollEnabled={false}>
-          <Image style={styles.topImage} resizeMode='cover' source={require('./img/1.jpg')} />
-          <Image style={styles.topImage} resizeMode='cover' source={require('./img/2.jpg')} />
+          <Image style={styles.topImage} resizeMode='center' source={require('./../../../res/images/icon_main_page_top_quality.png')} />
+          <Image style={styles.topImage} resizeMode='center' source={require('./../../../res/images/icon_main_page_top_equipment.png')} />
         </Carousel>
-        <SegmentedView style={{flex: 0,height:400}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
+        </ImageBackground>
+        <SegmentedView style={{flex: 0,height:400,backgroundColor:'#f8f8f8'}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
           <SegmentedView.Sheet title='质量检查'>
           <View style={styles.tabContent}>
-            <Button type={'primary'} size={'md'} onPress={() => this._loadQuality()} style={{ height: 50, marginBottom:40}} title="质检清单" />
+            <ModelItemView source={require('./../../../res/images/icon_main_pager_zjqd.png')} onPress={() => this._loadQualityForm()} title="质检清单" />
             <View style={styles.spliteItem} />
-            <Button type={'primary'} size={'md'} onPress={() => this._fileChoose()} style={{ height: 50 }} title="图纸" />
+            <ModelItemView source={require('./../../../res/images/icon_main_pager_blueprint.png')} onPress={() => this._fileChoose()} title="图纸" />
             <View style={styles.spliteItem} />
-            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="模型" />
+            <ModelItemView source={require('./../../../res/images/icon_main_pager_model.png')} onPress={() => this._projectChoose()} title="模型" />
             <View style={styles.spliteItem} />
-            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="质检项目" />
+            <ModelItemView source={require('./../../../res/images/icon_main_pager_module.png')} onPress={() => this._moduleChoose()} title="质检项目" />
             <View style={styles.spliteItem} />
             <Button type={'primary'} size={'md'} onPress={() => this._loadUserInfo()} style={{ height: 50 }} title="选择租户" />
           </View>
           </SegmentedView.Sheet>
           <SegmentedView.Sheet title='材设进场'>
           <View style={styles.tabContent}>
-            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="模型" />
+          <ModelItemView source={require('./../../../res/images/icon_main_pager_csjc.png')} onPress={() => this._loadEquipmentForm()} title="材设清单" />
             <View style={styles.spliteItem} />
-            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="质检项目" />
+            <ModelItemView source={require('./../../../res/images/icon_main_pager_equipment_model.png')} onPress={() => this._moduleChoose()} title="模型预览" />   
           </View>
           </SegmentedView.Sheet>
         </SegmentedView>
-        {/* <SegmentedBar onChange={(index) => { this.scrollToPage(index) }} justifyItem='scrollable'>
-          <SegmentedBar.Item title='质量检查' />
-          <SegmentedBar.Item title='材设进场' />
-        </SegmentedBar>
-        <Carousel ref={'carouselContent'} style={{ height: 238 }} onChange={(index) => this.scrollToPage(index)} carousel={false} scrollEnabled={false}>
-          <View style={styles.tabContent}>
-            <Button type={'primary'} size={'md'} onPress={() => this._loadQuality()} style={{ height: 50 }} title="质检清单" />
-            <View style={styles.spliteItem} />
-            <Button type={'primary'} size={'md'} onPress={() => this._loadQuality()} style={{ height: 50 }} title="图纸" />
-            <View style={styles.spliteItem} />
-            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="模型" />
-            <View style={styles.spliteItem} />
-            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="质检项目" />
-            <View style={styles.spliteItem} />
-            <Button type={'primary'} size={'md'} onPress={() => this._loadUserInfo()} style={{ height: 50 }} title="选择租户" />
-          </View>
-          <View style={styles.tabContent}>
-            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="模型" />
-            <View style={styles.spliteItem} />
-            <Button type={'primary'} size={'md'} style={{ height: 50 }} title="质检项目" />
-          </View>
-        </Carousel> */}
       </View>
 
     );
@@ -162,7 +150,8 @@ var styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 40,
     marginRight: 20,
-    marginBottom: 40
+    marginBottom: 40,
+    backgroundColor:'#f8f8f8',
   },
 
 });

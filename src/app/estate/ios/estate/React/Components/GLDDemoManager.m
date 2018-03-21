@@ -3,7 +3,7 @@
 //  estate
 //
 //  Created by glodon on 2018/3/19.
-//  Copyright © 2018年 Facebook. All rights reserved.
+//  Copyright © 2018年 Glodon. All rights reserved.
 //
 
 #import "GLDDemoManager.h"
@@ -38,6 +38,19 @@
 
 @end
 
+#import <LPDQuoteImagesView.h>
+
+// 控件定义
+@interface RNTImagesView1 : LPDQuoteImagesView
+
+@property (nonatomic, copy) RCTBubblingEventBlock onChange;// 响应事件定义
+
+@end
+
+@implementation RNTImagesView1
+
+@end
+
 @implementation GLDDemoManager
 // 组件导出，这里导出给js组件使用的名字就是 GLDDemo，Manager会被处理掉
 RCT_EXPORT_MODULE()
@@ -49,16 +62,26 @@ RCT_EXPORT_VIEW_PROPERTY(backgroundColor, UIColor)
 RCT_CUSTOM_VIEW_PROPERTY(title, NSString, UIButton)
 {
   // 设置相关属性
-  [view setTitle:json ? [RCTConvert buttonTitle:json] : @"button" forState:UIControlStateNormal];
-  [view setTitleColor:json ? [RCTConvert buttonColor:json] : nil forState:UIControlStateNormal];
+//  [view setTitle:json ? [RCTConvert buttonTitle:json] : @"button" forState:UIControlStateNormal];
+//  [view setTitleColor:json ? [RCTConvert buttonColor:json] : nil forState:UIControlStateNormal];
 }
 // 组件构建
 - (UIView *)view
 {
-  RNTButtonView * ret = [[RNTButtonView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-  [ret setTitle:@"组件测试" forState:UIControlStateNormal];
-  [ret addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
-  return ret;
+//  RNTButtonView * ret = [[RNTButtonView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+//  [ret setTitle:@"组件测试" forState:UIControlStateNormal];
+//  [ret addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
+//  return ret;
+  RNTImagesView1 *quoteImagesView =[[RNTImagesView1 alloc] initWithFrame:CGRectMake(0, 0, 400, 100) withCountPerRowInView:3 cellMargin:12];
+  //初始化view的frame, view里每行cell个数， cell间距（上方的图片1 即为quoteImagesView）
+  // 注：设置frame时，我们可以根据设计人员给的cell的宽度和最大个数、排列，间距去大致计算下quoteview的size.
+  quoteImagesView.maxSelectedCount = 3;
+  //最大可选照片数
+  quoteImagesView.collectionView.scrollEnabled = NO;
+  //view可否滑动
+  quoteImagesView.navcDelegate = (UIViewController<LPDQuoteImagesViewDelegate>*) [UIApplication sharedApplication].keyWindow.rootViewController ;    //self 至少是一个控制器。
+  //委托（委托controller弹出picker，且不用实现委托方法）
+  return quoteImagesView;
 }
 
 // 点击事件
