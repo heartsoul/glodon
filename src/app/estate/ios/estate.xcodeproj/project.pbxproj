@@ -107,6 +107,12 @@
 		247E2C6320464F1800016F63 /* TestRNViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2C6120464F1800016F63 /* TestRNViewController.m */; };
 		247E2C6620466D8D00016F63 /* TestRNViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 247E2C6520466D8D00016F63 /* TestRNViewController.storyboard */; };
 		247E2C6920466E2F00016F63 /* TestRNXXViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2C6820466E2F00016F63 /* TestRNXXViewController.m */; };
+		248E0CFE205FA0F10053F5AA /* GLDRNPhotoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0CFD205FA0F10053F5AA /* GLDRNPhotoManager.m */; };
+		248E0D01205FB1440053F5AA /* GLDDemoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D00205FB1440053F5AA /* GLDDemoManager.m */; };
+		248E0D2A2060A4760053F5AA /* RNTSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D292060A4760053F5AA /* RNTSwitch.m */; };
+		248E0D2D2060A54F0053F5AA /* RNTSwitchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D2C2060A54F0053F5AA /* RNTSwitchManager.m */; };
+		248E0D302060DFE40053F5AA /* RNTMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D2F2060DFE40053F5AA /* RNTMapView.m */; };
+		248E0D332060E0590053F5AA /* RNTMapManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D322060E0590053F5AA /* RNTMapManager.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -499,6 +505,18 @@
 		247E2C6520466D8D00016F63 /* TestRNViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TestRNViewController.storyboard; sourceTree = "<group>"; };
 		247E2C6720466E2F00016F63 /* TestRNXXViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRNXXViewController.h; sourceTree = "<group>"; };
 		247E2C6820466E2F00016F63 /* TestRNXXViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRNXXViewController.m; sourceTree = "<group>"; };
+		248E0CFC205FA0F10053F5AA /* GLDRNPhotoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLDRNPhotoManager.h; sourceTree = "<group>"; };
+		248E0CFD205FA0F10053F5AA /* GLDRNPhotoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDRNPhotoManager.m; sourceTree = "<group>"; };
+		248E0CFF205FB1440053F5AA /* GLDDemoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLDDemoManager.h; sourceTree = "<group>"; };
+		248E0D00205FB1440053F5AA /* GLDDemoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDDemoManager.m; sourceTree = "<group>"; };
+		248E0D282060A4760053F5AA /* RNTSwitch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTSwitch.h; sourceTree = "<group>"; };
+		248E0D292060A4760053F5AA /* RNTSwitch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTSwitch.m; sourceTree = "<group>"; };
+		248E0D2B2060A54F0053F5AA /* RNTSwitchManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTSwitchManager.h; sourceTree = "<group>"; };
+		248E0D2C2060A54F0053F5AA /* RNTSwitchManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTSwitchManager.m; sourceTree = "<group>"; };
+		248E0D2E2060DFE40053F5AA /* RNTMapView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTMapView.h; sourceTree = "<group>"; };
+		248E0D2F2060DFE40053F5AA /* RNTMapView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTMapView.m; sourceTree = "<group>"; };
+		248E0D312060E0590053F5AA /* RNTMapManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTMapManager.h; sourceTree = "<group>"; };
+		248E0D322060E0590053F5AA /* RNTMapManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTMapManager.m; sourceTree = "<group>"; };
 		2632B319FF8E0417CC63C60C /* Pods-estate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-estate.release.xcconfig"; path = "Pods/Target Support Files/Pods-estate/Pods-estate.release.xcconfig"; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
@@ -639,6 +657,7 @@
 		247E2B09204631A600016F63 /* React */ = {
 			isa = PBXGroup;
 			children = (
+				248E0CE0205FA09D0053F5AA /* Components */,
 				247E2B0A204631A600016F63 /* Vender */,
 				247E2C6020464F1800016F63 /* TestRNViewController.h */,
 				247E2C6120464F1800016F63 /* TestRNViewController.m */,
@@ -1034,6 +1053,25 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
+		248E0CE0205FA09D0053F5AA /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				248E0CFC205FA0F10053F5AA /* GLDRNPhotoManager.h */,
+				248E0CFD205FA0F10053F5AA /* GLDRNPhotoManager.m */,
+				248E0CFF205FB1440053F5AA /* GLDDemoManager.h */,
+				248E0D00205FB1440053F5AA /* GLDDemoManager.m */,
+				248E0D282060A4760053F5AA /* RNTSwitch.h */,
+				248E0D292060A4760053F5AA /* RNTSwitch.m */,
+				248E0D2B2060A54F0053F5AA /* RNTSwitchManager.h */,
+				248E0D2C2060A54F0053F5AA /* RNTSwitchManager.m */,
+				248E0D2E2060DFE40053F5AA /* RNTMapView.h */,
+				248E0D2F2060DFE40053F5AA /* RNTMapView.m */,
+				248E0D312060E0590053F5AA /* RNTMapManager.h */,
+				248E0D322060E0590053F5AA /* RNTMapManager.m */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1163,7 +1201,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 610;
-				ORGANIZATIONNAME = Facebook;
+				ORGANIZATIONNAME = Glodon;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 5BWXTQUBDE;
@@ -1492,6 +1530,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-estate/Pods-estate-resources.sh",
+				"${PODS_ROOT}/LPDQuoteImagesView/LPDQuoteImagesView/Assets/LPDImagePickerController.bundle",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_ROOT}/WebViewJavascriptBridge/WebViewJavascriptBridge/WebViewJavascriptBridge.js.txt",
 			);
@@ -1547,6 +1586,7 @@
 				247E2B10204631A600016F63 /* GLDRNBridgeModule.m in Sources */,
 				247E2BF52046373400016F63 /* ResponseErrorModel.m in Sources */,
 				247E2C102046373400016F63 /* SBJsonStreamParserAccumulator.m in Sources */,
+				248E0D332060E0590053F5AA /* RNTMapManager.m in Sources */,
 				247E2BE42046373300016F63 /* NSArray+JSON.m in Sources */,
 				247E2C082046373400016F63 /* UIWebViewController.m in Sources */,
 				247E2C002046373400016F63 /* WaitViewUtil.m in Sources */,
@@ -1558,9 +1598,11 @@
 				247E2C182046373400016F63 /* SBJsonTokeniser.m in Sources */,
 				247E2BFE2046373400016F63 /* UIPasswordTextField.m in Sources */,
 				247E2C1A2046373400016F63 /* UIImageView+Loading.m in Sources */,
+				248E0D302060DFE40053F5AA /* RNTMapView.m in Sources */,
 				247E2BFB2046373400016F63 /* NSDate+XHExtension.m in Sources */,
 				247E2C1B2046373400016F63 /* SDDataCache.m in Sources */,
 				247E2C1F2046373400016F63 /* SoulDatabaseBase.m in Sources */,
+				248E0D2D2060A54F0053F5AA /* RNTSwitchManager.m in Sources */,
 				247E2C052046373400016F63 /* DownSheetCell.m in Sources */,
 				247E2BDC2046373300016F63 /* UIImage+TintColor.m in Sources */,
 				247E2C042046373400016F63 /* UIMenuTableView.m in Sources */,
@@ -1569,6 +1611,7 @@
 				247E2BFD2046373400016F63 /* XHDatePickerView.m in Sources */,
 				247E2BD02046373300016F63 /* NSJSONSerialization+safeGenerate.m in Sources */,
 				247E2C192046373400016F63 /* UIQRViewController.m in Sources */,
+				248E0D01205FB1440053F5AA /* GLDDemoManager.m in Sources */,
 				247E2BE62046373300016F63 /* pinyin.c in Sources */,
 				247E2C0D2046373400016F63 /* NSObject+SBJson.m in Sources */,
 				247E2BEE2046373400016F63 /* RequestModel.m in Sources */,
@@ -1609,6 +1652,8 @@
 				247E2C202046373400016F63 /* SoulDatabaseBase+cache.m in Sources */,
 				247E2BEB2046373400016F63 /* UIImage+UIColor.m in Sources */,
 				247E2BD12046373300016F63 /* UIColor+DarkAddition.m in Sources */,
+				248E0D2A2060A4760053F5AA /* RNTSwitch.m in Sources */,
+				248E0CFE205FA0F10053F5AA /* GLDRNPhotoManager.m in Sources */,
 				247E2BEF2046373400016F63 /* NetManager.m in Sources */,
 				247E2C6320464F1800016F63 /* TestRNViewController.m in Sources */,
 				247E2BF62046373400016F63 /* ParserFactory.m in Sources */,
