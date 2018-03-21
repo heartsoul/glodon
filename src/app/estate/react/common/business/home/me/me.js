@@ -15,6 +15,7 @@ import {NavigationPage} from 'teaset'
 
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
+var name = '' ;
 
 export default class extends NavigationPage {
   
@@ -26,7 +27,13 @@ export default class extends NavigationPage {
   constructor() {
       super();
   };
-
+  
+  componentDidMount = () => {
+    console.log("componentDidMount");
+    if(global.storage.userInfo.accountInfo){
+        name = global.storage.userInfo.accountInfo.name;
+    }
+  };
 
   _logout=()=>{
     global.storage.logout();
@@ -56,7 +63,7 @@ export default class extends NavigationPage {
           <View style={{backgroundColor:'#00baf3'}}>
             <Image source={require('../../../res/images/icon_mine_default_header.png')} style={styles.mineAvatar}/>
         
-            <Text style={styles.mineName}>{global.storage.userInfo.accountInfo.name}</Text>
+            <Text style={styles.mineName}>{name}</Text>
 
             <Image source={require('../../../res/images/icon_mine_wave.png')} style={styles.mineWave}/>
 
