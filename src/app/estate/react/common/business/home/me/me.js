@@ -97,7 +97,7 @@ class MineItemView extends Component{
 
 var styles = StyleSheet.create({
     container:{
-      backgroundColor:'#ecf0f1',
+      backgroundColor:'#f5f8f9',
       width:width,
       height:height
     },
