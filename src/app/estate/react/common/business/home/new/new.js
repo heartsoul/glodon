@@ -9,10 +9,8 @@ import {
   Switch,
   requireNativeComponent,
 } from 'react-native';
+import { SegmentedView, ListRow, Label, ActionSheet } from 'teaset';
 import ImageChooserView from './ImageChooserView';
-import MapView from './MapView';
-import SwitchView from './SwitchView';
-import DemoView from './DemoView';
 
 export default class extends React.Component {
   static navigationOptions = ({navigation, screenProps}) => ({
@@ -53,15 +51,14 @@ export default class extends React.Component {
     return (
       <View>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-      <Text> 新建  </Text>
+        <ListRow title='检查单位' accessory='indicator' onPress={()=>{}} />
+        <ListRow title='施工单位' accessory='indicator' onPress={()=>{}} />
+        <ListRow title='责任人' accessory='indicator' onPress={()=>{}} />
       <ImageChooserView style={{ top:10,left:20,width:200,height:200 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
-      <MapView style={{ top:30,left:20,width:200,height:200 }} region={region}
-        zoomEnabled={true} />
-        
-        <SwitchView style={{ top:100,left:20,width:200,height:200 }} /> 
-        
-        <DemoView style={{ top:10,left:20,width:200,height:30 }} backgroundColor="#00baf3" onChange={()=>alert('收到')} />
-      </View>
+      <ListRow title='质检项目' accessory='indicator' onPress={()=>{}} />
+      <ListRow title='关联图纸' accessory='indicator' onPress={()=>{}} />
+      <ListRow title='关联模型' accessory='indicator' onPress={()=>{}} />
+       </View>
       
     );
   }

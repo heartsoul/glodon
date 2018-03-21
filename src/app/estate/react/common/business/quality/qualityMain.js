@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, Button, View, Text, Image, TouchableOpacity } from 'react-native';
+import {StyleSheet, Button, View, Text, Image, TouchableOpacity, NativeModules } from 'react-native';
 import { StackNavigator, DrawerNavigator, withNavigation } from 'react-navigation'; // 1.0.0-beta.27
 import QualityList from './qualityList'
-import { SegmentedBar, Drawer, Label } from 'teaset';
+import { SegmentedBar, Drawer, Label, ActionSheet } from 'teaset';
+var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 class DetailsScreen extends React.Component {
@@ -90,7 +91,39 @@ class RightBarButtons extends React.Component {
     
   }
   _onNewPress = (navigation) => {
-    navigation.navigate("NewPage");
+    let items = [
+      {title: '拍照', onPress: () => {
+        RNBridgeModule.RNInvokeOCCallBack(
+        {
+          caller: "gldrn",
+          name: "callNative",
+          ver: "1.0",
+          data: { subName: "photo", message: "调用相机" }
+        },
+        (data, request) => {
+          console.log(data);
+          console.log(request);
+        }
+      );}},
+      {title: '从手机相册选择', onPress: () => {
+        RNBridgeModule.RNInvokeOCCallBack(
+          {
+            caller: "gldrn",
+            name: "callNative",
+            ver: "1.0",
+            data: { subName: "photo", message: "调用相机" }
+          },
+          (data, request) => {
+            console.log(data);
+            console.log(request);
+          }
+        );
+      }},
+      {title: '无需图片,直接新建', disabled: false, onPress: () => {navigation.navigate("NewPage");}},
+    ];
+    let cancelItem = {title: '取消'};
+    ActionSheet.show(items, cancelItem);
+    // navigation.navigate("NewPage");
   }
   render() {
     return <View style={{
