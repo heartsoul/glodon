@@ -9,6 +9,7 @@ import{
   SafeAreaView,
   StyleSheet
 } from "react-native";
+import {ListRow} from "teaset";
 
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
@@ -37,6 +38,11 @@ export default class SettingPage extends Component{
         super();
     }
 
+    _tenantChoose = () => {
+        let navigator = this.props.navigation;
+        global.storage.projectIdVersionId = '';
+        global.storage.pushNext(navigator,"TenantPage")
+    }
 
 
     render(){
@@ -44,25 +50,24 @@ export default class SettingPage extends Component{
             <SafeAreaView style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
 
-                <SettingItemView icon = {require('../../../res/images/icon_setting_change_password.png')} title='修改密码' onPress={()=>this._gotoSetting()}></SettingItemView>
+                <SettingItemView icon = {require('../../../res/images/icon_setting_change_password.png')} title='修改密码'></SettingItemView>
                 <View style={{height:10}}></View>
 
-                <SettingItemView icon = {require('../../../res/images/icon_setting_version.png')} title='版本信息' hideArrow={true} showExtText={'版本号V1.1.0'} onPress={()=>this._gotoSetting()}></SettingItemView>
+                <SettingItemView icon = {require('../../../res/images/icon_setting_version.png')} title='版本信息' hideArrow={true} showExtText={'版本号V1.1.0'} ></SettingItemView>
                 <View style={styles.settingItemLine}></View>
-                <SettingItemView icon = {require('../../../res/images/icon_setting_feedback.png')} title='意见反馈' onPress={()=>this._gotoSetting()}></SettingItemView>
+                <SettingItemView icon = {require('../../../res/images/icon_setting_feedback.png')} title='意见反馈'></SettingItemView>
                 <View style={styles.settingItemLine}></View>
-                <SettingItemView icon = {require('../../../res/images/icon_setting_contact_us.png')} title='联系我们'hideArrow={true} onPress={()=>this._gotoSetting()}></SettingItemView>
+                <SettingItemView icon = {require('../../../res/images/icon_setting_contact_us.png')} title='联系我们'hideArrow={true} ></SettingItemView>
                 <View style={styles.settingItemLine}></View>
-                <SettingItemView icon = {require('../../../res/images/icon_setting_about_us.png')} title='关于我们' onPress={()=>this._gotoSetting()}></SettingItemView>
+                <SettingItemView icon = {require('../../../res/images/icon_setting_about_us.png')} title='关于我们' ></SettingItemView>
 
                 <View style={{height:10}}></View>
 
-                <SettingItemView icon = {require('../../../res/images/icon_setting_change_project.png')} title='切换项目' onPress={()=>this._gotoSetting()}></SettingItemView>
+                <SettingItemView icon = {require('../../../res/images/icon_setting_change_project.png')} title='切换项目' onPress={()=>this._tenantChoose()}></SettingItemView>
 
                 <View style={{height:10}}></View>
                 
-                <SettingItemView icon = {require('../../../res/images/icon_setting_offline.png')} title='离线设置' onPress={()=>this._gotoSetting()}></SettingItemView>
-
+                <SettingItemView icon = {require('../../../res/images/icon_setting_offline.png')} title='离线设置' ></SettingItemView>
 
             </SafeAreaView>
         );
@@ -74,14 +79,18 @@ class SettingItemView extends React.Component{
     
     constructor() {
         super();
+        
+    }
+
+    componentDidMount(){
+        
     }
 
     render(){
         let arrow = this.props.hideArrow ? null:<Image source={require('../../../res/images/icon_arrow_right_gray.png')} style={styles.settingItemArrow}/> ;    // 箭头
         let extText = this.props.showExtText ? <Text style={styles.settingItemExtText}>{this.props.showExtText}</Text> : null;    // 箭头
-
         return(
-         <TouchableOpacity onPress={()=>{ this.props.onPress()}}>
+         <TouchableOpacity onPress={()=>{this.props.onPress && this.props.onPress()}}>
           <View style={styles.settingItemContainer}>
             <Image source={this.props.icon} style={styles.settingItemIcon}/>
             <Text style={styles.settingItemText}>{this.props.title} </Text>
