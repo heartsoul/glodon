@@ -9,6 +9,8 @@ import {
   Switch,
   requireNativeComponent,
 } from 'react-native';
+var Dimensions = require("Dimensions");
+var { width, height } = Dimensions.get("window");
 import { SegmentedView, ListRow, Label, ActionSheet } from 'teaset';
 import ImageChooserView from './ImageChooserView';
 
@@ -54,7 +56,7 @@ export default class extends React.Component {
         <ListRow title='检查单位' accessory='indicator' onPress={()=>{}} />
         <ListRow title='施工单位' accessory='indicator' onPress={()=>{}} />
         <ListRow title='责任人' accessory='indicator' onPress={()=>{}} />
-      <ImageChooserView style={{ top:10,left:20,width:200,height:200 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
+      <ImageChooserView style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
       <ListRow title='质检项目' accessory='indicator' onPress={()=>{}} />
       <ListRow title='关联图纸' accessory='indicator' onPress={()=>{}} />
       <ListRow title='关联模型' accessory='indicator' onPress={()=>{}} />
