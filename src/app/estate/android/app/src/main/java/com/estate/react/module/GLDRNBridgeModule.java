@@ -1,4 +1,4 @@
-package com.estate.module;
+package com.estate.react.module;
 
 import android.text.TextUtils;
 

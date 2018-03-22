@@ -2,7 +2,7 @@ package com.estate;
 
 import android.app.Application;
 
-import com.estate.module.GLDReactPackage;
+import com.estate.react.GLDReactPackage;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;

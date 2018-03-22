@@ -1,4 +1,4 @@
-package com.estate.module;
+package com.estate.react.module;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;

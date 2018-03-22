@@ -1,7 +1,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { requireNativeComponent, processColor } from 'react-native';
+import { requireNativeComponent, processColor,View } from 'react-native';
 
 class ImageChooserView extends React.Component {
     _onChange = (event) => {
@@ -59,6 +59,8 @@ ImageChooserView.propTypes = {
      */
     isShowTakePhotoSheet: PropTypes.bool,
     onChange: PropTypes.func,
+    ...View.propTypes,
+
 };
 
 var GLDPhoto = requireNativeComponent('GLDPhoto', ImageChooserView);
