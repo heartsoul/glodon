@@ -89,9 +89,8 @@ class SettingItemView extends React.Component{
     render(){
         let arrow = this.props.hideArrow ? null:<Image source={require('../../../res/images/icon_arrow_right_gray.png')} style={styles.settingItemArrow}/> ;    // 箭头
         let extText = this.props.showExtText ? <Text style={styles.settingItemExtText}>{this.props.showExtText}</Text> : null;    // 箭头
-        
         return(
-         <TouchableOpacity onPress={()=>{ if(this.props.onPress){this.props.onPress()}}}>
+         <TouchableOpacity onPress={()=>{this.props.onPress && this.props.onPress()}}>
           <View style={styles.settingItemContainer}>
             <Image source={this.props.icon} style={styles.settingItemIcon}/>
             <Text style={styles.settingItemText}>{this.props.title} </Text>
