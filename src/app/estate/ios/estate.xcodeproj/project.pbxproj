@@ -113,6 +113,9 @@
 		248E0D2D2060A54F0053F5AA /* RNTSwitchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D2C2060A54F0053F5AA /* RNTSwitchManager.m */; };
 		248E0D302060DFE40053F5AA /* RNTMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D2F2060DFE40053F5AA /* RNTMapView.m */; };
 		248E0D332060E0590053F5AA /* RNTMapManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D322060E0590053F5AA /* RNTMapManager.m */; };
+		24D9E00120637CB800CAB786 /* BaseRCTComponentsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E00020637CB800CAB786 /* BaseRCTComponentsManager.m */; };
+		24D9E00420637E9600CAB786 /* NSDictionary+BaseRCTComponents.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E00320637E9600CAB786 /* NSDictionary+BaseRCTComponents.m */; };
+		24D9E007206390D500CAB786 /* GLDImagePickerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E006206390D500CAB786 /* GLDImagePickerManager.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -196,6 +199,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 9936F3131F5F2E4B0010BF04;
 			remoteInfo = privatedata;
+		};
+		24D9E0312063A2B400CAB786 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30E2D03B6DD14E379598579B /* STTVTableView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8E87A9901FAB62CC00B9C54E;
+			remoteInfo = STTVTableView;
 		};
 		2D16E6711FA4F8DC00B85C8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -517,8 +527,15 @@
 		248E0D2F2060DFE40053F5AA /* RNTMapView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTMapView.m; sourceTree = "<group>"; };
 		248E0D312060E0590053F5AA /* RNTMapManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTMapManager.h; sourceTree = "<group>"; };
 		248E0D322060E0590053F5AA /* RNTMapManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTMapManager.m; sourceTree = "<group>"; };
+		24D9DFFF20637CB800CAB786 /* BaseRCTComponentsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseRCTComponentsManager.h; sourceTree = "<group>"; };
+		24D9E00020637CB800CAB786 /* BaseRCTComponentsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRCTComponentsManager.m; sourceTree = "<group>"; };
+		24D9E00220637E9600CAB786 /* NSDictionary+BaseRCTComponents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+BaseRCTComponents.h"; sourceTree = "<group>"; };
+		24D9E00320637E9600CAB786 /* NSDictionary+BaseRCTComponents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+BaseRCTComponents.m"; sourceTree = "<group>"; };
+		24D9E005206390D500CAB786 /* GLDImagePickerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLDImagePickerManager.h; sourceTree = "<group>"; };
+		24D9E006206390D500CAB786 /* GLDImagePickerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDImagePickerManager.m; sourceTree = "<group>"; };
 		2632B319FF8E0417CC63C60C /* Pods-estate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-estate.release.xcconfig"; path = "Pods/Target Support Files/Pods-estate/Pods-estate.release.xcconfig"; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		30E2D03B6DD14E379598579B /* STTVTableView.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = STTVTableView.xcodeproj; path = "../node_modules/react-native-largelist/ios/STTVTableView.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -1056,6 +1073,9 @@
 		248E0CE0205FA09D0053F5AA /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				24D9E005206390D500CAB786 /* GLDImagePickerManager.h */,
+				24D9E006206390D500CAB786 /* GLDImagePickerManager.m */,
+				24D9DFE320637C1400CAB786 /* Base */,
 				248E0CFC205FA0F10053F5AA /* GLDPhotoManager.h */,
 				248E0CFD205FA0F10053F5AA /* GLDPhotoManager.m */,
 				248E0CFF205FB1440053F5AA /* GLDDemoManager.h */,
@@ -1070,6 +1090,25 @@
 				248E0D322060E0590053F5AA /* RNTMapManager.m */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		24D9DFE320637C1400CAB786 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				24D9DFFF20637CB800CAB786 /* BaseRCTComponentsManager.h */,
+				24D9E00020637CB800CAB786 /* BaseRCTComponentsManager.m */,
+				24D9E00220637E9600CAB786 /* NSDictionary+BaseRCTComponents.h */,
+				24D9E00320637E9600CAB786 /* NSDictionary+BaseRCTComponents.m */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		24D9E0132063A2B400CAB786 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				24D9E0322063A2B400CAB786 /* STTVTableView.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -1113,6 +1152,7 @@
 				139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */,
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
+				30E2D03B6DD14E379598579B /* STTVTableView.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1265,6 +1305,10 @@
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
+				{
+					ProductGroup = 24D9E0132063A2B400CAB786 /* Products */;
+					ProjectRef = 30E2D03B6DD14E379598579B /* STTVTableView.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1349,6 +1393,13 @@
 			fileType = archive.ar;
 			path = libprivatedata.a;
 			remoteRef = 247E2B022043C82F00016F63 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		24D9E0322063A2B400CAB786 /* STTVTableView.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = STTVTableView.framework;
+			remoteRef = 24D9E0312063A2B400CAB786 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2D16E6721FA4F8DC00B85C8A /* libRCTBlob-tvOS.a */ = {
@@ -1617,6 +1668,7 @@
 				247E2BEE2046373400016F63 /* RequestModel.m in Sources */,
 				247E2BD92046373300016F63 /* NSData+Compression.m in Sources */,
 				247E2C122046373400016F63 /* SBJsonStreamParserState.m in Sources */,
+				24D9E00420637E9600CAB786 /* NSDictionary+BaseRCTComponents.m in Sources */,
 				247E2C0E2046373400016F63 /* SBJsonStreamParser.m in Sources */,
 				247E2BDE2046373300016F63 /* NSArray+LinqExtensions.m in Sources */,
 				247E2C0A2046373400016F63 /* KxMenu.m in Sources */,
@@ -1644,6 +1696,7 @@
 				247E2BF82046373400016F63 /* NetCacheManager.m in Sources */,
 				247E2C1D2046373400016F63 /* SLColorArt.m in Sources */,
 				247E2C1E2046373400016F63 /* CoreDataManager.m in Sources */,
+				24D9E00120637CB800CAB786 /* BaseRCTComponentsManager.m in Sources */,
 				247E2BE22046373300016F63 /* NSCalendar+cache.m in Sources */,
 				247E2BD42046373300016F63 /* UIImage+Compress.m in Sources */,
 				247E2BF92046373400016F63 /* CacheUtil.m in Sources */,
@@ -1664,6 +1717,7 @@
 				247E2BDF2046373300016F63 /* NSString+Unicode.m in Sources */,
 				247E2BF12046373400016F63 /* NetUtil.m in Sources */,
 				247E2BE92046373400016F63 /* UIAlertController+Soul.m in Sources */,
+				24D9E007206390D500CAB786 /* GLDImagePickerManager.m in Sources */,
 				247E2C112046373400016F63 /* SBJsonUTF8Stream.m in Sources */,
 				247E2BF02046373400016F63 /* NetApiDelegate.m in Sources */,
 				247E2BD52046373300016F63 /* NSData+JSON.m in Sources */,
@@ -1707,7 +1761,10 @@
 					"COCOAPODS=1",
 					"SKIP_BUNDLING=0",
 				);
-				HEADER_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-largelist/ios/STTVTableView",
+				);
 				INFOPLIST_FILE = estate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1731,7 +1788,10 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5BWXTQUBDE;
-				HEADER_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-largelist/ios/STTVTableView",
+				);
 				INFOPLIST_FILE = estate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (

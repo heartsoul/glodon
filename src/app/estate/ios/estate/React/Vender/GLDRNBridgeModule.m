@@ -367,7 +367,13 @@ NSArray* apiSet() {
 }
 
 RCT_EXPORT_MODULE(GLDRNBridgeModule)
-
+- (dispatch_queue_t)methodQueue
+{
+  return dispatch_get_main_queue();
+}
++ (BOOL)requiresMainQueueSetup {
+  return NO;
+}
 //RN传参数调用原生OC,并且返回数据给RN  通过CallBack
 RCT_EXPORT_METHOD(RNInvokeOCCallBack:(NSDictionary *)dictionary callback:(RCTResponseSenderBlock)callback){
 #ifdef DEBUG
