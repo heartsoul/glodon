@@ -23,6 +23,7 @@ public class GLDReactPackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new GLDRNBridgeModule(reactContext));
+        modules.add(new ImageChooserViewManager());
 
         return modules;
     }

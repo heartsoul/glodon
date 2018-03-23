@@ -9,9 +9,14 @@ import android.widget.Toast;
 import com.estate.MainApplication;
 import com.estate.react.component.imageChoose.ImageChooserView;
 import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
+import com.facebook.react.uimanager.NativeViewHierarchyManager;
 import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.UIBlock;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.ViewGroupManager;
 import com.facebook.react.uimanager.annotations.ReactProp;
@@ -102,6 +107,18 @@ public class ImageChooserViewManager extends ViewGroupManager<ImageChooserView> 
         public void dispatch(RCTEventEmitter rctEventEmitter) {
             rctEventEmitter.receiveEvent(getViewTag(), getEventName(), null);
         }
+    }
+    @ReactMethod
+    public void loadFile(final ReadableMap data, Callback callback){
+        UIManagerModule uiManager = MainApplication.instance.getCurrentReactContext().getNativeModule(UIManagerModule.class);
+        uiManager.addUIBlock(new UIBlock() {
+            public void execute (NativeViewHierarchyManager nvhm) {
+                View view = nvhm.resolveView(data.getInt("handleId"));
+                if (view instanceof ImageChooserView) {
+                    ((ImageChooserView)view).loadFile();
+                }
+            }
+        });
     }
 }
 
