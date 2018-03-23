@@ -7,14 +7,16 @@ import com.facebook.react.ReactApplication;
 import com.imagepicker.ImagePickerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.glodon.bim.basic.utils.ScreenUtil;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
-
+  public static MainApplication instance;
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
     public boolean getUseDeveloperSupport() {
@@ -41,9 +43,15 @@ public class MainApplication extends Application implements ReactApplication {
     return mReactNativeHost;
   }
 
+  public ReactContext getCurrentReactContext(){
+    return mReactNativeHost.getReactInstanceManager().getCurrentReactContext();
+  }
+
   @Override
   public void onCreate() {
     super.onCreate();
+    instance = this;
+    ScreenUtil.init(this);
     SoLoader.init(this, /* native exopackage */ false);
   }
 }
