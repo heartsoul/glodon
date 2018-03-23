@@ -90,6 +90,16 @@ RCT_CUSTOM_VIEW_PROPERTY(title, NSString, UIButton)
   if (button.onChange) {
     button.onChange(@{});
   }
-  
+}
+RCT_EXPORT_METHOD(goBack:(nonnull NSNumber *)reactTag)
+{
+  [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, RNTImagesView1 *> *viewRegistry) {
+    RNTImagesView1 *view = viewRegistry[reactTag];
+    if (![view isKindOfClass:[RNTImagesView1 class]]) {
+      RCTLogError(@"Invalid view returned from registry, expecting RCTWebView, got: %@", view);
+    } else {
+//      [view goBack];
+    }
+  }];
 }
 @end

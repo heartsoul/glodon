@@ -60,6 +60,8 @@ export default class extends React.Component {
       <ListRow title='质检项目' accessory='indicator' onPress={()=>{}} />
       <ListRow title='关联图纸' accessory='indicator' onPress={()=>{}} />
       <ListRow title='关联模型' accessory='indicator' onPress={()=>{}} />
+      <ImageChooserView style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
+      
        </View>
       
     );

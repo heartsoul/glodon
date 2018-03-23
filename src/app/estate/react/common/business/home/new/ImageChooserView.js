@@ -1,21 +1,37 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { requireNativeComponent, processColor,View } from 'react-native';
+// import ReactNative from 'ReactNative'
+var ReactNative = require('ReactNative');
+import { requireNativeComponent, processColor,NativeModules,UIManager,View  } from 'react-native';
 
 class ImageChooserView extends React.Component {
     _onChange = (event) => {
         if (!this.props.onChange) {
             return;
         }
-
+        // console.log(GLDPhoto);
+        // console.log(NativeModules.GLDPhotoManager);
+       // NativeModules.GLDPhotoManager.loadFile();
         // process raw event...
-        this.props.onChange(event.nativeEvent);
+       // this.props.onChange(event.nativeEvent);
+       UIManager.dispatchViewManagerCommand(
+        this.getWebViewHandle(),
+        UIManager.GLDPhoto.Commands.loadFile,
+        null
+        );
     }
+    /**
+   * Returns the native `WebView` node.
+   */
+  getWebViewHandle = () => {
+    return ReactNative.findNodeHandle(this.refs['photo']);
+  };
     render() {
         return (
             <GLDPhoto
                 {...this.props}
+                ref ={'photo'}
                 onChange={(e) => { this._onChange(e); }} title={this.props.title ? { title: this.props.title.title, color: processColor(this.props.color) } : { title: "按钮" }}
                 backgroudColor={processColor(this.props.backgroudColor)}
             />
@@ -60,7 +76,7 @@ ImageChooserView.propTypes = {
     isShowTakePhotoSheet: PropTypes.bool,
     onChange: PropTypes.func,
     ...View.propTypes,
-
+    fireOnChange:PropTypes.string
 };
 
 var GLDPhoto = requireNativeComponent('GLDPhoto', ImageChooserView);
