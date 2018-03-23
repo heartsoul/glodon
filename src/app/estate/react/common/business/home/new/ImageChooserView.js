@@ -4,8 +4,9 @@ import React from 'react';
 // import ReactNative from 'ReactNative'
 var ReactNative = require('ReactNative');
 import { requireNativeComponent, processColor,NativeModules,UIManager,View  } from 'react-native';
-
-class ImageChooserView extends React.Component {
+const REF_PHOTO = 'gldPhoto';
+var PM = NativeModules.GLDPhotoManager;
+export default class ImageChooserView extends React.Component {
     _onChange = (event) => {
         if (!this.props.onChange) {
             return;
@@ -15,23 +16,24 @@ class ImageChooserView extends React.Component {
        // NativeModules.GLDPhotoManager.loadFile();
         // process raw event...
        // this.props.onChange(event.nativeEvent);
-       UIManager.dispatchViewManagerCommand(
-        this.getWebViewHandle(),
-        UIManager.GLDPhoto.Commands.loadFile,
-        null
+       PM.loadFile(
+        this.getViewHandle(),[],this._onLoadFile
         );
+    }
+    _onLoadFile = (files) =>{
+         console.log(files);
     }
     /**
    * Returns the native `WebView` node.
    */
-  getWebViewHandle = () => {
-    return ReactNative.findNodeHandle(this.refs['photo']);
+  getViewHandle = () => {
+    return ReactNative.findNodeHandle(this.refs[REF_PHOTO]);
   };
     render() {
         return (
             <GLDPhoto
                 {...this.props}
-                ref ={'photo'}
+                ref ={REF_PHOTO}
                 onChange={(e) => { this._onChange(e); }} title={this.props.title ? { title: this.props.title.title, color: processColor(this.props.color) } : { title: "按钮" }}
                 backgroudColor={processColor(this.props.backgroudColor)}
             />
@@ -81,4 +83,4 @@ ImageChooserView.propTypes = {
 
 var GLDPhoto = requireNativeComponent('GLDPhoto', ImageChooserView);
 
-module.exports = ImageChooserView;
+// module.exports = ImageChooserView;
