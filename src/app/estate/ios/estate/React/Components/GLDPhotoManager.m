@@ -68,24 +68,22 @@ RCT_CUSTOM_VIEW_PROPERTY(fireOnChange, NSString, RNTImagesView)
     //最大可选照片数
     quoteImagesView.collectionView.scrollEnabled = YES;
     //view可否滑动
-    quoteImagesView.navcDelegate = (UIViewController<LPDQuoteImagesViewDelegate>*) [UIApplication sharedApplication].keyWindow.rootViewController ;    //self 至少是一个控制器。
+    UIViewController *root = RCTPresentedViewController();
+
+    quoteImagesView.navcDelegate = (UIViewController<LPDQuoteImagesViewDelegate>*) root ;    //self 至少是一个控制器。
     //委托（委托controller弹出picker，且不用实现委托方法）
   _quoteImagesView = quoteImagesView;
   return quoteImagesView;
 }
-RCT_EXPORT_METHOD(RNInvokeOCPromise:(NSDictionary *)dictionary resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject){
-  
-}
-RCT_EXPORT_METHOD (loadFile:(nonnull NSNumber *)reactTag) {
-  [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, RNTImagesView *> *viewRegistry) {
-    RNTImagesView *view = viewRegistry[reactTag];
+
+RCT_EXPORT_METHOD (loadFile:(nonnull NSNumber *)reactTag uploadArray:(NSArray*)uploadArray callback:(RCTResponseSenderBlock)callback) {
+  RNTImagesView *view = (RNTImagesView*)[self.bridge.uiManager viewForReactTag:reactTag];
     if (![view isKindOfClass:[RNTImagesView class]]) {
       RCTLogError(@"Invalid view returned from registry, expecting RCTWebView, got: %@", view);
     } else {
-      [view loadFiles];
+    NSDictionary * ret = [view loadFiles];
+      callback(@[ret]);
     }
-  }];
     return;
   }
 

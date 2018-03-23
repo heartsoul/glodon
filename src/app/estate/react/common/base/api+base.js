@@ -19,7 +19,8 @@ import * as AppConfig from "../config/AppConfig"
 // })
 
 function parseJSON(response) {
-    return response.json();
+    let ret = response.json();
+    return ret;
 }
 
 function parseHTML(response) {
@@ -62,7 +63,18 @@ function checkStatus(response) {
         // });
         return response;
     } else if (response.status === 403) {
-        // Message.error('请÷联系管理员获取相应操作权限');
+        alert('请联系管理员获取相应操作权限');
+        // return ;
+        // Message.error('请联系管理员获取相应操作权限');
+    } else if (response.status === 401) {
+        global.storage.gotoLogin();
+        return ;
+        // Message.error('请联系管理员获取相应操作权限');
+    }
+    else if (response.status === 500) {
+        alert('数据获取失败');
+        // return ;
+        // Message.error('请联系管理员获取相应操作权限');
     }
 
     const error = new Error(response.statusText);
@@ -78,13 +90,19 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export function requestJSON(url, options) {
+
     let ops = {
         headers: {
             "Content-Type": "application/json;charset=utf-8",
-            "X-Requested-With": "XMLHttpRequest"
+            "X-Requested-With": "XMLHttpRequest",
         },
+        
         credentials: 'include', // 带上cookie
     };
+    // Authorization  Bearer 6515033c-6c5f-4d6a-8033-ec0906d4f085
+    if(global.storage.isLogin()) {
+        ops.headers.Authorization = "Bearer "+global.storage.getLoginToken();
+    }
     for (const i in ops) {
         if (options[i]) {
             options[i] = ops[i] = {...ops[i], ...options[i] };

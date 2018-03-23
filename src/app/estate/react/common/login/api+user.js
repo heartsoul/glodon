@@ -2,6 +2,12 @@ import { requestHTML, requestJSON } from "../base/api+base"
 
 // 用户登录
 const api_uaa_login = '/uaa/login'; // POST username=&password=
+const api_uaa_oauth_token = '/uaa/oauth/token'; // POST username=&password=
+// header
+// Content-Type:application/x-www-form-urlencoded
+// body
+// username=15822320523&password=123qwe&grant_type=password&client_id=aDlPf13UtiGs7yuHCd8eHSLHbHJTU8Sd&client_secret=voL9cWmkdu962V1tN0FE8aVsAD76HDGy
+
 // 用户退出
 const api_uaa_logout = '/uaa/logout'; // GET
 // 用户退出
@@ -25,6 +31,13 @@ export async function login(username, password) {
         headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Requested-With": "XMLHttpRequest" },
         method: 'POST',
         body: 'username=' + username + '&password=' + password,
+    });
+}
+export async function authaToken(username, password) {
+    return requestJSON(api_uaa_oauth_token, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Requested-With": "XMLHttpRequest" },
+        method: 'POST',
+        body: 'username=' + username + '&password=' + password +'&grant_type=password&client_id=aDlPf13UtiGs7yuHCd8eHSLHbHJTU8Sd&client_secret=voL9cWmkdu962V1tN0FE8aVsAD76HDGy',
     });
 }
 // 用户信息

@@ -51,7 +51,7 @@ class GLDStorage extends BaseStorage {
         this.loginToken = token;
         this.setItem('loginToken', this.loginToken);
     }
-    loginToken=()=> {
+    getLoginToken=()=> {
         return this.loginToken;
     }
     isLogin=()=> {

@@ -31,11 +31,27 @@ function login(username, pwd, successReturn) {
     console.log(response);
     loadUserInfo(successReturn);
   });
-  
+}
+function authaToken(username, pwd, successReturn) {
+  USERAPI.authaToken(username, pwd).then((response) => {
+    console.log(response.data);
+    global.storage.saveLoginToken(response.data.access_token);
+    loadUserInfo(successReturn);
+  });
+}
+function userLogin(username, pwd, successReturn) {
+  // cookie方式登录
+  login(username,pwd,successReturn);
+  // token 方式登录
+  // authaToken(username,pwd,successReturn);
 }
 function loadUserInfo(successReturn) {
   USERAPI.accountInfo().then((userInfo)=>{
     console.log(userInfo);
+    if(userInfo.err) {
+      alert('登录失败！');
+      return ;
+    }
     let data = userInfo["data"];
     console.log(global.storage);
     console.log(global.storage.userInfo);
@@ -174,6 +190,25 @@ class GLDLoginViewController extends React.Component {
     loadUserInfo(()=>{});
   }
   _loginAction = () => {
+    let navigator = this.props.navigation;
+    var ret = userLogin(this.state.username, this.state.password, () => {
+      global.storage.hasChoose((ret) => {
+        console.log("login1" + ret);
+        if (ret) {
+          global.storage.loadTenant((tenant) => {
+            console.log("login2" + tenant);
+            USERAPI.setCurrentTenant(tenant).then((responseData) => {
+              global.storage.gotoMain(navigator);
+            });
+          })
+        } else {
+          global.storage.gotoMain(navigator);
+        }
+      });
+    });
+  }
+  _loginActionOld = () => {
+   
     RNBridgeModule.RNInvokeOCCallBack(
       {
         caller: "gldrn",
