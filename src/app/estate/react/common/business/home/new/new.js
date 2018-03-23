@@ -7,6 +7,7 @@ import {
   View,
   StatusBar,
   Switch,
+  Image,
   requireNativeComponent,
 } from 'react-native';
 var Dimensions = require("Dimensions");
@@ -50,18 +51,19 @@ export default class extends React.Component {
       latitudeDelta: 0.1,
       longitudeDelta: 0.1,
     };
+    var imageFile =  'file:///Users/glodon/Library/Developer/CoreSimulator/Devices/9EC654E0-7B20-41CC-8485-72EE206DB389/data/Containers/Data/Application/B6094807-E7F6-4EE3-9947-3A358369E72C/Library/Caches/file/com.hackemist.SDWebImageCache.file/53b97cdaca226e2c5b7a6df8e9f7476f.png';
     return (
       <View>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         <ListRow title='检查单位' accessory='indicator' onPress={()=>{}} />
         <ListRow title='施工单位' accessory='indicator' onPress={()=>{}} />
         <ListRow title='责任人' accessory='indicator' onPress={()=>{}} />
-      <ImageChooserView style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
+      <ImageChooserView style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>{}} />
       <ListRow title='质检项目' accessory='indicator' onPress={()=>{}} />
       <ListRow title='关联图纸' accessory='indicator' onPress={()=>{}} />
       <ListRow title='关联模型' accessory='indicator' onPress={()=>{}} />
-      <ImageChooserView style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
-      
+    
+      <Image source={{uri:imageFile}} style={{width:200,height:200}} />
        </View>
       
     );

@@ -116,6 +116,7 @@
 		24D9E00120637CB800CAB786 /* BaseRCTComponentsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E00020637CB800CAB786 /* BaseRCTComponentsManager.m */; };
 		24D9E00420637E9600CAB786 /* NSDictionary+BaseRCTComponents.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E00320637E9600CAB786 /* NSDictionary+BaseRCTComponents.m */; };
 		24D9E007206390D500CAB786 /* GLDImagePickerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E006206390D500CAB786 /* GLDImagePickerManager.m */; };
+		24D9E0742064EAAC00CAB786 /* NSDictionary+SoulPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E0732064EAAB00CAB786 /* NSDictionary+SoulPhotoModel.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -533,6 +534,8 @@
 		24D9E00320637E9600CAB786 /* NSDictionary+BaseRCTComponents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+BaseRCTComponents.m"; sourceTree = "<group>"; };
 		24D9E005206390D500CAB786 /* GLDImagePickerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLDImagePickerManager.h; sourceTree = "<group>"; };
 		24D9E006206390D500CAB786 /* GLDImagePickerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDImagePickerManager.m; sourceTree = "<group>"; };
+		24D9E0562064EAAB00CAB786 /* NSDictionary+SoulPhotoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+SoulPhotoModel.h"; sourceTree = "<group>"; };
+		24D9E0732064EAAB00CAB786 /* NSDictionary+SoulPhotoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+SoulPhotoModel.m"; sourceTree = "<group>"; };
 		2632B319FF8E0417CC63C60C /* Pods-estate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-estate.release.xcconfig"; path = "Pods/Target Support Files/Pods-estate/Pods-estate.release.xcconfig"; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		30E2D03B6DD14E379598579B /* STTVTableView.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = STTVTableView.xcodeproj; path = "../node_modules/react-native-largelist/ios/STTVTableView.xcodeproj"; sourceTree = "<group>"; };
@@ -716,6 +719,8 @@
 		247E2B122046373300016F63 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				24D9E0562064EAAB00CAB786 /* NSDictionary+SoulPhotoModel.h */,
+				24D9E0732064EAAB00CAB786 /* NSDictionary+SoulPhotoModel.m */,
 				247E2B132046373300016F63 /* NSJSONSerialization+safeGenerate.m */,
 				247E2B142046373300016F63 /* UIColor+DarkAddition.m */,
 				247E2B152046373300016F63 /* NSDictionary+getValue.h */,
@@ -1690,6 +1695,7 @@
 				247E2C062046373400016F63 /* DownSheet.m in Sources */,
 				247E2BE72046373300016F63 /* NSDateFormatter+cache.m in Sources */,
 				247E2BFF2046373400016F63 /* DKCircleButton.m in Sources */,
+				24D9E0742064EAAC00CAB786 /* NSDictionary+SoulPhotoModel.m in Sources */,
 				247E2C022046373400016F63 /* UIAlterUtil.m in Sources */,
 				247E2C1C2046373400016F63 /* MNLUUID.m in Sources */,
 				247E2BD72046373300016F63 /* UIImage+Bundle.m in Sources */,

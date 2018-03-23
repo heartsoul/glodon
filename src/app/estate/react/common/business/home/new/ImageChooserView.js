@@ -11,14 +11,18 @@ export default class ImageChooserView extends React.Component {
         if (!this.props.onChange) {
             return;
         }
-        // console.log(GLDPhoto);
+        console.log(event.nativeEvent);
         // console.log(NativeModules.GLDPhotoManager);
        // NativeModules.GLDPhotoManager.loadFile();
         // process raw event...
-       // this.props.onChange(event.nativeEvent);
-       PM.loadFile(
-        this.getViewHandle(),[],this._onLoadFile
-        );
+        this.props.onChange(event.nativeEvent);
+        const timer = setTimeout(() => {
+            clearTimeout(timer);
+            PM.loadFile(
+                this.getViewHandle(),[],this._onLoadFile
+                );
+        }, 1500);
+       
     }
     _onLoadFile = (files) =>{
          console.log(files);
