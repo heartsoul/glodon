@@ -32,7 +32,6 @@ public class AlbumEditActivity extends BaseActivity implements View.OnClickListe
     private AlbumEditAdapter mAdapter;
     private List<ImageItem> mDataList;
     private OnAlbumChangeListener mListener ;
-    public static final String ALBUM_DATA = "albumData";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +98,7 @@ public class AlbumEditActivity extends BaseActivity implements View.OnClickListe
         };
         mAdapter = new AlbumEditAdapter(this, mListener);
         //设置选中后的数量
-        AlbumData data = (AlbumData) getIntent().getSerializableExtra(ALBUM_DATA);
+        AlbumData data = (AlbumData) getIntent().getSerializableExtra(AlbumConfig.ALBUM_DATA_KEY);
         if(data!=null) {
             LinkedHashList<String, ImageItem> map = data.map;
             if(map.size()==0){
@@ -122,18 +121,12 @@ public class AlbumEditActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.album_edit_nav_finish:
                 AlbumConfig.albumData = mAdapter.getSelectedImages();
-                Intent intent1 = new Intent();
-//对应BroadcastReceiver中intentFilter的action
-                intent1.setAction(AlbumConfig.ACTION_REFRESH_ALBUM_VIEW);
-//发送广播
-                sendBroadcast(intent1);
-
-//                sendBroadcast(new Intent(AlbumConfig.ACTION_REFRESH_ALBUM_VIEW));
+                setResult(RESULT_OK);
                 finish();
                 break;
             case R.id.album_edit_preview:
                 Intent intent = new Intent(mActivity, PhotoPreviewActivity.class);
-                intent.putExtra(ALBUM_DATA,mAdapter.getSelectedImages());
+                intent.putExtra(AlbumConfig.ALBUM_DATA_KEY,mAdapter.getSelectedImages());
                 startActivityForResult(intent,REQUEST_CODE_PHOTO_PREVIEW);
                 break;
         }
@@ -146,7 +139,7 @@ public class AlbumEditActivity extends BaseActivity implements View.OnClickListe
         {
             case REQUEST_CODE_PHOTO_PREVIEW:
                 if(resultCode == RESULT_OK && data!=null) {
-                    AlbumData albumdata = (AlbumData) data.getSerializableExtra(ALBUM_DATA);
+                    AlbumData albumdata = (AlbumData) data.getSerializableExtra(AlbumConfig.ALBUM_DATA_KEY);
                     if(albumdata!=null)
                     {
                         mAdapter=new AlbumEditAdapter(mActivity,mListener);

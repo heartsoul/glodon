@@ -1,5 +1,8 @@
 package com.estate;
 
+import android.content.Intent;
+import android.widget.Toast;
+
 import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {
@@ -12,4 +15,5 @@ public class MainActivity extends ReactActivity {
     protected String getMainComponentName() {
         return "estate";
     }
+
 }

@@ -9,6 +9,8 @@ public class AlbumConfig {
 
     public static final String ACTION_REFRESH_ALBUM_VIEW = "ACTION_REFRESH_ALBUM_VIEW";
 
+    public static final String ALBUM_DATA_KEY = "albumData";
+
     public static AlbumData albumData = null;
 
 

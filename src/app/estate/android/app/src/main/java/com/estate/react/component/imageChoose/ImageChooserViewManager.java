@@ -1,9 +1,14 @@
 package com.estate.react.component.imageChoose;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
+import android.widget.Toast;
 
+import com.estate.MainApplication;
 import com.estate.react.component.imageChoose.ImageChooserView;
+import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -25,7 +30,7 @@ import javax.annotation.Nullable;
 public class ImageChooserViewManager extends ViewGroupManager<ImageChooserView> {
 
     public static final String REACT_CLASS = "GLDPhoto";
-    private static final int CHANGE_COLOR = 1;
+    private static final int LOAD_FILE = 1;
 
     @Override
     public String getName() {
@@ -35,19 +40,24 @@ public class ImageChooserViewManager extends ViewGroupManager<ImageChooserView> 
     @Override
     protected ImageChooserView createViewInstance(ThemedReactContext reactContext) {
         ImageChooserView imageChooserView = new ImageChooserView(reactContext);
-
+        imageChooserView.setActivity(reactContext.getCurrentActivity());
         return imageChooserView;
     }
 
     @Nullable
     @Override
     public Map<String, Integer> getCommandsMap() {
-        return super.getCommandsMap();
+        return MapBuilder.of("loadFile", LOAD_FILE);
     }
 
     @Override
     public void receiveCommand(ImageChooserView root, int commandId, @Nullable ReadableArray args) {
         super.receiveCommand(root, commandId, args);
+        switch (commandId) {
+            case LOAD_FILE:
+                root.loadFile();
+                break;
+        }
     }
 
     @Nullable
