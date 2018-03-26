@@ -30,7 +30,7 @@ export async function login(username, password) {
     return requestHTML(api_uaa_login, {
         headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Requested-With": "XMLHttpRequest" },
         method: 'POST',
-        body: 'username=' + username + '&password=' + password,
+        body: `username=${username}&password=${password}`,
     });
 }
 export async function authaToken(username, password) {

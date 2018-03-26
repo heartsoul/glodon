@@ -15,26 +15,26 @@ var {
   height: deviceHeight,
   width: deviceWidth
 } = Dimensions.get('window');
-const cmdString = "\
-function callMessage(action, data, callbackName) { \
-  let actionIn = 'unknown'; let dataIn = {}; let callbackNameIn = 'defaultReturn';\
-  if(action) { actionIn = action;} else {alert('无效调用');return;}\
-  if(data) { dataIn = data;}\
-  if(callbackName) { callbackNameIn = callbackName; } \
-  let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});\
-  console.log('执行命令：'+cmd);\
-  window.postMessage(cmd);\
-}\
-window.modelEvent = {\
-  defaultReturn : function(data) {console.log('执行命令成功:'+data);},\
-  loadDotsData : function() { callMessage('loadDotsData');},\
-  invalidateToken : function() { callMessage('invalidateToken');},\
-  cancelPosition : function() { callMessage('cancelPosition');},\
-  getPosition : function(jsonData) { callMessage('getPosition', jsonData);},\
-  getPositionInfo : function(jsonData) { callMessage('getPositionInfo', jsonData);},\
-};\
-//document.addEventListener('message', function(e) {eval(e.data);});\
-";
+const cmdString = `
+function callMessage(action, data, callbackName) { 
+  let actionIn = 'unknown'; let dataIn = {}; let callbackNameIn = 'defaultReturn';
+  if(action) { actionIn = action;} else {alert('无效调用');return;}
+  if(data) { dataIn = data;}
+  if(callbackName) { callbackNameIn = callbackName; } 
+  let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});
+  console.log('执行命令：'+cmd);
+  window.postMessage(cmd);
+}
+window.modelEvent = {
+  defaultReturn : function(data) {console.log('执行命令成功:'+data);},
+  loadDotsData : function() { callMessage('loadDotsData');},
+  invalidateToken : function() { callMessage('invalidateToken');},
+  cancelPosition : function() { callMessage('cancelPosition');},
+  getPosition : function(jsonData) { callMessage('getPosition', jsonData);},
+  getPositionInfo : function(jsonData) { callMessage('getPositionInfo', jsonData);},
+};
+//document.addEventListener('message', function(e) {eval(e.data);});
+`;
 
 //默认应用的容器组件
 export default class GLDWebView extends Component {

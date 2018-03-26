@@ -187,7 +187,7 @@ function demoData(size) {
 }
  */
 export async function getQualityInspectionAll(projectId, qcState, page, size, qualityCheckpointId = 0, qualityCheckpointName = '') {
-    let api = "/quality/" + projectId + "/qualityInspection/all";
+    let api = `/quality/${projectId}/qualityInspection/all`;
     let filter = '';
     if (!(qualityCheckpointId === 0)) {
         filter += '&qualityCheckpointId=' + qualityCheckpointId;
