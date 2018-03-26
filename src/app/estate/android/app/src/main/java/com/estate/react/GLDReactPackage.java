@@ -1,5 +1,6 @@
 package com.estate.react;
 
+import com.estate.react.component.imageChoose.GLDDemoManager;
 import com.estate.react.component.imageChoose.ImageChooserViewManager;
 import com.estate.react.module.GLDRNBridgeModule;
 import com.facebook.react.ReactPackage;
@@ -31,6 +32,6 @@ public class GLDReactPackage implements ReactPackage {
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
 //        return new ArrayList<>();
-        return Arrays.<ViewManager>asList(new ImageChooserViewManager());
+        return Arrays.<ViewManager>asList(new ImageChooserViewManager(),new GLDDemoManager());
     }
 }
