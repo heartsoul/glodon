@@ -2,6 +2,7 @@ package com.estate.react;
 
 import com.estate.react.component.imageChoose.GLDDemoManager;
 import com.estate.react.component.imageChoose.ImageChooserViewManager;
+import com.estate.react.module.GLDPhotoManager;
 import com.estate.react.module.GLDRNBridgeModule;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
@@ -24,7 +25,7 @@ public class GLDReactPackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new GLDRNBridgeModule(reactContext));
-        modules.add(new ImageChooserViewManager());
+        modules.add(new GLDPhotoManager(reactContext));
 
         return modules;
     }

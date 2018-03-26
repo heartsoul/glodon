@@ -13,6 +13,10 @@ var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 import { SegmentedView, ListRow, Label, ActionSheet } from 'teaset';
 import ImageChooserView from './ImageChooserView';
+import * as UPLOADAPI from "../../service/api/api+upload"; 
+var ReactNative = require('ReactNative');
+
+const REF_PHOTO = 'gldPhoto';
 
 export default class extends React.Component {
   static navigationOptions = ({navigation, screenProps}) => ({
@@ -37,7 +41,20 @@ export default class extends React.Component {
   }
   
   _rightAction = ()=> {
-    console.log("执行_rightAction");
+    // let fileData = [
+    //     {"path" : "file:///storage/emulated/0/pic.png", "name" : "pic.png", "length" : 107815},
+    //     {"path" : "file:///storage/emulated/0/pic2.png", "name" : "pic2.png", "length" : 61365}
+    // ];
+    // UPLOADAPI.upLoadFiles(fileData,(code,result)=>{
+    //     alert(result)
+    // });
+    this.refs[REF_PHOTO]._loadFile((files)=>{
+        if(files){
+            UPLOADAPI.upLoadFiles(files,(code,result)=>{
+                alert(result)//上传图片的结果
+            });
+        }
+    });
   }
   constructor() {
       super();
@@ -60,7 +77,7 @@ export default class extends React.Component {
       <ListRow title='质检项目' accessory='indicator' onPress={()=>{}} />
       <ListRow title='关联图纸' accessory='indicator' onPress={()=>{}} />
       <ListRow title='关联模型' accessory='indicator' onPress={()=>{}} />
-      <ImageChooserView style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
+      <ImageChooserView ref ={ REF_PHOTO } style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
       
        </View>
       

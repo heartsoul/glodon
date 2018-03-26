@@ -18,13 +18,18 @@ import android.widget.Toast;
 import com.estate.MainApplication;
 import com.estate.R;
 import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 import com.glodon.bim.basic.image.ImageLoader;
 import com.glodon.bim.basic.utils.LinkedHashList;
 import com.glodon.bim.customview.album.AlbumConfig;
+import com.glodon.bim.customview.album.AlbumData;
 import com.glodon.bim.customview.album.AlbumEditActivity;
 import com.glodon.bim.customview.album.ImageItem;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +48,9 @@ public class ImageChooserView extends LinearLayout {
     private ImageView mPhoto0, mPhoto1, mPhoto2, mPhoto3;
     private Activity activity;
 
+    private String tag;
+    private AlbumData albumData = null;//选中的图片数据
+
     public ImageChooserView(Context context) {
         super(context);
         init();
@@ -59,7 +67,6 @@ public class ImageChooserView extends LinearLayout {
     }
 
     private void init() {
-        AlbumConfig.albumData = null;
         LayoutInflater.from(getContext()).inflate(R.layout.layout_image_chooser, this);
         mPhotoParent = findViewById(R.id.create_check_list_photo_parent);
         mPhoto0 = findViewById(R.id.create_check_list_photo_0);
@@ -70,11 +77,12 @@ public class ImageChooserView extends LinearLayout {
         addActivityEventListener();
 
         setPhoto();
+        tag = this.toString();
     }
 
     public void setPhoto() {
-        if (AlbumConfig.albumData != null) {
-            LinkedHashList<String, ImageItem> mSelectedMap = AlbumConfig.albumData.map;
+        if (albumData != null) {
+            LinkedHashList<String, ImageItem> mSelectedMap = albumData.map;
             List<ImageView> list = new ArrayList<>();
             list.add(mPhoto0);
             list.add(mPhoto1);
@@ -108,8 +116,11 @@ public class ImageChooserView extends LinearLayout {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(getContext(), AlbumEditActivity.class);
-            intent.putExtra(AlbumConfig.ALBUM_DATA_KEY, AlbumConfig.albumData);
+            if (albumData != null) {
+                intent.putExtra(AlbumConfig.ALBUM_DATA_KEY, albumData);
+            }
             if (activity != null) {
+                intent.putExtra("chooserView", tag);
                 activity.startActivityForResult(intent, OPEN_ALBUM_REQUEST_CODE);
             }
         }
@@ -120,14 +131,19 @@ public class ImageChooserView extends LinearLayout {
         this.activity = activity;
     }
 
-    public void addActivityEventListener(){
+    public void addActivityEventListener() {
         MainApplication.instance.getCurrentReactContext().addActivityEventListener(new ActivityEventListener() {
             @Override
             public void onActivityResult(final Activity activity, int requestCode, int resultCode, Intent data) {
                 if (OPEN_ALBUM_REQUEST_CODE == requestCode && resultCode == Activity.RESULT_OK) {
-                    setPhoto();
+                    String chooserView = data.getStringExtra("chooserView");
+                    if (chooserView != null && chooserView.equals(tag)) {
+                        albumData = (AlbumData) data.getSerializableExtra(AlbumConfig.ALBUM_DATA_KEY);
+                        setPhoto();
+                    }
                 }
             }
+
             @Override
             public void onNewIntent(Intent intent) {
 
@@ -135,7 +151,25 @@ public class ImageChooserView extends LinearLayout {
         });
     }
 
-    public void loadFile() {
-
+    /**
+     * 图片数组
+     *
+     * @return
+     */
+    public WritableArray loadFile() {
+        WritableArray files = Arguments.createArray();
+        if (albumData != null && albumData.map != null) {
+            for (ImageItem entry : albumData.map.getValueList()) {
+                File file = new File(entry.imagePath);
+                long length = file.length();
+                String name = file.getName();
+                WritableMap data = Arguments.createMap();
+                data.putString("path", entry.imagePath);
+                data.putString("name", name);
+                data.putString("length", length + "");
+                files.pushMap(data);
+            }
+        }
+        return files;
     }
 }

@@ -24,6 +24,15 @@ export default class ImageChooserView extends React.Component {
          console.log(files);
     }
     /**
+     * 获取GLDPhoto中的选中的图片信息
+     * @param {*} _onLoadFile 拿到文件信息后的回调方法
+     */
+    _loadFile(_onLoadFile){
+        PM.loadFile({handleId:this.getViewHandle()},(param)=>{
+            _onLoadFile(param)
+        });
+    }
+    /**
    * Returns the native `WebView` node.
    */
   getViewHandle = () => {
