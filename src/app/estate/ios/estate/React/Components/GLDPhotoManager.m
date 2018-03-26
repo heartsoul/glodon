@@ -29,15 +29,22 @@
   SDDataCache * sd = [SDDataCache fileDataCache];
   if([sd existInCachePathForKey:itemid]) {
     NSString * path = [[sd imageCache] defaultCachePathForKey:itemid];
-    path = [NSURL fileURLWithPath:path].absoluteString;
-    finish(@{@"path":path,@"key":itemid});
+    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    NSURL * fileUrl = [NSURL fileURLWithPath:path];
+    path = fileUrl.absoluteString;
+    id size = @"0";
+    if (attr[NSFileSize]) {
+      size = attr[NSFileSize];
+    }
+    finish(@{@"path":path,@"key":itemid,@"name":fileUrl.lastPathComponent,@"length":size});
     return;
   }
   [item loadImageData:^(NSData *imageData) {
     [[SDDataCache fileDataCache] storeData:imageData forKey:itemid];
     NSString * path = [[[SDDataCache fileDataCache] imageCache] defaultCachePathForKey:itemid];
-    path = [NSURL fileURLWithPath:path].absoluteString;
-    finish(@{@"path":path,@"key":itemid});
+    NSURL * fileUrl = [NSURL fileURLWithPath:path];
+    path = fileUrl.absoluteString;
+    finish(@{@"path":path,@"key":itemid,@"name":fileUrl.lastPathComponent,@"length":@(imageData.length)});
   }];
 }
 - (void)loadNext:(NSMutableArray *)ret asset:(PHAsset *)asset next:(PHAsset *(^)(void))next{

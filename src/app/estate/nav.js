@@ -82,8 +82,8 @@ const RootStack = StackNavigator(
     },
   },
   {
-    // initialRouteName: global.storage.isGuide() ? 'Guide' : 'Login',
-    initialRouteName: 'MainPage',
+    initialRouteName: global.storage.isGuide() ? 'Guide' : 'Login',
+    // initialRouteName: 'MainPage',
     // headerMode:"none",
   },
 );

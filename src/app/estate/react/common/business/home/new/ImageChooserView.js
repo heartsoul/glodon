@@ -5,7 +5,7 @@ import React from 'react';
 var ReactNative = require('ReactNative');
 import { requireNativeComponent, processColor,NativeModules,UIManager,View  } from 'react-native';
 const REF_PHOTO = 'gldPhoto';
-var PM = NativeModules.GLDPhotoManager;
+// var PM = NativeModules.GLDPhotoManager;
 export default class ImageChooserView extends React.Component {
     _onChange = (event) => {
         if (!this.props.onChange) {
@@ -18,14 +18,21 @@ export default class ImageChooserView extends React.Component {
         this.props.onChange(event.nativeEvent);
         const timer = setTimeout(() => {
             clearTimeout(timer);
-            PM.loadFile(
-                this.getViewHandle(),[],this._onLoadFile
-                );
+            // PM.loadFile(
+            //     this.getViewHandle(),[],this._onLoadFile
+            //     );
         }, 1500);
        
     }
     _onLoadFile = (files) =>{
          console.log(files);
+         if (!this.props.onLoadFile) {
+            return;
+        }
+        if(!files.images) {
+            return;
+        }
+        this.props.onLoadFile(files.images);
     }
     /**
    * Returns the native `WebView` node.
@@ -82,7 +89,8 @@ ImageChooserView.propTypes = {
     isShowTakePhotoSheet: PropTypes.bool,
     onChange: PropTypes.func,
     ...View.propTypes,
-    fireOnChange:PropTypes.string
+    fireOnChange:PropTypes.string,
+    onLoadFile: PropTypes.func,
 };
 
 var GLDPhoto = requireNativeComponent('GLDPhoto', ImageChooserView);

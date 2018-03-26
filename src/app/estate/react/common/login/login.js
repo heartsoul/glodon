@@ -41,9 +41,9 @@ function authaToken(username, pwd, successReturn) {
 }
 function userLogin(username, pwd, successReturn) {
   // cookie方式登录
-  login(username,pwd,successReturn);
+  // login(username,pwd,successReturn);
   // token 方式登录
-  // authaToken(username,pwd,successReturn);
+  authaToken(username,pwd,successReturn);
 }
 function loadUserInfo(successReturn) {
   USERAPI.accountInfo().then((userInfo)=>{
