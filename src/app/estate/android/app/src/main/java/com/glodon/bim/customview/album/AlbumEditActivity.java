@@ -25,13 +25,14 @@ public class AlbumEditActivity extends BaseActivity implements View.OnClickListe
 
     private static final int REQUEST_CODE_PHOTO_PREVIEW = 0;
     private static final int REQUEST_CODE_CREATE_CHECK_LIST = 1;
-    private TextView mNavCancel,mNavFinish;
+    private TextView mNavCancel, mNavFinish;
     private View mStatusView;
     private RecyclerView mRecyclerView;
     private TextView mPreviewView;
     private AlbumEditAdapter mAdapter;
     private List<ImageItem> mDataList;
-    private OnAlbumChangeListener mListener ;
+    private OnAlbumChangeListener mListener;
+    private String chooserView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,31 +81,33 @@ public class AlbumEditActivity extends BaseActivity implements View.OnClickListe
         mPreviewView.setOnClickListener(this);
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setVerticalScrollBarEnabled(true);
-        GridLayoutManager manager = new GridLayoutManager(this,4);
+        GridLayoutManager manager = new GridLayoutManager(this, 4);
         mRecyclerView.setLayoutManager(manager);
         mListener = new OnAlbumChangeListener() {
             @Override
             public void onChange(LinkedHashList<String, ImageItem> map) {
-                if(map.size()==0){
+                if (map.size() == 0) {
                     mNavFinish.setText("完成");
-                }else{
-                    mNavFinish.setText("完成("+map.size()+")");
+                } else {
+                    mNavFinish.setText("完成(" + map.size() + ")");
                 }
             }
         };
         mAdapter = new AlbumEditAdapter(this, mListener);
         //设置选中后的数量
         AlbumData data = (AlbumData) getIntent().getSerializableExtra(AlbumConfig.ALBUM_DATA_KEY);
-        if(data!=null) {
+        chooserView = getIntent().getStringExtra("chooserView");
+
+        if (data != null) {
             LinkedHashList<String, ImageItem> map = data.map;
-            if(map.size()==0){
+            if (map.size() == 0) {
                 mNavFinish.setText("完成");
-            }else{
-                mNavFinish.setText("完成("+map.size()+")");
+            } else {
+                mNavFinish.setText("完成(" + map.size() + ")");
             }
         }
         mAdapter.setSelectedMap(data);
@@ -115,19 +118,22 @@ public class AlbumEditActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        switch (id){
+        switch (id) {
             case R.id.album_edit_nav_cancel:
                 finish();
                 break;
-            case R.id.album_edit_nav_finish:
-                AlbumConfig.albumData = mAdapter.getSelectedImages();
-                setResult(RESULT_OK);
+            case R.id.album_edit_nav_finish: {
+                Intent intent = new Intent();
+                intent.putExtra(AlbumConfig.ALBUM_DATA_KEY, mAdapter.getSelectedImages());
+                intent.putExtra("chooserView", chooserView);
+                setResult(RESULT_OK, intent);
                 finish();
-                break;
+            }
+            break;
             case R.id.album_edit_preview:
                 Intent intent = new Intent(mActivity, PhotoPreviewActivity.class);
-                intent.putExtra(AlbumConfig.ALBUM_DATA_KEY,mAdapter.getSelectedImages());
-                startActivityForResult(intent,REQUEST_CODE_PHOTO_PREVIEW);
+                intent.putExtra(AlbumConfig.ALBUM_DATA_KEY, mAdapter.getSelectedImages());
+                startActivityForResult(intent, REQUEST_CODE_PHOTO_PREVIEW);
                 break;
         }
     }
@@ -135,23 +141,21 @@ public class AlbumEditActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode)
-        {
+        switch (requestCode) {
             case REQUEST_CODE_PHOTO_PREVIEW:
-                if(resultCode == RESULT_OK && data!=null) {
+                if (resultCode == RESULT_OK && data != null) {
                     AlbumData albumdata = (AlbumData) data.getSerializableExtra(AlbumConfig.ALBUM_DATA_KEY);
-                    if(albumdata!=null)
-                    {
-                        mAdapter=new AlbumEditAdapter(mActivity,mListener);
+                    if (albumdata != null) {
+                        mAdapter = new AlbumEditAdapter(mActivity, mListener);
                         mAdapter.setSelectedMap(albumdata);
                         mRecyclerView.setAdapter(mAdapter);
                         mAdapter.upateData(mDataList);
 
                         LinkedHashList<String, ImageItem> map = albumdata.map;
-                        if(map.size()==0){
+                        if (map.size() == 0) {
                             mNavFinish.setText("完成");
-                        }else{
-                            mNavFinish.setText("完成("+map.size()+")");
+                        } else {
+                            mNavFinish.setText("完成(" + map.size() + ")");
                         }
                     }
                 }

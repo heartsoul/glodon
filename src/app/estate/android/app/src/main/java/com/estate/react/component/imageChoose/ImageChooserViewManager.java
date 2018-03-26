@@ -108,17 +108,5 @@ public class ImageChooserViewManager extends ViewGroupManager<ImageChooserView> 
             rctEventEmitter.receiveEvent(getViewTag(), getEventName(), null);
         }
     }
-    @ReactMethod
-    public void loadFile(final ReadableMap data, Callback callback){
-        UIManagerModule uiManager = MainApplication.instance.getCurrentReactContext().getNativeModule(UIManagerModule.class);
-        uiManager.addUIBlock(new UIBlock() {
-            public void execute (NativeViewHierarchyManager nvhm) {
-                View view = nvhm.resolveView(data.getInt("handleId"));
-                if (view instanceof ImageChooserView) {
-                    ((ImageChooserView)view).loadFile();
-                }
-            }
-        });
-    }
 }
 

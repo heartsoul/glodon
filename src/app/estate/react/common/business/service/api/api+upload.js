@@ -1,14 +1,50 @@
-import { requestJSON } from "../../../base/api+base"
+import * as AppConfig from "./../../../config/AppConfig"
 
-export async function getOperationCode() {
-    // http://192.168.81.30/bimpm/attachment/operationCode?
-    // containerId=30314&name=pic2.png&digest=pic2.png&length=61365
-    let host = "http://192.168.81.30";
+var count = 0;//请求成功的数量
+var len = 0;//上传文件的数量
+/**
+ * 上传成功后，用来存储返回数据，
+ * 
+ * {
+ *       name : data.name,
+ *       objectId : data.id,
+ *       extension : data.extension,
+ *       digest : data.digest,
+ *       length : data.length,
+ *       uploadTime : data.createTime,
+ *   }
+ * 
+ */
+var resultArray = [];
+
+/**
+ * 上传文件
+ * 
+ * @param {[{path:"file:///storage/emulated/0/icon.png",name:"icon.png",length:988}]} fileData 文件数组
+ * @param {(code:"success||fail",response)=>{}} callback 回调函数中code为success或者fail，response是错误信息，或者上传成功的数据 resultArray
+ */
+export async function upLoadFiles(fileData,callback) {
+    count = 0;
+    len = fileData.length
+    result = [];
+    fileData.map((file)=>{
+        let path = "file://" + file.path;
+        getOperationCode(path,file.name,file.length,callback);   
+    });
+}
+
+/**
+ * 获取operationCode
+ * @param {*} filePath 文件路径 
+ * @param {*} name 文件名称
+ * @param {*} length 文件大小
+ * @param {*} callback 回调
+ */
+async function getOperationCode(filePath,name,length,callback) {
+
     let api = "/bimpm/attachment/operationCode";
-   
-    let filter = "?containerId=30314&name=pic2.png&digest=pic2.png&length=107815";
-
-    var filePath = 'file:///storage/emulated/0/pic/Jellyfish.jpg'
+    let timestamp =new Date().getTime();
+    let filter = "?containerId="+timestamp+"&name="+name+"&digest="+name+"&length="+length;
 
     let ops = {
         method:'POST', 
@@ -18,45 +54,75 @@ export async function getOperationCode() {
         },
         credentials: 'include', // 带上cookie
     };
-    // Authorization  Bearer 6515033c-6c5f-4d6a-8033-ec0906d4f085
+
     if(global.storage.isLogin()) {
         ops.headers.Authorization = "Bearer "+global.storage.getLoginToken();
     }
     
-   
-    return fetch(host + api+ filter, ...ops)
+    return fetch(AppConfig.BASE_URL + api+ filter, ...ops)
         .then((response) => response.text() )  
-        .then((responseData)=>{  
-            upLoad(responseData);
+        .then((responseData)=>{
+            upLoad(filePath,name,responseData,callback);
         })  
         .catch((error)=>{
-            alert(222)
+            alert(error)
+            callback("fail",error)
         });  
 }
 
-export async function upLoad(operationCode) {
-    // http://192.168.81.30/bimpm/attachment/operationCode?
-    // containerId=30314&name=pic2.png&digest=pic2.png&length=61365
-    let BASE_UPLOAD_URL =  "http://172.16.233.183:8093/v1/insecure/objects?operationCode="+operationCode;
+/**
+ * 上传文件
+ * @param {*} filePath 文件路径
+ * @param {*} name 文件名
+ * @param {*} operationCode 操作码 
+ * @param {*} callback 回调
+ */
+async function upLoad(filePath,name,operationCode,callback) {
 
-    var filePath = 'file:///storage/emulated/0/pic.png'
-    let formData = new FormData();       //因为需要上传多张图片,所以需要遍历数组,把图片的路径数组放入formData中  
-    let file = {uri: filePath, type: 'application/octet-stream', name: 'image.jpg'};
-    formData.append("uploaded_file",file);   //这里的files就是后台需',要的key  
-    
-   
-    return fetch(BASE_UPLOAD_URL,  {
+    let api =  "/v1/insecure/objects?operationCode="+operationCode;
+    let formData = new FormData();     
+    let file = {uri: filePath, type: 'application/octet-stream', name: name};
+    formData.append("uploaded_file",file);   //这里的uploaded_file就是后台需',要的key  
+    let ops = {
         method: 'POST',
         headers: {
             'Content-Type': 'multipart/form-data;charset=utf-8',
         },
         body: formData,
-    })
-        .then((response) => response.text() )  
-        .then((responseData)=>{  
-            alert("response:"+responseData)
+    };
+
+    return fetch(AppConfig.BASE_UPLOAD_URL + api, ops)
+        .then((response) => response.json() )  
+        .then((data)=>{
+            //处理上传成功的数据
+            if(data && data.message && "success" == data.message ){
+                count++;
+                let res = parseUploadData(data);
+                resultArray.push(res);
+            }else{
+                callback("fail", data);
+            }
+
+            if(count == len){
+                callback("success", resultArray);
+            }  
         })  
         .catch((error)=>{
-            alert("error:"+error)
+            callback("fail", error);
         });  
+}
+/**
+ * 处理返回成功的数据
+ * @param {*} data response
+ */
+function parseUploadData(data){
+    let res = {
+        name : data.name,
+        objectId : data.id,
+        extension : data.extension,
+        digest : data.digest,
+        length : data.length,
+        uploadTime : data.createTime,
+    }
+    return res;
 }
