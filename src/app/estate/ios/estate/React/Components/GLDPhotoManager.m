@@ -10,18 +10,77 @@
 #import <React/RCTComponent.h>
 #import <React/RCTUIManager.h>
 #import <LPDQuoteImagesView.h>
-
+#import "NSDictionary+SoulPhotoModel.h"
+#import "SDDataCache.h"
 // 控件定义
 @interface RNTImagesView : LPDQuoteImagesView
 
 @property (nonatomic, copy) RCTBubblingEventBlock onChange;// 响应事件定义
-- (NSDictionary*)loadFiles;
+- (void)loadFiles:(void(^)(NSArray * files))finish;
 @end
 
 @implementation RNTImagesView
 #pragma mark UICollectionView
-- (NSDictionary*)loadFiles {
-  return @{@"images":self.selectedAssets};
+
+- (void)loadItem:(PHAsset *)asset finish:(void(^)(NSDictionary *))finish {
+  // 检查是否已经存在了
+  NSMutableDictionary * item = [[NSMutableDictionary alloc] initWithAsset:asset photoQuality:UploadPhotoQualityNormal];
+  __block NSString * itemid = [[item getIdentifier] stringByAppendingPathExtension:@"data"];
+  SDDataCache * sd = [SDDataCache fileDataCache];
+  if([sd existInCachePathForKey:itemid]) {
+    NSString * path = [[sd imageCache] defaultCachePathForKey:itemid];
+    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    NSURL * fileUrl = [NSURL fileURLWithPath:path];
+    path = fileUrl.absoluteString;
+    id size = @"0";
+    if (attr[NSFileSize]) {
+      size = attr[NSFileSize];
+    }
+    finish(@{@"path":path,@"key":itemid,@"name":fileUrl.lastPathComponent,@"length":size});
+    return;
+  }
+  [item loadImageData:^(NSData *imageData) {
+    [[SDDataCache fileDataCache] storeData:imageData forKey:itemid];
+    NSString * path = [[[SDDataCache fileDataCache] imageCache] defaultCachePathForKey:itemid];
+    NSURL * fileUrl = [NSURL fileURLWithPath:path];
+    path = fileUrl.absoluteString;
+    finish(@{@"path":path,@"key":itemid,@"name":fileUrl.lastPathComponent,@"length":@(imageData.length)});
+  }];
+}
+- (void)loadNext:(NSMutableArray *)ret asset:(PHAsset *)asset next:(PHAsset *(^)(void))next{
+  if(asset) {
+    [self loadItem:asset finish:^(NSDictionary * path) {
+      [ret addObject:path];
+      PHAsset * nextItem = next();
+      if(next()) {
+        [self loadNext:ret asset:nextItem next:next];
+      }
+    }];
+  } else {
+    PHAsset * nextItem = next();
+    if(next()) {
+      [self loadNext:ret asset:nextItem next:next];
+    }
+  }
+}
+- (void)loadFiles:(void(^)(NSArray * files))finish {
+  __block NSArray * array = [self.selectedAssets copy];
+  if(array.count < 1) {
+    finish(@[]);
+    return ;
+  }
+  __block NSUInteger nCount = array.count;
+  __block NSUInteger nIndex = 0;
+  __block NSMutableArray * ret = [NSMutableArray array];
+  [self loadNext:ret asset:array[nIndex] next:^PHAsset *{
+    nIndex ++;
+    if(nIndex < nCount) {
+      return array[nIndex];
+    } else {
+      finish(ret);
+      return nil;
+    }
+  }];
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
   if(self.onChange) {
@@ -81,8 +140,10 @@ RCT_EXPORT_METHOD (loadFile:(nonnull NSNumber *)reactTag uploadArray:(NSArray*)u
     if (![view isKindOfClass:[RNTImagesView class]]) {
       RCTLogError(@"Invalid view returned from registry, expecting RCTWebView, got: %@", view);
     } else {
-    NSDictionary * ret = [view loadFiles];
-      callback(@[ret]);
+      [view loadFiles:^(NSArray *files) {
+        callback(@[@{@"images":files}]);
+      }];
+      
     }
     return;
   }
