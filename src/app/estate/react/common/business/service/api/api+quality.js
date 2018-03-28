@@ -517,7 +517,7 @@ export async function createSubmitInspection(projectId, props) {
  * @returns
  * {"id":5201156,"code":"ZLJC_20180328_003"}
  */
-export async function createSubmitInspection(projectId, props) {
+export async function createSaveInspection(projectId, props) {
     let api = `/quality/${projectId}/qualityInspection`;
     return requestJSON(api, {
         method: 'POST',
@@ -548,7 +548,7 @@ export async function editSubmitInspection(projectId, fileId, props) {
  * @param {{"code":"","constructionCompanyId":5212715,"constructionCompanyName":"施工单位A","description":"111","inspectId":0,"inspectionCompanyId":5211919,"inspectionCompanyName":"11301919","inspectionType":"inspection","needRectification":false,"projectId":5213135,"projectName":"APP材设","qualityCheckpointId":5200204,"qualityCheckpointName":"墙面","responsibleUserId":5200299,"responsibleUserName":"XP","responsibleUserTitle":"总工"}} props json格式
  * @returns responsebody无内容
  */
-export async function qualityInspection(projectId, fileId, props) {
+export async function editSaveInspection(projectId, fileId, props) {
     let api = `/quality/${projectId}/qualityInspection/${fileId}`;
     return requestJSON(api, {
         method: 'PUT',
@@ -562,7 +562,7 @@ export async function qualityInspection(projectId, fileId, props) {
  * @param {*} fileId 检查单id
  * @returns responsebody无内容
  */
-export async function qualityInspection(projectId, fileId) {
+export async function createDeleteInspection(projectId, fileId) {
     let api = `/quality/${projectId}/qualityInspection/${fileId}`;
     return requestJSON(api, {
         method: 'DELETE',
