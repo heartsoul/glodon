@@ -433,8 +433,139 @@ export async function getQualityFacilityAcceptanceElements(projectId, gdocFileId
  * @returns 
  */
 export async function getQualityCheckpointsProject(projectId, projectIdIn) {
-    let api = "/quality/" + projectId + "/quality/checkpoints/project/"+projectIdIn;
+    let api = `/quality/${projectId}/quality/checkpoints/project/${projectIdIn}`;
     return requestJSON(api, {
         method: 'GET',
     });
 }
+
+/**
+ * 获取项目下检查单位列表
+ * @param {*} projectId 项目id
+ * @returns 
+ * 
+ [
+  {
+    "parentId": null,
+    "code": "s1t1ri1n1g",
+    "name": "11301919",
+    "alias": null,
+    "type": "GROUP",
+    "extData": null,
+    "id": 5211919,
+    "treePath": "5211919/",
+    "orderNum": 1,
+    "external": false,
+    "formal": true
+  }
+]
+ */
+export async function getInspectionCompanies(projectId) {
+    let api = `/quality/${projectId}/qualityInspection/inspectionCompanys`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+/**
+ * 获取质检项目列表
+ * @param {*} projectId 
+ * @returns 
+ * 
+ [
+    {
+        "code": null,
+        "name": "其他项目",
+        "parentId": null,
+        "treePath": null,
+        "requirement": "非集团统一安排的检查",
+        "projectType": "Estate_Project_Type_House",
+        "specialtyId": -1,
+        "specialtyName": "",
+        "id": -1,
+        "hasRule": false
+      }
+]
+ */
+export async function getModuleList(projectId) {
+    let api = `/quality/${projectId}/checkpoints/templates/whole`;
+    let filter = `?ifOther=true`;
+    return requestJSON(api + filter, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 检查单 新增 提交
+ * @param {*} projectId 
+ * @param {{"code":"","constructionCompanyId":5212715,"constructionCompanyName":"施工单位A","description":"111","inspectId":0,"inspectionCompanyId":5211919,"inspectionCompanyName":"11301919","inspectionType":"inspection","needRectification":false,"projectId":5213135,"projectName":"APP材设","qualityCheckpointId":5200204,"qualityCheckpointName":"墙面","responsibleUserId":5200299,"responsibleUserName":"XP","responsibleUserTitle":"总工"}} props json格式
+ * @returns
+ * {"id":5201156,"code":"ZLJC_20180328_003"}
+ */
+export async function createSubmitInspection(projectId, props) {
+    let api = `/quality/${projectId}/qualityInspection/commit`;
+    return requestJSON(api, {
+        method: 'POST',
+        body:props,
+    });
+}
+
+
+/**
+ * 检查单 新增 保存
+ * @param {*} projectId 
+ * @param {{"code":"","constructionCompanyId":5212715,"constructionCompanyName":"施工单位A","description":"111","inspectId":0,"inspectionCompanyId":5211919,"inspectionCompanyName":"11301919","inspectionType":"inspection","needRectification":false,"projectId":5213135,"projectName":"APP材设","qualityCheckpointId":5200204,"qualityCheckpointName":"墙面","responsibleUserId":5200299,"responsibleUserName":"XP","responsibleUserTitle":"总工"}} props json格式
+ * @returns
+ * {"id":5201156,"code":"ZLJC_20180328_003"}
+ */
+export async function createSubmitInspection(projectId, props) {
+    let api = `/quality/${projectId}/qualityInspection`;
+    return requestJSON(api, {
+        method: 'POST',
+        body:props,
+    });
+}
+
+/**
+ * 检查单 编辑   提交
+ * @param {*} projectId 
+ * @param {*} fileId 检查单id
+ * @param {{"code":"","constructionCompanyId":5212715,"constructionCompanyName":"施工单位A","description":"111","inspectId":0,"inspectionCompanyId":5211919,"inspectionCompanyName":"11301919","inspectionType":"inspection","needRectification":false,"projectId":5213135,"projectName":"APP材设","qualityCheckpointId":5200204,"qualityCheckpointName":"墙面","responsibleUserId":5200299,"responsibleUserName":"XP","responsibleUserTitle":"总工"}} props json格式
+ * @returns responsebody无内容
+ * 
+ */
+export async function editSubmitInspection(projectId, fileId, props) {
+    let api = `/quality/${projectId}/qualityInspection/${fileId}/commit`;
+    return requestJSON(api, {
+        method: 'PUT',
+        body:props,
+    });
+}
+
+/**
+ * 检查单 编辑   保存
+ * @param {*} projectId 
+ * @param {*} fileId 检查单id
+ * @param {{"code":"","constructionCompanyId":5212715,"constructionCompanyName":"施工单位A","description":"111","inspectId":0,"inspectionCompanyId":5211919,"inspectionCompanyName":"11301919","inspectionType":"inspection","needRectification":false,"projectId":5213135,"projectName":"APP材设","qualityCheckpointId":5200204,"qualityCheckpointName":"墙面","responsibleUserId":5200299,"responsibleUserName":"XP","responsibleUserTitle":"总工"}} props json格式
+ * @returns responsebody无内容
+ */
+export async function qualityInspection(projectId, fileId, props) {
+    let api = `/quality/${projectId}/qualityInspection/${fileId}`;
+    return requestJSON(api, {
+        method: 'PUT',
+        body:props,
+    });
+}
+
+/**
+ * 检查单 删除
+ * @param {*} projectId 
+ * @param {*} fileId 检查单id
+ * @returns responsebody无内容
+ */
+export async function qualityInspection(projectId, fileId) {
+    let api = `/quality/${projectId}/qualityInspection/${fileId}`;
+    return requestJSON(api, {
+        method: 'DELETE',
+    });
+}
+
