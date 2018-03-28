@@ -210,5 +210,17 @@ export async function getModelBimFileChildren(projectId, projectVersionId, pageI
     });
 }
 
-
-
+/**
+ * 搜索模型或图纸
+ * @param {*} projectId 
+ * @param {*} projectVersionId 项目版本
+ * @param {*} facilityName 搜索关键字
+ * @param {*} suffix 模型rvt  图纸dwg
+ */
+export async function search(projectId,projectVersionId,facilityName,suffix) {
+    let api = `/model/${projectId}/${projectVersionId}/bim/file/query`;
+    let filter = `?facilityName=${facilityName}&suffix=${suffix}`;
+    return requestJSON(api + filter, {
+        method: 'POST',
+    });
+}
