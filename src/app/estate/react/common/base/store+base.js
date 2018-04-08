@@ -1,6 +1,10 @@
 import {
     AsyncStorage,
 } from 'react-native';
+import { 
+    NavigationActions
+} from 'react-navigation';
+
 export default class BaseStorage {
     constructor() {
         super.constructor();
@@ -101,11 +105,16 @@ class GLDStorage extends BaseStorage {
         AsyncStorage.getItem('currentTenant')
             .then((value) => {
                 this.currentTenant = value;
+                if(!value || value == null){
+                    this.currentTenant = '0';
+                }
                 console.log("loadTenant2："+this.currentTenant);
                 if(retFun) {
                     retFun(value);
                 }
                 return this.currentTenant;
+            }).catch((err)=>{
+                console.log(err)
             });
     }
     saveProject=(project)=> {
@@ -135,8 +144,14 @@ class GLDStorage extends BaseStorage {
             });
         // return this.currentProject;
     }
-    gotoLogin=()=> {
-        this.homeNavigation.replace("Login");
+    gotoLogin=(navigator)=> {
+        let resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({routeName:'Login'})//要跳转到的页面名字
+            ]
+        });
+        navigator.dispatch(resetAction);
     }
     hasChoose=(retFun)=> {
         let t = this.loadTenant((value)=>{
@@ -181,6 +196,18 @@ class GLDStorage extends BaseStorage {
         console.log("pushNext:"+name);
          navigator.navigate(name, params);
     }
+
+    goBack =  (navigation, params = {}) => {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
+        navigator.goBack();
+    }
+
     
 }
 // 全局变量

@@ -7,9 +7,11 @@ import{
   TouchableOpacity,
   Image,
   SafeAreaView,
-  StyleSheet
+  StyleSheet,
+  TouchableHighlight
 } from "react-native";
 import {ListRow} from "teaset";
+import * as USERAPI from "./../../../login/api+user";
 
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
@@ -36,6 +38,9 @@ export default class SettingPage extends Component{
       }
     constructor() {
         super();
+        this.state = {
+            pressed: false,
+        };
     }
 
     _tenantChoose = () => {
@@ -44,6 +49,16 @@ export default class SettingPage extends Component{
         global.storage.pushNext(navigator,"TenantPage")
     }
 
+    _logout=()=>{
+        global.storage.logout();
+        USERAPI.loginOut().then(()=>{
+          USERAPI.uaaLoginOut().then(()=>{
+    
+          });
+          let navigator = this.props.navigation;
+           global.storage.gotoLogin(navigator);
+        });
+    }
 
     render(){
         return (
@@ -69,6 +84,25 @@ export default class SettingPage extends Component{
                 
                 <SettingItemView icon = {require('../../../res/images/icon_setting_offline.png')} title='离线设置' ></SettingItemView>
 
+                <TouchableHighlight
+                    onPress={this._logout}
+                    underlayColor="#0099f3"
+                    activeOpacity={1.0}
+                  
+                    style={
+                         this.state.pressed
+                            ? styles.logoutTextViewPressed
+                            : styles.logoutTextView
+                      }
+                      onHideUnderlay={() => {
+                        this.setState({ pressed: false });
+                      }}
+                      onShowUnderlay={() => {
+                        this.setState({ pressed: true });
+                      }}
+                >
+                    <Text style={styles.logoutText}>退出登录 </Text>
+                </TouchableHighlight>
             </SafeAreaView>
         );
     }
@@ -79,7 +113,6 @@ class SettingItemView extends React.Component{
     
     constructor() {
         super();
-        
     }
 
     componentDidMount(){
@@ -139,6 +172,37 @@ var styles = StyleSheet.create({
     settingItemLine:{
       height:1,
       backgroundColor:'#f7f7f7',
+    },
+    logoutTextView: {
+        overflow: "hidden",
+        height: 40,
+        backgroundColor: "#00baf3",
+        borderRadius: 20,
+        marginTop: 40,
+        marginLeft: 20,
+        marginRight: 20
+    },
+
+    logoutTextViewPressed: {
+        overflow: "hidden",
+        height: 40,
+        backgroundColor: "#33baf3",
+        borderRadius: 20,
+        marginTop: 40,
+        marginLeft: 20,
+        marginRight: 20
+    },
+    logoutText: {
+        overflow: "hidden",
+        height: 20,
+        marginTop: 10,
+        marginLeft: 20,
+        marginRight: 20,
+        borderRadius: 20,
+        alignItems: "center",
+        textAlign: "center",
+        fontSize: 16,
+        color: "#fff"
     },
 
 });

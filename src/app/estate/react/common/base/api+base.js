@@ -97,7 +97,7 @@ export function requestJSON(url, options) {
             "X-Requested-With": "XMLHttpRequest",
         },
         
-        credentials: 'include', // 带上cookie
+        // credentials: 'include', // 带上cookie
     };
     // Authorization  Bearer 6515033c-6c5f-4d6a-8033-ec0906d4f085
     if(global.storage.isLogin()) {
@@ -120,13 +120,11 @@ export function requestJSON(url, options) {
             // if (data && data.code === 'FALSE') {
             //   const msg = data.message || '操作失败';
             // }
-            console.log(data);
             return { data };
         })
-        .catch(err => ({
-            err
-            // alert(err);
-            }));
+        .catch(err => {
+            console.log(err)
+        });
 }
 
 /**
@@ -141,7 +139,7 @@ export function requestHTML(url, options) {
         // headers: {
         //   'Content-Type': 'application/json;charset=utf-8',
         // },
-        credentials: 'include', // 带上cookie
+        // credentials: 'include', // 带上cookie
     };
     for (const i in ops) {
         if (options[i]) {
