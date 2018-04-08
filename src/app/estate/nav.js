@@ -75,10 +75,13 @@ const RootStack = StackNavigator(
       screen : GLD.BimFileChooserPage
     },
     NewPage: {
-      screen : GLD.NewPage
+      screen : GLD.NewPage 
     },
     SettingPage: {
       screen : GLD.SettingPage 
+    },
+    CheckPointPage: {
+        screen : GLD.CheckPointPage 
     },
   },
   {

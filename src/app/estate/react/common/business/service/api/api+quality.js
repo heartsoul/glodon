@@ -486,7 +486,7 @@ export async function getInspectionCompanies(projectId) {
       }
 ]
  */
-export async function getModuleList(projectId) {
+export async function getCheckPoints(projectId) {
     let api = `/quality/${projectId}/checkpoints/templates/whole`;
     let filter = `?ifOther=true`;
     return requestJSON(api + filter, {

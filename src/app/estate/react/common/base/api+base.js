@@ -120,13 +120,11 @@ export function requestJSON(url, options) {
             // if (data && data.code === 'FALSE') {
             //   const msg = data.message || '操作失败';
             // }
-            console.log(data);
             return { data };
         })
-        .catch(err => ({
-            err
-            // alert(err);
-            }));
+        .catch(err => {
+            console.log(err)
+        });
 }
 
 /**
