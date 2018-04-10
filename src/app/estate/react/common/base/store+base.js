@@ -167,7 +167,7 @@ class GLDStorage extends BaseStorage {
         });
         let p = this.loadProject();
         console.log("hasChoose:"+t+','+p);
-        return t != "0" &&  p != "0";
+        return t != "0" &&  p != "0" && t != undefined && p != undefined;
     }
     gotoMain = (navigation = null, name = "MainPage") => {
         let navigator = navigation;
