@@ -156,7 +156,11 @@ export default class CheckPointList extends React.Component{
                         <Text style={styles.moduleChildItemName}> {item.name}</Text>
                         <Image source={require('../../../res/images/icon_benchmark.png')} style={styles.moduleChildMark}/>
                         <View style={{flex:1}}/>
-                        <Image source={require('../../../res/images/icon_choose_list_selected.png')} style={styles.moduleItemSelectedIcon}/>
+                        {
+                            (this.state.selectedCheckPoint && this.state.selectedCheckPoint.id == item.id )?(
+                                <Image source={require('../../../res/images/icon_choose_list_selected.png')} style={styles.moduleItemSelectedIcon}/>
+                            ):(null)
+                        }
                 </View>
             </TouchableOpacity>
         );

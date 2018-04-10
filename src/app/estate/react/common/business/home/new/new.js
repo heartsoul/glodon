@@ -21,7 +21,7 @@ import * as UPLOADAPI from "../../service/api/api+upload";
 import * as QUALITYAPI from "../../service/api/api+quality"; 
 import * as PMBASICAPI from "../../service/api/api+pmbasic"; 
 
-import { Modal } from 'antd-mobile';
+import { Modal, Toast } from 'antd-mobile';
 
 var ReactNative = require('ReactNative');
 
@@ -151,15 +151,20 @@ export default class extends React.Component {
     //     {"path" : "file:///storage/emulated/0/pic.png", "name" : "pic.png", "length" : 107815},
     //     {"path" : "file:///storage/emulated/0/pic2.png", "name" : "pic2.png", "length" : 61365}
     // ];
-    // this.refs[REF_PHOTO]._loadFile((files)=>{
-    //     if(files){
-    //         UPLOADAPI.upLoadFiles(files,(code,result)=>{
-    //             alert(result)//上传图片的结果
-    //         });
-    //     }
-    // });
-    this._submit();
-
+    this.refs[REF_PHOTO]._loadFile((files)=>{
+        if(files && files.length > 0){
+            console.log(files)
+            UPLOADAPI.upLoadFiles(files,(code,result)=>{
+                this.setState({
+                    //上传图片的结果
+                    files:result,
+                });
+                this._submit();
+            });
+        }else{
+            this._submit();
+        }
+    });
   }
   //选择质检项目
   _selectCheckPoint = ()=>{ 
@@ -261,39 +266,91 @@ export default class extends React.Component {
     params.responsibleUserId =  this.state.persons[this.state.selectPersonIndex].id;
     params.responsibleUserName = this.state.persons[this.state.selectPersonIndex].name;
     params.responsibleUserTitle = this.state.persons[this.state.selectPersonIndex].title;
-   console.log(params)
+
+    params.files = this.state.files;
+
+    console.log(params)
    
-   return JSON.stringify(params);
+    return JSON.stringify(params);
   }
 
+  _loadingToast = ()=> {
+    Toast.loading('加载中...', 0, null ,true);
+  }
+
+
   _submit = ()=> {
+    console.log('submit------------')
     if(this._checkMustInfo()){
+        this._loadingToast();
          //区分新增提交和编辑提交
-        this._createSubmitInspection();
+        if(this.state.inspectId == '-1'){
+            this._createSubmitInspection();
+        } else {
+            this._editSubmitInspection();
+        }
+        
     }
   }
-  
+  //检查单 新增 提交
   _createSubmitInspection = ()=> {
     let params = this._assembleParams();  
     QUALITYAPI.createSubmitInspection(global.storage.projectId,params)
         .then(data =>{
+            Toast.hide();
             console.log(data)
             if(data && data.data && data.data.id){
                 global.storage.goBack(this.props.navigation,null);
             }
         })
   }
+
+  //检查单 编辑   提交
+  _editSubmitInspection = ()=> {
+    let params = this._assembleParams();  
+    QUALITYAPI.editSubmitInspection(global.storage.projectId,params)
+        .then(data =>{
+            Toast.hide();
+            console.log(data)
+            if(data && data.data && data.data.id){
+                global.storage.goBack(this.props.navigation,null);
+            }
+        })
+  }
+  
  _save = ()=> {
     if(this._checkMustInfo()){
         //区分新增保存和编辑保存
-       this._createSaveInspection();
+       this._loadingToast();
+       if(this.state.inspectId == '-1'){
+          this._createSaveInspection();
+       } else {
+          this._editSaveInspection();
+       }
    }
- }  
+ } 
+ // 检查单 新增 保存
   _createSaveInspection = ()=> {
     let params = this._assembleParams();  
     QUALITYAPI.createSaveInspection(global.storage.projectId,params)
         .then(data =>{
             console.log(data)
+            Toast.hide();
+            // data.id
+            if(data && data.data && data.data.id ){
+                this.setState({
+                    inspectId:data.id
+                });
+            }
+        })
+  }
+  //检查单 编辑   保存
+  _editSaveInspection = ()=> {
+    let params = this._assembleParams();  
+    QUALITYAPI.editSaveInspection(global.storage.projectId,params)
+        .then(data =>{
+            console.log(data)
+            Toast.hide();
             // data.id
             if(data && data.data && data.data.id ){
                 this.setState({
@@ -315,6 +372,7 @@ export default class extends React.Component {
   componentDidMount=()=> {
     console.log(this.props.navigation.state.params);
     console.log(global.storage.projectId);
+    this._initialState();
     //请求数据
      this.props.navigation.setParams({rightNavigatePress:this._rightAction }) 
      this._fetchData(this._getInspectionCompanies);
@@ -322,6 +380,30 @@ export default class extends React.Component {
      this._fetchData(this._getCheckPoints);
   }
   
+  //初始状态
+  _initialState = ()=>{
+    // console.log(this.props.navigation.state.params);
+    this.setState({
+        selectInspectionCompanyIndex: -1,//选中的检查单位
+        
+        selectCompanyIndex: -1,//选中的施工单位
+        
+        selectPersonIndex: -1,//选中的责任人
+
+        selectedCheckPoint:{},//选中的质检项目
+        
+        switchValue:false,//需要整改
+
+        contentDescription:PropTypes.string,//内容描述
+
+        modal:false,
+
+        inspectId:-1,//检查单id
+
+        files: [],//图片
+    });  
+  }
+
   _itemDividerLine = ()=> {
     return ( <View style={styles.dividerLine}></View>)
   }
@@ -364,6 +446,8 @@ export default class extends React.Component {
         modal:false,
 
         inspectId:-1,//检查单id
+
+        files: [],//图片
 
      }
 
