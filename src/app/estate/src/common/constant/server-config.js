@@ -13,12 +13,12 @@
 // String url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + "&show=" + show;
 
 // // 预生产服务器
-// export const BASE_UPLOAD_URL =  "https://api.glodon.com/nss";//图片服务
-// export const BASE_URL = "http://47.95.204.243"; // 应用服务
-// export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址
+export const BASE_UPLOAD_URL =  "https://api.glodon.com/nss";//图片服务
+export const BASE_URL = "http://47.95.204.243"; // 应用服务
+export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址
 
 // 生产服务器
-export const BASE_UPLOAD_URL =  "https://api.glodon.com/nss/";//图片服务
-export const BASE_URL = "http://bimcop.glodon.com"; // 应用服务
-export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址
+// export const BASE_UPLOAD_URL =  "https://api.glodon.com/nss/";//图片服务
+// export const BASE_URL = "http://bimcop.glodon.com"; // 应用服务
+// export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址
 

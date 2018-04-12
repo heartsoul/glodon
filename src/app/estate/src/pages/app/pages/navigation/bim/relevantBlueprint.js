@@ -67,6 +67,17 @@ export default class RelevantBlueprintPage extends Component {
     console.log(this.props.navigation.state.params);
     let params = this.props.navigation.state.params;
     let pageType = params.pageType;
+    let relevantBluePrint = params.relevantBluePrint;
+
+    if(relevantBluePrint){
+        this.setState({
+            drawingPositionX: relevantBluePrint.drawingPositionX,
+            drawingPositionY: relevantBluePrint.drawingPositionY,
+            showFinishView: true,
+        });
+    }
+
+
     let show = (pageType == 2);
     let showCreateNoticeView = true;
     if( pageType == 2){
@@ -82,7 +93,8 @@ export default class RelevantBlueprintPage extends Component {
         show: show,
         showCreateNoticeView: showCreateNoticeView,
     });
-    //延时加载
+
+    //长按提示View
     const timer = setTimeout(() => {
         clearTimeout(timer);
         this.setState({
@@ -123,9 +135,17 @@ export default class RelevantBlueprintPage extends Component {
                 <TouchableOpacity onPress={ ()=>{this.goBack()} }>
                     <Image source={require('app-images/icon_back_white.png')} style={{width:9, height:20, marginLeft:20}}/>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={ ()=>{this.goBack()} }>
-                    <Image source={require('app-images/icon_change_blueprint.png')} style={{width:9, height:20, marginLeft:20}}/>
-                </TouchableOpacity>
+                {
+                    //编辑状态的可以切换图纸
+                    (this.state.pageType == 1)?(
+                        <TouchableOpacity onPress={ ()=>{this.changeBluePrint()} }>
+                            <Image source={require('app-images/icon_change_blueprint.png')} style={{width:25, height:24, marginLeft:20}}/>
+                        </TouchableOpacity>
+                    ):(
+                        null
+                    )
+                }
+
             </View>
             <View style={{flex:1}}>
                 <Text style={{color:'#ffffff', fontSize:17, marginTop:5, alignSelf:'center'}}>{ title }</Text>
@@ -171,6 +191,22 @@ export default class RelevantBlueprintPage extends Component {
  goBack = ()=> {
     global.storage.goBack(this.props.navigation,null);
  }
+ changeBluePrint = ()=> {
+    let navigator = this.props.navigation; 
+
+    global.storage.qualityState.navKey = this.props.navigation.state.key;
+
+    global.storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: '图纸文件',pageType:0, saveKey:0})
+}
+setPosition = ()=> {
+    let position = [{
+        x: this.state.drawingPositionX,
+        y: this.state.drawingPositionY,
+        z: 0,
+    }];
+    this.refs.webview.injectJavaScript("javascript:loadPinItems('" + JSON.stringify(position) + "');")
+}
+
  //移除图钉
  removePosition = ()=> {
     this.refs.webview.injectJavaScript('javascript:removeDrawableItem();')
@@ -185,18 +221,19 @@ export default class RelevantBlueprintPage extends Component {
         fileId: this.state.fileId, 
         name: this.state.name, 
         drawingPositionX: this.state.drawingPositionX, 
-        drawingPositionY: this.state.drawingPositionX,
+        drawingPositionY: this.state.drawingPositionY,
     }
+    console.log(this.state.pageType)
     // 0新建检查单 1检查单编辑状态 2详情查看  3图纸模式
-    if(pageType == 0){
+    if(this.state.pageType == 0){
         global.storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
         this.props.navigation.goBack(global.storage.qualityState.navKey);
-    }else if(pageType == 1){
+    }else if(this.state.pageType == 1){
         global.storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
         this.props.navigation.goBack();
-    }else if(pageType == 2){
+    }else if(this.state.pageType == 2){
         this.props.navigation.goBack();
-    }else if(pageType == 3){
+    }else if(this.state.pageType == 3){
         this.props.navigation.replace('NewPage',{relevantBlueprint:relevantBlueprint});
     }
  }
@@ -283,7 +320,7 @@ export default class RelevantBlueprintPage extends Component {
             domStorageEnabled={false}
             onMessage={(e)=>this.onMessage(e)}
             injectedJavaScript={cmdString}
-            // onLoadEnd ={()=>this.refs.webview.postMessage('javascript:window.modelEvent.loadDotsData();')}
+            onLoadEnd ={()=>this.setPosition()}
             source={{ uri: url, method: 'GET' }}
             style={{ width: deviceWidth, height: deviceHeight }}>
           </WebView>

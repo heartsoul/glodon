@@ -33,7 +33,8 @@ export default class BimFileChooser extends Component {
             projectId:global.storage.projectId,
             latestVersion:global.storage.projectIdVersionId,
             fileId:0,
-            dataType:""//图纸文件 模型文件 
+            dataType:"",//图纸文件 模型文件 
+            pageType: 0,
         }
     }
     _keyExtractor = (item, index) => index;
@@ -139,8 +140,9 @@ export default class BimFileChooser extends Component {
         let params = this.props.navigation.state.params;
         let fileId = params.fileId;
         let dataType = params.dataType;
+        let saveKey = params.saveKey;
         console.log('fileId --------------------------- '+fileId)
-        if(!fileId || fileId == 0){//保存目录的初始key
+        if((!fileId || fileId == 0) && saveKey !=0){//保存目录的初始key
             console.log('save nav key ---------------------------')
             global.storage.qualityState.navKey = this.props.navigation.state.key;
         }
@@ -149,6 +151,7 @@ export default class BimFileChooser extends Component {
         this.setState({
             fileId: fileId,
             dataType: dataType,
+            pageType:  params.pageType,
         },()=>{
             //请求数据
             this.fetchData(1);
@@ -185,13 +188,13 @@ export default class BimFileChooser extends Component {
     _itemClick = (item,index) => {
         let navigator = this.props.navigation;
         if(item.value.folder === true) {
-            global.storage.pushNext(navigator,"BimFileChooserPage",{fileId:item.value.fileId,dataType:this.state.dataType});
+            global.storage.pushNext(navigator,"BimFileChooserPage",{fileId:item.value.fileId,dataType:this.state.dataType, pageType:this.state.pageType});
         } else {
             MODELAPI.getModelBimFileToken(this.state.projectId,this.state.latestVersion,item.value.fileId).then((responseData)=>{
                 let token = responseData.data.data;
                 global.storage.bimToken = token;
                 if(this.state.dataType === '图纸文件'){
-                    global.storage.pushNext(navigator,"RelevantBlueprintPage",{title:item.value.name, fileId:item.value.fileId});
+                    global.storage.pushNext(navigator,"RelevantBlueprintPage",{title:item.value.name, fileId:item.value.fileId,pageType:this.state.pageType});
                 }else{
                     global.storage.pushNext(navigator,"WebPage",{title:item.value.name, fileId:item.value.fileId});
                 }
