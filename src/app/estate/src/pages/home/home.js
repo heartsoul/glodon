@@ -100,7 +100,7 @@ class Page extends React.Component {
     super();
   }
   render() {
-    return (<TabView style={{ flex: 1 }} type='projector'>
+    return (<TabView style={{ flex: 1 ,height:'100%'}} type='projector'>
       <TabView.Sheet
         title='首页'
         icon={require('app-images/home/icon_main_main_page.png')}
@@ -175,8 +175,7 @@ export default class MainPage extends React.Component {
     this.page
   }
   render() {
-  return (<Page ref={'page'} />);
+  return (<Page style={{height:'100%'}} ref={'page'} />);
   }
-
 };
 

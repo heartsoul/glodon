@@ -8,7 +8,6 @@ import {
     ScrollView, StyleSheet, Text, View, StatusBar, Image,
     RefreshControl, Button, TouchableHighlight, TouchableOpacity, Dimensions
 } from "react-native";
-import { LargeList } from "react-native-largelist";
 import * as API from "app-api";
 import QualityListCell from "./qualityListCell";
 import { SegmentedBar,SegmentedView, Drawer, Label } from 'app-3rd/teaset';

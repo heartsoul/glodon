@@ -21,7 +21,7 @@ import {
     ListRow,
     Overlay,
     Theme,
-} from 'teaset';
+} from 'app-3rd/teaset';
 import * as QUALITYAPI from "app-api"; 
 
 export default class CheckPointList extends React.Component{

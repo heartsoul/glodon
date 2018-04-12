@@ -142,7 +142,7 @@ class GLDStorage extends BaseStorage {
         // return this.currentProject;
     }
     gotoLogin=(navigator)=> {
-        navigator.reset('LoginPage');
+        navigator.replace('LoginPage');
     }
     hasChoose=(retFun)=> {
         let t = this.loadTenant((value)=>{
@@ -185,7 +185,7 @@ class GLDStorage extends BaseStorage {
             return;
         }
         console.log("pushNext:"+name);
-         navigator.navigate(name, params);
+         navigator.push(name, params);
     }
 
     goBack =  (navigation, params = {}) => {

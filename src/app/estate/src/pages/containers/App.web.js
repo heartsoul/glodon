@@ -4,10 +4,7 @@ import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'
 
 import configureStore, { history } from '../store/ConfigureStore'
-import LoginPage from '../pages/LoginPage'
-import MainPage from '../pages/MainPage'
-
-import { StackRouter } from '../../../node_modules/react-navigation/src/react-navigation'
+import * as GLD from '../pages'
 
 const store = configureStore()
 
@@ -17,11 +14,20 @@ export default class App extends React.Component {
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <Switch>
-            <Route path="/" exact component={LoginPage} />
-            <Route path="/Login" exact component={LoginPage} />
-            <Route path="/Main" exact component={MainPage} />
+            <Route path="/" exact component={GLD.LoginPage} />
+            <Route path="/GuidePage" exact component={GLD.GuidePage} />
+            <Route path="/LoginPage" exact component={GLD.LoginPage} />
+            {/* <Route path="/ChoosePage" exact component={GLD.TenantPage} /> */}
+            <Route path="/MainPage" exact component={GLD.HomePage} />
+            {/* <Route path="/ProjectPage" exact component={GLD.ProjectPage} />
+            <Route path="/TenantPage" exact component={TenantPage} />
+            <Route path="/QualityMainPage" exact component={GLD.QualityMainPage} />
+            <Route path="/WebPage" exact component={WebPage} />
+            <Route path="/BimFileChooserPage" exact component={GLD.BimFileChooserPage} />*/}
+            <Route path="/NewPage" exact component={GLD.NewPage} /> 
+            <Route path="/SettingPage" exact component={GLD.SettingPage} />
+            {/* <Route path="/CheckPointPage" exact component={GLD.CheckPointPage} /> */}
             <Route component={NoMatch} />
-            <StackNavigator />
           </Switch>
         </ConnectedRouter>
       </Provider>

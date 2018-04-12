@@ -32,7 +32,7 @@ export async function login(username, password) {
         body: 'username=' + username + '&password=' + password,
     });
 }
-export async function authaToken(username, password) {
+export async function authToken(username, password) {
     return requestJSON(api_uaa_oauth_token, {
         headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Requested-With": "XMLHttpRequest" },
         method: 'POST',

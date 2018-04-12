@@ -2,9 +2,6 @@ import {authToken,setCurrentTenant,accountInfo,login as userLogin} from 'app-api
 
 import * as types from '../constants/loginTypes'
 
-import {NativeModules} from 'react-native'
-var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
-
 export function login(username, pwd) {
   return loginOld(username, pwd);
   // return loginNew(username, pwd);
@@ -12,50 +9,43 @@ export function login(username, pwd) {
 // 访问登录接口 根据返回结果来划分action属于哪个type,然后返回对象,给reducer处理
 function loginOld(username, pwd) {
   return dispatch => {
-    dispatch(isLogining())
-    RNBridgeModule.RNInvokeOCCallBack(
-      {
-        caller: "gldrn",
-        name: "clearCookie",
-        ver: "1.0",
-        data: { title: "登录", message: "是否确认登录？" }
-      },
-      (data, request) => {
-        userLogin(username, pwd).then((response) => {
-          accountInfo().then((userInfo) => {
-            console.log(userInfo);
-            if (userInfo.err) {
-              dispatch(loginError(false));
-              return;
-            }
-            let data = userInfo["data"];
-            if (!data) {
-              dispatch(loginError(false));
-              return;
-            }
-            global.storage.userInfo = data;
-            let ac = data["accountInfo"];
-            if (!ac) {
-              dispatch(loginError(false));
-            }
-            global.storage.hasChoose((ret) => {
-              if (!ret) {
-                dispatch(loginSuccessChoose(true, response.data))
-              }
-              global.storage.loadTenant((tenant) => {
-                setCurrentTenant(tenant).then((responseData) => {
-                  dispatch(loginSuccess(true, response.data))
-                });
-              });
-            });
-          }).catch((e) => {
-            dispatch(loginError(false));
-          });
-        }).catch((e) => {
+    // dispatch(isLogining())
+    dispatch(loginSuccessChoose(true, {}))
+    return;
+    userLogin(username, pwd).then((response) => {
+      accountInfo().then((userInfo) => {
+        console.log(userInfo);
+        if (userInfo.err) {
           dispatch(loginError(false));
+          return;
+        }
+        let data = userInfo["data"];
+        if (!data) {
+          dispatch(loginError(false));
+          return;
+        }
+        global.storage.userInfo = data;
+        let ac = data["accountInfo"];
+        if (!ac) {
+          dispatch(loginError(false));
+        }
+        global.storage.hasChoose((ret) => {
+          if (!ret) {
+            dispatch(loginSuccessChoose(true, response.data))
+          }
+          global.storage.loadTenant((tenant) => {
+            setCurrentTenant(tenant).then((responseData) => {
+              dispatch(loginSuccess(true, response.data))
+            });
+          });
         });
+      }).catch((e) => {
+        dispatch(loginError(false));
       });
-    };
+    }).catch((e) => {
+      dispatch(loginError(false));
+    }); 
+  }
 }
 
 // 访问登录接口 根据返回结果来划分action属于哪个type,然后返回对象,给reducer处理

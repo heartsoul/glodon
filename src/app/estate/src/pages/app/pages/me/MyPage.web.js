@@ -12,12 +12,11 @@ import {
   Dimensions
 } from 'react-native';
 import {loginOut, uaaLoginOut} from "app-api";
-import {NavigationPage} from 'app-3rd/teaset'
 
 var { width, height } = Dimensions.get("window");
 var name = '' ;
 
-export default class extends NavigationPage {
+export default class extends Component {
   
   static navigationOptions = {
     title: '',

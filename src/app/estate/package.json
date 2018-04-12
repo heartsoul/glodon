@@ -4,11 +4,19 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "prettier": "prettier --write --single-quote --no-semi --trailing-comma es5 --print-width 80 \"app/**/*.js\"",
+    "lint": "eslint app",
+    "format": "yarn prettier && yarn lint -- --fix",
+    "precommit": "yarn format",
+    "webStart": "webpack --config ./web/webpack.config.js",
+    "webServer": "webpack-dev-server --open --config ./web/webpack.config.js --port 8099 --host 127.0.0.1",
+    "webBuild": "NODE_ENV=production webpack --config ./webpack.production.config.js --progress"
   },
   "dependencies": {
     "antd-mobile": "^2.1.6",
     "babel-preset-react": "^6.24.1",
+    "babel-runtime": "^6.26.0",
     "connected-react-router": "^4.3.0",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
@@ -37,8 +45,10 @@
     "babel-plugin-import": "^1.6.6",
     "babel-plugin-react-native-web": "^0.3.3",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react-native": "4.0.0",
+    "css-loader": "^0.28.11",
     "eslint": "^4.19.1",
     "eslint-plugin-react-native": "^3.2.1",
     "file-loader": "^1.1.6",

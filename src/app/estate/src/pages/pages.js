@@ -10,13 +10,14 @@ import SubscribePage from './app/pages/subscription/SubscribePage'
 import NewPage from './app/pages/new/NewPage'
 import MainPage from './app/pages/main/MainPage'
 
-import QualityMainPage from './app/pages/quality/QualityMainPage'
-import CheckPointPage from './app/pages/navigation/bim/CheckPointPage'
-import ChoosePage from './app/pages/navigation/tenant/TenantPage'
-import TenantPage from './app/pages/navigation/tenant/TenantPage'
-import ProjectPage from './app/pages/navigation/project/ProjectPage'
-import BimFileChooserPage from './app/pages/navigation/bim/BimFileChooserPage'
-import WebPage from './app/pages/navigation/bim/WebPage'
+// import QualityMainPage from './app/pages/quality/QualityMainPage'
+// import CheckPointPage from './app/pages/navigation/bim/CheckPointPage'
+// import ChoosePage from './app/pages/navigation/tenant/TenantPage'
+// import TenantPage from './app/pages/navigation/tenant/TenantPage'
+// import ProjectPage from './app/pages/navigation/project/ProjectPage'
+// import BimFileChooserPage from './app/pages/navigation/bim/BimFileChooserPage'
+// import WebPage from './app/pages/navigation/bim/WebPage'
+
 export {
     LoginPage,
     GuidePage,
@@ -27,11 +28,11 @@ export {
     MessagePage,
     SubscribePage,
     NewPage,
-    QualityMainPage,
-    CheckPointPage,
-    ChoosePage,
-    TenantPage,
-    ProjectPage,
-    BimFileChooserPage,
-    WebPage
+    // QualityMainPage,
+    // CheckPointPage,
+    // ChoosePage,
+    // TenantPage,
+    // ProjectPage,
+    // BimFileChooserPage,
+    // WebPage
 }

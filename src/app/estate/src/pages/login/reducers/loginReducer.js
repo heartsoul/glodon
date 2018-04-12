@@ -31,7 +31,16 @@ export default function loginIn(state = initialState, action) {
 
         user: action.user,
       }
+      case types.LOGIN_IN_DONE_CHOOSE:
+      return {
+        ...state,
 
+        status: '登陆成功',
+
+        isSuccess: true,
+
+        user: action.user,
+      }
     // break
     case types.LOGIN_IN_ERROR:
       return {
