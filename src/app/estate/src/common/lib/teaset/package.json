@@ -1,0 +1,61 @@
+{
+  "_args": [
+    [
+      "teaset@0.5.5",
+      "/Users/glodon/glodon/estate-mobile-ios/src/app/estate"
+    ]
+  ],
+  "_from": "teaset@0.5.5",
+  "_id": "teaset@0.5.5",
+  "_inBundle": false,
+  "_integrity": "sha512-OEmIPDVZXOJTwWMy7A9MyyYUzwJHYjZ9r3JPYJk3PAvALfH3TVo+SQAt/Bx7g36h0A46AGo5z8sM2YiOWoIv+w==",
+  "_location": "/teaset",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "teaset@0.5.5",
+    "name": "teaset",
+    "escapedName": "teaset",
+    "rawSpec": "0.5.5",
+    "saveSpec": null,
+    "fetchSpec": "0.5.5"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/teaset/-/teaset-0.5.5.tgz",
+  "_spec": "0.5.5",
+  "_where": "/Users/glodon/glodon/estate-mobile-ios/src/app/estate",
+  "author": {
+    "name": "rilyu"
+  },
+  "bugs": {
+    "url": "https://github.com/rilyu/teaset/issues"
+  },
+  "dependencies": {
+    "prop-types": "^15.5.10",
+    "react-native-deprecated-custom-components": "github:facebookarchive/react-native-custom-components"
+  },
+  "description": "A UI library for react native.",
+  "homepage": "https://github.com/rilyu/teaset#readme",
+  "keywords": [
+    "teaset",
+    "react",
+    "native",
+    "UI",
+    "library",
+    "framework"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "teaset",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rilyu/teaset.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.5.5"
+}
