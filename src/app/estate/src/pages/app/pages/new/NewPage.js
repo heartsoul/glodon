@@ -427,13 +427,30 @@ export default class extends React.Component {
       Modal.alert('提示信息', message,[ {text:'知道了',style:{color:'#00baf3'}}]);
     }
     //选择图纸模型
-   _bimFileChooser = (dataType)=> {
+   _bimFileChooserBluePrint = (dataType)=> {
       let navigator = this.props.navigation; 
       //保存当前页面的key
       global.storage.qualityState.bimChooserCallback = this._bimChooserCallback;
-      global.storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: dataType})
-  
+
+      if(this.state.relevantBluePrint.name){
+        global.storage.pushNext(navigator,"RelevantBlueprintPage",{title:this.state.relevantBluePrint.name, fileId:this.state.relevantBluePrint.fileId,pageType:1,relevantBluePrint:this.state.relevantBluePrint});
+      }else{
+        global.storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: dataType,pageType:0})
+      }
+
    }
+       //选择图纸模型
+   _bimFileChooserModel = (dataType)=> {
+        let navigator = this.props.navigation; 
+        //保存当前页面的key
+        global.storage.qualityState.bimChooserCallback = this._bimChooserCallback;
+  
+      //   global.storage.pushNext(navigator,"RelevantBlueprintPage",{title:item.value.name, fileId:item.value.fileId});
+  
+  
+        global.storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: dataType})
+    
+     }
    //选择图纸或者模型后的回调 dataType 图纸文件{name:'', fileId:'', drawingPositionX:'', drawingPositionY:'' }、模型文件
    _bimChooserCallback = (data,dataType)=>{
       if(dataType === '图纸文件'){
@@ -514,8 +531,8 @@ export default class extends React.Component {
           </View>
   
           <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent'detail={this.state.selectedCheckPoint?this.state.selectedCheckPoint.name:''} onPress={()=>{this._selectCheckPoint()}} />
-          <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint?this.state.relevantBluePrint.name:''} onPress={()=>{ this._bimFileChooser('图纸文件') }} />
-          <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel?this.state.relevantModel.name:''} onPress={()=>{ this._bimFileChooser('模型文件') }} />
+          <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint?this.state.relevantBluePrint.name:''} onPress={()=>{ this._bimFileChooserBluePrint('图纸文件') }} />
+          <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel?this.state.relevantModel.name:''} onPress={()=>{ this._bimFileChooserModel('模型文件') }} />
   
           <ImageChooserView ref ={ REF_PHOTO } style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
           <View style={{marginBottom:30}}>
