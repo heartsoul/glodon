@@ -6,13 +6,13 @@ import React, { Component, PureComponent } from "react";
 import {
     ActivityIndicator, Animated, SectionList, FlatList,
     ScrollView, StyleSheet, Text, View, StatusBar, Image,
-    RefreshControl, Button, TouchableHighlight, TouchableOpacity
+    RefreshControl, Button, TouchableHighlight, TouchableOpacity, Dimensions
 } from "react-native";
 import { LargeList } from "react-native-largelist";
-import * as API from "../service/api/api+quality";
+import * as API from "app-api";
 import QualityListCell from "./qualityListCell";
-import { SegmentedBar,SegmentedView, Drawer, Label } from 'teaset';
-var Dimensions = require("Dimensions");
+import { SegmentedBar,SegmentedView, Drawer, Label } from 'app-3rd/teaset';
+
 var { width, height } = Dimensions.get("window");
 // const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 

@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, Button, View, Text, Image, TouchableOpacity, NativeModules,Dimensions } from 'app-3rd/react-native';
-import { StackNavigator, DrawerNavigator, withNavigation } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
-import QualityList from './qualityList'
+import {StyleSheet, Button, View, Text, Image, TouchableOpacity, NativeModules,Dimensions } from 'react-native';
+import { StackNavigator, DrawerNavigator, withNavigation } from 'app-3rd/react-navigation'; 
 import { SegmentedBar, Drawer, Label, ActionSheet } from 'app-3rd/teaset';
+import QualityList from './qualityList'
+
 var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
 var { width, height } = Dimensions.get("window");
 class DetailsScreen extends React.Component {
@@ -133,11 +134,11 @@ class RightBarButtons extends React.Component {
       width: 70,
     }}>
        <TouchableOpacity onPress={() => this._onSearchPress(this.props.navigation)} >
-      <Image style={styles.barItemImage} resizeMode='center' source={require('./../../res/images/icon_search_white.png')} />
+      <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_search_white.png')} />
     </TouchableOpacity>
     <View style={styles.spliteItem} />
        <TouchableOpacity onPress={() => this._onNewPress(this.props.navigation)} >
-      <Image style={styles.barItemImage} resizeMode='center' source={require('./../../res/images/icon_camera_white.png')} />
+      <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_camera_white.png')} />
     </TouchableOpacity>
     <View style={styles.spliteItem} />
     </View>
@@ -161,11 +162,11 @@ class LeftBarButtons extends React.Component {
     }}>
     <View style={styles.spliteItem} />
        <TouchableOpacity onPress={() => this._onBackPress(this.props.navigation)} >
-      <Image style={styles.barItemImage} resizeMode='center' source={require('./../../res/images/icon_back_white.png')} />
+      <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_back_white.png')} />
     </TouchableOpacity>
     <View style={styles.spliteItem} />
        <TouchableOpacity onPress={() => this._onMenuPress(this.props.navigation)} >
-      <Image style={styles.barItemImage} resizeMode='center' source={require('./../../res/images/icon_quality_check_menu.png')} />
+      <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_quality_check_menu.png')} />
     </TouchableOpacity>
     </View>
   }

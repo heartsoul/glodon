@@ -18,39 +18,39 @@ const RootStack = StackNavigator(
     LoginPage: {
       screen: GLD.LoginPage
     },
-    // ChoosePage: {
-    //   screen: GLD.TenantPage,
-    // },
+    ChoosePage: {
+      screen: GLD.TenantPage,
+    },
     MainPage: {
       screen : GLD.HomePage
     },
-    // ProjectPage: {
-    //   screen : GLD.ProjectPage
-    // },
-    // TenantPage: {
-    //   screen : GLD.TenantPage
-    // },
-    // QualityMainPage: {
-    //   screen : GLD.QualityMainPage
-    // },
-    // QualityMainPage: {
-    //   screen : GLD.QualityMainPage
-    // },
-    // WebPage: {
-    //   screen : GLD.WebPage
-    // },
-    // BimFileChooserPage: {
-    //   screen : GLD.BimFileChooserPage
-    // },
+    ProjectPage: {
+      screen : GLD.ProjectPage
+    },
+    TenantPage: {
+      screen : GLD.TenantPage
+    },
+    QualityMainPage: {
+      screen : GLD.QualityMainPage
+    },
+    QualityMainPage: {
+      screen : GLD.QualityMainPage
+    },
+    WebPage: {
+      screen : GLD.WebPage
+    },
+    BimFileChooserPage: {
+      screen : GLD.BimFileChooserPage
+    },
     NewPage: {
       screen : GLD.NewPage 
     },
     SettingPage: {
       screen : GLD.SettingPage 
     },
-    // CheckPointPage: {
-    //     screen : GLD.CheckPointPage 
-    // },
+    CheckPointPage: {
+        screen : GLD.CheckPointPage 
+    },
   },
   {
     initialRouteName: global.storage.isGuide(()=>{}) ? 'GuidePage' : 'LoginPage',

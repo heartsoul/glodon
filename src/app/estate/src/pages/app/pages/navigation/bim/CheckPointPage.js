@@ -22,7 +22,7 @@ import {
     Overlay,
     Theme,
 } from 'teaset';
-import * as QUALITYAPI from "../../service/api/api+quality"; 
+import * as QUALITYAPI from "app-api"; 
 
 export default class CheckPointList extends React.Component{
     
@@ -124,7 +124,7 @@ export default class CheckPointList extends React.Component{
                         <Text style={(index == this.state.navData.length-1) ? styles.lastNavName:styles.navName}> {item.name}</Text>
                         {
                              (index == this.state.navData.length-1) ? (
-                                <Image style={styles.navDownArrow} source={require('../../../res/images/icon_blue_arrow_down.png')}/>
+                                <Image style={styles.navDownArrow} source={require('app-images/icon_blue_arrow_down.png')}/>
                              ) :
                              ( <Text style={styles.navArrow}> {'->'}</Text>)
                         }
@@ -141,9 +141,9 @@ export default class CheckPointList extends React.Component{
            
             <TouchableOpacity activeOpacity={0.5} onPress={() => { this._moduleItemClick(item,index)}}>
                 <View style={styles.moduleItemContainer}>
-                        <Image source={require('../../../res/images/icon_blueprint_file.png')} style={styles.moduleDirIcon}/>
+                        <Image source={require('app-images/icon_blueprint_file.png')} style={styles.moduleDirIcon}/>
                         <Text style={styles.moduleDirItemName}> {item.name}</Text>
-                        <Image source={require('../../../res/images/icon_arrow_right_gray.png')} style={styles.moduleItemArrow}/>
+                        <Image source={require('app-images/icon_arrow_right_gray.png')} style={styles.moduleItemArrow}/>
                 </View>
             </TouchableOpacity>
         );
@@ -154,11 +154,11 @@ export default class CheckPointList extends React.Component{
             <TouchableOpacity activeOpacity={0.5} onPress={() => { this._moduleItemClick(item,index) }} >
                 <View style={styles.moduleItemContainer}>
                         <Text style={styles.moduleChildItemName}> {item.name}</Text>
-                        <Image source={require('../../../res/images/icon_benchmark.png')} style={styles.moduleChildMark}/>
+                        <Image source={require('app-images/icon_benchmark.png')} style={styles.moduleChildMark}/>
                         <View style={{flex:1}}/>
                         {
                             (this.state.selectedCheckPoint && this.state.selectedCheckPoint.id == item.id )?(
-                                <Image source={require('../../../res/images/icon_choose_list_selected.png')} style={styles.moduleItemSelectedIcon}/>
+                                <Image source={require('app-images/icon_choose_list_selected.png')} style={styles.moduleItemSelectedIcon}/>
                             ):(null)
                         }
                 </View>

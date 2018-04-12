@@ -1,7 +1,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { requireNativeComponent, processColor ,View} from 'react-native';
+import {requireNativeComponent} from 'react-native'
 
 class DemoView extends React.Component {
     _onChange = (event) => {

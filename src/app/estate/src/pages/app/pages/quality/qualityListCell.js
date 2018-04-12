@@ -2,13 +2,13 @@
 import React, {Component,PureComponent} from "react";
 import {Animated, StyleSheet, Text, View ,Image,
      Button,TouchableHighlight,TouchableOpacity} from "react-native";
- import * as API from "../service/api/api+quality"; 
+ import * as API from "app-api"; 
 
 var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 
-const projectImage =  require("../../res/images/icon_choose_project_item.png");
-const projectTimeImage = require("../../res/images/icon_time_black.png");
+const projectImage =  require("app-images/icon_choose_project_item.png");
+const projectTimeImage = require("app-images/icon_time_black.png");
 
 
 export default class QualityListCell extends PureComponent {

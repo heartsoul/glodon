@@ -9,7 +9,7 @@ import {
     RefreshControl, Button, TouchableHighlight, TouchableOpacity
 } from "react-native";
 import { LargeList } from "react-native-largelist";
-import * as API from "../service/api/api+quality";
+import * as API from "app-api";
 import QualityListCell from "./qualityListCell";
 import QualityListView from "./qualityListView";
 import { SegmentedBar,SegmentedView, Drawer, Label } from 'teaset';

@@ -464,9 +464,9 @@ export default class extends React.Component {
       <ScrollView>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         
-        <ListRow title='检查单位' accessory='indicator' bottomSeparator='indent' detail={this.state.selectInspectionCompanyIndex > -1 ? this.state.inspectionCompanies[this.state.selectInspectionCompanyIndex].name : ""} onPress={()=>{this._showInspectionCompanyActionSheet()}} />
-        <ListRow title='施工单位' accessory='indicator' bottomSeparator='indent' detail={this.state.selectCompanyIndex > -1 ? this.state.companies[this.state.selectCompanyIndex].name : ""} onPress={()=>{this._showCompanyActionSheet()}} />
-        <ListRow title='责任人' accessory='indicator' bottomSeparator='indent' detail={this.state.selectPersonIndex > -1 ? this.state.persons[this.state.selectPersonIndex].name : ""} onPress={()=>{this._getPersonList()}} />
+        <ListRow title='检查单位' accessory='indicator' bottomSeparator='indent' detail={this.state.selectInspectionCompanyIndex > 0 ? this.state.inspectionCompanies[this.state.selectInspectionCompanyIndex].name : ""} onPress={()=>{this._showInspectionCompanyActionSheet()}} />
+        <ListRow title='施工单位' accessory='indicator' bottomSeparator='indent' detail={this.state.selectCompanyIndex > 0 ? this.state.companies[this.state.selectCompanyIndex].name : ""} onPress={()=>{this._showCompanyActionSheet()}} />
+        <ListRow title='责任人' accessory='indicator' bottomSeparator='indent' detail={this.state.selectPersonIndex > 0 ? this.state.persons[this.state.selectPersonIndex].name : ""} onPress={()=>{this._getPersonList()}} />
         <TextInput 
             maxLength = {255}
             style={{textAlignVertical:'top',paddingLeft:12,paddingRight:12,paddingTop:12,paddingBottom:0,backgroundColor:'#ffffff',minHeight:120}}

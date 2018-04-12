@@ -4,10 +4,10 @@
 'use strict';
 import React, {Component,} from "react";
 import {ActivityIndicator, Animated, FlatList, ScrollView, StyleSheet, Text, View,StatusBar,Image,TouchableOpacity} from "react-native";
-import * as USERAPI from "../../../login/api+user"; 
+import * as USERAPI from "app-api"; 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-export default class tenantSimpleList extends Component {
+export default class tenantList extends Component {
     static navigationOptions = {
         title: '租户列表',
         tabBarVisible:false,
@@ -132,7 +132,7 @@ export default class tenantSimpleList extends Component {
             <TouchableOpacity key={index} activeOpacity={0.5}  onPress={() => this._clickItem(item,index)}>
                 <View style={styles.containerView}>
                  <Image
-          source={require("../../../res/images/icon_choose_tenant_item.png")}
+          source={require("app-images/icon_choose_tenant_item.png")}
           style={styles.image}/> 
                  <Text style={styles.content}> {item.value.tenantName}</Text>
                 </View>
