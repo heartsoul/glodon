@@ -33,7 +33,7 @@ window.modelEvent = {\
   getPosition : function(jsonData) { callMessage('getPosition', jsonData);},\
   getPositionInfo : function(jsonData) { callMessage('getPositionInfo', jsonData);},\
 };\
-//document.addEventListener('message', function(e) {eval(e.data);});\
+document.addEventListener('message', function(e) {eval(e.data);});\
 ";
 
 //默认应用的容器组件
@@ -65,7 +65,7 @@ export default class GLDWebView extends Component {
       switch (action) {
         case 'loadDotsData':
           {
-
+            
           }
           break;
         case 'invalidateToken':
@@ -99,8 +99,9 @@ export default class GLDWebView extends Component {
     }
   //渲染
   render() {
-   let url = "http://192.168.81.30/app.html?param=" + global.storage.bimToken + "&show=false";
-    // let url = "https://sg.glodon.com";
+    //   let url = "http://192.168.81.30/app.html?param=" + global.storage.bimToken + "&show=false";
+      let url = "http://47.95.204.243/app.html?param=" + global.storage.bimToken + "&show=false";
+      // let url = "https://sg.glodon.com";
     console.log("web view:" + url);
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
@@ -112,8 +113,8 @@ export default class GLDWebView extends Component {
             scalesPageToFit={true}
             javaScriptEnabled={true}
             domStorageEnabled={false}
-             onMessage={(e)=>this.onMessage(e)}
-             injectedJavaScript={cmdString}
+            onMessage={(e)=>this.onMessage(e)}
+            injectedJavaScript={cmdString}
            //  onLoadEnd ={()=>this.refs.webview.postMessage('javascript:window.modelEvent.loadDotsData();')}
             source={{ uri: url, method: 'GET' }}
             style={{ width: deviceWidth, height: deviceHeight }}>

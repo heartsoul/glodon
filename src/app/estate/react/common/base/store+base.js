@@ -208,6 +208,12 @@ class GLDStorage extends BaseStorage {
         navigator.goBack();
     }
 
+    //质量管理相关state
+    qualityState = {
+      bimChooserKey: '',//选择图纸模型的时候记录目录页面的初始navigation key，goBack from this page.
+      bimChooserCallback: ()=>{},//选择图纸模型后的回调
+    };
+    
     
 }
 // 全局变量
