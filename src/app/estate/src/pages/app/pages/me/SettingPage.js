@@ -11,12 +11,15 @@ import{
   TouchableHighlight,
   Dimensions,
 } from "react-native";
+import { connect } from 'react-redux' // 引入connect函数
+import * as loginAction from '../../../login/actions/loginAction' // 导入action方法 
+
 import {ListRow} from "app-3rd/teaset";
 import * as USERAPI from "app-api";
 
 var { width, height } = Dimensions.get("window");
 
-export default class SettingPage extends Component{
+class SettingPage extends Component{
 
     static navigationOptions = ({navigation, screenProps}) => ({
         headerTitle:(<Text style={{color:'#ffffff',fontSize:17,alignSelf:'center',textAlign:'center',flex:1,}}>设置</Text>),
@@ -55,8 +58,9 @@ export default class SettingPage extends Component{
           USERAPI.uaaLoginOut().then(()=>{
     
           });
+          this.props.logout();
           let navigator = this.props.navigation;
-           global.storage.gotoLogin(navigator);
+          global.storage.gotoLogin(navigator);
         });
     }
 
@@ -206,3 +210,19 @@ var styles = StyleSheet.create({
     },
 
 });
+
+export default connect(
+    state => ({
+      status: state.loginIn.status,
+      isSuccess: state.loginIn.isSuccess,
+      user: state.loginIn.user,
+      hasChoose: state.loginIn.hasChoose,
+    }),
+    dispatch => ({
+      logout: () =>{
+        if(dispatch) {
+          dispatch(loginAction.logout())
+        }
+      },
+    })
+  )(SettingPage)

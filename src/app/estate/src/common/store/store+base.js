@@ -159,13 +159,14 @@ class GLDStorage extends BaseStorage {
                 p = value;
                 console.log("hasChoose3:"+value);
                 if(retFun) {
-                    retFun(t != "0" &&  p != "0");
+                    retFun(t && p && t != "0" &&  p != "0");
                 }
             });
         });
         let p = this.loadProject();
-        console.log("hasChoose:"+t+','+p);
-        return t != "0" &&  p != "0" && t != undefined && p != undefined;
+        let ret = t != "0" &&  p != "0" && t != undefined && p != undefined && t != null && p != null;
+        console.log("hasChoose:"+ret);
+        return ret;
     }
     gotoMain = (navigation = null, name = "MainPage") => {
         let navigator = navigation;
@@ -176,7 +177,11 @@ class GLDStorage extends BaseStorage {
             return;
         }
         this.hasChoose((ret)=>{
+            console.log("\n>>>>>hasChoose:ret:"+ret)
+            console.log("\n>>>>>hasChoose:name:"+name)
+            console.log("\n>>>>>hasChoose:navigator:"+navigator)
             if (ret) {
+                
                  navigator.replace(name);
             } else {
                 navigator.replace("ChoosePage");

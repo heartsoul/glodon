@@ -28,10 +28,12 @@ function loginOld(username, pwd) {
         let ac = data["accountInfo"];
         if (!ac) {
           dispatch(loginError(false));
+          return;
         }
         global.storage.hasChoose((ret) => {
           if (!ret) {
             dispatch(loginSuccessChoose(true, response.data))
+            return
           }
           global.storage.loadTenant((tenant) => {
             setCurrentTenant(tenant).then((responseData) => {
@@ -70,10 +72,12 @@ function loginNew(username, pwd) {
         let ac = data["accountInfo"];
         if (!ac) {
           dispatch(loginError(false));
+          return;
         }
         global.storage.hasChoose((ret) => {
           if (!ret) {
             dispatch(loginSuccessChoose(true, response.data))
+            return;
           }
           global.storage.loadTenant((tenant) => {
             setCurrentTenant(tenant).then((responseData) => {

@@ -50,6 +50,7 @@ class LoginPage extends React.Component {
     // 登录完成,切成功登录
     if (nextProps.status === '登陆成功' && nextProps.isSuccess) {
       let navigator = this.props.navigation;
+      console.log("\n>>>>>hasChoose:ret:"+navigator)
       if(nextProps.hasChoose) {
         global.storage.gotoMain(navigator);
       } else {
@@ -302,14 +303,13 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    status: "未登录",
+    status: state.loginIn.status,
     isSuccess: state.loginIn.isSuccess,
     user: state.loginIn.user,
     hasChoose: state.loginIn.hasChoose,
   }),
   dispatch => ({
     login: (userName,password) =>{
-      console.log("dispatch(loginAction.login(userName,password)):"+dispatch)
       if(dispatch) {
         dispatch(loginAction.login(userName,password))
       }
