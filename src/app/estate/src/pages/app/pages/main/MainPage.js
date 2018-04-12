@@ -8,13 +8,11 @@ import {
   TouchableHighlight,
   Image,
   ImageBackground,
+  Dimensions,
 } from 'react-native';
 import ModelItemView from './ModelItemView'
-import NavigationItem from '../../../../components/views/NavigationItem'
-import { SegmentedBar, Label, SegmentedView, Button, Carousel } from 'teaset';
-//import * as USERAPI from "../../login/api+user";
-import { NavigationPage } from 'teaset'
-var Dimensions = require("Dimensions");
+import { NavigationPage,SegmentedBar, Label, SegmentedView, Button, Carousel } from 'app-3rd/teaset';
+
 var { width, height } = Dimensions.get("window");
 export default class extends NavigationPage {
   constructor() {
@@ -96,31 +94,31 @@ export default class extends NavigationPage {
     return (
       <View style={{backgroundColor:'#FFFFFE'}}>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-        <ImageBackground style={{ height: 238 }} resizeMode='center' source={require('./../../../res/images/icon_main_page_top_bg.png')}>
+        <ImageBackground style={{ height: 238 }} resizeMode='center' source={require('app-images/icon_main_page_top_bg.png')}>
         <Carousel ref={'carousel'} style={{ height: 238 }} carousel={false} scrollEnabled={false}>
-          <Image style={styles.topImage} resizeMode='center' source={require('./../../../res/images/icon_main_page_top_quality.png')} />
-          <Image style={styles.topImage} resizeMode='center' source={require('./../../../res/images/icon_main_page_top_equipment.png')} />
+          <Image style={styles.topImage} resizeMode='center' source={require('app-images/icon_main_page_top_quality.png')} />
+          <Image style={styles.topImage} resizeMode='center' source={require('app-images/icon_main_page_top_equipment.png')} />
         </Carousel>
         </ImageBackground>
         <SegmentedView style={{flex: 0,height:400,backgroundColor:'#f8f8f8'}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
           <SegmentedView.Sheet title='质量检查'>
           <View style={styles.tabContent}>
-            <ModelItemView source={require('./../../../res/images/icon_main_pager_zjqd.png')} onPress={() => this._loadQualityForm()} title="质检清单" />
+            <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={() => this._loadQualityForm()} title="质检清单" />
             <View style={styles.spliteItem} />
-            <ModelItemView source={require('./../../../res/images/icon_main_pager_blueprint.png')} onPress={() => this._fileChoose()} title="图纸" />
+            <ModelItemView source={require('app-images/icon_main_pager_blueprint.png')} onPress={() => this._fileChoose()} title="图纸" />
             <View style={styles.spliteItem} />
-            <ModelItemView source={require('./../../../res/images/icon_main_pager_model.png')} onPress={() => this._projectChoose()} title="模型" />
+            <ModelItemView source={require('app-images/icon_main_pager_model.png')} onPress={() => this._projectChoose()} title="模型" />
             <View style={styles.spliteItem} />
-            <ModelItemView source={require('./../../../res/images/icon_main_pager_module.png')} onPress={() => this._moduleChoose()} title="质检项目" />
+            <ModelItemView source={require('app-images/icon_main_pager_module.png')} onPress={() => this._moduleChoose()} title="质检项目" />
             <View style={styles.spliteItem} />
             <Button type={'primary'} size={'md'} onPress={() => this._loadUserInfo()} style={{ height: 50 }} title="选择租户" />
           </View>
           </SegmentedView.Sheet>
           <SegmentedView.Sheet title='材设进场'>
           <View style={styles.tabContent}>
-          <ModelItemView source={require('./../../../res/images/icon_main_pager_csjc.png')} onPress={() => this._loadEquipmentForm()} title="材设清单" />
+          <ModelItemView source={require('app-images/icon_main_pager_csjc.png')} onPress={() => this._loadEquipmentForm()} title="材设清单" />
             <View style={styles.spliteItem} />
-            <ModelItemView source={require('./../../../res/images/icon_main_pager_equipment_model.png')} onPress={() => this._moduleChoose()} title="模型预览" />   
+            <ModelItemView source={require('app-images/icon_main_pager_equipment_model.png')} onPress={() => this._moduleChoose()} title="模型预览" />   
           </View>
           </SegmentedView.Sheet>
         </SegmentedView>

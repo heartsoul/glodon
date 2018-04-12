@@ -6,9 +6,9 @@ import {
   View,
   StatusBar,
   Image,
+  TouchableOpacity
 } from 'react-native';
-import NavigationItem from '../../../../components/views/NavigationItem'
-import { Label, Button } from 'teaset';
+import { Label } from 'app-3rd/teaset';
 
 export default class extends React.Component {
     constructor() {
@@ -17,12 +17,12 @@ export default class extends React.Component {
     
     render() {
       return (
-        <NavigationItem {...this.props}>
+        <TouchableOpacity {...this.props}>
         <View style={styles.imageView}>
         <Image source={this.props.source} style={styles.image}/>
         <Label >{this.props.title}</Label>
         </View>
-        </NavigationItem>
+        </TouchableOpacity>
         
       );
     }

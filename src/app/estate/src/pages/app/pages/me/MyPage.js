@@ -10,7 +10,7 @@ import {
   Image,
   TouchableOpacity 
 } from 'react-native';
-import * as USERAPI from "../../../login/api+user";
+import {loginOut, uaaLoginOut} from "app-api";
 import {NavigationPage} from 'teaset'
 
 var Dimensions = require("Dimensions");
@@ -37,8 +37,8 @@ export default class extends NavigationPage {
 
   _logout=()=>{
     global.storage.logout();
-    USERAPI.loginOut().then(()=>{
-      USERAPI.uaaLoginOut().then(()=>{
+    loginOut().then(()=>{
+      uaaLoginOut().then(()=>{
 
       });
       global.storage.gotoLogin();
@@ -61,21 +61,21 @@ export default class extends NavigationPage {
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         <View>
           <View style={{backgroundColor:'#00baf3'}}>
-            <Image source={require('../../../res/images/icon_mine_default_header.png')} style={styles.mineAvatar}/>
+            <Image source={require('app-images/icon_mine_default_header.png')} style={styles.mineAvatar}/>
         
             <Text style={styles.mineName}>{name}</Text>
 
-            <Image source={require('../../../res/images/icon_mine_wave.png')} style={styles.mineWave}/>
+            <Image source={require('app-images/icon_mine_wave.png')} style={styles.mineWave}/>
 
           </View>
           <View style={{backgroundColor:'#ffffff'}}>
-            <MineItemView icon = {require('../../../res/images/icon_mine_permission.png')} title='我的任务' onPress={()=>this._gotoTask()}></MineItemView>
+            <MineItemView icon = {require('app-images/icon_mine_permission.png')} title='我的任务' onPress={()=>this._gotoTask()}></MineItemView>
             <View style={styles.mineItemLine}></View>
           
-            <MineItemView icon = {require('../../../res/images/icon_mine_plan.png')} title='我的计划' onPress={()=>this._gotoPlan()}></MineItemView>
+            <MineItemView icon = {require('app-images/icon_mine_plan.png')} title='我的计划' onPress={()=>this._gotoPlan()}></MineItemView>
             <View style={styles.mineItemLine}></View>
           
-            <MineItemView icon = {require('../../../res/images/icon_mine_setting.png')} title='设置' onPress={()=>this._gotoSetting()}></MineItemView>
+            <MineItemView icon = {require('app-images/icon_mine_setting.png')} title='设置' onPress={()=>this._gotoSetting()}></MineItemView>
 
           </View>
 
@@ -93,7 +93,7 @@ class MineItemView extends Component{
           <View style={styles.mineItemContainer}>
             <Image source={this.props.icon} style={styles.mineItemIcon}/>
             <Text style={styles.mineItemText}>{this.props.title} </Text>
-            <Image source={require('../../../res/images/icon_arrow_right_gray.png')} style={styles.mineItemArrow}/>
+            <Image source={require('app-images/icon_arrow_right_gray.png')} style={styles.mineItemArrow}/>
           </View>
         </TouchableOpacity>
 

@@ -1,7 +1,14 @@
 import GuidePage from './guide/GuidePage'
 import LoginPage from './login/pages/LoginPage'
 
-// import MainPage from './business/home/main';
+import HomePage from './home/home'
+
+import MyPage from './app/pages/me/MyPage'
+import SettingPage from './app/pages/me/SettingPage'
+import MessagePage from './app/pages/message/MessagePage'
+import SubscribePage from './app/pages/subscription/SubscribePage'
+import NewPage from './app/pages/new/NewPage'
+import MainPage from './app/pages/main/MainPage'
 // import TestPage from './business/home/test';
 // import BaseStorage from './base/store+base';
 // import ChoosePage from './business/navigation/chooseHome';
@@ -17,4 +24,14 @@ import LoginPage from './login/pages/LoginPage'
 // import QualityMainPage from './business/quality/qualityMain';
 // import SettingPage from './business/home/me/setting'
 
-export {LoginPage,GuidePage}
+export {
+    LoginPage,
+    GuidePage,
+    HomePage,
+    MainPage,
+    MyPage,
+    SettingPage,
+    MessagePage,
+    SubscribePage,
+    NewPage,
+}

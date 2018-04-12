@@ -1,8 +1,7 @@
 import React from 'react';
 import { Button, View, Text, Image,TouchableOpacity } from 'react-native';
-import { withNavigation } from 'react-navigation';
-import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'; // 1.0.0-beta.27
-import { TabView, Theme, BasePage, NavigationPage, TeaNavigator } from 'teaset'
+import { withNavigation,StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
+import { TabView, Theme, BasePage, NavigationPage, TeaNavigator } from 'app-3rd/teaset'
 //Theme.set(Theme.themes.black);
 const primaryColor = '#00baf3';
 Theme.set({
@@ -25,11 +24,15 @@ Theme.set({
   // navButtonFontSize: 15,
   navSeparatorColor: primaryColor,
 });
-import HomeTab from './home/home';
-import MeTab from './me/me';
-import MessageTab from './message/message';
-import SubscribeTab from './subscriptions/subscribe';
-import NavigationItem from '../../../components/views/NavigationItem'
+
+import {
+  MainPage as Tab1,
+  MyPage as Tab5,
+  MessagePage as Tab2,
+  SubscribePage as Tab4,
+  NewPage as Tab3,
+} from '../pages'
+
 class MinePage extends NavigationPage {
   static defaultProps = {
     ...NavigationPage.defaultProps,
@@ -37,7 +40,7 @@ class MinePage extends NavigationPage {
     showBackButton: false,
   };
   renderPage() {
-    return <MeTab />
+    return <Tab5 />
   }
 }
 
@@ -48,7 +51,7 @@ class SubscribePage extends NavigationPage {
     showBackButton: false,
   };
   renderPage() {
-    return <SubscribeTab />
+    return <Tab4 />
   }
 }
 class MessagePage extends NavigationPage {
@@ -58,14 +61,14 @@ class MessagePage extends NavigationPage {
     showBackButton: false,
   };
   renderPage() {
-    return <MessageTab />
+    return <Tab2 />
   }
 }
 
 class SearchaBarItem extends React.Component {
   render() {
     return  <TouchableOpacity  onPress={()=>this.props.navigation.navigate("SearchPage")} >  
-          <Image resizeMode='center' source={require('./../../res/images/icon_search_white.png')} />
+          <Image resizeMode='center' source={require('app-images/icon_search_white.png')} />
     </TouchableOpacity> 
   }
 }
@@ -89,7 +92,7 @@ class HomePage extends NavigationPage {
     return <SearchButton/>
   }
   renderPage() {
-    return <HomeTab style={{backgroundColor:'#FFFFFF'}} />
+    return <Tab1 style={{backgroundColor:'#FFFFFF'}} />
   }
 }
 class Page extends React.Component {
@@ -100,15 +103,15 @@ class Page extends React.Component {
     return (<TabView style={{ flex: 1 }} type='projector'>
       <TabView.Sheet
         title='首页'
-        icon={require('../../res/images/home/icon_main_main_page.png')}
-        activeIcon={require('../../res/images/home/icon_main_page_selected.png')}
+        icon={require('app-images/home/icon_main_main_page.png')}
+        activeIcon={require('app-images/home/icon_main_page_selected.png')}
       >
         <HomePage />
       </TabView.Sheet>
       <TabView.Sheet
         title='订阅'
-        icon={require('../../res/images/home/icon_main_subscribe.png')}
-        activeIcon={require('../../res/images/home/icon_main_subscribe_selected.png')}
+        icon={require('app-images/home/icon_main_subscribe.png')}
+        activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
         badge={1}
       >
         <SubscribePage />
@@ -131,7 +134,7 @@ class Page extends React.Component {
           }}>
             <Image
               style={{ width: 50, height: 50, borderRadius: 25 }}
-              source={require('../../res/images/home/icon_main_create.png')}
+              source={require('app-images/home/icon_main_create.png')}
             />
           </View>
         }
@@ -141,24 +144,24 @@ class Page extends React.Component {
 
       <TabView.Sheet
         title='消息'
-        icon={require('../../res/images/home/icon_main_message.png')}
-        activeIcon={require('../../res/images/home/icon_main_message_selected.png')}
+        icon={require('app-images/home/icon_main_message.png')}
+        activeIcon={require('app-images/home/icon_main_message_selected.png')}
         badge={9}
       >
         <MessagePage />
       </TabView.Sheet>
       <TabView.Sheet
         title='我'
-        icon={require('../../res/images/home/icon_main_mine.png')}
-        activeIcon={require('../../res/images/home/icon_main_mine_selected.png')}
+        icon={require('app-images/home/icon_main_mine.png')}
+        activeIcon={require('app-images/home/icon_main_mine_selected.png')}
       // badge={'new'}
       >
-        <MinePage />
+        <MinePage /> 
       </TabView.Sheet>
     </TabView>);
   }
 }
-export default class mainPage extends React.Component {
+export default class MainPage extends React.Component {
   static navigationOptions = {
     title: '首页',
     tabBarVisible: false,
@@ -172,7 +175,7 @@ export default class mainPage extends React.Component {
     this.page
   }
   render() {
-    return <Page ref={'page'} />;
+  return (<Page ref={'page'} />);
   }
 
 };

@@ -12,18 +12,18 @@ import {
   ScrollView,
   Button,
   TouchableHighlight,
+  Dimensions,
 } from 'react-native';
-var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
-import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'teaset';
+import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'app-3rd/teaset';
 import ImageChooserView from './ImageChooserView';
-import * as UPLOADAPI from "../../service/api/api+upload"; 
-import * as QUALITYAPI from "../../service/api/api+quality"; 
-import * as PMBASICAPI from "../../service/api/api+pmbasic"; 
+
+import * as API from "app-api";
+const UPLOADAPI = API
+const QUALITYAPI = API
+const PMBASICAPI = API
 
 import { Modal, Toast } from 'antd-mobile';
-
-var ReactNative = require('ReactNative');
 
 const REF_PHOTO = 'gldPhoto';
 

@@ -8,8 +8,7 @@ import * as GLD from '../pages'
 import configureStore, { history } from '../store/ConfigureStore'
 
 const store = configureStore()
-console.log("store:"+store)
-console.log("GLD.LoginPage:"+GLD.LoginPage)
+console.log("HomePage:"+GLD.HomePage)
 // LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage
 const RootStack = StackNavigator(
   {
@@ -22,9 +21,9 @@ const RootStack = StackNavigator(
     // ChoosePage: {
     //   screen: GLD.TenantPage,
     // },
-    // MainPage: {
-    //   screen : GLD.MainPage
-    // },
+    MainPage: {
+      screen : GLD.HomePage
+    },
     // ProjectPage: {
     //   screen : GLD.ProjectPage
     // },
@@ -43,12 +42,12 @@ const RootStack = StackNavigator(
     // BimFileChooserPage: {
     //   screen : GLD.BimFileChooserPage
     // },
-    // NewPage: {
-    //   screen : GLD.NewPage 
-    // },
-    // SettingPage: {
-    //   screen : GLD.SettingPage 
-    // },
+    NewPage: {
+      screen : GLD.NewPage 
+    },
+    SettingPage: {
+      screen : GLD.SettingPage 
+    },
     // CheckPointPage: {
     //     screen : GLD.CheckPointPage 
     // },
