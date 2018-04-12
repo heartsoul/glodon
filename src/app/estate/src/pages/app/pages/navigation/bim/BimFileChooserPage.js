@@ -32,7 +32,8 @@ export default class BimFileChooser extends Component {
             hasMore:true,
             projectId:global.storage.projectId,
             latestVersion:global.storage.projectIdVersionId,
-            fileId:global.storage.fileId,
+            fileId:0,
+            dataType:""//图纸文件 模型文件 
         }
     }
     _keyExtractor = (item, index) => index;
@@ -45,6 +46,7 @@ export default class BimFileChooser extends Component {
                 MODELAPI.getModelLatestVersion(projectId).then((responseData) => {
                     let latestVersion = responseData.data.data.versionId;
                     global.storage.projectIdVersionId = latestVersion;
+                    console.log(responseData)
                     this.setState({
                         projectId: projectId,
                         latestVersion: latestVersion,
@@ -62,7 +64,10 @@ export default class BimFileChooser extends Component {
         // 这个是js的访问网络的方法
         MODELAPI.getModelBimFileChildren(projectId,latestVersion,page,this.state.fileId).then(
             (responseData) => {
+                console.log(responseData)
                 let data = responseData.data.data.items;
+                data = this.filterData(data);
+
                 let last = false;
 
                 let dataBlob = [];
@@ -78,6 +83,7 @@ export default class BimFileChooser extends Component {
                         })
                         i++; 
                     });
+                    dataBlob = this.sortData(dataBlob);
                     // alert(2);
                     this.setState({
                         //复制数据源
@@ -100,10 +106,54 @@ export default class BimFileChooser extends Component {
             }
         );
     }
+    //过滤模型和图纸
+    filterData = (data)=> {
+        console.log('---------------')
+        console.log(this.state.fileId)
+        console.log(this.state.dataType)
+        if((!this.state.fileId || this.state.fileId == 0) && data.length > 0 && this.state.dataType){
+            //根据dataType过滤 图纸和模型
+            let filterData = data.filter((item)=>{
+                return item.name === this.state.dataType;
+            });
+            return filterData;
+        }
+        return data;
+    }
+    //文件夹在上面
+    sortData = (data)=> {
+        return data.sort((item1,item2) => {
+            if(item1.value.folder){
+                return -1;
+            }else if(item2.value.folder){
+                return 1;
+            }else{
+                return 0;
+            }
+        });
+    }
 
     componentDidMount() {
-        //请求数据
-         this.fetchData(1);
+        //上一个页面传来的参数
+      
+        let params = this.props.navigation.state.params;
+        let fileId = params.fileId;
+        let dataType = params.dataType;
+        console.log('fileId --------------------------- '+fileId)
+        if(!fileId || fileId == 0){//保存目录的初始key
+            console.log('save nav key ---------------------------')
+            global.storage.qualityState.navKey = this.props.navigation.state.key;
+        }
+
+        console.log(params)
+        this.setState({
+            fileId: fileId,
+            dataType: dataType,
+        },()=>{
+            //请求数据
+            this.fetchData(1);
+        });
+
     }
 
     //加载等待的view
@@ -134,19 +184,23 @@ export default class BimFileChooser extends Component {
     }
     _itemClick = (item,index) => {
         let navigator = this.props.navigation;
-        global.storage.fileId = item.value.fileId;
         if(item.value.folder === true) {
-            global.storage.pushNext(navigator,"BimFileChooserPage");
+            global.storage.pushNext(navigator,"BimFileChooserPage",{fileId:item.value.fileId,dataType:this.state.dataType});
         } else {
             MODELAPI.getModelBimFileToken(this.state.projectId,this.state.latestVersion,item.value.fileId).then((responseData)=>{
                 let token = responseData.data.data;
                 global.storage.bimToken = token;
-                global.storage.pushNext(navigator,"WebPage",{title:item.value.name});
+                if(this.state.dataType === '图纸文件'){
+                    global.storage.pushNext(navigator,"RelevantBlueprintPage",{title:item.value.name, fileId:item.value.fileId});
+                }else{
+                    global.storage.pushNext(navigator,"WebPage",{title:item.value.name, fileId:item.value.fileId});
+                }
             });
             
         }
         
     }
+    
 
     _separator = () => {
         return <View style={{height:1,backgroundColor:'#ededed',marginLeft:40}}/>;
@@ -183,17 +237,17 @@ export default class BimFileChooser extends Component {
         // if(!this.setState.hasMore) {
         //     return;
         // }
-        console.log(this.state.refreshing);
-        if(this.state.refreshing) {
-            return;
-        }
-        this.setState({
-            refreshing: true,
-        });
-        const timer = setTimeout(() => {
-            clearTimeout(timer);
-            this.fetchData(this.state.page);
-        }, 1500);
+        // console.log(this.state.refreshing);
+        // if(this.state.refreshing) {
+        //     return;
+        // }
+        // this.setState({
+        //     refreshing: true,
+        // });
+        // const timer = setTimeout(() => {
+        //     clearTimeout(timer);
+        //     this.fetchData(this.state.page);
+        // }, 1500);
     }
     _onRefreshing = () => {
         console.log(this.state.refreshing);

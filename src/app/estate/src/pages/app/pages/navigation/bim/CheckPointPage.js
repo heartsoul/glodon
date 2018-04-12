@@ -14,13 +14,13 @@ import {
     FlatList,
     StatusBar,
     Modal,
-    Label,
     Button,
 } from 'react-native';
 import {
     ListRow,
     Overlay,
     Theme,
+    Label,
 } from 'app-3rd/teaset';
 import * as QUALITYAPI from "app-api"; 
 

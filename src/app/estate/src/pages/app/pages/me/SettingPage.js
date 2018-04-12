@@ -12,7 +12,7 @@ import{
   Dimensions,
 } from "react-native";
 import {ListRow} from "app-3rd/teaset";
-import {loginOut, uaaLoginOut} from "app-api";
+import * as USERAPI from "app-api";
 
 var { width, height } = Dimensions.get("window");
 

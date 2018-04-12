@@ -51,6 +51,12 @@ const RootStack = StackNavigator(
     CheckPointPage: {
         screen : GLD.CheckPointPage 
     },
+    RelevantBlueprintPage: {
+      screen : GLD.RelevantBlueprintPage 
+    },
+    RelevantModlePage: {
+      screen : GLD.RelevantModlePage 
+    },
   },
   {
     initialRouteName: global.storage.isGuide(()=>{}) ? 'GuidePage' : 'LoginPage',

@@ -2,6 +2,7 @@ import {
     AsyncStorage,
 } from 'react-native';
 
+import {NavigationActions} from 'app-3rd/react-navigation'
 export default class BaseStorage {
     constructor() {
         super.constructor();
@@ -142,7 +143,13 @@ class GLDStorage extends BaseStorage {
         // return this.currentProject;
     }
     gotoLogin=(navigator)=> {
-        navigator.reset('LoginPage');
+        let resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({routeName:'LoginPage'})//要跳转到的页面名字
+            ]
+        });
+        navigator.dispatch(resetAction);
     }
     hasChoose=(retFun)=> {
         let t = this.loadTenant((value)=>{
@@ -198,8 +205,11 @@ class GLDStorage extends BaseStorage {
         }
         navigator.goBack();
     }
-
-    
+    //质量管理相关state
+    qualityState = {
+        bimChooserKey: '',//选择图纸模型的时候记录目录页面的初始navigation key，goBack from this page.
+        bimChooserCallback: () => { },//选择图纸模型后的回调
+    };  
 }
 // 全局变量
 global.storage = new GLDStorage();

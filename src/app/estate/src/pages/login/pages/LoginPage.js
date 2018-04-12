@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    status: state.loginIn.status,
+    status: "未登录",
     isSuccess: state.loginIn.isSuccess,
     user: state.loginIn.user,
     hasChoose: state.loginIn.hasChoose,

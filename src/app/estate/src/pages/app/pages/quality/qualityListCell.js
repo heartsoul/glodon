@@ -1,10 +1,9 @@
 'use strict';
 import React, {Component,PureComponent} from "react";
 import {Animated, StyleSheet, Text, View ,Image,
-     Button,TouchableHighlight,TouchableOpacity} from "react-native";
+     Button,TouchableHighlight,TouchableOpacity,Dimensions} from "react-native";
  import * as API from "app-api"; 
 
-var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 
 const projectImage =  require("app-images/icon_choose_project_item.png");
