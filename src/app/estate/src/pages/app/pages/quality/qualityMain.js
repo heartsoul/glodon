@@ -1,10 +1,9 @@
 import React from 'react';
-import {StyleSheet, Button, View, Text, Image, TouchableOpacity, NativeModules } from 'react-native';
-import { StackNavigator, DrawerNavigator, withNavigation } from 'react-navigation'; // 1.0.0-beta.27
+import {StyleSheet, Button, View, Text, Image, TouchableOpacity, NativeModules,Dimensions } from 'app-3rd/react-native';
+import { StackNavigator, DrawerNavigator, withNavigation } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
 import QualityList from './qualityList'
-import { SegmentedBar, Drawer, Label, ActionSheet } from 'teaset';
+import { SegmentedBar, Drawer, Label, ActionSheet } from 'app-3rd/teaset';
 var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
-var Dimensions = require("Dimensions");
 var { width, height } = Dimensions.get("window");
 class DetailsScreen extends React.Component {
   render() {
