@@ -248,7 +248,9 @@ export default class extends React.Component {
     //描述
     params.description = this.state.contentDescription;
     //检查单id
-    params.inspectId = -1;
+    params.inspectId = this.state.inspectId;
+    params.code = this.state.code;
+
     //检查单位 companies
     params.inspectionCompanyId = this.state.inspectionCompanies[this.state.selectInspectionCompanyIndex].id;
     params.inspectionCompanyName = this.state.inspectionCompanies[this.state.selectInspectionCompanyIndex].name;
@@ -267,6 +269,12 @@ export default class extends React.Component {
     params.responsibleUserName = this.state.persons[this.state.selectPersonIndex].name;
     params.responsibleUserTitle = this.state.persons[this.state.selectPersonIndex].title;
 
+    //关联图纸
+    params.drawingGdocFileId = this.state.relevantBluePrint.fileId;
+    params.drawingName = this.state.relevantBluePrint.name;
+    params.drawingPositionX = this.state.relevantBluePrint.drawingPositionX;
+    params.drawingPositionY = this.state.relevantBluePrint.drawingPositionY;
+
     params.files = this.state.files;
 
     console.log(params)
@@ -280,7 +288,6 @@ export default class extends React.Component {
 
 
   _submit = ()=> {
-    console.log('submit------------')
     if(this._checkMustInfo()){
         this._loadingToast();
          //区分新增提交和编辑提交
@@ -308,13 +315,11 @@ export default class extends React.Component {
   //检查单 编辑   提交
   _editSubmitInspection = ()=> {
     let params = this._assembleParams();  
-    QUALITYAPI.editSubmitInspection(global.storage.projectId,params)
+    QUALITYAPI.editSubmitInspection(global.storage.projectId, this.state.inspectId, params)
         .then(data =>{
             Toast.hide();
             console.log(data)
-            if(data && data.data && data.data.id){
-                global.storage.goBack(this.props.navigation,null);
-            }
+            global.storage.goBack(this.props.navigation,null);
         })
   }
   
@@ -336,10 +341,10 @@ export default class extends React.Component {
         .then(data =>{
             console.log(data)
             Toast.hide();
-            // data.id
-            if(data && data.data && data.data.id ){
+            if(data ){
                 this.setState({
-                    inspectId:data.id
+                    inspectId: data.data.id,
+                    code: data.data.code,
                 });
             }
         })
@@ -347,16 +352,10 @@ export default class extends React.Component {
   //检查单 编辑   保存
   _editSaveInspection = ()=> {
     let params = this._assembleParams();  
-    QUALITYAPI.editSaveInspection(global.storage.projectId,params)
+    QUALITYAPI.editSaveInspection(global.storage.projectId,this.state.inspectId,params)
         .then(data =>{
             console.log(data)
             Toast.hide();
-            // data.id
-            if(data && data.data && data.data.id ){
-                this.setState({
-                    inspectId:data.id
-                });
-            }
         })
   }
   //
@@ -378,6 +377,7 @@ export default class extends React.Component {
      this._fetchData(this._getInspectionCompanies);
      this._fetchData(this._getCompaniesList);
      this._fetchData(this._getCheckPoints);
+
   }
   
   //初始状态
@@ -401,6 +401,10 @@ export default class extends React.Component {
         inspectId:-1,//检查单id
 
         files: [],//图片
+
+        relevantBluePrint:{},//关联图纸
+        relevantModel:{},//关联模型
+           
     });  
   }
 
@@ -422,6 +426,26 @@ export default class extends React.Component {
   _showCheckInfoModal = (message) => {
     Modal.alert('提示信息', message,[ {text:'知道了',style:{color:'#00baf3'}}]);
   }
+  //选择图纸模型
+ _bimFileChooser = (dataType)=> {
+    let navigator = this.props.navigation; 
+    //保存当前页面的key
+    global.storage.qualityState.bimChooserCallback = this._bimChooserCallback;
+    global.storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: dataType})
+
+ }
+ //选择图纸或者模型后的回调 dataType 图纸文件{name:'', fileId:'', drawingPositionX:'', drawingPositionY:'' }、模型文件
+ _bimChooserCallback = (data,dataType)=>{
+    if(dataType === '图纸文件'){
+        this.setState({
+            relevantBluePrint: data,
+        });
+    }else if(dataType === '模型文件'){
+        this.setState({
+            relevantModel: data,
+        });
+    }
+ }
 
   constructor() {
       super();
@@ -446,6 +470,8 @@ export default class extends React.Component {
         modal:false,
 
         inspectId:-1,//检查单id
+        
+        code: '',
 
         files: [],//图片
 
@@ -488,8 +514,8 @@ export default class extends React.Component {
         </View>
 
         <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent'detail={this.state.selectedCheckPoint?this.state.selectedCheckPoint.name:''} onPress={()=>{this._selectCheckPoint()}} />
-        <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' onPress={()=>{}} />
-        <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' onPress={()=>{}} />
+        <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint?this.state.relevantBluePrint.name:''} onPress={()=>{ this._bimFileChooser('图纸文件') }} />
+        <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel?this.state.relevantModel.name:''} onPress={()=>{ this._bimFileChooser('模型文件') }} />
 
         <ImageChooserView ref ={ REF_PHOTO } style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
         <View style={{marginBottom:30}}>

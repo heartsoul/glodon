@@ -327,7 +327,7 @@ class GLDLoginViewController extends React.Component {
         />
         <View>
           <TouchableHighlight
-            onPress={this._loginAction}
+            onPress={this._loginActionOld}
             underlayColor="#0099f3"
             activeOpacity={1.0}
             style={
