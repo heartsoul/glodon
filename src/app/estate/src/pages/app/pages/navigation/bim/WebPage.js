@@ -57,6 +57,7 @@ export default class GLDWebView extends Component {
   _rightAction = ()=> {
     console.log("执行js window.modelEvent.loadDotsData();");
     this.refs.webview.injectJavaScript('javascript:window.modelEvent.loadDotsData();')
+    // this.props.navigation.pop("BimFileChooserPage");
   }
   onMessage =(e)=> {
     console.log(e.nativeEvent.data);

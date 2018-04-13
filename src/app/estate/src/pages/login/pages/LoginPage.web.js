@@ -29,7 +29,7 @@ class LoginPage extends React.Component {
     headerTintColor:"#FFF",
     headerStyle:{backgroundColor:"#00baf3"},
     header:null,
-}
+  }
   constructor(props) {
     super(props);
     /*用来指示是否显示Loading提示符号*/

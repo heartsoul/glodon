@@ -21,6 +21,13 @@ let image5 = require('./image/5.png');
 import {Util} from 'app-utils';
 
 export default class extends React.Component {
+  static navigationOptions = {
+    title: '向导',
+    tabBarVisible:false,
+    headerTintColor:"#FFF",
+    headerStyle:{backgroundColor:"#00baf3"},
+    header:null,
+}
   constructor() {
       super();
     };

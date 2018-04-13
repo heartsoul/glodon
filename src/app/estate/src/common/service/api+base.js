@@ -19,8 +19,12 @@ import {BASE_URL} from 'common-module'
 // })
 
 function parseJSON(response) {
+   let ContentType = response.headers.get('Content-Type');
+   if(ContentType && ContentType.toLowerCase().indexOf("application/json",0) > -1) {
     let ret = response.json();
     return ret;
+   }
+   return response.text();
 }
 
 function parseHTML(response) {
@@ -66,6 +70,7 @@ export function requestJSON(url, options) {
 
     let ops = {
         headers: {
+            'Accept': 'application/json',
             "Content-Type": "application/json;charset=utf-8",
             "X-Requested-With": "XMLHttpRequest",
         },
