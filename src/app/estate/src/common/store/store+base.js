@@ -15,7 +15,6 @@ export default class BaseStorage {
 
     // 查询
     getItem=(key ,result)=>  {
-        console.log(result);
         AsyncStorage.getItem(key)
             .then((value) => {
                 //  result(value);
@@ -155,7 +154,7 @@ class GLDStorage extends BaseStorage {
     }
     loadCurrentProjectName=(retFun)=> {
         // this.currentProject = this.getItem('currentProject');
-        console.log(this.currentProjectName);
+        // console.log(this.currentProjectName);
         if(this.currentProjectName != "首页") {
             if(retFun) {
                 retFun(this.currentProjectName);

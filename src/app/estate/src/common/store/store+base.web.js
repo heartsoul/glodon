@@ -42,6 +42,7 @@ class GLDStorage extends BaseStorage {
         this.guide = '0';
         this.currentTenant = "0";
         this.currentProject = "0";
+        this.currentProjectName = "首页";
         this.homeNavigation = null;
         this.bimToken = {};
         this.fileId = '';
@@ -59,14 +60,22 @@ class GLDStorage extends BaseStorage {
         return this.loginToken != '';
     }
     logout=()=> {
+        this.userInfo = {};
         this.loginToken = '';
-        this.currentProject = "0";
+        this.guide = '0';
         this.currentTenant = "0";
-        this.guide = "0";
+        this.currentProject = "0";
+        this.currentProjectName = "首页";
+        this.homeNavigation = null;
+        this.bimToken = {};
+        this.fileId = '';
+        this.projectIdVersionId = '';
+        this.projectId = 0;
         this.removeItem({key:'loginToken'});
         this.removeItem({key:'currentProject'});
         this.removeItem({key:'currentTenant'});
         this.removeItem({key:'guide'});
+        this.removeItem({key:'currentProjectName'});
     }
     saveGuide=()=> {
         this.guide = "1";
@@ -114,14 +123,15 @@ class GLDStorage extends BaseStorage {
                 console.log(err)
             });
     }
-    saveProject=(project)=> {
-        console.log(project);
+    saveProject=(project,name)=> {
         this.currentProject = ""+project;
+        this.currentProjectName = ""+name;
         this.setItem('currentProject', ""+project);
+        this.setItem('currentProjectName', ""+name);
     }
     loadProject=(retFun)=> {
         // this.currentProject = this.getItem('currentProject');
-        console.log(this.currentProject);
+        // console.log(this.currentProject);
         if(this.currentProject != "0") {
             if(retFun) {
                 retFun(this.currentProject);
@@ -138,6 +148,10 @@ class GLDStorage extends BaseStorage {
                 }
                 
                 return this.currentProject;
+            });
+            AsyncStorage.getItem('currentProjectName')
+            .then((value) => {
+                this.currentProjectName = value;
             });
         // return this.currentProject;
     }
@@ -199,6 +213,27 @@ class GLDStorage extends BaseStorage {
         navigator.goBack();
     }
 
+    loadCurrentProjectName=(retFun)=> {
+        // this.currentProject = this.getItem('currentProject');
+        // console.log(this.currentProjectName);
+        if(this.currentProjectName != "首页") {
+            if(retFun) {
+                retFun(this.currentProjectName);
+            }
+            return this.currentProjectName;
+        }
+        
+        AsyncStorage.getItem('currentProjectName')
+            .then((value) => {
+                this.currentProjectName = value;
+                if(retFun) {
+                    retFun(value);
+                }
+                
+                return this.currentProjectName;
+            });
+        return this.currentProjectName;
+    }
     
 }
 // 全局变量
