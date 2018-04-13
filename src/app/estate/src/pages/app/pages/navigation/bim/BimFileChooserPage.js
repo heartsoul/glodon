@@ -17,12 +17,23 @@ var { width, height } = Dimensions.get("window");
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 export default class BimFileChooser extends Component {
-    static navigationOptions = {
-        title: '图纸选择',
-        tabBarVisible: false,
-        headerTintColor: "#FFF",
-        headerStyle: { backgroundColor: "#00baf3" },
-    }
+
+    static navigationOptions = ({ navigation }) => {
+        const { params } = navigation.state;
+        let dataType = params.dataType;
+        let title = '图纸';
+        if (dataType === '图纸文件') {
+            title = '图纸';
+        } else {
+            title = '模型';
+        }
+        return {
+            title: title,
+            tabBarVisible: false,
+            headerTintColor: "#FFF",
+            headerStyle: { backgroundColor: "#00baf3" },
+        }
+    };
 
     constructor(props) {
         super(props);
@@ -211,54 +222,43 @@ export default class BimFileChooser extends Component {
 
 
     _separator = () => {
-        return <View style={{ height: 1, backgroundColor: '#ededed', marginLeft: 40 }} />;
+        return <View style={{ height: 0.5, backgroundColor: '#CCCCCC', marginLeft: 20 }} />;
     }
+
     //返回itemView
     renderItemView = ({ item, index }) => {
-        const _ = this;
+        if (item.value.folder) {
+            return this.renderFolderView({ item, index });
+        } else {
+            return this.renderFileView({ item, index });
+        }
+    }
+
+    renderFileView = ({ item, index }) => {
         return (
-            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => _._itemClick(item, index)}>
-                <View style={styles.containerView}>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
+                <View style={styles.containerFileView}>
                     <ThumbnailImage fileId={item.value.fileId} />
                     <Text style={styles.content}> {item.value.name}</Text>
                 </View>
-                <View style={{height:0.5,backgroundColor:'#CCCCCC',flex:1,marginLeft:20}}/>
             </TouchableOpacity>
         );
     }
 
-    //返回itemView
-    renderItemSimpleView = ({ item, index }) => {
-        const _ = this;
+    renderFolderView = ({ item, index }) => {
         return (
-            <View style={styles.containerSimpleView}>
-                <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => _._itemClick(item, index)}>
-                    <View>
-
-                        <Image
-                            source={require("app-images/icon_choose_project_item.png")}
-                            style={styles.image} />
-                        <Text style={styles.contentSimple}> {item.value.name}</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
+                <View style={styles.containerFolderView}>
+                    <Image
+                        source={require("app-images/icon_blueprint_file.png")}
+                        style={styles.image} />
+                    <Text style={styles.content}> {item.value.name}</Text>
+                </View>
+            </TouchableOpacity>
         );
     }
+
     _onEndReached = () => {
-        // if(!this.setState.hasMore) {
-        //     return;
-        // }
-        // console.log(this.state.refreshing);
-        // if(this.state.refreshing) {
-        //     return;
-        // }
-        // this.setState({
-        //     refreshing: true,
-        // });
-        // const timer = setTimeout(() => {
-        //     clearTimeout(timer);
-        //     this.fetchData(this.state.page);
-        // }, 1500);
     }
     _onRefreshing = () => {
         console.log(this.state.refreshing);
@@ -298,19 +298,6 @@ export default class BimFileChooser extends Component {
         );
     }
 
-    renderDataSimple = () => {
-        return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <Text style={{ color: "transparent", height: 30 }}> 项目列表 </Text>
-                <AnimatedFlatList style={{ width: width }}
-                    data={this.state.dataArray}
-                    renderItem={this.renderItemSimpleView}
-                />
-            </View>
-        );
-    }
-
     render = () => {
         //第一次加载等待的view
         if (this.state.isLoading && !this.state.error) {
@@ -318,10 +305,6 @@ export default class BimFileChooser extends Component {
         } else if (this.state.error) {
             //请求失败view
             return this.renderErrorView(this.state.errorInfo);
-        }
-        if (this.state.dataArray.length < 5) {
-            //加载数据
-            return this.renderDataSimple();
         }
         //加载数据
         return this.renderData();
@@ -336,31 +319,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#FFFFFF',
     },
-    containerSimpleView: {
+    containerFolderView: {
         flex: 1,
-        borderRadius: 8,
-        // borderWidth:1,
-        // borderColor:"#0F0",
-        height: 60,
-        marginTop: 5,
-
-        marginBottom: 10,
-        marginLeft: 40,
-        marginRight: 40,
+        height: 52,
+        marginLeft: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: '#FFF',
-        elevation: 5, // android 
-        shadowColor: "#333", // iOS
-        shadowOffset: { width: 3, height: 7 }, // iOS
-        shadowOpacity: 0.15, // iOS
-        shadowRadius: 3, // iOS
-
     },
-    containerView: {
+    containerFileView: {
         flex: 1,
         height: 72,
         marginLeft: 20,
         flexDirection: 'row',
-        alignItems:'center'
+        alignItems: 'center'
         // backgroundColor: '#FFF',
     },
     title: {
@@ -370,23 +342,16 @@ const styles = StyleSheet.create({
     content: {
         left: 0,
         top: 15,
-        marginLeft:12,
+        marginLeft: 12,
         textAlign: "left",
         fontSize: 15,
         color: 'black',
-        alignSelf:'flex-start'
+        alignSelf: 'flex-start'
     },
-    contentSimple: {
-        left: 60,
-        top: -20,
-        fontSize: 15,
-        color: 'black',
-    },
+
     image: {
-        left: 10,
-        top: 10,
-        width: 40,
-        height: 40,
+        width: 30,
+        height: 25,
     }
 
 });
