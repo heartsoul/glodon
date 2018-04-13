@@ -32,8 +32,8 @@ export default class BimFileChooser extends Component {
             dataArray: [],
             page:0,
             hasMore:true,
-            projectId:global.storage.projectId,
-            latestVersion:global.storage.projectIdVersionId,
+            projectId:storage.projectId,
+            latestVersion:storage.projectIdVersionId,
             fileId:0,
             dataType:""//图纸文件 模型文件 
         }
@@ -42,12 +42,12 @@ export default class BimFileChooser extends Component {
     
     fetchData = (page)=> {
         if (this.state.projectId === 0 || this.state.latestVersion === '') {
-            global.storage.loadProject((projectId) => {
-                global.storage.projectId = projectId;
+            storage.loadProject((projectId) => {
+                storage.projectId = projectId;
                 // 这个是js的访问网络的方法
                 MODELAPI.getModelLatestVersion(projectId).then((responseData) => {
                     let latestVersion = responseData.data.data.versionId;
-                    global.storage.projectIdVersionId = latestVersion;
+                    storage.projectIdVersionId = latestVersion;
                     console.log(responseData)
                     this.setState({
                         projectId: projectId,
@@ -144,7 +144,7 @@ export default class BimFileChooser extends Component {
         console.log('fileId --------------------------- '+fileId)
         if(!fileId || fileId == 0){//保存目录的初始key
             console.log('save nav key ---------------------------')
-            global.storage.qualityState.navKey = this.props.navigation.state.key;
+            storage.qualityState.navKey = this.props.navigation.state.key;
         }
 
         console.log(params)
@@ -187,15 +187,15 @@ export default class BimFileChooser extends Component {
     _itemClick = (item,index) => {
         let navigator = this.props.navigation;
         if(item.value.folder === true) {
-            global.storage.pushNext(navigator,"BimFileChooserPage",{fileId:item.value.fileId,dataType:this.state.dataType});
+            storage.pushNext(navigator,"BimFileChooserPage",{fileId:item.value.fileId,dataType:this.state.dataType});
         } else {
             MODELAPI.getModelBimFileToken(this.state.projectId,this.state.latestVersion,item.value.fileId).then((responseData)=>{
                 let token = responseData.data.data;
-                global.storage.bimToken = token;
+                storage.bimToken = token;
                 if(this.state.dataType === '图纸文件'){
-                    global.storage.pushNext(navigator,"RelevantBlueprintPage",{title:item.value.name, fileId:item.value.fileId});
+                    storage.pushNext(navigator,"RelevantBlueprintPage",{title:item.value.name, fileId:item.value.fileId});
                 }else{
-                    global.storage.pushNext(navigator,"WebPage",{title:item.value.name, fileId:item.value.fileId});
+                    storage.pushNext(navigator,"WebPage",{title:item.value.name, fileId:item.value.fileId});
                 }
             });
             

@@ -52,9 +52,9 @@ class LoginPage extends React.Component {
       let navigator = this.props.navigation;
       console.log("\n>>>>>hasChoose:ret:"+navigator)
       if(nextProps.hasChoose) {
-        global.storage.gotoMain(navigator);
+        storage.gotoMain(navigator);
       } else {
-        global.storage.gotoMain(navigator);
+        storage.gotoMain(navigator);
       }   
       return false
     }

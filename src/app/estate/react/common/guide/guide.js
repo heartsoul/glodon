@@ -45,7 +45,7 @@ export default class extends React.Component {
         <Image source={image5} style={styles.backgroundImage} >
         </Image>
         <TouchableOpacity style={styles.btn} onPress={() => {
-                          global.storage.saveGuide();
+                          storage.saveGuide();
                             this.props.navigation.replace('Login');
                         }} >
                         
@@ -54,7 +54,7 @@ export default class extends React.Component {
       </View>
       </ScrollView>
       <TouchableOpacity style={styles.skipBtn} onPress={() =>{ 
-        global.storage.saveGuide();
+        storage.saveGuide();
         this.props.navigation.replace('Login')
       }}
         >

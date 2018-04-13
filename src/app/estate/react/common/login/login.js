@@ -35,7 +35,7 @@ function login(username, pwd, successReturn) {
 function authaToken(username, pwd, successReturn) {
   USERAPI.authaToken(username, pwd).then((response) => {
     console.log(response.data);
-    global.storage.saveLoginToken(response.data.access_token);
+    storage.saveLoginToken(response.data.access_token);
     loadUserInfo(successReturn);
   });
 }
@@ -53,9 +53,9 @@ function loadUserInfo(successReturn) {
       return ;
     }
     let data = userInfo["data"];
-    console.log(global.storage);
-    console.log(global.storage.userInfo);
-    global.storage.userInfo = data;
+    console.log(storage);
+    console.log(storage.userInfo);
+    storage.userInfo = data;
     if(data) {
       let ac = data["accountInfo"];
       if (ac) {
@@ -192,17 +192,17 @@ class GLDLoginViewController extends React.Component {
   _loginAction = () => {
     let navigator = this.props.navigation;
     var ret = userLogin(this.state.username, this.state.password, () => {
-      global.storage.hasChoose((ret) => {
+      storage.hasChoose((ret) => {
         console.log("login1" + ret);
         if (ret) {
-          global.storage.loadTenant((tenant) => {
+          storage.loadTenant((tenant) => {
             console.log("login2" + tenant);
             USERAPI.setCurrentTenant(tenant).then((responseData) => {
-              global.storage.gotoMain(navigator);
+              storage.gotoMain(navigator);
             });
           })
         } else {
-          global.storage.gotoMain(navigator);
+          storage.gotoMain(navigator);
         }
       });
     });
@@ -227,17 +227,17 @@ class GLDLoginViewController extends React.Component {
         // }
         let navigator = this.props.navigation;
         var ret = login(this.state.username, this.state.password, () => {
-          global.storage.hasChoose((ret) => {
+          storage.hasChoose((ret) => {
             console.log("login1"+ret);
             if (ret) {
-              global.storage.loadTenant((tenant) => {
+              storage.loadTenant((tenant) => {
                 console.log("login2"+tenant);
                 USERAPI.setCurrentTenant(tenant).then((responseData) => {
-                  global.storage.gotoMain(navigator);
+                  storage.gotoMain(navigator);
                 });
               })
             } else {
-              global.storage.gotoMain(navigator);
+              storage.gotoMain(navigator);
             }
           });
         });

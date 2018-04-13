@@ -28,7 +28,7 @@ export default class tenantList extends Component {
 
     //网络请求
     fetchData = ()=> {
-      let userTenants = global.storage.userInfo["accountInfo"]["userTenants"];
+      let userTenants = storage.userInfo["accountInfo"]["userTenants"];
         if(userTenants) {
                 let data = userTenants;
                 let dataBlob = [];
@@ -121,8 +121,8 @@ export default class tenantList extends Component {
         //   alert(item.value.tenantId);
          USERAPI.setCurrentTenant(item.value.tenantId).then((responseData)=>{
             let navigator = this.props.navigation;
-             global.storage.saveTenant(item.value.tenantId);
-             global.storage.pushNext(navigator, "ProjectPage")
+             storage.saveTenant(item.value.tenantId);
+             storage.pushNext(navigator, "ProjectPage")
 
          });
     }

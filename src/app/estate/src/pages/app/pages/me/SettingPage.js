@@ -48,19 +48,19 @@ class SettingPage extends Component{
 
     _tenantChoose = () => {
         let navigator = this.props.navigation;
-        global.storage.projectIdVersionId = '';
-        global.storage.pushNext(navigator,"TenantPage")
+        storage.projectIdVersionId = '';
+        storage.pushNext(navigator,"TenantPage")
     }
 
     _logout=()=>{
-        global.storage.logout();
+        storage.logout();
         USERAPI.loginOut().then(()=>{
           USERAPI.uaaLoginOut().then(()=>{
     
           });
           this.props.logout();
           let navigator = this.props.navigation;
-          global.storage.gotoLogin(navigator);
+          storage.gotoLogin(navigator);
         });
     }
 

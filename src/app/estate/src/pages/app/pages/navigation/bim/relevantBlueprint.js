@@ -189,14 +189,14 @@ export default class RelevantBlueprintPage extends Component {
  }
 
  goBack = ()=> {
-    global.storage.goBack(this.props.navigation,null);
+    storage.goBack(this.props.navigation,null);
  }
  changeBluePrint = ()=> {
     let navigator = this.props.navigation; 
 
-    global.storage.qualityState.navKey = this.props.navigation.state.key;
+    storage.qualityState.navKey = this.props.navigation.state.key;
 
-    global.storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: '图纸文件',pageType:0, saveKey:0})
+    storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: '图纸文件',pageType:0, saveKey:0})
 }
 setPosition = ()=> {
     let position = [{
@@ -226,10 +226,10 @@ setPosition = ()=> {
     console.log(this.state.pageType)
     // 0新建检查单 1检查单编辑状态 2详情查看  3图纸模式
     if(this.state.pageType == 0){
-        global.storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
-        this.props.navigation.goBack(global.storage.qualityState.navKey);
+        storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
+        this.props.navigation.goBack(storage.qualityState.navKey);
     }else if(this.state.pageType == 1){
-        global.storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
+        storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
         this.props.navigation.goBack();
     }else if(this.state.pageType == 2){
         this.props.navigation.goBack();
@@ -293,7 +293,7 @@ setPosition = ()=> {
   //渲染
   render() {
     
-   let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + global.storage.bimToken + `&show=${this.state.show}`;
+   let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + storage.bimToken + `&show=${this.state.show}`;
 
    return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>

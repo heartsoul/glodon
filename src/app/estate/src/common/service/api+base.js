@@ -44,7 +44,7 @@ function checkStatus(response) {
         // return ;
         // Message.error('请联系管理员获取相应操作权限');
     } else if (response.status === 401) {
-        global.storage.gotoLogin();
+        storage.gotoLogin();
         return ;
         // Message.error('请联系管理员获取相应操作权限');
     }
@@ -78,8 +78,8 @@ export function requestJSON(url, options) {
         // credentials: 'include', // 带上cookie
     };
     // Authorization  Bearer 6515033c-6c5f-4d6a-8033-ec0906d4f085
-    if(global.storage.isLogin()) {
-        ops.headers.Authorization = "Bearer "+global.storage.getLoginToken();
+    if(storage.isLogin()) {
+        ops.headers.Authorization = "Bearer "+storage.getLoginToken();
     }
     for (const i in ops) {
         if (options[i]) {

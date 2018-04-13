@@ -46,8 +46,8 @@ export default class extends React.Component {
 
   _fetchData(fetchData){
     if (this.state.projectId === 0 || this.state.latestVersion === '') {
-        global.storage.loadProject((projectId) => {
-            global.storage.projectId = projectId;
+        storage.loadProject((projectId) => {
+            storage.projectId = projectId;
             this.setState({
                 projectId: projectId,
             });
@@ -61,7 +61,7 @@ export default class extends React.Component {
    * 获取项目下检查单位列表
    */
   _getInspectionCompanies = () => {
-    QUALITYAPI.getInspectionCompanies(global.storage.projectId)
+    QUALITYAPI.getInspectionCompanies(storage.projectId)
         .then(data => {
             this.setState({
                 inspectionCompanies: data.data,
@@ -85,7 +85,7 @@ export default class extends React.Component {
   * 获取施工单位列表
   */
   _getCompaniesList = ()=> {
-    PMBASICAPI.getCompaniesList(global.storage.projectId,'SGDW')
+    PMBASICAPI.getCompaniesList(storage.projectId,'SGDW')
     .then(data => {
         this.setState({
             companies: data.data,
@@ -113,7 +113,7 @@ export default class extends React.Component {
     }
     this._fetchData(() => {
         let coperationId = this.state.companies[this.state.selectCompanyIndex].coperationId;
-        PMBASICAPI.getPersonList(global.storage.projectId,coperationId)
+        PMBASICAPI.getPersonList(storage.projectId,coperationId)
         .then(data => {
             this.setState({
                 persons: data.data,
@@ -138,7 +138,7 @@ export default class extends React.Component {
    * 获取质检项目列表
    */
   _getCheckPoints = ()=> {
-      QUALITYAPI.getCheckPoints(global.storage.projectId)
+      QUALITYAPI.getCheckPoints(storage.projectId)
         .then(data => {
             this.setState({
                 checkPoints: data.data,
@@ -169,7 +169,7 @@ export default class extends React.Component {
   //选择质检项目
   _selectCheckPoint = ()=>{ 
       let navigator = this.props.navigation; 
-      global.storage.pushNext(
+      storage.pushNext(
         navigator,
         'CheckPointPage',
         {
@@ -259,7 +259,7 @@ export default class extends React.Component {
     //需要整改
     params.needRectification = this.state.switchValue;
 
-    params.projectId = global.storage.projectId;
+    params.projectId = storage.projectId;
     params.projectName = '';
     //质检项目
     params.qualityCheckpointId = this.state.selectedCheckPoint.id;
@@ -302,12 +302,12 @@ export default class extends React.Component {
   //检查单 新增 提交
   _createSubmitInspection = ()=> {
     let params = this._assembleParams();  
-    QUALITYAPI.createSubmitInspection(global.storage.projectId,params)
+    QUALITYAPI.createSubmitInspection(storage.projectId,params)
         .then(data =>{
             Toast.hide();
             console.log(data)
             if(data && data.data && data.data.id){
-                global.storage.goBack(this.props.navigation,null);
+                storage.goBack(this.props.navigation,null);
             }
         })
   }
@@ -315,11 +315,11 @@ export default class extends React.Component {
   //检查单 编辑   提交
   _editSubmitInspection = ()=> {
     let params = this._assembleParams();  
-    QUALITYAPI.editSubmitInspection(global.storage.projectId, this.state.inspectId, params)
+    QUALITYAPI.editSubmitInspection(storage.projectId, this.state.inspectId, params)
         .then(data =>{
             Toast.hide();
             console.log(data)
-            global.storage.goBack(this.props.navigation,null);
+            storage.goBack(this.props.navigation,null);
         })
   }
   
@@ -337,7 +337,7 @@ export default class extends React.Component {
  // 检查单 新增 保存
   _createSaveInspection = ()=> {
     let params = this._assembleParams();  
-    QUALITYAPI.createSaveInspection(global.storage.projectId,params)
+    QUALITYAPI.createSaveInspection(storage.projectId,params)
         .then(data =>{
             console.log(data)
             Toast.hide();
@@ -352,7 +352,7 @@ export default class extends React.Component {
   //检查单 编辑   保存
   _editSaveInspection = ()=> {
     let params = this._assembleParams();  
-    QUALITYAPI.editSaveInspection(global.storage.projectId,this.state.inspectId,params)
+    QUALITYAPI.editSaveInspection(storage.projectId,this.state.inspectId,params)
         .then(data =>{
             console.log(data)
             Toast.hide();
@@ -360,17 +360,17 @@ export default class extends React.Component {
   }
   //
   _delete = ()=>{
-    QUALITYAPI.createDeleteInspection(global.storage.projectId,this.state.inspectId)
+    QUALITYAPI.createDeleteInspection(storage.projectId,this.state.inspectId)
     .then(data =>{
         console.log(data)
-        global.storage.goBack(this.props.navigation,null);
+        storage.goBack(this.props.navigation,null);
     })
   }
 
 
   componentDidMount=()=> {
     console.log(this.props.navigation.state.params);
-    console.log(global.storage.projectId);
+    console.log(storage.projectId);
     this._initialState();
     //请求数据
      this.props.navigation.setParams({rightNavigatePress:this._rightAction }) 
@@ -430,8 +430,8 @@ export default class extends React.Component {
  _bimFileChooser = (dataType)=> {
     let navigator = this.props.navigation; 
     //保存当前页面的key
-    global.storage.qualityState.bimChooserCallback = this._bimChooserCallback;
-    global.storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: dataType})
+    storage.qualityState.bimChooserCallback = this._bimChooserCallback;
+    storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: dataType})
 
  }
  //选择图纸或者模型后的回调 dataType 图纸文件{name:'', fileId:'', drawingPositionX:'', drawingPositionY:'' }、模型文件
@@ -450,7 +450,7 @@ export default class extends React.Component {
   constructor() {
       super();
       this.state = {
-        projectId:global.storage.projectId,
+        projectId:storage.projectId,
         
         inspectionCompanies:PropTypes.array,
         selectInspectionCompanyIndex: -1,//选中的检查单位

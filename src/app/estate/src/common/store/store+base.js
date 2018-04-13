@@ -43,6 +43,7 @@ class GLDStorage extends BaseStorage {
         this.guide = '0';
         this.currentTenant = "0";
         this.currentProject = "0";
+        this.currentProjectName = "首页";
         this.homeNavigation = null;
         this.bimToken = {};
         this.fileId = '';
@@ -62,12 +63,19 @@ class GLDStorage extends BaseStorage {
     logout=()=> {
         this.loginToken = '';
         this.currentProject = "0";
+        this.currentProjectName = "首页";
         this.currentTenant = "0";
         this.guide = "0";
+        this.bimToken = {};
+        this.fileId = '';
+        this.projectIdVersionId = '';
+        this.projectId = 0;
         this.removeItem({key:'loginToken'});
         this.removeItem({key:'currentProject'});
         this.removeItem({key:'currentTenant'});
         this.removeItem({key:'guide'});
+        this.removeItem({key:'currentProjectName'});
+        
     }
     saveGuide=()=> {
         this.guide = "1";
@@ -81,7 +89,6 @@ class GLDStorage extends BaseStorage {
         AsyncStorage.getItem('guide')
             .then((value) => {
                 this.guide = value;
-                console.log("guide"+this.guide);
                 if(retFun) {
                     retFun(value);
                 }
@@ -106,7 +113,6 @@ class GLDStorage extends BaseStorage {
                 if(!value || value == null){
                     this.currentTenant = '0';
                 }
-                console.log("loadTenant2："+this.currentTenant);
                 if(retFun) {
                     retFun(value);
                 }
@@ -115,10 +121,11 @@ class GLDStorage extends BaseStorage {
                 console.log(err)
             });
     }
-    saveProject=(project)=> {
-        console.log(project);
+    saveProject=(project,name)=> {
         this.currentProject = ""+project;
+        this.currentProjectName = ""+name;
         this.setItem('currentProject', ""+project);
+        this.setItem('currentProjectName', ""+name);
     }
     loadProject=(retFun)=> {
         // this.currentProject = this.getItem('currentProject');
@@ -140,7 +147,32 @@ class GLDStorage extends BaseStorage {
                 
                 return this.currentProject;
             });
+            AsyncStorage.getItem('currentProjectName')
+            .then((value) => {
+                this.currentProjectName = value;
+            });
         // return this.currentProject;
+    }
+    loadCurrentProjectName=(retFun)=> {
+        // this.currentProject = this.getItem('currentProject');
+        console.log(this.currentProjectName);
+        if(this.currentProjectName != "首页") {
+            if(retFun) {
+                retFun(this.currentProjectName);
+            }
+            return this.currentProjectName;
+        }
+        
+        AsyncStorage.getItem('currentProjectName')
+            .then((value) => {
+                this.currentProjectName = value;
+                if(retFun) {
+                    retFun(value);
+                }
+                
+                return this.currentProjectName;
+            });
+        return this.currentProjectName;
     }
     gotoLogin=(navigator)=> {
         let resetAction = NavigationActions.reset({
@@ -151,13 +183,20 @@ class GLDStorage extends BaseStorage {
         });
         navigator.dispatch(resetAction);
     }
+    gotoMainPage=(navigator)=> {
+        let resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({routeName:'MainPage'})//要跳转到的页面名字
+            ]
+        });
+        navigator.dispatch(resetAction);
+    }
     hasChoose=(retFun)=> {
         let t = this.loadTenant((value)=>{
             t = value;
-            console.log("hasChoose2:"+value);
             this.loadProject((value)=>{
                 p = value;
-                console.log("hasChoose3:"+value);
                 if(retFun) {
                     retFun(t && p && t != "0" &&  p != "0");
                 }
@@ -165,7 +204,6 @@ class GLDStorage extends BaseStorage {
         });
         let p = this.loadProject();
         let ret = t != "0" &&  p != "0" && t != undefined && p != undefined && t != null && p != null;
-        console.log("hasChoose:"+ret);
         return ret;
     }
     gotoMain = (navigation = null, name = "MainPage") => {
@@ -177,9 +215,6 @@ class GLDStorage extends BaseStorage {
             return;
         }
         this.hasChoose((ret)=>{
-            console.log("\n>>>>>hasChoose:ret:"+ret)
-            console.log("\n>>>>>hasChoose:name:"+name)
-            console.log("\n>>>>>hasChoose:navigator:"+navigator)
             if (ret) {
                 
                  navigator.replace(name);
@@ -196,8 +231,7 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
-        console.log("pushNext:"+name);
-         navigator.navigate(name, params);
+        navigator.navigate(name, params);
     }
 
     goBack =  (navigation, params = {}) => {

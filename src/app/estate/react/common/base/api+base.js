@@ -24,33 +24,6 @@ function parseJSON(response) {
 }
 
 function parseHTML(response) {
-    // console.log("parseHTML");
-    // let headers = response.headers;
-
-    // headers.forEach(function(item, key, mapObj) {
-    //     console.log("headers:key" + key + ",value" + item.toString());
-    // });
-    // let ck = headers.get("set-cookie");
-    // ck.forEach(strCookie => {
-    //     //将多cookie切割为多个名/值对 
-    //     let arrCookie = strCookie.split("; ");
-    //     let JSESSIONID;
-    //     //遍历cookie数组，处理每个cookie对 
-    //     for (let i = 0; i < arrCookie.length; i++) {
-
-    //         let arr = arrCookie[i].split("=");
-    //         //找到名称为userId的cookie，并返回它的值 
-    //         if ("JSESSIONID" == arr[0]) {
-    //             JSESSIONID = arr[1];
-    //             break;
-    //         }
-    //     }
-    //     global.storage.saveLoginToken(JSESSIONID);
-    //     console.log("token:" + global.storage.loginToken());
-    // });
-    // "JSESSIONID=9F0905398EC498C67660CA4E2505B6F9; Path=/; HttpOnly"
-    // .headers.map["set-cookie"]["0"]
-
     return response;
 }
 
@@ -67,7 +40,7 @@ function checkStatus(response) {
         // return ;
         // Message.error('请联系管理员获取相应操作权限');
     } else if (response.status === 401) {
-        global.storage.gotoLogin();
+        storage.gotoLogin();
         return ;
         // Message.error('请联系管理员获取相应操作权限');
     }
@@ -100,8 +73,8 @@ export function requestJSON(url, options) {
         // credentials: 'include', // 带上cookie
     };
     // Authorization  Bearer 6515033c-6c5f-4d6a-8033-ec0906d4f085
-    if(global.storage.isLogin()) {
-        ops.headers.Authorization = "Bearer "+global.storage.getLoginToken();
+    if(storage.isLogin()) {
+        ops.headers.Authorization = "Bearer "+storage.getLoginToken();
     }
     for (const i in ops) {
         if (options[i]) {

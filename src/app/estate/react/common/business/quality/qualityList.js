@@ -46,7 +46,7 @@ export default class qualityList extends PureComponent {
     componentDidMount=()=> {
         //请求数据
         // this._onRefresh();
-        global.storage.qualityNavigation = this.props.navigation;
+        storage.qualityNavigation = this.props.navigation;
         // this.refs.sectionList.fetchData(API.CLASSIFY_STATES[0]);
         // this._onSegmentedBarChange(0);
     }

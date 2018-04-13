@@ -77,7 +77,7 @@ var SearchButton =  withNavigation(SearchaBarItem);
 class HomePage extends NavigationPage {
   static defaultProps = {
     ...NavigationPage.defaultProps,
-    title: global.storage ? global.storage.currentProject?''+global.storage.currentProject:'首页' : '首页',
+    title: storage ? storage.currentProject?''+storage.currentProject:'首页' : '首页',
     showBackButton: false,
   };
   constructor() {
@@ -136,7 +136,7 @@ class Page extends React.Component {
           </View>
         }
         iconContainerStyle={{ justifyContent: 'flex-end' }}
-        onPress={() => global.storage.pushNext(null, 'NewPage')}
+        onPress={() => storage.pushNext(null, 'NewPage')}
       />
 
       <TabView.Sheet
@@ -167,8 +167,8 @@ export default class mainPage extends React.Component {
     header: null
   }
   componentDidMount = () => {
-    global.storage.homeNavigation = this.props.navigation;
-    global.storage.page = this.refs.page;
+    storage.homeNavigation = this.props.navigation;
+    storage.page = this.refs.page;
     this.page
   }
   render() {

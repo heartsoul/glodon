@@ -30,24 +30,24 @@ export default class extends NavigationPage {
   
   componentDidMount = () => {
     console.log("componentDidMount");
-    if(global.storage.userInfo.accountInfo){
-        name = global.storage.userInfo.accountInfo.name;
+    if(storage.userInfo.accountInfo){
+        name = storage.userInfo.accountInfo.name;
     }
   };
 
   _logout=()=>{
-    global.storage.logout();
+    storage.logout();
     loginOut().then(()=>{
       uaaLoginOut().then(()=>{
 
       });
-      global.storage.gotoLogin();
+      storage.gotoLogin();
     });
 
   }
   _gotoSetting=()=>{
     let navigator = this.props.navigation;
-    global.storage.pushNext(navigator,'SettingPage');
+    storage.pushNext(navigator,'SettingPage');
   }
   _gotoTask=()=>{
       

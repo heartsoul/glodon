@@ -203,4 +203,4 @@ class GLDStorage extends BaseStorage {
 }
 // 全局变量
 global.storage = new GLDStorage();
-window.storage = new GLDStorage();
+// window.storage = new GLDStorage();

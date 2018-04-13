@@ -26,7 +26,7 @@ const RootStack = StackNavigator(
       headerStyle:{backgroundColor:"#00baf3"},
   }
   componentDidMount = () => {
-    global.storage.homeNavigation = this.props.navigation;
+    storage.homeNavigation = this.props.navigation;
   }
     render() {
       return <RootStack />;

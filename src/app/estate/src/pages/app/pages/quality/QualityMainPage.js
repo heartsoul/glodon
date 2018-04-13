@@ -87,7 +87,7 @@ class RightBarButtons extends React.Component {
   _onSearchPress = (navigation) => {
     console.log(navigation);
     navigation.navigate("SearchPage")
-    // global.storage.qualityNavigation.navigate('DrawerToggle')
+    // storage.qualityNavigation.navigate('DrawerToggle')
     
   }
   _onNewPress = (navigation) => {
@@ -188,7 +188,7 @@ export default class extends React.Component {
     ),
     // headerLeft: (
     //   //let drawer = null; Drawer.open(view, 'left');
-    //   // <Button onPress={()=>global.storage.qualityNavigation.navigate('DrawerToggle')
+    //   // <Button onPress={()=>storage.qualityNavigation.navigate('DrawerToggle')
     // // } title="菜单" color="#fff" />
     // <View style={{alignItems: 'center',
     // flexDirection: 'row',

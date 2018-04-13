@@ -25,7 +25,7 @@ export default class extends NavigationPage {
     // if (navigator) {
     //   navigator.navigate("TenantList");
     // }
-    global.storage.pushNext(navigator,"TenantPage")
+    storage.pushNext(navigator,"TenantPage")
   }
   _loadProjectInfo = () => {
     let navigator = this.props.navigation;
@@ -33,42 +33,42 @@ export default class extends NavigationPage {
     // if (navigator) {
     //   navigator.navigate("ProjectList");
     // }
-    global.storage.pushNext(navigator,"ProjectPage");
+    storage.pushNext(navigator,"ProjectPage");
   }
   _loadQualityForm = () => {
     let navigator = this.props.navigation;
-    global.storage.projectIdVersionId = '';
-    global.storage.fileId = '';
-    global.storage.bimToken = {};
+    storage.projectIdVersionId = '';
+    storage.fileId = '';
+    storage.bimToken = {};
 
-    global.storage.pushNext(navigator,"QualityMainPage")
+    storage.pushNext(navigator,"QualityMainPage")
    
   }
   _loadEquipmentForm = () => {
     let navigator = this.props.navigation;
-    global.storage.projectIdVersionId = '';
-    global.storage.fileId = '';
-    global.storage.bimToken = {};
+    storage.projectIdVersionId = '';
+    storage.fileId = '';
+    storage.bimToken = {};
 
-    global.storage.pushNext(navigator,"EquipmentMainPage")
+    storage.pushNext(navigator,"EquipmentMainPage")
    
   }
 
   _fileChoose = () => {
     let navigator = this.props.navigation;
 
-    global.storage.projectIdVersionId = '';
-    global.storage.pushNext(navigator,"BimFileChooserPage");
+    storage.projectIdVersionId = '';
+    storage.pushNext(navigator,"BimFileChooserPage");
   }
   _moduleChoose = () => {
     let navigator = this.props.navigation;
-    global.storage.projectIdVersionId = '';
-    global.storage.pushNext(navigator,"ModelFileChooserPage");
+    storage.projectIdVersionId = '';
+    storage.pushNext(navigator,"ModelFileChooserPage");
   }
   _projectChoose = () => {
     let navigator = this.props.navigation;
-    global.storage.projectIdVersionId = '';
-    global.storage.pushNext(navigator,"ProjectChooserPage");
+    storage.projectIdVersionId = '';
+    storage.pushNext(navigator,"ProjectChooserPage");
   }
   
 
@@ -77,10 +77,10 @@ export default class extends NavigationPage {
     this.fetchData();
   }
   fetchData = () => {
-    console.log(global.storage.loadTenant);
-    console.log(global.storage.loadProject);
+    console.log(storage.loadTenant);
+    console.log(storage.loadProject);
 
-    if (global.storage.loadTenant && global.storage.loadProject) {
+    if (storage.loadTenant && storage.loadProject) {
 
     } else {
       // this._loadUserInfo();

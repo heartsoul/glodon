@@ -169,7 +169,7 @@ export default class RelevantBlueprintPage extends Component {
  }
 
  goBack = ()=> {
-    global.storage.goBack(this.props.navigation,null);
+    storage.goBack(this.props.navigation,null);
  }
  //移除图钉
  removePosition = ()=> {
@@ -189,10 +189,10 @@ export default class RelevantBlueprintPage extends Component {
     }
     // 0新建检查单 1检查单编辑状态 2详情查看  3图纸模式
     if(pageType == 0){
-        global.storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
-        this.props.navigation.goBack(global.storage.qualityState.navKey);
+        storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
+        this.props.navigation.goBack(storage.qualityState.navKey);
     }else if(pageType == 1){
-        global.storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
+        storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
         this.props.navigation.goBack();
     }else if(pageType == 2){
         this.props.navigation.goBack();
@@ -256,7 +256,7 @@ export default class RelevantBlueprintPage extends Component {
   //渲染
   render() {
     
-   let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + global.storage.bimToken + `&show=${this.state.show}`;
+   let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + storage.bimToken + `&show=${this.state.show}`;
 
    return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>

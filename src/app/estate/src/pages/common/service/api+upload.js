@@ -55,8 +55,8 @@ async function getOperationCode(filePath,name,length,callback) {
         credentials: 'include', // 带上cookie
     };
 
-    if(global.storage.isLogin()) {
-        ops.headers.Authorization = "Bearer "+global.storage.getLoginToken();
+    if(storage.isLogin()) {
+        ops.headers.Authorization = "Bearer "+storage.getLoginToken();
     }
     
     return fetch(AppConfig.BASE_URL + api+ filter, ...ops)

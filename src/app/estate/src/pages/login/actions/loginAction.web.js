@@ -24,18 +24,18 @@ function loginOld(username, pwd) {
           dispatch(loginError(false));
           return;
         }
-        global.storage.userInfo = data;
+        storage.userInfo = data;
         let ac = data["accountInfo"];
         if (!ac) {
           dispatch(loginError(false));
           return;
         }
-        global.storage.hasChoose((ret) => {
+        storage.hasChoose((ret) => {
           if (!ret) {
             dispatch(loginSuccessChoose(true, response.data))
             return
           }
-          global.storage.loadTenant((tenant) => {
+          storage.loadTenant((tenant) => {
             setCurrentTenant(tenant).then((responseData) => {
               dispatch(loginSuccess(true, response.data))
             });
@@ -56,7 +56,7 @@ function loginNew(username, pwd) {
     dispatch(isLogining())
 
     authToken(username, pwd).then((response) => {
-      global.storage.saveLoginToken(response.data.access_token);
+      storage.saveLoginToken(response.data.access_token);
       accountInfo().then((userInfo) => {
         console.log(userInfo);
         if (userInfo.err) {
@@ -68,18 +68,18 @@ function loginNew(username, pwd) {
           dispatch(loginError(false));
           return;
         }
-        global.storage.userInfo = data;
+        storage.userInfo = data;
         let ac = data["accountInfo"];
         if (!ac) {
           dispatch(loginError(false));
           return;
         }
-        global.storage.hasChoose((ret) => {
+        storage.hasChoose((ret) => {
           if (!ret) {
             dispatch(loginSuccessChoose(true, response.data))
             return;
           }
-          global.storage.loadTenant((tenant) => {
+          storage.loadTenant((tenant) => {
             setCurrentTenant(tenant).then((responseData) => {
               dispatch(loginSuccess(true, response.data))
             });

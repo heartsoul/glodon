@@ -104,8 +104,8 @@ export default class GLDWebView extends Component {
   //渲染
   render() {
     
-    //   let url = "http://192.168.81.30/app.html?param=" + global.storage.bimToken + "&show=false";
-      let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + 'global.storage.bimToken' + "&show=true";
+    //   let url = "http://192.168.81.30/app.html?param=" + storage.bimToken + "&show=false";
+      let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + 'storage.bimToken' + "&show=true";
       // let url = "https://sg.glodon.com";
     console.log("web view:" + url);
     return (

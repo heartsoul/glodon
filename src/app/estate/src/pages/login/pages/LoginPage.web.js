@@ -53,9 +53,9 @@ class LoginPage extends React.Component {
       let navigator = this.props.navigation;
       if(nextProps.hasChoose) {
         this.props.history.replace('MainPage');
-        // global.storage.gotoMain(this.props.history);
+        // storage.gotoMain(this.props.history);
       } else {
-        // global.storage.gotoMain(this.props.history);
+        // storage.gotoMain(this.props.history);
         this.props.history.replace('MainPage');
       }   
       return false

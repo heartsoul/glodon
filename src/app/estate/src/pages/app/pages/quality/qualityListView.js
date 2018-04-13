@@ -46,7 +46,7 @@ export default class QualityListView extends PureComponent {
     _fetchData = (qcState, page) => {
         console.log("数据列表状态_fetchData："+qcState);
         // 这个是js的访问网络的方法
-        API.getQualityInspectionAll(global.storage.loadProject(), qcState, page, 35).then(
+        API.getQualityInspectionAll(storage.loadProject(), qcState, page, 35).then(
             (responseData) => {
 
                 // try {

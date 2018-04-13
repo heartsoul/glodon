@@ -53,7 +53,7 @@ export default class CheckPointList extends React.Component{
    * 获取质检项目列表
    */
   _getCheckPoints = () => {
-    QUALITYAPI.getCheckPoints(global.storage.projectId)
+    QUALITYAPI.getCheckPoints(storage.projectId)
       .then(data => {
           this.setState({
               checkPoints: data.data,
