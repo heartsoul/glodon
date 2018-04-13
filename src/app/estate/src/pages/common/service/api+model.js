@@ -224,3 +224,16 @@ export async function search(projectId,projectVersionId,facilityName,suffix) {
         method: 'POST',
     });
 }
+
+/**
+ * 获取图纸缩略图
+ * @param {*} projectId 
+ * @param {*} projectVersion 项目版本
+ * @param {*} fileId 
+ */
+export async function getBluePrintThumbnail(projectId, projectVersion, fileId) {
+    let api = `/model/${projectId}/${projectVersion}/viewing/files/${fileId}/thumbnailUrl`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
