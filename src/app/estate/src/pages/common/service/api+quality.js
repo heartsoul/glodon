@@ -569,3 +569,33 @@ export async function createDeleteInspection(projectId, fileId) {
     });
 }
 
+/**
+ * 获取图纸上检查的点
+ * @param {*} projectId 
+ * @param {*} drawingGdocFileId 图纸文件id
+ * @returns 
+ * [ { qcState: 'reviewed',
+        inspectionId: 5200073,
+        rectificationId: 5200019,
+        reviewId: 5200011,
+        drawingGdocFileId: 'be645ab6d5204fd19bda437c7a21b1d2',
+        drawingPositionX: '2475.5999755859375',
+        drawingPositionY: '948.800048828125',
+        inspectionUserId: 5200003,
+        responsibleUserId: 5200013 },
+      { qcState: 'inspected',
+        inspectionId: 5200202,
+        rectificationId: null,
+        reviewId: null,
+        drawingGdocFileId: 'be645ab6d5204fd19bda437c7a21b1d2',
+        drawingPositionX: '44516.609375',
+        drawingPositionY: '44516.609375',
+        inspectionUserId: 5200003,
+        responsibleUserId: 5210022 } ]
+ */
+export async function getBluePrintDots(projectId, drawingGdocFileId) {
+    let api = `/quality/${projectId}/qualityInspection/all/drawings/${drawingGdocFileId}/drawingPositions`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
