@@ -14,10 +14,7 @@ import {
     TouchableHighlight,
     Dimensions,
 } from 'react-native';
-import { connect } from 'react-redux';
-
 var { width, height } = Dimensions.get("window");
-
 import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'app-3rd/teaset';
 import ImageChooserView from './ImageChooserView';
 
@@ -30,7 +27,7 @@ import { Modal, Toast } from 'antd-mobile';
 
 const REF_PHOTO = 'gldPhoto';
 
-class NewPage extends React.Component {
+export default class extends React.Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '新建',
         headerTintColor: "#FFF",
@@ -369,17 +366,10 @@ class NewPage extends React.Component {
                 storage.goBack(this.props.navigation, null);
             })
     }
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        console.log('nextProps====================================');
-        console.log(nextProps.selectCheckPoint);
-        console.log('nextProps====================================');
-        return true;
-    }
+
 
     componentDidMount = () => {
-        console.log('====================================');
-        console.log(this.props.selectCheckPoint);
-        console.log('====================================');
+
 
         this._initialState();
 
@@ -549,7 +539,7 @@ class NewPage extends React.Component {
                     }
                 </View>
 
-                <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.props.selectedCheckPoint ? this.props.selectedCheckPoint.name : ''} onPress={() => { this._selectCheckPoint() }} />
+                <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.state.selectedCheckPoint ? this.state.selectedCheckPoint.name : ''} onPress={() => { this._selectCheckPoint() }} />
                 <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint ? this.state.relevantBluePrint.name : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
                 <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel ? this.state.relevantModel.name : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
 
@@ -674,12 +664,3 @@ var styles = StyleSheet.create({
         marginTop: 30,
     },
 });
-
-export default connect(
-    state => ({
-        selectedCheckPoint: state.checkPointList.selectCheckPoint,
-    }),
-    dispatch => ({ 
-
-    })
-)(NewPage);
