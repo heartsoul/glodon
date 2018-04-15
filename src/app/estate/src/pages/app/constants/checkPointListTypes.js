@@ -1,0 +1,3 @@
+export const GET_CHECK_POINTS = 'GET_CHECK_POINTS';
+
+export const SELECT_CHECK_POINT = 'SELECT_CHECK_POINT';

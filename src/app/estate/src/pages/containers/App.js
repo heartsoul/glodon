@@ -64,7 +64,7 @@ const RootStack = StackNavigator(
   },
   {
     // initialRouteName: storage.isGuide(()=>{}) ? 'GuidePage' : 'LoginPage',
-    initialRouteName: 'MainPage',
+    initialRouteName: 'LoginPage',
     // headerMode:"none",
   },
 );

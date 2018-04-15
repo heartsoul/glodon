@@ -12,6 +12,8 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { Accordion, List } from 'antd-mobile';
+import { connect } from 'react-redux';
+import * as checkPointListAction from './../../../actions/checkPointListAction' // 导入action方法 
 
 import * as API from 'app-api';
 
@@ -26,74 +28,21 @@ class CheckPointListPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            listData: [],
-            topDirNode: [],
-            topModelNode: [],//   
         };
     }
 
     componentDidMount() {
-        this.getCheckPoints();
+        this.props.getCheckPoints();
     }
 
-    /**
-     * 获取质检项目列表
-     */
-    getCheckPoints = () => {
-        API.getCheckPoints(storage.projectId)
-            .then(data => {
-
-                let topNode = this._getListByParentId(data.data, null);
-                let topDirNode = [];
-                let topModelNode = [];
-                topNode.map((item) => {
-                    if (item.viewType == 1) {
-                        item.childList = this._getListByParentId(data.data, item.id)
-                        topDirNode.push(item);
-                    } else {
-                        topModelNode.push(item);
-                    }
-                });
-                this.setState({
-                    checkPoints: data.data,
-                    topDirNode: topDirNode,
-                    topModelNode: topModelNode,
-                });
-            });
+    shouldComponentUpdate(nextProps, nextState) {
+        return true;
     }
 
-    _getListByParentId = (checkPoints, parentId) => {
-        let data = [];
-        checkPoints.map((item) => {
-            if (item.parentId == parentId) {
-                if (this._hasChild(checkPoints, item.id)) {
-                    item.viewType = 1;
-                }
-                data.push(item);
-            }
-        });
-        return data;
-    }
-
-    _hasChild = (checkPoints, parentId) => {
-        for (let item of checkPoints) {
-            if (item.parentId == parentId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    panelHeader = (item) => {
-        return (
-            <View style={styles.header}>
-                <Text style={styles.headerText}>{item.name}</Text>
-            </View>
-        );
-    }
 
     toQualityCheckList = (checkPoint) => {
         //跳转到列表页
+        this.props.selectCheckPoint(checkPoint);
         let navigator = this.props.navigation;
         storage.pushNext(navigator, 'QualityMainPage', { selectedCheckPoint: checkPoint, });
     }
@@ -104,8 +53,29 @@ class CheckPointListPage extends Component {
 
     toAddPage = (checkPoint) => {
         //新建页面
+        this.props.selectCheckPoint(checkPoint);
         let navigator = this.props.navigation;
         storage.pushNext(navigator, 'NewPage', { selectedCheckPoint: checkPoint, });
+    }
+
+    renderPanelHeader = (item) => {
+        return (
+            <View style={styles.header}>
+                <Text style={styles.headerText}>{item.name}</Text>
+            </View>
+        );
+    }
+
+    renderList = (list) => {
+        return (
+            <List style={styles.list}>
+                {
+                    list.map((child) => {
+                        return (<List.Item key={child.id} style={styles.listItem}>{this.renderItem(child)}</List.Item>);
+                    })
+                }
+            </List>
+        );
     }
 
     renderItem = (item) => {
@@ -129,50 +99,32 @@ class CheckPointListPage extends Component {
 
     renderPanel = (item) => {
         return (
-            (item.viewType == 1) ? (
-                <Accordion.Panel header={this.panelHeader(item)}>
-                    <List style={styles.list}>
-                        {
-                            item.childList.map((child) => {
-                                return (<List.Item style={styles.listItem}>{this.renderItem(child)}</List.Item>);
-                            })
-                        }
-                    </List>
-                </Accordion.Panel>
-            ) : (
-                    <Accordion.Panel header={this.panelHeader(item)}>
-                    </Accordion.Panel>
-                )
+            <Accordion.Panel key={item.id} header={this.renderPanelHeader(item)}>
+                {this.renderList(item.childList)}
+            </Accordion.Panel>
         );
     }
 
 
     render() {
+
         return (
             <View>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <ScrollView>
                     <Accordion style={styles.container}>
                         {
-                            this.state.topDirNode.map((item) => {
+                            this.props.topDirNode.map((item) => {
                                 return (this.renderPanel(item));
                             })
                         }
                     </Accordion>
-                    <List style={styles.list}>
-                        {
-                            this.state.topModelNode.map((child) => {
-                                return (<List.Item style={styles.listItem}>{this.renderItem(child)}</List.Item>);
-                            })
-                        }
-                    </List>
+                    {this.renderList(this.props.topModelNode)}
                 </ScrollView>
             </View>
         );
     }
 }
-
-export default CheckPointListPage;
 
 const styles = StyleSheet.create({
     container: {
@@ -222,4 +174,17 @@ const styles = StyleSheet.create({
 
 })
 
-
+export default connect(
+    state => ({
+        topDirNode: state.checkPointList.topDirNode,
+        topModelNode: state.checkPointList.topModelNode,
+    }),
+    dispatch => ({
+        getCheckPoints: () => {
+            dispatch(checkPointListAction.getCheckPoints())
+        },
+        selectCheckPoint: (checkPoint) => {
+            dispatch(checkPointListAction.selectCheckPoint(checkPoint))
+        },
+    })
+)(CheckPointListPage);
