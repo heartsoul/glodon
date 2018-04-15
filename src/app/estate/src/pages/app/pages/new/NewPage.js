@@ -490,7 +490,13 @@ export default class extends React.Component {
           
           code: '',
   
-          files: [],//图片
+          files: [{
+            url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
+            name: '2121',
+          }, {
+            url: 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg',
+            name: '2122',
+          }],//图片
   
        }
   
@@ -520,7 +526,13 @@ export default class extends React.Component {
               onChangeText={(text)=>{this.setState({contentDescription:text})}}
           />
   
-          <ImageChooserView style={{ top:0,left:0,width:width,height:100,marginTop:20 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
+          <ImageChooserView files={[{
+            url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
+            name: '2121',
+          }, {
+            url: 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg',
+            name: '2122',
+          }]} style={{ top:0,left:0,width:width,height:100,marginTop:20 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
           <View style={{marginTop:20,marginBottom:11}}>
               <ListRow title='需要整改'  bottomSeparator='indent'  detail={<Switch value={this.state.switchValue} onValueChange ={(value)=>{this._onChangeSwitch(value)}}/>}/>
               {

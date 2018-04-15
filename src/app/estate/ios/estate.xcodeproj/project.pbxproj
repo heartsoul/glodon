@@ -18,6 +18,9 @@
 		06958C852082E7220015C54F /* SoulCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06958C472082E7220015C54F /* SoulCameraViewController.m */; };
 		06958C862082E7220015C54F /* SoulDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06958C482082E7220015C54F /* SoulDrawView.m */; };
 		06958C872082E7220015C54F /* SoulActionToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06958C492082E7220015C54F /* SoulActionToolbarView.m */; };
+		06958CAE2083563A0015C54F /* GLDPhotoPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06958CAD2083563A0015C54F /* GLDPhotoPreviewViewController.m */; };
+		06958CD6208356F40015C54F /* GlodonPhotoPreviewCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06958CD5208356F40015C54F /* GlodonPhotoPreviewCollectionViewCell.m */; };
+		06958CD9208366880015C54F /* GLDPhotoPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06958CD8208366880015C54F /* GLDPhotoPickerController.m */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
@@ -412,6 +415,12 @@
 		06958C472082E7220015C54F /* SoulCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoulCameraViewController.m; sourceTree = "<group>"; };
 		06958C482082E7220015C54F /* SoulDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoulDrawView.m; sourceTree = "<group>"; };
 		06958C492082E7220015C54F /* SoulActionToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoulActionToolbarView.m; sourceTree = "<group>"; };
+		06958CAC208356390015C54F /* GLDPhotoPreviewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLDPhotoPreviewViewController.h; sourceTree = "<group>"; };
+		06958CAD2083563A0015C54F /* GLDPhotoPreviewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDPhotoPreviewViewController.m; sourceTree = "<group>"; };
+		06958CD4208356F40015C54F /* GlodonPhotoPreviewCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlodonPhotoPreviewCollectionViewCell.h; sourceTree = "<group>"; };
+		06958CD5208356F40015C54F /* GlodonPhotoPreviewCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GlodonPhotoPreviewCollectionViewCell.m; sourceTree = "<group>"; };
+		06958CD7208366880015C54F /* GLDPhotoPickerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLDPhotoPickerController.h; sourceTree = "<group>"; };
+		06958CD8208366880015C54F /* GLDPhotoPickerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDPhotoPickerController.m; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* estate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = estate.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1203,6 +1212,12 @@
 				248E0D2F2060DFE40053F5AA /* RNTMapView.m */,
 				248E0D312060E0590053F5AA /* RNTMapManager.h */,
 				248E0D322060E0590053F5AA /* RNTMapManager.m */,
+				06958CAC208356390015C54F /* GLDPhotoPreviewViewController.h */,
+				06958CAD2083563A0015C54F /* GLDPhotoPreviewViewController.m */,
+				06958CD4208356F40015C54F /* GlodonPhotoPreviewCollectionViewCell.h */,
+				06958CD5208356F40015C54F /* GlodonPhotoPreviewCollectionViewCell.m */,
+				06958CD7208366880015C54F /* GLDPhotoPickerController.h */,
+				06958CD8208366880015C54F /* GLDPhotoPickerController.m */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1859,6 +1874,7 @@
 				247E2C0A2046373400016F63 /* KxMenu.m in Sources */,
 				247E2C0B2046373400016F63 /* UINavigation+SXFixSpace.m in Sources */,
 				247E2BF32046373400016F63 /* BaseNetApi.m in Sources */,
+				06958CAE2083563A0015C54F /* GLDPhotoPreviewViewController.m in Sources */,
 				247E2BD32046373300016F63 /* NSData+SDDataCache.m in Sources */,
 				247E2C032046373400016F63 /* SSKeychain.m in Sources */,
 				247E2C152046373400016F63 /* SBJsonStreamParserAdapter.m in Sources */,
@@ -1886,6 +1902,7 @@
 				247E2BE22046373300016F63 /* NSCalendar+cache.m in Sources */,
 				247E2BD42046373300016F63 /* UIImage+Compress.m in Sources */,
 				247E2BF92046373400016F63 /* CacheUtil.m in Sources */,
+				06958CD9208366880015C54F /* GLDPhotoPickerController.m in Sources */,
 				247E2BFA2046373400016F63 /* ResponseModel.m in Sources */,
 				247E2BE12046373300016F63 /* NSDictionary+KeyValue.m in Sources */,
 				247E2C202046373400016F63 /* SoulDatabaseBase+cache.m in Sources */,
@@ -1902,6 +1919,7 @@
 				247E2BF72046373400016F63 /* NetCacheTool.m in Sources */,
 				247E2BF22046373400016F63 /* DataModel.m in Sources */,
 				247E2BDF2046373300016F63 /* NSString+Unicode.m in Sources */,
+				06958CD6208356F40015C54F /* GlodonPhotoPreviewCollectionViewCell.m in Sources */,
 				247E2BF12046373400016F63 /* NetUtil.m in Sources */,
 				247E2BE92046373400016F63 /* UIAlertController+Soul.m in Sources */,
 				24D9E007206390D500CAB786 /* GLDImagePickerManager.m in Sources */,

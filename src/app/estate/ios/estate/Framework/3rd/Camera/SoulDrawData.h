@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 @protocol SoulDrawDataDelegate<NSObject>
 - (void)draw;
 - (void)doTrans;

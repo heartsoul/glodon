@@ -17,6 +17,9 @@
 
 @protocol LPDImagePickerControllerDelegate;
 @interface LPDImagePickerController : UINavigationController
+
+- (void)configDefaultSetting;
+
 // 用这个初始化方法
 - (instancetype)initWithMaxImagesCount:(NSInteger)maxImagesCount delegate:(id<LPDImagePickerControllerDelegate>)delegate;
 - (instancetype)initWithMaxImagesCount:(NSInteger)maxImagesCount columnNumber:(NSInteger)columnNumber delegate:(id<LPDImagePickerControllerDelegate>)delegate;

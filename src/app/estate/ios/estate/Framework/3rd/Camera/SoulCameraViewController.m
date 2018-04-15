@@ -53,7 +53,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
-    self.photoView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight)];
+    self.photoView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
     if ( [self checkCameraPermission]) {
         [self customCamera];
         [self initSubViews];
@@ -94,7 +94,7 @@
     
     //使用self.session，初始化预览层，self.session负责驱动input进行信息的采集，layer负责把图像渲染显示
     self.previewLayer = [[AVCaptureVideoPreviewLayer alloc]initWithSession:self.session];
-    self.previewLayer.frame = CGRectMake(0, 0, KScreenWidth, KScreenHeight);
+    self.previewLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
   
     [self.photoView.layer addSublayer:self.previewLayer];
