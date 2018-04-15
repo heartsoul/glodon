@@ -57,11 +57,14 @@ const RootStack = StackNavigator(
     RelevantModlePage: {
       screen : GLD.RelevantModlePage 
     },
+    CheckPointListPage: {
+      screen: GLD.CheckPointListPage
+    },
     
   },
   {
-    initialRouteName: storage.isGuide(()=>{}) ? 'GuidePage' : 'LoginPage',
-    // initialRouteName: 'LoginPage',
+    // initialRouteName: storage.isGuide(()=>{}) ? 'GuidePage' : 'LoginPage',
+    initialRouteName: 'MainPage',
     // headerMode:"none",
   },
 );

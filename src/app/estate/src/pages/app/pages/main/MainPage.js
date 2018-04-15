@@ -58,10 +58,11 @@ export default class extends NavigationPage {
     storage.projectIdVersionId = '';
     storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: '图纸文件',pageType: 3})
   }
+  //质检项目
   _moduleChoose = () => {
     let navigator = this.props.navigation;
     storage.projectIdVersionId = '';
-    storage.pushNext(navigator,"ModelFileChooserPage");
+    storage.pushNext(navigator,"CheckPointListPage");
   }
   _projectChoose = () => {
     let navigator = this.props.navigation;
