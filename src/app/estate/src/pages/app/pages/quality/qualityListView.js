@@ -240,10 +240,6 @@ export default class QualityListView extends PureComponent {
         this._onFilter(API.CLASSIFY_STATES[index]);
     }
     _emptyView = () => {
-        this.setState({
-            refreshing: false,
-            isLoading: false,
-        });
         return (<View style={{ alignItems: 'center', justifyContent: 'center', height: height - 44 - 20 - 49 }}><Text style={{ color: 'gray' }}>暂无数据</Text></View>);
     }
     _toTop = () =>{
