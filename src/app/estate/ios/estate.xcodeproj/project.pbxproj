@@ -29,7 +29,6 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		247E2AD02043C82F00016F63 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		247E2B0F204631A600016F63 /* GLDRNEventEmitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2B0C204631A600016F63 /* GLDRNEventEmitter.m */; };
 		247E2B10204631A600016F63 /* GLDRNBridgeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2B0D204631A600016F63 /* GLDRNBridgeModule.m */; };
 		247E2BD02046373300016F63 /* NSJSONSerialization+safeGenerate.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2B132046373300016F63 /* NSJSONSerialization+safeGenerate.m */; };
@@ -123,6 +122,8 @@
 		248E0D2D2060A54F0053F5AA /* RNTSwitchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D2C2060A54F0053F5AA /* RNTSwitchManager.m */; };
 		248E0D302060DFE40053F5AA /* RNTMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D2F2060DFE40053F5AA /* RNTMapView.m */; };
 		248E0D332060E0590053F5AA /* RNTMapManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D322060E0590053F5AA /* RNTMapManager.m */; };
+		2498F88E2084299600ABA826 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2498F86D2084297900ABA826 /* libRCTCameraRoll.a */; };
+		2498F89120842AC200ABA826 /* RNTImagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2498F89020842AC200ABA826 /* RNTImagesView.m */; };
 		24D9E00120637CB800CAB786 /* BaseRCTComponentsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E00020637CB800CAB786 /* BaseRCTComponentsManager.m */; };
 		24D9E00420637E9600CAB786 /* NSDictionary+BaseRCTComponents.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E00320637E9600CAB786 /* NSDictionary+BaseRCTComponents.m */; };
 		24D9E007206390D500CAB786 /* GLDImagePickerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E006206390D500CAB786 /* GLDImagePickerManager.m */; };
@@ -273,6 +274,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 9936F3131F5F2E4B0010BF04;
 			remoteInfo = privatedata;
+		};
+		2498F86C2084297900ABA826 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2498F8632084297900ABA826 /* RCTCameraRoll.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58B5115D1A9E6B3D00147676;
+			remoteInfo = RCTCameraRoll;
 		};
 		24D9E0312063A2B400CAB786 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -619,6 +627,9 @@
 		248E0D2F2060DFE40053F5AA /* RNTMapView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTMapView.m; sourceTree = "<group>"; };
 		248E0D312060E0590053F5AA /* RNTMapManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTMapManager.h; sourceTree = "<group>"; };
 		248E0D322060E0590053F5AA /* RNTMapManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTMapManager.m; sourceTree = "<group>"; };
+		2498F8632084297900ABA826 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
+		2498F88F20842AC200ABA826 /* RNTImagesView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTImagesView.h; sourceTree = "<group>"; };
+		2498F89020842AC200ABA826 /* RNTImagesView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTImagesView.m; sourceTree = "<group>"; };
 		24D9DFFF20637CB800CAB786 /* BaseRCTComponentsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseRCTComponentsManager.h; sourceTree = "<group>"; };
 		24D9E00020637CB800CAB786 /* BaseRCTComponentsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRCTComponentsManager.m; sourceTree = "<group>"; };
 		24D9E00220637E9600CAB786 /* NSDictionary+BaseRCTComponents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+BaseRCTComponents.h"; sourceTree = "<group>"; };
@@ -643,6 +654,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2498F88E2084299600ABA826 /* libRCTCameraRoll.a in Frameworks */,
 				247E2C3920463AC200016F63 /* CKSecurityTool.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
@@ -717,18 +729,18 @@
 		06958C3D2082E7220015C54F /* Camera */ = {
 			isa = PBXGroup;
 			children = (
-				06958C3E2082E7220015C54F /* SoulPhotoEditViewController.h */,
 				06958C3F2082E7220015C54F /* SoulDrawData.h */,
-				06958C402082E7220015C54F /* SoulCameraEditView.xib */,
-				06958C412082E7220015C54F /* SoulActionToolbarView.h */,
-				06958C422082E7220015C54F /* SoulDrawView.h */,
-				06958C432082E7220015C54F /* SoulCameraViewController.h */,
-				06958C442082E7220015C54F /* SoulPhotoEditViewController.m */,
 				06958C452082E7220015C54F /* SoulDrawData.m */,
-				06958C462082E7220015C54F /* SoulActionToolbarViews.xib */,
-				06958C472082E7220015C54F /* SoulCameraViewController.m */,
+				06958C422082E7220015C54F /* SoulDrawView.h */,
 				06958C482082E7220015C54F /* SoulDrawView.m */,
+				06958C432082E7220015C54F /* SoulCameraViewController.h */,
+				06958C472082E7220015C54F /* SoulCameraViewController.m */,
+				06958C3E2082E7220015C54F /* SoulPhotoEditViewController.h */,
+				06958C442082E7220015C54F /* SoulPhotoEditViewController.m */,
+				06958C412082E7220015C54F /* SoulActionToolbarView.h */,
 				06958C492082E7220015C54F /* SoulActionToolbarView.m */,
+				06958C462082E7220015C54F /* SoulActionToolbarViews.xib */,
+				06958C402082E7220015C54F /* SoulCameraEditView.xib */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -1202,6 +1214,8 @@
 				24D9DFE320637C1400CAB786 /* Base */,
 				248E0CFC205FA0F10053F5AA /* GLDPhotoManager.h */,
 				248E0CFD205FA0F10053F5AA /* GLDPhotoManager.m */,
+				2498F88F20842AC200ABA826 /* RNTImagesView.h */,
+				2498F89020842AC200ABA826 /* RNTImagesView.m */,
 				248E0CFF205FB1440053F5AA /* GLDDemoManager.h */,
 				248E0D00205FB1440053F5AA /* GLDDemoManager.m */,
 				248E0D282060A4760053F5AA /* RNTSwitch.h */,
@@ -1220,6 +1234,14 @@
 				06958CD8208366880015C54F /* GLDPhotoPickerController.m */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		2498F8642084297900ABA826 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2498F86D2084297900ABA826 /* libRCTCameraRoll.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		24D9DFE320637C1400CAB786 /* Base */ = {
@@ -1272,6 +1294,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				2498F8632084297900ABA826 /* RCTCameraRoll.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -1403,6 +1426,10 @@
 				{
 					ProductGroup = ADBDB9201DFEBF0600ED6528 /* Products */;
 					ProjectRef = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
+				},
+				{
+					ProductGroup = 2498F8642084297900ABA826 /* Products */;
+					ProjectRef = 2498F8632084297900ABA826 /* RCTCameraRoll.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -1589,6 +1616,13 @@
 			remoteRef = 247E2B022043C82F00016F63 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		2498F86D2084297900ABA826 /* libRCTCameraRoll.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTCameraRoll.a;
+			remoteRef = 2498F86C2084297900ABA826 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		24D9E0322063A2B400CAB786 /* STTVTableView.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1718,7 +1752,6 @@
 				06958C842082E7220015C54F /* SoulActionToolbarViews.xib in Resources */,
 				247E2BFC2046373400016F63 /* XHDatePickerView.xib in Resources */,
 				247E2C6620466D8D00016F63 /* TestRNViewController.storyboard in Resources */,
-				247E2AD02043C82F00016F63 /* main.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				06958C812082E7220015C54F /* SoulCameraEditView.xib in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
@@ -1872,6 +1905,7 @@
 				247E2C0E2046373400016F63 /* SBJsonStreamParser.m in Sources */,
 				247E2BDE2046373300016F63 /* NSArray+LinqExtensions.m in Sources */,
 				247E2C0A2046373400016F63 /* KxMenu.m in Sources */,
+				2498F89120842AC200ABA826 /* RNTImagesView.m in Sources */,
 				247E2C0B2046373400016F63 /* UINavigation+SXFixSpace.m in Sources */,
 				247E2BF32046373400016F63 /* BaseNetApi.m in Sources */,
 				06958CAE2083563A0015C54F /* GLDPhotoPreviewViewController.m in Sources */,

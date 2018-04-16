@@ -325,9 +325,11 @@
         NSData *imageData =  [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
 //        [self saveImageWithImage:[UIImage imageWithData:imageData]];
 //        [self beginEdit:imageData];
-        [self disMiss];
+      
         if (self.didFinishPickingBlock) {
             self.didFinishPickingBlock([UIImage imageWithData:imageData]);
+        } else {
+          [self disMiss];
         }
         
     }];
@@ -341,7 +343,7 @@
 /**
  * 保存图片到相册
  */
-- (void)saveImageWithImage:(UIImage *)image {
++(void)saveImage:(UIImage *)image finishBlock:(void(^)(NSString *localIdentifier))finishBlock {
     // 判断授权状态
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         if (status != PHAuthorizationStatusAuthorized) return;
@@ -356,9 +358,11 @@
             } error:&error];
             
             if (error) {
+              finishBlock(nil);
                 NSLog(@"保存失败：%@", error);
                 return;
             }
+          finishBlock(createdAsset.localIdentifier);
         });
     }];
 }

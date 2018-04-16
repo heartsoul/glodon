@@ -13,6 +13,8 @@
 @property(nonatomic,weak,nullable) id<SoulCameraViewControllerDelegate> delegate;
 @property(nonatomic,copy,nullable) void(^didFinishPickingBlock)(UIImage* _Nonnull);
 @property(nonatomic,copy,nullable) void (^didCancelBlock)();
+
++(void)saveImage:(UIImage *)image finishBlock:(void(^)(NSString *localIdentifier))finishBlock;
 @end
 
 @protocol SoulCameraViewControllerDelegate<NSObject>

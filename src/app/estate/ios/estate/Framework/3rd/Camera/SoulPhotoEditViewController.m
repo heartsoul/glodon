@@ -70,7 +70,9 @@
 - (void)onFinish {
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.editView saveImage:^(NSString *assetId) {
-        
+      if(self.didFinishPickingBlock) {
+        self.didFinishPickingBlock(assetId);
+      }
     }];
 }
 

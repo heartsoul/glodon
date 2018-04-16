@@ -414,7 +414,7 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
     if (action == @selector(remove:)
-        ||action == @selector(savePic:)
+//        ||action == @selector(savePic:)
         ||action == @selector(editContent:)) {
         return YES;
     }
@@ -523,7 +523,7 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
         menu.menuItems = @[
                            [[UIMenuItem alloc] initWithTitle:@"删除" action:@selector(remove:)],
                            [[UIMenuItem alloc] initWithTitle:@"编辑" action:@selector(editContent:)],
-                           [[UIMenuItem alloc] initWithTitle:@"保存" action:@selector(savePic:)],
+//                           [[UIMenuItem alloc] initWithTitle:@"保存" action:@selector(savePic:)],
                            ];
         
         // 菜单最终显示的位置

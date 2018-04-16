@@ -29,6 +29,7 @@
   UIButton *_doneButton;
   UIImageView *_numberImageView;
   UILabel *_numberLable;
+  UILabel *_numberTitleLabel;
   UIButton *_originalPhotoButton;
   UILabel *_originalPhotoLable;
 }
@@ -85,6 +86,11 @@
   _naviBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.lpd_width, 64)];
   _naviBar.backgroundColor = [UIColor colorWithRed:(34/255.0) green:(34/255.0)  blue:(34/255.0) alpha:0.7];
   
+  _numberTitleLabel = [[UILabel alloc] initWithFrame:_naviBar.bounds];
+  _numberTitleLabel.font = [UIFont systemFontOfSize:17];
+  _numberTitleLabel.textColor = [UIColor whiteColor];
+  _numberTitleLabel.textAlignment = NSTextAlignmentCenter;
+  _numberTitleLabel.text = [NSString stringWithFormat:@"%zd/%zd",_currentIndex+1,self.models.count];
   _backButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 44, 44)];
   [_backButton setImage:[UIImage imageNamedFromMyBundle:@"navi_back.png"] forState:UIControlStateNormal];
   [_backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -96,6 +102,7 @@
   [_selectButton addTarget:self action:@selector(select:) forControlEvents:UIControlEventTouchUpInside];
   _selectButton.hidden = !lpdImagePickerVc.showSelectBtn;
   
+  [_naviBar addSubview:_numberTitleLabel];
   [_naviBar addSubview:_selectButton];
   [_naviBar addSubview:_backButton];
   [self.view addSubview:_naviBar];
@@ -209,11 +216,15 @@
       [_lpdImagePickerVc.selectedModels removeObject:model];
       if (self.photos) {
          [self.photos removeObject:_photosTemp[_currentIndex]];
+        [_lpdImagePickerVc.selectedAssets removeObject:model.asset];
       }
     } else {
       
       for (LPDAssetModel *model_item in selectedModels) {
         
+        if([model_item.asset isKindOfClass:[NSDictionary class]]) {
+          continue;
+        }
         if ([[[LPDImageManager manager] getAssetIdentifier:model.asset] isEqualToString:[[LPDImageManager manager] getAssetIdentifier:model_item.asset]]) {
           // 1.6.7版本更新:防止有多个一样的model,一次性被移除了
           NSArray *selectedModelsTmp = [NSArray arrayWithArray:_lpdImagePickerVc.selectedModels];
@@ -366,6 +377,7 @@
   LPDAssetModel *model = _models[_currentIndex];
   _selectButton.selected = model.isSelected;
   _numberLable.text = [NSString stringWithFormat:@"%zd",_lpdImagePickerVc.selectedModels.count];
+  _numberTitleLabel.text = [NSString stringWithFormat:@"%zd/%zd",_currentIndex+1,self.models.count];
   _numberImageView.hidden = (_lpdImagePickerVc.selectedModels.count <= 0 || _isHideNaviBar);
   _numberLable.hidden = (_lpdImagePickerVc.selectedModels.count <= 0 || _isHideNaviBar);
   

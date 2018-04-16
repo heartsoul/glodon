@@ -18,9 +18,9 @@
 @implementation UIAlertAction (GLDUIAlertAction)
 + (nonnull instancetype)actionWithTitle:(nullable NSString *)title style:(UIAlertActionStyle)style color:(nullable UIColor*)color handler:(void (^ __nullable)( UIAlertAction * __nullable action))handler {
     UIAlertAction* action = [[self class] actionWithTitle:title style:style handler:handler];
-    if(style == UIAlertActionStyleCancel) {
+//    if(style == UIAlertActionStyleCancel) {
         [action setTextColor:color];
-    }
+//    }
 //    [action setValue:color forKey:@"_titleTextColor"];
     return action;
 }
@@ -162,17 +162,17 @@
           //completion(NSNotFound);
         } else {
           NSUInteger index = [alertController.actions indexOfObject:action];
-          completion(index - 1);
+          completion(index);
         }
       }
       alertController = nil;
     } copy];
-    
-    [alertController addAction:[UIAlertAction actionWithTitle:cancelButtonTitle
-                                                        style:UIAlertActionStyleCancel
+    if (!(cancelButtonTitle == nil || cancelButtonTitle.length < 1)) {
+        [alertController addAction:[UIAlertAction actionWithTitle:cancelButtonTitle
+                                                        style:UIAlertActionStyleDefault
                                                         color:[CustomSetting shareInstance].cancelColor
                                                       handler:alertActionHandler]];
-    
+    }
     for (NSString *buttonTitle in otherButtonTitles) {
       [alertController addAction:[UIAlertAction actionWithTitle:buttonTitle
                                                           style:UIAlertActionStyleDefault

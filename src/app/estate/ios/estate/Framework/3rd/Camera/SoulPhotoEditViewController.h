@@ -11,7 +11,7 @@
 @protocol SoulPhotoEditViewControllerDelegate;
 @interface SoulPhotoEditViewController : UIViewController
 @property(nonatomic,weak,nullable) id<SoulPhotoEditViewControllerDelegate> delegate;
-@property(nonatomic,copy,nullable) void(^didFinishPickingBlock)(UIImage* _Nonnull);
+@property(nonatomic,copy,nullable) void(^didFinishPickingBlock)(NSString* _Nonnull assetId);
 @property(nonatomic,copy,nullable) void (^didCancelBlock)();
 @property(nonatomic,copy,nullable) UIImage* _Nonnull (^inputImageBlock)();
 @end

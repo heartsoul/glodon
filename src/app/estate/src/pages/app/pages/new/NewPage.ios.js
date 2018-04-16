@@ -241,7 +241,7 @@ export default class extends React.Component {
     
     //
     _assembleParams = ()=> {
-
+        return;
       let params = {};
       //施工单位
       params.constructionCompanyId = this.state.companies[this.state.selectCompanyIndex].id;
@@ -504,92 +504,17 @@ export default class extends React.Component {
     };
     
     render() {
-      var region = {
-        latitude: 37.48,
-        longitude: -122.16,
-        latitudeDelta: 0.1,
-        longitudeDelta: 0.1,
-      };
       return (
         <ScrollView>
           <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-          
-          <ListRow title='检查单位' accessory='indicator' bottomSeparator='indent' detail={this.state.selectInspectionCompanyIndex > -1 ? this.state.inspectionCompanies[this.state.selectInspectionCompanyIndex].name : ""} onPress={()=>{this._showInspectionCompanyActionSheet()}} />
-          <ListRow title='施工单位' accessory='indicator' bottomSeparator='indent' detail={this.state.selectCompanyIndex > -1 ? this.state.companies[this.state.selectCompanyIndex].name : ""} onPress={()=>{this._showCompanyActionSheet()}} />
-          <ListRow title='责任人' accessory='indicator' bottomSeparator='indent' detail={this.state.selectPersonIndex > -1 ? this.state.persons[this.state.selectPersonIndex].name : ""} onPress={()=>{this._getPersonList()}} />
-          <TextInput 
-              maxLength = {255}
-              style={{textAlignVertical:'top',paddingLeft:12,paddingRight:12,paddingTop:12,paddingBottom:0,backgroundColor:'#ffffff',minHeight:120}}
-              placeholder={'现场情况描述'}
-              multiline ={true}
-              underlineColorAndroid={"transparent"}
-              textAlign="left"
-              onChangeText={(text)=>{this.setState({contentDescription:text})}}
-          />
-  
-          <ImageChooserView files={[{
+          <ImageChooserView ref ={ REF_PHOTO } files={[{
             url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
             name: '2121',
           }, {
             url: 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg',
             name: '2122',
           }]} style={{ top:0,left:0,width:width,height:100,marginTop:20 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
-          <View style={{marginTop:20,marginBottom:11}}>
-              <ListRow title='需要整改'  bottomSeparator='indent'  detail={<Switch value={this.state.switchValue} onValueChange ={(value)=>{this._onChangeSwitch(value)}}/>}/>
-              {
-                  (this.state.switchValue)?(
-                      <ListRow title='整改期限'  accessory='indicator' bottomSeparator='indent' detail={'2018-04-08'}/>
-                  ):(null)
-              }
-          </View>
-  
-          <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent'detail={this.state.selectedCheckPoint?this.state.selectedCheckPoint.name:''} onPress={()=>{this._selectCheckPoint()}} />
-          <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint?this.state.relevantBluePrint.name:''} onPress={()=>{ this._bimFileChooserBluePrint('图纸文件') }} />
-          <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel?this.state.relevantModel.name:''} onPress={()=>{ this._bimFileChooserModel('模型文件') }} />
-  
-          <ImageChooserView ref ={ REF_PHOTO } style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
-          <View style={{marginBottom:30}}>
-              <TouchableHighlight
-                  underlayColor="#0099f3"
-                  activeOpacity={1.0}
-                  
-                  style={
-                          this.state.pressed
-                          ? styles.saveTextViewPressed
-                          : styles.saveTextView
-                      }
-                      onHideUnderlay={() => {
-                      this.setState({ pressed: false });
-                      }}
-                      onShowUnderlay={() => {
-                      this.setState({ pressed: true });
-                      }}
-                  >
-                      <Text style={styles.saveText} onPress={()=>{this._save()}}>保存</Text>
-              </TouchableHighlight>
-              {
-                  (this.state.inspectId != -1)?(
-                      <TouchableHighlight
-                          underlayColor="#0099f3"
-                          activeOpacity={1.0}
-                          style={
-                                  this.state.pressed
-                                  ? styles.deleteTextViewPressed
-                                  : styles.deleteTextView
-                              }
-                          onHideUnderlay={() => {
-                          this.setState({ pressed: false });
-                          }}
-                          onShowUnderlay={() => {
-                          this.setState({ pressed: true });
-                          }}
-                          >
-                              <Text style={styles.deleteText} onPress={()=>{this._delete()}}>删除</Text>
-                      </TouchableHighlight>
-                  ):(null)
-              }
-  
-          </View>
+          
           
          </ScrollView>
         
