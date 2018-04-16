@@ -19,6 +19,7 @@ import BimFileChooserPage from './app/pages/navigation/bim/BimFileChooserPage'
 import WebPage from './app/pages/navigation/bim/WebPage'
 import RelevantBlueprintPage from './app/pages/navigation/bim/relevantBlueprint'
 import RelevantModlePage from './app/pages/navigation/bim/relevantModle'
+import CheckPointListPage from './app/pages/navigation/bim/CheckPointListPage'
 export {
     LoginPage,
     GuidePage,
@@ -37,5 +38,6 @@ export {
     BimFileChooserPage,
     WebPage,
     RelevantBlueprintPage,
-    RelevantModlePage
+    RelevantModlePage,
+    CheckPointListPage,
 }
