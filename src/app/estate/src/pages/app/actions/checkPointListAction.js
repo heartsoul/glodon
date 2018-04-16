@@ -52,46 +52,52 @@ function hasChild(checkPoints, parentId) {
  */
 export function loadSuccess(topDirNode, topModelNode) {
     return {
-        type: types.GET_CHECK_POINTS,
+        type: types.CHECK_POINT_LOAD,
         topDirNode: topDirNode,
         topModelNode: topModelNode,
     }
 
 }
 
-
-/**
- * 选中构件，新建、质检清单列表、构件信息页
- * @param {*} checkPoint 
- */
-export function selectCheckPoint(checkPoint) {
-    return {
-        type: types.SELECT_CHECK_POINT,
-        selectCheckPoint: checkPoint,
-    }
-}
 export function toQualityCheckList(checkPoint) {
     //跳转到列表页
-    
-    let navigator = this.props.navigation;
-    storage.pushNext(navigator, 'QualityMainPage', { selectedCheckPoint: checkPoint, });
-    return dispatch=>{
-        dispatch(selectCheckPoint(checkPoint));
+    return {
+        type: types.CHECK_POINT_TO_QUALITY_LIST,
+        selectedCheckPoint: checkPoint,
+        navPage: 'QualityMainPage',
     }
 }
 
-export function toCheckPointInfoPage(item) {
+export function toCheckPointInfoPage(checkPoint) {
     //构件信息页面
-    return dispatch=>{
-        dispatch(selectCheckPoint(checkPoint));
+    return {
+        type: types.CHECK_POINT_TO_INFO,
+        selectedCheckPoint: checkPoint,
+        navPage: '',
     }
 }
+
+
 
 export function toAddPage(checkPoint) {
     //新建页面
-    let navigator = this.props.navigation;
-    storage.pushNext(navigator, 'NewPage', { selectedCheckPoint: checkPoint, });
-    return dispatch=>{
-        dispatch(selectCheckPoint(checkPoint));
+    return {
+        type: types.CHECK_POINT_TO_NEW_QUALITY,
+        selectedCheckPoint: checkPoint,
+        navPage: 'NewPage',
+    }
+}
+
+export function navSuccess(){
+    return {
+        type: types.CHECK_POINT_INIT,
+    }
+}
+
+export function reset(){
+      //reset
+      return {
+        type: types.CHECK_POINT_RESET,
+        navPage: '',
     }
 }
