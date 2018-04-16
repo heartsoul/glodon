@@ -21,6 +21,7 @@
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
     "react-native": "^0.54.4",
+    "react-native-camera-roll-picker": "^1.2.3",
     "react-native-gallery": "0.0.17",
     "react-native-image-picker": "^0.26.7",
     "react-native-keyboard-aware-scroll-view": "^0.4.4",
