@@ -13,7 +13,8 @@ import {
 } from 'react-native';
 import { Accordion, List } from 'antd-mobile';
 import { connect } from 'react-redux';
-import * as checkPointListAction from './../../../actions/checkPointListAction' // 导入action方法 
+import * as checkPointListAction from './../../../actions/checkPointListAction'; // 导入action方法 
+import * as types from '../../../constants/checkPointListTypes';
 
 import * as API from 'app-api';
 
@@ -36,26 +37,13 @@ class CheckPointListPage extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return true;
-    }
-
-
-    toQualityCheckList = (checkPoint) => {
-        //跳转到列表页
-        this.props.selectCheckPoint(checkPoint);
-        let navigator = this.props.navigation;
-        storage.pushNext(navigator, 'QualityMainPage', { selectedCheckPoint: checkPoint, });
-    }
-
-    toCheckPointInfoPage = (item) => {
-        //构件信息页面
-    }
-
-    toAddPage = (checkPoint) => {
-        //新建页面
-        this.props.selectCheckPoint(checkPoint);
-        let navigator = this.props.navigation;
-        storage.pushNext(navigator, 'NewPage', { selectedCheckPoint: checkPoint, });
+        if (nextProps.navPage) {
+            let navigator = this.props.navigation;
+            storage.pushNext(navigator, nextProps.navPage);
+            this.props.navSuccess();
+            return false;
+        }
+        return true
     }
 
     renderPanelHeader = (item) => {
@@ -80,14 +68,14 @@ class CheckPointListPage extends Component {
 
     renderItem = (item) => {
         return (
-            <TouchableOpacity onPress={() => { this.toQualityCheckList(item) }} >
+            <TouchableOpacity onPress={() => { this.props.toQualityCheckList(item) }} >
                 <View style={styles.itemView} >
                     <Text style={styles.listText}>{item.name}</Text>
-                    <TouchableOpacity style={{ paddingRight: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.toCheckPointInfoPage(item) }}>
+                    <TouchableOpacity style={{ paddingRight: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.props.toCheckPointInfoPage(item) }}>
                         <Image style={styles.markImage} source={require('app-images/icon_module_standard_white.png')} />
                     </TouchableOpacity>
                     <View style={{ flex: 1 }} />
-                    <TouchableOpacity style={{ paddingLeft: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.toAddPage(item) }}>
+                    <TouchableOpacity style={{ paddingLeft: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.props.toAddPage(item) }}>
                         <Image style={styles.addImage} source={require('app-images/icon_module_create_white.png')} />
                     </TouchableOpacity>
                     <Image style={styles.arrow} source={require('app-images/icon_arrow_right_gray.png')} />
@@ -176,6 +164,7 @@ const styles = StyleSheet.create({
 
 export default connect(
     state => ({
+        navPage: state.checkPointList.navPage,
         topDirNode: state.checkPointList.topDirNode,
         topModelNode: state.checkPointList.topModelNode,
     }),
@@ -183,8 +172,17 @@ export default connect(
         getCheckPoints: () => {
             dispatch(checkPointListAction.getCheckPoints())
         },
-        selectCheckPoint: (checkPoint) => {
-            dispatch(checkPointListAction.selectCheckPoint(checkPoint))
+        toCheckPointInfoPage: (checkPoint) => {
+            dispatch(checkPointListAction.toCheckPointInfoPage(checkPoint))
+        },
+        toAddPage: (checkPoint) => {
+            dispatch(checkPointListAction.toAddPage(checkPoint))
+        },
+        toQualityCheckList: (checkPoint) => {
+            dispatch(checkPointListAction.toQualityCheckList(checkPoint))
+        },
+        navSuccess: () => {
+            dispatch(checkPointListAction.navSuccess())
         },
     })
 )(CheckPointListPage);

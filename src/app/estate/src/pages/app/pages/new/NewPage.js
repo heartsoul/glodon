@@ -17,6 +17,7 @@ import {
 var { width, height } = Dimensions.get("window");
 import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'app-3rd/teaset';
 import ImageChooserView from './ImageChooserView';
+import { connect } from 'react-redux';
 
 import * as API from "app-api";
 const UPLOADAPI = API
@@ -27,7 +28,7 @@ import { Modal, Toast } from 'antd-mobile';
 
 const REF_PHOTO = 'gldPhoto';
 
-export default class extends React.Component {
+class NewPage extends React.Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '新建',
         headerTintColor: "#FFF",
@@ -370,18 +371,14 @@ export default class extends React.Component {
 
     componentDidMount = () => {
 
-
         this._initialState();
 
-        let params = this.props.navigation.state.params;
-        let checkPoint = {};
-        if (params && params.selectedCheckPoint) {
-            checkPoint = params.selectedCheckPoint
+        if (this.props.selectedCheckPoint) {
+            this.setState({
+                selectedCheckPoint: this.props.selectedCheckPoint,
+            });
         }
-        this.setState({
-            selectedCheckPoint: checkPoint,
-        });
-        
+       
         //请求数据
         this.props.navigation.setParams({ rightNavigatePress: this._rightAction })
         this._fetchData(this._getInspectionCompanies);
@@ -664,3 +661,12 @@ var styles = StyleSheet.create({
         marginTop: 30,
     },
 });
+
+export default connect(
+    state => ({
+        selectedCheckPoint: state.checkPointList.selectedCheckPoint
+    }),
+    dispatch => ({
+
+    })
+)(NewPage);
