@@ -11,6 +11,7 @@ import NewPage from './app/pages/new/NewPage'
 import MainPage from './app/pages/main/MainPage'
 
 import QualityMainPage from './app/pages/quality/QualityMainPage'
+import QualityDetailPage from './app/pages/quality/QualityDetailPage'
 import CheckPointPage from './app/pages/navigation/bim/CheckPointPage'
 import ChoosePage from './app/pages/navigation/tenant/TenantPage'
 import TenantPage from './app/pages/navigation/tenant/TenantPage'
@@ -40,4 +41,5 @@ export {
     RelevantBlueprintPage,
     RelevantModlePage,
     CheckPointListPage,
+    QualityDetailPage,
 }

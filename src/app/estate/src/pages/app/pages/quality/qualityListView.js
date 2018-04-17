@@ -1,5 +1,5 @@
 /**
- * Created by JokAr on 2017/4/12.
+ * Created by soul on 2018/4/12.
  */
 'use strict';
 import React, { Component, PureComponent } from "react";

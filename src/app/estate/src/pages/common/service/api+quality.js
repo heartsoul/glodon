@@ -123,7 +123,7 @@ function demoData(size) {
     }
     return ret;
 }
-// var dataLast =  {"data":{"content":demoData(1000),'last':false}};
+ var dataLast =  {"data":{"content":demoData(100),'last':false}};
 
 /**
  * 获取质检清单
@@ -187,6 +187,7 @@ function demoData(size) {
 }
  */
 export async function getQualityInspectionAll(projectId, qcState, page, size, qualityCheckpointId = 0, qualityCheckpointName = '') {
+    return dataLast;
     let api = "/quality/" + projectId + "/qualityInspection/all";
     let filter = '';
     if (!(qualityCheckpointId === 0)) {
@@ -201,7 +202,7 @@ export async function getQualityInspectionAll(projectId, qcState, page, size, qu
 }
 
 /**
- * 根据id查询检查历史详
+ * 根据id查询检查历史详情
  * 
  * @export
  * @param {number} projectId 项目id

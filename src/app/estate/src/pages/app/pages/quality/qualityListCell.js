@@ -34,57 +34,64 @@ export default class QualityListCell extends PureComponent {
         }
         return 0;
     }
+    _toDetail = (item) => {
+        storage.pushNext(null,"QualityDetailPage");
+    }
     renderItem = (item,index) => {
         return (
-<View style={[styles.containerView,]}>
-             <Image
-          source={projectTimeImage}
-          style={styles.imageTime}/> 
-                 <Text style={styles.contentTime}>{item.value.showTime}</Text>
-                 {
-                    this._toQcStateShowColor(item.value.qcState) == 1 ? (
-<Text style={[styles.contentStatus,{color:'red'}]}>{item.value.qcStateShow}</Text>
-                    ) : (this._toQcStateShowColor(item.value.qcState) == 2 ? (
-<Text style={[styles.contentStatus,{color:'orange'}]}>{item.value.qcStateShow}</Text>
+            <TouchableHighlight onPress={()=>{this._toDetail(item)}}>
+                <View style={[styles.containerView,]}>
+                    <View style={[styles.contentHeaderView]}>
+                        <Image
+                            source={projectTimeImage}
+                            style={styles.imageTime} />
+                        <Text style={styles.contentTime}>{item.value.showTime}</Text>
+                        {
+                            this._toQcStateShowColor(item.value.qcState) == 1 ? (
+                                <Text style={[styles.contentStatus, { color: 'red' }]}>{item.value.qcStateShow}</Text>
+                            ) : (this._toQcStateShowColor(item.value.qcState) == 2 ? (
+                                <Text style={[styles.contentStatus, { color: 'orange' }]}>{item.value.qcStateShow}</Text>
 
-                    ) : (
-                        <Text style={[styles.contentStatus]}>{item.value.qcStateShow}</Text>
-                    ))
-                    
-                 }
-                 
-                 <View style={styles.contentView}>
-    
-                 {
-                     item.url == undefined ? (<Image
-                        source={projectImage}
-                        style={styles.image}/>) : (<Image
-                            source={{uri:item.url}}
-                            style={styles.image}/>)
-                 }
-                  
-                 <Text style={styles.content}>{item.value.description}</Text>
-                 </View>
-                 {
-                       index % 2 ==0 ? (
+                            ) : (
+                                    <Text style={[styles.contentStatus]}>{item.value.qcStateShow}</Text>
+                                ))
+                        }
+                    </View>
+                    <View style={[styles.contentView, index % 2 == 1 ? {} : styles.contentView_border]}>
+
+                        {
+                            item.url == undefined ? (<Image
+                                source={projectImage}
+                                style={styles.image} />) : (<Image
+                                    source={{ uri: item.url }}
+                                    style={styles.image} />)
+                        }
+
+                        <Text style={styles.content}>{item.value.description}</Text>
+                    </View>
+                    {
+                        index % 2 == 0 ? (
                             null
                         ) : (
-                            <View style={[styles.contentActionView]} >
-                 <TouchableHighlight onPress={()=>{alert('删除')}} style={[styles.contentActionButton,styles.contentActionButtonDelete]}><Text style={styles.contentActionButtonTextDelete}>删除</Text>
-                 </TouchableHighlight>
-                 <TouchableHighlight onPress={()=>{alert('提交')}} style={styles.contentActionButton}><Text style={styles.contentActionButtonText}>提交</Text></TouchableHighlight>
-                 </View>
-                        )
+                                <View style={[styles.contentActionView]} >
+                                    <TouchableHighlight onPress={() => { alert('提交') }} style={styles.contentActionButton}><Text style={styles.contentActionButtonText}>提交</Text></TouchableHighlight>
+                                    <TouchableHighlight onPress={() => { alert('删除') }} style={[styles.contentActionButton, styles.contentActionButtonDelete]}><Text style={styles.contentActionButtonTextDelete}>删除</Text>
+                                    </TouchableHighlight>
+                                </View>
+                            )
                     }
-                 
-            </View>
+                </View>
+            </TouchableHighlight>
         );
   }
 }
 
 const styles = StyleSheet.create({
     contentActionView: {
-        height:40,
+        height:50,
+        alignItems: "center",
+        alignContent: "center",
+        flexDirection:'row-reverse',
     },
     contentActionButtonText: {
         justifyContent: "center",
@@ -106,25 +113,19 @@ const styles = StyleSheet.create({
     
     contentActionButton:{
         width:80,
-        left:width-140,
+        marginRight:20,
         backgroundColor:'#FFFFFF',
-        // flex:1,
-        top: -30,
         height:30,
         borderRadius:15,
         borderColor:'#eeeeee',
         borderWidth:1,
     },
     contentActionButtonDelete:{
-        left:width-100 - 140,
-        top:0,
+        marginRight:20,
     },
     containerView:{
         flex: 1,
         borderRadius:8,
-        // borderWidth:1,
-        // borderColor:"#0F0",
-        // height:119,
         marginTop: 5,
         
         marginBottom: 5,
@@ -133,44 +134,55 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         elevation:2.5, // android 
         shadowColor:"#333", // iOS
-        shadowOffset:{width:3,height:7}, // iOS
+        shadowOffset:{width:1.5,height:5}, // iOS
         shadowOpacity:0.15, // iOS
         shadowRadius:3, // iOS
     },
+    contentHeaderView:{
+        height:40,
+        alignItems: "center",
+        alignContent: "center",
+        flexDirection:'row',
+    },
     content: {
-        left: 80,
-        top: -50,
+        marginTop:10,
+        marginLeft:10,
         fontSize: 15,
         color: 'black',
     },
     contentView: {
         left: 0,
-        top: -10,
         backgroundColor: '#ededed',
         overflow:'hidden',
-        // borderRadius:8,
+        // alignItems: "center",
+        alignContent: "center",
+        flexDirection:'row',
+    },
+    contentView_border: {
+        borderBottomLeftRadius:8,
+        borderBottomRightRadius:8,
     },
     image:{
-        left:10,
-        top:10,
+        marginTop:10,
+        marginBottom:10,
+        marginLeft:10,
         width:60,
         height:60,
     },
     imageTime:{
-        left:10,
-        top:10,
+        marginLeft:10,
         width:20,
         height:20,
     },
     contentTime: {
-        left: 35,
-        top: -8,
+        marginLeft: 10,
         fontSize: 14,
         color: 'black',
     },
     contentStatus: {
         right: 10,
-        top: -28,
+        top: 10,
+        position:'absolute',
         textAlign:'right',
         fontSize: 15,
         color: 'green',

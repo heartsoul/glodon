@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
     contentList: {
      flex:1,
-         backgroundColor:'#ffffff',
+         backgroundColor:'#dedede',
         //  height:120,
     },
     dataList: {

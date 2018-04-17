@@ -60,7 +60,9 @@ const RootStack = StackNavigator(
     CheckPointListPage: {
       screen: GLD.CheckPointListPage
     },
-    
+    QualityDetailPage: {
+      screen: GLD.QualityDetailPage
+    }
   },
   {
     // initialRouteName: storage.isGuide(()=>{}) ? 'GuidePage' : 'LoginPage',
