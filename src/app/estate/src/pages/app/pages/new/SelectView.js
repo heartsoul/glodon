@@ -115,7 +115,7 @@ class SelectView extends Component {
     }
 
     /**
-     * 如果点击的是责任人，先弹窗
+     * 如果点击的是责任人先获取数据
      */
     onPress = () => {
         if (this.props.title === '责任人') {
@@ -147,11 +147,8 @@ class SelectView extends Component {
     /**
      * 选中的数据
      */
-    getSelectedItem = () => {
-        let ret = {
-            selectData: (this.state.selectIndex != -1) ? this.state.dataList[this.state.selectIndex] : null,
-        }
-        return ret;
+    getSelectedData = () => {
+        return (this.state.selectIndex != -1) ? this.state.dataList[this.state.selectIndex] : null;
     }
 
     render() {
