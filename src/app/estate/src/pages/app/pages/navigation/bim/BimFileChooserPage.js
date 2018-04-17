@@ -11,7 +11,7 @@ import {
 import { StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
 
 import ThumbnailImage from "./ThumbnailImage"
-
+import * as PageType from "./PageTypes";
 import * as MODELAPI from "app-api";
 var { width, height } = Dimensions.get("window");
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -50,7 +50,7 @@ export default class BimFileChooser extends Component {
             latestVersion: global.storage.projectIdVersionId,
             fileId: 0,
             dataType: "",//图纸文件 模型文件 
-            pageType: 0,
+            pageType: PageType.PAGE_TYPE_NEW_QUALITY,
         }
     }
     _keyExtractor = (item, index) => index;
@@ -212,7 +212,7 @@ export default class BimFileChooser extends Component {
                 if (this.state.dataType === '图纸文件') {
                     global.storage.pushNext(navigator, "RelevantBlueprintPage", { title: item.value.name, fileId: item.value.fileId, pageType: this.state.pageType });
                 } else {
-                    global.storage.pushNext(navigator, "WebPage", { title: item.value.name, fileId: item.value.fileId });
+                    global.storage.pushNext(navigator, "RelevantModlePage", { title: item.value.name, fileId: item.value.fileId, pageType: this.state.pageType });
                 }
             });
 

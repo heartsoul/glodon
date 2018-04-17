@@ -1,21 +1,25 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
-  Dimensions,
-  Text,
-  View,
-  WebView,
-  SafeAreaView,
-  StatusBar
+    AppRegistry,
+    StyleSheet,
+    Dimensions,
+    Text,
+    View,
+    Image,
+    WebView,
+    SafeAreaView,
+    StatusBar,
+    TouchableOpacity,
 } from 'react-native';
+import { Toast } from 'antd-mobile';
 
 import * as AppConfig from "common-module"
+import * as PageType from "./PageTypes";
 
 //获取设备的宽度和高度
 var {
-  height: deviceHeight,
-  width: deviceWidth
+    height: deviceHeight,
+    width: deviceWidth
 } = Dimensions.get('window');
 const cmdString = "\
 function callMessage(action, data, callbackName) { \
@@ -29,8 +33,8 @@ function callMessage(action, data, callbackName) { \
 }\
 window.modelEvent = {\
   defaultReturn : function(data) {console.log('执行命令成功:'+data);},\
-  loadDotsData : function() { callMessage('loadDotsData');},\
   invalidateToken : function() { callMessage('invalidateToken');},\
+  loadDotsData : function() { callMessage('loadDotsData');},\
   cancelPosition : function() { callMessage('cancelPosition');},\
   getPosition : function(jsonData) { callMessage('getPosition', jsonData);},\
   getPositionInfo : function(jsonData) { callMessage('getPositionInfo', jsonData);},\
@@ -38,190 +42,334 @@ window.modelEvent = {\
 document.addEventListener('message', function(e) {eval(e.data);});\
 ";
 
-//默认应用的容器组件
-export default class GLDWebView extends Component {
-  static navigationOptions = ({navigation, screenProps}) => ({
-    title: navigation.state.params?navigation.state.params.title : '图纸',
-    headerTintColor: "#FFF",
-    headerStyle: { backgroundColor: "#00baf3" },
-    headerRight:(  
-      <Text  onPress={()=>navigation.state.params.rightNavigatePress()} style={{marginLeft:5, width:30, textAlign:"center"}} >  
-          测试 
-      </Text>  
-  )  
-  });
-  componentDidMount=()=> {
-    console.log(this.props.navigation.state.params);
-    //请求数据
-     this.props.navigation.setParams({title:this.props.navigation.state.params.title, rightNavigatePress:this._rightAction }) 
-  }
-  
-  _rightAction = ()=> {
-    console.log("执行js window.modelEvent.loadDotsData();");
-    this.refs.webview.injectJavaScript('javascript:window.modelEvent.loadDotsData();')
-  }
-  onMessage =(e)=> {
-    console.log(e.nativeEvent.data);
-    let action = e.nativeEvent.data;
-    if(action) {
-      switch (action) {
-        case 'loadDotsData':
-          {
-            this.loadDotsData();
-          }
-          break;
-        case 'invalidateToken':
-        {
-            this.invalidateToken();
-        }
-        break;
-        case 'cancelPosition':
-        {
-            this.cancelPosition();
-        }
-        break;
-        case 'getPosition':
-        {
-            this.getPosition();
-        }
-        break;
-        case 'getPositionInfo':
-        {
-            this.getPositionInfo();
-        }
-        break;
-        default:
-          break;
-      }
+/**
+ * 关联模型
+ */
+export default class RelevantModelPage extends Component {
+
+    static navigationOptions = ({ navigation, screenProps }) => ({
+        title: '',
+        tabBarVisible: false,
+        headerTintColor: "#FFF",
+        headerStyle: { backgroundColor: "#00baf3" },
+        header: null,
+    });
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            showFinishView: false,//显示完成
+            fileId: '',
+            name: '',
+            pageType: PageType.PAGE_TYPE_NEW_QUALITY,// 0新建检查单 1检查单编辑状态 2详情查看  3质检单模型模式  4新建材设进场 5新增材设进场编辑状态  6材设模型模式
+            showChangeMode: false,//显示切换模型 pageType为1、5时为true
+            showAddIcon: false,//显示创建按钮 pageType为 2 或者 3、6无创建权限时为false
+            selectedModel: {},//选中的模型
+        };
     }
-  }
-  //在WebView中注册该回调方法
-  
-  onNavigationStateChange(event){
-    console.log('onNavigationStateChange:');
-    console.log(event); //打印出event中属性
+
+    componentDidMount = () => {
+        console.log(this.props.navigation.state.params);
+        let params = this.props.navigation.state.params;
+        let pageType = params.pageType;
+        let relevantModel = params.relevantModel;
+
+        if (pageType === PageType.PAGE_TYPE_EDIT_QUALITY || pageType === PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
+            this.setState({
+                showChangeMode: true,
+            })
+        }
+        if (pageType != PageType.PAGE_TYPE_DETAIL) {
+            this.setState({
+                showAddIcon: true,
+            })
+            if (pageType == PageType.PAGE_TYPE_QUALITY_MODEL) {
+                //判断是否有质检单创建权限
+            } else if (pageType == PageType.PAGE_TYPE_EQUIPMENT_MODEL) {
+                //判断是否有材设单创建权限
+            }
+        }
+        this.setState({
+            fileId: params.fileId,
+            name: params.title,
+            pageType: pageType,
+            selectedModel: relevantModel,
+        });
+
+        this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
     }
-  //渲染
-  render() {
-    
-    //   let url = "http://192.168.81.30/app.html?param=" + storage.bimToken + "&show=false";
-      let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + 'storage.bimToken' + "&show=true";
-      // let url = "https://sg.glodon.com";
-    console.log("web view:" + url);
-    return (
-      <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
-        <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-        <View style={styles.container}>
-          <WebView bounces={false}
-            ref="webview"
-            onNavigationStateChange={()=>this.onNavigationStateChange}
-            scalesPageToFit={true}
-            javaScriptEnabled={true}
-            domStorageEnabled={false}
-            onMessage={(e)=>this.onMessage(e)}
-            injectedJavaScript={cmdString}
-           //  onLoadEnd ={()=>this.refs.webview.postMessage('javascript:window.modelEvent.loadDotsData();')}
-            source={{ uri: url, method: 'GET' }}
-            style={{ width: deviceWidth, height: deviceHeight }}>
-          </WebView>
-        </View>
-      </SafeAreaView>
-    );
-  }
-  //模型加载完毕后的回调
-  loadDotsData() {
-    // LogUtil.e("loadDotsData");
-    // pageFinished();
-    console.log('loadDotsData');
-  }
 
-  //token失效的情况
-  invalidateToken() {
-    // LogUtil.e("invalidateToken");
-    // showTokenError();
-  }
 
-  //取消选中构件
-  cancelPosition() {
-    // LogUtil.e("cancelPosition");
-    // component = null;
-  }
+    goBack = () => {
+        storage.goBack(this.props.navigation, null);
+    }
 
-  //点击构件返回信息
-  getPosition(json) {
-    // LogUtil.e("getPosition json=" + json + " type=" + type);
-    // if (TextUtils.isEmpty(json)) {
-    //     component = null;
-    // } else {
-    //     component = new GsonBuilder().create().fromJson(json, ModelComponent.class);
-    // }
+    changeModel = () => {
+        let navigator = this.props.navigation;
 
-    // //0新建检查单 1检查单编辑状态 2详情查看  3模型模式   4新建材设进场  5新增材设进场编辑状态  6材设模型模式
-    // switch (type) {
-    //     case 0:
-    //         if (checkComponent()) {
-    //             backData();
-    //         }
-    //         break;
-    //     case 1:
-    //         if (checkComponent()) {
-    //             backData();
-    //         }
-    //         break;
-    //     case 2:
+        storage.qualityState.navKey = this.props.navigation.state.key;
 
-    //         break;
-    //     case 3:
-    //         if (checkComponent()) {
-    //             //跳转到检查单创建页
-    //             Intent intent = new Intent(mActivity, CreateCheckListActivity.class);
-    //             mModelSelectInfo.component = component;
-    //             intent.putExtra(CommonConfig.RELEVANT_MODEL, mModelSelectInfo);
-    //             startActivity(intent);
-    //             finish();
-    //         }
-    //         break;
-    //     case 4:
-    //         if (checkComponent()) {
-    //             backData();
-    //         }
-    //         break;
-    //     case 5:
-    //         if (checkComponent()) {
-    //             backData();
-    //         }
-    //         break;
-    //     case 6:
-    //         if (checkComponent()) {
-    //             //跳转到材设记录创建页
-    //             Intent intent = new Intent(mActivity, CreateEquipmentMandatoryActivity.class);
-    //             mModelSelectInfo.component = component;
-    //             intent.putExtra(CommonConfig.RELEVANT_MODEL, mModelSelectInfo);
-    //             startActivity(intent);
-    //         }
-    //         break;
-    // }
-  }
+        let pageType = PageType.PAGE_TYPE_NEW_QUALITY;
+        
+        if (this.state.pageType === PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
+            let pageType = PageType.PAGE_TYPE_NEW_EQUIPMENT;
+        }
 
-  //点击圆点 返回信息
-  getPositionInfo(json) {
-    // LogUtil.e("getPositionInfo json=" + json);
-    // switch (type) {
-    //     case 3:
-    //         handleQuality(json);
-    //         break;
-    //     case 6:
-    //         handleEquipment(json);
-    //         break;
-    // }
-  }
+        storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: '模型文件', pageType: pageType, saveKey: 0 })
+    }
+    setPosition = () => {
+        let position = [{
+            x: this.state.drawingPositionX,
+            y: this.state.drawingPositionY,
+            z: 0,
+        }];
+        this.refs.webview.injectJavaScript("javascript:loadPinItems('" + JSON.stringify(position) + "');")
+    }
+
+    //移除图钉
+    removePosition = () => {
+        this.refs.webview.injectJavaScript('javascript:removeDrawableItem();')
+
+        this.setState({
+            showFinishView: false,
+        });
+    }
+
+    /**
+     * 新建
+     */
+    add = () => {
+        //会出发getPosition方法
+        this.refs.webview.injectJavaScript("javascript:getSelectedComponent();")
+    }
+
+    /**
+     * 选择构件后新建，返回新建页面
+     */
+    finish = (component) => {
+        let relevantModel = {
+            fileId: this.state.fileId,
+            fileName: this.state.name,
+            buildingId: '',
+            buildingName: '',
+            component: component,
+        }
+        console.log(this.state.pageType)
+        // 0新建检查单 1检查单编辑状态 2详情查看  3模型模式
+        if (this.state.pageType == PageType.PAGE_TYPE_NEW_QUALITY) {
+            storage.qualityState.bimChooserCallback(relevantModel, '模型文件');
+            this.props.navigation.goBack(storage.qualityState.navKey);
+        } else if (this.state.pageType == PageType.PAGE_TYPE_EDIT_QUALITY) {
+            storage.qualityState.bimChooserCallback(relevantModel, '模型文件');
+            this.props.navigation.goBack();
+        } else if (this.state.pageType == PageType.PAGE_TYPE_DETAIL) {
+            this.props.navigation.goBack();
+        } else if (this.state.pageType == PageType.PAGE_TYPE_QUALITY_MODEL) {
+            this.props.navigation.replace('NewPage', { relevantModel: relevantBlueprint });
+        }
+    }
+
+    onMessage = (e) => {
+        console.log(e.nativeEvent.data);
+        let data = JSON.parse(e.nativeEvent.data);
+        let action = data.action;
+        if (action) {
+            switch (action) {
+                case 'invalidateToken':
+                    {
+                        this.invalidateToken();
+                    }
+                    break;
+                case 'loadDotsData':
+                    {
+                        this.loadDotsData();
+                    }
+
+                    break;
+                case 'cancelPosition':
+                    {
+                        this.cancelPosition();
+                    }
+                    break;
+                case 'getPosition':
+                    {
+                        this.getPosition(data.data);
+                    }
+                    break;
+                case 'getPositionInfo':
+                    {
+                        this.getPositionInfo(data.data);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    //token失效的情况
+    invalidateToken = () => {
+        // LogUtil.e("invalidateToken");
+        // showTokenError();
+    }
+    /**
+     * 模型加载完毕后的回调
+     */
+    loadDotsData = () => {
+        //0新建检查单 1检查单编辑状态 2详情查看  3模型模式  4新建材设进场 5新增材设进场编辑状态  6材设模型模式
+        switch (this.state.pageType) {
+            case PageType.PAGE_TYPE_EDIT_QUALITY:
+            case PageType.PAGE_TYPE_DETAIL:
+            case PageType.PAGE_TYPE_EDIT_EQUIPMENT:
+                this.showSelectedComponent();
+                break;
+            case PageType.PAGE_TYPE_QUALITY_MODEL:
+                this.getElements();
+                break;
+            case PageType.PAGE_TYPE_EQUIPMENT_MODEL:
+                this.getEquipmentList();
+                break;
+            default:
+                break;
+        }
+    }
+    /**
+     * 编辑查看详情的时候显示选择的构件
+     */
+    showSelectedComponent = () => {
+        if (this.state.selectedModel && this.state.selectedModel.component && this.state.selectedModel.component.elementId) {
+            let data = `[ ${this.state.selectedModel.component.elementId} ]`;
+            this.refs.webview.injectJavaScript("javascript:showSelectedComponent('" + data + "');")
+        }
+
+    }
+
+    /**
+     * 显示质检单模型历史选择信息
+     */
+    getElements = () => {
+
+    }
+    /**
+     * 显示材设单模型历史选择信息
+     */
+    getEquipmentList = () => {
+
+    }
+
+    cancelPosition = () => {
+
+    }
+
+    /**
+     * 调用 `javascript:getSelectedComponent()`后,返回构件信息
+     */
+    getPosition = (json) => {
+        //{"action":"getPosition","data":{},"callback":"defaultReturn"}
+        //{"action":"getPosition","data":"{\"elementId\":\"318370\",\"fileId\":\"\",\"objectId\":\"318370\"}","callback":"defaultReturn"}
+        let component = json;//选中的构件
+        if (typeof json === 'string') {
+            component = JSON.parse(json)
+        }
+        if (!component || !component.elementId) {
+            Toast.info('您还未选择构件!', 1);
+            return;
+        }
+        this.finish(component);
+    }
+
+    //点击圆点 返回信息
+    getPositionInfo = (json) => {
+
+    }
+    //在WebView中注册该回调方法
+
+    onNavigationStateChange(event) {
+        console.log('onNavigationStateChange:');
+        console.log(event); //打印出event中属性
+    }
+
+
+
+    renderHeaderView = () => {
+        let params = this.props.navigation.state.params;
+        let title = params ? params.title : '模型';
+        title = '点击选择';
+        return (
+            <View style={{ height: 43, flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0.5)', alignItems: 'center' }}>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={() => { this.goBack() }}>
+                        <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 20 }} />
+                    </TouchableOpacity>
+                    {
+                        //编辑状态的可以切换模型
+                        (this.state.showChangeMode) ? (
+                            <TouchableOpacity onPress={() => { this.changeModel() }}>
+                                <Image source={require('app-images/icon_change_model.png')} style={{ width: 25, height: 24, marginLeft: 20 }} />
+                            </TouchableOpacity>
+                        ) : (null)
+                    }
+
+                </View>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: 'center' }}>{title}</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                    {
+                        //显示创建
+                        (this.state.showAddIcon) ? (
+                            <TouchableOpacity onPress={() => { this.add() }}>
+                                <Text style={{ color: '#ffffff', fontSize: 25, marginTop: 5, alignSelf: 'flex-end', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5 }}>+</Text>
+                            </TouchableOpacity>
+                        ) : (null)
+                    }
+                </View>
+            </View>
+        );
+    }
+
+
+    //渲染
+    render() {
+        let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + storage.bimToken + `&show=${this.state.show}`;
+        return (
+            <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="rgba(0, 0, 0, 0.5)" />
+                {
+                    this.renderHeaderView()
+                }
+
+                <View style={styles.container}>
+
+                    <WebView bounces={false}
+                        ref="webview"
+                        onNavigationStateChange={() => this.onNavigationStateChange}
+                        scalesPageToFit={true}
+                        javaScriptEnabled={true}
+                        domStorageEnabled={false}
+                        onMessage={(e) => this.onMessage(e)}
+                        injectedJavaScript={cmdString}
+                        onLoadEnd={() => this.setPosition()}
+                        source={{ uri: url, method: 'GET' }}
+                        style={{ width: deviceWidth, height: deviceHeight }}>
+                    </WebView>
+                    {
+                        this.state.showCreateNoticeView ? (
+                            this.createNoticeView()
+                        ) : (null)
+                    }
+
+                </View>
+            </SafeAreaView>
+        );
+    }
+
 }
 
 //样式定义
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 0
-  }
+    container: {
+        flex: 1,
+        paddingTop: 0
+    }
 });
 

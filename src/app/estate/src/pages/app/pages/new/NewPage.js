@@ -21,7 +21,7 @@ import ImageChooserView from './ImageChooserView';
 import SelectView from './SelectView';
 import RectificationView from './RectificationView';//整改
 import SelectCheckPointView from './SelectCheckPointView';
-
+import * as PageType from '../navigation/bim/PageTypes';
 import * as API from "app-api";
 const UPLOADAPI = API
 const QUALITYAPI = API
@@ -68,7 +68,7 @@ class NewPage extends React.Component {
     /**
      * 质检项目
      */
-    getSelectedCheckPoint = ()=>{
+    getSelectedCheckPoint = () => {
         return this.refs[REF_CHECKPOINT].getSelectedCheckPoint()
     }
 
@@ -320,29 +320,30 @@ class NewPage extends React.Component {
     _showCheckInfoModal = (message) => {
         Modal.alert('提示信息', message, [{ text: '知道了', style: { color: '#00baf3' } }]);
     }
-    //选择图纸模型
+    //选择图纸文件
     _bimFileChooserBluePrint = (dataType) => {
         let navigator = this.props.navigation;
         //保存当前页面的key
         storage.qualityState.bimChooserCallback = this._bimChooserCallback;
 
         if (this.state.relevantBluePrint.name) {
-            storage.pushNext(navigator, "RelevantBlueprintPage", { title: this.state.relevantBluePrint.name, fileId: this.state.relevantBluePrint.fileId, pageType: 1, relevantBluePrint: this.state.relevantBluePrint });
+            storage.pushNext(navigator, "RelevantBlueprintPage", { title: this.state.relevantBluePrint.name, fileId: this.state.relevantBluePrint.fileId, pageType: PageType.PAGE_TYPE_EDIT_QUALITY, relevantBluePrint: this.state.relevantBluePrint });
         } else {
-            storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: dataType, pageType: 0 })
+            storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: dataType, pageType: PageType.PAGE_TYPE_NEW_QUALITY })
         }
 
     }
-    //选择图纸模型
+    //选择模型文件
     _bimFileChooserModel = (dataType) => {
         let navigator = this.props.navigation;
         //保存当前页面的key
         storage.qualityState.bimChooserCallback = this._bimChooserCallback;
 
-        //   storage.pushNext(navigator,"RelevantBlueprintPage",{title:item.value.name, fileId:item.value.fileId});
-
-
-        storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: dataType })
+        if (this.state.relevantModel.fileName) {
+            storage.pushNext(navigator, "RelevantModlePage", { title: this.state.relevantModel.fileName, fileId: this.state.relevantModel.fileId, pageType: PageType.PAGE_TYPE_EDIT_QUALITY, relevantModel: this.state.relevantModel });
+        } else {
+            storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: dataType, pageType: PageType.PAGE_TYPE_NEW_QUALITY })
+        }
 
     }
     //选择图纸或者模型后的回调 dataType 图纸文件{name:'', fileId:'', drawingPositionX:'', drawingPositionY:'' }、模型文件
@@ -425,7 +426,7 @@ class NewPage extends React.Component {
                 <SelectCheckPointView ref={REF_CHECKPOINT} selectedCheckPoint={this.state.selectedCheckPoint} ></SelectCheckPointView>
 
                 <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint ? this.state.relevantBluePrint.name : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
-                <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel ? this.state.relevantModel.name : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
+                <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel ? this.state.relevantModel.fileName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
 
                 <View style={{ marginBottom: 30 }}>
                     <TouchableHighlight

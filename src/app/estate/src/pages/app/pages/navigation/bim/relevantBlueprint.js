@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import * as AppConfig from "common-module"
+import * as PageType from "./PageTypes";
 
 //获取设备的宽度和高度
 var {
@@ -57,7 +58,7 @@ export default class RelevantBlueprintPage extends Component {
         showFinishView: false,//显示完成
         fileId: '',
         name: '',
-        pageType: 0,// 0新建检查单 1检查单编辑状态 2详情查看  3图纸模式
+        pageType: PageType.PAGE_TYPE_NEW_QUALITY,// 0新建检查单 1检查单编辑状态 2详情查看  3图纸模式
         show: false,// true  不响应长按事件  false响应长按事件 (0、1、3响应 ，2 不响应)
         showCreateNoticeView: true,//新建提示弹窗
     };
@@ -76,13 +77,15 @@ export default class RelevantBlueprintPage extends Component {
             showFinishView: true,
         });
     }
+    console.log('pageType====================================');
+    console.log(pageType);
+    console.log('pageType====================================');
 
-
-    let show = (pageType == 2);
+    let show = (pageType == PageType.PAGE_TYPE_DETAIL);
     let showCreateNoticeView = true;
-    if( pageType == 2){
+    if( pageType == PageType.PAGE_TYPE_DETAIL){
         showCreateNoticeView = false;
-    }else if(pageType == 3){
+    }else if(pageType == PageType.PAGE_TYPE_QUALITY_MODEL){
         //判断是否有创建权限
     }
 
@@ -137,7 +140,7 @@ export default class RelevantBlueprintPage extends Component {
                 </TouchableOpacity>
                 {
                     //编辑状态的可以切换图纸
-                    (this.state.pageType == 1)?(
+                    (this.state.pageType == PageType.PAGE_TYPE_EDIT_QUALITY)?(
                         <TouchableOpacity onPress={ ()=>{this.changeBluePrint()} }>
                             <Image source={require('app-images/icon_change_blueprint.png')} style={{width:25, height:24, marginLeft:20}}/>
                         </TouchableOpacity>
@@ -196,7 +199,7 @@ export default class RelevantBlueprintPage extends Component {
 
     storage.qualityState.navKey = this.props.navigation.state.key;
 
-    storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: '图纸文件',pageType:0, saveKey:0})
+    storage.pushNext(navigator,"BimFileChooserPage",{fileId: 0,dataType: '图纸文件',pageType:PageType.PAGE_TYPE_NEW_QUALITY, saveKey:0})
 }
 setPosition = ()=> {
     let position = [{
@@ -225,15 +228,15 @@ setPosition = ()=> {
     }
     console.log(this.state.pageType)
     // 0新建检查单 1检查单编辑状态 2详情查看  3图纸模式
-    if(this.state.pageType == 0){
+    if(this.state.pageType == PageType.PAGE_TYPE_NEW_QUALITY){
         storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
         this.props.navigation.goBack(storage.qualityState.navKey);
-    }else if(this.state.pageType == 1){
+    }else if(this.state.pageType == PageType.PAGE_TYPE_EDIT_QUALITY){
         storage.qualityState.bimChooserCallback(relevantBlueprint,'图纸文件');
         this.props.navigation.goBack();
-    }else if(this.state.pageType == 2){
+    }else if(this.state.pageType == PageType.PAGE_TYPE_DETAIL){
         this.props.navigation.goBack();
-    }else if(this.state.pageType == 3){
+    }else if(this.state.pageType == PageType.PAGE_TYPE_QUALITY_MODEL){
         this.props.navigation.replace('NewPage',{relevantBlueprint:relevantBlueprint});
     }
  }
@@ -299,7 +302,7 @@ setPosition = ()=> {
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="rgba(0, 0, 0, 0.5)" />
         {
-            (this.state.pageType == 2)?(
+            (this.state.pageType === PageType.PAGE_TYPE_DETAIL)?(
                 this.headerDetailView()
             ):(
                 this.state.showFinishView ?(
