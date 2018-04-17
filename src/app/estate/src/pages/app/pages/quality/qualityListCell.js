@@ -1,9 +1,9 @@
 'use strict';
 import React, {Component,PureComponent} from "react";
 import {Animated, StyleSheet, Text, View ,Image,
-     Button,TouchableHighlight,TouchableOpacity,Dimensions} from "react-native";
- import * as API from "app-api"; 
-
+     Button,TouchableOpacity,Dimensions} from "react-native";
+import * as API from "app-api"; 
+import {StatusActionButton} from "app-components"
 var { width, height } = Dimensions.get("window");
 
 const projectImage =  require("app-images/icon_choose_project_item.png");
@@ -35,11 +35,11 @@ export default class QualityListCell extends PureComponent {
         return 0;
     }
     _toDetail = (item) => {
-        storage.pushNext(null,"QualityDetailPage");
+        storage.pushNext(null,"QualityDetailPage",{"item":item});
     }
     renderItem = (item,index) => {
         return (
-            <TouchableHighlight onPress={()=>{this._toDetail(item)}}>
+            <TouchableOpacity activeOpacity={0.5} onPress={()=>{this._toDetail(item)}}>
                 <View style={[styles.containerView,]}>
                     <View style={[styles.contentHeaderView]}>
                         <Image
@@ -74,14 +74,15 @@ export default class QualityListCell extends PureComponent {
                             null
                         ) : (
                                 <View style={[styles.contentActionView]} >
-                                    <TouchableHighlight onPress={() => { alert('提交') }} style={styles.contentActionButton}><Text style={styles.contentActionButtonText}>提交</Text></TouchableHighlight>
-                                    <TouchableHighlight onPress={() => { alert('删除') }} style={[styles.contentActionButton, styles.contentActionButtonDelete]}><Text style={styles.contentActionButtonTextDelete}>删除</Text>
-                                    </TouchableHighlight>
+                                <View style={{width:20}}></View>
+                                <StatusActionButton color="green" width={80} onClick={() => { alert('提交') }} text="提交"/>
+                                <View style={{width:20}}></View>
+                                <StatusActionButton color="red"  width={80} onClick={() => { alert('删除') }} text="删除"/>
                                 </View>
                             )
                     }
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         );
   }
 }
@@ -93,42 +94,13 @@ const styles = StyleSheet.create({
         alignContent: "center",
         flexDirection:'row-reverse',
     },
-    contentActionButtonText: {
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        marginTop: 6,
-        marginLeft: 5,
-        color:'#00baf3'
-    },
-    contentActionButtonTextDelete: {
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        marginTop: 6,
-        marginLeft: 5,
-        color:'#FF0000',
-        elevation:100, // android
-    },
     
-    contentActionButton:{
-        width:80,
-        marginRight:20,
-        backgroundColor:'#FFFFFF',
-        height:30,
-        borderRadius:15,
-        borderColor:'#eeeeee',
-        borderWidth:1,
-    },
-    contentActionButtonDelete:{
-        marginRight:20,
-    },
     containerView:{
         flex: 1,
         borderRadius:8,
-        marginTop: 5,
+        marginTop: 10,
         
-        marginBottom: 5,
+        marginBottom: 10,
         marginLeft: 20,
         marginRight: 20,
         backgroundColor: '#FFF',
@@ -152,7 +124,7 @@ const styles = StyleSheet.create({
     },
     contentView: {
         left: 0,
-        backgroundColor: '#ededed',
+        backgroundColor: '#fafafa',
         overflow:'hidden',
         // alignItems: "center",
         alignContent: "center",

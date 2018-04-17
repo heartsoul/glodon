@@ -173,7 +173,14 @@ class GLDStorage extends BaseStorage {
             });
         return this.currentProjectName;
     }
-    gotoLogin=(navigator)=> {
+    gotoLogin=(navigation)=> {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
         let resetAction = NavigationActions.reset({
             index: 0,
             actions: [
@@ -182,7 +189,14 @@ class GLDStorage extends BaseStorage {
         });
         navigator.dispatch(resetAction);
     }
-    gotoMainPage=(navigator)=> {
+    gotoMainPage=(navigation)=> {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
         let resetAction = NavigationActions.reset({
             index: 0,
             actions: [

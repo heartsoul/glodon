@@ -261,39 +261,6 @@ export default class QualityListView extends PureComponent {
             onEndReachedThreshold={1}
             ListEmptyComponent={this._emptyView}
         />
-    //     <LargeList
-    //     ref = {'dataList'}
-    //     style={styles.dataList}
-    //     bounces={true}
-    //     refreshing={this.state.refreshing}
-    //     onRefresh={() => {
-    //         this.onRefresh();
-    //     }}
-    //     safeMargin={600}
-    //     numberOfRowsInSection={(section) => 1}
-    //     numberOfSections={this.numberOfSections.bind(this)}
-    //     heightForCell={(section, row) => 96}
-    //     renderCell={ this.renderItem.bind(this)}
-    //     heightForSection={(section) => 10}
-    //     //renderHeader={this.renderHeader.bind(this)}
-    //     //renderFooter={this.renderFooter.bind(this)}
-    //     renderSection={section => {
-    //         return (
-    //             <View
-    //                 style={{
-    //                     flex: 1,
-    //                     backgroundColor: section % 2 ? "grey" : "yellow",
-    //                     justifyContent: "center",
-    //                     alignItems: "center"
-    //                 }}
-    //             >
-    //                 <Text>
-    //                     I am 11
-    //                 </Text>
-    //             </View>
-    //         );
-    //     }}
-    // />
 
         );
     }
@@ -360,31 +327,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
         // height:180
     },
-    containerView: {
-        flex: 1,
-        borderRadius: 8,
-        // borderWidth:1,
-        // borderColor:"#0F0",
-        // height:119,
-        marginTop: 5,
-
-        marginBottom: 5,
-        marginLeft: 20,
-        marginRight: 20,
-        backgroundColor: '#FFF',
-        elevation: 100, // android 
-        shadowColor: "#333", // iOS
-        shadowOffset: { width: 3, height: 7 }, // iOS
-        shadowOpacity: 0.15, // iOS
-        shadowRadius: 3, // iOS
-    },
 
     groupHeaderView: {
-        // backgroundColor:'#eee',
-        height: 40,
+        backgroundColor: '#fafafa',
+        height: 30,
     },
     headerLine: {
-        backgroundColor: '#999',
+        backgroundColor: '#e6e6e6',
         height: 1,
         top: 19,
         marginLeft: 20,
@@ -399,6 +348,6 @@ const styles = StyleSheet.create({
         width: 100,
         top: 10,
         left: width / 2 - 50,
-        backgroundColor: '#ededed',
+        backgroundColor: '#fafafa',
     }
 });

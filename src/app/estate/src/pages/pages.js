@@ -12,6 +12,7 @@ import MainPage from './app/pages/main/MainPage'
 
 import QualityMainPage from './app/pages/quality/QualityMainPage'
 import QualityDetailPage from './app/pages/quality/QualityDetailPage'
+import BigImageViewPage from './app/pages/quality/BigImageViewPage'
 import CheckPointPage from './app/pages/navigation/bim/CheckPointPage'
 import ChoosePage from './app/pages/navigation/tenant/TenantPage'
 import TenantPage from './app/pages/navigation/tenant/TenantPage'
@@ -21,6 +22,7 @@ import WebPage from './app/pages/navigation/bim/WebPage'
 import RelevantBlueprintPage from './app/pages/navigation/bim/relevantBlueprint'
 import RelevantModlePage from './app/pages/navigation/bim/relevantModle'
 import CheckPointListPage from './app/pages/navigation/bim/CheckPointListPage'
+
 export {
     LoginPage,
     GuidePage,
@@ -42,4 +44,5 @@ export {
     RelevantModlePage,
     CheckPointListPage,
     QualityDetailPage,
+    BigImageViewPage,
 }

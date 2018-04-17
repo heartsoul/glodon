@@ -62,6 +62,9 @@ const RootStack = StackNavigator(
     },
     QualityDetailPage: {
       screen: GLD.QualityDetailPage
+    },
+    BigImageViewPage: {
+      screen:GLD.BigImageViewPage
     }
   },
   {

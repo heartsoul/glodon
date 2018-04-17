@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
     contentList: {
      flex:1,
-         backgroundColor:'#dedede',
+         backgroundColor:'#fafafa',
         //  height:120,
     },
     dataList: {
@@ -195,6 +195,6 @@ const styles = StyleSheet.create({
         width: 100,
         top: 10,
         left: width / 2 - 50,
-        backgroundColor: '#ededed',
+        backgroundColor: '#fafafa',
     }
 });

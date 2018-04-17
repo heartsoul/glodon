@@ -5,13 +5,13 @@ import { requestJSON } from "common-module"
 // 质检相关常量定义
 // 状态显示颜色
 export const CLASSIFY_STATES_COLOR = ["gray"
-, "orange"
-, "red"
-, "red"
-, "green"
-, "green"
-, "red"
-, "green"
+, "#f39b3d"
+, "#f55353"
+, "#f55353"
+, "#28d575"
+, "#28d575"
+, "#f55353"
+, "#28d575"
 ];
 // 状态
 export const CLASSIFY_STATES = [""
@@ -187,7 +187,7 @@ function demoData(size) {
 }
  */
 export async function getQualityInspectionAll(projectId, qcState, page, size, qualityCheckpointId = 0, qualityCheckpointName = '') {
-    return dataLast;
+    // return dataLast;
     let api = "/quality/" + projectId + "/qualityInspection/all";
     let filter = '';
     if (!(qualityCheckpointId === 0)) {
