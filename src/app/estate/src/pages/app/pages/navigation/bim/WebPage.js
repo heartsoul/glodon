@@ -9,7 +9,7 @@ import {
   SafeAreaView,
   StatusBar
 } from 'react-native';
-
+import * as AppConfig from "common-module"
 //获取设备的宽度和高度
 var {
   height: deviceHeight,
@@ -100,7 +100,7 @@ export default class GLDWebView extends Component {
     }
   //渲染
   render() {
-   let url = "http://192.168.81.30/app.html?param=" + storage.bimToken + "&show=false";
+    let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + storage.bimToken + `&show=false`;
     // let url = "https://sg.glodon.com";
     console.log("web view:" + url);
     return (
