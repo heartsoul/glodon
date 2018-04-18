@@ -43,7 +43,28 @@ class SelectView extends Component {
             this.fetchData(this.getCompaniesList);
         }
     }
-
+    /**
+     * 根据默认值来设置当前选中的值
+     */
+    getSelectIndex = (data ,setDefault) => {
+        let index = -1;
+        let value = this.props.value;
+        if(data && data.length > 0){
+            if(setDefault){
+                index = 0;
+            }
+            if(value && value.id){
+                for (let key in data) {
+                    if (data[key].id === value.id) {
+                        index = key;
+                        break;
+                    }
+                }
+            }
+        }
+        index = parseInt(index);
+        return index;
+    }
     /**
      * 获取项目下检查单位列表
      */
@@ -52,7 +73,7 @@ class SelectView extends Component {
             .then(data => {
                 this.setState({
                     dataList: data.data,
-                    selectIndex: data.data && data.data.length > 0 && 0,
+                    selectIndex: this.getSelectIndex(data.data, true),
                 });
 
             });
@@ -66,7 +87,7 @@ class SelectView extends Component {
             .then(data => {
                 this.setState({
                     dataList: data.data,
-                    selectIndex: data.data && data.data.length > 0 && 0,
+                    selectIndex: this.getSelectIndex(data.data, true),
                 });
 
                 if (this.props.selectCallback && data.data.length > 0) {
@@ -109,6 +130,8 @@ class SelectView extends Component {
             if (selectedItem.id === newSelectItem.id) {
                 selectIndex = this.state.selectIndex;
             }
+        }else {
+            selectIndex = this.getSelectIndex(persons, false);
         }
 
         return selectIndex;
@@ -148,13 +171,31 @@ class SelectView extends Component {
      * 选中的数据
      */
     getSelectedData = () => {
-        return (this.state.selectIndex != -1) ? this.state.dataList[this.state.selectIndex] : null;
+        if (this.state.selectIndex == -1) {
+            return this.props.value;
+        } else {
+            return this.state.dataList[this.state.selectIndex];
+        }
+    }
+
+    /**
+     * 选中的name
+     */
+    getDetail = () => {
+        let detail = '';
+        if (this.props.value) {
+            detail = this.props.value.name;
+        }
+        if (this.state.selectIndex > -1) {
+            detail = this.state.dataList[this.state.selectIndex].name;
+        }
+        return detail;
     }
 
     render() {
         return (
             <View>
-                <ListRow title={this.props.title} accessory='indicator' bottomSeparator='indent' detail={this.state.selectIndex > -1 ? this.state.dataList[this.state.selectIndex].name : ""} onPress={() => { this.onPress() }} />
+                <ListRow title={this.props.title} accessory='indicator' bottomSeparator='indent' detail={this.getDetail()} onPress={() => { this.onPress() }} />
             </View>
         );
     }
@@ -166,6 +207,10 @@ SelectView.propTypes = {
      * 标题
      */
     title: PropTypes.string.isRequired,
+    /**
+     * 默认值
+     */
+    value: PropTypes.object,
 
     /**
      * 选中一条后的回调
