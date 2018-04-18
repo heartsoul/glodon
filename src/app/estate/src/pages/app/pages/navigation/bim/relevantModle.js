@@ -15,6 +15,7 @@ import { Toast } from 'antd-mobile';
 
 import * as AppConfig from "common-module"
 import * as PageType from "./PageTypes";
+import * as BimToken from "./BimFileTokenUtil";
 
 //获取设备的宽度和高度
 var {
@@ -65,6 +66,7 @@ export default class RelevantModelPage extends Component {
             showChangeMode: false,//显示切换模型 pageType为1、5时为true
             showAddIcon: false,//显示创建按钮 pageType为 2 或者 3、6无创建权限时为false
             selectedModel: {},//选中的模型
+            url:'',
         };
     }
 
@@ -97,6 +99,13 @@ export default class RelevantModelPage extends Component {
         });
 
         this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
+
+        BimToken.getBimFileToken(params.fileId,(token)=>{
+            let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=false`;
+            this.setState({
+                url: url
+            });
+        })
     }
 
 
@@ -165,7 +174,7 @@ export default class RelevantModelPage extends Component {
         } else if (this.state.pageType == PageType.PAGE_TYPE_DETAIL) {
             this.props.navigation.goBack();
         } else if (this.state.pageType == PageType.PAGE_TYPE_QUALITY_MODEL) {
-            this.props.navigation.replace('NewPage', { relevantModel: relevantBlueprint });
+            this.props.navigation.replace('NewPage', { relevantModel: relevantModel });
         }
     }
 
@@ -330,7 +339,6 @@ export default class RelevantModelPage extends Component {
 
     //渲染
     render() {
-        let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + storage.bimToken + `&show=${this.state.show}`;
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="rgba(0, 0, 0, 0.5)" />
@@ -349,7 +357,7 @@ export default class RelevantModelPage extends Component {
                         onMessage={(e) => this.onMessage(e)}
                         injectedJavaScript={cmdString}
                         onLoadEnd={() => this.setPosition()}
-                        source={{ uri: url, method: 'GET' }}
+                        source={{ uri: this.state.url, method: 'GET' }}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
                     {

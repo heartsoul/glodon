@@ -75,7 +75,7 @@ SelectCheckPointView.propTypes = {
     /**
    * 默认的日期
    */
-    selectedCheckPoint: {}
+    selectedCheckPoint: PropTypes.object
 }
 
 const styles = StyleSheet.create({

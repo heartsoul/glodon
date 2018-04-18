@@ -281,14 +281,27 @@ class NewPage extends React.Component {
 
     componentDidMount = () => {
 
-        this._initialState();
+        // this._initialState();
 
+        let params = this.props.navigation.state.params;
+        let relevantBlueprint = {};
+        if(params.relevantBlueprint){
+            relevantBlueprint = params.relevantBlueprint;
+        }
+        let selectedCheckPoint = {};
         if (this.props.selectedCheckPoint) {
-            this.setState({
-                selectedCheckPoint: this.props.selectedCheckPoint,
-            })
+            selectedCheckPoint = this.props.selectedCheckPoint;
+        }
+        let relevantModel = {};
+        if(params.relevantModel){
+            relevantModel = params.relevantModel;
         }
 
+        this.setState({
+            relevantBluePrint: relevantBlueprint,
+            relevantModel: relevantModel,
+            selectedCheckPoint: selectedCheckPoint,
+        });
         //请求数据
         this.props.navigation.setParams({ rightNavigatePress: this._rightAction })
     }
