@@ -20,8 +20,8 @@ import TenantPage from './app/pages/navigation/tenant/TenantPage'
 import ProjectPage from './app/pages/navigation/project/ProjectPage'
 import BimFileChooserPage from './app/pages/navigation/bim/BimFileChooserPage'
 import WebPage from './app/pages/navigation/bim/WebPage'
-import RelevantBlueprintPage from './app/pages/navigation/bim/relevantBlueprint'
-import RelevantModlePage from './app/pages/navigation/bim/relevantModle'
+import RelevantBlueprintPage from './app/pages/navigation/bim/RelevantBlueprintPage'
+import RelevantModlePage from './app/pages/navigation/bim/RelevantModlePage'
 import CheckPointListPage from './app/pages/navigation/bim/CheckPointListPage'
 
 export {
