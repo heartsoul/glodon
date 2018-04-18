@@ -65,7 +65,10 @@ const RootStack = StackNavigator(
     },
     BigImageViewPage: {
       screen:GLD.BigImageViewPage
-    }
+    },
+    QualityStatardsPage: {
+      screen:GLD.QualityStatardsPage
+    },
   },
   {
     // initialRouteName: storage.isGuide(()=>{}) ? 'GuidePage' : 'LoginPage',

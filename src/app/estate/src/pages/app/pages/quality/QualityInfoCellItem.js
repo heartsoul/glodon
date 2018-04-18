@@ -34,8 +34,11 @@ export default class QualityInfoCellItem extends React.Component {
         );
     }
     renderDescription = () => {
-        if(!this.props.descriptionDate) {
+        if (!this.props.descriptionDate) {
             return this.renderDescriptionSimple();
+        }
+        if (!this.props.description) {
+            return this.renderDateSimple();
         }
         return (
             <View
@@ -44,12 +47,11 @@ export default class QualityInfoCellItem extends React.Component {
             >
                 <View style={styles.descriptionView}>
                     <Label style={styles.description}>{this.props.description}</Label>
-                </View>
-        
+                </View>)
                 <View style={styles.dateView}>
                     <Label style={styles.date}>{this.props.descriptionDate}</Label>
                 </View>
-                
+
             </View>
         );
     }
@@ -65,28 +67,40 @@ export default class QualityInfoCellItem extends React.Component {
             </View>
         );
     }
-    bigImage = (images,index) => {
+    renderDateSimple = () => {
+        return (
+            <View
+                {...this.props}
+                style={[styles.containerView, styles.containerDescriptionView]}
+            >
+                <View style={styles.dateView}>
+                    <Label style={styles.date}>{this.props.descriptionDate}</Label>
+                </View>
+            </View>
+        );
+    }
+    bigImage = (images, index) => {
         let media = [];
         images.map((url, index) => {
-                media.push({
-                    photo:url,
-                });
+            media.push({
+                photo: url,
+            });
         });
-        storage.pushNext(null,'BigImageViewPage', {media:media, index:index})
-    
+        storage.pushNext(null, 'BigImageViewPage', { media: media, index: index })
+
     }
     renderImage = () => {
-        const {url} = this.props;
+        const { url } = this.props;
         console.log(url);
         return (
             <View
                 {...this.props}
                 style={styles.containerView}
             >
-                <TouchableOpacity activeOpacity={0.5} onPress={(event) => { 
-                    this.bigImage([url],0);
-                 }}>
-                    <Image source={{ uri: url }} onLayout={(data)=>{
+                <TouchableOpacity activeOpacity={0.5} onPress={(event) => {
+                    this.bigImage([url], 0);
+                }}>
+                    <Image source={{ uri: url }} onLayout={(data) => {
                         console.log(data);
                     }} style={styles.imageMax} />
                 </TouchableOpacity>
@@ -102,7 +116,7 @@ export default class QualityInfoCellItem extends React.Component {
                 {
                     this.props.urls.map((url, index) => {
                         return (
-                            <TouchableOpacity key={'xxx'+index} activeOpacity={0.5} onPress={(event) => { this.bigImage(this.props.urls,index);}}>
+                            <TouchableOpacity key={'xxx' + index} activeOpacity={0.5} onPress={(event) => { this.bigImage(this.props.urls, index); }}>
                                 <Image source={{ uri: url }} style={styles.imageNarmal} />
                             </TouchableOpacity>
                         );
@@ -207,7 +221,7 @@ const styles = StyleSheet.create({
     containerDescriptionView: {
         flexDirection: 'column',
     },
-    
+
     titleView: {
         flexDirection: 'row',
 
@@ -217,7 +231,7 @@ const styles = StyleSheet.create({
         marginRight: 75,
         alignItems: 'center'
     },
-    
+
     actionButtion: {
         right: 0,
         top: 0,
@@ -226,46 +240,46 @@ const styles = StyleSheet.create({
     userImage: {
         width: 35,
         height: 35,
-        borderRadius:17.5,
+        borderRadius: 17.5,
     },
     userContentView: {
         marginLeft: 12,
     },
-    userName:{
-        color:'#313131',
-        fontSize:15,
-        fontWeight:"bold",
+    userName: {
+        color: '#313131',
+        fontSize: 15,
+        fontWeight: "bold",
     },
     actionDate: {
-        marginTop:5,
-        color:'#919191',
-        fontSize:12,
+        marginTop: 5,
+        color: '#919191',
+        fontSize: 12,
     },
-    descriptionView:{
+    descriptionView: {
     },
     dateView: {
-        marginTop:5,
+        marginTop: 5,
     },
-    description:{
-        color:'#2c2c2c',
-        fontSize:16,
+    description: {
+        color: '#2c2c2c',
+        fontSize: 16,
     },
     date: {
         // marginTop:5,
-        color:'#2c2c2c',
-        fontSize:12,
-        fontWeight:"100",
+        color: '#2c2c2c',
+        fontSize: 12,
+        fontWeight: "100",
     },
     imageNarmal: {
-        marginRight:10,
-        width:106,
-        height:106,
-        resizeMode:'cover'
+        marginRight: 10,
+        width: 106,
+        height: 106,
+        resizeMode: 'cover'
     },
     imageMax: {
-        width:230,
-        height:230,
-        resizeMode:'contain'
+        width: 230,
+        height: 230,
+        resizeMode: 'contain'
     },
 
 });

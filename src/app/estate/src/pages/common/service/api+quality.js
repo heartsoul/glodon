@@ -2,103 +2,7 @@ import { requestJSON } from "common-module"
 /**
  * 质量检查相关API
  */
-// 质检相关常量定义
-// 状态显示颜色
-export const CLASSIFY_STATES_COLOR = ["gray"
-, "#f39b3d"
-, "#f55353"
-, "#f55353"
-, "#28d575"
-, "#28d575"
-, "#f55353"
-, "#28d575"
-];
-// 状态
-export const CLASSIFY_STATES = [""
-, "staged"
-, "unrectified"
-, "unreviewed"
-, "inspected"
-, "reviewed"
-, "delayed"
-, "accepted"
-];
-// 状态显示名
-export const CLASSIFY_NAMES = ["全部"
-, "待提交"
-, "待整改"
-, "待复查"
-, "已检查"
-, "已复查"
-, "已延迟"
-, "已验收"
-];
-// 状态数据总表
-export const CLASSIFY_STATUS_LIST = [{ name: CLASSIFY_NAMES[0], state: CLASSIFY_STATES[0], color: CLASSIFY_STATES_COLOR[0] }
-    , { name: CLASSIFY_NAMES[1], state: CLASSIFY_STATES[1], color: CLASSIFY_STATES_COLOR[1] }
-    , { name: CLASSIFY_NAMES[2], state: CLASSIFY_STATES[2], color: CLASSIFY_STATES_COLOR[2] }
-    , { name: CLASSIFY_NAMES[3], state: CLASSIFY_STATES[3], color: CLASSIFY_STATES_COLOR[3] }
-    , { name: CLASSIFY_NAMES[4], state: CLASSIFY_STATES[4], color: CLASSIFY_STATES_COLOR[4] }
-    , { name: CLASSIFY_NAMES[5], state: CLASSIFY_STATES[5], color: CLASSIFY_STATES_COLOR[5] }
-    , { name: CLASSIFY_NAMES[6], state: CLASSIFY_STATES[6], color: CLASSIFY_STATES_COLOR[6] }
-    , { name: CLASSIFY_NAMES[7], state: CLASSIFY_STATES[7], color: CLASSIFY_STATES_COLOR[7] }
-];
-
-// 状态相关转换函数
-/**
- * 状态转换为显示状态
- * 
- * @export
- * @param {string} qcState 状态
- * @returns 
- */
-export function toQcStateShow(qcState) {
-    let index = CLASSIFY_STATES.indexOf(qcState);
-    if (index > 0) {
-        return CLASSIFY_NAMES[index];
-    }
-    return "";
-}
-
-/**
- * 状态转化为显示颜色
- * 
- * @export
- * @param {string} qcState 状态
- * @returns 
- */
-export function toQcStateShowColor(qcState) {
-    let index = CLASSIFY_STATES.indexOf(qcState);
-    if (index > 0) {
-        return CLASSIFY_STATES_COLOR[index];
-    }
-    return "";
-}
-/**
- * 时间戳转换为显示时间 年-月-日 时:分:秒
- * 后续可以考虑增加个性化展示，比如显示今天，刚刚，一周前等。
- * @export
- * @param {number} inputTime 
- * @returns 
- */
-export function formatUnixtimestamp(inputTime) {
-
-    var date = new Date(inputTime);
-    // console.log(inputTime);
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    m = m < 10 ? ('0' + m) : m;
-    var d = date.getDate();
-    d = d < 10 ? ('0' + d) : d;
-    var h = date.getHours();
-    h = h < 10 ? ('0' + h) : h;
-    var minute = date.getMinutes();
-    var second = date.getSeconds();
-    minute = minute < 10 ? ('0' + minute) : minute;
-    second = second < 10 ? ('0' + second) : second;
-    return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
-};
-
+import * as CONSTANT from "./api+constant"
 /**
  * 生产测试数据
  * 
@@ -116,7 +20,7 @@ function demoData(size) {
         ret.push({
             "id": "100" + i,
             "description": "description " + i,
-            "qcState": CLASSIFY_STATES[i % CLASSIFY_STATES.length],
+            "qcState": CONSTANT.CLASSIFY_STATES[i % CONSTANT.CLASSIFY_STATES.length],
             "inspectionDate": t,
             "updateTime": t + 1000,
         });
@@ -596,6 +500,30 @@ export async function createDeleteInspection(projectId, fileId) {
  */
 export async function getBluePrintDots(projectId, drawingGdocFileId) {
     let api = `/quality/${projectId}/qualityInspection/all/drawings/${drawingGdocFileId}/drawingPositions`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+
+
+/**
+ * 根据质量预设检查点查询验评标准检查项
+ * @param {*} templateId 
+ * @returns 
+ * [
+  {
+    "code": "string",
+    "content": "string",
+    "id": 0,
+    "name": "string",
+    "parentId": 0,
+    "projectProperty": "string",
+    "standardId": 0
+  }
+]
+ */
+export async function getStandardsItems(templateId) {
+    let api = `/quality//acceptanceStandard/templates/${templateId}/standards/items`;
     return requestJSON(api, {
         method: 'GET',
     });

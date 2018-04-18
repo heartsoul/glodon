@@ -14,6 +14,21 @@ export default class QualityInfoItem extends React.Component {
         this.props.onClick();
     }
     renderInfo=()=>{
+        if(!this.props.onClick) {
+            return (
+                <View 
+                    {...this.props}
+                    style={styles.containerView}
+                >
+                <View style={styles.titleView}>
+                <Label style={styles.leftTitle}>{this.props.leftTitle}</Label>
+                </View>
+                <View style={styles.contentView}>
+                <Label style={styles.content}>{this.props.content}</Label>
+                </View>
+                </View>
+            );
+        }
         return (
             <View 
                 {...this.props}
@@ -25,7 +40,7 @@ export default class QualityInfoItem extends React.Component {
             <View style={styles.contentView}>
             <Label style={styles.content}>{this.props.content}</Label>
             <TouchableOpacity activeOpacity={0.5} onPress={(event)=>{this.onClick(event)}}>
-            <Image source={benchmarkImage} style={styles.infoMark} />
+                <Image source={benchmarkImage} style={styles.infoMark} />
             </TouchableOpacity>
             </View>
             </View>

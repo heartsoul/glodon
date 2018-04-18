@@ -63,6 +63,37 @@ export default class QualityDetailPage extends PureComponent {
         });
     }
 
+    onAction =(inspectionInfo)=>{
+        // "qualityCheckpointId": 5200014,
+		// "qualityCheckpointName": "墙面",
+        // alert(progressInfo.billType);
+        storage.pushNext(null, "QualityStatardsPage", { 'qualityCheckpointId': inspectionInfo.qualityCheckpointId, 'qualityCheckpointName': inspectionInfo.qualityCheckpointName});
+    }
+
+    onOpenDrawingAction =(inspectionInfo)=>{
+        // "drawingGdocFileId": "be645ab6d5204fd19bda437c7a21b1d2",
+		// "drawingName": "基础图.dwg",
+		// "drawingPositionX": "2475.5999755859375",
+		// "drawingPositionY": "948.800048828125",
+        alert(inspectionInfo.drawingName);
+        // alert(progressInfo.drawingName);
+        // alert(progressInfo.drawingName);
+        // alert(progressInfo.drawingName);
+        storage.pushNext(null, "RelevantBlueprintPage", { title: inspectionInfo.drawingName, fileId: inspectionInfo.drawingGdocFileId, pageType: 1, relevantBluePrint: {"data":inspectionInfo} });
+                 
+    }
+
+    onOpenModleAction =(inspectionInfo)=>{
+        // "buildingId": 0,
+		// "buildingName": null,
+        // "elementId": "318370",
+		// "elementName": "常规 - 150mm",
+		// "gdocFileId": "a5b812dff199438dba5bacee0b373497",
+        alert(inspectionInfo.gdocFileId);
+        storage.pushNext(null, "RelevantModlePage", { title: inspectionInfo.elementName, fileId: inspectionInfo.gdocFileId, pageType: 1, relevantBluePrint: {"data":inspectionInfo} });
+                   
+    }
+
     componentDidMount() {
         this.fetchData();
     }
@@ -119,64 +150,92 @@ export default class QualityDetailPage extends PureComponent {
         return (<View style={{ alignItems: 'center', justifyContent: 'center', height: height - 44 - 20 - 49 }}><Text style={{ color: 'gray' }}>暂无数据</Text></View>);
     }
 
-    renderData() {
+    renderFirstProgressInfoItem = (inspectionInfo) => {
+       let progressInfo = {
+        "id": inspectionInfo.id,
+		"code": inspectionInfo.code,
+		"billType": API.toBillType(inspectionInfo.inspectionType),
+		"lastRectificationDate": inspectionInfo.lastRectificationDate,
+		"handleDate": inspectionInfo.updateTime,
+		"handlerId": inspectionInfo.creatorId,
+		"handlerName": inspectionInfo.creatorName,
+		"handlerTitle": inspectionInfo.responsibleUserTitle,
+		"commitTime": inspectionInfo.commitTime,
+		"files": inspectionInfo.files
+        };
+        return this.renderProgressInfoItem(progressInfo,'-11');
+    }
+    
+    renderProgressInfoItem = (progressInfo,index) => {
+        if (progressInfo.files.size <= 0) {
+            return <View key={"renderProgressInfoItem"+index} style={{ marginTop: 10 }}>
+                <QualityInfoCellItem userName={progressInfo.handlerName+'-'+progressInfo.handlerTitle} userImage="https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg" actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
+                    actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
+                <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate):null} showType="description" />
+                <QualityInfoItem showType="line" />
+            </View>
+        }
+        if (progressInfo.files.size == 1) {
+            return (
+                <View key={"renderProgressInfoItem"+index} style={{ marginTop: 10 }}>
+                    <QualityInfoCellItem userName={progressInfo.handlerName} userImage="https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg" actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
+                        actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
+                    <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate):null} showType="description" />
+                    <QualityInfoCellItem url={progressInfo.files[0].url} showType="image" />
+                    <QualityInfoItem showType="line" />
+                </View>
+            );
+        }
+        let urls = [];
+        progressInfo.files.map((file, index) => {
+            urls.push(file.url);
+        })
+
+        return <View key={"renderProgressInfoItem"+index} style={{ marginTop: 10 }}>
+            <QualityInfoCellItem userName={progressInfo.handlerName} userImage="https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg" actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
+                actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
+            <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate):null} showType="description" />
+            <QualityInfoCellItem urls={urls}
+                showType="images" />
+            <QualityInfoItem showType="line" />
+        </View>
+    }
+    renderData=()=> {
         const { inspectionInfo, progressInfos } = this.state.item;
         return (
             <ScrollView style={{ backgroundColor: '#FFFFFF' }}>
                 <View style={{ marginTop: 10 }}>
-                    <QualityInfoItem leftTitle="施工单位：" content={inspectionInfo.constructionCompanyName} />
+                    <QualityInfoItem leftTitle={inspectionInfo.inspectionType ==='inspection' ? "施工单位：" : "施工单位："} content={inspectionInfo.constructionCompanyName} />
                     <QualityInfoItem leftTitle="责任人：" content={inspectionInfo.inspectionCompanyName} />
-                    <QualityInfoItem leftTitle="质检项目：" showType="info" onClick={() => { alert(inspectionInfo.qualityCheckpointId) }} content={inspectionInfo.qualityCheckpointName} />
+                    {
+                        inspectionInfo.qualityCheckpointId > 0 ? (
+<QualityInfoItem leftTitle="质检项目：" showType="info" onClick={() => { this.onAction(inspectionInfo)}} content={inspectionInfo.qualityCheckpointName} />
+                    
+                        ): (
+                            <QualityInfoItem leftTitle="质检项目：" showType="info" content={inspectionInfo.qualityCheckpointName} />
+                        )
+                    }
                     <QualityInfoItem leftTitle="现场描述：" content={inspectionInfo.description} />
                     <QualityInfoItem leftTitle="保存时间：" content={API.formatUnixtimestamp(inspectionInfo.updateTime)} />
                     <QualityInfoItem leftTitle="提交时间：" content={API.formatUnixtimestamp(inspectionInfo.commitTime)} />
                     <QualityInfoItem leftTitle="关联图纸：" showType="link" onClick={() => {
-                        storage.pushNext(null, "RelevantBlueprintPage", { title: inspectionInfo.drawingName, fileId: inspectionInfo.drawingGdocFileId, pageType: 1, relevantBluePrint: {} });
+                        this.onOpenDrawingAction(inspectionInfo);
                     }} content={inspectionInfo.drawingName} />
                     <QualityInfoItem leftTitle="关联模型：" showType="link" onClick={() => {
-                        storage.pushNext(null, "RelevantModlePage", { title: "图纸号 JPGF-756", fileId: '122', pageType: 1, relevantBluePrint: {} });
-                    }} content="构件 JPGF-123" />
+                        this.onOpenModleAction(inspectionInfo);
+                    }} content={inspectionInfo.elementName} />
                     <QualityInfoItem showType="line" />
                 </View>
-
+                {
+                    this.renderFirstProgressInfoItem(inspectionInfo)
+                }
                 {
                     progressInfos.map((progressInfo, index) => {
-                        if (progressInfo.files.size <= 0) {
-                            return <View style={{ marginTop: 10 }}>
-                                <QualityInfoCellItem userName={progressInfo.handlerName} userImage="https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg" actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
-                                    actionText={progressInfo.billType} actionColor="#00B5F2" onAction={() => { alert(3) }} />
-                                <QualityInfoCellItem description={progressInfo.billType} descriptionDate={"整改期" + API.formatUnixtimestamp(progressInfo.handleDate)} showType="description" />
-                                <QualityInfoItem showType="line" />
-                            </View>
-                        }
-                        if (progressInfo.files.size == 1) {
-                            return (
-                                <View style={{ marginTop: 10 }}>
-                                    <QualityInfoCellItem userName={progressInfo.handlerName} userImage="https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg" actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
-                                        actionText={progressInfo.billType} actionColor="#00B5F2" onAction={() => { alert(3) }} />
-                                    <QualityInfoCellItem description={progressInfo.billType} descriptionDate={"整改期" + API.formatUnixtimestamp(progressInfo.handleDate)} showType="description" />
-                                    <QualityInfoCellItem url={progressInfo.files[0].url} showType="image" />
-                                    <QualityInfoItem showType="line" />
-                                </View>
-                            );
-                        }
-                        let urls = [];
-                        progressInfo.files.map((file, index) => {
-                            urls.push(file.url);
-                        })
-
-                        return <View style={{ marginTop: 10 }}>
-                            <QualityInfoCellItem userName={progressInfo.handlerName} userImage="https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg" actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
-                                actionText={progressInfo.billType} actionColor="#00B5F2" onAction={() => { alert(3) }} />
-                            <QualityInfoCellItem description={progressInfo.billType} descriptionDate={"整改期" + API.formatUnixtimestamp(progressInfo.handleDate)} showType="description" />
-                            <QualityInfoCellItem urls={urls}
-                                showType="images" />
-                            <QualityInfoItem showType="line" />
-                        </View>
+                       return this.renderProgressInfoItem(progressInfo,index);
                     })
                 }
 
-                <View style={{ marginTop: 10 }}>
+                {/* <View style={{ marginTop: 10 }}>
                     <QualityInfoCellItem userName="刘明明-监理" userImage="https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg" actionDate="2017-10-18 21:25:00" showType="user" actionText="检查" actionColor="#00B5F2" onAction={() => { alert(3) }} />
                     <QualityInfoCellItem description="三楼水管要调整" descriptionDate="整改期：2017-10-19" showType="description" />
                     <QualityInfoCellItem url='https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg' showType="image" />
@@ -203,7 +262,7 @@ export default class QualityDetailPage extends PureComponent {
                     <QualityInfoCellItem urls={['https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg', 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg']}
                         showType="images" />
                     <QualityInfoItem showType="line" />
-                </View>
+                </View> */}
 
             </ScrollView>
         );

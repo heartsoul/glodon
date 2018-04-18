@@ -12,6 +12,7 @@ import MainPage from './app/pages/main/MainPage'
 
 import QualityMainPage from './app/pages/quality/QualityMainPage'
 import QualityDetailPage from './app/pages/quality/QualityDetailPage'
+import QualityStatardsPage from './app/pages/quality/QualityStatardsPage'
 import BigImageViewPage from './app/pages/quality/BigImageViewPage'
 import CheckPointPage from './app/pages/navigation/bim/CheckPointPage'
 import ChoosePage from './app/pages/navigation/tenant/TenantPage'
@@ -45,4 +46,5 @@ export {
     CheckPointListPage,
     QualityDetailPage,
     BigImageViewPage,
+    QualityStatardsPage,
 }
