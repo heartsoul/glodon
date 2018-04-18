@@ -66,7 +66,7 @@ export default class RelevantModelPage extends Component {
             showChangeMode: false,//显示切换模型 pageType为1、5时为true
             showAddIcon: false,//显示创建按钮 pageType为 2 或者 3、6无创建权限时为false
             selectedModel: {},//选中的模型
-            url:'',
+            url: '',
         };
     }
 
@@ -100,7 +100,7 @@ export default class RelevantModelPage extends Component {
 
         this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
 
-        BimToken.getBimFileToken(params.fileId,(token)=>{
+        BimToken.getBimFileToken(params.fileId, (token) => {
             let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=false`;
             this.setState({
                 url: url
@@ -116,15 +116,12 @@ export default class RelevantModelPage extends Component {
     changeModel = () => {
         let navigator = this.props.navigation;
 
-        storage.qualityState.navKey = this.props.navigation.state.key;
-
         let pageType = PageType.PAGE_TYPE_NEW_QUALITY;
-        
+
         if (this.state.pageType === PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
             let pageType = PageType.PAGE_TYPE_NEW_EQUIPMENT;
         }
-
-        storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: '模型文件', pageType: pageType, saveKey: 0 })
+        storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: '模型文件', pageType: pageType })
     }
     setPosition = () => {
         let position = [{
@@ -164,17 +161,25 @@ export default class RelevantModelPage extends Component {
             component: component,
         }
         console.log(this.state.pageType)
-        // 0新建检查单 1检查单编辑状态 2详情查看  3模型模式
+        // 0新建检查单 1检查单编辑状态 2详情查看  3质检单模型模式  4新建材设进场 5新增材设进场编辑状态  6材设模型模式
         if (this.state.pageType == PageType.PAGE_TYPE_NEW_QUALITY) {
-            storage.qualityState.bimChooserCallback(relevantModel, '模型文件');
-            this.props.navigation.goBack(storage.qualityState.navKey);
+            storage.bimFileChooseCallback (relevantModel, '模型文件');
+            this.props.navigation.pop("NewPage");
         } else if (this.state.pageType == PageType.PAGE_TYPE_EDIT_QUALITY) {
-            storage.qualityState.bimChooserCallback(relevantModel, '模型文件');
-            this.props.navigation.goBack();
-        } else if (this.state.pageType == PageType.PAGE_TYPE_DETAIL) {
+            storage.bimFileChooseCallback (relevantModel, '模型文件');
             this.props.navigation.goBack();
         } else if (this.state.pageType == PageType.PAGE_TYPE_QUALITY_MODEL) {
             this.props.navigation.replace('NewPage', { relevantModel: relevantModel });
+        } else if (this.state.pageType == PageType.PAGE_TYPE_NEW_EQUIPMENT){
+            // pop到新建材设单页面
+
+        } else if (this.state.pageType == PageType.PAGE_TYPE_EDIT_EQUIPMENT){
+            //编辑材设单
+            this.props.navigation.goBack();
+        } else if (this.state.pageType == PageType.PAGE_TYPE_EQUIPMENT_MODEL){
+            //从材设单模型进入 replace为新建材设单页面
+        }else if (this.state.pageType == PageType.PAGE_TYPE_DETAIL) {
+            this.props.navigation.goBack();
         }
     }
 

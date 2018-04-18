@@ -338,13 +338,13 @@ class NewPage extends React.Component {
     //选择图纸文件
     _bimFileChooserBluePrint = (dataType) => {
         let navigator = this.props.navigation;
-        storage.qualityState.bimChooserCallback = this._bimChooserCallback;
+        storage.bimFileChooseCallback = this._bimChooserCallback;
         BimFileEntry.chooseBlueprintFromQualityNew(navigator, this.state.relevantBluePrint)
     }
     //选择模型文件
     _bimFileChooserModel = (dataType) => {
         let navigator = this.props.navigation;
-        storage.qualityState.bimChooserCallback = this._bimChooserCallback;
+        storage.bimFileChooseCallback = this._bimChooserCallback;
         BimFileEntry.chooseModelFromQualityNew(navigator, this.state.relevantModel)
     }
     //选择图纸或者模型后的回调 dataType 图纸文件{name:'', fileId:'', drawingPositionX:'', drawingPositionY:'' }、模型文件

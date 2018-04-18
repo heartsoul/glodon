@@ -156,12 +156,6 @@ export default class BimFileChooser extends Component {
         let params = this.props.navigation.state.params;
         let fileId = params.fileId;
         let dataType = params.dataType;
-        let saveKey = params.saveKey;
-        console.log('fileId --------------------------- ' + fileId)
-        if ((!fileId || fileId == 0) && saveKey != 0) {//保存目录的初始key
-            console.log('save nav key ---------------------------')
-            global.storage.qualityState.navKey = this.props.navigation.state.key;
-        }
 
         console.log(params)
         this.setState({

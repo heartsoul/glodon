@@ -2,19 +2,19 @@ import {
     AsyncStorage,
 } from 'react-native';
 
-import {NavigationActions} from 'app-3rd/react-navigation'
+import { NavigationActions } from 'app-3rd/react-navigation'
 export default class BaseStorage {
     constructor() {
         super.constructor();
-       this.storage = AsyncStorage;
+        this.storage = AsyncStorage;
     }
-    setItem =(key,value)=> {
+    setItem = (key, value) => {
         AsyncStorage.setItem(key, value, (error, result) => {
         });
     }
 
     // 查询
-    getItem=(key ,result)=>  {
+    getItem = (key, result) => {
         AsyncStorage.getItem(key)
             .then((value) => {
                 //  result(value);
@@ -22,10 +22,10 @@ export default class BaseStorage {
     }
 
     // 删除
-    removeItem=(key)=> {
+    removeItem = (key) => {
         AsyncStorage.removeItem(key.key);
     }
-    version=()=> {
+    version = () => {
         console.log('BaseStorage version 1.0.0.0');
     }
 
@@ -49,17 +49,17 @@ class GLDStorage extends BaseStorage {
         this.projectIdVersionId = '';
         this.projectId = 0;
     }
-    saveLoginToken=(token)=> {
+    saveLoginToken = (token) => {
         this.loginToken = token;
         this.setItem('loginToken', this.loginToken);
     }
-    getLoginToken=()=> {
+    getLoginToken = () => {
         return this.loginToken;
     }
-    isLogin=()=> {
+    isLogin = () => {
         return this.loginToken != '';
     }
-    logout=()=> {
+    logout = () => {
         this.loginToken = '';
         this.currentProject = "0";
         this.currentProjectName = "首页";
@@ -69,39 +69,39 @@ class GLDStorage extends BaseStorage {
         this.fileId = '';
         this.projectIdVersionId = '';
         this.projectId = 0;
-        this.removeItem({key:'loginToken'});
-        this.removeItem({key:'currentProject'});
-        this.removeItem({key:'currentTenant'});
-        this.removeItem({key:'guide'});
-        this.removeItem({key:'currentProjectName'});
-        
+        this.removeItem({ key: 'loginToken' });
+        this.removeItem({ key: 'currentProject' });
+        this.removeItem({ key: 'currentTenant' });
+        this.removeItem({ key: 'guide' });
+        this.removeItem({ key: 'currentProjectName' });
+
     }
-    saveGuide=()=> {
+    saveGuide = () => {
         this.guide = "1";
         this.setItem('guide', this.guide);
     }
-    isGuide=(retFun)=> {
-        if(this.guide != "0") {
+    isGuide = (retFun) => {
+        if (this.guide != "0") {
             retFun(this.guide);
             return this.guide;
         }
         AsyncStorage.getItem('guide')
             .then((value) => {
                 this.guide = value;
-                if(retFun) {
+                if (retFun) {
                     retFun(value);
                 }
                 return this.guide;
             });
     }
-    saveTenant=(tenant)=> {
-        this.currentTenant = ""+tenant;
+    saveTenant = (tenant) => {
+        this.currentTenant = "" + tenant;
         this.setItem('currentTenant', this.currentTenant);
     }
-    loadTenant=(retFun)=> {
-        console.log("loadTenant1："+this.currentTenant);
-        if(this.currentTenant != "0") {
-            if(retFun) {
+    loadTenant = (retFun) => {
+        console.log("loadTenant1：" + this.currentTenant);
+        if (this.currentTenant != "0") {
+            if (retFun) {
                 retFun(this.currentTenant);
             }
             return this.currentTenant;
@@ -109,71 +109,71 @@ class GLDStorage extends BaseStorage {
         AsyncStorage.getItem('currentTenant')
             .then((value) => {
                 this.currentTenant = value;
-                if(!value || value == null){
+                if (!value || value == null) {
                     this.currentTenant = '0';
                 }
-                if(retFun) {
+                if (retFun) {
                     retFun(value);
                 }
                 return this.currentTenant;
-            }).catch((err)=>{
+            }).catch((err) => {
                 console.log(err)
             });
     }
-    saveProject=(project,name)=> {
-        this.currentProject = ""+project;
-        this.currentProjectName = ""+name;
-        this.setItem('currentProject', ""+project);
-        this.setItem('currentProjectName', ""+name);
+    saveProject = (project, name) => {
+        this.currentProject = "" + project;
+        this.currentProjectName = "" + name;
+        this.setItem('currentProject', "" + project);
+        this.setItem('currentProjectName', "" + name);
     }
-    loadProject=(retFun)=> {
+    loadProject = (retFun) => {
         // this.currentProject = this.getItem('currentProject');
         console.log(this.currentProject);
-        if(this.currentProject != "0") {
-            if(retFun) {
+        if (this.currentProject != "0") {
+            if (retFun) {
                 retFun(this.currentProject);
             }
             return this.currentProject;
         }
-        
+
         AsyncStorage.getItem('currentProject')
             .then((value) => {
                 this.currentProject = value;
-                console.log("loadProject2："+this.currentProject);
-                if(retFun) {
+                console.log("loadProject2：" + this.currentProject);
+                if (retFun) {
                     retFun(value);
                 }
-                
+
                 return this.currentProject;
             });
-            AsyncStorage.getItem('currentProjectName')
+        AsyncStorage.getItem('currentProjectName')
             .then((value) => {
                 this.currentProjectName = value;
             });
         // return this.currentProject;
     }
-    loadCurrentProjectName=(retFun)=> {
+    loadCurrentProjectName = (retFun) => {
         // this.currentProject = this.getItem('currentProject');
         // console.log(this.currentProjectName);
-        if(this.currentProjectName != "首页") {
-            if(retFun) {
+        if (this.currentProjectName != "首页") {
+            if (retFun) {
                 retFun(this.currentProjectName);
             }
             return this.currentProjectName;
         }
-        
+
         AsyncStorage.getItem('currentProjectName')
             .then((value) => {
                 this.currentProjectName = value;
-                if(retFun) {
+                if (retFun) {
                     retFun(value);
                 }
-                
+
                 return this.currentProjectName;
             });
         return this.currentProjectName;
     }
-    gotoLogin=(navigation)=> {
+    gotoLogin = (navigation) => {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
@@ -184,12 +184,12 @@ class GLDStorage extends BaseStorage {
         let resetAction = NavigationActions.reset({
             index: 0,
             actions: [
-                NavigationActions.navigate({routeName:'LoginPage'})//要跳转到的页面名字
+                NavigationActions.navigate({ routeName: 'LoginPage' })//要跳转到的页面名字
             ]
         });
         navigator.dispatch(resetAction);
     }
-    gotoMainPage=(navigation)=> {
+    gotoMainPage = (navigation) => {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
@@ -200,23 +200,23 @@ class GLDStorage extends BaseStorage {
         let resetAction = NavigationActions.reset({
             index: 0,
             actions: [
-                NavigationActions.navigate({routeName:'MainPage'})//要跳转到的页面名字
+                NavigationActions.navigate({ routeName: 'MainPage' })//要跳转到的页面名字
             ]
         });
         navigator.dispatch(resetAction);
     }
-    hasChoose=(retFun)=> {
-        let t = this.loadTenant((value)=>{
+    hasChoose = (retFun) => {
+        let t = this.loadTenant((value) => {
             t = value;
-            this.loadProject((value)=>{
+            this.loadProject((value) => {
                 p = value;
-                if(retFun) {
-                    retFun(t && p && t != "0" &&  p != "0");
+                if (retFun) {
+                    retFun(t && p && t != "0" && p != "0");
                 }
             });
         });
         let p = this.loadProject();
-        let ret = t != "0" &&  p != "0" && t != undefined && p != undefined && t != null && p != null;
+        let ret = t != "0" && p != "0" && t != undefined && p != undefined && t != null && p != null;
         return ret;
     }
     gotoMain = (navigation = null, name = "MainPage") => {
@@ -227,10 +227,10 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
-        this.hasChoose((ret)=>{
+        this.hasChoose((ret) => {
             if (ret) {
-                
-                 navigator.replace(name);
+
+                navigator.replace(name);
             } else {
                 navigator.replace("ChoosePage");
             }
@@ -247,7 +247,7 @@ class GLDStorage extends BaseStorage {
         navigator.navigate(name, params);
     }
 
-    goBack =  (navigation, params = {}) => {
+    goBack = (navigation, params = {}) => {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
@@ -258,10 +258,14 @@ class GLDStorage extends BaseStorage {
         navigator.goBack();
     }
     //质量管理相关state
+    
+    //模型图纸选择后新建页面回调
+    bimFileChooseCallback = (bimFile) => {}
+
     qualityState = {
         bimChooserKey: '',//选择图纸模型的时候记录目录页面的初始navigation key，goBack from this page.
         bimChooserCallback: () => { },//选择图纸模型后的回调
-    };  
+    };
 }
 // 全局变量
 global.storage = new GLDStorage();

@@ -204,9 +204,7 @@ export default class RelevantBlueprintPage extends Component {
     changeBluePrint = () => {
         let navigator = this.props.navigation;
 
-        storage.qualityState.navKey = this.props.navigation.state.key;
-
-        storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: '图纸文件', pageType: PageType.PAGE_TYPE_NEW_QUALITY, saveKey: 0 })
+        storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: '图纸文件', pageType: PageType.PAGE_TYPE_NEW_QUALITY})
     }
     setPosition = () => {
         let position = [{
@@ -239,10 +237,10 @@ export default class RelevantBlueprintPage extends Component {
         console.log(this.state.pageType)
         // 0新建检查单 1检查单编辑状态 2详情查看  3图纸模式
         if (this.state.pageType == PageType.PAGE_TYPE_NEW_QUALITY) {
-            storage.qualityState.bimChooserCallback(relevantBlueprint, '图纸文件');
-            this.props.navigation.goBack(storage.qualityState.navKey);
+            storage.bimFileChooseCallback(relevantBlueprint, '图纸文件');
+            this.props.navigation.pop("NewPage");
         } else if (this.state.pageType == PageType.PAGE_TYPE_EDIT_QUALITY) {
-            storage.qualityState.bimChooserCallback(relevantBlueprint, '图纸文件');
+            storage.bimFileChooseCallback(relevantBlueprint, '图纸文件');
             this.props.navigation.goBack();
         } else if (this.state.pageType == PageType.PAGE_TYPE_DETAIL) {
             this.props.navigation.goBack();
