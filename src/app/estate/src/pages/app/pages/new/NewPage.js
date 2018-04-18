@@ -12,6 +12,7 @@ import {
     ScrollView,
     Button,
     TouchableHighlight,
+    ActivityIndicator,
     Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -59,7 +60,12 @@ class NewPage extends React.Component {
      * 获取selectView中的数据，没有时返回 null，ref(REF_INSPECT_COMPANY、REF_COMPANY、REF_PERSON)
      */
     getSelectedData = (ref) => {
-        return this.refs[ref].getSelectedData()
+        let ele = this.refs[ref];
+        let ret = {};
+        if(ele){
+            ret = ele.getSelectedData();
+        }
+        return ret;
     }
     /**
      * 整改期限{ value: true, date: '2018-04-08' }
@@ -283,48 +289,96 @@ class NewPage extends React.Component {
 
     componentDidMount = () => {
 
-        // this._initialState();
 
         let params = this.props.navigation.state.params;
-        let relevantBlueprint = {};
-        if (params.relevantBlueprint) {
-            relevantBlueprint = params.relevantBlueprint;
-        }
-        let selectedCheckPoint = {};
-        if (this.props.selectedCheckPoint) {
-            selectedCheckPoint = this.props.selectedCheckPoint;
-        }
-        let relevantModel = {};
-        if (params.relevantModel) {
-            relevantModel = params.relevantModel;
-        }
+        //从列表编辑页进入
+        // params = {
+        //     item: {},
+        // }
+        if (params && params.item) {
+            API.getQualityInspectionDetail(storage.loadProject(), params.item.value.id).then((responseData) => {
+            // API.getQualityInspectionDetail('5200146', '5200227').then((responseData) => {
+                let editInfo = {};
+                if (responseData.data && responseData.data.inspectionInfo) {
+                    editInfo = responseData.data.inspectionInfo;
+                }
+                this.setState({
+                    editInfo: editInfo,
+                    isLoading: false,
+                }, () => {
+                    this.initialState(editInfo);
+                });
+            }).catch(err => {
+                this.setState({
+                    isLoading: false,
+                });
+            });
+        } else {
+            //从首页图纸进入
+            let relevantBlueprint = {};
+            if (params.relevantBlueprint) {
+                relevantBlueprint = params.relevantBlueprint;
+            }
+            //从质检项目进入
+            let selectedCheckPoint = {};
+            if (this.props.selectedCheckPoint) {
+                selectedCheckPoint = this.props.selectedCheckPoint;
+            }
+            //从首页模型进入
+            let relevantModel = {};
+            if (params.relevantModel) {
+                relevantModel = params.relevantModel;
+            }
+            this.setState({
+                relevantBluePrint: relevantBlueprint,
+                relevantModel: relevantModel,
+                selectedCheckPoint: selectedCheckPoint,
+                isLoading: false,
+            });
 
-        this.setState({
-            relevantBluePrint: relevantBlueprint,
-            relevantModel: relevantModel,
-            selectedCheckPoint: selectedCheckPoint,
-        });
+        }
         //请求数据
         this.props.navigation.setParams({ rightNavigatePress: this._rightAction })
     }
 
-    //初始状态
-    _initialState = () => {
-        // console.log(this.props.navigation.state.params);
+
+    //编辑页面进入时，已存在设置数据
+    initialState = (info) => {
+
+        let contentDescription = info.description;
+        let inspectId = info.id;
+        let code = info.code;
+        let inspectionType = info.inspectionType;
+        let projectId = info.projectId;
+        let projectName = info.projectName;
+
+        let needRectification = info.needRectification;
+        let lastRectificationDate = info.lastRectificationDate;
+
+        let selectedCheckPoint = {
+            id: info.qualityCheckpointId,//-1
+            name: info.qualityCheckpointName,
+        }
+
+        let relevantBlueprint = {
+            drawingGdocFileId: info.drawingGdocFileId,
+            drawingName: info.drawingGdocFileId,
+            drawingPositionX: info.drawingGdocFileId,
+            drawingPositionY: info.drawingGdocFileId,
+        }
+
         this.setState({
-            selectedCheckPoint: {},//选中的质检项目
-
-            contentDescription: PropTypes.string,//内容描述
-
-            modal: false,
-
-            inspectId: -1,//检查单id
-
+            contentDescription: contentDescription,//内容描述
+            inspectId: inspectId,//检查单id
+            code: code,
+            projectId: projectId,
+            projectName: projectName,
             files: [],//图片
 
-            relevantBluePrint: {},//关联图纸
+            selectedCheckPoint: selectedCheckPoint,//选中的质检项目
+            relevantBluePrint: relevantBlueprint,//关联图纸
             relevantModel: {},//关联模型
-
+            
         });
     }
 
@@ -363,17 +417,16 @@ class NewPage extends React.Component {
     constructor() {
         super();
         this.state = {
+            isLoading: true,
+
+            editInfo: {},//编辑的时候获取的详情
+
             projectId: storage.projectId,
-
-            selectedCheckPoint: {},//选中的质检项目
-
+            inspectId: -1,//检查单id
+            code: '',
             contentDescription: PropTypes.string,//内容描述
 
-            modal: false,
-
-            inspectId: -1,//检查单id
-
-            code: '',
+            selectedCheckPoint: {},//选中的质检项目
 
             files: [{
                 url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
@@ -386,24 +439,45 @@ class NewPage extends React.Component {
         }
 
     };
-
-    render() {
-        var region = {
-            latitude: 37.48,
-            longitude: -122.16,
-            latitudeDelta: 0.1,
-            longitudeDelta: 0.1,
-        };
+    //加载等待的view
+    renderLoadingView = () => {
         return (
-            <ScrollView>
+            <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <SelectView ref={REF_INSPECT_COMPANY} title='检查单位' />
-                <SelectView ref={REF_COMPANY} title='施工单位' selectCallback={(selectCompany) => {
-                    this.setState({
-                        selectCompany: selectCompany,
-                    })
-                }} />
-                <SelectView tref={REF_PERSON} title='责任人' extraData={this.state.selectCompany} />
+                <ActivityIndicator
+                    animating={true}
+                    style={[styles.gray, { height: 80 }]}
+                    color='green'
+                    size="large"
+                />
+            </View>
+        );
+    }
+    renderData = () => {
+        return (
+            <View>
+                <SelectView ref={REF_INSPECT_COMPANY} title='检查单位'
+                    value={this.state.editInfo ? ({
+                        id: this.state.editInfo.inspectionCompanyId,
+                        name: this.state.editInfo.inspectionCompanyName,
+                    }) : ({})} />
+                <SelectView ref={REF_COMPANY} title='施工单位'
+                    value={this.state.editInfo ? ({
+                        id: this.state.editInfo.constructionCompanyId,
+                        name: this.state.editInfo.constructionCompanyName,
+                    }) : ({})}
+                    selectCallback={(selectCompany) => {
+                        this.setState({
+                            selectCompany: selectCompany,
+                        })
+                    }} />
+                <SelectView tref={REF_PERSON} title='责任人'
+                    value={this.state.editInfo ? ({
+                        id: this.state.editInfo.responsibleUserId,
+                        name: this.state.editInfo.responsibleUserName,
+                        title: this.state.editInfo.responsibleUserTitle,
+                    }) : ({})}
+                    extraData={this.state.selectCompany} />
 
                 <TextInput
                     maxLength={255}
@@ -413,6 +487,7 @@ class NewPage extends React.Component {
                     underlineColorAndroid={"transparent"}
                     textAlign="left"
                     onChangeText={(text) => { this.setState({ contentDescription: text }) }}
+                    value={(typeof this.state.contentDescription === 'string') ? (this.state.contentDescription) : ('')}
                 />
 
                 <ImageChooserView ref={REF_PHOTO} files={[{
@@ -471,7 +546,18 @@ class NewPage extends React.Component {
                     }
 
                 </View>
+            </View>
+        );
+    }
 
+    render() {
+
+        return (
+            <ScrollView>
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                {
+                    this.state.isLoading ? (this.renderLoadingView()) : (this.renderData())
+                }
             </ScrollView>
 
         );

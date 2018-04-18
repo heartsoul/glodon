@@ -20,19 +20,18 @@ export default class SelectCheckPointView extends Component {
         };
     }
 
-    componentDidMount() {
-        if (this.props.selectedCheckPoint) {
+    componentWillReceiveProps(nextProps) {
+        if (!(this.state.selectedCheckPoint && this.state.selectedCheckPoint.name) && this.props.selectedCheckPoint && this.props.selectedCheckPoint.name) {
             this.setState({
                 selectedCheckPoint: this.props.selectedCheckPoint,
-            });
+            })
         }
     }
 
-    selectCheckPoint = () => {
-        let navigator = this.props.navigation;
 
+    selectCheckPoint = () => {
         storage.pushNext(
-            navigator,
+            null,
             'CheckPointPage',
             {
                 selectedCheckPoint: this.state.selectedCheckPoint,
@@ -48,16 +47,13 @@ export default class SelectCheckPointView extends Component {
     getSelectedCheckPoint = () => {
         return this.state.selectedCheckPoint;
     }
-    
+
     getDetailName = () => {
         let name = '';
-        if (this.state.selectedCheckPoint) {
+        if (this.state.selectedCheckPoint && this.state.selectedCheckPoint.name) {
             name = this.state.selectedCheckPoint.name;
-        } else if (this.props.selectedCheckPoint) {
-            this.setState({
-                selectedCheckPoint: this.props.selectedCheckPoint,
-            })
         }
+
         return name;
     }
 
