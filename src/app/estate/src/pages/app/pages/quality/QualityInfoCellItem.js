@@ -2,9 +2,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { View, StyleSheet, Text as Label, Image, TouchableOpacity } from 'react-native';
-const benchmarkImage = require("app-images/icon_benchmark.png");
 import { StatusActionButton } from "app-components"
 import { push } from 'connected-react-router';
+
+const benchmarkImage = require("app-images/icon_benchmark.png");
+const userImage = require("app-images/icon_mine_default_header.png");
 
 
 export default class QualityInfoCellItem extends React.Component {
@@ -21,7 +23,7 @@ export default class QualityInfoCellItem extends React.Component {
                 style={[styles.containerView, styles.containerUserView]}
             >
                 <View style={styles.titleView}>
-                    <Image source={{ uri: this.props.userImage }} style={styles.userImage} />
+                    <Image source={this.props.userImage ? { uri: this.props.userImage } : userImage} style={styles.userImage} />
                 </View>
                 <View style={styles.userContentView}>
                     <Label style={styles.userName}>{this.props.userName}</Label>

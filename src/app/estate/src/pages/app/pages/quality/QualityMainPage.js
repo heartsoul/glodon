@@ -3,7 +3,8 @@ import {StyleSheet, Button, View, Text, Image, TouchableOpacity, NativeModules,D
 import { StackNavigator, DrawerNavigator, withNavigation } from 'app-3rd/react-navigation'; 
 import { SegmentedBar, Drawer, Label, ActionSheet } from 'app-3rd/teaset';
 import QualityList from './qualityList'
-
+import * as API from 'app-api'
+import {GLDDrawerPaneView} from "app-components"
 var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
 var { width, height } = Dimensions.get("window");
 class DetailsScreen extends React.Component {
@@ -73,11 +74,8 @@ const MyNavScreen = ({ navigation, banner }) => (
 
 let view = (
   <View style={{ backgroundColor: "#333333", height: height, width: width*2/3 }}>
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Label type='detail' size='xl' text='Drawer1' />
-      <Label type='detail' size='xl' text='Drawer2' />
-      <Label type='detail' size='xl' text='Drawer3' />
-      <Label type='detail' size='xl' text='Drawer4' />
+    <View style={{justifyContent: 'center', alignItems: 'center' }}>
+      <GLDDrawerPaneView style={{width:width*2/3}} currentItem={API.APP_EQUIPMENT} />
     </View>
   </View>
 );

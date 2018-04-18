@@ -36,6 +36,21 @@ export const QC_STATE_ALL = "all";
 export const QC_STATE_STANDARD = "standard";
 export const QC_STATE_NOT_STANDARD = "notStandard";
 
+/**
+ * 侧滑菜单项目
+ */
+export const APP_COLOR_ITEM = "#ffffff";
+export const APP_COLOR_CURRENT = "#00baf3"; // 
+// 质检管理
+export const APP_QUALITY = "Quality"; // 质检清单
+export const APP_QUALITY_DRAWER = "QualityDrawer"; // 模型
+export const APP_QUALITY_MODLE = "QualityModle"; // 图纸
+export const APP_QUALITY_CHECK_POINT = "QualityCheckPoint"; // 质检项目
+// 材设进场
+export const APP_EQUIPMENT = "Equipment"; // 材设清单
+export const APP_EQUIPMENT_MODLE = "EquipmentModle"; // 模型预览
+
+
 export const EQUIPMENT_CLASSIFY_NAMES = ["全部", "待提交", "合格", "不合格"];
 export const EQUIPMENT_CLASSIFY_STATES = [QC_STATE_ALL, QC_STATE_EDIT, QC_STATE_STANDARD, QC_STATE_NOT_STANDARD];
 

@@ -169,7 +169,7 @@ export default class QualityDetailPage extends PureComponent {
     renderProgressInfoItem = (progressInfo,index) => {
         if (progressInfo.files.size <= 0) {
             return <View key={"renderProgressInfoItem"+index} style={{ marginTop: 10 }}>
-                <QualityInfoCellItem userName={progressInfo.handlerName+'-'+progressInfo.handlerTitle} userImage="https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg" actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
+                <QualityInfoCellItem userName={progressInfo.handlerName+'-'+progressInfo.handlerTitle} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
                     actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
                 <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate):null} showType="description" />
                 <QualityInfoItem showType="line" />
@@ -178,7 +178,7 @@ export default class QualityDetailPage extends PureComponent {
         if (progressInfo.files.size == 1) {
             return (
                 <View key={"renderProgressInfoItem"+index} style={{ marginTop: 10 }}>
-                    <QualityInfoCellItem userName={progressInfo.handlerName} userImage="https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg" actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
+                    <QualityInfoCellItem userName={progressInfo.handlerName} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
                         actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
                     <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate):null} showType="description" />
                     <QualityInfoCellItem url={progressInfo.files[0].url} showType="image" />
@@ -192,7 +192,7 @@ export default class QualityDetailPage extends PureComponent {
         })
 
         return <View key={"renderProgressInfoItem"+index} style={{ marginTop: 10 }}>
-            <QualityInfoCellItem userName={progressInfo.handlerName} userImage="https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg" actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
+            <QualityInfoCellItem userName={progressInfo.handlerName}  actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
                 actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
             <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate):null} showType="description" />
             <QualityInfoCellItem urls={urls}
