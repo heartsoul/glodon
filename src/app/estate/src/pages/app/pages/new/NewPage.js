@@ -23,6 +23,8 @@ import RectificationView from './RectificationView';//整改
 import SelectCheckPointView from './SelectCheckPointView';
 import * as PageType from '../navigation/bim/PageTypes';
 import * as API from "app-api";
+import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
+
 const UPLOADAPI = API
 const QUALITYAPI = API
 const PMBASICAPI = API
@@ -285,7 +287,7 @@ class NewPage extends React.Component {
 
         let params = this.props.navigation.state.params;
         let relevantBlueprint = {};
-        if(params.relevantBlueprint){
+        if (params.relevantBlueprint) {
             relevantBlueprint = params.relevantBlueprint;
         }
         let selectedCheckPoint = {};
@@ -293,7 +295,7 @@ class NewPage extends React.Component {
             selectedCheckPoint = this.props.selectedCheckPoint;
         }
         let relevantModel = {};
-        if(params.relevantModel){
+        if (params.relevantModel) {
             relevantModel = params.relevantModel;
         }
 
@@ -336,28 +338,14 @@ class NewPage extends React.Component {
     //选择图纸文件
     _bimFileChooserBluePrint = (dataType) => {
         let navigator = this.props.navigation;
-        //保存当前页面的key
         storage.qualityState.bimChooserCallback = this._bimChooserCallback;
-
-        if (this.state.relevantBluePrint.name) {
-            storage.pushNext(navigator, "RelevantBlueprintPage", { title: this.state.relevantBluePrint.name, fileId: this.state.relevantBluePrint.fileId, pageType: PageType.PAGE_TYPE_EDIT_QUALITY, relevantBluePrint: this.state.relevantBluePrint });
-        } else {
-            storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: dataType, pageType: PageType.PAGE_TYPE_NEW_QUALITY })
-        }
-
+        BimFileEntry.chooseBlueprintFromQualityNew(navigator, this.state.relevantBluePrint)
     }
     //选择模型文件
     _bimFileChooserModel = (dataType) => {
         let navigator = this.props.navigation;
-        //保存当前页面的key
         storage.qualityState.bimChooserCallback = this._bimChooserCallback;
-
-        if (this.state.relevantModel.fileName) {
-            storage.pushNext(navigator, "RelevantModlePage", { title: this.state.relevantModel.fileName, fileId: this.state.relevantModel.fileId, pageType: PageType.PAGE_TYPE_EDIT_QUALITY, relevantModel: this.state.relevantModel });
-        } else {
-            storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: dataType, pageType: PageType.PAGE_TYPE_NEW_QUALITY })
-        }
-
+        BimFileEntry.chooseModelFromQualityNew(navigator, this.state.relevantModel)
     }
     //选择图纸或者模型后的回调 dataType 图纸文件{name:'', fileId:'', drawingPositionX:'', drawingPositionY:'' }、模型文件
     _bimChooserCallback = (data, dataType) => {

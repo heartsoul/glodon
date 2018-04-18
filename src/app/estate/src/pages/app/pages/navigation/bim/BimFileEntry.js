@@ -41,7 +41,7 @@ export function chooseQualityModelFromHome(navigator) {
 /**
  * 从质检单新建页面进入图纸选择及展示
  */
-export function chooseBluePrintFromQualityNew(navigator, blueprint) {
+export function chooseBlueprintFromQualityNew(navigator, blueprint) {
     if (blueprint && blueprint.name) {
         storage.pushNext(navigator, "RelevantBlueprintPage", {
             title: blueprint.name,
@@ -61,7 +61,7 @@ export function chooseBluePrintFromQualityNew(navigator, blueprint) {
 /**
  * 从质检单新建页面进入模型选择及展示
  */
-export function chooseModuleFromQualityNew(navigator, model) {
+export function chooseModelFromQualityNew(navigator, model) {
     if (model && model.fileName) {
         storage.pushNext(navigator, "RelevantModlePage", {
             title: model.fileName,
@@ -89,16 +89,11 @@ export function chooseEquipmentModelFromHome(navigator) {
         pageType: PageType.PAGE_TYPE_EQUIPMENT_MODEL
     });
 }
-/**
-
- * 
- * 详情页进入图纸、模型展示
- */
 
 /**
  * 材设单新建进入模型选择及展示
  */
-export function chooseEquipmentModelFromNew(navigator) {
+export function chooseEquipmentModelFromNew(navigator, model) {
     if (model && model.fileName) {
         storage.pushNext(navigator, "RelevantModlePage", {
             title: model.fileName,
