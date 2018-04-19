@@ -105,7 +105,7 @@ function checkMustInfo(params, callback) {
         showStar.showDescriptionStar = true;
     }
     //质检项目 
-    if (!params.qualityCheckpointId) {
+    if (!params.qualityCheckpointName) {
         info.push('质检项目');
         showStar.showCheckpointStar = true;
     }

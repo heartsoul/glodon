@@ -5,7 +5,7 @@ import * as API from 'app-api'
 
 export function getCheckPoints() {
     return dispatch => {
-        API.getCheckPoints(storage.projectId)
+        API.getCheckPoints(storage.loadProject())
             .then(data => {
                 let topNode = getListByParentId(data.data, null);
                 let topDirNode = [];
@@ -73,7 +73,7 @@ export function toCheckPointInfoPage(checkPoint) {
     return {
         type: types.CHECK_POINT_TO_INFO,
         selectedCheckPoint: checkPoint,
-        navPage: '',
+        navPage: 'QualityStatardsPage',
     }
 }
 
@@ -95,9 +95,7 @@ export function navSuccess(){
 }
 
 export function reset(){
-      //reset
       return {
         type: types.CHECK_POINT_RESET,
-        navPage: '',
     }
 }

@@ -6,6 +6,7 @@ const initialState = {
     topDirNode: [],
     topModelNode: [],
     navPage: null,
+    selectedCheckPoint:{}
 }
 
 export default (state = initialState, action) => {
@@ -28,6 +29,7 @@ export default (state = initialState, action) => {
         case types.CHECK_POINT_RESET:
             return initialState
         case types.CHECK_POINT_INIT:
+        
             return {
                 ...state,
                 navPage: null,

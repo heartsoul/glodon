@@ -39,11 +39,20 @@ class CheckPointListPage extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.navPage) {
             let navigator = this.props.navigation;
-            storage.pushNext(navigator, nextProps.navPage);
-            this.props.navSuccess();
+            if(nextProps.navPage === 'QualityStatardsPage'){
+                storage.pushNext(navigator, "QualityStatardsPage", { 'qualityCheckpointId': nextProps.selectedCheckPoint.id, 'qualityCheckpointName': nextProps.selectedCheckPoint.name });
+            }else{
+                storage.pushNext(navigator, nextProps.navPage);
+            }
+            // this.props.navSuccess();
             return false;
         }
         return true
+    }
+
+    componentWillUnmount() {
+        //页面销毁时，清空选中的项目
+        this.props.reset();
     }
 
     renderPanelHeader = (item) => {
@@ -167,6 +176,7 @@ export default connect(
         navPage: state.checkPointList.navPage,
         topDirNode: state.checkPointList.topDirNode,
         topModelNode: state.checkPointList.topModelNode,
+        selectedCheckPoint:  state.checkPointList.selectedCheckPoint,
     }),
     dispatch => ({
         getCheckPoints: () => {
@@ -184,5 +194,8 @@ export default connect(
         navSuccess: () => {
             dispatch(checkPointListAction.navSuccess())
         },
+        reset: () => {
+            dispatch(checkPointListAction.reset())
+        }
     })
 )(CheckPointListPage);
