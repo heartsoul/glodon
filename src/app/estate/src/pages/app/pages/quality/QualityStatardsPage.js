@@ -15,26 +15,9 @@ var {
     height: deviceHeight,
     width: deviceWidth
 } = Dimensions.get('window');
-const cmdString = "\
-function callMessage(action, data, callbackName) { \
-  let actionIn = 'unknown'; let dataIn = {}; let callbackNameIn = 'defaultReturn';\
-  if(action) { actionIn = action;} else {alert('无效调用');return;}\
-  if(data) { dataIn = data;}\
-  if(callbackName) { callbackNameIn = callbackName; } \
-  let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});\
-  console.log('执行命令：'+cmd);\
-  window.postMessage(cmd);\
-}\
-window.modelEvent = {\
-  defaultReturn : function(data) {console.log('执行命令成功:'+data);},\
-  loadDotsData : function() { callMessage('loadDotsData');},\
-  invalidateToken : function() { callMessage('invalidateToken');},\
-  cancelPosition : function() { callMessage('cancelPosition');},\
-  getPosition : function(jsonData) { callMessage('getPosition', jsonData);},\
-  getPositionInfo : function(jsonData) { callMessage('getPositionInfo', jsonData);},\
-};\
-//document.addEventListener('message', function(e) {eval(e.data);});\
-";
+
+const imagePlus = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAAAXNSR0IArs4c6QAAAjJJREFUWAntmUFOwkAUhp2GuOICegITD+CeeALXxI1WYMPKRBMTURITTVyxAYxsjHsvYFjrAYgXMNEDsGJB/f9mpmkII0P7oDV2kvIebzozX//XKfBQG7oFQaB6vd6xUuoI/i7CZdO3ZjsGwwgMg3q9/gg/4PqKL/1+f2s6nT7DrfB9jtrQ87xqrVb78qhkTiGpV4VsZFTdbtdH4IFRyDyBuYR94lUwtu7G7ALsEOu2YTf1+ie8L98Q2GMAgOe4L+50Z6YGXGfgutVc70w9N07YqKTxs7ZxFjJ6AIp2d1bpnifKDEuZoH+iiYMiTYqH9NWLgmLH7mATfPKgLwkrCgqwAxzb+qAv1kRB8XA2z72NuC9BKwoqAWSbowC1KZM0XiiaVDnbuEJRmzJJ44WiSZWzjSvZOuJx/Aq4wffDU3zZiD554v0Wv4VxLUtfGMacE8x532g0Ln47j32uqW8uCblo3bBfz9l0OdkVtMOrd5lwmXP0nB2XMU6p16lZmB6k+gqLmnRfYxzfizRXRUUWSzNJAZpGvXljC0XnqZIm9j8VReUtetbG/TRKmrGiigLuBRN/89C+WSe1dXrgu67i+/4HPhb5c5kFt7AA6zp20XmioKsANBcgmnoz6SosQcdmYhZRjZ+1nWEZe7iXRgYK9xcrvblocRYylhAYgCysOMO2UeDiRshFadwoRsawRAi4VwQrpiNndohy/T5TH+CZVwXcMGeAxAn/viFjVHCFvLn+Q+wH19fSqWHjCcYAAAAASUVORK5CYII=';
+const imageMinus = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAAAXNSR0IArs4c6QAAAbNJREFUWAntmUFKxDAUhk0YXM0FPIMHcF88hrjRse1mVoKC4GJAUHA1m7bibMRjSNd6gDmDF+hqFo3/XxIZBqFxeEwjJou+zGv68vV/KWRe1J5txhhVluW5UuoM/UO4x+7ejm0DhiUYFlmWPaNvOL/ipaqqg7ZtX9FN+DugVmutT9I0/dRUMlBI6pWQjYyqKIoJHE/0QuYVzC3sC9+Cvl03Zhdgp5h3Brtv57/gunyH44gOAF5jXTzYm4MacF2B695yfTD1/HC6RiVdf2i7zkJGDaDvr3uodP8kygbLmKB/okVQ6TRFRaOi0gpIx4trNCoqrYB0vLhG/62iI583x7+AO+wPL7EvdDtun8d6xyDmCjEf8zy/6Rvsu0an0pAEszGnfZC87ws659v7BPzNGBtz7vOMV+ptanrT4zPhtmN8Fd02vthzEVRMShsoKhoVlVZAOl5co1FRaQWk43GNNi4oi6iuP7TdYGk0djBLB4VtFyu9QbR1FjKO4FiArKs4w85Q6WXlOYjSuFOMjAoXlsff4EzcjcBsjXL9MVNveEQCuDowQOJ0xzdk7M6Z6LHKBnsg9gUjHKh1fPU0mwAAAABJRU5ErkJggg==';
 
 //默认应用的容器组件
 export default class QualityStatardsPage extends Component {
@@ -55,44 +38,54 @@ export default class QualityStatardsPage extends Component {
         }
     }
 
-    proccessHtml = (dataItem,level) => {
-       let html = `<div class='standardsContent${level+1}'>`;
-       let children = dataItem.children;
-       html += `<div class='standardsHeader standardsHeader${level}'><p><img src="images/add.jpg"  alt="-" width=20 height=20></img>&nbsp;${dataItem.name}</p></div>`;
-       html += `<div class='standardsOff'><p>${API.removeHTMLTag(dataItem.content)}</p>`;
-       children.map((item,index)=>{
-            html += this.proccessHtml(item,level+1);
-       });
-       html += '</div></div>';
-       return html;
+    proccessHtml = (dataItem, level, isFirst) => {
+        let style = isFirst? 'display:""' : 'display:none';
+        let html = `<div class='standardsContent${level + 1}'>
+       `;
+        let children = dataItem.children;
+        html += `<div class='standardsHeader standardsHeader${level}'>
+       <p><img onclick='onImageClick(this,"id_${dataItem.id}")' open=false src='${isFirst ? imageMinus : imagePlus}'  alt="-" width=20 height=20></img>&nbsp;${dataItem.name}</p></div>
+       <div class='standardsOff' style='${style}' id='id_${dataItem.id}'>
+       <p>${API.removeHTMLTag(dataItem.content)}</p>
+       `;
+        children.map((item, index) => {
+            html += this.proccessHtml(item, level + 1, false);
+        });
+        html += `
+       </div>
+       </div>
+       `;
+        return html;
     }
     proccessHtmlTop = (rootItem) => {
         let children = rootItem.children;
         let html = '';
-        children.map((item,index)=>{
-             html += this.proccessHtml(item,0);
+        let size = children.length;
+        children.map((item, index) => {
+            html += this.proccessHtml(item, 0, size <= 1);
         });
         return html;
-     }
+    }
     proccessData = (dataList) => {
-        
-        let head = `<div class='standardsHeaderTop'><p>${this.props.navigation.state.params.qualityCheckpointName}质检标准</p>`
+
+        let head = `<div class='standardsHeaderTop'><p>${this.props.navigation.state.params.qualityCheckpointName}质检标准</p>
+        `
         let treeItem = [];
-        let treeItemMap = {'0':[]};
-        let treeItemMapAll = {'0':{'children':[]}};
-        dataList.map((item,index)=>{
-            treeItemMapAll[''+item.id] =item;
+        let treeItemMap = { '0': [] };
+        let treeItemMapAll = { '0': { 'children': [] } };
+        dataList.map((item, index) => {
+            treeItemMapAll['' + item.id] = item;
             item.children = [];
         });
-        dataList.map((item,index)=>{
+        dataList.map((item, index) => {
             let id = item.id;
             let parentId = item.parentId;
-            if(!parentId) {
+            if (!parentId) {
                 parentId = '0';
             }
             let name = item.name;
-            var parentItem = treeItemMapAll[''+parentId];
-            if(!parentItem) {
+            var parentItem = treeItemMapAll['' + parentId];
+            if (!parentItem) {
                 parentItem = treeItemMapAll['0'];
             }
             parentItem.children.push(item);
@@ -174,25 +167,35 @@ export default class QualityStatardsPage extends Component {
         }
         </style>
         <script type="text/javascript">
-        
-       </script>
+        const imagePlus = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAAAXNSR0IArs4c6QAAAjJJREFUWAntmUFOwkAUhp2GuOICegITD+CeeALXxI1WYMPKRBMTURITTVyxAYxsjHsvYFjrAYgXMNEDsGJB/f9mpmkII0P7oDV2kvIebzozX//XKfBQG7oFQaB6vd6xUuoI/i7CZdO3ZjsGwwgMg3q9/gg/4PqKL/1+f2s6nT7DrfB9jtrQ87xqrVb78qhkTiGpV4VsZFTdbtdH4IFRyDyBuYR94lUwtu7G7ALsEOu2YTf1+ie8L98Q2GMAgOe4L+50Z6YGXGfgutVc70w9N07YqKTxs7ZxFjJ6AIp2d1bpnifKDEuZoH+iiYMiTYqH9NWLgmLH7mATfPKgLwkrCgqwAxzb+qAv1kRB8XA2z72NuC9BKwoqAWSbowC1KZM0XiiaVDnbuEJRmzJJ44WiSZWzjSvZOuJx/Aq4wffDU3zZiD554v0Wv4VxLUtfGMacE8x532g0Ln47j32uqW8uCblo3bBfz9l0OdkVtMOrd5lwmXP0nB2XMU6p16lZmB6k+gqLmnRfYxzfizRXRUUWSzNJAZpGvXljC0XnqZIm9j8VReUtetbG/TRKmrGiigLuBRN/89C+WSe1dXrgu67i+/4HPhb5c5kFt7AA6zp20XmioKsANBcgmnoz6SosQcdmYhZRjZ+1nWEZe7iXRgYK9xcrvblocRYylhAYgCysOMO2UeDiRshFadwoRsawRAi4VwQrpiNndohy/T5TH+CZVwXcMGeAxAn/viFjVHCFvLn+Q+wH19fSqWHjCcYAAAAASUVORK5CYII=';
+        const imageMinus = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAAAXNSR0IArs4c6QAAAbNJREFUWAntmUFKxDAUhk0YXM0FPIMHcF88hrjRse1mVoKC4GJAUHA1m7bibMRjSNd6gDmDF+hqFo3/XxIZBqFxeEwjJou+zGv68vV/KWRe1J5txhhVluW5UuoM/UO4x+7ejm0DhiUYFlmWPaNvOL/ipaqqg7ZtX9FN+DugVmutT9I0/dRUMlBI6pWQjYyqKIoJHE/0QuYVzC3sC9+Cvl03Zhdgp5h3Brtv57/gunyH44gOAF5jXTzYm4MacF2B695yfTD1/HC6RiVdf2i7zkJGDaDvr3uodP8kygbLmKB/okVQ6TRFRaOi0gpIx4trNCoqrYB0vLhG/62iI583x7+AO+wPL7EvdDtun8d6xyDmCjEf8zy/6Rvsu0an0pAEszGnfZC87ws659v7BPzNGBtz7vOMV+ptanrT4zPhtmN8Fd02vthzEVRMShsoKhoVlVZAOl5co1FRaQWk43GNNi4oi6iuP7TdYGk0djBLB4VtFyu9QbR1FjKO4FiArKs4w85Q6WXlOYjSuFOMjAoXlsff4EzcjcBsjXL9MVNveEQCuDowQOJ0xzdk7M6Z6LHKBnsg9gUjHKh1fPU0mwAAAABJRU5ErkJggg==';
+        function onImageClick(img, divId) {
+            var open = img.open ? false : true;
+            var divSub = document.getElementById(divId);
+            divSub.style.display = open ? '' : 'none';
+            img.open = open;
+            img.src = open ? imageMinus : imagePlus;
+        }
+        </script>
         </HEAD>
         <BODY>
         ${head}
+
         ${body}
+
         </BODY>
         </HTML>`;
-        console.log('>>>>>html:\n'+html);
+        console.log('>>>>>html:\n' + html);
         return html;
     }
 
     fetchData = () => {
-         // "qualityCheckpointId": 5200014,
+        // "qualityCheckpointId": 5200014,
         // "qualityCheckpointName": "墙面",
-        this.props.navigation.setParams({title:this.props.navigation.state.params.qualityCheckpointName}) 
+        this.props.navigation.setParams({ title: this.props.navigation.state.params.qualityCheckpointName })
         let templateId = this.props.navigation.state.params.qualityCheckpointId;
         API.getStandardsItems(templateId).then((responseData) => {
-           let html = this.proccessData(responseData.data);
+            let html = this.proccessData(responseData.data);
             this.setState({
                 isLoading: false,
                 error: false,
@@ -229,7 +232,7 @@ export default class QualityStatardsPage extends Component {
                         // onMessage={(e) => this.onMessage(e)}
                         // injectedJavaScript={cmdString}
                         //  onLoadEnd ={()=>this.refs.webview.postMessage('javascript:window.modelEvent.loadDotsData();')}
-                        source={{ html: this.state.html}}
+                        source={{ html: this.state.html }}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
                 </View>
