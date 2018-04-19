@@ -3,6 +3,22 @@ import {
 } from 'react-native';
 
 import { NavigationActions } from 'app-3rd/react-navigation'
+class ActionRightsObject {
+    constructor() {
+        super.constructor();
+        this.items = [];
+        console.log('constructor:'+this.items);
+    }
+    size = () => {
+        console.log('size:'+this.items);
+        return this.items.size;
+    }
+    contains = (key) => {
+        console.log('contains:'+this.items);
+        return this.items.indexOf(key) >= 0;
+    }
+}
+
 export default class BaseStorage {
     constructor() {
         super.constructor();
@@ -48,6 +64,7 @@ class GLDStorage extends BaseStorage {
         this.fileId = '';
         this.projectIdVersionId = '';
         this.projectId = 0;
+        this.actionRights = {};
     }
     saveLoginToken = (token) => {
         this.loginToken = token;
@@ -266,6 +283,29 @@ class GLDStorage extends BaseStorage {
         bimChooserKey: '',//选择图纸模型的时候记录目录页面的初始navigation key，goBack from this page.
         bimChooserCallback: () => { },//选择图纸模型后的回调
     };
+
+    loadAuthority = (key) => {
+        if(this.actionRights[key]) {
+            AsyncStorage.getItem(key)
+            .then((value) => {
+                this.setActionRights(key,value.parseJSON());
+            });
+            return this.actionRights[key];
+        } else {
+            return new ActionRightsObject([]);
+        }
+    }
+
+    setActionRights = (key,value) => {
+        if(!value) {
+            return;
+        }
+        this.setItem(key, JSON.stringify(value));
+        let rights = new ActionRightsObject();
+        rights.items = value;
+        this.actionRights[key] = rights;
+        
+    }
 }
 // 全局变量
 global.storage = new GLDStorage();

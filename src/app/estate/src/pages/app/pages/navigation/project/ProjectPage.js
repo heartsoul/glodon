@@ -7,7 +7,8 @@ import {ActivityIndicator, Animated, FlatList,SectionList,
     ScrollView, StyleSheet, 
     Text, View,StatusBar,Image,TouchableOpacity,RefreshControl,Dimensions} from "react-native";
 
-import * as USERAPI from "app-api"; 
+import * as USERAPI from "app-api";
+import * as AuthorityManager from "./AuthorityManager";
 var { width, height } = Dimensions.get("window");
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 export default class projectList extends Component {
@@ -147,8 +148,14 @@ export default class projectList extends Component {
     }
     _itemClick = (item,index) => {
         let navigator = this.props.navigation;
-        storage.saveProject(""+item.value.id,""+item.value.name);
-        storage.gotoMainPage(navigator);
+        AuthorityManager.loadAuthoritys(""+item.value.id,(success)=>{
+            if(!success) {
+                alert('获取权限失败');
+                return;
+            }
+            storage.saveProject(""+item.value.id,""+item.value.name);
+            storage.gotoMainPage(navigator);
+        });
     }
 
     _separator = () => {

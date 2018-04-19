@@ -1,4 +1,4 @@
-import {authToken,setCurrentTenant,accountInfo,login as userLogin} from 'app-api'
+import * as API from 'app-api'
 
 import * as types from '../constants/loginTypes'
 
@@ -9,6 +9,14 @@ export function login(username, pwd) {
   return loginOld(username, pwd);
   // return loginNew(username, pwd);
 }
+
+export function logout() {
+  console.log('退出登录方法')
+  return dispatch => {
+    dispatch(logoutSuccess())
+  }
+}
+
 // 访问登录接口 根据返回结果来划分action属于哪个type,然后返回对象,给reducer处理
 function loginOld(username, pwd) {
   return dispatch => {
@@ -21,43 +29,13 @@ function loginOld(username, pwd) {
         data: { title: "登录", message: "是否确认登录？" }
       },
       (data, request) => {
-        userLogin(username, pwd).then((response) => {
-          accountInfo().then((userInfo) => {
-            console.log(userInfo);
-            if (userInfo.err) {
-              dispatch(loginError(false));
-              return;
-            }
-            let data = userInfo["data"];
-            if (!data) {
-              dispatch(loginError(false));
-              return;
-            }
-            storage.userInfo = data;
-            let ac = data["accountInfo"];
-            if (!ac) {
-              dispatch(loginError(false));
-              return;
-            }
-            storage.hasChoose((ret) => {
-              if (!ret) {
-                dispatch(loginSuccessChoose(true, response.data))
-                return;
-              }
-              storage.loadTenant((tenant) => {
-                setCurrentTenant(tenant).then((responseData) => {
-                  dispatch(loginSuccess(true, response.data))
-                });
-              });
-            });
-          }).catch((e) => {
-            dispatch(loginError(false));
-          });
+        API.login(username, pwd).then((response) => {
+          loadAccount(dispatch,response);
         }).catch((e) => {
           dispatch(loginError(false));
         });
       });
-    };
+  };
 }
 
 // 访问登录接口 根据返回结果来划分action属于哪个type,然后返回对象,给reducer处理
@@ -65,56 +43,47 @@ function loginNew(username, pwd) {
   return dispatch => {
     dispatch(isLogining())
 
-    authToken(username, pwd).then((response) => {
+    API.authToken(username, pwd).then((response) => {
       storage.saveLoginToken(response.data.access_token);
-      accountInfo().then((userInfo) => {
-        console.log(userInfo);
-        if (userInfo.err) {
-          dispatch(loginError(false));
-          return;
-        }
-        let data = userInfo["data"];
-        if (!data) {
-          dispatch(loginError(false));
-          return;
-        }
-        storage.userInfo = data;
-        let ac = data["accountInfo"];
-        if (!ac) {
-          dispatch(loginError(false));
-          return;
-        }
-        storage.hasChoose((ret) => {
-          if (!ret) {
-            dispatch(loginSuccessChoose(true, response.data))
-            return;
-          }
-          storage.loadTenant((tenant) => {
-            setCurrentTenant(tenant).then((responseData) => {
-              dispatch(loginSuccess(true, response.data))
-            });
-          });
-        });
-      }).catch((e) => {
-        dispatch(loginError(false));
-      });
+      loadAccount(dispatch,response);
     }).catch((e) => {
       dispatch(loginError(false));
     });
   }
 }
 
-export function logout() {
-  console.log('退出登录方法')
-  return dispatch => {
-    // 模拟用户登录
-    // let result = fetch('https://www.baidu.com/')
-    //     .then((res)=>{
-    dispatch(logoutSuccess())
-    // }).catch((e)=>{
-    //   dispatch(loginError(false));
-    // })
-  }
+function loadAccount(dispatch,response) {
+  API.accountInfo().then((userInfo) => {
+    console.log(userInfo);
+    if (userInfo.err) {
+      dispatch(loginError(false));
+      return;
+    }
+    let data = userInfo["data"];
+    if (!data) {
+      dispatch(loginError(false));
+      return;
+    }
+    storage.userInfo = data;
+    let ac = data["accountInfo"];
+    if (!ac) {
+      dispatch(loginError(false));
+      return;
+    }
+    storage.hasChoose((ret) => {
+      if (!ret) {
+        dispatch(loginSuccessChoose(true, response.data))
+        return;
+      }
+      storage.loadTenant((tenant) => {
+        API.setCurrentTenant(tenant).then((responseData) => {
+          dispatch(loginSuccess(true, response.data))
+        });
+      });
+    });
+  }).catch((e) => {
+    dispatch(loginError(false));
+  });
 }
 
 function logoutSuccess() {

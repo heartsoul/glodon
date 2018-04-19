@@ -14,9 +14,6 @@ const api_uaa_logout = '/uaa/logout'; // GET
 const api_logout = '/logout'; // GET
 // 获取用户信息
 const api_admin_accout = '/admin/account';
-// 获取权限
-const api_auths_moduleRights = '/admin/auths/{appCode}/moduleRights/{moduleCode}'; // GET deptId=
-
 // 获取用户信息，包含租户列表信息
 const api_uaa_user = '/uaa/user';
 // 可用项目列表 http://192.168.81.30/pmbasic/swagger-ui.html#!/project-controller/queryAvailableProjectsUsingGET

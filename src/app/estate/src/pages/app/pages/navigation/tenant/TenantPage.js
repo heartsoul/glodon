@@ -28,6 +28,12 @@ export default class tenantList extends Component {
 
     //网络请求
     fetchData = ()=> {
+        if(storage.userInfo && storage.userInfo["accountInfo"]) {
+            
+        } else {
+            storage.gotoLogin(this.props.navigation);
+            return;
+        }
       let userTenants = storage.userInfo["accountInfo"]["userTenants"];
         if(userTenants) {
                 let data = userTenants;
@@ -121,7 +127,7 @@ export default class tenantList extends Component {
         //   alert(item.value.tenantId);
          USERAPI.setCurrentTenant(item.value.tenantId).then((responseData)=>{
             let navigator = this.props.navigation;
-             storage.saveTenant(item.value.tenantId);
+             storage.saveTenant(item.value.id);
              storage.pushNext(navigator, "ProjectPage")
 
          });
