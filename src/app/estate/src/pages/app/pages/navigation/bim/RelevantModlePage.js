@@ -75,7 +75,6 @@ export default class RelevantModelPage extends Component {
         let params = this.props.navigation.state.params;
         let pageType = params.pageType;
         let relevantModel = params.relevantModel;
-
         if (pageType === PageType.PAGE_TYPE_EDIT_QUALITY || pageType === PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
             this.setState({
                 showChangeMode: true,
@@ -154,10 +153,7 @@ export default class RelevantModelPage extends Component {
      */
     finish = (component) => {
         let relevantModel = {
-            fileId: this.state.fileId,
-            fileName: this.state.name,
-            buildingId: '',
-            buildingName: '',
+           ...this.state.selectedModel,
             component: component,
         }
         console.log(this.state.pageType)
