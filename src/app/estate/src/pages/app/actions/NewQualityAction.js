@@ -343,8 +343,12 @@ function getDetailInfo(info) {
     let projectId = info.projectId;
     let projectName = info.projectName;
 
-    let needRectification = info.needRectification;
-    let lastRectificationDate = info.lastRectificationDate;
+
+    //整改信息
+    let rectificationData = {
+        value: info.needRectification,
+        date: info.lastRectificationDate,
+    };
 
     let selectedCheckPoint = {
         id: info.qualityCheckpointId,//-1
@@ -379,6 +383,7 @@ function getDetailInfo(info) {
         relevantBluePrint: relevantBlueprint,//关联图纸
         relevantModel: relevantModel,//关联模型
         componentName: componentName,
+        rectificationData: rectificationData,
     };
 
     return ret;

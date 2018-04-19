@@ -27,10 +27,6 @@ import * as API from "app-api";
 import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
 import * as NewQualityAction from "./../../actions/NewQualityAction";
 
-const UPLOADAPI = API
-const QUALITYAPI = API
-const PMBASICAPI = API
-
 import { Modal, Toast } from 'antd-mobile';
 
 const REF_PHOTO = 'gldPhoto';
@@ -101,8 +97,8 @@ class NewPage extends React.Component {
     /**
      * 整改期限{ value: true, date: '2018-04-08' }
      */
-    getSwitchValue = () => {
-        return this.refs[REF_RECTIFICATION].getSwitchValue()
+    getRectificationData = () => {
+        return this.refs[REF_RECTIFICATION].getRectificationData()
     }
 
     /**
@@ -121,7 +117,7 @@ class NewPage extends React.Component {
             inspectCompanyData: this.getSelectedData(REF_INSPECT_COMPANY),
             personData: this.getSelectedData(REF_INSPECT_COMPANY),
             checkPoint: this.getSelectedCheckPoint(),
-            rectificationData: this.getSwitchValue(),
+            rectificationData: this.getRectificationData(),
             state: this.state,
         };
         return ret;
@@ -240,7 +236,7 @@ class NewPage extends React.Component {
                     name: '2122',
                 }]} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" onChange={() => alert('收到!')} />
 
-                <RectificationView ref={REF_RECTIFICATION} ></RectificationView>
+                <RectificationView ref={REF_RECTIFICATION} rectificationData={this.state.rectificationData}></RectificationView>
                 <SelectCheckPointView ref={REF_CHECKPOINT} selectedCheckPoint={this.state.selectedCheckPoint} ></SelectCheckPointView>
 
                 <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint ? this.state.relevantBluePrint.name : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />

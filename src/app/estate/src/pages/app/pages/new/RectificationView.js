@@ -3,38 +3,63 @@ import {
     StyleSheet,
     Text,
     Switch,
-    View
+    View,
+    TouchableOpacity,
 } from 'react-native';
 import PropTypes from 'prop-types'
 import { ListRow } from 'app-3rd/teaset';
+import { DatePicker, List } from 'antd-mobile';
+
+const nowTimeStamp = Date.now();
+const now = new Date(nowTimeStamp);
 
 export default class RectificationView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            switchValue: false,//需要整改
+            needRectification: false,//需要整改
+            date: now,
         };
     }
 
-    onChangeSwitch = (switchValue) => {
+    componentWillReceiveProps(nextProps) {
+        let rectificationData = this.props.rectificationData;
+        if (rectificationData) {
+            let date = now;
+            if(rectificationData.date){
+                date = new Date(rectificationData.date);
+            }
+            this.setState({
+                needRectification: rectificationData.value,
+                date: date,
+            })
+        }
+    }
+
+    onChangeSwitch = (needRectification) => {
         this.setState({
-            switchValue: switchValue,
+            needRectification: needRectification,
         })
     }
 
+
     renderSwitchView = () => {
         return (
-            <Switch value={this.state.switchValue} onValueChange={(value) => { this.onChangeSwitch(value) }} />
+            <Switch value={this.state.needRectification} onValueChange={(value) => { this.onChangeSwitch(value) }} />
         );
     }
 
     /**
-     * 
+     * 获取整改信息
      */
-    getSwitchValue = () => {
+    getRectificationData = () => {
+        let date = '';
+        if (this.state.needRectification) {
+            date = this.state.date;
+        }
         return {
-            value: this.state.switchValue,
-            date: '',
+            value: this.state.needRectification,
+            date: date,
         };
     }
 
@@ -43,9 +68,22 @@ export default class RectificationView extends Component {
         return (
             <View style={styles.container}>
                 <ListRow title='需要整改' bottomSeparator='indent' detail={this.renderSwitchView()} />
+
                 {
-                    (this.state.switchValue) ? (
-                        <ListRow title='整改期限' accessory='indicator' bottomSeparator='indent' detail={'2018-04-08'} />
+                    (this.state.needRectification) ? (
+                        <DatePicker
+                            mode="date"
+                            title=" "
+                            extra=" "
+                            value={this.state.date}
+                            onChange={date => this.setState({ date: date })}
+                        >
+                            <List.Item arrow="horizontal" >
+                                <Text style={{ fontSize: 15, color: "#000000" }}>
+                                    整改期限
+                        </Text>
+                            </List.Item>
+                        </DatePicker>
                     ) : (null)
                 }
             </View>
