@@ -206,7 +206,7 @@ export default class BimFileChooser extends Component {
                 if (this.state.dataType === '图纸文件') {
                     global.storage.pushNext(navigator, "RelevantBlueprintPage", { title: item.value.name, fileId: item.value.fileId, pageType: this.state.pageType });
                 } else {
-                    global.storage.pushNext(navigator, "RelevantModlePage", { title: item.value.name, fileId: item.value.fileId, pageType: this.state.pageType });
+                    global.storage.pushNext(navigator, "RelevantModlePage", { title: item.value.name, fileId: item.value.fileId, pageType: this.state.pageType, relevantModel:item.value });
                 }
             });
 

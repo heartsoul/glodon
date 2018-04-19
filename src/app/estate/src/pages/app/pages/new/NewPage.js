@@ -62,7 +62,7 @@ class NewPage extends React.Component {
     getSelectedData = (ref) => {
         let ele = this.refs[ref];
         let ret = {};
-        if(ele){
+        if (ele) {
             ret = ele.getSelectedData();
         }
         return ret;
@@ -85,20 +85,20 @@ class NewPage extends React.Component {
         //     {"path" : "file:///storage/emulated/0/pic.png", "name" : "pic.png", "length" : 107815},
         //     {"path" : "file:///storage/emulated/0/pic2.png", "name" : "pic2.png", "length" : 61365}
         // ];
-        this.refs[REF_PHOTO]._loadFile((files) => {
-            if (files && files.length > 0) {
-                console.log(files)
-                UPLOADAPI.upLoadFiles(files, (code, result) => {
-                    this.setState({
-                        //上传图片的结果
-                        files: result,
-                    });
-                    this._submit();
-                });
-            } else {
-                this._submit();
-            }
-        });
+        // this.refs[REF_PHOTO]._loadFile((files) => {
+        //     if (files && files.length > 0) {
+        //         console.log(files)
+        //         UPLOADAPI.upLoadFiles(files, (code, result) => {
+        //             this.setState({
+        //                 //上传图片的结果
+        //                 files: result,
+        //             });
+        //             this._submit();
+        //         });
+        //     } else {
+        this._submit();
+        //     }
+        // });
     }
 
     /**
@@ -195,6 +195,13 @@ class NewPage extends React.Component {
         params.drawingName = this.state.relevantBluePrint.name;
         params.drawingPositionX = this.state.relevantBluePrint.drawingPositionX;
         params.drawingPositionY = this.state.relevantBluePrint.drawingPositionY;
+
+        //关联模型
+        params.elementName = this.state.componentName;
+        params.elementId = this.state.relevantModel.component.elementId;
+        params.buildingName = this.state.relevantModel.buildingName;
+        params.buildingId = this.state.relevantModel.buildingId;
+        params.gdocFileId = this.state.relevantModel.fileId;
 
         params.files = this.state.files;
 
@@ -297,7 +304,7 @@ class NewPage extends React.Component {
         // }
         if (params && params.item) {
             API.getQualityInspectionDetail(storage.loadProject(), params.item.value.id).then((responseData) => {
-            // API.getQualityInspectionDetail('5200146', '5200227').then((responseData) => {
+                // API.getQualityInspectionDetail('5200146', '5200227').then((responseData) => {
                 let editInfo = {};
                 if (responseData.data && responseData.data.inspectionInfo) {
                     editInfo = responseData.data.inspectionInfo;
@@ -344,7 +351,6 @@ class NewPage extends React.Component {
 
     //编辑页面进入时，已存在设置数据
     initialState = (info) => {
-
         let contentDescription = info.description;
         let inspectId = info.id;
         let code = info.code;
@@ -361,10 +367,19 @@ class NewPage extends React.Component {
         }
 
         let relevantBlueprint = {
-            drawingGdocFileId: info.drawingGdocFileId,
-            drawingName: info.drawingGdocFileId,
-            drawingPositionX: info.drawingGdocFileId,
-            drawingPositionY: info.drawingGdocFileId,
+            fileId: info.drawingGdocFileId,
+            name: info.drawingName,
+            drawingPositionX: info.drawingPositionX,
+            drawingPositionY: info.drawingPositionY,
+        }
+
+        //关联模型
+        let componentName = info.elementName;
+        let relevantModel = {
+            fileId: info.gdocFileId,
+            buildingName: info.buildingName,
+            buildingId: info.buildingId,
+            component: { id: info.elementId, name: info.elementName }
         }
 
         this.setState({
@@ -377,9 +392,13 @@ class NewPage extends React.Component {
 
             selectedCheckPoint: selectedCheckPoint,//选中的质检项目
             relevantBluePrint: relevantBlueprint,//关联图纸
-            relevantModel: {},//关联模型
-            
+            relevantModel: relevantModel,//关联模型
+            componentName: componentName,
         });
+
+
+
+
     }
 
     _itemDividerLine = () => {
@@ -411,6 +430,12 @@ class NewPage extends React.Component {
             this.setState({
                 relevantModel: data,
             });
+            API.getModelElementProperty(storage.projectId, storage.projectIdVersionId, data.fileId, data.component.elementId)
+                .then(responseData => {
+                    this.setState({
+                        componentName: responseData.data.data.name,
+                    });
+                });
         }
     }
 
@@ -427,14 +452,14 @@ class NewPage extends React.Component {
             contentDescription: PropTypes.string,//内容描述
 
             selectedCheckPoint: {},//选中的质检项目
-
-            files: [{
-                url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
-                name: '2121',
-            }, {
-                url: 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg',
-                name: '2122',
-            }],//图片
+            componentName: '',
+            // files: [{
+            //     url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
+            //     name: '2121',
+            // }, {
+            //     url: 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg',
+            //     name: '2122',
+            // }],//图片
 
         }
 
@@ -502,7 +527,7 @@ class NewPage extends React.Component {
                 <SelectCheckPointView ref={REF_CHECKPOINT} selectedCheckPoint={this.state.selectedCheckPoint} ></SelectCheckPointView>
 
                 <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint ? this.state.relevantBluePrint.name : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
-                <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel ? this.state.relevantModel.fileName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
+                <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.componentName ? this.state.componentName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
 
                 <View style={{ marginBottom: 30 }}>
                     <TouchableHighlight
