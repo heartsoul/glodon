@@ -82,6 +82,11 @@ export default class SelectCheckPointView extends Component {
         });
     }
 
+    toCheckPointInfo = () => {
+        let navigator = this.props.navigation;
+        storage.pushNext(navigator, "QualityStatardsPage", { 'qualityCheckpointId': this.state.selectedCheckPoint.id, 'qualityCheckpointName': this.state.selectedCheckPoint.name });
+    }
+
     getDetailView = () => {
         return (
             <View style={{ flexDirection: 'row', flex: 1, }}>
@@ -96,7 +101,7 @@ export default class SelectCheckPointView extends Component {
                 />
                 {
                     (this.state.isShowMark) ? (
-                        <TouchableOpacity style={{ paddingRight: 5, alignSelf: "center", }} onPress={() => { }}>
+                        <TouchableOpacity style={{ paddingRight: 5, alignSelf: "center", }} onPress={() => { this.toCheckPointInfo() }}>
                             <Image style={styles.markImage} source={require('app-images/icon_benchmark.png')} />
                         </TouchableOpacity>
                     ) : (null)

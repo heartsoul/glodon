@@ -73,7 +73,7 @@ export function toCheckPointInfoPage(checkPoint) {
     return {
         type: types.CHECK_POINT_TO_INFO,
         selectedCheckPoint: checkPoint,
-        navPage: '',
+        navPage: 'QualityStatardsPage',
     }
 }
 

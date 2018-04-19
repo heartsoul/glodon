@@ -39,8 +39,12 @@ class CheckPointListPage extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.navPage) {
             let navigator = this.props.navigation;
-            storage.pushNext(navigator, nextProps.navPage);
-            this.props.navSuccess();
+            if(nextProps.navPage === 'QualityStatardsPage'){
+                storage.pushNext(navigator, "QualityStatardsPage", { 'qualityCheckpointId': nextProps.selectedCheckPoint.id, 'qualityCheckpointName': nextProps.selectedCheckPoint.name });
+            }else{
+                storage.pushNext(navigator, nextProps.navPage);
+            }
+            // this.props.navSuccess();
             return false;
         }
         return true
@@ -172,6 +176,7 @@ export default connect(
         navPage: state.checkPointList.navPage,
         topDirNode: state.checkPointList.topDirNode,
         topModelNode: state.checkPointList.topModelNode,
+        selectedCheckPoint:  state.checkPointList.selectedCheckPoint,
     }),
     dispatch => ({
         getCheckPoints: () => {
