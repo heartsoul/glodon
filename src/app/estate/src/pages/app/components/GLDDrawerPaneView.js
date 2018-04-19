@@ -5,6 +5,9 @@ import { StyleSheet, Text as Label, View, ScrollView, Image, TouchableOpacity, D
 import { Drawer } from 'app-3rd/teaset';
 
 import * as API from 'app-api'
+import {BimFileEntry} from 'app-entry';//图纸模型选择及展示入口
+
+import PaneViewItem from './PaneViewItem'
 
 const { width, height } = Dimensions.get("window");
 const headerImage = require("app-images/icon_main_project_name.png");
@@ -14,185 +17,6 @@ const settingImage = require("app-images/icon_drawer_setting.png");
 
 const arrowUpImage = require("app-images/icon_draw_arrow_up.png");
 const arrowDownImage = require("app-images/icon_drawer_arrow_down.png");
-
-class PaneViewItem extends Component {
-    onClick = (event) => {
-        if (!this.props.onClick) {
-            return;
-        }
-        this.props.onClick();
-    }
-    renderHeader = () => {
-        return (
-            <View style={[styles.containerView]}>
-                <View style={styles.contentView}>
-                    <Image source={headerImage} style={styles.headerImage} />
-                    <Label style={[styles.content, this.props.color ? { color: this.props.color } : {}]}>{this.props.title}</Label>
-                </View>
-            </View>
-        );
-    }
-
-    renderSection = () => {
-        return (
-            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
-                <View style={[styles.containerView]}>
-                    <Image source={this.props.image} style={styles.infoMark} />
-                    <View style={styles.titleView}>
-                        <Label style={[styles.leftTitle, this.props.color ? { color: this.props.color } : {}]}>{this.props.title}</Label>
-                    </View>
-                    <Image source={this.props.rightImage} style={styles.rightMark} />
-                </View>
-            </TouchableOpacity>
-        );
-    }
-
-    renderSectionSimple = () => {
-        return (
-            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
-                <View style={[styles.containerView]}>
-                    <Image source={this.props.image} style={styles.infoMark} />
-                    <View style={styles.titleView}>
-                        <Label style={[styles.leftTitle, this.props.color ? { color: this.props.color } : {}]}>{this.props.title}</Label>
-                    </View>
-                    <View style={styles.imageEmpty} />
-                </View>
-            </TouchableOpacity>
-        );
-    }
-
-    renderLine = () => {
-        return (
-            <View style={[styles.containerView, styles.lineView]}>
-            </View>
-        );
-    }
-    renderItem = () => {
-        return (
-            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
-                <View style={[styles.containerView]}>
-                    <View style={styles.imageEmpty} />
-                    <View style={styles.titleView}>
-                        <Label style={[styles.leftTitle, this.props.color ? { color: this.props.color } : {}]}>{this.props.title}</Label>
-                    </View>
-                    <View style={styles.imageEmpty} />
-                </View>
-            </TouchableOpacity>
-        );
-    }
-    render = () => {
-        if (this.props.showType === 'header') {
-            return this.renderHeader();
-        }
-        if (this.props.showType === 'section') {
-            return this.renderSection();
-        }
-        if (this.props.showType === 'sectionSimple') {
-            return this.renderSectionSimple();
-        }
-        if (this.props.showType === 'line') {
-            return this.renderLine();
-        }
-        return this.renderItem();
-    }
-}
-PaneViewItem.propTypes = {
-
-    /**
-     * 控件展现类型 default|header|section|sectionSimple|line
-     */
-    showType: PropTypes.string,
-    /**
-     * 点击响应
-     */
-    onClick: PropTypes.func,
-    /**
-     * 标题
-     */
-    title: PropTypes.string,
-
-    /**
-     * 文字颜色
-     */
-    color: PropTypes.string,
-    /**
-     * icon image
-     */
-    image: PropTypes.any,
-    /**
-     * icon right image
-     */
-    rightImage: PropTypes.any,
-};
-
-
-const styles = StyleSheet.create({
-
-    containerView: {
-        marginTop: 10,
-        marginBottom: 5,
-        marginLeft: 20,
-        marginRight: 20,
-        flexDirection: 'row',
-    },
-    content: {
-        fontSize: 16,
-        fontWeight: '100',
-    },
-
-    leftTitle: {
-        fontSize: 16,
-        width: 75,
-        color: '#FDFDFD',
-        fontWeight: '100',
-        // fontFamily:"PingFangSC-Light",
-    },
-    titleView: {
-        flexDirection: 'row',
-
-    },
-    contentView: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        alignContent: "center",
-        justifyContent: 'center',
-        width: "100%",
-    },
-    infoMark: {
-        width: 18,
-        height: 18,
-        marginRight: 10,
-        resizeMode: 'contain',
-    },
-    imageEmpty: {
-        width: 18,
-        height: 18,
-        marginRight: 10,
-    },
-    rightMark: {
-        width: 14,
-        height: 14,
-        right: 0,
-        position: 'absolute',
-        resizeMode: 'contain',
-    },
-    headerImage: {
-        width: 50,
-        height: 50,
-        resizeMode: 'contain',
-        marginBottom: 5,
-    },
-    lineView: {
-        marginTop: 10,
-        marginBottom: 5,
-        marginLeft: 10,
-        marginRight: 10,
-
-        height: 0.5,
-        // width: '100%',
-        backgroundColor: '#cccccc55'
-    },
-});
 
 export default class GLDDrawerPaneView extends Component {
     static drawer = null
@@ -225,19 +49,32 @@ export default class GLDDrawerPaneView extends Component {
     }
 
     onQualityAction = () => {
-        // alert(1);
-    }
+        this.close();
+        let navigator = this.props.navigation;
+        storage.projectIdVersionId = '';
+        storage.fileId = '';
+        storage.bimToken = {};
 
+        storage.pushNext(navigator, "QualityMainPage")
+    }
+    //图纸
     onQualityDrawerAction = () => {
-        // alert(2);
+        this.close();
+        let navigator = this.props.navigation;
+        BimFileEntry.chooseBlueprintFromHome(navigator);
     }
-
+    //模型
     onQualityModleAction = () => {
-
+        this.close();
+        let navigator = this.props.navigation;
+        BimFileEntry.chooseQualityModelFromHome(navigator);
     }
-
+    //质检项目
     onCheckPointAction = () => {
-
+        this.close();
+        let navigator = this.props.navigation;
+        storage.projectIdVersionId = '';
+        storage.pushNext(navigator, "CheckPointListPage");
     }
 
     onEquipmentChange = () => {
@@ -248,11 +85,19 @@ export default class GLDDrawerPaneView extends Component {
     }
 
     onEquipmentAction = () => {
+        this.close();
+        let navigator = this.props.navigation;
+        storage.projectIdVersionId = '';
+        storage.fileId = '';
+        storage.bimToken = {};
 
+        storage.pushNext(navigator, "EquipmentMainPage")
     }
-
+    //模型预览
     onEquipmentModleAction = () => {
-
+        this.close();
+        let navigator = this.props.navigation;
+        BimFileEntry.chooseQualityModelFromHome(navigator);
     }
 
     onSettingAction = () => {
@@ -269,7 +114,7 @@ export default class GLDDrawerPaneView extends Component {
             <View style={{ backgroundColor: "#3a3a3a", height: height, width: width * 0.667 }}>
                 <ScrollView style={{ backgroundColor: "#3a3a3a", height: '100%', width: '100%' }}>
                     <View style={{ marginTop: 100 }}>
-                        <PaneViewItem title={storage.loadCurrentProjectName(() => { })} color={API.APP_COLOR_ITEM} showType="header" />
+                        <PaneViewItem title={storage.loadCurrentProjectName(() => { })} image={headerImage} color={API.APP_COLOR_ITEM} showType="header" />
                         <View style={{ width: '100%', height: 50 }}></View>
                         
                         <PaneViewItem title="质检管理" color={API.APP_COLOR_ITEM}
