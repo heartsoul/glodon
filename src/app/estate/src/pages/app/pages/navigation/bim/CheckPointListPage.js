@@ -46,6 +46,11 @@ class CheckPointListPage extends Component {
         return true
     }
 
+    componentWillUnmount() {
+        //页面销毁时，清空选中的项目
+        this.props.reset();
+    }
+
     renderPanelHeader = (item) => {
         return (
             <View style={styles.header}>
@@ -184,5 +189,8 @@ export default connect(
         navSuccess: () => {
             dispatch(checkPointListAction.navSuccess())
         },
+        reset: () => {
+            dispatch(checkPointListAction.reset())
+        }
     })
 )(CheckPointListPage);

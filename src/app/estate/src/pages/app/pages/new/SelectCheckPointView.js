@@ -3,6 +3,10 @@
 import React, { Component } from 'react';
 import {
     StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Image,
     View,
 } from 'react-native';
 import PropTypes from 'prop-types';
@@ -16,14 +20,22 @@ export default class SelectCheckPointView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedCheckPoint: {},
+            selectedCheckPoint: {
+                id: -1,
+                name: '',
+            },
+            inputName: '',
+            isShowMark: false,
         };
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!(this.state.selectedCheckPoint && this.state.selectedCheckPoint.name) && this.props.selectedCheckPoint && this.props.selectedCheckPoint.name) {
+        let selectedCheckPoint = this.props.selectedCheckPoint;
+        if (selectedCheckPoint && selectedCheckPoint.id && selectedCheckPoint.id != -1) {
             this.setState({
-                selectedCheckPoint: this.props.selectedCheckPoint,
+                selectedCheckPoint: selectedCheckPoint,
+                inputName: selectedCheckPoint.name,
+                isShowMark: true,
             })
         }
     }
@@ -37,31 +49,69 @@ export default class SelectCheckPointView extends Component {
                 selectedCheckPoint: this.state.selectedCheckPoint,
                 callback: (checkPoint) => {
                     this.setState({
+                        inputName: checkPoint.name,
                         selectedCheckPoint: checkPoint,
+                        isShowMark: true,
                     });
                 }
             }
         );
     }
 
+    /**
+     * 获取选中或者修改后的质检项目
+     */
     getSelectedCheckPoint = () => {
-        return this.state.selectedCheckPoint;
+        let selectedCheckPoint = {
+            name: this.state.inputName,
+            id: -1,
+        }
+        if (this.state.selectedCheckPoint.name === this.state.inputName) {
+            selectedCheckPoint.id = this.state.selectedCheckPoint.id;
+        }
+        return selectedCheckPoint;
     }
 
-    getDetailName = () => {
-        let name = '';
-        if (this.state.selectedCheckPoint && this.state.selectedCheckPoint.name) {
-            name = this.state.selectedCheckPoint.name;
-        }
+    textInputChange = (text) => {
+        let isShowMark = this.state.selectedCheckPoint
+            && this.state.selectedCheckPoint.name === text
+            && this.state.selectedCheckPoint.id && this.state.selectedCheckPoint.id != -1;
+        this.setState({
+            inputName: text,
+            isShowMark: isShowMark,
+        });
+    }
 
-        return name;
+    getDetailView = () => {
+        return (
+            <View style={{ flexDirection: 'row', flex: 1, }}>
+                <TextInput
+                    style={{ flex: 1, textAlignVertical: 'top', paddingLeft: 12, paddingRight: 12, paddingTop: 12, paddingBottom: 0, backgroundColor: '#ffffff' }}
+                    placeholder={''}
+                    multiline={false}
+                    underlineColorAndroid={"transparent"}
+                    textAlign="right"
+                    onChangeText={(text) => { this.textInputChange(text) }}
+                    value={this.state.inputName}
+                />
+                {
+                    (this.state.isShowMark) ? (
+                        <TouchableOpacity style={{ paddingRight: 5, alignSelf: "center", }} onPress={() => { }}>
+                            <Image style={styles.markImage} source={require('app-images/icon_benchmark.png')} />
+                        </TouchableOpacity>
+                    ) : (null)
+                }
+
+            </View>
+        );
     }
 
     render() {
 
         return (
             <View>
-                <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.getDetailName()} onPress={() => { this.selectCheckPoint() }} />
+                {/* <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.getDetailName()} onPress={() => { this.selectCheckPoint() }} /> */}
+                <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.getDetailView()} onPress={() => { this.selectCheckPoint() }} />
             </View>
         );
     }
@@ -75,5 +125,8 @@ SelectCheckPointView.propTypes = {
 }
 
 const styles = StyleSheet.create({
-
+    markImage: {
+        width: 15,
+        height: 15,
+    },
 })
