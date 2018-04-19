@@ -73,36 +73,62 @@ function assembleParams(requestParams) {
  * 检查必填项
  * @param {*} params 
  */
-function checkMustInfo(params) {
+function checkMustInfo(params, callback) {
     let info = [];
+    let showStar = {
+        showInspectCompanyStar:false,
+        showCompanyStar:false,
+        showPersonStar:false,
+        showDescriptionStar:false,
+        showCheckpointStar:false,
+        showRectificationStar:false,
+    };
     //检查单位
     if (!params.inspectionCompanyId) {
         info.push('检查单位');
+        showStar.showInspectCompanyStar = true;
     }
     //施工单位
     if (!params.constructionCompanyId) {
         info.push('施工单位');
+        showStar.showCompanyStar = true;
     }
-
+    
     //责任人
     if (!params.responsibleUserId) {
         info.push('责任人');
+        showStar.showPersonStar = true;
     }
     //现场描述
     if (!(typeof params.description === 'string') || params.description.length === 0) {
         info.push('现场描述');
+        showStar.showDescriptionStar = true;
     }
     //质检项目 
     if (!params.qualityCheckpointId) {
         info.push('质检项目');
+        showStar.showCheckpointStar = true;
     }
-
     //整改期限
+    if(params.needRectification && !params.lastRectificationDate){
+        info.push('整改期限');
+        showStar.showRectificationStar = true;
+    }
+    callback(showStar);
     let len = info.length;
     if (len > 0) {
         showCheckInfoModal(info)
         return false;
     }
+
+    if(params.needRectification){
+        let nowTimeStamp = Date.now();
+        if(nowTimeStamp > params.lastRectificationDate){
+            Modal.alert('提示信息', "整改期限不能早于当前日期！", [{ text: '知道了', style: { color: '#00baf3' } }]);
+            return false;
+        }
+    }
+
     return true;
 }
 /**
@@ -163,9 +189,9 @@ function uploadFile(imageChooserEle, uploadCallback) {
  * state NewPage的state
  * @param {*} navigator navigator
  */
-export function submit(requestParams, imageChooserEle, navigator) {
+export function submit(requestParams, imageChooserEle, navigator,callback) {
     let params = assembleParams(requestParams);
-    if (checkMustInfo(params)) {
+    if (checkMustInfo(params,callback)) {
         loadingToast();
         uploadFile(imageChooserEle, (files) => {
             if (files) {
@@ -220,7 +246,7 @@ function editSubmitInspection(params, navigator) {
  */
 export function save(requestParams, imageChooserEle, callback) {
     let params = assembleParams(requestParams);
-    if (checkMustInfo(params)) {
+    if (checkMustInfo(params,callback)) {
         loadingToast();
         uploadFile(imageChooserEle, (files) => {
             if (files) {
