@@ -16,10 +16,7 @@ export default class QualityInfoItem extends React.Component {
     renderInfo=()=>{
         if(!this.props.onClick) {
             return (
-                <View 
-                    {...this.props}
-                    style={styles.containerView}
-                >
+                <View style={styles.containerView} >
                 <View style={styles.titleView}>
                 <Label style={styles.leftTitle}>{this.props.leftTitle}</Label>
                 </View>
@@ -30,10 +27,7 @@ export default class QualityInfoItem extends React.Component {
             );
         }
         return (
-            <View 
-                {...this.props}
-                style={styles.containerView}
-            >
+            <View style={styles.containerView} >
             <View style={styles.titleView}>
             <Label style={styles.leftTitle}>{this.props.leftTitle}</Label>
             </View>
@@ -48,10 +42,7 @@ export default class QualityInfoItem extends React.Component {
     }
     renderLink=()=>{
         return (
-            <View 
-                {...this.props}
-                style={styles.containerView}
-            >
+            <View style={styles.containerView} >
             <View style={styles.titleView}>
             <Label style={styles.leftTitle}>{this.props.leftTitle}</Label>
             </View>
@@ -65,19 +56,13 @@ export default class QualityInfoItem extends React.Component {
     }
     renderLine=() =>{
         return (
-            <View 
-                {...this.props}
-                style={[styles.containerView,styles.lineView]}
-            >
+            <View style={[styles.containerView,styles.lineView]}>
             </View>
         );
     }
     renderItem=() =>{
         return (
-            <View 
-                {...this.props}
-                style={styles.containerView}
-            >
+            <View style={styles.containerView} >
             <View style={styles.titleView}>
             <Label style={styles.leftTitle}>{this.props.leftTitle}</Label>
             </View>

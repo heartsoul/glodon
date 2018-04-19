@@ -1,10 +1,10 @@
 import React from 'react';
 import {StyleSheet, Button, View, Text, Image, TouchableOpacity, NativeModules,Dimensions } from 'react-native';
 import { StackNavigator, DrawerNavigator, withNavigation } from 'app-3rd/react-navigation'; 
-import { SegmentedBar, Drawer, Label, ActionSheet } from 'app-3rd/teaset';
+import { SegmentedBar, Label, ActionSheet } from 'app-3rd/teaset';
 import QualityList from './qualityList'
 import * as API from 'app-api'
-import {GLDDrawerPaneView} from "app-components"
+import {LeftBarButtons} from "app-components"
 var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
 var { width, height } = Dimensions.get("window");
 class DetailsScreen extends React.Component {
@@ -72,15 +72,6 @@ const MyNavScreen = ({ navigation, banner }) => (
   </ScrollView>
 );
 
-let view = (
-  <View style={{ backgroundColor: "#333333", height: height, width: width*2/3 }}>
-    <View style={{justifyContent: 'center', alignItems: 'center' }}>
-      <GLDDrawerPaneView style={{width:width*2/3}} currentItem={API.APP_EQUIPMENT} />
-    </View>
-  </View>
-);
-let drawer = null;
-
 class RightBarButtons extends React.Component {
   _onSearchPress = (navigation) => {
     console.log(navigation);
@@ -142,33 +133,7 @@ class RightBarButtons extends React.Component {
     </View>
   }
 }
-class LeftBarButtons extends React.Component {
-  _onBackPress = (navigation) => {
-    console.log(navigation);
-    navigation.goBack();
-  }
-  _onMenuPress = (navigation) => {
-    Drawer.open(view, 'left');
-  }
-  render() {
-    return <View style={{
-      alignItems: 'center',
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      justifyContent: 'flex-start',
-      width: 70,
-    }}>
-    <View style={styles.spliteItem} />
-       <TouchableOpacity onPress={() => this._onBackPress(this.props.navigation)} >
-      <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_back_white.png')} />
-    </TouchableOpacity>
-    <View style={styles.spliteItem} />
-       <TouchableOpacity onPress={() => this._onMenuPress(this.props.navigation)} >
-      <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_quality_check_menu.png')} />
-    </TouchableOpacity>
-    </View>
-  }
-}
+
 // let RightButton = withNavigation(RightBarButtons);
 // let LeftButton = withNavigation(RightBarButtons);
 export default class extends React.Component {
@@ -182,7 +147,7 @@ export default class extends React.Component {
       <RightBarButtons navigation={navigation} />
     ),
     headerLeft: (
-      <LeftBarButtons navigation={navigation} />
+      <LeftBarButtons navigation={navigation} currentItem={API.APP_QUALITY} />
     ),
     // headerLeft: (
     //   //let drawer = null; Drawer.open(view, 'left');
@@ -201,10 +166,18 @@ export default class extends React.Component {
     return <RootStack />;
   }
 };
+
 const styles = StyleSheet.create({
-  barItemImage:{
-    width:26,
-    height:26,
+  barItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    justifyContent: 'flex-start',
+    width: 70,
+  },
+  barItemImage: {
+    width: 26,
+    height: 26,
   },
   spliteItem: {
     width: 10,

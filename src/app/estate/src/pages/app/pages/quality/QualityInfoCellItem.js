@@ -19,9 +19,7 @@ export default class QualityInfoCellItem extends React.Component {
 
     renderUser = () => {
         return (
-            <View
-                style={[styles.containerView, styles.containerUserView]}
-            >
+            <View style={[styles.containerView, styles.containerUserView]} >
                 <View style={styles.titleView}>
                     <Image source={this.props.userImage ? { uri: this.props.userImage } : userImage} style={styles.userImage} />
                 </View>
@@ -43,10 +41,7 @@ export default class QualityInfoCellItem extends React.Component {
             return this.renderDateSimple();
         }
         return (
-            <View
-                {...this.props}
-                style={[styles.containerView, styles.containerDescriptionView]}
-            >
+            <View style={[styles.containerView, styles.containerDescriptionView]} >
                 <View style={styles.descriptionView}>
                     <Label style={styles.description}>{this.props.description}</Label>
                 </View>)
@@ -59,10 +54,7 @@ export default class QualityInfoCellItem extends React.Component {
     }
     renderDescriptionSimple = () => {
         return (
-            <View
-                {...this.props}
-                style={[styles.containerView, styles.containerDescriptionView]}
-            >
+            <View style={[styles.containerView, styles.containerDescriptionView]} >
                 <View style={styles.descriptionView}>
                     <Label style={styles.description}>{this.props.description}</Label>
                 </View>
@@ -71,10 +63,7 @@ export default class QualityInfoCellItem extends React.Component {
     }
     renderDateSimple = () => {
         return (
-            <View
-                {...this.props}
-                style={[styles.containerView, styles.containerDescriptionView]}
-            >
+            <View style={[styles.containerView, styles.containerDescriptionView]} >
                 <View style={styles.dateView}>
                     <Label style={styles.date}>{this.props.descriptionDate}</Label>
                 </View>
@@ -95,10 +84,7 @@ export default class QualityInfoCellItem extends React.Component {
         const { url } = this.props;
         console.log(url);
         return (
-            <View
-                {...this.props}
-                style={styles.containerView}
-            >
+            <View style={styles.containerView} >
                 <TouchableOpacity activeOpacity={0.5} onPress={(event) => {
                     this.bigImage([url], 0);
                 }}>
@@ -111,10 +97,7 @@ export default class QualityInfoCellItem extends React.Component {
     }
     renderImages = () => {
         return (
-            <View
-                {...this.props}
-                style={styles.containerView}
-            >
+            <View style={styles.containerView} >
                 {
                     this.props.urls.map((url, index) => {
                         return (
@@ -131,10 +114,7 @@ export default class QualityInfoCellItem extends React.Component {
 
     renderItem = () => {
         return (
-            <View
-                {...this.props}
-                style={styles.containerView}
-            >
+            <View style={styles.containerView} >
                 <View style={styles.titleView}>
                     <Label style={styles.leftTitle}>{this.props.leftTitle}</Label>
                 </View>
