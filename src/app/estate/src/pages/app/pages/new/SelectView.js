@@ -1,11 +1,12 @@
 'use strict'
 
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Image } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { ListRow, PullPicker } from 'app-3rd/teaset';
+import StarView from './StarView';
 
 import * as API from "app-api";
 /**
@@ -18,6 +19,7 @@ class SelectView extends Component {
         this.state = {
             dataList: [],
             selectIndex: -1,
+            showStar: false,
         };
     }
     /**
@@ -43,17 +45,23 @@ class SelectView extends Component {
             this.fetchData(this.getCompaniesList);
         }
     }
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            showStar: nextProps.showStar,
+        });
+    }
+
     /**
      * 根据默认值来设置当前选中的值
      */
-    getSelectIndex = (data ,setDefault) => {
+    getSelectIndex = (data, setDefault) => {
         let index = -1;
         let value = this.props.value;
-        if(data && data.length > 0){
-            if(setDefault){
+        if (data && data.length > 0) {
+            if (setDefault) {
                 index = 0;
             }
-            if(value && value.id){
+            if (value && value.id) {
                 for (let key in data) {
                     if (data[key].id === value.id) {
                         index = key;
@@ -130,7 +138,7 @@ class SelectView extends Component {
             if (selectedItem.id === newSelectItem.id) {
                 selectIndex = this.state.selectIndex;
             }
-        }else {
+        } else {
             selectIndex = this.getSelectIndex(persons, false);
         }
 
@@ -174,7 +182,8 @@ class SelectView extends Component {
         if (this.state.selectIndex == -1) {
             return this.props.value;
         } else {
-            return this.state.dataList[this.state.selectIndex];
+            let ret = this.state.dataList[this.state.selectIndex];
+            return ret;
         }
     }
 
@@ -191,15 +200,28 @@ class SelectView extends Component {
         }
         return detail;
     }
+    // icon_create_check_list_star
 
-    render() {
+    starItemView = () => {
         return (
-            <View>
+            <View style={{ flex: 1 }}>
                 <ListRow title={this.props.title} accessory='indicator' bottomSeparator='indent' detail={this.getDetail()} onPress={() => { this.onPress() }} />
             </View>
         );
     }
+
+    render() {
+        return (
+            <StarView
+                showStar={this.state.showStar}
+                childView={this.starItemView()}
+            >
+            </StarView>
+        );
+    }
 }
+
+
 
 SelectView.propTypes = {
 
@@ -220,6 +242,10 @@ SelectView.propTypes = {
      * 关联的数据，选择责任人时，需要先有施工单位
      */
     extraData: PropTypes.object,
+    /**
+     * 校验信息时显示星号
+     */
+    showStar: PropTypes.bool,
 
 };
 

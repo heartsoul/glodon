@@ -22,14 +22,14 @@ import ImageChooserView from './ImageChooserView';
 import SelectView from './SelectView';
 import RectificationView from './RectificationView';//整改
 import SelectCheckPointView from './SelectCheckPointView';
+import StarView from "./StarView";
+
 import * as PageType from '../navigation/bim/PageTypes';
 import * as API from "app-api";
 import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
 import * as NewQualityAction from "./../../actions/NewQualityAction";
 
-const UPLOADAPI = API
-const QUALITYAPI = API
-const PMBASICAPI = API
+
 
 import { Modal, Toast } from 'antd-mobile';
 
@@ -39,6 +39,7 @@ const REF_COMPANY = 'REF_COMPANY';//施工单位
 const REF_PERSON = 'REF_PERSON';//责任人
 const REF_RECTIFICATION = 'REF_RECTIFICATION';//整改
 const REF_CHECKPOINT = 'REF_CHECKPOINT';//质检项目
+
 
 class NewPage extends React.Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -72,6 +73,12 @@ class NewPage extends React.Component {
 
             selectedCheckPoint: {},//选中的质检项目
             componentName: '',
+            showInspectCompanyStar: false,
+            showCompanyStar: false,
+            showPersonStar: false,
+            showDescriptionStar: false,
+            showCheckpointStar: false,
+            showRectificationStar: false,
         }
 
     };
@@ -101,8 +108,8 @@ class NewPage extends React.Component {
     /**
      * 整改期限{ value: true, date: '2018-04-08' }
      */
-    getSwitchValue = () => {
-        return this.refs[REF_RECTIFICATION].getSwitchValue()
+    getRectificationData = () => {
+        return this.refs[REF_RECTIFICATION].getRectificationData()
     }
 
     /**
@@ -119,9 +126,9 @@ class NewPage extends React.Component {
         let ret = {
             companyData: this.getSelectedData(REF_COMPANY),
             inspectCompanyData: this.getSelectedData(REF_INSPECT_COMPANY),
-            personData: this.getSelectedData(REF_INSPECT_COMPANY),
+            personData: this.getSelectedData(REF_PERSON),
             checkPoint: this.getSelectedCheckPoint(),
-            rectificationData: this.getSwitchValue(),
+            rectificationData: this.getRectificationData(),
             state: this.state,
         };
         return ret;
@@ -131,7 +138,9 @@ class NewPage extends React.Component {
     submit = () => {
         //提交
         let requestParams = this.assembleParams();
-        NewQualityAction.submit(requestParams, this.refs[REF_PHOTO], this.props.navigation);
+        NewQualityAction.submit(requestParams, this.refs[REF_PHOTO], this.props.navigation, (params) => {
+            this.setState(params);
+        });
     }
 
     //保存
@@ -194,6 +203,20 @@ class NewPage extends React.Component {
             </View>
         );
     }
+    renderDescriptionView = () => {
+        return (
+            <TextInput
+                maxLength={255}
+                style={{ textAlignVertical: 'top', paddingLeft: 12, paddingRight: 12, paddingTop: 12, paddingBottom: 0, backgroundColor: '#ffffff', minHeight: 120 }}
+                placeholder={'现场情况描述'}
+                multiline={true}
+                underlineColorAndroid={"transparent"}
+                textAlign="left"
+                onChangeText={(text) => { this.setState({ contentDescription: text }) }}
+                value={(typeof this.state.contentDescription === 'string') ? (this.state.contentDescription) : ('')}
+            />
+        );
+    }
 
     renderData = () => {
         return (
@@ -202,7 +225,9 @@ class NewPage extends React.Component {
                     value={this.state.editInfo ? ({
                         id: this.state.editInfo.inspectionCompanyId,
                         name: this.state.editInfo.inspectionCompanyName,
-                    }) : ({})} />
+                    }) : ({})}
+                    showStar={this.state.showInspectCompanyStar}
+                />
                 <SelectView ref={REF_COMPANY} title='施工单位'
                     value={this.state.editInfo ? ({
                         id: this.state.editInfo.constructionCompanyId,
@@ -212,25 +237,22 @@ class NewPage extends React.Component {
                         this.setState({
                             selectCompany: selectCompany,
                         })
-                    }} />
-                <SelectView tref={REF_PERSON} title='责任人'
+                    }}
+                    showStar={this.state.showCompanyStar}
+                />
+                <SelectView ref={REF_PERSON} title='责任人'
                     value={this.state.editInfo ? ({
                         id: this.state.editInfo.responsibleUserId,
                         name: this.state.editInfo.responsibleUserName,
                         title: this.state.editInfo.responsibleUserTitle,
                     }) : ({})}
-                    extraData={this.state.selectCompany} />
-
-                <TextInput
-                    maxLength={255}
-                    style={{ textAlignVertical: 'top', paddingLeft: 12, paddingRight: 12, paddingTop: 12, paddingBottom: 0, backgroundColor: '#ffffff', minHeight: 120 }}
-                    placeholder={'现场情况描述'}
-                    multiline={true}
-                    underlineColorAndroid={"transparent"}
-                    textAlign="left"
-                    onChangeText={(text) => { this.setState({ contentDescription: text }) }}
-                    value={(typeof this.state.contentDescription === 'string') ? (this.state.contentDescription) : ('')}
+                    extraData={this.state.selectCompany}
+                    showStar={this.state.showPersonStar}
                 />
+                <StarView
+                    showStar={this.state.showDescriptionStar}
+                    childView={this.renderDescriptionView()}
+                ></StarView>
 
                 <ImageChooserView ref={REF_PHOTO} files={[{
                     url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
@@ -239,9 +261,11 @@ class NewPage extends React.Component {
                     url: 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg',
                     name: '2122',
                 }]} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" onChange={() => alert('收到!')} />
-
-                <RectificationView ref={REF_RECTIFICATION} ></RectificationView>
-                <SelectCheckPointView ref={REF_CHECKPOINT} selectedCheckPoint={this.state.selectedCheckPoint} ></SelectCheckPointView>
+                <RectificationView ref={REF_RECTIFICATION} rectificationData={this.state.rectificationData} showStar={this.state.showRectificationStar}></RectificationView>
+                <StarView
+                    showStar={this.state.showCheckpointStar}
+                    childView={<SelectCheckPointView ref={REF_CHECKPOINT} selectedCheckPoint={this.state.selectedCheckPoint} ></SelectCheckPointView>}
+                />
 
                 <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint ? this.state.relevantBluePrint.name : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
                 <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.componentName ? this.state.componentName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
