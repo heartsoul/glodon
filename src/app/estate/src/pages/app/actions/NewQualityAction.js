@@ -53,20 +53,17 @@ function assembleParams(requestParams) {
     params.responsibleUserTitle = personData.title;
 
     //关联图纸
-    params.drawingGdocFileId = state.relevantBluePrint.fileId;
-    params.drawingName = state.relevantBluePrint.name;
+    params.drawingGdocFileId = state.relevantBluePrint.drawingGdocFileId;
+    params.drawingName = state.relevantBluePrint.drawingName;
     params.drawingPositionX = state.relevantBluePrint.drawingPositionX;
     params.drawingPositionY = state.relevantBluePrint.drawingPositionY;
 
     //关联模型
-    params.elementName = state.componentName;
-    if (state.relevantModel && state.relevantModel.component) {
-        params.elementId = state.relevantModel.component.elementId;
-    }
+    params.elementName = state.relevantModel.elementName;
+    params.elementId = state.relevantModel.elementId;
     params.buildingName = state.relevantModel.buildingName;
     params.buildingId = state.relevantModel.buildingId;
-    params.gdocFileId = state.relevantModel.fileId;
-
+    params.gdocFileId = state.relevantModel.gdocFileId;
     return params;
 }
 /**
@@ -382,19 +379,19 @@ function getDetailInfo(info) {
     }
 
     let relevantBlueprint = {
-        fileId: info.drawingGdocFileId,
-        name: info.drawingName,
+        drawingGdocFileId: info.drawingGdocFileId,
+        drawingName: info.drawingName,
         drawingPositionX: info.drawingPositionX,
         drawingPositionY: info.drawingPositionY,
     }
 
     //关联模型
-    let componentName = info.elementName;
     let relevantModel = {
-        fileId: info.gdocFileId,
+        gdocFileId: info.gdocFileId,
         buildingName: info.buildingName,
         buildingId: info.buildingId,
-        component: { id: info.elementId, name: info.elementName }
+        elementId: info.elementId,
+        elementName: info.elementName,
     }
 
     let ret = {
@@ -408,7 +405,6 @@ function getDetailInfo(info) {
         selectedCheckPoint: selectedCheckPoint,//选中的质检项目
         relevantBluePrint: relevantBlueprint,//关联图纸
         relevantModel: relevantModel,//关联模型
-        componentName: componentName,
         rectificationData: rectificationData,
     };
 

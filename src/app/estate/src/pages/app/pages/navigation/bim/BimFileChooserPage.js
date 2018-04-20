@@ -13,6 +13,8 @@ import { StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-naviga
 import ThumbnailImage from "./ThumbnailImage"
 import * as PageType from "./PageTypes";
 import * as MODELAPI from "app-api";
+import * as BimFileEntry from "./BimFileEntry";
+
 var { width, height } = Dimensions.get("window");
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -204,16 +206,14 @@ export default class BimFileChooser extends Component {
                 let token = responseData.data.data;
                 global.storage.bimToken = token;
                 if (this.state.dataType === '图纸文件') {
-                    global.storage.pushNext(navigator, "RelevantBlueprintPage", { title: item.value.name, fileId: item.value.fileId, pageType: this.state.pageType });
+                    BimFileEntry.showBlueprintFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.name);
                 } else {
-                    global.storage.pushNext(navigator, "RelevantModlePage", { title: item.value.name, fileId: item.value.fileId, pageType: this.state.pageType, relevantModel:item.value });
+                    BimFileEntry.showModelFromChoose(navigator, this.state.pageType,item.value.fileId,item.value.buildingId,item.value.buildingName)
                 }
             });
 
         }
-
     }
-
 
     _separator = () => {
         return <View style={{ height: 0.5, backgroundColor: '#CCCCCC', marginLeft: 20 }} />;

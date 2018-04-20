@@ -72,7 +72,10 @@ class NewPage extends React.Component {
             contentDescription: PropTypes.string,//内容描述
 
             selectedCheckPoint: {},//选中的质检项目
-            componentName: '',
+
+            relevantBluePrint: {},//关联图纸
+            relevantModel: {},//关联模型
+
             showInspectCompanyStar: false,
             showCompanyStar: false,
             showPersonStar: false,
@@ -160,14 +163,23 @@ class NewPage extends React.Component {
     _bimFileChooserBluePrint = (dataType) => {
         let navigator = this.props.navigation;
         storage.bimFileChooseCallback = this._bimChooserCallback;
-        BimFileEntry.chooseBlueprintFromQualityNew(navigator, this.state.relevantBluePrint)
+        BimFileEntry.chooseBlueprintFromQualityNew(navigator,
+            this.state.relevantBluePrint.drawingGdocFileId,
+            this.state.relevantBluePrint.drawingName,
+            this.state.relevantBluePrint.drawingPositionX,
+            this.state.relevantBluePrint.drawingPositionY,
+        )
     }
 
     //选择模型文件
     _bimFileChooserModel = (dataType) => {
         let navigator = this.props.navigation;
         storage.bimFileChooseCallback = this._bimChooserCallback;
-        BimFileEntry.chooseModelFromQualityNew(navigator, this.state.relevantModel)
+        BimFileEntry.chooseModelFromQualityNew(navigator,
+            this.state.relevantModel.gdocFileId,
+            this.state.relevantModel.elementId,
+            this.state.relevantModel.buildingId,
+            this.state.relevantModel.buildingName)
     }
 
     //选择图纸或者模型后的回调 dataType 图纸文件{name:'', fileId:'', drawingPositionX:'', drawingPositionY:'' }、模型文件
@@ -177,13 +189,14 @@ class NewPage extends React.Component {
                 relevantBluePrint: data,
             });
         } else if (dataType === '模型文件') {
-            this.setState({
-                relevantModel: data,
-            });
-            API.getModelElementProperty(storage.projectId, storage.projectIdVersionId, data.fileId, data.component.elementId)
+            API.getModelElementProperty(storage.projectId, storage.projectIdVersionId, data.gdocFileId, data.elementId)
                 .then(responseData => {
+                    let relevantModel = {
+                        ...data,
+                        elementName: responseData.data.data.name,
+                    }
                     this.setState({
-                        componentName: responseData.data.data.name,
+                        relevantModel: relevantModel,
                     });
                 });
         }
@@ -267,8 +280,8 @@ class NewPage extends React.Component {
                     childView={<SelectCheckPointView ref={REF_CHECKPOINT} selectedCheckPoint={this.state.selectedCheckPoint} ></SelectCheckPointView>}
                 />
 
-                <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint ? this.state.relevantBluePrint.name : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
-                <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.componentName ? this.state.componentName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
+                <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint ? this.state.relevantBluePrint.drawingName : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
+                <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel.elementName ? this.state.relevantModel.elementName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
 
                 <View style={{ marginBottom: 30 }}>
                     <TouchableHighlight

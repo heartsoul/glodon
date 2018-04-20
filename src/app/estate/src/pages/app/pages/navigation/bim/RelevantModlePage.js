@@ -16,6 +16,7 @@ import { Toast } from 'antd-mobile';
 import * as AppConfig from "common-module"
 import * as PageType from "./PageTypes";
 import * as BimToken from "./BimFileTokenUtil";
+import * as AuthorityManager from "./../project/AuthorityManager";
 
 //获取设备的宽度和高度
 var {
@@ -60,12 +61,10 @@ export default class RelevantModelPage extends Component {
         super(props);
         this.state = {
             showFinishView: false,//显示完成
-            fileId: '',
-            name: '',
             pageType: PageType.PAGE_TYPE_NEW_QUALITY,// 0新建检查单 1检查单编辑状态 2详情查看  3质检单模型模式  4新建材设进场 5新增材设进场编辑状态  6材设模型模式
             showChangeMode: false,//显示切换模型 pageType为1、5时为true
             showAddIcon: false,//显示创建按钮 pageType为 2 或者 3、6无创建权限时为false
-            selectedModel: {},//选中的模型
+            relevantModel: {},//选中的模型
             url: '',
         };
     }
@@ -75,31 +74,36 @@ export default class RelevantModelPage extends Component {
         let params = this.props.navigation.state.params;
         let pageType = params.pageType;
         let relevantModel = params.relevantModel;
+
+        let showChangeMode = false;
         if (pageType === PageType.PAGE_TYPE_EDIT_QUALITY || pageType === PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
-            this.setState({
-                showChangeMode: true,
-            })
+            showChangeMode = true;
         }
+
+        let showAddIcon = false;
         if (pageType != PageType.PAGE_TYPE_DETAIL) {
-            this.setState({
-                showAddIcon: true,
-            })
+            showAddIcon = true;
             if (pageType == PageType.PAGE_TYPE_QUALITY_MODEL) {
                 //判断是否有质检单创建权限
+                if (!AuthorityManager.isShowCreateButton()) {
+                    showAddIcon = false;
+                }
             } else if (pageType == PageType.PAGE_TYPE_EQUIPMENT_MODEL) {
                 //判断是否有材设单创建权限
+                if (!AuthorityManager.isEquipmentModify()) {
+                    showAddIcon = false;
+                }
             }
         }
         this.setState({
-            fileId: params.fileId,
-            name: params.title,
             pageType: pageType,
-            selectedModel: relevantModel,
+            relevantModel: relevantModel,
+            showChangeMode: showChangeMode,
+            showAddIcon: showAddIcon,
         });
 
         this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
-
-        BimToken.getBimFileToken(params.fileId, (token) => {
+        BimToken.getBimFileToken(relevantModel.gdocFileId, (token) => {
             let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=false`;
             this.setState({
                 url: url
@@ -153,28 +157,27 @@ export default class RelevantModelPage extends Component {
      */
     finish = (component) => {
         let relevantModel = {
-           ...this.state.selectedModel,
-            component: component,
+            ...this.state.relevantModel,
+            elementId: component.elementId,
         }
-        console.log(this.state.pageType)
         // 0新建检查单 1检查单编辑状态 2详情查看  3质检单模型模式  4新建材设进场 5新增材设进场编辑状态  6材设模型模式
         if (this.state.pageType == PageType.PAGE_TYPE_NEW_QUALITY) {
-            storage.bimFileChooseCallback (relevantModel, '模型文件');
+            storage.bimFileChooseCallback(relevantModel, '模型文件');
             this.props.navigation.pop("NewPage");
         } else if (this.state.pageType == PageType.PAGE_TYPE_EDIT_QUALITY) {
-            storage.bimFileChooseCallback (relevantModel, '模型文件');
+            storage.bimFileChooseCallback(relevantModel, '模型文件');
             this.props.navigation.goBack();
         } else if (this.state.pageType == PageType.PAGE_TYPE_QUALITY_MODEL) {
             this.props.navigation.replace('NewPage', { relevantModel: relevantModel });
-        } else if (this.state.pageType == PageType.PAGE_TYPE_NEW_EQUIPMENT){
+        } else if (this.state.pageType == PageType.PAGE_TYPE_NEW_EQUIPMENT) {
             // pop到新建材设单页面
 
-        } else if (this.state.pageType == PageType.PAGE_TYPE_EDIT_EQUIPMENT){
+        } else if (this.state.pageType == PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
             //编辑材设单
             this.props.navigation.goBack();
-        } else if (this.state.pageType == PageType.PAGE_TYPE_EQUIPMENT_MODEL){
+        } else if (this.state.pageType == PageType.PAGE_TYPE_EQUIPMENT_MODEL) {
             //从材设单模型进入 replace为新建材设单页面
-        }else if (this.state.pageType == PageType.PAGE_TYPE_DETAIL) {
+        } else if (this.state.pageType == PageType.PAGE_TYPE_DETAIL) {
             this.props.navigation.goBack();
         }
     }
@@ -246,11 +249,10 @@ export default class RelevantModelPage extends Component {
      * 编辑查看详情的时候显示选择的构件
      */
     showSelectedComponent = () => {
-        if (this.state.selectedModel && this.state.selectedModel.component && this.state.selectedModel.component.elementId) {
-            let data = `[ ${this.state.selectedModel.component.elementId} ]`;
+        if (this.state.relevantModel && this.state.relevantModel.elementId) {
+            let data = `[ ${this.state.relevantModel.elementId} ]`;
             this.refs.webview.injectJavaScript("javascript:showSelectedComponent('" + data + "');")
         }
-
     }
 
     /**
@@ -301,9 +303,7 @@ export default class RelevantModelPage extends Component {
 
 
     renderHeaderView = () => {
-        let params = this.props.navigation.state.params;
-        let title = params ? params.title : '模型';
-        title = '点击选择';
+        let title = '点击选择';
         return (
             <View style={{ height: 43, flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0.5)', alignItems: 'center' }}>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
