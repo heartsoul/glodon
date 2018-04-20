@@ -48,7 +48,7 @@ export function isQualityCheckDelete(){
 /**
  * 质量  是否有新建整改单权限
  */
-export function isCreateRepair(){
+export function isCreateRectify(){
     Quality_Rectification_Bean = {actionRights:storage.loadAuthority(AuthorityConfig.Quality_Rectification)} ;//质量整改记录
     if(Quality_Rectification_Bean!=null && Quality_Rectification_Bean.actionRights!=null && Quality_Rectification_Bean.actionRights.size()>0 &&Quality_Rectification_Bean.actionRights.contains(AuthorityConfig.ModifyGrant)){
         return true;

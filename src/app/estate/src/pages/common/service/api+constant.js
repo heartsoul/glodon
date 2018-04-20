@@ -96,8 +96,14 @@ export const CLASSIFY_STATUS_LIST = [{ name: CLASSIFY_NAMES[0], state: CLASSIFY_
     , { name: CLASSIFY_NAMES[7], state: CLASSIFY_STATES[7], color: CLASSIFY_STATES_COLOR[7] }
 ];
 
-export const BILL_TYPE = ["检查", "整改", "复查", "验收"];
-export const BILL_TYPE_COLOR = ["#00B5F2", "#F6AD5F", "#F6AD5F","#00B5F2"];
+export const BILL_TYPE_ITEM_INSPECT = "检查";
+export const BILL_TYPE_ITEM_RECTIFY = "整改";
+export const BILL_TYPE_ITEM_REVIEW = "复查";
+export const BILL_TYPE_ITEM_ACCEPT = "验收";
+export const BILL_TYPE_ITEM_SUBMIT = "提交";
+export const BILL_TYPE_ITEM_DELETE = "删除";
+export const BILL_TYPE = [BILL_TYPE_ITEM_INSPECT, BILL_TYPE_ITEM_RECTIFY, BILL_TYPE_ITEM_REVIEW, BILL_TYPE_ITEM_ACCEPT,BILL_TYPE_ITEM_SUBMIT,BILL_TYPE_ITEM_DELETE];
+export const BILL_TYPE_COLOR = ["#00B5F2", "#F6AD5F", "#F6AD5F","#00B5F2","#00B5F2", "#f55353"];
 
 // 状态相关转换函数
 /**
