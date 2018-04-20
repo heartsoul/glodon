@@ -28,9 +28,9 @@ export default class extends Component {
   };
   
   componentDidMount = () => {
-    console.log("componentDidMount");
-    if(storage.userInfo.accountInfo){
-        name = storage.userInfo.accountInfo.name;
+    // console.log("componentDidMount");
+    if(storage.loadUserInfo().accountInfo){
+        name = storage.loadUserInfo().accountInfo.name;
     }
   };
 

@@ -28,7 +28,7 @@ export default class tenantSimpleList extends Component {
 
     //网络请求
     fetchData = ()=> {
-      let userTenants = storage.userInfo["accountInfo"]["userTenants"];
+      let userTenants = storage.loadUserInfo()["accountInfo"]["userTenants"];
         if(userTenants) {
                 let data = userTenants;
                 let dataBlob = [];

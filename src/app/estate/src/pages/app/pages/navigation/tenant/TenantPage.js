@@ -28,13 +28,14 @@ export default class tenantList extends Component {
 
     //网络请求
     fetchData = ()=> {
-        if(storage.userInfo && storage.userInfo["accountInfo"]) {
+        let userInfo = storage.loadUserInfo();
+        if(userInfo && userInfo["accountInfo"]) {
             
         } else {
             storage.gotoLogin(this.props.navigation);
             return;
         }
-      let userTenants = storage.userInfo["accountInfo"]["userTenants"];
+      let userTenants = userInfo["accountInfo"]["userTenants"];
         if(userTenants) {
                 let data = userTenants;
                 let dataBlob = [];
@@ -60,35 +61,6 @@ export default class tenantList extends Component {
                             errorInfo: {"errorInfo":"未登录"},
                         });
         }
-        //这个是js的访问网络的方法
-        // fetch(REQUEST_URL)
-        //     .then((response) => response.json())
-        //     .then((responseData) => {
-        //         let data = responseData.items;
-        //         let dataBlob = [];
-        //         let i = 0;
-        //         data.map(function (item) {
-        //             dataBlob.push({
-        //                 key: i,
-        //                 value: item,
-        //             })
-        //             i++;
-        //         });
-        //         this.setState({
-        //             //复制数据源
-        //             dataArray: dataBlob,
-        //             isLoading: false,
-        //         });
-        //         data = null;
-        //         dataBlob = null;
-        //     })
-        //     .catch((error) => {
-        //         this.setState({
-        //             error: true,
-        //             errorInfo: error
-        //         })
-        //     })
-        //     .done();
     }
 
     componentDidMount() {

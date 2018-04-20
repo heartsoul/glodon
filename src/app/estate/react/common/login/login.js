@@ -47,27 +47,16 @@ function userLogin(username, pwd, successReturn) {
 }
 function loadUserInfo(successReturn) {
   USERAPI.accountInfo().then((userInfo)=>{
-    console.log(userInfo);
     if(userInfo.err) {
+      console.log(userInfo.err);
       alert('登录失败！');
       return ;
     }
     let data = userInfo["data"];
-    console.log(storage);
-    console.log(storage.userInfo);
-    storage.userInfo = data;
+    storage.saveUserInfo(data);
     if(data) {
       let ac = data["accountInfo"];
       if (ac) {
-        let username = ac["name"];
-        console.log(username);
-        let userTenants = ac["userTenants"];
-        if (userTenants) {
-          console.log(userTenants.length);
-          userTenants.forEach(tenant => {
-            console.log(tenant["tenantName"]);
-          });
-        }
         successReturn();
       } else {
         Alert("登录失败！");

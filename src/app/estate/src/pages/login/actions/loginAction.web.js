@@ -24,7 +24,7 @@ function loginOld(username, pwd) {
           dispatch(loginError(false));
           return;
         }
-        storage.userInfo = data;
+        storage.saveUserInfo(data);
         let ac = data["accountInfo"];
         if (!ac) {
           dispatch(loginError(false));
@@ -68,7 +68,7 @@ function loginNew(username, pwd) {
           dispatch(loginError(false));
           return;
         }
-        storage.userInfo = data;
+        storage.saveUserInfo(data);
         let ac = data["accountInfo"];
         if (!ac) {
           dispatch(loginError(false));

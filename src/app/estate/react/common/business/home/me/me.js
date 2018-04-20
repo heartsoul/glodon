@@ -30,8 +30,8 @@ export default class extends NavigationPage {
   
   componentDidMount = () => {
     console.log("componentDidMount");
-    if(storage.userInfo.accountInfo){
-        name = storage.userInfo.accountInfo.name;
+    if(storage.loadUserInfo().accountInfo){
+        name = storage.loadUserInfo().accountInfo.name;
     }
   };
 

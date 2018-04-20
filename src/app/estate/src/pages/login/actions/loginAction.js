@@ -64,7 +64,7 @@ function loadAccount(dispatch,response) {
       dispatch(loginError(false));
       return;
     }
-    storage.userInfo = data;
+    storage.saveUserInfo(data);
     let ac = data["accountInfo"];
     if (!ac) {
       dispatch(loginError(false));

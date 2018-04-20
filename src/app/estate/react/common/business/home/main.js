@@ -77,7 +77,7 @@ var SearchButton =  withNavigation(SearchaBarItem);
 class HomePage extends NavigationPage {
   static defaultProps = {
     ...NavigationPage.defaultProps,
-    title: storage ? storage.currentProject?''+storage.currentProject:'首页' : '首页',
+    title: storage ? storage.loadProject()?''+storage.loadProject():'首页' : '首页',
     showBackButton: false,
   };
   constructor() {
