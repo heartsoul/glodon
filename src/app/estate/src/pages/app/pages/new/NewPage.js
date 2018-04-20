@@ -11,9 +11,13 @@ import {
     TextInput,
     ScrollView,
     Button,
+    Image,
     TouchableHighlight,
+    TouchableOpacity,
     ActivityIndicator,
     Dimensions,
+    Platform,
+    BackHandler,
 } from 'react-native';
 import { connect } from 'react-redux';
 var { width, height } = Dimensions.get("window");
@@ -51,11 +55,11 @@ class NewPage extends React.Component {
                 提交
         </Text>
         ),
-        // headerLeft:(  
-        //   <Text  onPress={()=>navigation.goBack()} style={{marginLeft:20, color:'#FFFFFF' , width:60, textAlign:"left"}} >  
-        //       返回   
-        //   </Text>  
-        // )
+        headerLeft: (
+            <TouchableOpacity onPress={() => { navigation.state.params.leftNavigatePress() }} style={{ paddingLeft: 20 }}>
+                <Image source={require("app-images/icon_back_white.png")} style={{ width: 9, height: 20 }}></Image>
+            </TouchableOpacity>
+        )
     });
 
 
@@ -87,6 +91,12 @@ class NewPage extends React.Component {
     };
 
     componentDidMount = () => {
+
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.goBack();
+            return true;
+        });
+
         let params = this.props.navigation.state.params;
         //从不同页面进入时初始化状态
         NewQualityAction.initialState(params, this.props.selectedCheckPoint, (params) => {
@@ -94,6 +104,27 @@ class NewPage extends React.Component {
         })
         //提交
         this.props.navigation.setParams({ rightNavigatePress: this.submit })
+        this.props.navigation.setParams({ leftNavigatePress: this.goBack })
+    }
+    componentWillUnmount() {
+        if (Platform.OS === 'android') {
+            BackHandler.removeEventListener('hardwareBackPress');
+        }
+    }
+
+    //返回
+    goBack = () => {
+        Modal.alert('是否确认退出当前页面？', "您还未保存当前数据！", [
+            {
+                text: '取消', style: { color: '#5b5b5b' }
+            },
+            {
+                text: '不保存', style: { color: '#e75452' }, onPress: () => { this.props.navigation.goBack() }
+            },
+            {
+                text: '保存', style: { color: '#00baf3' }, onPress: () => { this.save() }
+            }
+        ]);
     }
 
     /**
@@ -151,6 +182,7 @@ class NewPage extends React.Component {
         let requestParams = this.assembleParams();
         NewQualityAction.save(requestParams, this.refs[REF_PHOTO], (params) => {
             this.setState(params)
+            Toast.success('保存成功', 1);
         });
     }
 
