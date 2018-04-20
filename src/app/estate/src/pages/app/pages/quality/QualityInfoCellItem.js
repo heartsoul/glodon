@@ -27,9 +27,13 @@ export default class QualityInfoCellItem extends React.Component {
                     <Label style={styles.userName}>{this.props.userName}</Label>
                     <Label style={styles.actionDate}>{this.props.actionDate}</Label>
                 </View>
-                <View style={styles.actionButtion}>
-                    <StatusActionButton color={this.props.actionColor} borderColor={this.props.actionColor} onClick={() => { this.props.onAction() }} text={this.props.actionText} />
-                </View>
+                {
+                    this.props.onAction ?
+                        <View style={styles.actionButtion}>
+                            <StatusActionButton color={this.props.actionColor} borderColor={this.props.actionColor} text={this.props.actionText} />
+                        </View>
+                        : null
+                }
             </View>
         );
     }

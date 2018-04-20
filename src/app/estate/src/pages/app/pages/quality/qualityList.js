@@ -46,6 +46,12 @@ export default class qualityList extends PureComponent {
         //请求数据
         // this._onRefresh();
         storage.qualityNavigation = this.props.navigation;
+        API.getQualityInspectionSummary(storage.loadProject()).then(
+            (responseData)=>{
+                console.log('getQualityInspectionSummary'+JSON.stringify(responseData.data))
+                // 获取数量数据
+            }
+        );
         // this.refs.sectionList.fetchData(API.CLASSIFY_STATES[0]);
         // this._onSegmentedBarChange(0);
     }

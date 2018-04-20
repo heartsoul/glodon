@@ -4,6 +4,14 @@ export const TYPE_INSPECTION =[
     "inspection",// 检查
     "acceptance" // 验收
 ];
+export const TYPE_INSPECTION_NAME =[
+    "检查单",// 
+    "验收单" // 
+];
+export const TYPE_NEW_NAME =[
+    "+整改单",// 
+    "+复查单" // 
+];
 export const INSPECTION_COMPANY_NAME_TIP = ["检查单位","验收单位"];
 export const CREATE_TYPE_CHECK = "0";//新建检查单
 export const CREATE_TYPE_REPAIR = "1";//新建整改单
