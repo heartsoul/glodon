@@ -9,11 +9,12 @@ import {
     Image,
     ImageBackground,
     Dimensions,
+    SafeAreaView,
 } from 'react-native';
 import ModelItemView from './ModelItemView'
 
 import { NavigationPage, SegmentedBar, Label, SegmentedView, Button, Carousel } from 'app-3rd/teaset';
-import * as BimFileEntry from '../navigation/bim/BimFileEntry';//图纸模型选择及展示入口
+import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
 var { width, height } = Dimensions.get("window");
 export default class extends NavigationPage {
     constructor() {
@@ -72,18 +73,11 @@ export default class extends NavigationPage {
 
     componentDidMount() {
         //请求数据
-        this.fetchData();
+        // this.fetchData();
+        console.log("componentDidMount")
     }
     fetchData = () => {
-        console.log(storage.loadTenant);
-        console.log(storage.loadProject);
-
-        if (storage.loadTenant && storage.loadProject) {
-
-        } else {
-            // this._loadUserInfo();
-        }
-
+        this.render()
     }
     scrollToPage = (index) => {
         if (parseInt('' + index) != parseInt('' + this.refs.carousel.activeIndex)) {
@@ -91,29 +85,54 @@ export default class extends NavigationPage {
         }
     }
     render() {
+        let qShow = AuthorityManager.isQualityBrowser()
+        let eShow = AuthorityManager.isEquipmentBrowser()
+        if(!(qShow || eShow)) {
+           return <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
+           <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+           <View style={{flex:1,alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
+           <Text style={styles.text}> 敬请期待 </Text>
+           </View>
+           </SafeAreaView>
+        }
+
         return (
             <View style={{ backgroundColor: '#FFFFFE' }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <ImageBackground style={{ height: 238 }} resizeMode='center' source={require('app-images/icon_main_page_top_bg.png')}>
                     <Carousel ref={'carousel'} style={{ height: 238 }} carousel={false} scrollEnabled={false}>
+                    {
+                        qShow ? 
                         <Image style={styles.topImage} resizeMode='center' source={require('app-images/icon_main_page_top_quality.png')} />
+                        : null
+                    }
+                     {
+                        eShow ? 
                         <Image style={styles.topImage} resizeMode='center' source={require('app-images/icon_main_page_top_equipment.png')} />
+                        : null
+                    }
                     </Carousel>
                 </ImageBackground>
                 <SegmentedView style={{ flex: 0, height: 400, backgroundColor: '#f8f8f8' }} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
-                    <SegmentedView.Sheet title='质量检查'>
-                        <View style={styles.tabContent}>
-                            <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={() => this._loadQualityForm()} title="质检清单" />
-                            <View style={styles.spliteItem} />
-                            <ModelItemView source={require('app-images/icon_main_pager_blueprint.png')} onPress={() => this._fileChoose()} title="图纸" />
-                            <View style={styles.spliteItem} />
-                            <ModelItemView source={require('app-images/icon_main_pager_model.png')} onPress={() => this._projectChoose()} title="模型" />
-                            <View style={styles.spliteItem} />
-                            <ModelItemView source={require('app-images/icon_main_pager_module.png')} onPress={() => this._moduleChoose()} title="质检项目" />
-                            <View style={styles.spliteItem} />
-                            <Button type={'primary'} size={'md'} onPress={() => this._loadUserInfo()} style={{ height: 50 }} title="选择租户" />
-                        </View>
-                    </SegmentedView.Sheet>
+                    {
+                        qShow ? 
+                            <SegmentedView.Sheet title='质量检查'>
+                                <View style={styles.tabContent}>
+                                    <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={() => this._loadQualityForm()} title="质检清单" />
+                                    <View style={styles.spliteItem} />
+                                    <ModelItemView source={require('app-images/icon_main_pager_blueprint.png')} onPress={() => this._fileChoose()} title="图纸" />
+                                    <View style={styles.spliteItem} />
+                                    <ModelItemView source={require('app-images/icon_main_pager_model.png')} onPress={() => this._projectChoose()} title="模型" />
+                                    <View style={styles.spliteItem} />
+                                    <ModelItemView source={require('app-images/icon_main_pager_module.png')} onPress={() => this._moduleChoose()} title="质检项目" />
+                                    <View style={styles.spliteItem} />
+                                    <Button type={'primary'} size={'md'} onPress={() => this._loadUserInfo()} style={{ height: 50 }} title="选择租户" />
+                                </View>
+                            </SegmentedView.Sheet>
+                         : null
+                    }
+                     {
+                        eShow ? 
                     <SegmentedView.Sheet title='材设进场'>
                         <View style={styles.tabContent}>
                             <ModelItemView source={require('app-images/icon_main_pager_csjc.png')} onPress={() => this._loadEquipmentForm()} title="材设清单" />
@@ -121,6 +140,8 @@ export default class extends NavigationPage {
                             <ModelItemView source={require('app-images/icon_main_pager_equipment_model.png')} onPress={() => this._moduleChoose()} title="模型预览" />
                         </View>
                     </SegmentedView.Sheet>
+                    : null
+                }
                 </SegmentedView>
             </View>
 
@@ -151,5 +172,11 @@ var styles = StyleSheet.create({
         marginBottom: 40,
         backgroundColor: '#f8f8f8',
     },
-
+    container:{
+        flex:1,
+      },
+      text:{
+        fontSize:18,
+        color:'gray'
+      },
 });

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-
+import {View, ActivityIndicator} from 'react-native'
 import { StackNavigator,NavigationActions } from 'app-3rd/react-navigation'; 
 
 import * as GLD from '../pages'
@@ -99,7 +99,28 @@ RootStack.router.getStateForAction = (action, state) => {
 };
 
 export default class App extends React.Component {
-  render() {
+
+  constructor() {
+    super();
+    this.state = {
+      hasLoad : false,
+    }
+  }
+
+  componentDidMount() {
+    storage._loadStorageData(()=>{
+      this.setState({
+        hasLoad:true
+      })
+    });
+  }
+  renderPage() {
     return (<Provider store={store}><RootStack /></Provider>)
+  }
+  render() {
+    if(this.state.hasLoad) {
+      return this.renderPage();
+    }
+    return <View style={{backgroundColor:'#FFFFFF', justifyContent:'center',flex:1,alignItems:'center',alignContent:'center'}}> <ActivityIndicator size='large'/> </View>
   }
 }

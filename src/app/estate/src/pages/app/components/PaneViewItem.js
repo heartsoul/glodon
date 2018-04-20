@@ -110,6 +110,9 @@ PaneViewItem.propTypes = {
      * icon right image
      */
     rightImage: PropTypes.any,
+     /**
+     * icon right image
+     */
 };
 
 

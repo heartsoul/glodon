@@ -106,12 +106,17 @@ export default class BaseStorage extends Component {
     }
 
     // 加载所有数据
-    _loadStorageData() {
+    _loadStorageData(funRet) {
+        console.log("_loadStorageData-start")
         AsyncStorage.getItem(__KEY_storageData)
             .then((value) => {
                 this.storageData = JSON.parse(value);
                 if (!value || value == null) {
                     this.storageData = {};
+                }
+                console.log("_loadStorageData"+value)
+                if(funRet) {
+                    funRet();
                 }
             }).catch((err) => {
                 console.log(err)
