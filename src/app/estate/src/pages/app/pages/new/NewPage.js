@@ -11,9 +11,13 @@ import {
     TextInput,
     ScrollView,
     Button,
+    Image,
     TouchableHighlight,
+    TouchableOpacity,
     ActivityIndicator,
     Dimensions,
+    Platform,
+    BackHandler,
 } from 'react-native';
 import { connect } from 'react-redux';
 var { width, height } = Dimensions.get("window");
@@ -51,11 +55,11 @@ class NewPage extends React.Component {
                 提交
         </Text>
         ),
-        // headerLeft:(  
-        //   <Text  onPress={()=>navigation.goBack()} style={{marginLeft:20, color:'#FFFFFF' , width:60, textAlign:"left"}} >  
-        //       返回   
-        //   </Text>  
-        // )
+        headerLeft: (
+            <TouchableOpacity onPress={() => { navigation.state.params.leftNavigatePress() }} style={{ paddingLeft: 20 }}>
+                <Image source={require("app-images/icon_back_white.png")} style={{ width: 9, height: 20 }}></Image>
+            </TouchableOpacity>
+        )
     });
 
 
@@ -72,7 +76,10 @@ class NewPage extends React.Component {
             contentDescription: PropTypes.string,//内容描述
 
             selectedCheckPoint: {},//选中的质检项目
-            componentName: '',
+
+            relevantBluePrint: {},//关联图纸
+            relevantModel: {},//关联模型
+
             showInspectCompanyStar: false,
             showCompanyStar: false,
             showPersonStar: false,
@@ -84,6 +91,12 @@ class NewPage extends React.Component {
     };
 
     componentDidMount = () => {
+
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.goBack();
+            return true;
+        });
+
         let params = this.props.navigation.state.params;
         //从不同页面进入时初始化状态
         NewQualityAction.initialState(params, this.props.selectedCheckPoint, (params) => {
@@ -91,6 +104,27 @@ class NewPage extends React.Component {
         })
         //提交
         this.props.navigation.setParams({ rightNavigatePress: this.submit })
+        this.props.navigation.setParams({ leftNavigatePress: this.goBack })
+    }
+    componentWillUnmount() {
+        if (Platform.OS === 'android') {
+            BackHandler.removeEventListener('hardwareBackPress');
+        }
+    }
+
+    //返回
+    goBack = () => {
+        Modal.alert('是否确认退出当前页面？', "您还未保存当前数据！", [
+            {
+                text: '取消', style: { color: '#5b5b5b' }
+            },
+            {
+                text: '不保存', style: { color: '#e75452' }, onPress: () => { this.props.navigation.goBack() }
+            },
+            {
+                text: '保存', style: { color: '#00baf3' }, onPress: () => { this.save() }
+            }
+        ]);
     }
 
     /**
@@ -148,6 +182,7 @@ class NewPage extends React.Component {
         let requestParams = this.assembleParams();
         NewQualityAction.save(requestParams, this.refs[REF_PHOTO], (params) => {
             this.setState(params)
+            Toast.success('保存成功', 1);
         });
     }
 
@@ -160,14 +195,23 @@ class NewPage extends React.Component {
     _bimFileChooserBluePrint = (dataType) => {
         let navigator = this.props.navigation;
         storage.bimFileChooseCallback = this._bimChooserCallback;
-        BimFileEntry.chooseBlueprintFromQualityNew(navigator, this.state.relevantBluePrint)
+        BimFileEntry.chooseBlueprintFromQualityNew(navigator,
+            this.state.relevantBluePrint.drawingGdocFileId,
+            this.state.relevantBluePrint.drawingName,
+            this.state.relevantBluePrint.drawingPositionX,
+            this.state.relevantBluePrint.drawingPositionY,
+        )
     }
 
     //选择模型文件
     _bimFileChooserModel = (dataType) => {
         let navigator = this.props.navigation;
         storage.bimFileChooseCallback = this._bimChooserCallback;
-        BimFileEntry.chooseModelFromQualityNew(navigator, this.state.relevantModel)
+        BimFileEntry.chooseModelFromQualityNew(navigator,
+            this.state.relevantModel.gdocFileId,
+            this.state.relevantModel.elementId,
+            this.state.relevantModel.buildingId,
+            this.state.relevantModel.buildingName)
     }
 
     //选择图纸或者模型后的回调 dataType 图纸文件{name:'', fileId:'', drawingPositionX:'', drawingPositionY:'' }、模型文件
@@ -177,13 +221,14 @@ class NewPage extends React.Component {
                 relevantBluePrint: data,
             });
         } else if (dataType === '模型文件') {
-            this.setState({
-                relevantModel: data,
-            });
-            API.getModelElementProperty(storage.projectId, storage.projectIdVersionId, data.fileId, data.component.elementId)
+            API.getModelElementProperty(storage.projectId, storage.projectIdVersionId, data.gdocFileId, data.elementId)
                 .then(responseData => {
+                    let relevantModel = {
+                        ...data,
+                        elementName: responseData.data.data.name,
+                    }
                     this.setState({
-                        componentName: responseData.data.data.name,
+                        relevantModel: relevantModel,
                     });
                 });
         }
@@ -267,8 +312,8 @@ class NewPage extends React.Component {
                     childView={<SelectCheckPointView ref={REF_CHECKPOINT} selectedCheckPoint={this.state.selectedCheckPoint} ></SelectCheckPointView>}
                 />
 
-                <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint ? this.state.relevantBluePrint.name : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
-                <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.componentName ? this.state.componentName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
+                <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint ? this.state.relevantBluePrint.drawingName : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
+                <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel.elementName ? this.state.relevantModel.elementName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
 
                 <View style={{ marginBottom: 30 }}>
                     <TouchableHighlight

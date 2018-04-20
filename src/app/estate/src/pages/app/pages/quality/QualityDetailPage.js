@@ -14,6 +14,7 @@ import { List } from 'antd-mobile';
 import { Label } from 'app-3rd/teaset';
 
 import QualityInfoItem from "./QualityInfoItem"
+import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
 
 var { width, height } = Dimensions.get("window");
 
@@ -63,35 +64,36 @@ export default class QualityDetailPage extends PureComponent {
         });
     }
 
-    onAction =(inspectionInfo)=>{
+    onAction = (inspectionInfo) => {
         // "qualityCheckpointId": 5200014,
-		// "qualityCheckpointName": "墙面",
+        // "qualityCheckpointName": "墙面",
         // alert(progressInfo.billType);
-        storage.pushNext(null, "QualityStatardsPage", { 'qualityCheckpointId': inspectionInfo.qualityCheckpointId, 'qualityCheckpointName': inspectionInfo.qualityCheckpointName});
+        storage.pushNext(null, "QualityStatardsPage", { 'qualityCheckpointId': inspectionInfo.qualityCheckpointId, 'qualityCheckpointName': inspectionInfo.qualityCheckpointName });
     }
 
-    onOpenDrawingAction =(inspectionInfo)=>{
+    onOpenDrawingAction = (inspectionInfo) => {
         // "drawingGdocFileId": "be645ab6d5204fd19bda437c7a21b1d2",
-		// "drawingName": "基础图.dwg",
-		// "drawingPositionX": "2475.5999755859375",
-		// "drawingPositionY": "948.800048828125",
-        alert(inspectionInfo.drawingName);
+        // "drawingName": "基础图.dwg",
+        // "drawingPositionX": "2475.5999755859375",
+        // "drawingPositionY": "948.800048828125",
+        // alert(inspectionInfo.drawingName);
         // alert(progressInfo.drawingName);
         // alert(progressInfo.drawingName);
         // alert(progressInfo.drawingName);
-        storage.pushNext(null, "RelevantBlueprintPage", { title: inspectionInfo.drawingName, fileId: inspectionInfo.drawingGdocFileId, pageType: 1, relevantBluePrint: {"data":inspectionInfo} });
-                 
+        // storage.pushNext(null, "RelevantBlueprintPage", { title: inspectionInfo.drawingName, fileId: inspectionInfo.drawingGdocFileId, pageType: 1, relevantBluePrint: { "data": inspectionInfo } });
+        BimFileEntry.showBlueprintFromDetail(null, inspectionInfo.drawingGdocFileId, inspectionInfo.drawingName, inspectionInfo.drawingPositionX, inspectionInfo.drawingPositionY)
+
     }
 
-    onOpenModleAction =(inspectionInfo)=>{
+    onOpenModleAction = (inspectionInfo) => {
         // "buildingId": 0,
-		// "buildingName": null,
+        // "buildingName": null,
         // "elementId": "318370",
-		// "elementName": "常规 - 150mm",
-		// "gdocFileId": "a5b812dff199438dba5bacee0b373497",
-        alert(inspectionInfo.gdocFileId);
-        storage.pushNext(null, "RelevantModlePage", { title: inspectionInfo.elementName, fileId: inspectionInfo.gdocFileId, pageType: 1, relevantBluePrint: {"data":inspectionInfo} });
-                   
+        // "elementName": "常规 - 150mm",
+        // "gdocFileId": "a5b812dff199438dba5bacee0b373497",
+        // alert(inspectionInfo.gdocFileId);
+        // storage.pushNext(null, "RelevantModlePage", { title: inspectionInfo.elementName, fileId: inspectionInfo.gdocFileId, pageType: 1, relevantBluePrint: { "data": inspectionInfo } });
+        BimFileEntry.showModelFromDetail(null, inspectionInfo.gdocFileId, inspectionInfo.elementId);
     }
 
     componentDidMount() {
@@ -151,36 +153,36 @@ export default class QualityDetailPage extends PureComponent {
     }
 
     renderFirstProgressInfoItem = (inspectionInfo) => {
-       let progressInfo = {
-        "id": inspectionInfo.id,
-		"code": inspectionInfo.code,
-		"billType": API.toBillType(inspectionInfo.inspectionType),
-		"lastRectificationDate": inspectionInfo.lastRectificationDate,
-		"handleDate": inspectionInfo.updateTime,
-		"handlerId": inspectionInfo.creatorId,
-		"handlerName": inspectionInfo.creatorName,
-		"handlerTitle": inspectionInfo.responsibleUserTitle,
-		"commitTime": inspectionInfo.commitTime,
-		"files": inspectionInfo.files
+        let progressInfo = {
+            "id": inspectionInfo.id,
+            "code": inspectionInfo.code,
+            "billType": API.toBillType(inspectionInfo.inspectionType),
+            "lastRectificationDate": inspectionInfo.lastRectificationDate,
+            "handleDate": inspectionInfo.updateTime,
+            "handlerId": inspectionInfo.creatorId,
+            "handlerName": inspectionInfo.creatorName,
+            "handlerTitle": inspectionInfo.responsibleUserTitle,
+            "commitTime": inspectionInfo.commitTime,
+            "files": inspectionInfo.files
         };
-        return this.renderProgressInfoItem(progressInfo,'-11');
+        return this.renderProgressInfoItem(progressInfo, '-11');
     }
-    
-    renderProgressInfoItem = (progressInfo,index) => {
+
+    renderProgressInfoItem = (progressInfo, index) => {
         if (progressInfo.files.size <= 0) {
-            return <View key={"renderProgressInfoItem"+index} style={{ marginTop: 10 }}>
-                <QualityInfoCellItem userName={progressInfo.handlerName+'-'+progressInfo.handlerTitle} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
+            return <View key={"renderProgressInfoItem" + index} style={{ marginTop: 10 }}>
+                <QualityInfoCellItem userName={progressInfo.handlerName + '-' + progressInfo.handlerTitle} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
                     actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
-                <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate):null} showType="description" />
+                <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate) : null} showType="description" />
                 <QualityInfoItem showType="line" />
             </View>
         }
         if (progressInfo.files.size == 1) {
             return (
-                <View key={"renderProgressInfoItem"+index} style={{ marginTop: 10 }}>
+                <View key={"renderProgressInfoItem" + index} style={{ marginTop: 10 }}>
                     <QualityInfoCellItem userName={progressInfo.handlerName} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
                         actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
-                    <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate):null} showType="description" />
+                    <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate) : null} showType="description" />
                     <QualityInfoCellItem url={progressInfo.files[0].url} showType="image" />
                     <QualityInfoItem showType="line" />
                 </View>
@@ -191,29 +193,29 @@ export default class QualityDetailPage extends PureComponent {
             urls.push(file.url);
         })
 
-        return <View key={"renderProgressInfoItem"+index} style={{ marginTop: 10 }}>
-            <QualityInfoCellItem userName={progressInfo.handlerName}  actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
+        return <View key={"renderProgressInfoItem" + index} style={{ marginTop: 10 }}>
+            <QualityInfoCellItem userName={progressInfo.handlerName} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
                 actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
-            <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate):null} showType="description" />
+            <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate) : null} showType="description" />
             <QualityInfoCellItem urls={urls}
                 showType="images" />
             <QualityInfoItem showType="line" />
         </View>
     }
-    renderData=()=> {
+    renderData = () => {
         const { inspectionInfo, progressInfos } = this.state.item;
         return (
             <ScrollView style={{ backgroundColor: '#FFFFFF' }}>
                 <View style={{ marginTop: 10 }}>
-                    <QualityInfoItem leftTitle={inspectionInfo.inspectionType ==='inspection' ? "施工单位：" : "施工单位："} content={inspectionInfo.constructionCompanyName} />
+                    <QualityInfoItem leftTitle={inspectionInfo.inspectionType === 'inspection' ? "施工单位：" : "施工单位："} content={inspectionInfo.constructionCompanyName} />
                     <QualityInfoItem leftTitle="责任人：" content={inspectionInfo.inspectionCompanyName} />
                     {
                         inspectionInfo.qualityCheckpointId > 0 ? (
-<QualityInfoItem leftTitle="质检项目：" showType="info" onClick={() => { this.onAction(inspectionInfo)}} content={inspectionInfo.qualityCheckpointName} />
-                    
-                        ): (
-                            <QualityInfoItem leftTitle="质检项目：" showType="info" content={inspectionInfo.qualityCheckpointName} />
-                        )
+                            <QualityInfoItem leftTitle="质检项目：" showType="info" onClick={() => { this.onAction(inspectionInfo) }} content={inspectionInfo.qualityCheckpointName} />
+
+                        ) : (
+                                <QualityInfoItem leftTitle="质检项目：" showType="info" content={inspectionInfo.qualityCheckpointName} />
+                            )
                     }
                     <QualityInfoItem leftTitle="现场描述：" content={inspectionInfo.description} />
                     <QualityInfoItem leftTitle="保存时间：" content={API.formatUnixtimestamp(inspectionInfo.updateTime)} />
@@ -231,7 +233,7 @@ export default class QualityDetailPage extends PureComponent {
                 }
                 {
                     progressInfos.map((progressInfo, index) => {
-                       return this.renderProgressInfoItem(progressInfo,index);
+                        return this.renderProgressInfoItem(progressInfo, index);
                     })
                 }
 

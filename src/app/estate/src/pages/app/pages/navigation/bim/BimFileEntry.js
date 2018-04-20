@@ -41,11 +41,15 @@ export function chooseQualityModelFromHome(navigator) {
 /**
  * 从质检单新建页面进入图纸选择及展示
  */
-export function chooseBlueprintFromQualityNew(navigator, blueprint) {
-    if (blueprint && blueprint.name) {
+export function chooseBlueprintFromQualityNew(navigator, drawingGdocFileId, drawingName, drawingPositionX, drawingPositionY) {
+    let blueprint = {
+        drawingGdocFileId: drawingGdocFileId,
+        drawingName: drawingName,
+        drawingPositionX: drawingPositionX,
+        drawingPositionY: drawingPositionY,
+    }
+    if (blueprint.drawingName) {
         storage.pushNext(navigator, "RelevantBlueprintPage", {
-            title: blueprint.name,
-            fileId: blueprint.fileId,
             pageType: PageType.PAGE_TYPE_EDIT_QUALITY,
             relevantBluePrint: blueprint,
         });
@@ -61,10 +65,16 @@ export function chooseBlueprintFromQualityNew(navigator, blueprint) {
 /**
  * 从质检单新建页面进入模型选择及展示
  */
-export function chooseModelFromQualityNew(navigator, model) {
-    if (model && model.fileId) {
+export function chooseModelFromQualityNew(navigator, gdocFileId, elementId, buildingId, buildingName) {
+    let model = {
+        gdocFileId: gdocFileId,
+        elementId: elementId,
+        buildingId: buildingId,
+        buildingName: buildingName,
+    }
+
+    if (gdocFileId) {
         storage.pushNext(navigator, "RelevantModlePage", {
-            fileId: model.fileId,
             pageType: PageType.PAGE_TYPE_EDIT_QUALITY,
             relevantModel: model,
         });
@@ -92,10 +102,15 @@ export function chooseEquipmentModelFromHome(navigator) {
 /**
  * 材设单新建进入模型选择及展示
  */
-export function chooseEquipmentModelFromNew(navigator, model) {
-    if (model && model.fileId) {
+export function chooseEquipmentModelFromNew(navigator, gdocFileId, elementId, buildingId, buildingName) {
+    let model = {
+        gdocFileId: gdocFileId,
+        elementId: elementId,
+        buildingId: buildingId,
+        buildingName: buildingName,
+    }
+    if (gdocFileId) {
         storage.pushNext(navigator, "RelevantModlePage", {
-            fileId: model.fileId,
             pageType: PageType.PAGE_TYPE_EDIT_EQUIPMENT,
             relevantModel: model,
         });
@@ -109,30 +124,82 @@ export function chooseEquipmentModelFromNew(navigator, model) {
 }
 
 /**
- * 从详情页进入图纸展示
+ * 从图纸选择进入图纸展示页
+ * @param {*} pageType 从首页模型进入（PAGE_TYPE_EQUIPMENT_MODEL、PAGE_TYPE_QUALITY_MODEL），
+ *  从新建进入，或者进入图纸后重新选择（当做新建 PAGE_TYPE_NEW_QUALITY、PAGE_TYPE_NEW_EQUIPMENT），
+ *  choose页已把pageType存在state中，可以直接使用
+ * @param {*} drawingGdocFileId 
+ * @param {*} drawingName 
  */
-export function showBlueprintFromDetail(navigator, blueprint) {
-    if (blueprint && blueprint.name) {
-        storage.pushNext(navigator, "RelevantBlueprintPage", {
-            title: blueprint.name,
-            fileId: blueprint.fileId,
-            pageType: PageType.PAGE_TYPE_DETAIL,
-            relevantBluePrint: blueprint,
-        });
+export function showBlueprintFromChoose(navigator, pageType, drawingGdocFileId, drawingName) {
+    let blueprint = {
+        drawingGdocFileId: drawingGdocFileId,
+        drawingName: drawingName,
+        drawingPositionX: '',//新图纸未做标记，可以为空
+        drawingPositionY: '',
     }
+    storage.pushNext(navigator, "RelevantBlueprintPage", {
+        pageType: pageType,
+        relevantBluePrint: blueprint,
+    });
+}
+/**
+ * 从模型选择进入模型展示页
+ * @param {*} navigator 
+ * @param {*} pageType 
+ * @param {*} gdocFileId 
+ * @param {*} buildingId 
+ * @param {*} buildingName 
+ */
+export function showModelFromChoose(navigator, pageType, gdocFileId, buildingId, buildingName) {
+    let model = {
+        gdocFileId: gdocFileId,
+        buildingId: buildingId,
+        buildingName: buildingName,
+    }
+
+    storage.pushNext(navigator, "RelevantModlePage", {
+        pageType: pageType,
+        relevantModel: model,
+    });
+}
+
+/**
+ * 从详情页进入图纸展示
+ * @param {*} navigator 
+ * @param {*} drawingGdocFileId 图纸文件id
+ * @param {*} drawingName 图纸名称
+ * @param {*} drawingPositionX  
+ * @param {*} drawingPositionY 
+ */
+export function showBlueprintFromDetail(navigator, drawingGdocFileId, drawingName, drawingPositionX, drawingPositionY) {
+    let blueprint = {
+        drawingGdocFileId: drawingGdocFileId,
+        drawingName: drawingName,
+        drawingPositionX: drawingPositionX,
+        drawingPositionY: drawingPositionY,
+    }
+    storage.pushNext(navigator, "RelevantBlueprintPage", {
+        pageType: PageType.PAGE_TYPE_DETAIL,
+        relevantBluePrint: blueprint,
+    });
 }
 
 /**
  * 从详情页进入模型展示
+ * @param {*} navigator 
+ * @param {*} gdocFileId 模型文件id
+ * @param {*} elementId 构件id
  */
-export function showModelFromDetail(navigator, model) {
-    if (model && model.fileId) {
-        storage.pushNext(navigator, "RelevantModlePage", {
-            fileId: model.fileId,
-            pageType: PageType.PAGE_TYPE_DETAIL,
-            relevantModel: model,
-        });
+export function showModelFromDetail(navigator, gdocFileId, elementId) {
+    let model = {
+        gdocFileId: gdocFileId,
+        elementId: elementId,
     }
+    storage.pushNext(navigator, "RelevantModlePage", {
+        pageType: PageType.PAGE_TYPE_DETAIL,
+        relevantModel: model,
+    });
 }
 
 

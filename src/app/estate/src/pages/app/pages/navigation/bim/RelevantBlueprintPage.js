@@ -15,6 +15,7 @@ import {
 import * as AppConfig from "common-module";
 import * as PageType from "./PageTypes";
 import * as BimToken from "./BimFileTokenUtil";
+import * as AuthorityManager from "./../project/AuthorityManager";
 
 //获取设备的宽度和高度
 var {
@@ -57,43 +58,51 @@ export default class RelevantBlueprintPage extends Component {
             drawingPositionX: '',
             drawingPositionY: '',
             showFinishView: false,//显示完成
-            fileId: '',
             name: '',
             pageType: PageType.PAGE_TYPE_NEW_QUALITY,// 0新建检查单 1检查单编辑状态 2详情查看  3图纸模式
             show: false,// true  不响应长按事件  false响应长按事件 (0、1、3响应 ，2 不响应)
             showCreateNoticeView: true,//新建提示弹窗
+            showCreateButton: true,//显示创建按钮
             url: '',
         };
     }
 
     componentDidMount = () => {
-        console.log(this.props.navigation.state.params);
         let params = this.props.navigation.state.params;
+
         let pageType = params.pageType;
         let relevantBluePrint = params.relevantBluePrint;
 
-        if (relevantBluePrint) {
-            this.setState({
-                drawingPositionX: relevantBluePrint.drawingPositionX,
-                drawingPositionY: relevantBluePrint.drawingPositionY,
-                showFinishView: true,
-            });
+        let showFinishView = false;
+        //编辑页进入直接显示完成页面
+        if (pageType == PageType.PAGE_TYPE_EDIT_QUALITY || pageType == PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
+            showFinishView = true;
         }
-
+        //详情页不响应长按事件
         let show = (pageType == PageType.PAGE_TYPE_DETAIL);
+
         let showCreateNoticeView = true;
+        let showCreateButton = true;
         if (pageType == PageType.PAGE_TYPE_DETAIL) {
             showCreateNoticeView = false;
         } else if (pageType == PageType.PAGE_TYPE_QUALITY_MODEL) {
             //判断是否有创建权限
+            if (!AuthorityManager.isShowCreateButton()) {
+                showCreateNoticeView = false;
+                showCreateButton = false;
+            }
         }
 
         this.setState({
-            fileId: params.fileId,
-            name: params.title,
+            drawingGdocFileId: relevantBluePrint.drawingGdocFileId,
+            drawingName: relevantBluePrint.drawingName,
+            drawingPositionX: relevantBluePrint.drawingPositionX,
+            drawingPositionY: relevantBluePrint.drawingPositionY,
             pageType: pageType,
+            showFinishView: showFinishView,
             show: show,
             showCreateNoticeView: showCreateNoticeView,
+            showCreateButton: showCreateButton,
         });
 
         //长按提示View
@@ -105,9 +114,9 @@ export default class RelevantBlueprintPage extends Component {
         }, 4000);
 
         //请求数据
-        this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
+        this.props.navigation.setParams({ title: relevantBluePrint.title, rightNavigatePress: this._rightAction })
 
-        BimToken.getBimFileToken(params.fileId, (token) => {
+        BimToken.getBimFileToken(relevantBluePrint.drawingGdocFileId, (token) => {
             let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
             this.setState({
                 url: url
@@ -118,8 +127,7 @@ export default class RelevantBlueprintPage extends Component {
 
     //详情页查看图纸的header
     headerDetailView = () => {
-        let params = this.props.navigation.state.params;
-        let title = params ? params.title : '图纸';
+        let title = this.state.drawingName ? this.state.drawingName : '图纸';
         return (
             <View style={{ height: 43, flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0.5)', alignItems: 'center' }}>
                 <View style={{ flex: 1 }}>
@@ -137,8 +145,7 @@ export default class RelevantBlueprintPage extends Component {
     }
 
     headerCreateView = () => {
-        let params = this.props.navigation.state.params;
-        let title = params ? params.title : '图纸';
+        let title = this.state.drawingName ? this.state.drawingName : '图纸';
         return (
             <View style={{ height: 43, flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0.5)', alignItems: 'center' }}>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -161,15 +168,18 @@ export default class RelevantBlueprintPage extends Component {
                     <Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: 'center' }}>{title}</Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                    <Text style={{ color: '#ffffff', fontSize: 15, alignSelf: 'flex-end', marginRight: 20, marginTop: 5, }}>长按新建</Text>
+                    {
+                        (this.state.showCreateButton) ? (
+                            <Text style={{ color: '#ffffff', fontSize: 15, alignSelf: 'flex-end', marginRight: 20, marginTop: 5, }}>长按新建</Text>
+                        ) : (null)
+                    }
                 </View>
             </View>
         );
     }
 
     headerFinishView = () => {
-        let params = this.props.navigation.state.params;
-        let title = params ? params.title : '图纸';
+        let title = this.state.drawingName ? this.state.drawingName : '图纸';
         return (
             <View style={{ height: 43, flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0.5)', alignItems: 'center' }}>
                 <View style={{ flex: 1 }}>
@@ -204,7 +214,7 @@ export default class RelevantBlueprintPage extends Component {
     changeBluePrint = () => {
         let navigator = this.props.navigation;
 
-        storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: '图纸文件', pageType: PageType.PAGE_TYPE_NEW_QUALITY})
+        storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: '图纸文件', pageType: PageType.PAGE_TYPE_NEW_QUALITY })
     }
     setPosition = () => {
         let position = [{
@@ -228,12 +238,11 @@ export default class RelevantBlueprintPage extends Component {
     finish = () => {
 
         let relevantBlueprint = {
-            fileId: this.state.fileId,
-            name: this.state.name,
+            drawingGdocFileId: this.state.drawingGdocFileId,
+            drawingName: this.state.drawingName,
             drawingPositionX: this.state.drawingPositionX,
             drawingPositionY: this.state.drawingPositionY,
         }
-        // this.props.chooseBlueprint(relevantBlueprint);
         console.log(this.state.pageType)
         // 0新建检查单 1检查单编辑状态 2详情查看  3图纸模式
         if (this.state.pageType == PageType.PAGE_TYPE_NEW_QUALITY) {
