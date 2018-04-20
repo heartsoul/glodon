@@ -7,14 +7,11 @@ class ActionRightsObject {
     constructor() {
         super.constructor();
         this.items = [];
-        console.log('constructor:'+this.items);
     }
     size = () => {
-        console.log('size:'+this.items);
-        return this.items.size;
+        return this.items.length;
     }
     contains = (key) => {
-        console.log('contains:'+this.items);
         return this.items.indexOf(key) >= 0;
     }
 }
@@ -116,7 +113,7 @@ class GLDStorage extends BaseStorage {
         this.setItem('currentTenant', this.currentTenant);
     }
     loadTenant = (retFun) => {
-        console.log("loadTenant1：" + this.currentTenant);
+        // console.log("loadTenant1：" + this.currentTenant);
         if (this.currentTenant != "0") {
             if (retFun) {
                 retFun(this.currentTenant);
@@ -145,7 +142,7 @@ class GLDStorage extends BaseStorage {
     }
     loadProject = (retFun) => {
         // this.currentProject = this.getItem('currentProject');
-        console.log(this.currentProject);
+        // console.log(this.currentProject);
         if (this.currentProject != "0") {
             if (retFun) {
                 retFun(this.currentProject);
@@ -156,7 +153,7 @@ class GLDStorage extends BaseStorage {
         AsyncStorage.getItem('currentProject')
             .then((value) => {
                 this.currentProject = value;
-                console.log("loadProject2：" + this.currentProject);
+                // console.log("loadProject2：" + this.currentProject);
                 if (retFun) {
                     retFun(value);
                 }
@@ -286,12 +283,12 @@ class GLDStorage extends BaseStorage {
 
     loadAuthority = (key) => {
         if(this.actionRights[key]) {
-            AsyncStorage.getItem(key)
-            .then((value) => {
-                this.setActionRights(key,value.parseJSON());
-            });
             return this.actionRights[key];
         } else {
+            AsyncStorage.getItem(key)
+            .then((value) => {
+                this.setActionRights(key,JSON.parse(value));
+            });
             return new ActionRightsObject([]);
         }
     }

@@ -93,7 +93,7 @@ export function isQualityBrowser(){
 
 //判断是不是我
 export function isMe(currentId){
-    if(storage.currentTenant){
+    if(storage.loadTenant(()=>{})) {
         return storage.currentTenant == currentId;
     }
     return false;
