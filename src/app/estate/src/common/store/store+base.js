@@ -2,22 +2,22 @@
  * 数据存储类
  */
 
-import {Component} from 'react'
-import {AsyncStorage} from 'react-native';
+import { Component } from 'react'
+import { AsyncStorage } from 'react-native';
 
 import { NavigationActions } from 'app-3rd/react-navigation'
 
 /**
  *  权限操作对象
  */
-class ActionRightsObject extends Component{
+class ActionRightsObject extends Component {
     constructor() {
         super();
         this.items = []; // 权限项目
     }
     // 权限数量
     size = () => {
-        return this.items.length; 
+        return this.items.length;
     }
     // 查找是否拥有某个权限
     contains = (key) => {
@@ -28,7 +28,7 @@ class ActionRightsObject extends Component{
 /**
  *  数据存储对象
  */
-export default class BaseStorage extends Component{
+export default class BaseStorage extends Component {
     constructor() {
         super();
         this.storage = AsyncStorage; // 数据存储核心对象
@@ -62,7 +62,7 @@ export default class BaseStorage extends Component{
 
     // 查询，对外接口
     getItem = (key) => {
-       return this.storageData[key];
+        return this.storageData[key];
     }
     /**
      * 从内存获取数据，对外接口
@@ -73,7 +73,7 @@ export default class BaseStorage extends Component{
      * @returns 
      * @memberof BaseStorage
      */
-    loadItem(key,defaultValue,retFun) {
+    loadItem(key, defaultValue, retFun) {
         let retValue = this.getItem(key);
         if (retValue) {
             if (retFun) {
@@ -104,7 +104,7 @@ export default class BaseStorage extends Component{
     _saveStorageData() {
         this._setItem(__KEY_storageData, JSON.stringify(this.storageData));
     }
-  
+
     // 加载所有数据
     _loadStorageData() {
         AsyncStorage.getItem(__KEY_storageData)
@@ -115,7 +115,7 @@ export default class BaseStorage extends Component{
                 }
             }).catch((err) => {
                 console.log(err)
-            }); 
+            });
     }
 }
 
@@ -132,7 +132,7 @@ const __KEY_actionRights = "actionRights"; // 当前所有权限
 class GLDStorage extends BaseStorage {
     constructor() {
         super();
-      
+
         this.homeNavigation = null; // 主导航
 
         // 临时数据
@@ -141,14 +141,14 @@ class GLDStorage extends BaseStorage {
         this.projectIdVersionId = '';
         this.projectId = 0;
     }
-    
+
     //保存用户信息
     saveUserInfo(userInfo) {
         this.setItem(__KEY_userInfo, userInfo);
     }
     //加载用户信息
     loadUserInfo(retFun) {
-       return this.loadItem(__KEY_userInfo,{},retFun);
+        return this.loadItem(__KEY_userInfo, {}, retFun);
     }
     // 保存登录token
     saveLoginToken = (token) => {
@@ -156,7 +156,7 @@ class GLDStorage extends BaseStorage {
     }
     // 获取登录的token
     getLoginToken = () => {
-        return this.loadItem(__KEY_loginToken,'',null);
+        return this.loadItem(__KEY_loginToken, '', null);
     }
     // 是否已经登录了
     isLogin = () => {
@@ -172,7 +172,7 @@ class GLDStorage extends BaseStorage {
     }
     // 是否已经引导过了 true：引导过了
     isGuide = (retFun) => {
-        return this.loadItem(__KEY_guide,'0',null) == '1';
+        return this.loadItem(__KEY_guide, '0', null) == '1';
     }
     // 保存当前租户
     saveTenant = (tenant) => {
@@ -180,7 +180,7 @@ class GLDStorage extends BaseStorage {
     }
     // 获取当前租户
     loadTenant = (retFun) => {
-        return this.loadItem(__KEY_currentTenant,'0',retFun)
+        return this.loadItem(__KEY_currentTenant, '0', retFun)
     }
     // 保存当前项目，名称
     saveProject = (project, name) => {
@@ -189,16 +189,16 @@ class GLDStorage extends BaseStorage {
     }
     // 获取当前选择项目
     loadProject = (retFun) => {
-        return this.loadItem(__KEY_currentProject,'0',retFun);
+        return this.loadItem(__KEY_currentProject, '0', retFun);
     }
     // 获取当前选择项目名
     loadCurrentProjectName = (retFun) => {
-        return this.loadItem(__KEY_currentProjectName,'首页',retFun);
+        return this.loadItem(__KEY_currentProjectName, '首页', retFun);
     }
     // 获取权限项
     loadAuthority = (key) => {
-        let actionRights = this.loadItem(__KEY_actionRights,{},null);
-        if(actionRights[key]) {
+        let actionRights = this.loadItem(__KEY_actionRights, {}, null);
+        if (actionRights[key]) {
             let rights = new ActionRightsObject();
             rights.items = actionRights[key];
             return rights;
@@ -207,11 +207,11 @@ class GLDStorage extends BaseStorage {
         }
     }
     // 保存权限项
-    setActionRights = (key,value) => {
-        if(!value) {
+    setActionRights = (key, value) => {
+        if (!value) {
             return;
         }
-        let actionRights = this.loadItem(__KEY_actionRights,{},null);
+        let actionRights = this.loadItem(__KEY_actionRights, {}, null);
         actionRights[key] = value;
         this.setItem(__KEY_actionRights, actionRights);
     }
@@ -300,10 +300,10 @@ class GLDStorage extends BaseStorage {
         }
         navigator.goBack();
     }
-    
+
     //质量管理相关state
     //模型图纸选择后新建页面回调
-    bimFileChooseCallback = (bimFile) => {}
+    bimFileChooseCallback = (bimFile) => { }
 
     qualityState = {
         bimChooserKey: '',//选择图纸模型的时候记录目录页面的初始navigation key，goBack from this page.
@@ -311,6 +311,6 @@ class GLDStorage extends BaseStorage {
     };
 }
 // 全局变量
-if(!global.storage) {
+if (!global.storage) {
     global.storage = new GLDStorage();
 }
