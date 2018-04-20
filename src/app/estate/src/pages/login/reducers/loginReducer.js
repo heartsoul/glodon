@@ -7,6 +7,7 @@ const initialState = {
   hasChoose: false,
   isSuccess: false,
   user: null,
+  retryTimes:3
 }
 // 不同类别的事件使用switch对应处理过程
 
@@ -30,6 +31,7 @@ export default function loginIn(state = initialState, action) {
         isSuccess: true,
 
         user: action.user,
+        retryTimes:3,
       }
       case types.LOGIN_IN_DONE_CHOOSE:
       return {
@@ -40,6 +42,7 @@ export default function loginIn(state = initialState, action) {
         isSuccess: true,
 
         user: action.user,
+        retryTimes:3,
       }
     // break
     case types.LOGIN_IN_ERROR:
@@ -63,6 +66,18 @@ export default function loginIn(state = initialState, action) {
         isSuccess: false,
 
         user: null,
+        retryTimes:3,
+      }
+      case types.LOGIN_IN_RETRY:
+      return {
+        ...state,
+
+        status: '重试',
+
+        isSuccess: false,
+
+        user: null,
+        retryTimes:state.retryTimes-1,
       }
 
     // break

@@ -6,6 +6,7 @@ import {NativeModules} from 'react-native'
 var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
 
 export function login(username, pwd) {
+  console.log("》》》》开始登录")
   return loginOld(username, pwd);
   // return loginNew(username, pwd);
 }
@@ -30,7 +31,7 @@ function loginOld(username, pwd) {
       },
       (data, request) => {
         API.login(username, pwd).then((response) => {
-          loadAccount(dispatch,response);
+          loadAccount(dispatch,response,username, pwd);
         }).catch((e) => {
           dispatch(loginError(false));
         });
@@ -45,14 +46,13 @@ function loginNew(username, pwd) {
 
     API.authToken(username, pwd).then((response) => {
       storage.saveLoginToken(response.data.access_token);
-      loadAccount(dispatch,response);
+      loadAccount(dispatch,response,username, pwd);
     }).catch((e) => {
       dispatch(loginError(false));
     });
   }
 }
-
-function loadAccount(dispatch,response) {
+function loadAccount(dispatch,response,username, pwd) {
   API.accountInfo().then((userInfo) => {
     console.log(userInfo);
     if (userInfo.err) {
@@ -61,7 +61,7 @@ function loadAccount(dispatch,response) {
     }
     let data = userInfo["data"];
     if (!data) {
-      dispatch(loginError(false));
+      dispatch(loginRetry(false));
       return;
     }
     storage.saveUserInfo(data);
@@ -119,5 +119,12 @@ function loginError(isSuccess) {
   console.log('error')
   return {
     type: types.LOGIN_IN_ERROR,
+  }
+}
+
+function loginRetry(isSuccess) {
+  console.log('error')
+  return {
+    type: types.LOGIN_IN_RETRY,
   }
 }

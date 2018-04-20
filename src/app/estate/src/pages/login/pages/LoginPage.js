@@ -16,6 +16,7 @@ import {
 } from "react-native";
 
 import { connect } from 'react-redux' // 引入connect函数
+import { Toast } from 'antd-mobile' // 引入connect函数
 import * as loginAction from '../actions/loginAction' // 导入action方法 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -47,10 +48,15 @@ class LoginPage extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.status === '重试' && nextProps.retryTimes > 0) {
+      this.props.login(this.state.username,this.state.password);
+      return false;
+    }
     // 登录完成,切成功登录
     if (nextProps.status === '登陆成功' && nextProps.isSuccess) {
       let navigator = this.props.navigation;
       console.log("\n>>>>>hasChoose:ret:"+navigator)
+      Toast.hide();
       if(nextProps.hasChoose) {
         storage.gotoMain(navigator);
       } else {
@@ -58,6 +64,7 @@ class LoginPage extends React.Component {
       }   
       return false
     }
+    Toast.hide();
     return true
   }
 
@@ -173,7 +180,7 @@ class LoginPage extends React.Component {
         />
         <View>
           <ActionButton
-            onPress={()=>login(this.state.username,this.state.password)}
+            onPress={()=>{Toast.loading('正在登录...', 0, null, true);; login(this.state.username,this.state.password)}}
             isDisabled={()=>{return this.state.disabled}}
             text="登 录"
           >
@@ -307,6 +314,7 @@ export default connect(
     isSuccess: state.loginIn.isSuccess,
     user: state.loginIn.user,
     hasChoose: state.loginIn.hasChoose,
+    retryTimes:state.loginIn.retryTimes,
   }),
   dispatch => ({
     login: (userName,password) =>{
