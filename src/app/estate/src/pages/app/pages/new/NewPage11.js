@@ -16,11 +16,12 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     Dimensions,
+    Platform,
+    BackHandler,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Modal, Toast } from 'antd-mobile';
+var { width, height } = Dimensions.get("window");
 import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'app-3rd/teaset';
-
 import ImageChooserView from './ImageChooserView';
 import SelectView from './SelectView';
 import RectificationView from './RectificationView';//整改
@@ -33,7 +34,9 @@ import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
 import * as NewQualityAction from "./../../actions/NewQualityAction";
 
 
-var { width, height } = Dimensions.get("window");
+
+import { Modal, Toast } from 'antd-mobile';
+
 const REF_PHOTO = 'gldPhoto';
 const REF_INSPECT_COMPANY = 'REF_INSPECT_COMPANY';//检查单位
 const REF_COMPANY = 'REF_COMPANY';//施工单位
@@ -43,11 +46,27 @@ const REF_CHECKPOINT = 'REF_CHECKPOINT';//质检项目
 
 
 class NewPage extends React.Component {
+    static navigationOptions = ({ navigation, screenProps }) => ({
+        title: '新建',
+        headerTintColor: "#FFF",
+        headerStyle: { backgroundColor: "#00baf3" },
+        headerRight: (
+            <Text onPress={() => navigation.state.params.rightNavigatePress()} style={{ marginRight: 20, color: '#FFFFFF', width: 60, textAlign: "right" }} >
+                提交
+        </Text>
+        ),
+        headerLeft: (
+            <TouchableOpacity onPress={() => { navigation.state.params.leftNavigatePress() }} style={{ paddingLeft: 20 }}>
+                <Image source={require("app-images/icon_back_white.png")} style={{ width: 9, height: 20 }}></Image>
+            </TouchableOpacity>
+        )
+    });
+
 
     constructor() {
         super();
         this.state = {
-            isLoading: false,
+            isLoading: true,
 
             editInfo: {},//编辑的时候获取的详情
 
@@ -73,16 +92,26 @@ class NewPage extends React.Component {
 
     componentDidMount = () => {
 
-        // //从不同页面进入时初始化状态
-        let params = this.props.params;
-        if (!params) {
-            params = {};
-        }
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.goBack();
+            return true;
+        });
+
+        let params = this.props.navigation.state.params;
+        //从不同页面进入时初始化状态
         NewQualityAction.initialState(params, this.props.selectedCheckPoint, (params) => {
             this.setState(params);
         })
-
+        //提交
+        this.props.navigation.setParams({ rightNavigatePress: this.submit })
+        this.props.navigation.setParams({ leftNavigatePress: this.goBack })
     }
+    componentWillUnmount() {
+        if (Platform.OS === 'android') {
+            BackHandler.removeEventListener('hardwareBackPress');
+        }
+    }
+
     //返回
     goBack = () => {
         Modal.alert('是否确认退出当前页面？', "您还未保存当前数据！", [
@@ -134,7 +163,6 @@ class NewPage extends React.Component {
             personData: this.getSelectedData(REF_PERSON),
             checkPoint: this.getSelectedCheckPoint(),
             rectificationData: this.getRectificationData(),
-            inspectionType: this.props.type,
             state: this.state,
         };
         return ret;
@@ -238,9 +266,7 @@ class NewPage extends React.Component {
     renderData = () => {
         return (
             <View>
-                <SelectView
-                    ref={REF_INSPECT_COMPANY}
-                    title={(this.props.type === "acceptance") ? ("验收单位") : ("检查单位")}
+                <SelectView ref={REF_INSPECT_COMPANY} title='检查单位'
                     value={this.state.editInfo ? ({
                         id: this.state.editInfo.inspectionCompanyId,
                         name: this.state.editInfo.inspectionCompanyName,
@@ -341,8 +367,7 @@ class NewPage extends React.Component {
             <ScrollView>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 {
-                    this.renderData()
-                    // this.state.isLoading ? (this.renderLoadingView()) : (this.renderData())
+                    this.state.isLoading ? (this.renderLoadingView()) : (this.renderData())
                 }
             </ScrollView>
 
@@ -421,14 +446,6 @@ var styles = StyleSheet.create({
         marginTop: 30,
     },
 });
-
-NewPage.propTypes = {
-    params: PropTypes.object,
-    /**
-     * 区分检查单和验收单（inspection、acceptance）
-     */
-    type: PropTypes.string,
-}
 
 export default connect(
     state => ({

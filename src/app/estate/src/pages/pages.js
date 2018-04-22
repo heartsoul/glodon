@@ -7,7 +7,8 @@ import MyPage from './app/pages/me/MyPage'
 import SettingPage from './app/pages/me/SettingPage'
 import MessagePage from './app/pages/message/MessagePage'
 import SubscribePage from './app/pages/subscription/SubscribePage'
-import NewPage from './app/pages/new/NewPage'
+import NewPage from './app/pages/new/NewCheckListPage'
+import NewCheckListPage from './app/pages/new/NewCheckListPage'
 import MainPage from './app/pages/main/MainPage'
 
 import QualityMainPage from './app/pages/quality/QualityMainPage'
@@ -47,4 +48,5 @@ export {
     QualityDetailPage,
     BigImageViewPage,
     QualityStatardsPage,
+    NewCheckListPage,
 }
