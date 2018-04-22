@@ -6,12 +6,12 @@ import React, { Component, PureComponent } from "react";
 import {
     ActivityIndicator, Animated, SectionList, FlatList,
     ScrollView, StyleSheet, Text, View, StatusBar, Image,
-    RefreshControl, Button,Dimensions, TouchableHighlight, TouchableOpacity
+    RefreshControl, Button, Dimensions, TouchableHighlight, TouchableOpacity
 } from "react-native";
 import * as API from "app-api";
 import QualityListCell from "./qualityListCell";
 import QualityListView from "./qualityListView";
-import { SegmentedBar,SegmentedView, Drawer, Label } from 'app-3rd/teaset';
+import { SegmentedBar, SegmentedView, Drawer, Label } from 'app-3rd/teaset';
 
 var { width, height } = Dimensions.get("window");
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
@@ -25,30 +25,46 @@ export default class qualityList extends PureComponent {
         headerStyle: { backgroundColor: "#00baf3" },
         gesturesEnabled: false,
     };
-    
+
 
     constructor(props) {
         super(props);
-        
+
         this.state = {
             //网络请求状态
             error: false,
             errorInfo: "",
             qcState: '',
-            isLoading:true,
-            activeIndex:0,
-            qualityView: [{},{},{},{},{},{},{},{}],
-           }
+            isLoading: true,
+            activeIndex: 0,
+            qualityView: [{}, {}, {}, {}, {}, {}, {}, {}],
+            qualityBadge:{
+                item:[0,0,0,0,0,0,0,0,0,0]
+            },
+            qualityBadge0:0
+        }
     }
     _keyExtractor = (item, index) => index;
-  
-    componentDidMount=()=> {
+
+    componentDidMount = () => {
         //请求数据
         // this._onRefresh();
         storage.qualityNavigation = this.props.navigation;
         API.getQualityInspectionSummary(storage.loadProject()).then(
-            (responseData)=>{
-                console.log('getQualityInspectionSummary'+JSON.stringify(responseData.data))
+            (responseData) => {
+                console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
+                let items = responseData.data;
+                let qualityBadgeItem = this.state.qualityBadge.item;
+                items.map((item, index) => {
+                    let find = API.CLASSIFY_STATES.indexOf(item.qcState);
+                    if (find > 0) {
+                        qualityBadgeItem[find] = item.count;
+                    }
+                });
+                console.log(JSON.stringify(qualityBadgeItem));
+                 this.setState({
+                        qualityBadge:{item:qualityBadgeItem},
+                    })
                 // 获取数量数据
             }
         );
@@ -57,14 +73,14 @@ export default class qualityList extends PureComponent {
     }
 
     _onSegmentedBarChange = (index) => {
-        this.setState({activeIndex:index});
+        this.setState({ activeIndex: index });
         this.state.qualityView[index].fetchData(API.CLASSIFY_STATES[index]);
     }
-    _toTop = () =>{
+    _toTop = () => {
         // this.state.sectionList.scrollToOffset({animated: true, offset:0});
     }
     renderData() {
-           
+
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
@@ -87,11 +103,12 @@ export default class qualityList extends PureComponent {
 
                 </SegmentedBar>
                 <QualityListView  ref='sectionList'  qcState = {''} />  */}
-                <SegmentedView style={{flex:1}} justifyItem={'scrollable'} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}> 
-                 {
+
+                <SegmentedView style={{ flex: 1 }} justifyItem={'scrollable'} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
+                    {
                        API.CLASSIFY_STATUS_LIST.map((item,index)=>{
                            return (
-                               <SegmentedView.Sheet key={item.name} title={item.name}>
+                               <SegmentedView.Sheet key={item.name} title={item.name} badge={this.state.qualityBadge.item[index]}>
                                 <QualityListView ref={ (e) => {
                                     this.state.qualityView[index] = e
                                     } } style={{flex:1}} qcState={''+item.state} loadData={index ==0 ? true: false} /> 
@@ -99,7 +116,7 @@ export default class qualityList extends PureComponent {
                            );
                        })
                    }
-           </SegmentedView>
+                </SegmentedView>
                 {/* <TouchableOpacity style={styles.topBtn} onPress={this._toTop.bind(this)}>
             <Text style={styles.topBtnText}>置顶</Text>
       </TouchableOpacity> */}
@@ -108,6 +125,7 @@ export default class qualityList extends PureComponent {
     }
 
     render() {
+        console.log('render:' + JSON.stringify(this.state.qualityBadge))
         //加载数据
         return this.renderData();
     }
@@ -116,19 +134,19 @@ export default class qualityList extends PureComponent {
 const styles = StyleSheet.create({
     contentHeader: {
         // flex:1,
-        height:30,
-        top:0,
+        height: 30,
+        top: 0,
     },
     contentList: {
-     flex:1,
-         backgroundColor:'#fafafa',
+        flex: 1,
+        backgroundColor: '#fafafa',
         //  height:120,
     },
     dataList: {
         // flex: 1,
-        top:0, 
-        height:height,
-        backgroundColor:'green',
+        top: 0,
+        height: height,
+        backgroundColor: 'green',
     },
     gray: {
         top: 100,

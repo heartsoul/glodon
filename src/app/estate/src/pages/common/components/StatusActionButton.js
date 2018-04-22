@@ -27,7 +27,7 @@ export default class StatusActionButton extends Component {
 
 StatusActionButton.propTypes = {
     text: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
     color: PropTypes.any.isRequired,
     borderColor: PropTypes.string,
     width: PropTypes.any,

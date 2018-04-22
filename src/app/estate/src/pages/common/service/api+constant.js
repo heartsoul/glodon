@@ -187,7 +187,7 @@ export function toQcStateShowColor(qcState) {
  */
 export function toBillTypeColor(billType) {
     let index = BILL_TYPE.indexOf(billType);
-    if (index > 0) {
+    if (index >= 0) {
         return BILL_TYPE_COLOR[index];
     }
     return "gray";
