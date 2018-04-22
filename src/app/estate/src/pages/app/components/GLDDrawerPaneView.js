@@ -25,7 +25,7 @@ export default class GLDDrawerPaneView extends Component {
         const view = (
             <GLDDrawerPaneView currentItem={currentItem} navigation={navigation} />
         );
-        GLDDrawerPaneView.drawer = Drawer.open(view, 'left');
+        GLDDrawerPaneView.drawer = Drawer.open(view, 'left','translate');
     }
     static close() {
         if (GLDDrawerPaneView.drawer) {
