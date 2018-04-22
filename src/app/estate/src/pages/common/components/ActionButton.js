@@ -14,9 +14,13 @@ export default class ActionButton extends Component {
 
   render() {
     const { text, onPress, isDisabled} = this.props
+    let onPressIn= onPress;
+    if(isDisabled && isDisabled()) {
+      onPressIn = null
+    }
     return (
         <TouchableHighlight
-        onPress={onPress}
+        onPress={onPressIn}
         underlayColor="#0099f3"
         activeOpacity={1.0}
         style={[styles.style_action,isDisabled()

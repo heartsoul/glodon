@@ -20,7 +20,7 @@ import { Toast } from 'antd-mobile' // 引入connect函数
 import * as loginAction from '../actions/loginAction' // 导入action方法 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { ActionButton } from 'app-components';
+import { ActionButton,TextInputNormal,TextInputPassword } from 'app-components';
 
 var { width, height } = Dimensions.get("window");
 
@@ -34,6 +34,8 @@ class LoginPage extends React.Component {
 }
   constructor(props) {
     super(props);
+    this.passwordTextInput = null;
+    this.userNameTextInput = null;
     /*用来指示是否显示Loading提示符号*/
     this.state = {
       disabled: false,
@@ -68,24 +70,36 @@ class LoginPage extends React.Component {
     return true
   }
 
+  _checkInput() {
+    return (this.state.username.length && this.state.password.length);
+  }
   _onUserNameChangeText = text => {
+    if(text === '\n') {
+      this.passwordTextInput.focus();
+      this.passwordTextInput.setSelectionRange(0, input.value.length);
+      return;
+    }
     console.log("_onUserNameChangeText" + text);
     this.setState({ username: text });
   };
   _onUserNameBlur = () => {
-    this.setState({ focusUserName: 0 });
+
+    this.setState({ focusUserName: 0, disabled:this._checkInput()});
   };
   _onPasswordBlur = () => {
-    this.setState({ focusPassword: 0 });
+    this.setState({ focusPassword: 0, disabled:this._checkInput()});
   };
   _onUserNameFocus = () => {
+
     this.setState({
       focusUserName: 1
+      , disabled:this._checkInput()
     });
   };
   _onPasswordFocus = () => {
     this.setState({
       focusPassword: 1
+      , disabled:this._checkInput()
     });
   };
   _onPasswordChangeText = text => {
@@ -99,16 +113,10 @@ class LoginPage extends React.Component {
   render() {
     const { login } = this.props
     return (
-      <KeyboardAwareScrollView style={{backgroundColor: "#ffffff",}}>
-       
-      <View
-        style={{
-          backgroundColor: "#ffffff",
-          flex: 1,
-          marginLeft: 0,
-          marginRight: 0
-        }}
-      >
+      <KeyboardAwareScrollView style={{backgroundColor: "#ffffff",flex: 1,
+      marginLeft: 0,
+      marginRight: 0}}>
+     
         <StatusBar
           barStyle="light-content"
           backgroundColor="#00baf3"
@@ -130,17 +138,13 @@ class LoginPage extends React.Component {
         >
           账户名
         </Text>
-        <TextInput
-          style={styles.style_user_input}
+        <TextInputNormal
           placeholder={this.state.focusUserName == 1 ? "" : "请输入账户名称"}
-          numberOfLines={1}
-          autoFocus={true}
-          underlineColorAndroid={"transparent"}
-          textAlign="left"
           onBlur={() => this._onUserNameBlur()}
           onFocus={() => this._onUserNameFocus()}
           onChangeText={text => this._onUserNameChangeText(text)}
           value={this.state.username}
+          ref={this.userNameTextInput}
         />
         <View
           style={
@@ -159,17 +163,13 @@ class LoginPage extends React.Component {
         >
           密码
         </Text>
-        <TextInput
-          style={styles.style_pwd_input}
+        <TextInputPassword
           placeholder={this.state.focusPassword == 1 ? "" : "请输入用户密码"}
-          numberOfLines={1}
-          underlineColorAndroid={"transparent"}
-          secureTextEntry={true}
-          textAlign="left"
           onChangeText={text => this._onPasswordChangeText(text)}
           value={this.state.password}
           onBlur={() => this._onPasswordBlur()}
           onFocus={() => this._onPasswordFocus()}
+          ref={this.passwordTextInput}
         />
         <View
           style={
@@ -187,7 +187,6 @@ class LoginPage extends React.Component {
           </ActionButton> 
           <Text style={styles.style_loginText}>{this.props.status}</Text>
         </View>
-      </View>
       </KeyboardAwareScrollView>
     );
   }
@@ -222,20 +221,7 @@ const styles = StyleSheet.create({
     marginTop: 440,
     alignSelf: "center"
   },
-  style_user_input: {
-    backgroundColor: "#fff",
-    marginTop: 12,
-    height: 40,
-    marginLeft: 20,
-    marginRight: 60
-  },
-  style_pwd_input: {
-    backgroundColor: "#fff",
-    height: 40,
-    marginTop: 12,
-    marginLeft: 20,
-    marginRight: 60
-  },
+ 
   style_input_line: {
     height: 2,
     backgroundColor: "#00baf3",
@@ -247,17 +233,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(243,242,242)",
     marginLeft: 20,
     marginRight: 20
-  },
-  style_input_submit: {
-    marginTop: 15,
-    marginLeft: 20,
-    marginRight: 20,
-    backgroundColor: "#333",
-    height: 60,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    color: "#fff"
   },
   style_view_unlogin: {
     fontSize: 12,
