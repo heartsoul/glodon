@@ -32,12 +32,46 @@ export default class ImageChooserView extends React.Component {
             _onLoadFile(param)
         });
     }
+     /**
+     * 启动拍照
+     */
+   static takePhoto=(retFun)=>{
+        PM.takePhoto(
+            (data,bSuccess) => {
+              console.log(data);
+              retFun(data,bSuccess)
+            }
+          );
+    }
+    
+     /**
+     * 启动相册选择
+     */
+   static pickerImages=(retFun)=>{
+    PM.pickerImages(
+        (data,bSuccess) => {
+          console.log(data);
+          retFun(data,bSuccess)
+        }
+      );
+    }
+    
     /**
    * Returns the native `WebView` node.
    */
   getViewHandle = () => {
     return ReactNative.findNodeHandle(this.refs[REF_PHOTO]);
   };
+  componentDidMount () {
+    //   if(this.props.needTakePhoto) {
+    //     this.takePhoto();
+    //     return;
+    //   }
+    //   if(this.props.needPickerImages) {
+    //     this.pickerImages();
+    //     return;
+    //   }
+  }
     render() {
         return (
             <GLDPhoto
@@ -87,7 +121,18 @@ ImageChooserView.propTypes = {
     isShowTakePhotoSheet: PropTypes.bool,
     onChange: PropTypes.func,
     ...View.propTypes,
-    files:PropTypes.array
+    /**
+     * 已有文件
+     */
+    files:PropTypes.array,
+    /**
+     * 是否要弹出拍照
+     */
+    needTakePhoto:PropTypes.bool,
+    /**
+     * 是否要弹出相册，与needTakePhoto
+     */
+    needPickerImages:PropTypes.bool,
 };
 
 var GLDPhoto = requireNativeComponent('GLDPhoto', ImageChooserView);

@@ -140,6 +140,62 @@
   }];
   [self.navcDelegate presentViewController:vc animated:YES completion:nil];
 }
++ (void)takePhoto:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback {
+  SoulCameraViewController * vc = [[SoulCameraViewController alloc] initWithNibName:nil bundle:nil];
+  @weakify(vc,self);
+  [vc setDidFinishPickingBlock:^(UIImage * _Nonnull image){
+    SoulPhotoEditViewController * vc1 = [[SoulPhotoEditViewController alloc] initWithNibName:nil bundle:nil];
+    vc1.inputImageBlock = ^UIImage * _Nonnull{
+      return image;
+    };
+    [vc1 setDidFinishPickingBlock:^(NSString *localIdentifier) {
+      if (localIdentifier) {
+        PHAsset * asset = [NSMutableDictionary getPHAsset:localIdentifier];
+        @strongify(self);
+        [navcDelegate dismissViewControllerAnimated:NO completion:nil];
+        
+        [self.class loadItem:asset finish:^(NSDictionary *data) {
+          callback(@[data]);
+        }];
+      } else {
+        callback(@[]);
+      }
+    }];
+    @strongify(vc);
+    [vc1 setDidCancelBlock:^{
+      callback(@[]);
+    }];
+    [vc presentViewController:vc1 animated:NO completion:^{
+      
+    }];
+  }];
+  [navcDelegate presentViewController:vc animated:YES completion:nil];
+}
++ (void)imagePicker:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback {
+  LPDImagePickerController *lpdImagePickerVc = [[LPDImagePickerControllerEx alloc] initWithMaxImagesCount:3 columnNumber:5 delegate:nil pushPhotoPickerVc:YES];
+  lpdImagePickerVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+  lpdImagePickerVc.allowPickingVideo = NO;
+  lpdImagePickerVc.allowPickingOriginalPhoto = NO;
+  lpdImagePickerVc.allowTakePicture = NO;
+  lpdImagePickerVc.sortAscendingByModificationDate = NO;
+  
+    lpdImagePickerVc.selectedAssets =[NSMutableArray array];
+    lpdImagePickerVc.showSelectBtn = NO;
+    lpdImagePickerVc.allowPreview = NO;
+    lpdImagePickerVc.maxImagesCount = 3;
+    
+  [lpdImagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
+    [self.class loadFiles:assets finish:^(NSArray *datas) {
+      callback(datas);
+    }];
+  }];
+  [lpdImagePickerVc setImagePickerControllerDidCancelHandle:^{
+    callback(@[]);
+  }];
+  
+  [navcDelegate presentViewController:lpdImagePickerVc animated:YES completion:nil];
+}
+
 - (void)pushImagePickerControllerEx {
   
   LPDImagePickerController *lpdImagePickerVc = [[LPDImagePickerControllerEx alloc] initWithMaxImagesCount:self.maxSelectedCount columnNumber:self.countPerRowInAlbum delegate:self pushPhotoPickerVc:YES];
@@ -313,7 +369,7 @@
 //  }
 }
 
-- (void)loadItem:(PHAsset *)asset finish:(void(^)(NSDictionary *))finish {
++ (void)loadItem:(PHAsset *)asset finish:(void(^)(NSDictionary *))finish {
   if ([asset isKindOfClass:[NSDictionary class]]) {
     finish((NSDictionary*)asset); // 传入的文件，直接就返回原数据。
     return;
@@ -342,24 +398,23 @@
     finish(@{@"path":path,@"key":itemid,@"name":fileUrl.lastPathComponent,@"length":@(imageData.length)});
   }];
 }
-- (void)loadNext:(NSMutableArray *)ret asset:(PHAsset *)asset next:(PHAsset *(^)(void))next{
++ (void)loadNext:(NSMutableArray *)ret asset:(PHAsset *)asset next:(PHAsset *(^)(void))next{
   if(asset) {
-    [self loadItem:asset finish:^(NSDictionary * path) {
+    [self.class loadItem:asset finish:^(NSDictionary * path) {
       [ret addObject:path];
       PHAsset * nextItem = next();
       if(next()) {
-        [self loadNext:ret asset:nextItem next:next];
+        [self.class loadNext:ret asset:nextItem next:next];
       }
     }];
   } else {
     PHAsset * nextItem = next();
     if(next()) {
-      [self loadNext:ret asset:nextItem next:next];
+      [self.class loadNext:ret asset:nextItem next:next];
     }
   }
 }
-- (void)loadFiles:(void(^)(NSArray * files))finish {
-  __block NSArray * array = [self.selectedAssets copy];
++ (void)loadFiles:(NSArray*)array finish:(void(^)(NSArray * files))finish {
   if(array.count < 1) {
     finish(@[]);
     return ;
@@ -367,7 +422,7 @@
   __block NSUInteger nCount = array.count;
   __block NSUInteger nIndex = 0;
   __block NSMutableArray * ret = [NSMutableArray array];
-  [self loadNext:ret asset:array[nIndex] next:^PHAsset *{
+  [self.class loadNext:ret asset:array[nIndex] next:^PHAsset *{
     nIndex ++;
     if(nIndex < nCount) {
       return array[nIndex];
@@ -376,6 +431,9 @@
       return nil;
     }
   }];
+}
+- (void)loadFiles:(void(^)(NSArray * files))finish {
+  [self.class loadFiles:[self.selectedAssets copy] finish:finish];
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
   //  if(self.onChange) {

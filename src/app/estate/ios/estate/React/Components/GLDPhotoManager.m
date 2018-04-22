@@ -46,35 +46,59 @@ RCT_CUSTOM_VIEW_PROPERTY(files, NSArray, RNTImagesView)
 // 组件构建
 - (UIView *)view
 {
-    CGFloat w = [UIApplication sharedApplication].keyWindow.frame.size.width;
-    CGFloat h = w / 5 + 34;
-    RNTImagesView *quoteImagesView =[[RNTImagesView alloc] initWithFrame:CGRectMake(0, 0, w, h) withCountPerRowInView:0 cellMargin:10];
-    //初始化view的frame, view里每行cell个数， cell间距（上方的图片1 即为quoteImagesView）
-    // 注：设置frame时，我们可以根据设计人员给的cell的宽度和最大个数、排列，间距去大致计算下quoteview的size.
-    quoteImagesView.maxSelectedCount = 3;
-    //最大可选照片数
-    quoteImagesView.collectionView.scrollEnabled = YES;
-    //view可否滑动
-    UIViewController *root = RCTPresentedViewController();
-
-    quoteImagesView.navcDelegate = (UIViewController<LPDQuoteImagesViewDelegate>*) root ;    //self 至少是一个控制器。
-    //委托（委托controller弹出picker，且不用实现委托方法）
+  CGFloat w = [UIApplication sharedApplication].keyWindow.frame.size.width;
+  CGFloat h = w / 5 + 34;
+  RNTImagesView *quoteImagesView =[[RNTImagesView alloc] initWithFrame:CGRectMake(0, 0, w, h) withCountPerRowInView:0 cellMargin:10];
+  //初始化view的frame, view里每行cell个数， cell间距（上方的图片1 即为quoteImagesView）
+  // 注：设置frame时，我们可以根据设计人员给的cell的宽度和最大个数、排列，间距去大致计算下quoteview的size.
+  quoteImagesView.maxSelectedCount = 3;
+  //最大可选照片数
+  quoteImagesView.collectionView.scrollEnabled = YES;
+  //view可否滑动
+  UIViewController *root = RCTPresentedViewController();
+  
+  quoteImagesView.navcDelegate = (UIViewController<LPDQuoteImagesViewDelegate>*) root ;    //self 至少是一个控制器。
+  //委托（委托controller弹出picker，且不用实现委托方法）
   _quoteImagesView = quoteImagesView;
   return quoteImagesView;
 }
 
-RCT_EXPORT_METHOD (loadFile:(nonnull NSNumber *)reactTag uploadArray:(NSArray*)uploadArray callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD (loadFile:(nonnull NSNumber *)reactTag callback:(RCTResponseSenderBlock)callback) {
   RNTImagesView *view = (RNTImagesView*)[self.bridge.uiManager viewForReactTag:reactTag];
-    if (![view isKindOfClass:[RNTImagesView class]]) {
-      RCTLogError(@"Invalid view returned from registry, expecting RCTWebView, got: %@", view);
-    } else {
-      [view loadFiles:^(NSArray *files) {
-        callback(@[@{@"images":files}]);
-      }];
-      
-    }
-    return;
+  if (![view isKindOfClass:[RNTImagesView class]]) {
+    RCTLogError(@"Invalid view returned from registry, expecting RCTWebView, got: %@", view);
+  } else {
+    [view loadFiles:^(NSArray *files) {
+      callback(@[@{@"images":files}]);
+    }];
+    
   }
+  return;
+}
+
+RCT_EXPORT_METHOD (takePhoto:(RCTResponseSenderBlock)callback) {
+  //view可否滑动
+  UIViewController *root = RCTPresentedViewController();
+  [RNTImagesView takePhoto:root callback:^(NSArray *files) {
+    if(!files) {
+      files = @[];
+    }
+    callback(@[files,files.count?@(YES):@(NO)]);
+  }];
+  return;
+}
+
+RCT_EXPORT_METHOD (pickerImages:(RCTResponseSenderBlock)callback) {
+  
+  UIViewController *root = RCTPresentedViewController();
+  [RNTImagesView imagePicker:root callback:^(NSArray *files) {
+    if(!files) {
+      files = @[];
+    }
+    callback(@[files,files.count?@(YES):@(NO)]);
+  }];
+  return;
+}
 
 - (dispatch_queue_t)methodQueue
 {
@@ -126,6 +150,8 @@ RCT_EXPORT_METHOD (loadFile:(nonnull NSNumber *)reactTag uploadArray:(NSArray*)u
 }
 
 @end
+
+
 
 
 

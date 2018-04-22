@@ -14,4 +14,6 @@
 @property (nonatomic, copy) RCTBubblingEventBlock onChange;// 响应事件定义
 
 - (void)loadFiles:(void(^)(NSArray * files))finish;
++ (void)takePhoto:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback;
++ (void)imagePicker:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback;
 @end

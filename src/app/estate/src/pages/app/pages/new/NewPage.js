@@ -22,7 +22,7 @@ import {
 import { connect } from 'react-redux';
 var { width, height } = Dimensions.get("window");
 import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'app-3rd/teaset';
-import ImageChooserView from './ImageChooserView';
+import { ImageChooserView } from 'app-components';
 import SelectView from './SelectView';
 import RectificationView from './RectificationView';//整改
 import SelectCheckPointView from './SelectCheckPointView';
