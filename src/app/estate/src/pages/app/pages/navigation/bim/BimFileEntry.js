@@ -1,4 +1,5 @@
 'use strict'
+import {GLDNewMenuView} from 'app-components'
 /**
  * 图纸模型选择及展示入口;
  * PageType 0新建检查单 1检查单编辑状态 2详情查看  3质检单模型模式  4新建材设进场 5新增材设进场编辑状态  6材设模型模式
@@ -14,7 +15,12 @@
  * 详情页进入图纸、模型展示
  * 
  */
-import * as PageType from "./PageTypes";
+
+ import * as PageType from "./PageTypes";
+
+export function homeSelect(navigation) {
+    GLDNewMenuView.openMenu(navigation);
+}
 
 /**
  *  从质检单首页进入图纸选择

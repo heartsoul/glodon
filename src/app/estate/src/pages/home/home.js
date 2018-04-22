@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button, View, Text, Image,TouchableOpacity } from 'react-native';
 import { withNavigation,StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
-import { TabView, Theme, BasePage, NavigationPage, TeaNavigator } from 'app-3rd/teaset'
+import { TabView, Theme, BasePage, NavigationPage, TeaNavigator, Overlay, Label} from 'app-3rd/teaset'
 //Theme.set(Theme.themes.black);
+import { BimFileEntry } from 'app-entry';
 const primaryColor = '#00baf3';
 Theme.set({
   primaryColor: primaryColor,
@@ -104,6 +105,9 @@ class Page extends React.Component {
   constructor() {
     super();
   }
+  onNewClick = () =>{
+    BimFileEntry.homeSelect(this.props.navigation);
+  }
   render() {
     return (<TabView style={{ flex: 1 ,height:'100%'}} type='projector'>
       <TabView.Sheet
@@ -144,7 +148,7 @@ class Page extends React.Component {
           </View>
         }
         iconContainerStyle={{ justifyContent: 'flex-end' }}
-        onPress={() => storage.pushNext(null, 'NewPage')}
+        onPress={() => {this.onNewClick()}}
       />
 
       <TabView.Sheet
