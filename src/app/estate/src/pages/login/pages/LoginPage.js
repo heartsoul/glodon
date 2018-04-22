@@ -19,6 +19,7 @@ import { connect } from 'react-redux' // 引入connect函数
 import { Toast } from 'antd-mobile' // 引入connect函数
 import * as loginAction from '../actions/loginAction' // 导入action方法 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+// import {ScrollView as KeyboardAwareScrollView } from 'react-native';
 
 import { ActionButton,TextInputNormal,TextInputPassword } from 'app-components';
 
@@ -74,9 +75,9 @@ class LoginPage extends React.Component {
     return (this.state.username.length && this.state.password.length);
   }
   _onUserNameChangeText = text => {
-    if(text === '\n') {
+    if(text.indexOf('\n')>=0) {
       this.passwordTextInput.focus();
-      this.passwordTextInput.setSelectionRange(0, input.value.length);
+      // this.passwordTextInput.setSelectionRange(0, this.passwordTextInput.value.length);
       return;
     }
     console.log("_onUserNameChangeText" + text);
@@ -84,34 +85,43 @@ class LoginPage extends React.Component {
   };
   _onUserNameBlur = () => {
 
-    this.setState({ focusUserName: 0, disabled:this._checkInput()});
+    this.setState({ focusUserName: 0, disabled:!this._checkInput()});
   };
   _onPasswordBlur = () => {
-    this.setState({ focusPassword: 0, disabled:this._checkInput()});
+    this.setState({ focusPassword: 0, disabled:!this._checkInput()});
   };
   _onUserNameFocus = () => {
 
     this.setState({
       focusUserName: 1
-      , disabled:this._checkInput()
+      , disabled:!this._checkInput()
     });
   };
   _onPasswordFocus = () => {
     this.setState({
       focusPassword: 1
-      , disabled:this._checkInput()
+      , disabled:!this._checkInput()
     });
   };
   _onPasswordChangeText = text => {
+    if(text.indexOf('\n')>=0) {
+     if(this._checkInput()) {
+       this.doLogin();
+     }
+      return;
+    }
     console.log("_onPasswordChangeText" + text);
     this.setState({ password: text });
   };
   _fogotAction = () => {
    
   };
-  
-  render() {
+  doLogin=()=>{
+    Toast.loading('正在登录...', 0, null, true);
     const { login } = this.props
+    login(this.state.username,this.state.password)
+  }
+  render() {
     return (
       <KeyboardAwareScrollView style={{backgroundColor: "#ffffff",flex: 1,
       marginLeft: 0,
@@ -144,7 +154,7 @@ class LoginPage extends React.Component {
           onFocus={() => this._onUserNameFocus()}
           onChangeText={text => this._onUserNameChangeText(text)}
           value={this.state.username}
-          ref={this.userNameTextInput}
+          ref={(ref)=>{this.userNameTextInput=ref}}
         />
         <View
           style={
@@ -169,7 +179,7 @@ class LoginPage extends React.Component {
           value={this.state.password}
           onBlur={() => this._onPasswordBlur()}
           onFocus={() => this._onPasswordFocus()}
-          ref={this.passwordTextInput}
+          ref={(ref)=>{this.passwordTextInput=ref}}
         />
         <View
           style={
@@ -180,7 +190,7 @@ class LoginPage extends React.Component {
         />
         <View>
           <ActionButton
-            onPress={()=>{Toast.loading('正在登录...', 0, null, true);; login(this.state.username,this.state.password)}}
+            onPress={()=>{this.doLogin()}}
             isDisabled={()=>{return this.state.disabled}}
             text="登 录"
           >

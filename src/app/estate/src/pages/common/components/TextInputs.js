@@ -26,7 +26,14 @@ export class TextInputNormal extends TextInput {
       underlineColorAndroid={"transparent"}
       textAlign="left"
       placeholder={this.props.placeholder}
-      onChangeText={this.props.onChangeText}
+      onSubmitEditing ={(text)=>{
+        this.props.onChangeText('\n');
+      }
+      }
+      onChangeText={(text)=>{
+        this.props.onChangeText(text);
+      }
+      }
       value={this.props.value}
       onBlur={this.props.onBlur}
       onFocus={this.props.onFocus}
@@ -47,6 +54,7 @@ export class TextInputPassword extends TextInput {
 
   constructor(props) {
     super(props);
+    this.textInput = null;
     /*用来指示是否显示Loading提示符号*/
     this.state = {
       disabled: false,
@@ -62,16 +70,21 @@ export class TextInputPassword extends TextInput {
   }
   _onSecureTextEntry = () =>{
     if(this.state.secureTextEntry) {
-      this.resetData = YES;
+      this.setState({
+        resetData:true,
+        secureTextEntry:!this.state.secureTextEntry,
+      });
+    } else {
+      this.setState({
+        secureTextEntry:!this.state.secureTextEntry,
+      });
     }
-    this.setState({
-      secureTextEntry:!this.state.secureTextEntry,
-    });
+    // this.textInput.setSelectionRange(0, this.textInput.value.length);
   }
   render() {
     return (
       <View  style={[styles.style_input,]}>
-      <TextInput
+      <TextInput ref={(ref)=>{this.textInput=ref}}
       style={[styles.style_pwd_input]}
       numberOfLines={1}
       returnKeyType = "done"
@@ -81,10 +94,17 @@ export class TextInputPassword extends TextInput {
       textAlign="left"
       // autoFocus={true}
       placeholder={this.props.placeholder}
+      onSubmitEditing ={(text)=>{
+        this.props.onChangeText('\n');
+      }
+      }
       onChangeText={(text)=>{
-        if(this.resetData == true) {
-          this.resetData = false;
-          text = this.value;
+        if(this.state.resetData == true) {
+          text = this.state.value;
+          this.setState({
+            value:text,
+            resetData:false
+          });
         } 
         this.props.onChangeText(text);}
       }
@@ -165,6 +185,7 @@ const styles = StyleSheet.create({
     height: 40,
     marginTop: 0,
     marginLeft: 0,
-    marginRight: 60
+    marginRight: 60,
+    fontSize:12,
   },
 });
