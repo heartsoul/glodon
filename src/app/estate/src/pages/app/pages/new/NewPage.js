@@ -43,8 +43,15 @@ const REF_CHECKPOINT = 'REF_CHECKPOINT';//质检项目
 
 class NewPage extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        let filesIn = [];
+        if(props.params) {
+            if(props.params.files) {
+                filesIn = props.params.files;
+            }
+        }
+
         this.state = {
             isLoading: false,
 
@@ -66,6 +73,7 @@ class NewPage extends React.Component {
             showDescriptionStar: false,
             showCheckpointStar: false,
             showRectificationStar: false,
+            files:filesIn, //附件图片
         }
 
     };
@@ -276,13 +284,7 @@ class NewPage extends React.Component {
                     childView={this.renderDescriptionView()}
                 ></StarView>
 
-                <ImageChooserView ref={REF_PHOTO} files={[{
-                    url: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg',
-                    name: '2121',
-                }, {
-                    url: 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg',
-                    name: '2122',
-                }]} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" onChange={() => alert('收到!')} />
+                <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" onChange={() => alert('收到!')} />
                 <RectificationView ref={REF_RECTIFICATION} rectificationData={this.state.rectificationData} showStar={this.state.showRectificationStar}></RectificationView>
                 <StarView
                     showStar={this.state.showCheckpointStar}

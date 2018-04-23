@@ -85,7 +85,7 @@ export default class RelevantModelPage extends Component {
             showAddIcon = true;
             if (pageType == PageType.PAGE_TYPE_QUALITY_MODEL) {
                 //判断是否有质检单创建权限
-                if (!AuthorityManager.isShowCreateButton()) {
+                if (!AuthorityManager.isQualityCreate()) {
                     showAddIcon = false;
                 }
             } else if (pageType == PageType.PAGE_TYPE_EQUIPMENT_MODEL) {

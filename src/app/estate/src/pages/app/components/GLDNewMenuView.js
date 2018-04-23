@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, View, ScrollView, Image, TouchableOpacity, Dimensions,NativeModules } from 'react-native'
+import { StyleSheet, View, ScrollView, Image, TouchableOpacity, Dimensions, NativeModules } from 'react-native'
 
-import { Overlay, Label, Button , ActionSheet} from 'app-3rd/teaset';
+import { Overlay, Label, Button, ActionSheet } from 'app-3rd/teaset';
 
 import * as API from 'app-api'
 
@@ -18,56 +18,77 @@ export default class GLDNewMenuView extends Component {
     static openMenu(navigation) {
         let overlayView = (
             <Overlay.View side='bottom' modal={false}
-                style={{ flexDirection:'column' ,alignItems: 'center', justifyContent: 'flex-end', alignContent:'center',}}
+                style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', alignContent: 'center', }}
                 // modal={true}
                 // overlayOpacity={0}
                 ref={v => this.overlayView = v}
             >
-                <View style={{flexDirection:'row' ,  justifyContent: 'center', alignItems: 'center', alignContent:'center', marginBottom:65, marginTop:20 }}>
-                    <TouchableOpacity onPress={() => {this.overlayView && this.overlayView.close();GLDNewMenuView.openChoose(navigation);}} style={{ borderColor: '#8a6d3b' }}>
-                        <Image style={{ width: 80, height: 80 }} source={qualityCreateImage} />
-                        <Label style={{ color: '#ffffff', fontSize: 16, marginTop: 10 }} text='新建质检单' />
-                    </TouchableOpacity>
-                    <View style={{width:50,height:50}}/>
-                    <TouchableOpacity onPress={() => this.overlayView && this.overlayView.close()} style={{ borderColor: '#8a6d3b' }}>
-                        <Image style={{ width: 80, height: 80 }} source={equipmentCreateImage} />
-                        <Label style={{ color: '#ffffff', fontSize: 16, marginTop: 10 }} text='新建材设单' />
-                    </TouchableOpacity>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: 'center', marginBottom: 65, marginTop: 20 }}>
+                    {
+                        AuthorityManager.isQualityCreate() ? (
+                            <TouchableOpacity onPress={() => { this.overlayView && this.overlayView.close(); GLDNewMenuView.openChoose(navigation); }} style={{ borderColor: '#8a6d3b' }}>
+                                <Image style={{ width: 80, height: 80 }} source={qualityCreateImage} />
+                                <Label style={{ color: '#ffffff', fontSize: 16, marginTop: 10 }} text='新建质检单' />
+                            </TouchableOpacity>
+                        ) : null
+                    }
+                    <View style={[{ width: 50, height: 50 }, (AuthorityManager.isQualityCreate() && AuthorityManager.isEquipmentCreate()) ? {} : { display: 'none' }]} />
+                    {
+                        AuthorityManager.isQualityCreate() ? (
+                            <TouchableOpacity onPress={() => this.overlayView && this.overlayView.close()} style={{ borderColor: '#8a6d3b' }}>
+                                <Image style={{ width: 80, height: 80 }} source={equipmentCreateImage} />
+                                <Label style={{ color: '#ffffff', fontSize: 16, marginTop: 10 }} text='新建材设单' />
+                            </TouchableOpacity>
+                        ) : null
+                    }
                 </View>
             </Overlay.View>
         );
         Overlay.show(overlayView);
     }
-    static takePhoto(navigation) {
-      let overlayView = (
-        <Overlay.View side='bottom' modal={false}
-            style={{ flexDirection:'column' ,alignItems: 'center', justifyContent: 'flex-end', alignContent:'center',}}
-            // modal={true}
-            // overlayOpacity={0}
-            ref={v => this.overlayView = v}
-        >
-            <ImageChooserView needTakePhoto={true} files={[]} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" onChange={() => alert('收到!')} />
-        </Overlay.View>
-    );
-    Overlay.show(overlayView);
-    }
-    static openChoose(navigation) {
-            let items = [
-              {title: '拍照', onPress: () => {
-                ImageChooserView.takePhoto((files,success)=>{
-                  alert(files);
-                })
-               }},
-              {title: '从手机相册选择', onPress: () => {
-                
-                ImageChooserView.pickerImages((files,success)=>{
-                  alert(files);
-                })
-              }},
-              {title: '无需图片,直接新建', disabled: false, onPress: () => {storage.pushNext(navigation, "NewPage");}},
-            ];
-            let cancelItem = {title: '取消'};
-            ActionSheet.show(items, cancelItem);
-           
+    static openChoose(navigation, finish) {
+
+        let items = [
+            {
+                title: '拍照', onPress: () => {
+                    ImageChooserView.takePhoto((files, success) => {
+                        if (!success || files.length < 1) {
+                            return;
+                        }
+                        if (success && finish) {
+                            finish(files);
+                            return;
+                        }
+                        storage.pushNext(navigation, "NewPage", { 'files': files });
+                    })
+                }
+            },
+            {
+                title: '从手机相册选择', onPress: () => {
+
+                    ImageChooserView.pickerImages((files, success) => {
+                        if (!success || files.length < 1) {
+                            return;
+                        }
+                        if (finish) {
+                            finish(files);
+                            return;
+                        }
+                        storage.pushNext(navigation, "NewPage", { 'files': files });
+                    })
+                }
+            },
+            {
+                title: '无需图片,直接新建', disabled: false, onPress: () => {
+                    if (finish) {
+                        finish([]);
+                        return;
+                    }
+                    storage.pushNext(navigation, "NewPage");
+                }
+            },
+        ];
+        let cancelItem = { title: '取消' };
+        ActionSheet.show(items, cancelItem);
     }
 }

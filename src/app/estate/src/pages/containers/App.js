@@ -121,11 +121,11 @@ export default class App extends React.Component {
     return (<Provider store={store}><RootStack /></Provider>)
   }
   render() {
-    // if (this.state.hasLoad) {
+    if (this.state.hasLoad) {
       return this.renderPage();
-    // }
-    // return <View style={{ backgroundColor: '#FFFFFF', justifyContent: 'center', flex: 1, alignItems: 'center', alignContent: 'center' }}>
-    //   <ActivityIndicator size='large' />
-    // </View>
+    }
+    return <View style={{ backgroundColor: '#FFFFFF', justifyContent: 'center', flex: 1, alignItems: 'center', alignContent: 'center' }}>
+      <ActivityIndicator size='large' />
+    </View>
   }
 }

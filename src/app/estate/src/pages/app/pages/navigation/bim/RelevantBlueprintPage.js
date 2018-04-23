@@ -87,7 +87,7 @@ export default class RelevantBlueprintPage extends Component {
             showCreateNoticeView = false;
         } else if (pageType == PageType.PAGE_TYPE_QUALITY_MODEL) {
             //判断是否有创建权限
-            if (!AuthorityManager.isShowCreateButton()) {
+            if (!AuthorityManager.isQualityCreate()) {
                 showCreateNoticeView = false;
                 showCreateButton = false;
             }

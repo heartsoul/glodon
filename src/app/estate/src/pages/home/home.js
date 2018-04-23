@@ -3,7 +3,7 @@ import { Button, View, Text, Image,TouchableOpacity } from 'react-native';
 import { withNavigation,StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
 import { TabView, Theme, BasePage, NavigationPage, TeaNavigator, Overlay, Label} from 'app-3rd/teaset'
 //Theme.set(Theme.themes.black);
-import { BimFileEntry } from 'app-entry';
+import { BimFileEntry, AuthorityManager } from 'app-entry';
 const primaryColor = '#00baf3';
 Theme.set({
   primaryColor: primaryColor,
@@ -108,24 +108,9 @@ class Page extends React.Component {
   onNewClick = () =>{
     BimFileEntry.homeSelect(this.props.navigation);
   }
-  render() {
-    return (<TabView style={{ flex: 1 ,height:'100%'}} type='projector'>
-      <TabView.Sheet
-        title='首页'
-        icon={require('app-images/home/icon_main_main_page.png')}
-        activeIcon={require('app-images/home/icon_main_page_selected.png')}
-      >
-        <HomePage />
-      </TabView.Sheet>
-      <TabView.Sheet
-        title='订阅'
-        icon={require('app-images/home/icon_main_subscribe.png')}
-        activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
-        badge={1}
-      >
-        <SubscribePage />
-      </TabView.Sheet>
-      <TabView.Sheet
+  renderCreate = () => {
+    if(AuthorityManager.isQualityCreate() || AuthorityManager.isEquipmentCreate()) {
+    return <TabView.Sheet
         type='button'
         title='新建'
         icon={
@@ -150,7 +135,30 @@ class Page extends React.Component {
         iconContainerStyle={{ justifyContent: 'flex-end' }}
         onPress={() => {this.onNewClick()}}
       />
-
+    }
+    return null;
+  }
+  render() {
+    return (<TabView style={{ flex: 1 ,height:'100%'}} type='projector'>
+      <TabView.Sheet
+        title='首页'
+        icon={require('app-images/home/icon_main_main_page.png')}
+        activeIcon={require('app-images/home/icon_main_page_selected.png')}
+      >
+        <HomePage />
+      </TabView.Sheet>
+      <TabView.Sheet
+        title='订阅'
+        icon={require('app-images/home/icon_main_subscribe.png')}
+        activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
+        badge={1}
+      >
+        <SubscribePage />
+      </TabView.Sheet>
+      {
+        // 是否可以新建
+        this.renderCreate()
+      }
       <TabView.Sheet
         title='消息'
         icon={require('app-images/home/icon_main_message.png')}

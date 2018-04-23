@@ -527,7 +527,7 @@ const styles = StyleSheet.create({
 //             case 3:
 //                 show = false;
 //                 //判断是否有权限新建检查单
-//                 if (!AuthorityManager.isShowCreateButton()) {
+//                 if (!AuthorityManager.isQualityCreate()) {
 //                     //无权限
 //                     show = true;//不响应点击事件
 //                     mFinishView.setVisibility(View.GONE);

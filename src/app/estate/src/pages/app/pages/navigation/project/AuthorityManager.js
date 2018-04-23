@@ -10,10 +10,11 @@ import * as AuthorityConfig from './AuthorityConfig'
 
 
 //---------------------------质量--------------------------------------
+
 /**
  * 质量  是否显示新增检查单验收单按钮
  */
-export function isShowCreateButton(){
+export function isQualityCreate(){
     Quality_Check_Bean = {actionRights:storage.loadAuthority(AuthorityConfig.Quality_Check)};//质量检查记录
     if(Quality_Check_Bean!=null && Quality_Check_Bean.actionRights!=null && Quality_Check_Bean.actionRights.size()>0 &&isHasModifyRight(Quality_Check_Bean.actionRights)){
         return true;
@@ -21,7 +22,6 @@ export function isShowCreateButton(){
         return false;
     }
 }
-
 /**
  * 质量  待提交 提交功能
  */
@@ -99,7 +99,17 @@ export function isMe(currentId){
 
 
 //---------------------------材设--------------------------------------
-
+/**
+ * 进场  是否显示新增
+ */
+export function isEquipmentCreate(){
+    Quality_Facility_Bean = {actionRights:storage.loadAuthority(AuthorityConfig.Quality_Facility)};//质量检查记录
+    if(Quality_Facility_Bean!=null && Quality_Facility_Bean.actionRights!=null && Quality_Facility_Bean.actionRights.size()>0 &&isHasModifyRight(Quality_Facility_Bean.actionRights)){
+        return true;
+    }else{
+        return false;
+    }
+}
 /**
  * 判断是否有删除材设的权限
  */
@@ -136,6 +146,7 @@ export function isEquipmentBrowser(){
                     Quality_Facility_Bean.actionRights.contains(AuthorityConfig.BrowseGrant)
             );
 }
+//---------------------------材设--------------------------------------
 
 /**
  * 获取所有权限
