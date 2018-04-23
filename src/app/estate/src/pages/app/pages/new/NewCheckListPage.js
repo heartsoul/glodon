@@ -14,7 +14,6 @@ import {
 import { Tabs, } from 'antd-mobile';
 import NewCheckListTabBar from "./NewCheckListTabBar";
 import NewPage from "./NewPage";
-import PageTest from "./PageTest";
 
 var { width, height } = Dimensions.get("window");
 
@@ -28,28 +27,12 @@ const REF_ACCEPTANCE = 'REF_ACCEPTANCE';//
 class NewCheckListPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
-        // title: '新建',
-        headerTitle: (navigation.state.params.headerTitle),
-        headerTintColor: "#FFF",
-        headerStyle: { backgroundColor: "#00baf3" },
-        headerRight: (
-            <Text onPress={() => navigation.state.params.rightNavigatePress()} style={{ marginRight: 20, color: '#FFFFFF', width: 60, textAlign: "right" }} >
-                提交
-        </Text>
-        ),
-        headerLeft: (
-            <Text onPress={() => navigation.state.params.leftNavigatePress()} style={{ marginLeft: 20, color: '#FFFFFF', width: 60, textAlign: "left" }} >
-                返回
-        </Text>
-        ),
-        gesturesEnabled: false,
-        // header: null
+        header: null
     });
-    activePage = null;
-    inspectionPage = null;
-    acceptancePage = null;
-    hiddenBar = null;
-    activeTab = 0;
+    activePage = null;//当前选中tab页面的引用
+    inspectionPage = null;//检查单页面引用
+    acceptancePage = null;//验收单页面引用
+
     constructor(props) {
         super(props);
         this.activePage = null;
@@ -60,35 +43,22 @@ class NewCheckListPage extends Component {
             inspectParams: params.inspectParams,
             acceptanceParams: params.acceptanceParams,
         };
-        let headerTitle = (<View style={{ height: 44, width: 200 }}>
-            <Tabs
-                tabs={tabs}
-                initialPage={this.activeTab}
-                ananimated={true}
-                onChange={(data, index) => {
-                    this.onChangePage(data, index);
-                }}
-                noRenderContent={true}
-                swipeable={false}
-                renderTabBar={(props) => {
-                    return <NewCheckListTabBar defaultProps={props} />
-                }}
-            >
-            </Tabs></View>);
-        this.props.navigation.setParams({ leftNavigatePress: this.goBack, rightNavigatePress: this.goBack, onChangePage: this.onChangePage, headerTitle: headerTitle })
+        console.log('====================================');
+        console.log(params);
+        console.log('====================================');
     }
 
     getCheckListParams = () => {
         let params = this.props.navigation.state.params;
         let inspectParams = {};
         let acceptanceParams = {};
+        // 从待提交进入时候根据单据类型设置参数
         if (params && params.item && params.item.value) {
             let editType = params.item.value.inspectionType;
             if (editType === tabs[0].type) {
                 inspectParams = params;
             } else {
                 acceptanceParams = params;
-                this.activeTab = 1;
             }
         } else {
             inspectParams = params;
@@ -99,24 +69,12 @@ class NewCheckListPage extends Component {
             acceptanceParams: acceptanceParams,
         });
     }
-    onChangePage = (data, index) => {
-        if (index == 0) {
-            this.activePage = this.inspectionPage;
-        } else if (index == 1) {
-            this.activePage = this.acceptancePage;
-        }
-        this.hiddenBar.onTabClick(index);
-        // this.formPage.goToTab(index, true, true);
-    }
-    componentWillMount = () => {
 
-    }
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', () => {
             this.goBack();
             return true;
         });
-
     }
 
     componentWillUnmount() {
@@ -140,38 +98,51 @@ class NewCheckListPage extends Component {
             alert("call error");
         }
     }
+    /**
+     * tab切换
+     */
+    onChange = (data, index) => {
+        (data, index) => {
+            if (index == 0) {
+                this.activePage = this.inspectionPage;
+            } else if (index == 1) {
+                this.activePage = this.acceptancePage;
+            }
+        }
+    }
 
     render() {
         return (
             <View>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <View style={{ height: height + 44, marginTop: -44 }}>
+                <View style={{ height: height }}>
                     <Tabs
                         tabs={tabs}
-                        initialPage={this.activeTab}
+                        initialPage={0}
                         ananimated={true}
+                        onChange={(data, index) => { this.onChange(data, index) }}
                         swipeable={false}
                         renderTabBar={(props) => {
-                            return <NewCheckListTabBar ref={(ref) => { this.hiddenBar = ref; }} activeTab={this.activeTab} defaultProps={props} />
+                            return <NewCheckListTabBar defaultProps={props} submit={this.submit} goBack={this.goBack} />
                         }}
                     >
                         <NewPage setRef={(ref) => {
                             this.inspectionPage = ref;
-                            if (this.activeTab == 0) {
-                                this.activePage = ref;
-                            }
+                            this.activePage = ref;
                         }} params={(this.state.inspectParams)} type={tabs[0].type}></NewPage>
                         <NewPage setRef={(ref) => {
                             this.acceptancePage = ref;
-                            if (this.activeTab == 1) {
-                                this.activePage = ref;
-                            }
                         }} params={(this.state.acceptanceParams)} type={tabs[1].type}></NewPage>
                     </Tabs>
                 </View>
 
             </View>
         );
+    }
+
+    setAction1 = (onSave, onSubmit) => {
+        this.onSave1 = onSave;
+        this.onSave2 = onSubmit;
     }
 }
 

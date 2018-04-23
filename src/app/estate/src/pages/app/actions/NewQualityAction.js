@@ -73,12 +73,12 @@ function assembleParams(requestParams) {
 function checkMustInfo(params, callback) {
     let info = [];
     let showStar = {
-        showInspectCompanyStar:false,
-        showCompanyStar:false,
-        showPersonStar:false,
-        showDescriptionStar:false,
-        showCheckpointStar:false,
-        showRectificationStar:false,
+        showInspectCompanyStar: false,
+        showCompanyStar: false,
+        showPersonStar: false,
+        showDescriptionStar: false,
+        showCheckpointStar: false,
+        showRectificationStar: false,
     };
     //检查单位
     if (!params.inspectionCompanyId) {
@@ -90,7 +90,7 @@ function checkMustInfo(params, callback) {
         info.push('施工单位');
         showStar.showCompanyStar = true;
     }
-    
+
     //责任人
     if (!params.responsibleUserId) {
         info.push('责任人');
@@ -107,7 +107,7 @@ function checkMustInfo(params, callback) {
         showStar.showCheckpointStar = true;
     }
     //整改期限
-    if(params.needRectification && !params.lastRectificationDate){
+    if (params.needRectification && !params.lastRectificationDate) {
         info.push('整改期限');
         showStar.showRectificationStar = true;
     }
@@ -118,9 +118,9 @@ function checkMustInfo(params, callback) {
         return false;
     }
 
-    if(params.needRectification){
+    if (params.needRectification) {
         let nowTimeStamp = Date.now();
-        if(nowTimeStamp > params.lastRectificationDate){
+        if (nowTimeStamp > params.lastRectificationDate) {
             Modal.alert('提示信息', "整改期限不能早于当前日期！", [{ text: '知道了', style: { color: '#00baf3' } }]);
             return false;
         }
@@ -186,9 +186,9 @@ function uploadFile(imageChooserEle, uploadCallback) {
  * state NewPage的state
  * @param {*} navigator navigator
  */
-export function submit(requestParams, imageChooserEle, navigator,callback) {
+export function submit(requestParams, imageChooserEle, navigator, callback) {
     let params = assembleParams(requestParams);
-    if (checkMustInfo(params,callback)) {
+    if (checkMustInfo(params, callback)) {
         loadingToast();
         uploadFile(imageChooserEle, (files) => {
             if (files) {
@@ -211,7 +211,7 @@ export function submit(requestParams, imageChooserEle, navigator,callback) {
  */
 function createSubmitInspection(params, navigator) {
     let requestParams = JSON.stringify(params);
-    API.createSubmitInspection(storage.projectId, requestParams)
+    API.createSubmitInspection(storage.projectId, params.inspectionType, requestParams)
         .then(data => {
             Toast.hide();
             if (data && data.data && data.data.id) {
@@ -224,7 +224,7 @@ function createSubmitInspection(params, navigator) {
  */
 function editSubmitInspection(params, navigator) {
     let requestParams = JSON.stringify(params);
-    API.editSubmitInspection(storage.projectId, params.inspectId, requestParams)
+    API.editSubmitInspection(storage.projectId, params.inspectId, params.inspectionType, requestParams)
         .then(data => {
             Toast.hide();
             storage.goBack(navigator, null);
@@ -243,7 +243,7 @@ function editSubmitInspection(params, navigator) {
  */
 export function save(requestParams, imageChooserEle, callback) {
     let params = assembleParams(requestParams);
-    if (checkMustInfo(params,callback)) {
+    if (checkMustInfo(params, callback)) {
         loadingToast();
         uploadFile(imageChooserEle, (files) => {
             if (files) {
@@ -265,7 +265,7 @@ export function save(requestParams, imageChooserEle, callback) {
  */
 function createSaveInspection(params, callback) {
     let requestParams = JSON.stringify(params);
-    API.createSaveInspection(storage.projectId, requestParams)
+    API.createSaveInspection(storage.projectId, params.inspectionType, requestParams)
         .then(data => {
             Toast.hide();
             if (data) {
@@ -282,7 +282,7 @@ function createSaveInspection(params, callback) {
  */
 function editSaveInspection(params) {
     let requestParams = JSON.stringify(params);
-    API.editSaveInspection(storage.projectId, params.inspectId, requestParams)
+    API.editSaveInspection(storage.projectId, params.inspectId, params.inspectionType, requestParams)
         .then(data => {
             console.log(data)
             Toast.hide();
@@ -292,8 +292,8 @@ function editSaveInspection(params) {
 /**
  * 删除草稿
  */
-export function deleteInspection(inspectId, navigator) {
-    API.createDeleteInspection(storage.projectId, inspectId)
+export function deleteInspection(inspectId, inspectionType, navigator) {
+    API.createDeleteInspection(storage.projectId, inspectId, inspectionType)
         .then(data => {
             storage.goBack(navigator, null);
         })
@@ -305,6 +305,9 @@ export function deleteInspection(inspectId, navigator) {
  * @param {*} callback 
  */
 export function initialState(params, checkPoint, callback) {
+    if (!params) {
+        params = {};
+    }
     //从列表编辑页进入
     if (params && params.item) {
         getQualityInspectionDetail(params.item.value.id, callback)

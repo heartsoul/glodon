@@ -27,7 +27,7 @@ function demoData(size) {
     }
     return ret;
 }
- var dataLast =  {"data":{"content":demoData(100),'last':false}};
+var dataLast = { "data": { "content": demoData(100), 'last': false } };
 
 /**
  * 获取质检清单
@@ -270,7 +270,7 @@ export async function getQualityInspectionSummary(projectId, qualityCheckpointId
 ]
  */
 export async function getQualityInspectionAllDrawingPositions(projectId, qualityCheckpointId) {
-    let api = "/quality/" + projectId + "/qualityInspection/all/all/drawings/"+drawingGdocFileId+"/drawingPositions";
+    let api = "/quality/" + projectId + "/qualityInspection/all/all/drawings/" + drawingGdocFileId + "/drawingPositions";
     return requestJSON(api, {
         method: 'GET',
     });
@@ -299,7 +299,7 @@ export async function getQualityInspectionAllDrawingPositions(projectId, quality
 ]
  */
 export async function getQualityInspectionElements(projectId, gdocFileId) {
-    let api = "/quality/" + projectId + "/qualityInspection/all/all/model/"+gdocFileId+"/elements";
+    let api = "/quality/" + projectId + "/qualityInspection/all/all/model/" + gdocFileId + "/elements";
     return requestJSON(api, {
         method: 'GET',
     });
@@ -323,7 +323,7 @@ export async function getQualityInspectionElements(projectId, gdocFileId) {
 ]
  */
 export async function getQualityFacilityAcceptanceElements(projectId, gdocFileId) {
-    let api = "/quality/" + projectId + "/facilityAcceptance/model/"+gdocFileId+"/elements";
+    let api = "/quality/" + projectId + "/facilityAcceptance/model/" + gdocFileId + "/elements";
     return requestJSON(api, {
         method: 'GET',
     });
@@ -400,17 +400,30 @@ export async function getCheckPoints(projectId) {
 }
 
 /**
+ * url中区分检查单和验收单（inspection\acceptance）
+ */
+function getApiType(inspectionType) {
+    if (inspectionType === "acceptance") {
+        return "qualityAcceptance";
+    }
+    return "qualityInspection";
+
+}
+
+/**
  * 检查单 新增 提交
  * @param {*} projectId 
  * @param {{"code":"","constructionCompanyId":5212715,"constructionCompanyName":"施工单位A","description":"111","inspectId":0,"inspectionCompanyId":5211919,"inspectionCompanyName":"11301919","inspectionType":"inspection","needRectification":false,"projectId":5213135,"projectName":"APP材设","qualityCheckpointId":5200204,"qualityCheckpointName":"墙面","responsibleUserId":5200299,"responsibleUserName":"XP","responsibleUserTitle":"总工"}} props json格式
  * @returns
  * {"id":5201156,"code":"ZLJC_20180328_003"}
  */
-export async function createSubmitInspection(projectId, props) {
-    let api = `/quality/${projectId}/qualityInspection/commit`;
+export async function createSubmitInspection(projectId, inspectionType, props) {
+    let type = getApiType(inspectionType)
+
+    let api = `/quality/${projectId}/${type}/commit`;
     return requestJSON(api, {
         method: 'POST',
-        body:props,
+        body: props,
     });
 }
 
@@ -422,11 +435,18 @@ export async function createSubmitInspection(projectId, props) {
  * @returns
  * {"id":5201156,"code":"ZLJC_20180328_003"}
  */
-export async function createSaveInspection(projectId, props) {
-    let api = `/quality/${projectId}/qualityInspection`;
+export async function createSaveInspection(projectId, inspectionType, props) {
+    let type = getApiType(inspectionType)
+    let api = `/quality/${projectId}/${type}`;
+    console.log('createSaveInspection====================================');
+    console.log(inspectionType);
+    console.log(type);
+    console.log(props);
+    console.log(api);
+    console.log('createSaveInspection====================================');
     return requestJSON(api, {
         method: 'POST',
-        body:props,
+        body: props,
     });
 }
 
@@ -438,11 +458,12 @@ export async function createSaveInspection(projectId, props) {
  * @returns responsebody无内容
  * 
  */
-export async function editSubmitInspection(projectId, fileId, props) {
-    let api = `/quality/${projectId}/qualityInspection/${fileId}/commit`;
+export async function editSubmitInspection(projectId, fileId, inspectionType, props) {
+    let type = getApiType(inspectionType)
+    let api = `/quality/${projectId}/${type}/${fileId}/commit`;
     return requestJSON(api, {
         method: 'PUT',
-        body:props,
+        body: props,
     });
 }
 
@@ -453,11 +474,12 @@ export async function editSubmitInspection(projectId, fileId, props) {
  * @param {{"code":"","constructionCompanyId":5212715,"constructionCompanyName":"施工单位A","description":"111","inspectId":0,"inspectionCompanyId":5211919,"inspectionCompanyName":"11301919","inspectionType":"inspection","needRectification":false,"projectId":5213135,"projectName":"APP材设","qualityCheckpointId":5200204,"qualityCheckpointName":"墙面","responsibleUserId":5200299,"responsibleUserName":"XP","responsibleUserTitle":"总工"}} props json格式
  * @returns responsebody无内容
  */
-export async function editSaveInspection(projectId, fileId, props) {
-    let api = `/quality/${projectId}/qualityInspection/${fileId}`;
+export async function editSaveInspection(projectId, fileId, inspectionType, props) {
+    let type = getApiType(inspectionType)
+    let api = `/quality/${projectId}/${type}/${fileId}`;
     return requestJSON(api, {
         method: 'PUT',
-        body:props,
+        body: props,
     });
 }
 
@@ -467,8 +489,9 @@ export async function editSaveInspection(projectId, fileId, props) {
  * @param {*} fileId 检查单id
  * @returns responsebody无内容
  */
-export async function createDeleteInspection(projectId, fileId) {
-    let api = `/quality/${projectId}/qualityInspection/${fileId}`;
+export async function createDeleteInspection(projectId, inspectionType, fileId) {
+    let type = getApiType(inspectionType)
+    let api = `/quality/${projectId}/${type}/${fileId}`;
     return requestJSON(api, {
         method: 'DELETE',
     });
