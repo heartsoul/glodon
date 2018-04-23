@@ -33,6 +33,9 @@ class NewCheckListPage extends Component {
 
     constructor(props) {
         super(props);
+        this.activePage = null;
+        this.inspectionPage = null;
+        this.acceptancePage = null;
         let params = this.getCheckListParams();
         this.state = {
             activeTab: tabs[0],
@@ -76,19 +79,20 @@ class NewCheckListPage extends Component {
     }
 
     submit = () => {
-        if (this.state.activeTab.type === tabs[0].type) {
-            this.refs[REF_INSPECTION].submit();
-        } else {
-            this.refs[REF_ACCEPTANCE].submit();
-        }
+        this.activePage.submit();
+        // if (this.state.activeTab.type === tabs[0].type) {
+        //     this.refs[REF_INSPECTION].submit();
+        // } else {
+        //     this.refs[REF_ACCEPTANCE].submit();
+        // }
     }
 
     goBack = () => {
-        if (this.state.activeTab.type === tabs[0].type) {
-            this.refs[REF_INSPECTION].goBack();
-        } else {
-            this.refs[REF_ACCEPTANCE].goBack();
-        }
+        // if (this.state.activeTab.type === tabs[0].type) {
+            this.activePage.goBack();
+        // } else {
+        //     this.acceptancePage.goBack();
+        // }
     }
 
     render() {
@@ -101,6 +105,11 @@ class NewCheckListPage extends Component {
                         initialPage={0}
                         ananimated={true}
                         onChange={(data, index) => {
+                            if(index == 0) {
+                                this.activePage = this.inspectionPage;
+                            } else if(index == 1) {
+                                this.activePage = this.acceptancePage;
+                            }
                             this.setState({
                                 activeTab: data,
                             });
@@ -110,13 +119,18 @@ class NewCheckListPage extends Component {
                             return <NewCheckListTabBar defaultProps={props} submit={this.submit} goBack={this.goBack} />
                         }}
                     >
-                        <NewPage ref={REF_INSPECTION} params={(this.state.inspectParams)} type={tabs[0].type}></NewPage>
-                        <NewPage ref={REF_ACCEPTANCE} params={(this.state.acceptanceParams)} type={tabs[1].type}></NewPage>
+                        <NewPage ref={(ref)=>{this.inspectionPage = ref;this.activePage = ref}} params={(this.state.inspectParams)} type={tabs[0].type}></NewPage>
+                        <NewPage ref={(ref)=>{this.acceptancePage = ref;}} params={(this.state.acceptanceParams)} type={tabs[1].type}></NewPage>
                     </Tabs>
                 </View>
 
             </View>
         );
+    }
+
+    setAction1 = (onSave,onSubmit)=>{
+        this.onSave1 = onSave;
+        this.onSave2 = onSubmit;
     }
 }
 
