@@ -13,11 +13,11 @@ import PropTypes from 'prop-types';
  * 新建质检单TaBbar，antd-mobile中tab的renderTabBar
  */
 class NewCheckListTabBar extends Component {
-
     constructor(props) {
         super(props);
+        console.log('>>>props.activeTab:' + props.defaultProps.activeTab);
         this.state = {
-            activeTab: 0,//当前选中的tab
+            activeTab: props.defaultProps.activeTab,//当前选中的tab
         };
     }
 
@@ -36,36 +36,27 @@ class NewCheckListTabBar extends Component {
     }
 
     renderTab = (tab, index) => {
+
         return (
-            <View key={index}>
+            <TouchableOpacity key={index} onPress={() => { this.onTabClick(index) }}>
                 <View style={styles.tabTextContainer}>
-                    <TouchableOpacity onPress={() => { this.onTabClick(index) }}>
-                        <Text style={(this.state.activeTab == index) ? styles.tabTextSelected : styles.tabText} >{tab.title}</Text>
-                    </TouchableOpacity>
+                    <Text style={(this.state.activeTab == index) ? styles.tabTextSelected : styles.tabText} >{tab.title}</Text>
                 </View>
-                {
-                    (this.state.activeTab == index) ? (<View style={styles.underLine} ></View>) : (null)
-                }
-            </View>
+                <View style={(this.state.activeTab != index) ? { display: 'none' } : styles.underLine} ></View>
+            </TouchableOpacity>
         );
     }
 
     render() {
         return (
             <View style={styles.tabBar}>
-
-                <TouchableOpacity onPress={() => { this.props.goBack() }} style={styles.goBack}>
-                    <Image source={require("app-images/icon_back_white.png")} style={{ width: 9, height: 20 }}></Image>
-                </TouchableOpacity>
                 <View style={styles.tabItemContainer}>
                     {
                         this.props.defaultProps.tabs.map((item, index) => {
                             return (this.renderTab(item, index))
                         })
                     }
-
                 </View>
-                <Text onPress={() => this.props.submit()} style={styles.submit} >提交</Text>
             </View>
         );
     }
@@ -76,14 +67,6 @@ NewCheckListTabBar.propTypes = {
      * defaultTabBar的属性
      */
     defaultProps: PropTypes.object,
-    /**
-     * 提交
-     */
-    submit: PropTypes.func,
-    /**
-     * 返回
-     */
-    goBack: PropTypes.func,
 
 }
 
@@ -126,18 +109,6 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         backgroundColor: "#ffffff",
     },
-    submit: {
-        marginRight: 20,
-        color: '#FFFFFF',
-        width: 60,
-        textAlign: "right",
-        flex: 1,
-    },
-    goBack: {
-        paddingLeft: 20,
-        flex: 1,
-    }
-
 })
 
 export default NewCheckListTabBar;

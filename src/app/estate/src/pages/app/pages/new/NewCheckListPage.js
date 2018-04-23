@@ -28,11 +28,28 @@ const REF_ACCEPTANCE = 'REF_ACCEPTANCE';//
 class NewCheckListPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
-        header: null
+        // title: '新建',
+        headerTitle: (navigation.state.params.headerTitle),
+        headerTintColor: "#FFF",
+        headerStyle: { backgroundColor: "#00baf3" },
+        headerRight: (
+            <Text onPress={() => navigation.state.params.rightNavigatePress()} style={{ marginRight: 20, color: '#FFFFFF', width: 60, textAlign: "right" }} >
+                提交
+        </Text>
+        ),
+        headerLeft: (
+            <Text onPress={() => navigation.state.params.leftNavigatePress()} style={{ marginLeft: 20, color: '#FFFFFF', width: 60, textAlign: "left" }} >
+                返回
+        </Text>
+        ),
+        gesturesEnabled: false,
+        // header: null
     });
     activePage = null;
     inspectionPage = null;
     acceptancePage = null;
+    hiddenBar = null;
+    activeTab = 0;
     constructor(props) {
         super(props);
         this.activePage = null;
@@ -40,10 +57,25 @@ class NewCheckListPage extends Component {
         this.acceptancePage = null;
         let params = this.getCheckListParams();
         this.state = {
-            activeTab: tabs[0],
             inspectParams: params.inspectParams,
             acceptanceParams: params.acceptanceParams,
         };
+        let headerTitle = (<View style={{ height: 44, width: 200 }}>
+            <Tabs
+                tabs={tabs}
+                initialPage={this.activeTab}
+                ananimated={true}
+                onChange={(data, index) => {
+                    this.onChangePage(data, index);
+                }}
+                noRenderContent={true}
+                swipeable={false}
+                renderTabBar={(props) => {
+                    return <NewCheckListTabBar defaultProps={props} />
+                }}
+            >
+            </Tabs></View>);
+        this.props.navigation.setParams({ leftNavigatePress: this.goBack, rightNavigatePress: this.goBack, onChangePage: this.onChangePage, headerTitle: headerTitle })
     }
 
     getCheckListParams = () => {
@@ -56,6 +88,7 @@ class NewCheckListPage extends Component {
                 inspectParams = params;
             } else {
                 acceptanceParams = params;
+                this.activeTab = 1;
             }
         } else {
             inspectParams = params;
@@ -66,14 +99,26 @@ class NewCheckListPage extends Component {
             acceptanceParams: acceptanceParams,
         });
     }
+    onChangePage = (data, index) => {
+        if (index == 0) {
+            this.activePage = this.inspectionPage;
+        } else if (index == 1) {
+            this.activePage = this.acceptancePage;
+        }
+        this.hiddenBar.onTabClick(index);
+        // this.formPage.goToTab(index, true, true);
+    }
+    componentWillMount = () => {
 
+    }
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', () => {
             this.goBack();
             return true;
         });
+
     }
-    
+
     componentWillUnmount() {
         if (Platform.OS === 'android') {
             BackHandler.removeEventListener('hardwareBackPress');
@@ -81,73 +126,52 @@ class NewCheckListPage extends Component {
     }
 
     submit = () => {
-        if(this.activePage) {
+        if (this.activePage) {
             this.activePage.submit(this.props.navigation);
         } else {
             alert("call error");
         }
-        
-        // if (this.state.activeTab.type === tabs[0].type) {
-        //     this.refs[REF_INSPECTION].submit();
-        // } else {
-        //     this.refs[REF_ACCEPTANCE].submit();
-        // }
     }
 
     goBack = () => {
-        if(this.activePage) {
+        if (this.activePage) {
             this.activePage.goBack(this.props.navigation);
         } else {
             alert("call error");
         }
-        // if (this.state.activeTab.type === tabs[0].type) {
-            // this.activePage.goBack();
-        // } else {
-        //     this.acceptancePage.goBack();
-        // }
     }
 
     render() {
         return (
             <View>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <View style={{ height: height }}>
+                <View style={{ height: height + 44, marginTop: -44 }}>
                     <Tabs
                         tabs={tabs}
-                        initialPage={0}
+                        initialPage={this.activeTab}
                         ananimated={true}
-                        onChange={(data, index) => {
-                            if(index == 0) {
-                                this.activePage = this.inspectionPage;
-                            } else if(index == 1) {
-                                this.activePage = this.acceptancePage;
-                            }
-                            this.setState({
-                                activeTab: data,
-                            });
-                        }}
                         swipeable={false}
                         renderTabBar={(props) => {
-                            return <NewCheckListTabBar defaultProps={props} submit={this.submit} goBack={this.goBack} />
+                            return <NewCheckListTabBar ref={(ref) => { this.hiddenBar = ref; }} activeTab={this.activeTab} defaultProps={props} />
                         }}
                     >
-                        <NewPage setRef={(ref)=>{
+                        <NewPage setRef={(ref) => {
                             this.inspectionPage = ref;
-                            this.activePage = ref;
+                            if (this.activeTab == 0) {
+                                this.activePage = ref;
+                            }
                         }} params={(this.state.inspectParams)} type={tabs[0].type}></NewPage>
-                        <NewPage setRef={(ref)=>{
+                        <NewPage setRef={(ref) => {
                             this.acceptancePage = ref;
-                            }} params={(this.state.acceptanceParams)} type={tabs[1].type}></NewPage>
+                            if (this.activeTab == 1) {
+                                this.activePage = ref;
+                            }
+                        }} params={(this.state.acceptanceParams)} type={tabs[1].type}></NewPage>
                     </Tabs>
                 </View>
 
             </View>
         );
-    }
-
-    setAction1 = (onSave,onSubmit)=>{
-        this.onSave1 = onSave;
-        this.onSave2 = onSubmit;
     }
 }
 

@@ -32,6 +32,7 @@ function parseHTML(response) {
 }
 
 function checkStatus(response) {
+    console.log(">>>返回数据："+JSON.stringify(response));
     if (response.status >= 200 && response.status < 300) {
         // let headers = response.headers;
         // console.log("checkStatus");
@@ -45,7 +46,7 @@ function checkStatus(response) {
         // Message.error('请联系管理员获取相应操作权限');
     } else if (response.status === 401) {
         storage.gotoLogin();
-        return ;
+        // return ;
         // Message.error('请联系管理员获取相应操作权限');
     }
     else if (response.status === 500) {
@@ -90,7 +91,7 @@ export function requestJSON(url, options) {
     if (ops.isSpecial) {
         return fetch(BASE_URL + url, ops);
     }
-    console.log(BASE_URL + url);
+    console.log(">>>请求信息："+BASE_URL + url);
     return fetch(BASE_URL + url, ops)
         .then(checkStatus)
         .then(parseJSON)

@@ -403,13 +403,13 @@
     [self.class loadItem:asset finish:^(NSDictionary * path) {
       [ret addObject:path];
       PHAsset * nextItem = next();
-      if(next()) {
+      if(nextItem) {
         [self.class loadNext:ret asset:nextItem next:next];
       }
     }];
   } else {
     PHAsset * nextItem = next();
-    if(next()) {
+    if(nextItem) {
       [self.class loadNext:ret asset:nextItem next:next];
     }
   }

@@ -88,14 +88,18 @@ RCT_EXPORT_METHOD (takePhoto:(RCTResponseSenderBlock)callback) {
   return;
 }
 
-RCT_EXPORT_METHOD (pickerImages:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD (pickerImages:(RCTResponseSenderBlock)callbackRet) {
   
   UIViewController *root = RCTPresentedViewController();
+  __block bool bRet = false;
   [RNTImagesView imagePicker:root callback:^(NSArray *files) {
     if(!files) {
       files = @[];
     }
-    callback(@[files,files.count?@(YES):@(NO)]);
+    if(callbackRet && !bRet) {
+      callbackRet(@[files,files.count?@(YES):@(NO)]);
+      bRet = true;
+    }
   }];
   return;
 }
