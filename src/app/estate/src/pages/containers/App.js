@@ -1,14 +1,14 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import {View, ActivityIndicator} from 'react-native'
-import { StackNavigator,NavigationActions } from 'app-3rd/react-navigation'; 
+import { View, ActivityIndicator } from 'react-native'
+import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 
 import * as GLD from '../pages'
 
 import configureStore, { history } from '../store/ConfigureStore'
 
 const store = configureStore()
-console.log("HomePage:"+GLD.HomePage)
+console.log("HomePage:" + GLD.HomePage)
 // LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage
 const RootStack = StackNavigator(
   {
@@ -22,40 +22,40 @@ const RootStack = StackNavigator(
       screen: GLD.TenantPage,
     },
     MainPage: {
-      screen : GLD.HomePage
+      screen: GLD.HomePage
     },
     ProjectPage: {
-      screen : GLD.ProjectPage
+      screen: GLD.ProjectPage
     },
     TenantPage: {
-      screen : GLD.TenantPage
+      screen: GLD.TenantPage
     },
     QualityMainPage: {
-      screen : GLD.QualityMainPage
+      screen: GLD.QualityMainPage
     },
     QualityMainPage: {
-      screen : GLD.QualityMainPage
+      screen: GLD.QualityMainPage
     },
     WebPage: {
-      screen : GLD.WebPage
+      screen: GLD.WebPage
     },
     BimFileChooserPage: {
-      screen : GLD.BimFileChooserPage
+      screen: GLD.BimFileChooserPage
     },
     NewPage: {
-      screen : GLD.NewPage 
+      screen: GLD.NewPage
     },
     SettingPage: {
-      screen : GLD.SettingPage 
+      screen: GLD.SettingPage
     },
     CheckPointPage: {
-        screen : GLD.CheckPointPage 
+      screen: GLD.CheckPointPage
     },
     RelevantBlueprintPage: {
-      screen : GLD.RelevantBlueprintPage 
+      screen: GLD.RelevantBlueprintPage
     },
     RelevantModlePage: {
-      screen : GLD.RelevantModlePage 
+      screen: GLD.RelevantModlePage
     },
     CheckPointListPage: {
       screen: GLD.CheckPointListPage
@@ -64,10 +64,13 @@ const RootStack = StackNavigator(
       screen: GLD.QualityDetailPage
     },
     BigImageViewPage: {
-      screen:GLD.BigImageViewPage
+      screen: GLD.BigImageViewPage
     },
     QualityStatardsPage: {
-      screen:GLD.QualityStatardsPage
+      screen: GLD.QualityStatardsPage
+    },
+    NewCheckListPage: {
+      screen: GLD.NewCheckListPage
     },
   },
   {
@@ -103,14 +106,14 @@ export default class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      hasLoad : false,
+      hasLoad: false,
     }
   }
 
   componentDidMount() {
-    storage._loadStorageData(()=>{
+    storage._loadStorageData(() => {
       this.setState({
-        hasLoad:true
+        hasLoad: true
       })
     });
   }
@@ -118,9 +121,11 @@ export default class App extends React.Component {
     return (<Provider store={store}><RootStack /></Provider>)
   }
   render() {
-    if(this.state.hasLoad) {
+    // if (this.state.hasLoad) {
       return this.renderPage();
-    }
-    return <View style={{backgroundColor:'#FFFFFF', justifyContent:'center',flex:1,alignItems:'center',alignContent:'center'}}> <ActivityIndicator size='large'/> </View>
+    // }
+    // return <View style={{ backgroundColor: '#FFFFFF', justifyContent: 'center', flex: 1, alignItems: 'center', alignContent: 'center' }}>
+    //   <ActivityIndicator size='large' />
+    // </View>
   }
 }

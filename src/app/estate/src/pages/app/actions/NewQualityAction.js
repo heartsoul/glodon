@@ -31,7 +31,7 @@ function assembleParams(requestParams) {
     params.inspectionCompanyId = inspectCompanyData.id;
     params.inspectionCompanyName = inspectCompanyData.name;
     //单据类型 inspection acceptance
-    params.inspectionType = 'inspection';
+    params.inspectionType = requestParams.inspectionType;
 
     //需要整改
     let rectificationData = requestParams.rectificationData;
