@@ -72,6 +72,9 @@ const RootStack = StackNavigator(
     NewCheckListPage: {
       screen: GLD.NewCheckListPage
     },
+    NewReviewPage: {
+        screen: GLD.NewReviewPage
+    },
   },
   {
     // initialRouteName: storage.isGuide(()=>{}) ? 'GuidePage' : 'LoginPage',

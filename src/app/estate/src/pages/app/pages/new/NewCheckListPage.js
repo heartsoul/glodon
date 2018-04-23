@@ -74,7 +74,7 @@ class NewCheckListPage extends Component {
                 }}
             >
             </Tabs></View>);
-        this.props.navigation.setParams({ leftNavigatePress: this.goBack, rightNavigatePress: this.goBack, onChangePage: this.onChangePage, headerTitle: headerTitle })
+        this.props.navigation.setParams({ leftNavigatePress: this.goBack, rightNavigatePress: this.submit, onChangePage: this.onChangePage, headerTitle: headerTitle })
     }
 
     getCheckListParams = () => {

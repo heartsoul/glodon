@@ -438,12 +438,6 @@ export async function createSubmitInspection(projectId, inspectionType, props) {
 export async function createSaveInspection(projectId, inspectionType, props) {
     let type = getApiType(inspectionType)
     let api = `/quality/${projectId}/${type}`;
-    console.log('createSaveInspection====================================');
-    console.log(inspectionType);
-    console.log(type);
-    console.log(props);
-    console.log(api);
-    console.log('createSaveInspection====================================');
     return requestJSON(api, {
         method: 'POST',
         body: props,
@@ -549,5 +543,82 @@ export async function getStandardsItems(templateId) {
     let api = `/quality//acceptanceStandard/templates/${templateId}/standards/items`;
     return requestJSON(api, {
         method: 'GET',
+    });
+}
+/**
+ * 复查单  新增  保存
+ * @param {*} projectId 
+ * @param {*} props 
+ */
+export async function createSaveReview(projectId, props) {
+    let api = `quality/${projectId}/qualityReviews`;
+    return requestJSON(api, {
+        method: 'POST',
+        body: props,
+    });
+}
+
+/**
+ * 复查单  编辑  保存
+ * @param {*} projectId 
+ * @param {*} fileId 
+ * @param {*} props 
+ */
+export async function editSaveReview(projectId, fileId, props) {
+    let api = `quality/${projectId}/qualityReviews/${fileId}`;
+    return requestJSON(api, {
+        method: 'PUT',
+        body: props,
+    });
+}
+
+/**
+ * 复查单  新增  提交
+ * @param {*} projectId 
+ * @param {*} props 
+ */
+export async function createSubmitReview(projectId, props) {
+    let api = `quality/${projectId}/qualityReviews/commit`;
+    return requestJSON(api, {
+        method: 'POST',
+        body: props,
+    });
+}
+
+/**
+ * 复查单  编辑  提交
+ * @param {*} projectId 
+ * @param {*} fileId 
+ * @param {*} props 
+ */
+export async function editSubmitReview(projectId, fileId, props) {
+    let api = `quality/${projectId}/qualityReviews/${fileId}/commit`;
+    return requestJSON(api, {
+        method: 'PUT',
+        body: props,
+    });
+}
+
+/**
+ * 复查单  查询保存后的复查单数据
+ * @param {*} projectId 
+ * @param {*} inspectionId 
+ */
+export async function getReviewInfo(projectId, inspectionId) {
+    let api = `quality/${projectId}/qualityReviews/staged?inspectionId=${inspectionId}`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 复查单  删除
+ * @param {*} projectId 
+ * @param {*} fileId 
+ */
+export async function deleteReview(projectId, fileId) {
+    let api = `quality/${projectId}/qualityReviews/${fileId}`;
+    return requestJSON(api, {
+        method: 'DELETE',
     });
 }
