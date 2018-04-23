@@ -30,7 +30,9 @@ class NewCheckListPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         header: null
     });
-
+    activePage = null;
+    inspectionPage = null;
+    acceptancePage = null;
     constructor(props) {
         super(props);
         this.activePage = null;
@@ -79,7 +81,12 @@ class NewCheckListPage extends Component {
     }
 
     submit = () => {
-        this.activePage.submit();
+        if(this.activePage) {
+            this.activePage.submit(this.props.navigation);
+        } else {
+            alert("call error");
+        }
+        
         // if (this.state.activeTab.type === tabs[0].type) {
         //     this.refs[REF_INSPECTION].submit();
         // } else {
@@ -88,8 +95,13 @@ class NewCheckListPage extends Component {
     }
 
     goBack = () => {
+        if(this.activePage) {
+            this.activePage.goBack(this.props.navigation);
+        } else {
+            alert("call error");
+        }
         // if (this.state.activeTab.type === tabs[0].type) {
-            this.activePage.goBack();
+            // this.activePage.goBack();
         // } else {
         //     this.acceptancePage.goBack();
         // }
@@ -119,8 +131,13 @@ class NewCheckListPage extends Component {
                             return <NewCheckListTabBar defaultProps={props} submit={this.submit} goBack={this.goBack} />
                         }}
                     >
-                        <NewPage ref={(ref)=>{this.inspectionPage = ref;this.activePage = ref}} params={(this.state.inspectParams)} type={tabs[0].type}></NewPage>
-                        <NewPage ref={(ref)=>{this.acceptancePage = ref;}} params={(this.state.acceptanceParams)} type={tabs[1].type}></NewPage>
+                        <NewPage setRef={(ref)=>{
+                            this.inspectionPage = ref;
+                            this.activePage = ref;
+                        }} params={(this.state.inspectParams)} type={tabs[0].type}></NewPage>
+                        <NewPage setRef={(ref)=>{
+                            this.acceptancePage = ref;
+                            }} params={(this.state.acceptanceParams)} type={tabs[1].type}></NewPage>
                     </Tabs>
                 </View>
 

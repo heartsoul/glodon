@@ -74,6 +74,10 @@ class NewPage extends React.Component {
 
         // //从不同页面进入时初始化状态
         let params = this.props.params;
+        const {setRef} = this.props;
+        if(setRef) {
+            setRef(this);
+        }
         if (!params) {
             params = {};
         }
@@ -83,13 +87,13 @@ class NewPage extends React.Component {
 
     }
     //返回
-    goBack = () => {
+    goBack = (navigation) => {
         Modal.alert('是否确认退出当前页面？', "您还未保存当前数据！", [
             {
                 text: '取消', style: { color: '#5b5b5b' }
             },
             {
-                text: '不保存', style: { color: '#e75452' }, onPress: () => { this.props.navigation.goBack() }
+                text: '不保存', style: { color: '#e75452' }, onPress: () => { navigation.goBack() }
             },
             {
                 text: '保存', style: { color: '#00baf3' }, onPress: () => { this.save() }
@@ -140,10 +144,10 @@ class NewPage extends React.Component {
     }
 
     //提交
-    submit = () => {
+    submit = (navigation) => {
         //提交
         let requestParams = this.assembleParams();
-        NewQualityAction.submit(requestParams, this.refs[REF_PHOTO], this.props.navigation, (params) => {
+        NewQualityAction.submit(requestParams, this.refs[REF_PHOTO], navigation, (params) => {
             this.setState(params);
         });
     }
@@ -158,7 +162,7 @@ class NewPage extends React.Component {
     }
 
     //删除
-    delete = () => {
+    delete = (navigation) => {
         NewQualityAction.deleteInspection(this.state.inspectId, this.props.navigation);
     }
 
