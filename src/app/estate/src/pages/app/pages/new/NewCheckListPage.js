@@ -14,7 +14,6 @@ import {
 import { Tabs, } from 'antd-mobile';
 import NewCheckListTabBar from "./NewCheckListTabBar";
 import NewPage from "./NewPage";
-import PageTest from "./PageTest";
 
 var { width, height } = Dimensions.get("window");
 
