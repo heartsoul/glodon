@@ -39,7 +39,7 @@ class SelectView extends Component {
     componentDidMount() {
         let { title } = this.props
 
-        if (this.props.title === '检查单位') {
+        if (this.props.title === '检查单位' || this.props.title === '验收单位') {
             this.fetchData(this.getInspectionCompanies);
         } else if (this.props.title === '施工单位') {
             this.fetchData(this.getCompaniesList);

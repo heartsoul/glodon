@@ -79,16 +79,14 @@ class NewPage extends React.Component {
     };
 
     componentDidMount = () => {
+        //把当前页面引用设置给父页面
+        const { setRef } = this.props;
+        if (setRef) {
+            setRef(this);
+        }
 
         // //从不同页面进入时初始化状态
         let params = this.props.params;
-        const {setRef} = this.props;
-        if(setRef) {
-            setRef(this);
-        }
-        if (!params) {
-            params = {};
-        }
         NewQualityAction.initialState(params, this.props.selectedCheckPoint, (params) => {
             this.setState(params);
         })
@@ -171,7 +169,7 @@ class NewPage extends React.Component {
 
     //删除
     delete = (navigation) => {
-        NewQualityAction.deleteInspection(this.state.inspectId, this.props.navigation);
+        NewQualityAction.deleteInspection(this.state.inspectId, this.props.type, this.props.navigation);
     }
 
     //选择图纸文件
