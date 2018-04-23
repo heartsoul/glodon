@@ -2,23 +2,25 @@
  * Created by JokAr on 2017/4/12.
  */
 'use strict';
-import React, { Component, PureComponent } from "react";
+import React, { Component } from "react";
 import {
     ActivityIndicator, Animated, SectionList, FlatList,
     ScrollView, StyleSheet, Text, View, StatusBar, Image,
     RefreshControl, Button, TouchableHighlight, TouchableOpacity, Dimensions
 } from "react-native";
-import * as API from "app-api";
-import QualityInfoCellItem from "./QualityInfoCellItem";
+import { connect } from 'react-redux' // 引入connect函数
 import { List } from 'antd-mobile';
 import { Label } from 'app-3rd/teaset';
 
-import QualityInfoItem from "./QualityInfoItem"
 import { BimFileEntry, AuthorityManager } from "app-entry";
+import * as API from "app-api";
 
+import QualityInfoCellItem from "./QualityInfoCellItem";
+import QualityInfoItem from "./QualityInfoItem"
+import * as actions from '../../actions/qualityInfoAction'
 var { width, height } = Dimensions.get("window");
-
-export default class QualityDetailPage extends PureComponent {
+ 
+class QualityDetailPage extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
         title: navigation.state.params.title?navigation.state.params.title : '详情',
         tabBarVisible: false,
@@ -37,22 +39,18 @@ export default class QualityDetailPage extends PureComponent {
             //网络请求状态
             error: false,
             errorInfo: "",
-            item: null,
+            qualityInfo: null,
         }
     }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     if (nextProps.error || nextProps.isLoading) {
+    //       return true;
+    //     }
+    //     return true
+    // }
 
-    fetchData = () => {
-        this.setState({
-            isLoading: true,
-            error: false,
-            errorInfo: "",
-            item: null,
-        })
-        let item = this.props.navigation.getParam('item');
-        API.getQualityInspectionDetail(storage.loadProject(), item.value.id).then((responseData) => {
-            
-            const { inspectionInfo, progressInfos } = responseData.data;
-            let power = false;
+    updateNavBar = (inspectionInfo) =>{
+        let power = false;
             let title = "";
             if(inspectionInfo.inspectionType == API.TYPE_INSPECTION[0]) {
                 title = API.TYPE_INSPECTION_NAME[0]
@@ -74,21 +72,8 @@ export default class QualityDetailPage extends PureComponent {
                     rightTitle = API.TYPE_NEW_NAME[1]
                 }
             }
-            this.setState({
-                isLoading: false,
-                error: false,
-                errorInfo: "",
-                item: responseData.data,
-            });
+
             this.props.navigation.setParams({title:title,rightTitle:rightTitle, rightNavigatePress:this._rightAction }) 
-        }).catch(err => {
-            this.setState = {
-                isLoading: false,
-                error: err,
-                errorInfo: err,
-                item: null,
-            };
-        });
     }
 
     onAction = (inspectionInfo) => {
@@ -130,9 +115,15 @@ export default class QualityDetailPage extends PureComponent {
     }
 
     componentDidMount() {
-        this.fetchData();
+        const {fetchData} = this.props;
+        const {item} = this.props.navigation.state.params;
+        fetchData(item.value.id);
     }
 
+    componentWillUnmount () {
+        const {resetData} = this.props;
+        resetData();
+    }
     //加载等待的view
     renderLoadingView() {
         return (
@@ -240,7 +231,8 @@ export default class QualityDetailPage extends PureComponent {
         </View>
     }
     renderData = () => {
-        const { inspectionInfo, progressInfos } = this.state.item;
+        const { inspectionInfo, progressInfos } = this.props.qualityInfo;
+        this.updateNavBar(inspectionInfo)
         return (
             <ScrollView style={{ backgroundColor: '#FFFFFF' }}>
                 <View style={{ marginTop: 10 }}>
@@ -274,46 +266,17 @@ export default class QualityDetailPage extends PureComponent {
                     })
                 }
 
-                {/* <View style={{ marginTop: 10 }}>
-                    <QualityInfoCellItem userName="刘明明-监理" userImage="https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg" actionDate="2017-10-18 21:25:00" showType="user" actionText="检查" actionColor="#00B5F2" onAction={() => { alert(3) }} />
-                    <QualityInfoCellItem description="三楼水管要调整" descriptionDate="整改期：2017-10-19" showType="description" />
-                    <QualityInfoCellItem url='https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg' showType="image" />
-                    <QualityInfoItem showType="line" />
-                </View>
-
-                <View style={{ marginTop: 10 }}>
-                    <QualityInfoCellItem userName="刘明明-监理" userImage="https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg" actionDate="2017-10-18 21:25:00" showType="user" actionText="整改" actionColor="#F6AD5F" onAction={() => { alert(3) }} />
-                    <QualityInfoCellItem description="三楼水管要调整" descriptionDate="整改期：2017-10-19" showType="description" />
-                    <QualityInfoCellItem urls={['https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg', 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg']}
-                        showType="images" />
-                    <QualityInfoItem showType="line" />
-                </View>
-                <View style={{ marginTop: 10 }}>
-                    <QualityInfoCellItem userName="刘明明-监理" userImage="https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg" actionDate="2017-10-18 21:25:00" showType="user" actionText="检查" actionColor="#00B5F2" onAction={() => { alert(3) }} />
-                    <QualityInfoCellItem description="三楼水管要调整" showType="description" />
-                    <QualityInfoCellItem urls={['https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg', 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg']}
-                        showType="images" />
-                    <QualityInfoItem showType="line" />
-                </View>
-                <View style={{ marginTop: 10 }}>
-                    <QualityInfoCellItem userName="刘明明-监理" userImage="https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg" actionDate="2017-10-18 21:25:00" showType="user" actionText="检查" actionColor="#00B5F2" onAction={() => { alert(3) }} />
-                    <QualityInfoCellItem description="三楼水管要调整" showType="description" />
-                    <QualityInfoCellItem urls={['https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg', 'https://zos.alipayobjects.com/rmsportal/hqQWgTXdrlmVVYi.jpeg']}
-                        showType="images" />
-                    <QualityInfoItem showType="line" />
-                </View> */}
-
             </ScrollView>
         );
     }
     render() {
         // 第一次加载等待的view
-        if (this.state.isLoading && !this.state.error) {
+        if (this.props.isLoading && !this.props.error) {
             return this.renderLoadingView();
         } else
-            if (this.state.error) {
+            if (this.props.error) {
                 //请求失败view
-                return this.renderErrorView(this.state.errorInfo);
+                return this.renderErrorView(this.props.error);
             }
         //加载数据
         return this.renderData();
@@ -323,3 +286,24 @@ export default class QualityDetailPage extends PureComponent {
 const styles = StyleSheet.create({
 
 });
+
+export default connect(
+    state => ({
+        qualityInfo: state.qualityInfo.data,
+        isLoading: state.qualityInfo.isLoading,
+        item:state.qualityInfo.item,
+        error:state.qualityInfo.error
+    }),
+    dispatch => ({
+      fetchData: (fileId) =>{
+        if(dispatch) {
+          dispatch(actions.fetchData(fileId))
+        }
+      },
+      resetData: () =>{
+        if(dispatch) {
+          dispatch(actions.reset())
+        }
+      },
+    })
+  )(QualityDetailPage)
