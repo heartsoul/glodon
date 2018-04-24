@@ -208,4 +208,10 @@ export function showModelFromDetail(navigator, gdocFileId, elementId) {
     });
 }
 
-
+/**
+ * 进入新建检查单
+ * @param {*} navigator 
+ */
+export function showNewReviewPage(navigator) {
+    storage.pushNext(navigator, "NewReviewPage");
+}

@@ -22,15 +22,13 @@ var { width, height } = Dimensions.get("window");
  
 class QualityDetailPage extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
-        title: navigation.state.params.title?navigation.state.params.title : '详情',
+        // title: navigation.state.params.title?navigation.state.params.title : '详情',
+        title: navigation.state.params.loadTitle?navigation.state.params.loadTitle(): '详情',
         tabBarVisible: false,
         headerTintColor: "#FFF",
         headerStyle: { backgroundColor: "#00baf3" },
-        gesturesEnabled: false,
-        headerRight:navigation.state.params.rightTitle ? (  
-            <Label  onPress={()=>navigation.state.params.rightNavigatePress()} style={{marginRight:10, color:'#FFFFFF', textAlign:"center"}} >  
-                {navigation.state.params.rightTitle}
-        </Label>  ): null
+        gesturesEnabled: true,
+        headerRight:navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle(): null
     })
     constructor(props) {
         super(props);
@@ -41,41 +39,53 @@ class QualityDetailPage extends Component {
             errorInfo: "",
             qualityInfo: null,
         }
+        this.props.navigation.setParams({loadTitle:this.loadTitle, loadRightTitle:this.loadRightTitle}) 
     }
     // shouldComponentUpdate(nextProps, nextState) {
     //     if (nextProps.error || nextProps.isLoading) {
     //       return true;
     //     }
+      
     //     return true
     // }
 
-    updateNavBar = (inspectionInfo) =>{
+    newUnreviewed = () => {
+        BimFileEntry.showNewReviewPage(this.props.navigation);
+    }
+    newUnrectified = () => {
+        BimFileEntry.showNewReviewPage(this.props.navigation);
+    }
+    loadRightTitle = () => {
+        const { inspectionInfo } = this.props.qualityInfo;
         let power = false;
-            let title = "";
+        if (inspectionInfo.qcState == API.QC_STATE_UNRECTIFIED) {
+            // 整改
+            power = (AuthorityManager.isCreateRectify() && AuthorityManager.isMe(inspectionInfo.responsibleUserId))
+            if (power) {
+                return (<Label onPress={() => this.newUnrectified()} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >
+                    {API.TYPE_NEW_NAME[0]}</Label>)
+            }
+        } else if (inspectionInfo.qcState == API.QC_STATE_UNREVIEWED) {
+            // 检查
+            power = (AuthorityManager.isCreateReview() && AuthorityManager.isMe(inspectionInfo.creatorId))
+            if (power) {
+                return (<Label onPress={() => this.newUnreviewed()} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >
+                    {API.TYPE_NEW_NAME[1]}</Label>)
+            }
+        }
+        return null;
+    }
+
+    loadTitle = () => {
+        const { inspectionInfo } = this.props.qualityInfo;
+        let title = '详情';
             if(inspectionInfo.inspectionType == API.TYPE_INSPECTION[0]) {
                 title = API.TYPE_INSPECTION_NAME[0]
             } else if(inspectionInfo.inspectionType == API.TYPE_INSPECTION[1]) {
                 title = API.TYPE_INSPECTION_NAME[1]
             }
-            let rightTitle = null;
-            
-            if(inspectionInfo.qcState == API.QC_STATE_UNRECTIFIED) {
-                // 整改
-                power = (AuthorityManager.isCreateRectify()&& AuthorityManager.isMe(inspectionInfo.responsibleUserId))
-                if(power) {
-                    rightTitle = API.TYPE_NEW_NAME[0]
-                }
-            } else if(inspectionInfo.qcState == API.QC_STATE_UNREVIEWED) {
-                // 检查
-                power = (AuthorityManager.isCreateReview()&& AuthorityManager.isMe(inspectionInfo.creatorId)) 
-                if(power) {
-                    rightTitle = API.TYPE_NEW_NAME[1]
-                }
-            }
-
-            this.props.navigation.setParams({title:title,rightTitle:rightTitle, rightNavigatePress:this._rightAction }) 
+        return title;
     }
-
     onAction = (inspectionInfo) => {
         // "qualityCheckpointId": 5200014,
         // "qualityCheckpointName": "墙面",
@@ -232,7 +242,7 @@ class QualityDetailPage extends Component {
     }
     renderData = () => {
         const { inspectionInfo, progressInfos } = this.props.qualityInfo;
-        this.updateNavBar(inspectionInfo)
+        // this.updateNavBar(inspectionInfo)
         return (
             <ScrollView style={{ backgroundColor: '#FFFFFF' }}>
                 <View style={{ marginTop: 10 }}>
@@ -270,6 +280,7 @@ class QualityDetailPage extends Component {
         );
     }
     render() {
+        console.log('render:'+this.props.isLoading);
         // 第一次加载等待的view
         if (this.props.isLoading && !this.props.error) {
             return this.renderLoadingView();
