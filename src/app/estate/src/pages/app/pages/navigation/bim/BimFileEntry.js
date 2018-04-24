@@ -209,9 +209,11 @@ export function showModelFromDetail(navigator, gdocFileId, elementId) {
 }
 
 /**
- * 进入新建检查单
+ * 进入新建检查/整改单
  * @param {*} navigator 
+ * @param {*} qualityCheckListId  单据id
+ * @param {*} createType  单据类型 CREATE_TYPE_RECTIFY|CREATE_TYPE_REVIEW 具体见常量定义
  */
-export function showNewReviewPage(navigator) {
-    storage.pushNext(navigator, "NewReviewPage");
+export function showNewReviewPage(navigator, qualityCheckListId,createType) {
+    storage.pushNext(navigator, "NewReviewPage",{qualityCheckListId:qualityCheckListId,createType:createType});
 }
