@@ -3,8 +3,8 @@
 import * as types from "./../constants/reviewRepairTypes";
 
 const initialState = {
-    detailInfo: {},
-    reviewInfo: {},
+    qualityInfo: {},
+    editInfo: {},
     isLoading: true,
     error: null,
 }
@@ -17,11 +17,11 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 qualityInfo: action.qualityInfo,
             }
-        case types.REVIEW_REPAIR_LOAD_REVIEWiNFO:
+        case types.REVIEW_REPAIR_LOAD_EDITINFO:
             return {
                 ...state,
                 isLoading: false,
-                reviewInfo: action.reviewInfo,
+                editInfo: action.editInfo,
             }
         case types.REVIEW_REPAIR_LOAD_ERROR:
             return {

@@ -28,8 +28,8 @@ export const CREATE_TYPE_REVIEW = "2";//新建复查单
  * 复查不合格  "notAccepted"
  */
 export const STATUS_ALL = "";
-export const STATUS_CLOSED = "closed";
-export const STATUS_NOT_ACCEPTED = "notAccepted";
+export const STATUS_CLOSED = "closed";//复查合格 "closed
+export const STATUS_NOT_ACCEPTED = "notAccepted";//复查不合格  "notAccepted"
 export const QC_STATE_STAGED = "staged";
 export const QC_STATE_UNRECTIFIED = "unrectified";
 export const QC_STATE_UNREVIEWED = "unreviewed";
