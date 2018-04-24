@@ -4,34 +4,21 @@
 'use strict';
 import React, { Component, PureComponent } from "react";
 import {
-    ActivityIndicator, Animated, SectionList, FlatList,
-    ScrollView, StyleSheet, Text, View, StatusBar, Image,
-    RefreshControl, Button, TouchableHighlight, TouchableOpacity, Dimensions
+    ActivityIndicator, SectionList, StyleSheet, Text, View, StatusBar, Image,
+    RefreshControl, Dimensions
 } from "react-native";
 import * as API from "app-api";
+import { connect } from 'react-redux' // 引入connect函数
+import * as actions from '../../actions/qualityListAction'
 import QualityListCell from "./qualityListCell";
-import { SegmentedBar,SegmentedView, Drawer, Label } from 'app-3rd/teaset';
-
 var { width, height } = Dimensions.get("window");
-// const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
-//   drawer.close(); //如需要可代码手动关上抽屉
-export default class QualityListView extends PureComponent {
+class QualityListView extends PureComponent {
     
     constructor(props) {
         super(props);
-        console.log( "props.qcState:"+props.qcState+"props.loadData:"+props.loadData);
-        this.state = {
-            isLoading: false,
-            //网络请求状态
-            error: false,
-            errorInfo: "",
-            sectionArray: [],
-            qcState: props.qcState,
-            currentPage: 0,
-            hasMore: false,
-            refreshing: false,
-            loadData:props.loadData,
+        if(props.onRef) {
+            props.onRef(this);
         }
     }
     _sectionData=(index) =>{
@@ -40,86 +27,19 @@ export default class QualityListView extends PureComponent {
     _keyExtractor = (item, index) => index;
     //网络请求
     fetchData = (qcState) => {
+        if(this.props.page > 0) {
+            return;
+        }
         this._fetchData(qcState, 0);
     }
     //网络请求
     _fetchData = (qcState, page) => {
-        console.log("数据列表状态_fetchData："+qcState);
-        // 这个是js的访问网络的方法
-        API.getQualityInspectionAll(storage.loadProject(), qcState, page, 35).then(
-            (responseData) => {
-
-                // try {
-                    let data = responseData.data.content;
-                    let hasData = responseData.data.last == false;
-                    let dataBlob = [];
-                    let groupMap = new Map();
-                    let i = 0, j = 0;
-                    let sectionLob = [];
-                    if (page != 0) {
-                        groupMap = this.state.groupMap;
-                    }
-                    data.forEach(item => {
-                        item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
-                        item.index = i;
-                        item.qcStateShow = "" + API.toQcStateShow(item.qcState);
-                        if (item.files && item.files.size > 0) {
-                            item.url = item.files[0].url;
-                            // console.log(item.url);
-                        }
-                        let groupTime = item.showTime.substring(0, 10);
-                        let dataBlob = groupMap.get(groupTime);
-                        if (dataBlob == undefined) {
-                            dataBlob = [];
-                            groupMap.set(groupTime, dataBlob);
-                        }
-                        dataBlob.push({
-                            key: "" + item.id,
-                            value: item,
-                        });
-                        i++;
-                    });
-
-                    groupMap.forEach(function (value, key, map) {
-                        sectionLob.push({
-                            key: key,
-                            data: value,
-                        });
-                    });
-                    
-                    this.setState({
-                        //复制数据源
-                        sectionArray: sectionLob,
-                        groupMap: groupMap,
-                        isLoading: false,
-                        refreshing: false,
-                        currentPage: page + 1,
-                        hasMore: hasData,
-                    });
-                     this.render();
-                    data = null;
-                    dataBlob = null;
-                    sectionLob = null;
-                    groupMap = null;
-                // }
-                // catch (err) {
-                //     this.setState({
-                //         isLoading: false,
-                //         refreshing: false,
-                //     });
-                // }
-            }
-        ).catch(err => ({
-            err
-        }));
+       this.props.fetchData(qcState, page, this.props.dataMap);
     }
 
     componentDidMount() {
-        //请求数据
-        // this._onRefresh();
-        console.log("数据列表状态："+this.state.qcState);
-        if(this.state.loadData === true) {
-            this.fetchData(this.state.qcState);
+        if(this.props.loadData === true) {
+            this.fetchData(this.props.qcState);
         }
     }
 
@@ -140,10 +60,6 @@ export default class QualityListView extends PureComponent {
 
     //加载失败view
     renderErrorView(error) {
-        this.setState({
-            refreshing: false,
-            isLoading: false,
-        });
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
@@ -160,50 +76,7 @@ export default class QualityListView extends PureComponent {
             <QualityListCell item={item} index={index} />
         );
     }
-    numberOfRowsInSection = (section) =>{
-        console.log("numberOfRowsInSection");
-        let data = this.state.sectionArray[section];
-        if(data != undefined && data.data != undefined) {
-            console.log("numberOfRowsInSection:"+parseInt(''+data.data.length));
-            return parseInt(''+data.data.length);
-        }
-        return 0;
-    }
-    
-    numberOfSections = () =>{
-        console.log("numberOfSections");
-        let data = this.state.sectionArray;
-        if(data != undefined) {
-            console.log("numberOfSections:"+parseInt(''+data.length));
-            return 19;//parseInt(''+data.length);
-        }
-        return 0;
-    }
-    heightForSection = (section) =>{
-        return 30;
-    }
-    heightForCell = (section,row) =>{
-        console.log("heightForCell");
-        return row % 5 == 3 ? 18 : 12;
-    }
-    renderItem = (section,row) =>{
-        return <View style={{flex:1}} ><Text>abc</Text></View>;
-        // let sectionData = self.state.sectionArray.get(section);
-        // let item = sectionData.data.get(row);
-        // return (
-        //     <QualityListCell style={{flex:1}}  item={item} index={row} />
-        // );
-    }
-    renderSection = (section) =>{
-        let sectionData = self.state.sectionArray.get(section);
-        let txt = sectionData.key;
-        return <View style={styles.groupHeaderView}>
-            <View style={styles.headerLine}></View>
-            <Text
-                style={styles.groupTitle}>{txt}</Text>
-        </View>
-    }
-    
+   
     _sectionComp = (info) => {
         var txt = info.section.key;
         return <View style={styles.groupHeaderView}>
@@ -212,51 +85,37 @@ export default class QualityListView extends PureComponent {
                 style={styles.groupTitle}>{txt}</Text>
         </View>
     }
-    _onFilter = (qcState) => {
-        console.log("_onFilter"+qcState);
-        this.setState({
-            refreshing: true,
-            currentPage: 0,
-            hasMore: true,
-            qcState: qcState,
-        });
-        this.fetchData(qcState);
-    }
     _onEndReached = () => {
-        if (this.state.refreshing || this.state.isLoading || this.state.hasMore == false) {
+        if (this.props.isLoading || this.props.hasMore == false) {
             return;
         }
-        this.setState({
-            refreshing: true,
-        });
-        this._fetchData(this.state.qcState, this.state.currentPage);
+        this._fetchData(this.props.qcState, this.props.page);
     }
     _onRefresh = () => {
-        console.log("_onRefresh"+this.state.qcState);
-        this._onFilter(this.state.qcState);
+        this._fetchData(this.props.qcState, -1);
     }
-    _onSegmentedBarChange = (index) => {
-        this.setState({qcState: API.CLASSIFY_STATES[index] });
-        this._onFilter(API.CLASSIFY_STATES[index]);
-    }
+   
     _emptyView = () => {
         return (<View style={{ alignItems: 'center', justifyContent: 'center', height: height - 44 - 20 - 49 }}><Text style={{ color: 'gray' }}>暂无数据</Text></View>);
     }
-    _toTop = () =>{
-        this.refs.sectionList.scrollToOffset({animated: true, offset:0});
+    scrollToOffset = () =>{
+        if(this.refs.sectionList.scrollTo) {
+            this.refs.sectionList.scrollTo();
+        }
+        
     }
-    renderData() {
+    renderData= ()=> {
         return (
         <SectionList
             ref='sectionList'
-            sections={this.state.sectionArray}
+            sections={this.props.dataArray}
             renderItem={this.renderItemView}
             // keyExtractor={this._keyExtractor}
             renderSectionHeader={this._sectionComp}
             // ItemSeparatorComponent={this._separator}
-            stickySectionHeadersEnabled={true}
+            stickySectionHeadersEnabled={false}
             onRefresh={this._onRefresh}
-            refreshing={this.state.refreshing}
+            refreshing={this.props.isLoading}
             onEndReached={this._onEndReached}
             onEndReachedThreshold={1}
             ListEmptyComponent={this._emptyView}
@@ -266,12 +125,12 @@ export default class QualityListView extends PureComponent {
     }
     render() {
        // 第一次加载等待的view
-        if (this.state.isLoading && !this.state.error) {
+        if (this.props.isLoading && !this.props.error) {
             return this.renderLoadingView();
         } else 
-        if (this.state.error) {
+        if (this.props.error) {
             //请求失败view
-            return this.renderErrorView(this.state.errorInfo);
+            return this.renderErrorView(this.props.error);
         }
         //加载数据
         return this.renderData();
@@ -284,41 +143,12 @@ const styles = StyleSheet.create({
         height:30,
         top:0,
     },
-    contentList: {
-        // flex:1,
-        // backgroundColor:'orange',
-        //  height:120,
-    },
-    dataList: {
-        // flex: 1,
-        top:0, 
-        height:height,
-        backgroundColor:'green',
-    },
     gray: {
         top: 100,
         left: width / 2 - 30,
         position: 'absolute',
     },
-    topBtn: {
-        width: 50,
-        height: 25,
-        backgroundColor: '#0007',
-        borderRadius: 8,
-        justifyContent: 'center',
-        alignItems: 'center',
-        top: height - 100,
-        left: width - 60,
-        position: 'absolute',
-    },
-    topBtnText: {
-        fontSize: 12,
-        color: '#fff'
-    },
-    headerButton: {
-        color: '#333333',
-        fontSize: 14,
-    },
+ 
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -351,3 +181,37 @@ const styles = StyleSheet.create({
         backgroundColor: '#fafafa',
     }
 });
+
+function mapStateToProps(state) {
+    return {qualityList:state.qualityList}
+  }
+
+  function mapDispatchToProps(dispatch) {
+    return {
+        fetchData: (qcState,page,dataMap) =>{
+          if(dispatch) {
+            dispatch(actions.fetchData(qcState,page,dataMap))
+          }
+        },
+        resetData: (qcState) =>{
+          if(dispatch) {
+            dispatch(actions.reset(qcState))
+          }
+        },
+      }
+  }
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+    
+    return Object.assign({}, ownProps,dispatchProps, {
+        dataArray: stateProps.qualityList.datas[ownProps.qcState].data,
+        dataMap:stateProps.qualityList.datas[ownProps.qcState].dataMap,
+        page:stateProps.qualityList.datas[ownProps.qcState].page,
+        isLoading: stateProps.qualityList.datas[ownProps.qcState].isLoading,
+        error:stateProps.qualityList.datas[ownProps.qcState].error,
+        hasMore:stateProps.qualityList.datas[ownProps.qcState].hasMore
+    })
+  }
+  
+  
+export default connect(mapStateToProps,mapDispatchToProps,mergeProps)(QualityListView)

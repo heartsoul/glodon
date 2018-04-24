@@ -10,6 +10,7 @@ const initialState = {
     isLoading: true,
     item:{},
     error:null,
+    isSuccessed:false,
 }
 
 export default (state = initialState, action) => {
@@ -19,6 +20,7 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: true,
                 error:null,
+                isSuccessed:false
             }
         case types.QUALITY_INFO_DONE:
             return {
@@ -26,12 +28,14 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 data: action.data,
                 error:null,
+                isSuccessed:true
             }
         case types.QUALITY_INFO_ERROR:
             return {
                 ...state,
                 isLoading: false,
                 error:action.error,
+                isSuccessed:false
             }
         case types.QUALITY_INFO_INIT:
             return initialState;

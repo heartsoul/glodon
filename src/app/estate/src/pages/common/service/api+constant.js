@@ -83,6 +83,16 @@ export const CLASSIFY_STATES = [STATUS_ALL
 , QC_STATE_DELAYED
 , QC_STATE_ACCEPTED
 ];
+// 状态
+export const CLASSIFY_STATES_SUMMARY = ["-"+STATUS_ALL
+    , QC_STATE_STAGED
+    , QC_STATE_UNRECTIFIED
+    , QC_STATE_UNREVIEWED
+    , "-"+QC_STATE_INSPECTED
+    , "-"+QC_STATE_REVIEWED
+    , QC_STATE_DELAYED
+    , "-"+QC_STATE_ACCEPTED
+    ];
 // 状态显示名
 export const CLASSIFY_NAMES = ["全部"
 , "待提交"
@@ -127,7 +137,7 @@ export function toCompanyNameTip(inspectionType) {
         index = 0;
     }
     return INSPECTION_COMPANY_NAME_TIP[index];
-}
+}                
 
 /**
  * 状态转换为显示状态
@@ -192,7 +202,6 @@ export function toBillTypeColor(billType) {
     }
     return "gray";
 }
-
 
 /**
  * 时间戳转换为显示时间 年-月-日 时:分:秒

@@ -45,18 +45,14 @@ export default class qualityList extends PureComponent {
         }
     }
     _keyExtractor = (item, index) => index;
-
-    componentDidMount = () => {
-        //请求数据
-        // this._onRefresh();
-        storage.qualityNavigation = this.props.navigation;
+    _loadInspectionSummary = () =>{
         API.getQualityInspectionSummary(storage.loadProject()).then(
             (responseData) => {
-                console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
+                // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
                 let items = responseData.data;
                 let qualityBadgeItem = this.state.qualityBadge.item;
                 items.map((item, index) => {
-                    let find = API.CLASSIFY_STATES.indexOf(item.qcState);
+                    let find = API.CLASSIFY_STATES_SUMMARY.indexOf(item.qcState);
                     if (find > 0) {
                         qualityBadgeItem[find] = item.count;
                     }
@@ -68,6 +64,12 @@ export default class qualityList extends PureComponent {
                 // 获取数量数据
             }
         );
+    }
+    componentDidMount = () => {
+        //请求数据
+        // this._onRefresh();
+        storage.qualityNavigation = this.props.navigation;
+        this._loadInspectionSummary();
         // this.refs.sectionList.fetchData(API.CLASSIFY_STATES[0]);
         // this._onSegmentedBarChange(0);
     }
@@ -75,49 +77,36 @@ export default class qualityList extends PureComponent {
     _onSegmentedBarChange = (index) => {
         this.setState({ activeIndex: index });
         this.state.qualityView[index].fetchData(API.CLASSIFY_STATES[index]);
+        this._loadInspectionSummary();
     }
     _toTop = () => {
-        // this.state.sectionList.scrollToOffset({animated: true, offset:0});
+        let index = this.state.activeIndex;
+        let qualityView = this.state.qualityView[index];
+        if(qualityView.scrollToOffset) {
+            qualityView.scrollToOffset();
+        }
     }
     renderData() {
 
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                {/* <SegmentedBar style={styles.contentHeader} ref = {'segmentedBar'} onChange={(index) => this._onSegmentedBarChange(index)} justifyItem='scrollable'>
-                   {
-                    //    API.CLASSIFY_NAMES.map((item,index)=>{
-                    //        return (
-                    //         <SegmentedBar.Item key={item} title={item} />
-                    //        );
-                    //    })
-                   }
-                    <SegmentedBar.Item title='全部' />
-                    <SegmentedBar.Item badge={29} title='待提交' />
-                    <SegmentedBar.Item badge={5} title='待整改' />
-                    <SegmentedBar.Item badge={'...'} title='待复查' />
-                    <SegmentedBar.Item title='已检查' />
-                    <SegmentedBar.Item title='已复查' />
-                    <SegmentedBar.Item title='已延迟' />
-                    <SegmentedBar.Item title='已验收' />
-
-                </SegmentedBar>
-                <QualityListView  ref='sectionList'  qcState = {''} />  */}
-
                 <SegmentedView style={{ flex: 1 }} justifyItem={'scrollable'} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
                     {
                        API.CLASSIFY_STATUS_LIST.map((item,index)=>{
                            return (
                                <SegmentedView.Sheet key={item.name} title={item.name} badge={this.state.qualityBadge.item[index]}>
-                                <QualityListView ref={ (e) => {
-                                    this.state.qualityView[index] = e
-                                    } } style={{flex:1}} qcState={''+item.state} loadData={index ==0 ? true: false} /> 
+                                <QualityListView 
+                                onRef={ (ref) => {this.state.qualityView[index] = ref}} 
+                                style={{flex:1}} 
+                                qcState={''+item.state} 
+                                loadData={index ==0 ? true: false} /> 
                             </SegmentedView.Sheet>
                            );
                        })
                    }
                 </SegmentedView>
-                {/* <TouchableOpacity style={styles.topBtn} onPress={this._toTop.bind(this)}>
+                {/* <TouchableOpacity style={styles.topBtn} onPress={()=>this._toTop()}>
             <Text style={styles.topBtnText}>置顶</Text>
       </TouchableOpacity> */}
             </View>
@@ -132,11 +121,6 @@ export default class qualityList extends PureComponent {
 }
 
 const styles = StyleSheet.create({
-    contentHeader: {
-        // flex:1,
-        height: 30,
-        top: 0,
-    },
     contentList: {
         flex: 1,
         backgroundColor: '#fafafa',
@@ -198,27 +182,4 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15, // iOS
         shadowRadius: 3, // iOS
     },
-
-    groupHeaderView: {
-        // backgroundColor:'#eee',
-        height: 40,
-    },
-    headerLine: {
-        backgroundColor: '#999',
-        height: 1,
-        top: 19,
-        marginLeft: 20,
-        marginRight: 20,
-    },
-    groupTitle: {
-        height: 20,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        color: '#999',
-        fontSize: 14,
-        width: 100,
-        top: 10,
-        left: width / 2 - 50,
-        backgroundColor: '#fafafa',
-    }
 });
