@@ -551,7 +551,7 @@ export async function getStandardsItems(templateId) {
  * @param {*} props 
  */
 export async function createSaveReview(projectId, props) {
-    let api = `quality/${projectId}/qualityReviews`;
+    let api = `/quality/${projectId}/qualityReviews`;
     return requestJSON(api, {
         method: 'POST',
         body: props,
@@ -565,7 +565,7 @@ export async function createSaveReview(projectId, props) {
  * @param {*} props 
  */
 export async function editSaveReview(projectId, fileId, props) {
-    let api = `quality/${projectId}/qualityReviews/${fileId}`;
+    let api = `/quality/${projectId}/qualityReviews/${fileId}`;
     return requestJSON(api, {
         method: 'PUT',
         body: props,
@@ -578,7 +578,7 @@ export async function editSaveReview(projectId, fileId, props) {
  * @param {*} props 
  */
 export async function createSubmitReview(projectId, props) {
-    let api = `quality/${projectId}/qualityReviews/commit`;
+    let api = `/quality/${projectId}/qualityReviews/commit`;
     return requestJSON(api, {
         method: 'POST',
         body: props,
@@ -592,7 +592,7 @@ export async function createSubmitReview(projectId, props) {
  * @param {*} props 
  */
 export async function editSubmitReview(projectId, fileId, props) {
-    let api = `quality/${projectId}/qualityReviews/${fileId}/commit`;
+    let api = `/quality/${projectId}/qualityReviews/${fileId}/commit`;
     return requestJSON(api, {
         method: 'PUT',
         body: props,
@@ -603,9 +603,42 @@ export async function editSubmitReview(projectId, fileId, props) {
  * 复查单  查询保存后的复查单数据
  * @param {*} projectId 
  * @param {*} inspectionId 
+ * { data:
+ { id: 5200032,                                                
+   code: 'ZLFC_20180424_001',                                 
+   qcState: 'staged',                                         
+   projectId: 5200146,                                        
+   projectName: 'app调试图纸模型B',                           
+   inspectionId: 5200103,                                     
+   inspectionCode: 'ZLJC_20171227_006',                       
+   inspectionCompanyId: 5200001,                              
+   inspectionCompanyName: '龙湖新租户A',                      
+   rectificationId: 5200028,                                  
+   rectificationCode: 'ZLZG_20171227_001',                    
+   responsibleUserId: 5200013,                                
+   responsibleUserName: 'zhouruifeng',                        
+   qualityCheckpointId: null,                                 
+   qualityCheckpointName: '窗',                               
+   buildingId: 0,                                             
+   buildingName: null,                                        
+   elementId: '313507',                                       
+   elementName: '墙',                                         
+   gdocFileId: '96cb1e58a27d46e99c10038f73839705',            
+   reviewDate: 1524499200000,                                 
+   status: 'closed',                                          
+   lastRectificationDate: null,                               
+   description: '1231',                                       
+   files: [],                                                 
+   drawingGdocFileId: null,                                   
+   drawingName: null,                                         
+   drawingPositionX: null,                                    
+   drawingPositionY: null,                                    
+   committed: false }
+ }                                       
+
  */
 export async function getReviewInfo(projectId, inspectionId) {
-    let api = `quality/${projectId}/qualityReviews/staged?inspectionId=${inspectionId}`;
+    let api = `/quality/${projectId}/qualityReviews/staged?inspectionId=${inspectionId}`;
     return requestJSON(api, {
         method: 'GET',
     });
@@ -617,7 +650,85 @@ export async function getReviewInfo(projectId, inspectionId) {
  * @param {*} fileId 
  */
 export async function deleteReview(projectId, fileId) {
-    let api = `quality/${projectId}/qualityReviews/${fileId}`;
+    let api = `/quality/${projectId}/qualityReviews/${fileId}`;
+    return requestJSON(api, {
+        method: 'DELETE',
+    });
+}
+
+/**
+ * 整改单  新增  保存
+ * @param {*} projectId 
+ * @param {*} props 
+ */
+export async function createSaveRepair(projectId, props) {
+    let api = `/quality/${projectId}/qualityRectification`;
+    return requestJSON(api, {
+        method: 'POST',
+        body: props,
+    });
+}
+
+/**
+ * 整改单  编辑  保存
+ * @param {*} projectId 
+ * @param {*} fileId 
+ * @param {*} props 
+ */
+export async function editSaveRepair(projectId, fileId, props) {
+    let api = `/quality/${projectId}/qualityRectification/${fileId}`;
+    return requestJSON(api, {
+        method: 'PUT',
+        body: props,
+    });
+}
+
+/**
+ * 整改单  新增  提交
+ * @param {*} projectId 
+ * @param {*} props 
+ */
+export async function createSubmitRepair(projectId, props) {
+    let api = `/quality/${projectId}/qualityRectification/commit`;
+    return requestJSON(api, {
+        method: 'POST',
+        body: props,
+    });
+}
+
+/**
+ * 整改单  编辑  提交
+ * @param {*} projectId 
+ * @param {*} fileId 
+ * @param {*} props 
+ */
+export async function editSubmitRepair(projectId, fileId, props) {
+    let api = `/quality/${projectId}/qualityRectification/${fileId}/commit`;
+    return requestJSON(api, {
+        method: 'PUT',
+        body: props,
+    });
+}
+
+/**
+ * 整改单  查询保存后的复查单数据
+ * @param {*} projectId 
+ * @param {*} inspectionId 
+ */
+export async function getRepairInfo(projectId, inspectionId) {
+    let api = `/quality/${projectId}/qualityRectification/staged?inspectionId=${inspectionId}`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 整改单  删除
+ * @param {*} projectId 
+ * @param {*} fileId 
+ */
+export async function deleteRepair(projectId, fileId) {
+    let api = `/quality/${projectId}/qualityRectification/${fileId}`;
     return requestJSON(api, {
         method: 'DELETE',
     });
