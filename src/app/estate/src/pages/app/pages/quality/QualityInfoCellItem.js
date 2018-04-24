@@ -48,7 +48,7 @@ export default class QualityInfoCellItem extends React.Component {
             <View style={[styles.containerView, styles.containerDescriptionView]} >
                 <View style={styles.descriptionView}>
                     <Label style={styles.description}>{this.props.description}</Label>
-                </View>)
+                </View>
                 <View style={styles.dateView}>
                     <Label style={styles.date}>{this.props.descriptionDate}</Label>
                 </View>

@@ -71,37 +71,6 @@ export default class QualityDetailView extends Component {
         // const {resetData} = this.props;
         // resetData();
     }
-    //加载等待的view
-    renderLoadingView() {
-        return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <ActivityIndicator
-                    animating={true}
-                    style={[styles.gray, { height: 80 }]}
-                    color='green'
-                    size="large"
-                />
-            </View>
-        );
-    }
-
-    //加载失败view
-    renderErrorView(error) {
-        this.setState({
-            refreshing: false,
-            isLoading: false,
-        });
-        return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <Text>
-                    Fail: {error}
-                </Text>
-            </View>
-        );
-    }
-
     renderFirstProgressInfoItem = (inspectionInfo) => {
         let progressInfo = {
             "id": inspectionInfo.id,
@@ -120,7 +89,7 @@ export default class QualityDetailView extends Component {
 
     renderProgressInfoItem = (progressInfo, index) => {
         
-        if (progressInfo.files.size <= 0) {
+        if (progressInfo.files.length <= 0) {
             return <View key={"renderProgressInfoItem" + index} style={{ marginTop: 10 }}>
                 <QualityInfoCellItem userName={progressInfo.handlerName + '-' + progressInfo.handlerTitle} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
                     actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
@@ -128,7 +97,7 @@ export default class QualityDetailView extends Component {
                 <QualityInfoItem showType="line" />
             </View>
         }
-        if (progressInfo.files.size == 1) {
+        if (progressInfo.files.length == 1) {
             return (
                 <View key={"renderProgressInfoItem" + index} style={{ marginTop: 10 }}>
                     <QualityInfoCellItem userName={progressInfo.handlerName} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
