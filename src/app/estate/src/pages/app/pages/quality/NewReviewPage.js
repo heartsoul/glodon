@@ -12,9 +12,13 @@ import {
     ScrollView,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { ListRow } from 'app-3rd/teaset';
 import { DatePicker, List } from 'antd-mobile';
+
 import WideButton from "./../../components/WideButton";
+import * as API from "app-api";
+import * as reviewRepairAction from "./../../actions/reviewRepairAction";
 
 class NewReviewPage extends Component {
 
@@ -44,6 +48,14 @@ class NewReviewPage extends Component {
             expand: false,//检查单是否展开
         };
         this.props.navigation.setParams({ leftNavigatePress: this.goBack, rightNavigatePress: this.submit })
+    }
+
+    componentDidMount() {
+
+    }
+
+    assembleParams = () => {
+
     }
 
     goBack = () => {
@@ -135,7 +147,26 @@ class NewReviewPage extends Component {
     }
 }
 
-export default NewReviewPage;
+{/* <QualityDetailView qualityInfo={qualityInfo}/> */ }
+
+export default connect(
+    state => ({
+        detailInfo: state.reviewRepair.detailInfo,
+        reviewInfo: state.reviewRepair.reviewInfo,
+        error: state.reviewRepair.error
+    }),
+    dispatch => ({
+        getInspectionDetail: (fileId) => {
+            if (dispatch) {
+                dispatch(reviewRepairAction.getInspectionDetail(fileId))
+            }
+        },
+        getReviewInfo: (fileId) => {
+            if (dispatch) {
+                dispatch(reviewRepairAction.getReviewInfo(fileId))
+            }
+        }
+    }))(NewReviewPage);
 
 const styles = StyleSheet.create({
     input: {
