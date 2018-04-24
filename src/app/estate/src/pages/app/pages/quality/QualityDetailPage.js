@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { connect } from 'react-redux' // 引入connect函数
 
-
 import { BimFileEntry, AuthorityManager } from "app-entry";
 import * as API from "app-api";
 import QualityDetailView from "./QualityDetailView"
@@ -57,15 +56,15 @@ class QualityDetailPage extends Component {
             // 整改
             power = (AuthorityManager.isCreateRectify() && AuthorityManager.isMe(inspectionInfo.responsibleUserId))
             if (power) {
-                return (<Label onPress={() => this.newUnrectified(inspectionInfo.id)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >
-                    {API.TYPE_NEW_NAME[0]}</Label>)
+                return (<Text onPress={() => this.newUnrectified(inspectionInfo.id)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >
+                    {API.TYPE_NEW_NAME[0]}</Text>)
             }
         } else if (inspectionInfo.qcState == API.QC_STATE_UNREVIEWED) {
             // 检查
             power = (AuthorityManager.isCreateReview() && AuthorityManager.isMe(inspectionInfo.creatorId))
             if (power) {
-                return (<Label onPress={() => this.newUnreviewed(inspectionInfo.id)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >
-                    {API.TYPE_NEW_NAME[1]}</Label>)
+                return (<Text onPress={() => this.newUnreviewed(inspectionInfo.id)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >
+                    {API.TYPE_NEW_NAME[1]}</Text>)
             }
         }
         return null;
