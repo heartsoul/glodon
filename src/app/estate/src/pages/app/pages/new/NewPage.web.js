@@ -46,7 +46,6 @@ export default class extends React.Component {
     _fetchData(fetchData){
       if (this.state.projectId === 0 || this.state.latestVersion === '') {
           storage.loadProject((projectId) => {
-              storage.projectId = projectId;
               this.setState({
                   projectId: projectId,
               });
@@ -60,7 +59,7 @@ export default class extends React.Component {
      * 获取项目下检查单位列表
      */
     _getInspectionCompanies = () => {
-      QUALITYAPI.getInspectionCompanies(storage.projectId)
+      QUALITYAPI.getInspectionCompanies(storage.loadProject())
           .then(data => {
               this.setState({
                   inspectionCompanies: data.data,
@@ -84,7 +83,7 @@ export default class extends React.Component {
     * 获取施工单位列表
     */
     _getCompaniesList = ()=> {
-      PMBASICAPI.getCompaniesList(storage.projectId,'SGDW')
+      PMBASICAPI.getCompaniesList(storage.loadProject(),'SGDW')
       .then(data => {
           this.setState({
               companies: data.data,
@@ -112,7 +111,7 @@ export default class extends React.Component {
       }
       this._fetchData(() => {
           let coperationId = this.state.companies[this.state.selectCompanyIndex].coperationId;
-          PMBASICAPI.getPersonList(storage.projectId,coperationId)
+          PMBASICAPI.getPersonList(storage.loadProject(),coperationId)
           .then(data => {
               this.setState({
                   persons: data.data,
@@ -137,7 +136,7 @@ export default class extends React.Component {
      * 获取质检项目列表
      */
     _getCheckPoints = ()=> {
-        QUALITYAPI.getCheckPoints(storage.projectId)
+        QUALITYAPI.getCheckPoints(storage.loadProject())
           .then(data => {
               this.setState({
                   checkPoints: data.data,
@@ -258,7 +257,7 @@ export default class extends React.Component {
       //需要整改
       params.needRectification = this.state.switchValue;
   
-      params.projectId = storage.projectId;
+      params.projectId = storage.loadProject();
       params.projectName = '';
       //质检项目
       params.qualityCheckpointId = this.state.selectedCheckPoint.id;
@@ -301,7 +300,7 @@ export default class extends React.Component {
     //检查单 新增 提交
     _createSubmitInspection = ()=> {
       let params = this._assembleParams();  
-      QUALITYAPI.createSubmitInspection(storage.projectId,params)
+      QUALITYAPI.createSubmitInspection(storage.loadProject(),params)
           .then(data =>{
               Toast.hide();
               console.log(data)
@@ -314,7 +313,7 @@ export default class extends React.Component {
     //检查单 编辑   提交
     _editSubmitInspection = ()=> {
       let params = this._assembleParams();  
-      QUALITYAPI.editSubmitInspection(storage.projectId, this.state.inspectId, params)
+      QUALITYAPI.editSubmitInspection(storage.loadProject(), this.state.inspectId, params)
           .then(data =>{
               Toast.hide();
               console.log(data)
@@ -336,7 +335,7 @@ export default class extends React.Component {
    // 检查单 新增 保存
     _createSaveInspection = ()=> {
       let params = this._assembleParams();  
-      QUALITYAPI.createSaveInspection(storage.projectId,params)
+      QUALITYAPI.createSaveInspection(storage.loadProject(),params)
           .then(data =>{
               console.log(data)
               Toast.hide();
@@ -351,7 +350,7 @@ export default class extends React.Component {
     //检查单 编辑   保存
     _editSaveInspection = ()=> {
       let params = this._assembleParams();  
-      QUALITYAPI.editSaveInspection(storage.projectId,this.state.inspectId,params)
+      QUALITYAPI.editSaveInspection(storage.loadProject(),this.state.inspectId,params)
           .then(data =>{
               console.log(data)
               Toast.hide();
@@ -359,7 +358,7 @@ export default class extends React.Component {
     }
     //
     _delete = ()=>{
-      QUALITYAPI.createDeleteInspection(storage.projectId,this.state.inspectId)
+      QUALITYAPI.createDeleteInspection(storage.loadProject(),this.state.inspectId)
       .then(data =>{
           console.log(data)
           storage.goBack(this.props.navigation,null);
@@ -369,7 +368,7 @@ export default class extends React.Component {
   
     componentDidMount=()=> {
       console.log(this.props.navigation.state.params);
-      console.log(storage.projectId);
+      console.log(storage.loadProject());
       this._initialState();
       //请求数据
        this.props.navigation.setParams({rightNavigatePress:this._rightAction }) 
@@ -449,7 +448,7 @@ export default class extends React.Component {
     constructor() {
         super();
         this.state = {
-          projectId:storage.projectId,
+          projectId:storage.loadProject(),
           
           inspectionCompanies:PropTypes.array,
           selectInspectionCompanyIndex: -1,//选中的检查单位

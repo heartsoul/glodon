@@ -48,7 +48,7 @@ export default class BimFileChooser extends Component {
             dataArray: [],
             page: 0,
             hasMore: true,
-            projectId: global.storage.projectId,
+            projectId: storage.loadProject(),
             latestVersion: global.storage.projectIdVersionId,
             fileId: 0,
             dataType: "",//图纸文件 模型文件 
@@ -59,8 +59,7 @@ export default class BimFileChooser extends Component {
 
     fetchData = (page) => {
         if (this.state.projectId === 0 || this.state.latestVersion === '') {
-            global.storage.loadProject((projectId) => {
-                global.storage.projectId = projectId;
+            storage.loadProject((projectId) => {
                 // 这个是js的访问网络的方法
                 MODELAPI.getModelLatestVersion(projectId).then((responseData) => {
                     let latestVersion = responseData.data.data.versionId;

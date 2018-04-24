@@ -8,10 +8,14 @@ export const TYPE_INSPECTION_NAME =[
     "检查单",// 
     "验收单" // 
 ];
+
+export const TYPE_NEW_NAME_RECTIFY = "整改单";
+export const TYPE_NEW_NAME_REVIEW = "复查单";
 export const TYPE_NEW_NAME =[
-    "+整改单",// 
-    "+复查单" // 
+    "+"+TYPE_NEW_NAME_RECTIFY,// 
+    "+"+TYPE_NEW_NAME_REVIEW // 
 ];
+
 export const INSPECTION_COMPANY_NAME_TIP = ["检查单位","验收单位"];
 export const CREATE_TYPE_CHECK = "0";//新建检查单
 export const CREATE_TYPE_RECTIFY = "1";//新建整改单

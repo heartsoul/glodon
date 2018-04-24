@@ -38,7 +38,7 @@ function assembleParams(requestParams) {
     params.needRectification = rectificationData.value;
     params.lastRectificationDate = rectificationData.date;
 
-    params.projectId = storage.projectId;
+    params.projectId = storage.loadProject();
     params.projectName = '';
 
     //质检项目
@@ -211,7 +211,7 @@ export function submit(requestParams, imageChooserEle, navigator, callback) {
  */
 function createSubmitInspection(params, navigator) {
     let requestParams = JSON.stringify(params);
-    API.createSubmitInspection(storage.projectId, params.inspectionType, requestParams)
+    API.createSubmitInspection(storage.loadProject(), params.inspectionType, requestParams)
         .then(data => {
             Toast.hide();
             if (data && data.data && data.data.id) {
@@ -224,7 +224,7 @@ function createSubmitInspection(params, navigator) {
  */
 function editSubmitInspection(params, navigator) {
     let requestParams = JSON.stringify(params);
-    API.editSubmitInspection(storage.projectId, params.inspectId, params.inspectionType, requestParams)
+    API.editSubmitInspection(storage.loadProject(), params.inspectId, params.inspectionType, requestParams)
         .then(data => {
             Toast.hide();
             storage.goBack(navigator, null);
@@ -265,7 +265,7 @@ export function save(requestParams, imageChooserEle, callback) {
  */
 function createSaveInspection(params, callback) {
     let requestParams = JSON.stringify(params);
-    API.createSaveInspection(storage.projectId, params.inspectionType, requestParams)
+    API.createSaveInspection(storage.loadProject(), params.inspectionType, requestParams)
         .then(data => {
             Toast.hide();
             if (data) {
@@ -282,7 +282,7 @@ function createSaveInspection(params, callback) {
  */
 function editSaveInspection(params) {
     let requestParams = JSON.stringify(params);
-    API.editSaveInspection(storage.projectId, params.inspectId, params.inspectionType, requestParams)
+    API.editSaveInspection(storage.loadProject(), params.inspectId, params.inspectionType, requestParams)
         .then(data => {
             console.log(data)
             Toast.hide();
@@ -293,7 +293,7 @@ function editSaveInspection(params) {
  * 删除草稿
  */
 export function deleteInspection(inspectId, inspectionType, navigator) {
-    API.createDeleteInspection(storage.projectId, inspectId, inspectionType)
+    API.createDeleteInspection(storage.loadProject(), inspectId, inspectionType)
         .then(data => {
             storage.goBack(navigator, null);
         })

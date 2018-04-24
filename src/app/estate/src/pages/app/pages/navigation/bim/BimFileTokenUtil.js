@@ -15,7 +15,7 @@ function getLastetVersion(fileId, callback) {
 }
 
 function getToken(fileId, callback) {
-    API.getModelBimFileToken(storage.projectId, storage.projectIdVersionId, fileId).then((responseData) => {
+    API.getModelBimFileToken(storage.loadProject(), storage.projectIdVersionId, fileId).then((responseData) => {
         let token = responseData.data.data;
         global.storage.bimToken = token;
         callback(token);
@@ -24,14 +24,7 @@ function getToken(fileId, callback) {
 
 
 function fetchData(requestMethod) {
-    if (storage.projectId === 0) {
-        storage.loadProject((projectId) => {
-            storage.projectId = projectId;
-            requestMethod();
-        });
-    } else {
-        requestMethod();
-    }
+  requestMethod();    
 }
 /**
  * 获取token

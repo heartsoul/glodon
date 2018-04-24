@@ -57,7 +57,7 @@ class NewPage extends React.Component {
 
             editInfo: {},//编辑的时候获取的详情
 
-            projectId: storage.projectId,
+            projectId: storage.loadProject(),
             inspectId: -1,//检查单id
             code: '',
             contentDescription: PropTypes.string,//内容描述
@@ -202,7 +202,7 @@ class NewPage extends React.Component {
                 relevantBluePrint: data,
             });
         } else if (dataType === '模型文件') {
-            API.getModelElementProperty(storage.projectId, storage.projectIdVersionId, data.gdocFileId, data.elementId)
+            API.getModelElementProperty(storage.loadProject(), storage.projectIdVersionId, data.gdocFileId, data.elementId)
                 .then(responseData => {
                     let relevantModel = {
                         ...data,

@@ -26,14 +26,8 @@ class SelectView extends Component {
      * 获取数据之前先检查是否已经选择项目
      */
     fetchData = (fetchData) => {
-        if (storage.projectId === 0) {
-            storage.loadProject((projectId) => {
-                storage.projectId = projectId;
-                fetchData();
-            });
-        } else {
-            fetchData();
-        }
+        fetchData();
+        
     }
 
     componentDidMount() {
@@ -77,7 +71,7 @@ class SelectView extends Component {
      * 获取项目下检查单位列表
      */
     getInspectionCompanies = () => {
-        API.getInspectionCompanies(storage.projectId)
+        API.getInspectionCompanies(storage.loadProject())
             .then(data => {
                 this.setState({
                     dataList: data.data,
@@ -91,7 +85,7 @@ class SelectView extends Component {
      * 获取施工单位列表
      */
     getCompaniesList = () => {
-        API.getCompaniesList(storage.projectId, 'SGDW')
+        API.getCompaniesList(storage.loadProject(), 'SGDW')
             .then(data => {
                 this.setState({
                     dataList: data.data,
@@ -114,7 +108,7 @@ class SelectView extends Component {
         }
         this.fetchData(() => {
             let coperationId = extraData.coperationId;
-            API.getPersonList(storage.projectId, coperationId)
+            API.getPersonList(storage.loadProject(), coperationId)
                 .then(data => {
                     let selectIndex = this.getSelectPersonIndex(data.data);
                     this.setState({

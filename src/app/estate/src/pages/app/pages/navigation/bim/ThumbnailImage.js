@@ -26,7 +26,7 @@ export default class ThumnbnailImage extends Component {
     componentDidMount() {
         if (this.props.fileId) {
             console.log(this.props.fileId)
-            API.getBluePrintThumbnail(global.storage.projectId, global.storage.projectIdVersionId, this.props.fileId)
+            API.getBluePrintThumbnail(storage.loadProject(), global.storage.projectIdVersionId, this.props.fileId)
                 .then(responseData => {
                     console.log('getBluePrintThumbnail ')
                     console.log(responseData)

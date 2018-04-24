@@ -27,9 +27,9 @@ class QualityListView extends PureComponent {
     _keyExtractor = (item, index) => index;
     //网络请求
     fetchData = (qcState) => {
-        if(this.props.page > 0) {
-            return;
-        }
+        // if(this.props.page > 0) {
+        //     return;
+        // }
         this._fetchData(qcState, 0);
     }
     //网络请求
@@ -41,6 +41,11 @@ class QualityListView extends PureComponent {
         if(this.props.loadData === true) {
             this.fetchData(this.props.qcState);
         }
+    }
+
+    componentWillReceiveProps= (nextProps) =>{
+        nextProps
+        return true;
     }
 
     //加载等待的view
@@ -63,17 +68,25 @@ class QualityListView extends PureComponent {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <Text>
-                    Fail: {error}
-                </Text>
+                <Text>Fail:</Text>
             </View>
         );
     }
-
+    onCellAction = (item, index, type) => {
+        if(type == 'delete') {
+            this.props.deleteData(this.props.qcState,item.value.id, item.value.inspectionType)
+            return;
+        }
+        if(type == 'submit') {
+            this.props.submitData(this.props.qcState,item.value.id, item.value.inspectionType)
+            return;
+        }
+        
+    }
     //返回itemView
     renderItemView = ({ item, index }) => {
         return (
-            <QualityListCell item={item} index={index} />
+            <QualityListCell onCellAction={this.onCellAction} item={item} index={index} />
         );
     }
    
@@ -183,7 +196,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-    return {qualityList:state.qualityList}
+    return {...state}
   }
 
   function mapDispatchToProps(dispatch) {
@@ -198,6 +211,16 @@ function mapStateToProps(state) {
             dispatch(actions.reset(qcState))
           }
         },
+        deleteData: (qcState, inspectId, inspectionType) =>{
+            if(dispatch) {
+              dispatch(actions.deleteData(qcState, inspectId, inspectionType))
+            }
+          },
+          submitData: (qcState, inspectId, inspectionType) =>{
+            if(dispatch) {
+              dispatch(actions.submitData(qcState, inspectId, inspectionType))
+            }
+          },
       }
   }
 
@@ -209,7 +232,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         page:stateProps.qualityList.datas[ownProps.qcState].page,
         isLoading: stateProps.qualityList.datas[ownProps.qcState].isLoading,
         error:stateProps.qualityList.datas[ownProps.qcState].error,
-        hasMore:stateProps.qualityList.datas[ownProps.qcState].hasMore
+        hasMore:stateProps.qualityList.datas[ownProps.qcState].hasMore,
+        updateIndex:stateProps.updateData.updateIndex
     })
   }
   

@@ -8,7 +8,7 @@ import * as API from "app-api";
 import { StatusActionButton } from "app-components"
 var { width, height } = Dimensions.get("window");
 
-import { AuthorityManager } from "app-entry";
+import { BimFileEntry, AuthorityManager } from "app-entry";
 
 const projectImage = require("app-images/icon_choose_project_item.png");
 const projectTimeImage = require("app-images/icon_time_black.png");
@@ -27,27 +27,28 @@ export default class QualityListCell extends PureComponent {
     }
 
     // 提交
-    _onSubmitAction = (itemData, index) => {
-
+    _onSubmitAction = (item, index) => {
+        // BimFileEntry.showNewReviewPage(null,item.value.qualityCheckListId,API.CREATE_TYPE_REVIEW); 
+        this.props.onCellAction(item,index,'submit');
     }
     // 删除
-    _onDeleteAction = (itemData, index) => {
-
+    _onDeleteAction = (item, index) => {
+        this.props.onCellAction(item,index,'delete');
     }
     // 检查
-    _onInspectAction = (itemData, index) => {
+    _onInspectAction = (item, index) => {
 
     }
     // 复查
-    _onReviewAction = (itemData, index) => {
-
+    _onReviewAction = (item, index) => {
+        BimFileEntry.showNewReviewPage(null,item.value.qualityCheckListId,API.CREATE_TYPE_REVIEW);
     }
     // 整改
-    _onRectifyAction = (itemData, index) => {
-
+    _onRectifyAction = (item, index) => {
+        BimFileEntry.showNewReviewPage(null,item.value.qualityCheckListId,API.CREATE_TYPE_RECTIFY);
     }
     // 验收
-    _onAcceptAction = (itemData, index) => {
+    _onAcceptAction = (item, index) => {
 
     }
 
@@ -115,11 +116,10 @@ export default class QualityListCell extends PureComponent {
     // 整改
     renderRectifyAction = (item, index) => {
         if (AuthorityManager.isCreateRectify() && AuthorityManager.isMe(item.value.responsibleUserId)) {
-            let billType = API.BILL_TYPE_ITEM_RECTIFY;
             return (
                 <View style={[styles.contentActionView]}>
-                    <StatusActionButton color={API.toBillTypeColor(billType)} width={80} marginRight={20}
-                        onClick={() => { this._onRectifyAction(item, index) }} text={billType} />
+                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)} width={80} marginRight={20}
+                        onClick={() => { this._onRectifyAction(item, index) }} text={API.TYPE_NEW_NAME_RECTIFY} />
                 </View>
             )
         }
@@ -128,11 +128,10 @@ export default class QualityListCell extends PureComponent {
     // 复查
     renderReviewAction = (item, index) => {
         if (AuthorityManager.isCreateReview() && AuthorityManager.isMe(item.value.creatorId)) {
-            let billType = API.BILL_TYPE_ITEM_REVIEW;
             return (
                 <View style={[styles.contentActionView]}>
-                    <StatusActionButton color={API.toBillTypeColor(billType)} width={80} marginRight={20}
-                        onClick={() => { this._onReviewAction(item, index) }} text={billType} />
+                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)} width={80} marginRight={20}
+                        onClick={() => { this._onReviewAction(item, index) }} text={API.TYPE_NEW_NAME_REVIEW} />
                 </View>
             )
         }
