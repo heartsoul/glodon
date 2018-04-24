@@ -15,7 +15,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false,
-                detailInfo: action.detailInfo,
+                qualityInfo: action.qualityInfo,
             }
         case types.REVIEW_REPAIR_LOAD_REVIEWiNFO:
             return {

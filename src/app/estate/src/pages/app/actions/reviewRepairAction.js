@@ -4,7 +4,7 @@ import * as types from "./../constants/reviewRepairTypes";
 /**
  * 获取质检单详情
  */
-export function getInspectionDetail(fieldId) {
+export function getQualityInfo(fieldId) {
     return dispatch => {
         API.getQualityInspectionDetail(storage.loadProject(), fieldId).then((responseData) => {
             dispatch(_loadDetailSuccess(responseData.data));
@@ -30,7 +30,7 @@ export function getReviewInfo(fieldId) {
 export function _loadDetailSuccess(data) {
     return {
         type: types.REVIEW_REPAIR_LOAD_DETAIL,
-        detailInfo: data,
+        qualityInfo: data,
     }
 }
 

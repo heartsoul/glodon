@@ -19,6 +19,8 @@ import { DatePicker, List } from 'antd-mobile';
 import WideButton from "./../../components/WideButton";
 import * as API from "app-api";
 import * as reviewRepairAction from "./../../actions/reviewRepairAction";
+import QualityDetailView from "./QualityDetailView";
+
 
 class NewReviewPage extends Component {
 
@@ -51,6 +53,8 @@ class NewReviewPage extends Component {
     }
 
     componentDidMount() {
+        const {item} = this.props.navigation.state.params;
+        const { getQualityInfo, getReviewInfo } = this.props;
 
     }
 
@@ -134,9 +138,7 @@ class NewReviewPage extends Component {
                 />
 
                 <View style={this.state.expand ? {} : { display: "none" }}>
-                    <Text>{` 检查单详情\nstart
-                    
-                    end`}</Text>
+                    <QualityDetailView qualityInfo={this.props.qualityInfo} />
                 </View>
 
                 <WideButton text="保存" onClick={() => { alert(11) }} style={{ marginTop: 30 }} />
@@ -147,18 +149,18 @@ class NewReviewPage extends Component {
     }
 }
 
-{/* <QualityDetailView qualityInfo={qualityInfo}/> */ }
+
 
 export default connect(
     state => ({
-        detailInfo: state.reviewRepair.detailInfo,
+        qualityInfo: state.reviewRepair.qualityInfo,
         reviewInfo: state.reviewRepair.reviewInfo,
         error: state.reviewRepair.error
     }),
     dispatch => ({
         getInspectionDetail: (fileId) => {
             if (dispatch) {
-                dispatch(reviewRepairAction.getInspectionDetail(fileId))
+                dispatch(reviewRepairAction.getQualityInfo(fileId))
             }
         },
         getReviewInfo: (fileId) => {
