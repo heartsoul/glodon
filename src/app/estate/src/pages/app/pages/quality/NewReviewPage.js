@@ -10,6 +10,7 @@ import {
     StatusBar,
     Switch,
     ScrollView,
+    Dimensions,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -17,12 +18,15 @@ import { ListRow } from 'app-3rd/teaset';
 import { DatePicker, List } from 'antd-mobile';
 
 import WideButton from "./../../components/WideButton";
+import { ImageChooserView } from 'app-components';
 import * as API from "app-api";
 import * as reviewRepairAction from "./../../actions/reviewRepairAction";
 import QualityDetailView from "./QualityDetailView";
 
+const REF_PHOTO = 'gldPhoto';
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
+var { width, height } = Dimensions.get("window");
 
 /**
  * 新建复查单整改单
@@ -48,6 +52,12 @@ class NewReviewPage extends Component {
     });
 
     constructor(props) {
+        let filesIn = [];
+        if (props.params) {
+            if (props.params.files) {
+                filesIn = props.params.files;
+            }
+        }
         super(props);
         let params = this.props.navigation.state.params;
         let showRectificationView = (params && params.createType === API.CREATE_TYPE_REVIEW);
@@ -59,6 +69,7 @@ class NewReviewPage extends Component {
             switchValue: null,
             isSetEditInfo: false,
             showRectificationView: showRectificationView,//是否显示复查合格
+            files: filesIn, //附件图片
         };
         this.props.navigation.setParams({ leftNavigatePress: this.goBack, rightNavigatePress: this.submit })
     }
@@ -66,9 +77,6 @@ class NewReviewPage extends Component {
     componentDidMount() {
         // storage.pushNext(navigator, "NewReviewPage",{qualityCheckListId:qualityCheckListId,createType:createType});
         let params = this.props.navigation.state.params;
-        console.log('====================================');
-        console.log(params);
-        console.log('====================================');
         const { fetchData } = this.props;
         fetchData(params.qualityCheckListId, params.createType);
     }
@@ -102,6 +110,7 @@ class NewReviewPage extends Component {
             lastRectificationDate: date,
             isSetEditInfo: true,
             switchValue: switchValue,
+            files: editInfo.files,
         });
     }
 
@@ -130,6 +139,7 @@ class NewReviewPage extends Component {
             this.props.qualityInfo,
             this.props.editInfo,
             params.createType,
+            this.refs[REF_PHOTO],
         );
     }
 
@@ -145,6 +155,7 @@ class NewReviewPage extends Component {
             this.props.editInfo,
             params.createType,
             this.props.navigation,
+            this.refs[REF_PHOTO],
         );
     }
 
@@ -210,7 +221,9 @@ class NewReviewPage extends Component {
                     onChangeText={(text) => { this.setState({ description: text }) }}
                     value={(typeof this.state.description === 'string') ? (this.state.description) : ('')}
                 />
-               
+
+                <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" onChange={() => alert('收到!')} />
+
                 {
                     this.state.showRectificationView ? (
                         <View style={styles.container}>
@@ -261,13 +274,13 @@ export default connect(
                 dispatch(reviewRepairAction.fetchData(fileId, type))
             }
         },
-        saveRepairReview: (inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type) => {
+        saveRepairReview: (inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, imageChooserEle) => {
             if (dispatch) {
-                dispatch(reviewRepairAction.save(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type))
+                dispatch(reviewRepairAction.save(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, imageChooserEle))
             }
         },
-        submit: (inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, navigator) => {
-            dispatch(reviewRepairAction.submit(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, navigator))
+        submit: (inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, navigator, imageChooserEle) => {
+            dispatch(reviewRepairAction.submit(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, navigator, imageChooserEle))
         },
         deleteForm: (fileId, type, navigator) => {
             if (dispatch) {

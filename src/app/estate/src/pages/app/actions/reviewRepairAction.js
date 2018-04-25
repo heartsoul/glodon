@@ -13,6 +13,11 @@ export function fetchData(fieldId, type) {
     }
 }
 
+function loadingToast() {
+    Toast.loading('加载中...', 0, null, true);
+}
+
+
 /**
  * 获取质检单详情
  */
@@ -44,6 +49,24 @@ function getRepairInfo(fieldId, dispatch) {
         dispatch(_loadError(err))
     });
 }
+
+/**
+ * 上传图片
+ * @param {*} imageChooserEle 图片组件
+ * @param {*} uploadCallback 
+ */
+function uploadFile(imageChooserEle, uploadCallback) {
+    imageChooserEle._loadFile((files) => {
+        if (files && files.length > 0) {
+            API.upLoadFiles(files, (code, result) => {
+                uploadCallback(result);
+            });
+        } else {
+            uploadCallback();
+        }
+    });
+}
+
 
 /**
  * 复查单的参数
@@ -167,12 +190,12 @@ function checkRepairMustInfo(params) {
  * @param {*} editInfo 
  * @param {*} type 
  */
-export function submit(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, navigator) {
+export function submit(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, navigator, imageChooserEle) {
     return dispatch => {
         if (type === API.CREATE_TYPE_REVIEW) {//新建复查单
-            submitReview(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, dispatch, navigator);
+            submitReview(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, dispatch, navigator, imageChooserEle);
         } else if (type === API.CREATE_TYPE_RECTIFY) {//新建整改单
-            submitRepair(inspectionId, description, qualityInfo, editInfo, dispatch, navigator);
+            submitRepair(inspectionId, description, qualityInfo, editInfo, dispatch, navigator, imageChooserEle);
         }
     }
 }
@@ -188,25 +211,34 @@ export function submit(inspectionId, description, status, lastRectificationDate,
  * @param {*} dispatch 
  * @param {*} navigator 
  */
-function submitReview(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, dispatch, navigator) {
+function submitReview(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, dispatch, navigator, imageChooserEle) {
     let reviewId = editInfo.id;
     let params = assembleReviewParams(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo);
     let mustInfo = checkReviewMustInfo(params);
 
     if (mustInfo.checked) {
-        let props = JSON.stringify(params);
+        loadingToast();
+        uploadFile(imageChooserEle, (files) => {
+            if (files) {
+                params.files = files;
+            }
+            let props = JSON.stringify(params);
+            if (!reviewId) {//新建提交
+                API.createSubmitReview(storage.loadProject(), props).then(responseData => {
+                    //pop页面
+                    storage.goBack(navigator, null)
+                    Toast.hide();
+                })
+            } else {//编辑提交
+                API.editSubmitReview(storage.loadProject(), reviewId, props).then(responseData => {
+                    //pop页面
+                    storage.goBack(navigator, null)
+                    Toast.hide();
+                })
+            }
 
-        if (!reviewId) {//新建提交
-            API.createSubmitReview(storage.loadProject(), props).then(responseData => {
-                //pop页面
-                storage.goBack(navigator, null)
-            })
-        } else {//编辑提交
-            API.editSubmitReview(storage.loadProject(), reviewId, props).then(responseData => {
-                //pop页面
-                storage.goBack(navigator, null)
-            })
-        }
+        });
+
 
     } else {
         //显示提示
@@ -223,25 +255,33 @@ function submitReview(inspectionId, description, status, lastRectificationDate, 
  * @param {*} dispatch 
  * @param {*} navigator 
  */
-function submitRepair(inspectionId, description, qualityInfo, editInfo, dispatch, navigator) {
+function submitRepair(inspectionId, description, qualityInfo, editInfo, dispatch, navigator, imageChooserEle) {
     let reviewId = editInfo.id;
     let params = assembleRepairParams(inspectionId, description, qualityInfo, editInfo);
     let mustInfo = checkRepairMustInfo(params);
 
     if (mustInfo.checked) {
-        let props = JSON.stringify(params);
+        loadingToast();
+        uploadFile(imageChooserEle, (files) => {
+            if (files) {
+                params.files = files;
+            }
+            let props = JSON.stringify(params);
+            if (!reviewId) {//新建提交
+                API.createSubmitRepair(storage.loadProject(), props).then(responseData => {
+                    //pop页面
+                    storage.goBack(navigator, null);
+                    Toast.hide();
+                })
+            } else {//编辑提交
+                API.editSubmitRepair(storage.loadProject(), reviewId, props).then(responseData => {
+                    //pop页面
+                    storage.goBack(navigator, null);
+                    Toast.hide();
+                })
+            }
+        });
 
-        if (!reviewId) {//新建提交
-            API.createSubmitRepair(storage.loadProject(), props).then(responseData => {
-                //pop页面
-                storage.goBack(navigator, null)
-            })
-        } else {//编辑提交
-            API.editSubmitRepair(storage.loadProject(), reviewId, props).then(responseData => {
-                //pop页面
-                storage.goBack(navigator, null)
-            })
-        }
 
     } else {
         //显示提示
@@ -259,12 +299,12 @@ function submitRepair(inspectionId, description, qualityInfo, editInfo, dispatch
  * @param {*} editInfo 
  * @param {*} type 
  */
-export function save(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type) {
+export function save(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, imageChooserEle) {
     return dispatch => {
         if (type === API.CREATE_TYPE_REVIEW) {//新建复查单
-            saveReview(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, dispatch);
+            saveReview(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, dispatch, imageChooserEle);
         } else if (type === API.CREATE_TYPE_RECTIFY) {//新建整改单
-            saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch);
+            saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, imageChooserEle);
         }
     }
 }
@@ -278,39 +318,48 @@ export function save(inspectionId, description, status, lastRectificationDate, q
  * @param {*} editInfo 
  * @param {*} dispatch 
  */
-function saveReview(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, dispatch) {
+function saveReview(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, dispatch, imageChooserEle) {
     let reviewId = editInfo.id;
     let params = assembleReviewParams(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo);
     let mustInfo = checkReviewMustInfo(params);
     if (mustInfo.checked) {
-        let props = JSON.stringify(params);
-        if (!reviewId) {//新建保存
-            API.createSaveReview(storage.loadProject(), props).then(responseData => {
-                //"保存成功！"  { data: { id: 5200032, code: 'ZLFC_20180424_001' } }
-                let resetEditInfo = {
-                    id: responseData.data.id,
-                    code: responseData.data.code,
-                    description: description,
-                    lastRectificationDate: lastRectificationDate,
-                    status: status,
-                }
-                dispatch(_loadEditInfoSuccess(resetEditInfo))
-                Toast.info("保存成功！", 1);
-            })
-        } else {//编辑保存
-            API.editSaveReview(storage.loadProject(), reviewId, props).then(responseData => {
-                let resetEditInfo = {
-                    id: editInfo.id,
-                    code: editInfo.code,
-                    description: description,
-                    lastRectificationDate: lastRectificationDate,
-                    status: status,
-                }
-                dispatch(_loadEditInfoSuccess(editInfo))
-                //"保存成功！" 
-                Toast.info("保存成功！", 1);
-            })
-        }
+        loadingToast();
+        uploadFile(imageChooserEle, (files) => {
+            if (files) {
+                params.files = files;
+            }
+            let props = JSON.stringify(params);
+            if (!reviewId) {//新建保存
+                API.createSaveReview(storage.loadProject(), props).then(responseData => {
+                    //"保存成功！"  { data: { id: 5200032, code: 'ZLFC_20180424_001' } }
+                    let resetEditInfo = {
+                        id: responseData.data.id,
+                        code: responseData.data.code,
+                        description: description,
+                        lastRectificationDate: lastRectificationDate,
+                        status: status,
+                    }
+                    dispatch(_loadEditInfoSuccess(resetEditInfo))
+                    Toast.hide();
+                    Toast.info("保存成功！", 1);
+                })
+            } else {//编辑保存
+                API.editSaveReview(storage.loadProject(), reviewId, props).then(responseData => {
+                    let resetEditInfo = {
+                        id: editInfo.id,
+                        code: editInfo.code,
+                        description: description,
+                        lastRectificationDate: lastRectificationDate,
+                        status: status,
+                    }
+                    dispatch(_loadEditInfoSuccess(editInfo))
+                    //"保存成功！" 
+                    Toast.hide();
+                    Toast.info("保存成功！", 1);
+                })
+            }
+        });
+
 
     } else {
         //显示提示窗
@@ -326,35 +375,44 @@ function saveReview(inspectionId, description, status, lastRectificationDate, qu
  * @param {*} editInfo 
  * @param {*} dispatch 
  */
-function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch) {
+function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, imageChooserEle) {
     let reviewId = editInfo.id;
     let params = assembleRepairParams(inspectionId, description, qualityInfo, editInfo);
     let mustInfo = checkRepairMustInfo(params);
     if (mustInfo.checked) {
-        let props = JSON.stringify(params);
-        if (!reviewId) {//新建保存
-            API.createSaveRepair(storage.loadProject(), props).then(responseData => {
-                //"保存成功！"  { data: { id: 5200032, code: 'ZLFC_20180424_001' } }
-                let resetEditInfo = {
-                    id: responseData.data.id,
-                    code: responseData.data.code,
-                    description: description,
-                }
-                dispatch(_loadEditInfoSuccess(resetEditInfo))
-                Toast.info("保存成功！", 1);
-            })
-        } else {//编辑保存
-            API.editSaveRepair(storage.loadProject(), reviewId, props).then(responseData => {
-                let resetEditInfo = {
-                    id: editInfo.id,
-                    code: editInfo.code,
-                    description: description,
-                }
-                dispatch(_loadEditInfoSuccess(editInfo))
-                //"保存成功！" 
-                Toast.info("保存成功！", 1);
-            })
-        }
+        loadingToast();
+        uploadFile(imageChooserEle, (files) => {
+            if (files) {
+                params.files = files;
+            }
+            let props = JSON.stringify(params);
+            if (!reviewId) {//新建保存
+                API.createSaveRepair(storage.loadProject(), props).then(responseData => {
+                    //"保存成功！"  { data: { id: 5200032, code: 'ZLFC_20180424_001' } }
+                    let resetEditInfo = {
+                        id: responseData.data.id,
+                        code: responseData.data.code,
+                        description: description,
+                    }
+                    dispatch(_loadEditInfoSuccess(resetEditInfo))
+                    Toast.hide();
+                    Toast.info("保存成功！", 1);
+                })
+            } else {//编辑保存
+                API.editSaveRepair(storage.loadProject(), reviewId, props).then(responseData => {
+                    let resetEditInfo = {
+                        id: editInfo.id,
+                        code: editInfo.code,
+                        description: description,
+                    }
+                    dispatch(_loadEditInfoSuccess(editInfo))
+                    Toast.hide();
+                    //"保存成功！" 
+                    Toast.info("保存成功！", 1);
+                })
+            }
+
+        });
 
     } else {
         //显示提示窗

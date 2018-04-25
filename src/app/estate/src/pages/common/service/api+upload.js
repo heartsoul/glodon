@@ -1,5 +1,7 @@
 
-import { requestJSON,BASE_UPLOAD_URL } from "common-module"
+import { requestJSON, BASE_UPLOAD_URL } from "common-module"
+import * as AppConfig from "common-module";
+
 var count = 0;//请求成功的数量
 var len = 0;//上传文件的数量
 /**
@@ -23,13 +25,13 @@ var resultArray = [];
  * @param {[{path:"file:///storage/emulated/0/icon.png",name:"icon.png",length:988}]} fileData 文件数组
  * @param {(code:"success||fail",response)=>{}} callback 回调函数中code为success或者fail，response是错误信息，或者上传成功的数据 resultArray
  */
-export async function upLoadFiles(fileData,callback) {
+export async function upLoadFiles(fileData, callback) {
     count = 0;
     len = fileData.length
     result = [];
-    fileData.map((file)=>{
+    fileData.map((file) => {
         let path = "file://" + file.path;
-        getOperationCode(path,file.name,file.length,callback);   
+        getOperationCode(path, file.name, file.length, callback);
     });
 }
 
@@ -40,14 +42,14 @@ export async function upLoadFiles(fileData,callback) {
  * @param {*} length 文件大小
  * @param {*} callback 回调
  */
-async function getOperationCode(filePath,name,length,callback) {
+async function getOperationCode(filePath, name, length, callback) {
 
     let api = "/bimpm/attachment/operationCode";
-    let timestamp =new Date().getTime();
-    let filter = "?containerId="+timestamp+"&name="+name+"&digest="+name+"&length="+length;
+    let timestamp = new Date().getTime();
+    let filter = "?containerId=" + timestamp + "&name=" + name + "&digest=" + name + "&length=" + length;
 
     let ops = {
-        method:'POST', 
+        method: 'POST',
         headers: {
             "Content-Type": "application/json;charset=utf-8",
             "X-Requested-With": "XMLHttpRequest",
@@ -55,19 +57,19 @@ async function getOperationCode(filePath,name,length,callback) {
         credentials: 'include', // 带上cookie
     };
 
-    if(storage.isLogin()) {
-        ops.headers.Authorization = "Bearer "+storage.getLoginToken();
+    if (storage.isLogin()) {
+        ops.headers.Authorization = "Bearer " + storage.getLoginToken();
     }
-    
-    return fetch(AppConfig.BASE_URL + api+ filter, ...ops)
-        .then((response) => response.text() )  
-        .then((responseData)=>{
-            upLoad(filePath,name,responseData,callback);
-        })  
-        .catch((error)=>{
+
+    return fetch(AppConfig.BASE_URL + api + filter, ...ops)
+        .then((response) => response.text())
+        .then((responseData) => {
+            upLoad(filePath, name, responseData, callback);
+        })
+        .catch((error) => {
             alert(error)
-            callback("fail",error)
-        });  
+            callback("fail", error)
+        });
 }
 
 /**
@@ -77,12 +79,12 @@ async function getOperationCode(filePath,name,length,callback) {
  * @param {*} operationCode 操作码 
  * @param {*} callback 回调
  */
-async function upLoad(filePath,name,operationCode,callback) {
+async function upLoad(filePath, name, operationCode, callback) {
 
-    let api =  "/v1/insecure/objects?operationCode="+operationCode;
-    let formData = new FormData();     
-    let file = {uri: filePath, type: 'application/octet-stream', name: name};
-    formData.append("uploaded_file",file);   //这里的uploaded_file就是后台需',要的key  
+    let api = "/v1/insecure/objects?operationCode=" + operationCode;
+    let formData = new FormData();
+    let file = { uri: filePath, type: 'application/octet-stream', name: name };
+    formData.append("uploaded_file", file);   //这里的uploaded_file就是后台需',要的key  
     let ops = {
         method: 'POST',
         headers: {
@@ -92,37 +94,42 @@ async function upLoad(filePath,name,operationCode,callback) {
     };
 
     return fetch(BASE_UPLOAD_URL + api, ops)
-        .then((response) => response.json() )  
-        .then((data)=>{
+        .then((response) => response.json())
+        .then((data) => {
             //处理上传成功的数据
-            if(data && data.message && "success" == data.message ){
+            if (data && data.message && "success" == data.message) {
                 count++;
-                let res = parseUploadData(data);
-                resultArray.push(res);
-            }else{
+                let res = parseUploadData(data.data);
+                if (res && res.name) {
+                    resultArray.push(res);
+                }
+            } else {
                 callback("fail", data);
             }
 
-            if(count == len){
+            if (count == len) {
                 callback("success", resultArray);
-            }  
-        })  
-        .catch((error)=>{
+            }
+        })
+        .catch((error) => {
             callback("fail", error);
-        });  
+        });
 }
 /**
  * 处理返回成功的数据
  * @param {*} data response
  */
-function parseUploadData(data){
+function parseUploadData(data) {
+    if (!data) {
+        return null;
+    }
     let res = {
-        name : data.name,
-        objectId : data.id,
-        extension : data.extension,
-        digest : data.digest,
-        length : data.length,
-        uploadTime : data.createTime,
+        name: data.name,
+        objectId: data.id,
+        extension: data.extension,
+        digest: data.digest,
+        length: data.length,
+        uploadTime: data.createTime,
     }
     return res;
 }
