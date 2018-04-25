@@ -13,7 +13,7 @@ export default (state = initialState, action) => {
                 ...state,
                 updateIndex:action.updateIndex,
             }
-        case types.UPDATE_DATE_UPDATE:
+        case types.UPDATE_DATA_UPDATE:
             return {
                 ...state,
                 updateIndex:state.updateIndex+1,

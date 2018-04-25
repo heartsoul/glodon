@@ -1,6 +1,7 @@
 import * as API from 'app-api';
 import * as types from "./../constants/reviewRepairTypes";
 import { Modal, Toast } from 'antd-mobile';
+import * as UpdateDataAction from "./updateDataAction";
 
 export function fetchData(fieldId, type) {
     return dispatch => {
@@ -142,6 +143,11 @@ function checkReviewMustInfo(params) {
     let isDescriptionEmpty = (!params.description || params.description.length == 0);
     let isDateEmpty = (!params.lastRectificationDate || params.lastRectificationDate.length == 0);
     let isDateDisable = false;
+    if (!isDateEmpty) {
+        var timeStamp = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+        isDateDisable = (timeStamp > params.lastRectificationDate);
+    }
+
     let msg = "";
     let checked = true;//是否合格
     if (params.status === API.STATUS_CLOSED) {
@@ -226,12 +232,14 @@ function submitReview(inspectionId, description, status, lastRectificationDate, 
             if (!reviewId) {//新建提交
                 API.createSubmitReview(storage.loadProject(), props).then(responseData => {
                     //pop页面
+                    dispatch(UpdateDataAction.updateData());
                     storage.goBack(navigator, null)
                     Toast.hide();
                 })
             } else {//编辑提交
                 API.editSubmitReview(storage.loadProject(), reviewId, props).then(responseData => {
                     //pop页面
+                    dispatch(UpdateDataAction.updateData());
                     storage.goBack(navigator, null)
                     Toast.hide();
                 })
@@ -270,12 +278,14 @@ function submitRepair(inspectionId, description, qualityInfo, editInfo, dispatch
             if (!reviewId) {//新建提交
                 API.createSubmitRepair(storage.loadProject(), props).then(responseData => {
                     //pop页面
+                    dispatch(UpdateDataAction.updateData())
                     storage.goBack(navigator, null);
                     Toast.hide();
                 })
             } else {//编辑提交
                 API.editSubmitRepair(storage.loadProject(), reviewId, props).then(responseData => {
                     //pop页面
+                    dispatch(UpdateDataAction.updateData())
                     storage.goBack(navigator, null);
                     Toast.hide();
                 })
