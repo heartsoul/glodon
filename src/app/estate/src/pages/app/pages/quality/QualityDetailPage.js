@@ -35,13 +35,14 @@ class QualityDetailPage extends Component {
         }
         this.props.navigation.setParams({loadTitle:this.loadTitle, loadRightTitle:this.loadRightTitle}) 
     }
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     if (nextProps.error || nextProps.isLoading) {
-    //       return true;
-    //     }
-      
-    //     return true
-    // }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.updateIndex != this.props.updateIndex){
+            const {fetchData} = this.props;
+            const {item} = this.props.navigation.state.params;
+            fetchData(item.value.id);
+        }
+    }
 
     newUnreviewed = (qualityCheckListId) => {
         BimFileEntry.showNewReviewPage(this.props.navigation,qualityCheckListId,API.CREATE_TYPE_REVIEW);
@@ -150,7 +151,8 @@ export default connect(
         qualityInfo: state.qualityInfo.data,
         isLoading: state.qualityInfo.isLoading,
         item:state.qualityInfo.item,
-        error:state.qualityInfo.error
+        error:state.qualityInfo.error,
+        updateIndex: state.updateData.updateIndex,
     }),
     dispatch => ({
       fetchData: (fileId) =>{
