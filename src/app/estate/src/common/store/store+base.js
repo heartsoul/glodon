@@ -231,6 +231,7 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
+        this.logout();
         let resetAction = NavigationActions.reset({
             index: 0,
             actions: [
