@@ -86,15 +86,12 @@ export default class QualityInfoCellItem extends React.Component {
     }
     renderImage = () => {
         const { url } = this.props;
-        console.log(url);
         return (
             <View style={styles.containerView} >
                 <TouchableOpacity activeOpacity={0.5} onPress={(event) => {
                     this.bigImage([url], 0);
                 }}>
-                    <Image source={{ uri: url }} onLayout={(data) => {
-                        console.log(data);
-                    }} style={styles.imageMax} />
+                    <Image source={{ uri: url }} style={styles.imageMax} />
                 </TouchableOpacity>
             </View>
         );
