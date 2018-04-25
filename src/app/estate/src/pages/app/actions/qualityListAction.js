@@ -5,11 +5,11 @@ import * as types from '../constants/qualityListTypes'
 // 删除草稿
 export function deleteData(qcState, inspectId, inspectionType) {
   return dispatch => {
-    API.createDeleteInspection(storage.loadProject(), inspectId, inspectionType)
+    API.createDeleteInspection(storage.loadProject(), inspectionType, inspectId)
       .then(data => {
         __fetchData(qcState, 0, new Map(), dispatch)
       }).catch(error => {
-        dispatch(_loadError(error, qcState, page));
+        dispatch(_loadError(error, qcState, 0));
       });
   }
 }

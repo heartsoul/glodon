@@ -4,8 +4,9 @@ import {
     Animated, StyleSheet, Text, View, Image,
     Button, TouchableOpacity, Dimensions
 } from "react-native";
+
 import * as API from "app-api";
-import { StatusActionButton } from "app-components"
+import { StatusActionButton, ActionModal } from "app-components"
 var { width, height } = Dimensions.get("window");
 
 import { BimFileEntry, AuthorityManager } from "app-entry";
@@ -33,7 +34,9 @@ export default class QualityListCell extends PureComponent {
     }
     // 删除
     _onDeleteAction = (item, index) => {
-        this.props.onCellAction(item,index,'delete');
+        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消'}, { text: '删除', onPress:()=>{
+            this.props.onCellAction(item,index,'delete');
+        } });
     }
     // 检查
     _onInspectAction = (item, index) => {

@@ -18,6 +18,7 @@ import {
     Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
+import {ActionModal} from 'app-components'
 import { Modal, Toast } from 'antd-mobile';
 import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'app-3rd/teaset';
 import { ImageChooserView } from 'app-components';
@@ -94,7 +95,7 @@ class NewPage extends React.Component {
     }
     //返回
     goBack = (navigation) => {
-        Modal.alert('是否确认退出当前页面？', "您还未保存当前数据！", [
+        ActionModal.alert('是否确认退出当前页面？', "您还未保存当前数据！", [
             {
                 text: '取消', style: { color: '#5b5b5b' }
             },

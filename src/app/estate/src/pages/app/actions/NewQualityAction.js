@@ -1,7 +1,8 @@
 'use strict'
 
-import { Modal, Toast } from 'antd-mobile';
+import { Toast } from 'antd-mobile';
 import * as API from "app-api";
+import {ActionModal} from 'app-components'
 
 /**
  * request data
@@ -121,7 +122,7 @@ function checkMustInfo(params, callback) {
     if (params.needRectification) {
         let nowTimeStamp = Date.now();
         if (nowTimeStamp > params.lastRectificationDate) {
-            Modal.alert('提示信息', "整改期限不能早于当前日期！", [{ text: '知道了', style: { color: '#00baf3' } }]);
+            ActionModal.alert('提示信息', "整改期限不能早于当前日期！", [{ text: '知道了', style: { color: '#00baf3' } }]);
             return false;
         }
     }
@@ -150,7 +151,7 @@ function showCheckInfoModal(info) {
     }
 
     msg = `${msg}!`
-    Modal.alert('提示信息', msg, [{ text: '知道了', style: { color: '#00baf3' } }]);
+    ActionModal.alertTip('提示信息', msg, { text: '知道了', style: { color: '#00baf3' } });
 }
 
 function loadingToast() {
@@ -293,7 +294,7 @@ function editSaveInspection(params) {
  * 删除草稿
  */
 export function deleteInspection(inspectId, inspectionType, navigator) {
-    API.createDeleteInspection(storage.loadProject(), inspectId, inspectionType)
+    API.createDeleteInspection(storage.loadProject(), inspectionType, inspectId)
         .then(data => {
             storage.goBack(navigator, null);
         })

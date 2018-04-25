@@ -422,7 +422,7 @@ export default class extends React.Component {
     }
   
     _showCheckInfoModal = (message) => {
-      Modal.alert('提示信息', message,[ {text:'知道了',style:{color:'#00baf3'}}]);
+      ActionModal.alertTip('提示信息', message,{text:'知道了',style:{color:'#00baf3'}});
     }
     //选择图纸模型
    _bimFileChooser = (dataType)=> {
