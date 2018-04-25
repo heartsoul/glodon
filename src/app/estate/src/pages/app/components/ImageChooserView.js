@@ -8,17 +8,14 @@ const REF_PHOTO = 'gldPhoto';
 var PM = NativeModules.GLDPhotoManager;
 export default class ImageChooserView extends React.Component {
     _onChange = (event) => {
+        
+        PM.loadFile({"handleId":this.getViewHandle()},this._onLoadFile);
+
         if (!this.props.onChange) {
             return;
         }
-        // console.log(GLDPhoto);
-        // console.log(NativeModules.GLDPhotoManager);
-       // NativeModules.GLDPhotoManager.loadFile();
-        // process raw event...
-       // this.props.onChange(event.nativeEvent);
-       PM.loadFile(
-        this.getViewHandle(),[],this._onLoadFile
-        );
+        this.props.onChange();
+        
     }
     _onLoadFile = (files) =>{
          console.log(files);
@@ -28,7 +25,7 @@ export default class ImageChooserView extends React.Component {
      * @param {*} _onLoadFile 拿到文件信息后的回调方法
      */
     _loadFile(_onLoadFile){
-        PM.loadFile({handleId:this.getViewHandle()},(param)=>{
+        PM.loadFile({"handleId":this.getViewHandle()},(param)=>{
             _onLoadFile(param)
         });
     }

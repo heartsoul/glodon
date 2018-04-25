@@ -41,7 +41,7 @@ RCT_CUSTOM_VIEW_PROPERTY(files, NSArray, RNTImagesView)
   NSDictionary * dic = [RCTConvert toFiles:json];
   view.selectedPhotos = [dic objectForKey:@"selectedPhotos"];
   view.selectedAssets = [dic objectForKey:@"selectedAssets"];
-  
+  [view.collectionView reloadData];
 }
 // 组件构建
 - (UIView *)view
@@ -63,7 +63,24 @@ RCT_CUSTOM_VIEW_PROPERTY(files, NSArray, RNTImagesView)
   return quoteImagesView;
 }
 
-RCT_EXPORT_METHOD (loadFile:(nonnull NSNumber *)reactTag callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD (loadFileByReactTag:(nonnull NSNumber *)reactTag callback:(RCTResponseSenderBlock)callback) {
+  RNTImagesView *view = (RNTImagesView*)[self.bridge.uiManager viewForReactTag:reactTag];
+  if (![view isKindOfClass:[RNTImagesView class]]) {
+    RCTLogError(@"Invalid view returned from registry, expecting RCTWebView, got: %@", view);
+  } else {
+    [view loadFiles:^(NSArray *files) {
+      callback(@[@{@"images":files}]);
+    }];
+    
+  }
+  return;
+}
+RCT_EXPORT_METHOD (loadFile:(nonnull NSDictionary *)params callback:(RCTResponseSenderBlock)callback) {
+  NSNumber * reactTag = [params objectForKey:@"handleId"];
+  if (!reactTag) {
+     callback(@[@{@"images":@[]}]);
+    return;
+  }
   RNTImagesView *view = (RNTImagesView*)[self.bridge.uiManager viewForReactTag:reactTag];
   if (![view isKindOfClass:[RNTImagesView class]]) {
     RCTLogError(@"Invalid view returned from registry, expecting RCTWebView, got: %@", view);
