@@ -120,8 +120,9 @@ function checkMustInfo(params, callback) {
     }
 
     if (params.needRectification) {
-        let nowTimeStamp = Date.now();
-        if (nowTimeStamp > params.lastRectificationDate) {
+        // let nowTimeStamp = Date.now();
+        var timeStamp = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+        if (timeStamp > params.lastRectificationDate) {
             ActionModal.alert('提示信息', "整改期限不能早于当前日期！", [{ text: '知道了', style: { color: '#00baf3' } }]);
             return false;
         }

@@ -18,7 +18,7 @@ import { ListRow } from 'app-3rd/teaset';
 import { DatePicker, List } from 'antd-mobile';
 
 import WideButton from "./../../components/WideButton";
-import { ImageChooserView } from 'app-components';
+import { ImageChooserView, ActionModal } from 'app-components';
 import * as API from "app-api";
 import * as reviewRepairAction from "./../../actions/reviewRepairAction";
 import QualityDetailView from "./QualityDetailView";
@@ -160,8 +160,10 @@ class NewReviewPage extends Component {
     }
 
     deleteForm = () => {
-        let params = this.props.navigation.state.params;
-        this.props.deleteForm(this.props.editInfo.id, params.createType, this.props.navigation);
+        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消'}, { text: '删除', onPress:()=>{
+            let params = this.props.navigation.state.params;
+            this.props.deleteForm(this.props.editInfo.id, params.createType, this.props.navigation);
+        } });
     }
 
     onChangeSwitch = (value) => {

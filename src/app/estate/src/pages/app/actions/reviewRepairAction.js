@@ -143,6 +143,11 @@ function checkReviewMustInfo(params) {
     let isDescriptionEmpty = (!params.description || params.description.length == 0);
     let isDateEmpty = (!params.lastRectificationDate || params.lastRectificationDate.length == 0);
     let isDateDisable = false;
+    if (!isDateEmpty) {
+        var timeStamp = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+        isDateDisable = (timeStamp > params.lastRectificationDate);
+    }
+
     let msg = "";
     let checked = true;//是否合格
     if (params.status === API.STATUS_CLOSED) {
