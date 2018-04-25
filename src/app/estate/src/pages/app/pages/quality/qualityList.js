@@ -63,7 +63,9 @@ export default class qualityList extends PureComponent {
                     })
                 // 获取数量数据
             }
-        );
+        ).catch(err=>{
+
+        });
     }
     componentDidMount = () => {
         //请求数据

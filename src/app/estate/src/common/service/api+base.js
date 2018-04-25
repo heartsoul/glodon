@@ -34,25 +34,25 @@ function parseHTML(response) {
 function checkStatus(response) {
     console.log(">>>返回数据："+JSON.stringify(response));
     if (response.status >= 200 && response.status < 300) {
-        // let headers = response.headers;
-        // console.log("checkStatus");
-        // headers.forEach(function(item, key, mapObj) {
-        //     console.log("headers:key" + key + ",value" + item.toString());
-        // });
         return response;
     } else if (response.status === 403) {
         alert('请联系管理员获取相应操作权限');
-        // return ;
+        const error = new Error("请联系管理员获取相应操作权限");
+        error.response = response;
+        throw error;
+        return response;
         // Message.error('请联系管理员获取相应操作权限');
     } else if (response.status === 401) {
         storage.gotoLogin();
-        // return ;
-        // Message.error('请联系管理员获取相应操作权限');
     }
     else if (response.status === 500) {
-        alert('数据获取失败');
+        alert('数据获取失败(code:500).');
         // return ;
         // Message.error('请联系管理员获取相应操作权限');
+        const error = new Error("数据获取失败");
+        error.response = response;
+        throw error;
+        return response;
     }
 
     const error = new Error(response.statusText);
@@ -95,15 +95,9 @@ export function requestJSON(url, options) {
     return fetch(BASE_URL + url, ops)
         .then(checkStatus)
         .then(parseJSON)
-        .then((data) => {
-            // if (data && data.code === 'FALSE') {
-            //   const msg = data.message || '操作失败';
-            // }
+        .then((data) => { 
             return { data };
         })
-        .catch(err => {
-            console.log(err)
-        });
 }
 
 /**
@@ -137,8 +131,12 @@ export function requestHTML(url, options) {
             // if (data && data.code === 'FALSE') {
             //   const msg = data.message || '操作失败';
             // }
-            console.log(data);
+            // console.log(data);
+            if (!data) {
+                const error = new Error('没有数据返回');
+                error.response = null;
+                throw error
+              }
             return data;
         })
-        .catch(err => ({ err }));
 }

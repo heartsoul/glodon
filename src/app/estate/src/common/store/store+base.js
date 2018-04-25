@@ -226,6 +226,7 @@ class GLDStorage extends BaseStorage {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
+            this.homeNavigation = null
         }
         if (!navigator) {
             return;
