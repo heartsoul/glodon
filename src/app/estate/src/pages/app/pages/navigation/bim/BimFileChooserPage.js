@@ -59,18 +59,15 @@ export default class BimFileChooser extends Component {
 
     fetchData = (page) => {
         if (this.state.projectId === 0 || this.state.latestVersion === '') {
-            storage.loadProject((projectId) => {
-                // 这个是js的访问网络的方法
-                MODELAPI.getModelLatestVersion(projectId).then((responseData) => {
-                    let latestVersion = responseData.data.data.versionId;
-                    global.storage.projectIdVersionId = latestVersion;
-                    console.log(responseData)
-                    this.setState({
-                        projectId: projectId,
-                        latestVersion: latestVersion,
-                    });
-                    this.fetchDataInner(page, projectId, latestVersion);
+
+            MODELAPI.getModelLatestVersion(storage.loadProject()).then((responseData) => {
+                let latestVersion = responseData.data.data.versionId;
+                global.storage.projectIdVersionId = latestVersion;
+                console.log(responseData)
+                this.setState({
+                    latestVersion: latestVersion,
                 });
+                this.fetchDataInner(page, projectId, latestVersion);
             });
         } else {
             this.fetchDataInner(page, this.state.projectId, this.state.latestVersion);
@@ -207,7 +204,7 @@ export default class BimFileChooser extends Component {
                 if (this.state.dataType === '图纸文件') {
                     BimFileEntry.showBlueprintFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.name);
                 } else {
-                    BimFileEntry.showModelFromChoose(navigator, this.state.pageType,item.value.fileId,item.value.buildingId,item.value.buildingName)
+                    BimFileEntry.showModelFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.buildingId, item.value.buildingName)
                 }
             });
 

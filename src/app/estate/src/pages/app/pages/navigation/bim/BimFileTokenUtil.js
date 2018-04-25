@@ -6,7 +6,7 @@ import * as API from 'app-api';
  * @param {*} callback 
  */
 function getLastetVersion(fileId, callback) {
-    API.getModelLatestVersion(storage.projectId).then((responseData) => {
+    API.getModelLatestVersion(storage.loadProject()).then((responseData) => {
         let latestVersion = responseData.data.data.versionId;
         storage.projectIdVersionId = latestVersion;
         getToken(fileId, callback);
