@@ -5,7 +5,7 @@ import GLDDrawerPaneView from "./GLDDrawerPaneView"
 
 export default class LeftBarButtons extends React.Component {
   _onBackPress = (navigation) => {
-    navigation.goBack();
+    storage.pop(navigation,1)
   }
 
   _onMenuPress = (navigation) => {
@@ -32,7 +32,7 @@ export default class LeftBarButtons extends React.Component {
 
 LeftBarButtons.propTypes = {
   currentItem: PropTypes.string.isRequired,
-  navigation:PropTypes.any.isRequired,
+  navigation:PropTypes.any,
   top:PropTypes.any,
 }
 const styles = StyleSheet.create({

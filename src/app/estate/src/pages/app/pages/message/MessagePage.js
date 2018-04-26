@@ -10,8 +10,6 @@ import {
 export default class extends React.Component {
   static navigationOptions = {
     title: '消息',
-    headerTintColor:"#FFF",
-    headerStyle:{backgroundColor:"#00baf3"},
   };
   
   constructor() {

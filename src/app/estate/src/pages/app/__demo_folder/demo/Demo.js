@@ -10,8 +10,6 @@ import DemoView from './DemoView';
 export default class extends React.Component {
   static navigationOptions = ({navigation, screenProps}) => ({
     title: 'Demo',
-    headerTintColor:"#FFF",
-    headerStyle:{backgroundColor:"#00baf3"},
   });
   constructor() {
       super();

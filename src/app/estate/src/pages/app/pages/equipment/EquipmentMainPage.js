@@ -42,10 +42,6 @@ class RightBarButtons extends React.Component {
 export default class extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
     title: '材设清单',
-    tabBarVisible: false,
-    headerTintColor: "#FFF",
-    headerStyle: { backgroundColor: "#00baf3" },
-    // gesturesEnabled:false,
     headerRight: (
       <RightBarButtons navigation={navigation} />
     ),

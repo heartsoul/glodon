@@ -28,9 +28,6 @@ var { width, height } = Dimensions.get("window");
 class LoginPage extends React.Component {
   static navigationOptions = {
     title: '用户登录',
-    tabBarVisible:false,
-    headerTintColor:"#FFF",
-    headerStyle:{backgroundColor:"#00baf3"},
     header:null,
 }
   constructor(props) {

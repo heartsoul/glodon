@@ -6,9 +6,6 @@ export default class BigImageViewPage extends Component {
        //1.隐藏导航头部
          header: null,
         title: '大图预览',
-        tabBarVisible: false,
-        headerTintColor: "#FFF",
-        headerStyle: { backgroundColor: "#00baf3" },
         gesturesEnabled: false,
     };
     _goBack = () => {

@@ -10,9 +10,6 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 export default class tenantList extends Component {
     static navigationOptions = {
         title: '租户列表',
-        tabBarVisible:false,
-        headerTintColor:"#FFF",
-        headerStyle:{backgroundColor:"#00baf3"},
     }
 
     constructor(props) {

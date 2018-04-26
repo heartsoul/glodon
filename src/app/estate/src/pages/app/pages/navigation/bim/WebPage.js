@@ -40,8 +40,6 @@ window.modelEvent = {\
 export default class GLDWebView extends Component {
   static navigationOptions = ({navigation, screenProps}) => ({
     title: navigation.state.params?navigation.state.params.title : '图纸',
-    headerTintColor: "#FFF",
-    headerStyle: { backgroundColor: "#00baf3" },
     headerRight:(  
       <Text  onPress={()=>navigation.state.params.rightNavigatePress()} style={{marginLeft:5, width:30, textAlign:"center"}} >  
           测试 

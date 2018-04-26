@@ -23,9 +23,6 @@ class CheckPointListPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '质检项目',
-        tabBarVisible: false,
-        headerTintColor: "#FFF",
-        headerStyle: { backgroundColor: "#00baf3" },
         headerLeft: (<LeftBarButtons top={navigation.getParam('top')} navigation={navigation} currentItem={API.APP_QUALITY_CHECK_POINT} />),
       });
 
@@ -38,23 +35,16 @@ class CheckPointListPage extends Component {
     componentDidMount() {
         this.props.getCheckPoints();
     }
-
+    
+    
+    toAddPage= (item) =>{
+        storage.pushNext(this.props.navigation, 'NewPage',{ 'qualityCheckpointId': item.id, 'qualityCheckpointName': item.name }); 
+    }
+    toCheckPointInfoPage= (item) =>{
+        storage.pushNext(this.props.navigation, 'QualityStatardsPage',{ 'qualityCheckpointId': item.id, 'qualityCheckpointName': item.name }); 
+    }
     toQualityCheckList= (item) =>{
         storage.pushNext(this.props.navigation, 'QualityMainPage',{ 'qualityCheckpointId': item.id, 'qualityCheckpointName': item.name }); 
-    }
-    shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.navPage) {
-            let navigator = this.props.navigation;
-            if(nextProps.navPage === 'QualityStatardsPage'){
-                storage.pushNext(navigator, "QualityStatardsPage", { 'qualityCheckpointId': nextProps.selectedCheckPoint.id, 'qualityCheckpointName': nextProps.selectedCheckPoint.name });
-            } else if(nextProps.navPage === 'QualityMainPage'){
-                storage.pushNext(navigator, nextProps.navPage,{ 'qualityCheckpointId': nextProps.selectedCheckPoint.id, 'qualityCheckpointName': nextProps.selectedCheckPoint.name });
-            } else {
-                storage.pushNext(navigator, nextProps.navPage,{ 'qualityCheckpointId': nextProps.selectedCheckPoint.id, 'qualityCheckpointName': nextProps.selectedCheckPoint.name });
-            }
-            return false;
-        }
-        return true
     }
 
     componentWillUnmount() {
@@ -86,15 +76,15 @@ class CheckPointListPage extends Component {
         return (
             <TouchableOpacity onPress={() => { this.toQualityCheckList(item) }} >
                 <View style={styles.itemView} >
-                    <Text style={styles.listText}>{item.name}</Text>
-                    <TouchableOpacity style={{ paddingRight: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.props.toCheckPointInfoPage(item) }}>
+                    <Text style={styles.listItemText}>{item.name}</Text>
+                    <TouchableOpacity style={{ paddingRight: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.toCheckPointInfoPage(item) }}>
                         <Image style={styles.markImage} source={require('app-images/icon_module_standard_white.png')} />
                     </TouchableOpacity>
                     <View style={{ flex: 1 }} />
-                    <TouchableOpacity style={{ paddingLeft: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.props.toAddPage(item) }}>
+                    <TouchableOpacity style={{ paddingLeft: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.toAddPage(item) }}>
                         <Image style={styles.addImage} source={require('app-images/icon_module_create_white.png')} />
                     </TouchableOpacity>
-                    <Image style={styles.arrow} source={require('app-images/icon_arrow_right_gray.png')} />
+                    <Image style={styles.arrow} source={require('app-images/icon_arrow_right_white.png')} />
                 </View>
             </TouchableOpacity>
 
@@ -147,6 +137,7 @@ const styles = StyleSheet.create({
     headerText: {
         paddingLeft: 60,
         fontSize: 15,
+        fontWeight: '100',
     },
 
     listItem: {
@@ -180,7 +171,6 @@ const styles = StyleSheet.create({
 
 export default connect(
     state => ({
-        navPage: state.checkPointList.navPage,
         topDirNode: state.checkPointList.topDirNode,
         topModelNode: state.checkPointList.topModelNode,
         selectedCheckPoint:  state.checkPointList.selectedCheckPoint,
@@ -188,15 +178,6 @@ export default connect(
     dispatch => ({
         getCheckPoints: () => {
             dispatch(checkPointListAction.getCheckPoints())
-        },
-        toCheckPointInfoPage: (checkPoint) => {
-            dispatch(checkPointListAction.toCheckPointInfoPage(checkPoint))
-        },
-        toAddPage: (checkPoint) => {
-            dispatch(checkPointListAction.toAddPage(checkPoint))
-        },
-        toQualityCheckList: (checkPoint) => {
-            dispatch(checkPointListAction.toQualityCheckList(checkPoint))
         },
         navSuccess: () => {
             dispatch(checkPointListAction.navSuccess())

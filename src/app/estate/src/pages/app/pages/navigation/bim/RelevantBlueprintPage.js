@@ -46,9 +46,6 @@ export default class RelevantBlueprintPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '',
-        tabBarVisible: false,
-        headerTintColor: "#FFF",
-        headerStyle: { backgroundColor: "#00baf3" },
         header: null,
     });
 

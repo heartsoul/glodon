@@ -14,9 +14,6 @@ var { width, height } = Dimensions.get("window");
 export default class extends PureComponent {
     static navigationOptions = {
         title: '材设清单',
-        tabBarVisible: false,
-        headerTintColor: "#FFF",
-        headerStyle: { backgroundColor: "#00baf3" },
         gesturesEnabled: true,
     };
 

@@ -23,8 +23,6 @@ const imageMinus = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAA
 export default class QualityStatardsPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: navigation.state.params ? navigation.state.params.title : '',
-        headerTintColor: "#FFF",
-        headerStyle: { backgroundColor: "#00baf3" },
         // head:null
     });
     constructor(props) {

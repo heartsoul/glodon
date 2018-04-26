@@ -146,7 +146,9 @@ class GLDStorage extends BaseStorage {
         this.projectIdVersionId = '';
         this.projectId = 0;
     }
-
+    setRootNavigation(navigation) {
+        this.homeNavigation = navigation;
+    }
     //保存用户信息
     saveUserInfo(userInfo) {
         this.setItem(__KEY_userInfo, userInfo);
@@ -316,7 +318,18 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
-        navigator.goBack();
+        navigator.goBack(params);
+    }
+    // 返回到上一页面
+    pop = (navigation, params = {}) => {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
+        navigator.pop(params);
     }
 
     //质量管理相关state

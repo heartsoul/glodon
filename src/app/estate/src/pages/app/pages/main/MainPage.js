@@ -20,21 +20,7 @@ export default class extends NavigationPage {
     constructor() {
         super();
     };
-    _loadUserInfo = () => {
-        let navigator = this.props.navigation;
-        // if (navigator) {
-        //   navigator.navigate("TenantList");
-        // }
-        storage.pushNext(navigator, "TenantPage")
-    }
-    _loadProjectInfo = () => {
-        let navigator = this.props.navigation;
-
-        // if (navigator) {
-        //   navigator.navigate("ProjectList");
-        // }
-        storage.pushNext(navigator, "ProjectPage");
-    }
+   
     _loadQualityForm = () => {
         let navigator = this.props.navigation;
         storage.projectIdVersionId = '';
@@ -133,7 +119,6 @@ export default class extends NavigationPage {
                                     <View style={styles.spliteItem} />
                                     <ModelItemView source={require('app-images/icon_main_pager_module.png')} onPress={() => this._checkPointChoose()} title="质检项目" />
                                     <View style={styles.spliteItem} />
-                                    <Button type={'primary'} size={'md'} onPress={() => this._loadUserInfo()} style={{ height: 50 }} title="选择租户" />
                                 </View>
                             </SegmentedView.Sheet>
                          : null

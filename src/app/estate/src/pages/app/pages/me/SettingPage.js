@@ -22,14 +22,7 @@ var { width, height } = Dimensions.get("window");
 class SettingPage extends Component{
 
     static navigationOptions = ({navigation, screenProps}) => ({
-        headerTitle:(<Text style={{color:'#ffffff',fontSize:17,alignSelf:'center',textAlign:'center',flex:1,}}>设置</Text>),
-        headerStyle:{backgroundColor:"#00baf3"},
-        headerLeft:(
-            <TouchableOpacity onPress={()=>{navigation.goBack()}}>
-              <Image source={require('app-images/icon_back_white.png')} style={{width:9,height:20,marginLeft:20}} />
-            </TouchableOpacity>  
-        ),
-        headerRight:(<View style={{width:29}}/>)
+        title:'设置',
       });
       componentDidMount=()=> {
         console.log(this.props.navigation.state.params);

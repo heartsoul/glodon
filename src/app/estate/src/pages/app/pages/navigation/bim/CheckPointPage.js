@@ -66,10 +66,7 @@ export default class CheckPointList extends React.Component {
 
     static navigationOptions = {
         title: '质检项目',
-        tabBarVisible: false,
-        headerTintColor: "#FFF",
-        headerStyle: { backgroundColor: "#00baf3" },
-    }
+       }
 
     _getListByParentId = (parentId) => {
         let data = [];

@@ -181,9 +181,6 @@ class Page extends React.Component {
 export default class MainPage extends React.Component {
   static navigationOptions = {
     title: '首页',
-    tabBarVisible: false,
-    headerTintColor: "#FFF",
-    headerStyle: { backgroundColor: "#00baf3" },
     header: null
   }
   componentDidMount = () => {

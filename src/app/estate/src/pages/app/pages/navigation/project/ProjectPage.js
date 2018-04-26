@@ -14,9 +14,6 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 export default class projectList extends Component {
     static navigationOptions = {
         title: '项目列表',
-        tabBarVisible:false,
-        headerTintColor:"#FFF",
-        headerStyle:{backgroundColor:"#00baf3"},
     }
 
     constructor(props) {

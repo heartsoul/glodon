@@ -3,6 +3,7 @@ import { Provider } from 'react-redux'
 import { View, ActivityIndicator } from 'react-native'
 import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 
+import { LeftBarButtons } from "app-components"
 import * as GLD from '../pages'
 
 import configureStore, { history } from '../store/ConfigureStore'
@@ -73,17 +74,33 @@ const RootStack = StackNavigator(
       screen: GLD.NewCheckListPage
     },
     NewReviewPage: {
-        screen: GLD.NewReviewPage
+      screen: GLD.NewReviewPage
     },
     EquipmentMainPage: {
-      screen:GLD.EquipmentMainPage
+      screen: GLD.EquipmentMainPage
     }
   },
   {
     // initialRouteName: storage.isGuide(()=>{}) ? 'GuidePage' : 'LoginPage',
     initialRouteName: 'MainPage',
     // headerMode:"none",
-  },
+    navigationOptions: (navigation) => {
+      return {
+        headerStyle: {
+          backgroundColor: '#00baf3',
+        },
+        headerTintColor: '#fff',
+        tabBarVisible: false,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          fontSize:17,
+        },
+        headerLeft: (
+          <LeftBarButtons top={false} currentItem={""} />
+        )
+      }
+    },
+  }
 );
 
 const defaultGetStateForAction = RootStack.router.getStateForAction;
@@ -121,7 +138,9 @@ export default class App extends React.Component {
       this.setState({
         hasLoad: true
       })
+      
     });
+    
   }
   renderPage() {
     return (<Provider store={store}><RootStack /></Provider>)

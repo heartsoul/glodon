@@ -21,8 +21,6 @@ export default class extends NavigationPage {
   
   static navigationOptions = {
     title: '',
-    headerTintColor:"#FFF",
-    headerStyle:{backgroundColor:"#00baf3"}
   };
   constructor() {
       super();

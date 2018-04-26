@@ -35,8 +35,6 @@ class NewReviewPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '复查单',
-        headerTintColor: "#FFF",
-        headerStyle: { backgroundColor: "#00baf3" },
         headerRight: (
             <Text onPress={() => navigation.state.params.rightNavigatePress()} style={{ marginRight: 20, color: '#FFFFFF', width: 60, textAlign: "right" }} >
                 提交

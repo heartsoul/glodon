@@ -20,8 +20,6 @@ export default class extends Component {
   
   static navigationOptions = {
     title: '',
-    headerTintColor:"#FFF",
-    headerStyle:{backgroundColor:"#00baf3"}
   };
   constructor() {
       super();
