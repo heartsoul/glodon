@@ -23,16 +23,61 @@ var resultArray = [];
  * 上传文件
  * 
  * @param {[{path:"file:///storage/emulated/0/icon.png",name:"icon.png",length:988}]} fileData 文件数组
+ * 已上传的图片{ objectId: 'a2dc4b3e003f46b58dacfe2319ba96f3',
+     name: 'c2ecd15a5f1c2f95e5ec1ceae6b56dfb.data',
+     extension: 'data',
+     length: 158983,
+     digest: 'acda2ade5c4efc5974f085b884a728cd',
+     targetId: '5200266',
+     targetType: 'Estate_Quality_Inspection',
+     uploadId: null,
+     uploadTime: 1524708482000,
+     remark: null,
+     extData: null,
+     id: 5200649,
+     creatorId: 5200003,
+     creatorName: '徐园',
+     updatorId: 5200003,
+     updatorName: '徐园',
+     createTime: 1524708482000,
+     updateTime: 1524708482000,
+     url: '' }
  * @param {(code:"success||fail",response)=>{}} callback 回调函数中code为success或者fail，response是错误信息，或者上传成功的数据 resultArray
  */
 export async function upLoadFiles(fileData, callback) {
     count = 0;
     len = fileData.length
-    result = [];
+    resultArray = [];
     fileData.map((file) => {
         let path = "file://" + file.path;
-        getOperationCode(path, file.name, file.length, callback);
+        if(!isUploadedFile(file)){
+            getOperationCode(path, file.name, file.length, callback);
+        }
     });
+}
+/**
+ * 已经上传过的文件不再上传
+ * @param {*} file 
+ */
+function isUploadedFile(file) {
+    if (file && file.objectId) {
+        let res = {
+            name: file.name,
+            objectId: file.objectId,
+            extension: file.extension,
+            digest: file.digest,
+            length: file.length,
+            uploadTime: file.createTime,
+        }
+        resultArray.push(res);
+        count++;
+        if (count == len) {
+            callback("success", resultArray);
+        }
+
+        return true;
+    }
+    return false;
 }
 
 /**
