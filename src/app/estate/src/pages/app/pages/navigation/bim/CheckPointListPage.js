@@ -16,15 +16,20 @@ import { connect } from 'react-redux';
 import * as checkPointListAction from './../../../actions/checkPointListAction'; // 导入action方法 
 import * as types from '../../../constants/checkPointListTypes';
 
-import * as API from 'app-api';
+import * as API from 'app-api'
+import { LeftBarButtons } from "app-components"
 
 class CheckPointListPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '质检项目',
+        tabBarVisible: false,
         headerTintColor: "#FFF",
         headerStyle: { backgroundColor: "#00baf3" },
-    });
+        headerLeft: (
+          <LeftBarButtons navigation={navigation} currentItem={API.APP_QUALITY_CHECK_POINT} />
+        ),
+      });
 
     constructor(props) {
         super(props);

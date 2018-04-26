@@ -43,8 +43,8 @@ export const QUALITY_CHECK_LIST_SHOW_REPAIR = "showRepair";
 /**
  * 材设进场
  */
-export const QC_STATE_EDIT = "edit";
 export const QC_STATE_ALL = "all";
+export const QC_STATE_EDIT = "edit";
 export const QC_STATE_STANDARD = "standard";
 export const QC_STATE_NOT_STANDARD = "notStandard";
 
@@ -62,9 +62,9 @@ export const APP_QUALITY_CHECK_POINT = "QualityCheckPoint"; // 质检项目
 export const APP_EQUIPMENT = "Equipment"; // 材设清单
 export const APP_EQUIPMENT_MODLE = "EquipmentModle"; // 模型预览
 
-
 export const EQUIPMENT_CLASSIFY_NAMES = ["全部", "待提交", "合格", "不合格"];
 export const EQUIPMENT_CLASSIFY_STATES = [QC_STATE_ALL, QC_STATE_EDIT, QC_STATE_STANDARD, QC_STATE_NOT_STANDARD];
+
 
 
 // 状态显示颜色
@@ -116,6 +116,14 @@ export const CLASSIFY_STATUS_LIST = [{ name: CLASSIFY_NAMES[0], state: CLASSIFY_
     , { name: CLASSIFY_NAMES[5], state: CLASSIFY_STATES[5], color: CLASSIFY_STATES_COLOR[5] }
     , { name: CLASSIFY_NAMES[6], state: CLASSIFY_STATES[6], color: CLASSIFY_STATES_COLOR[6] }
     , { name: CLASSIFY_NAMES[7], state: CLASSIFY_STATES[7], color: CLASSIFY_STATES_COLOR[7] }
+];
+
+// 状态数据总表
+export const EQUIPMENT_CLASSIFY_STATUS_LIST = [
+    { name: EQUIPMENT_CLASSIFY_NAMES[0], state: EQUIPMENT_CLASSIFY_STATES[0], color: CLASSIFY_STATES_COLOR[0] }
+    , { name: EQUIPMENT_CLASSIFY_NAMES[1], state: EQUIPMENT_CLASSIFY_STATES[1], color: CLASSIFY_STATES_COLOR[1] }
+    , { name: EQUIPMENT_CLASSIFY_NAMES[2], state: EQUIPMENT_CLASSIFY_STATES[2], color: CLASSIFY_STATES_COLOR[2] }
+    , { name: EQUIPMENT_CLASSIFY_NAMES[3], state: EQUIPMENT_CLASSIFY_STATES[3], color: CLASSIFY_STATES_COLOR[3] }
 ];
 
 export const BILL_TYPE_ITEM_INSPECT = "检查";

@@ -58,11 +58,18 @@ export default class extends NavigationPage {
         let navigator = this.props.navigation;
         BimFileEntry.chooseBlueprintFromHome(navigator);
     }
-    //质检项目
+    //模型预览
     _moduleChoose = () => {
+        let navigator = this.props.navigation;
+        BimFileEntry.chooseQualityModelFromHome(navigator);
+    }
+
+    //质检项目
+    _checkPointChoose = () => {
         let navigator = this.props.navigation;
         storage.projectIdVersionId = '';
         storage.pushNext(navigator, "CheckPointListPage");
+
     }
     //模型
     _projectChoose = () => {
@@ -124,7 +131,7 @@ export default class extends NavigationPage {
                                     <View style={styles.spliteItem} />
                                     <ModelItemView source={require('app-images/icon_main_pager_model.png')} onPress={() => this._projectChoose()} title="模型" />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_module.png')} onPress={() => this._moduleChoose()} title="质检项目" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_module.png')} onPress={() => this._checkPointChoose()} title="质检项目" />
                                     <View style={styles.spliteItem} />
                                     <Button type={'primary'} size={'md'} onPress={() => this._loadUserInfo()} style={{ height: 50 }} title="选择租户" />
                                 </View>

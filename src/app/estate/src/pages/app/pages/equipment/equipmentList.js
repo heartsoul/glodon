@@ -7,13 +7,13 @@ import {StyleSheet, View, StatusBar, Dimensions} from "react-native";
 import {SegmentedView} from 'app-3rd/teaset';
 
 import * as API from "app-api";
-import QualityListView from "./qualityListView";
+import EquipmentListView from "./equipmentListView";
 
 var { width, height } = Dimensions.get("window");
 
-export default class qualityList extends PureComponent {
+export default class extends PureComponent {
     static navigationOptions = {
-        title: '质检清单',
+        title: '材设清单',
         tabBarVisible: false,
         headerTintColor: "#FFF",
         headerStyle: { backgroundColor: "#00baf3" },
@@ -30,81 +30,67 @@ export default class qualityList extends PureComponent {
             qcState: '',
             isLoading: true,
             activeIndex: 0,
-            qualityView: [{}, {}, {}, {}, {}, {}, {}, {}],
-            qualityBadge:{
-                item:[0,0,0,0,0,0,0,0,0,0]
+            equipmentView: [{}, {}, {}, {}],
+            equipmentBadge:{
+                item:[0,0,0,0]
             },
         }
     }
     _keyExtractor = (item, index) => index;
     _loadInspectionSummary = () =>{
-        let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
-        let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointI');
-        API.getQualityInspectionSummary(storage.loadProject(),qualityCheckpointId,qualityCheckpointName).then(
-            (responseData) => {
-                // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
-                let items = responseData.data;
-                let qualityBadgeItem = this.state.qualityBadge.item;
-                items.map((item, index) => {
-                    let find = API.CLASSIFY_STATES_SUMMARY.indexOf(item.qcState);
-                    if (find > 0) {
-                        qualityBadgeItem[find] = item.count;
-                    }
-                });
-                console.log(JSON.stringify(qualityBadgeItem));
-                 this.setState({
-                        qualityBadge:{item:qualityBadgeItem},
-                    })
-                // 获取数量数据
-            }
-        ).catch(err=>{
+        // let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
+        // let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointI');
+        // // API.getQualityInspectionSummary(storage.loadProject(),qualityCheckpointId,qualityCheckpointName).then(
+        //     (responseData) => {
+        //         // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
+        //         let items = responseData.data;
+        //         let qualityBadgeItem = this.state.qualityBadge.item;
+        //         items.map((item, index) => {
+        //             let find = API.CLASSIFY_STATES_SUMMARY.indexOf(item.qcState);
+        //             if (find > 0) {
+        //                 qualityBadgeItem[find] = item.count;
+        //             }
+        //         });
+        //         console.log(JSON.stringify(qualityBadgeItem));
+        //          this.setState({
+        //                 qualityBadge:{item:qualityBadgeItem},
+        //             })
+        //         // 获取数量数据
+        //     }
+        // ).catch(err=>{
 
-        });
+        // });
     }
     componentDidMount = () => {
-        //请求数据
-        // this._onRefresh();
-        storage.qualityNavigation = this.props.navigation;
+        storage.equipmentNavigation = this.props.navigation;
         this._loadInspectionSummary();
-        // this.refs.sectionList.fetchData(API.CLASSIFY_STATES[0]);
-        // this._onSegmentedBarChange(0);
     }
 
     _onSegmentedBarChange = (index) => {
         this.setState({ activeIndex: index });
-        this.state.qualityView[index].fetchData(API.CLASSIFY_STATES[index]);
+        this.state.equipmentView[index].fetchData(API.EQUIPMENT_CLASSIFY_STATES[index]);
         this._loadInspectionSummary();
     }
     _toTop = () => {
         let index = this.state.activeIndex;
-        let qualityView = this.state.qualityView[index];
-        if(qualityView.scrollToOffset) {
-            qualityView.scrollToOffset();
+        let equipmentView = this.state.equipmentView[index];
+        if(equipmentView.scrollToOffset) {
+            equipmentView.scrollToOffset();
         }
     }
     renderData() {
-        let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
-        let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointI');
-        if(!qualityCheckpointId) {
-            qualityCheckpointId = 0
-        }
-        if(!qualityCheckpointName) {
-            qualityCheckpointName = ''
-        }
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <SegmentedView style={{ flex: 1 }} justifyItem={'scrollable'} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
                     {
-                       API.CLASSIFY_STATUS_LIST.map((item,index)=>{
+                       API.EQUIPMENT_CLASSIFY_STATUS_LIST.map((item,index)=>{
                            return (
-                               <SegmentedView.Sheet key={item.name} title={item.name} badge={this.state.qualityBadge.item[index]}>
-                                <QualityListView 
-                                onRef={ (ref) => {this.state.qualityView[index] = ref}} 
+                               <SegmentedView.Sheet key={item.name} title={item.name} badge={this.state.equipmentBadge.item[index]}>
+                                <EquipmentListView 
+                                onRef={ (ref) => {this.state.equipmentView[index] = ref}} 
                                 style={{flex:1}} 
                                 qcState={''+item.state}
-                                qualityCheckpointId={qualityCheckpointId}
-                                qualityCheckpointName = {qualityCheckpointName}
                                 loadData={index ==0 ? true: false} /> 
                             </SegmentedView.Sheet>
                            );
@@ -119,7 +105,7 @@ export default class qualityList extends PureComponent {
     }
 
     render() {
-        console.log('render:' + JSON.stringify(this.state.qualityBadge))
+        console.log('render:' + JSON.stringify(this.state.equipmentBadge))
         //加载数据
         return this.renderData();
     }

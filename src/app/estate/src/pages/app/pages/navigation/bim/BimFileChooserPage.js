@@ -12,7 +12,8 @@ import { StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-naviga
 
 import ThumbnailImage from "./ThumbnailImage"
 import * as PageType from "./PageTypes";
-import * as MODELAPI from "app-api";
+import * as API from "app-api";
+import { LeftBarButtons } from "app-components"
 import * as BimFileEntry from "./BimFileEntry";
 
 var { width, height } = Dimensions.get("window");
@@ -24,16 +25,22 @@ export default class BimFileChooser extends Component {
         const { params } = navigation.state;
         let dataType = params.dataType;
         let title = '图纸';
+        let currentItem = API.APP_QUALITY_DRAWER;
         if (dataType === '图纸文件') {
             title = '图纸';
+            currentItem = API.APP_QUALITY_DRAWER;
         } else {
             title = '模型';
+            currentItem = API.APP_QUALITY_MODLE;
         }
         return {
             title: title,
             tabBarVisible: false,
             headerTintColor: "#FFF",
             headerStyle: { backgroundColor: "#00baf3" },
+            headerLeft: (
+                <LeftBarButtons navigation={navigation} currentItem={currentItem} />
+              ),
         }
     };
 
@@ -60,7 +67,7 @@ export default class BimFileChooser extends Component {
     fetchData = (page) => {
         if (this.state.projectId === 0 || this.state.latestVersion === '') {
 
-            MODELAPI.getModelLatestVersion(storage.loadProject()).then((responseData) => {
+            API.getModelLatestVersion(storage.loadProject()).then((responseData) => {
                 let latestVersion = responseData.data.data.versionId;
                 global.storage.projectIdVersionId = latestVersion;
                 console.log(responseData)
@@ -77,7 +84,7 @@ export default class BimFileChooser extends Component {
     //网络请求
     fetchDataInner = (page, projectId, latestVersion) => {
         // 这个是js的访问网络的方法
-        MODELAPI.getModelBimFileChildren(projectId, latestVersion, page, this.state.fileId).then(
+        API.getModelBimFileChildren(projectId, latestVersion, page, this.state.fileId).then(
             (responseData) => {
                 console.log(responseData)
                 let data = responseData.data.data.items;

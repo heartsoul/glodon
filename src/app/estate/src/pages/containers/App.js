@@ -75,6 +75,9 @@ const RootStack = StackNavigator(
     NewReviewPage: {
         screen: GLD.NewReviewPage
     },
+    EquipmentMainPage: {
+      screen:GLD.EquipmentMainPage
+    }
   },
   {
     // initialRouteName: storage.isGuide(()=>{}) ? 'GuidePage' : 'LoginPage',

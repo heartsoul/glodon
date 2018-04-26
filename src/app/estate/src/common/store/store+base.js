@@ -268,7 +268,7 @@ class GLDStorage extends BaseStorage {
         return retValue;
     }
     // 转到页面，会替换
-    gotoMain = (navigation = null, name = "MainPage") => {
+    gotoMain = (navigation = null, name = "MainPage", params = {}) => {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
@@ -279,11 +279,22 @@ class GLDStorage extends BaseStorage {
         this.hasChoose((ret) => {
             if (ret) {
 
-                navigator.replace(name);
+                navigator.replace(name, params = {});
             } else {
-                navigator.replace("ChoosePage");
+                navigator.replace("ChoosePage", params = {});
             }
         })
+    }
+    // 转到页面，replace模式
+    replaceNext = (navigation, name = "MainPage", params = {}) => {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
+        navigator.replace(name, params);
     }
     // 转到页面，push模式
     pushNext = (navigation, name = "MainPage", params = {}) => {

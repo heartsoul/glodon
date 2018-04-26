@@ -25,6 +25,7 @@ import WebPage from './app/pages/navigation/bim/WebPage'
 import RelevantBlueprintPage from './app/pages/navigation/bim/RelevantBlueprintPage'
 import RelevantModlePage from './app/pages/navigation/bim/RelevantModlePage'
 import CheckPointListPage from './app/pages/navigation/bim/CheckPointListPage'
+import EquipmentMainPage from './app/pages/equipment/EquipmentMainPage'
 
 export {
     LoginPage,
@@ -51,4 +52,5 @@ export {
     QualityStatardsPage,
     NewCheckListPage,
     NewReviewPage,
+    EquipmentMainPage,
 }

@@ -9,6 +9,7 @@ import * as API from 'app-api'
 import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
 
 import PaneViewItem from './PaneViewItem'
+import { replace } from 'connected-react-router';
 
 const { width, height } = Dimensions.get("window");
 const headerImage = require("app-images/icon_main_project_name.png");
@@ -56,26 +57,26 @@ export default class GLDDrawerPaneView extends Component {
         storage.fileId = '';
         storage.bimToken = {};
 
-        storage.pushNext(navigator, "QualityMainPage")
+        storage.replaceNext(navigator, "QualityMainPage")
     }
     //图纸
     onQualityDrawerAction = () => {
         this.close();
         let navigator = this.props.navigation;
-        BimFileEntry.chooseBlueprintFromHome(navigator);
+        BimFileEntry.chooseBlueprintFromHome(navigator, true);
     }
     //模型
     onQualityModleAction = () => {
         this.close();
         let navigator = this.props.navigation;
-        BimFileEntry.chooseQualityModelFromHome(navigator);
+        BimFileEntry.chooseQualityModelFromHome(navigator, true);
     }
     //质检项目
     onCheckPointAction = () => {
         this.close();
         let navigator = this.props.navigation;
         storage.projectIdVersionId = '';
-        storage.pushNext(navigator, "CheckPointListPage");
+        storage.replaceNext(navigator, "CheckPointListPage");
     }
 
     onEquipmentChange = () => {
@@ -92,18 +93,18 @@ export default class GLDDrawerPaneView extends Component {
         storage.fileId = '';
         storage.bimToken = {};
 
-        storage.pushNext(navigator, "EquipmentMainPage")
+        storage.replaceNext(navigator, "EquipmentMainPage")
     }
     //模型预览
     onEquipmentModleAction = () => {
         this.close();
         let navigator = this.props.navigation;
-        BimFileEntry.chooseQualityModelFromHome(navigator);
+        BimFileEntry.chooseQualityModelFromHome(navigator, true);
     }
 
     onSettingAction = () => {
         this.close();
-        storage.pushNext(this.props.navigation, 'SettingPage');
+        storage.replaceNext(this.props.navigation, 'SettingPage');
     }
     componentDidMount() {
     }
