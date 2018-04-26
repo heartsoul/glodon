@@ -3,6 +3,7 @@
 import { Toast } from 'antd-mobile';
 import * as API from "app-api";
 import { ActionModal } from 'app-components'
+import * as UpdateDataAction from "./updateDataAction";
 
 /**
  * request data
@@ -312,10 +313,10 @@ function editSaveInspection(params) {
 /**
  * 删除草稿
  */
-export function deleteInspection(inspectId, inspectionType, navigator) {
+export function deleteInspection(inspectId, inspectionType, callback) {
     API.createDeleteInspection(storage.loadProject(), inspectionType, inspectId)
         .then(data => {
-            storage.goBack(navigator, null);
+            callback();
         })
 }
 
