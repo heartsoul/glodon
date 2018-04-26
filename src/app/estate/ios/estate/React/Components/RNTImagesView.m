@@ -382,7 +382,6 @@
     NSString * path = [[sd imageCache] defaultCachePathForKey:itemid];
     NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
     NSURL * fileUrl = [NSURL fileURLWithPath:path];
-    path = fileUrl.absoluteString;
     id size = @"0";
     if (attr[NSFileSize]) {
       size = attr[NSFileSize];

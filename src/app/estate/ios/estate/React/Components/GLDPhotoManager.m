@@ -69,7 +69,7 @@ RCT_EXPORT_METHOD (loadFileByReactTag:(nonnull NSNumber *)reactTag callback:(RCT
     RCTLogError(@"Invalid view returned from registry, expecting RCTWebView, got: %@", view);
   } else {
     [view loadFiles:^(NSArray *files) {
-      callback(@[@{@"images":files}]);
+      callback(@[files]);
     }];
     
   }
@@ -78,7 +78,7 @@ RCT_EXPORT_METHOD (loadFileByReactTag:(nonnull NSNumber *)reactTag callback:(RCT
 RCT_EXPORT_METHOD (loadFile:(nonnull NSDictionary *)params callback:(RCTResponseSenderBlock)callback) {
   NSNumber * reactTag = [params objectForKey:@"handleId"];
   if (!reactTag) {
-     callback(@[@{@"images":@[]}]);
+     callback(@[@[]]);
     return;
   }
   RNTImagesView *view = (RNTImagesView*)[self.bridge.uiManager viewForReactTag:reactTag];
@@ -86,7 +86,7 @@ RCT_EXPORT_METHOD (loadFile:(nonnull NSDictionary *)params callback:(RCTResponse
     RCTLogError(@"Invalid view returned from registry, expecting RCTWebView, got: %@", view);
   } else {
     [view loadFiles:^(NSArray *files) {
-      callback(@[@{@"images":files}]);
+      callback(@[files]);
     }];
     
   }
