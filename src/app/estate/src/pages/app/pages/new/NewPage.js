@@ -49,9 +49,16 @@ class NewPage extends React.Component {
     constructor(props) {
         super(props);
         let filesIn = [];
+        let selectedCheckPoint = {}
         if (props.params) {
             if (props.params.files) {
                 filesIn = props.params.files;
+            }
+            if (props.params.qualityCheckpointId) {
+                selectedCheckPoint = {
+                    id:props.params.qualityCheckpointId,
+                    name:props.params.qualityCheckpointName
+                };
             }
         }
         this.state = {
@@ -64,7 +71,7 @@ class NewPage extends React.Component {
             code: '',
             contentDescription: PropTypes.string,//内容描述
 
-            selectedCheckPoint: {},//选中的质检项目
+            selectedCheckPoint: selectedCheckPoint,//选中的质检项目
 
             relevantBluePrint: {},//关联图纸
             relevantModel: {},//关联模型

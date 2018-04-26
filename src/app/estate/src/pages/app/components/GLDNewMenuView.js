@@ -59,7 +59,7 @@ export default class GLDNewMenuView extends Component {
                             finish(files);
                             return;
                         }
-                        storage.pushNext(navigation, "NewPage", { 'files': files });
+                        storage.pushNext(navigation, "NewPage", {...navigation.state.params, 'files': files });
                     })
                 }
             },
@@ -74,7 +74,7 @@ export default class GLDNewMenuView extends Component {
                             finish(files);
                             return;
                         }
-                        storage.pushNext(navigation, "NewPage", { 'files': files });
+                        storage.pushNext(navigation, "NewPage", {...navigation.state.params,'files': files });
                     })
                 }
             },
@@ -84,7 +84,7 @@ export default class GLDNewMenuView extends Component {
                         finish([]);
                         return;
                     }
-                    storage.pushNext(navigation, "NewPage");
+                    storage.pushNext(navigation, "NewPage",{...navigation.state.params,});
                 }
             },
         ];
