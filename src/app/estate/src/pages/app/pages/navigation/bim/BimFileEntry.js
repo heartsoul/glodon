@@ -1,5 +1,6 @@
 'use strict'
-import {GLDNewMenuView} from 'app-components'
+import { GLDNewMenuView } from 'app-components'
+import * as NewQualityAction from "./../../../actions/NewQualityAction";
 /**
  * 图纸模型选择及展示入口;
  * PageType 0新建检查单 1检查单编辑状态 2详情查看  3质检单模型模式  4新建材设进场 5新增材设进场编辑状态  6材设模型模式
@@ -16,7 +17,7 @@ import {GLDNewMenuView} from 'app-components'
  * 
  */
 
- import * as PageType from "./PageTypes";
+import * as PageType from "./PageTypes";
 
 export function homeSelect(navigation) {
     GLDNewMenuView.openMenu(navigation);
@@ -220,6 +221,15 @@ export function showModelFromDetail(navigator, gdocFileId, elementId) {
  * @param {*} qualityCheckListId  单据id
  * @param {*} createType  单据类型 CREATE_TYPE_RECTIFY|CREATE_TYPE_REVIEW 具体见常量定义
  */
-export function showNewReviewPage(navigator, qualityCheckListId,createType) {
-    storage.pushNext(navigator, "NewReviewPage",{qualityCheckListId:qualityCheckListId,createType:createType});
+export function showNewReviewPage(navigator, qualityCheckListId, createType) {
+    storage.pushNext(navigator, "NewReviewPage", { qualityCheckListId: qualityCheckListId, createType: createType });
+}
+
+/**
+ * 从列表提交质检单
+ * @param {*} inspectId 质检单id
+ * @param {*} callback 提交完成后回调 ,callback的参数 { res: "error", data: err } { res: "success", data: "" }
+ */
+export function submitInspectionFromList(inspectId, callback) {
+    NewQualityAction.submitFromList(inspectId, callback);
 }

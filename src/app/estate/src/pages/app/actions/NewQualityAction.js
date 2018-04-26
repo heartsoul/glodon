@@ -2,7 +2,7 @@
 
 import { Toast } from 'antd-mobile';
 import * as API from "app-api";
-import {ActionModal} from 'app-components'
+import { ActionModal } from 'app-components'
 
 /**
  * request data
@@ -206,6 +206,24 @@ export function submit(requestParams, imageChooserEle, navigator, callback) {
 
     }
 }
+/**
+ * 从列表提交
+ * @param {*} inspectId 
+ */
+export function submitFromList(inspectId, callback) {
+    API.getQualityInspectionDetail(storage.loadProject(), inspectId)
+        .then((responseData) => {
+            let params = responseData.data.inspectionInfo;
+            params.inspectId = params.id;
+            API.editSubmitInspection(storage.loadProject(), inspectId, params.inspectionType, JSON.stringify(params))
+                .then(data => {
+                    callback({ res: "success", data: data, });
+                })
+        }).catch(err => {
+            callback({ res: "error", data: err });
+        });
+}
+
 
 /**
  * 检查单 新增 提交
