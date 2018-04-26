@@ -26,9 +26,7 @@ class CheckPointListPage extends Component {
         tabBarVisible: false,
         headerTintColor: "#FFF",
         headerStyle: { backgroundColor: "#00baf3" },
-        headerLeft: (
-          <LeftBarButtons navigation={navigation} currentItem={API.APP_QUALITY_CHECK_POINT} />
-        ),
+        headerLeft: (<LeftBarButtons top={navigation.getParam('top')} navigation={navigation} currentItem={API.APP_QUALITY_CHECK_POINT} />),
       });
 
     constructor(props) {

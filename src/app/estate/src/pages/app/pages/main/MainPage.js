@@ -41,7 +41,7 @@ export default class extends NavigationPage {
         storage.fileId = '';
         storage.bimToken = {};
 
-        storage.pushNext(navigator, "QualityMainPage")
+        storage.pushNext(navigator, "QualityMainPage", {top:true})
 
     }
     _loadEquipmentForm = () => {
@@ -50,7 +50,7 @@ export default class extends NavigationPage {
         storage.fileId = '';
         storage.bimToken = {};
 
-        storage.pushNext(navigator, "EquipmentMainPage")
+        storage.pushNext(navigator, "EquipmentMainPage", {top:true})
 
     }
     //图纸
@@ -68,7 +68,7 @@ export default class extends NavigationPage {
     _checkPointChoose = () => {
         let navigator = this.props.navigation;
         storage.projectIdVersionId = '';
-        storage.pushNext(navigator, "CheckPointListPage");
+        storage.pushNext(navigator, "CheckPointListPage", {top:true});
 
     }
     //模型

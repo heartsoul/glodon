@@ -57,26 +57,26 @@ export default class GLDDrawerPaneView extends Component {
         storage.fileId = '';
         storage.bimToken = {};
 
-        storage.replaceNext(navigator, "QualityMainPage")
+        storage.replaceNext(navigator, "QualityMainPage", {top:true})
     }
     //图纸
     onQualityDrawerAction = () => {
         this.close();
         let navigator = this.props.navigation;
-        BimFileEntry.chooseBlueprintFromHome(navigator, true);
+        BimFileEntry.chooseBlueprintFromHome(navigator, true, true);
     }
     //模型
     onQualityModleAction = () => {
         this.close();
         let navigator = this.props.navigation;
-        BimFileEntry.chooseQualityModelFromHome(navigator, true);
+        BimFileEntry.chooseQualityModelFromHome(navigator, true, true);
     }
     //质检项目
     onCheckPointAction = () => {
         this.close();
         let navigator = this.props.navigation;
         storage.projectIdVersionId = '';
-        storage.replaceNext(navigator, "CheckPointListPage");
+        storage.replaceNext(navigator, "CheckPointListPage", {top:true});
     }
 
     onEquipmentChange = () => {
@@ -93,18 +93,18 @@ export default class GLDDrawerPaneView extends Component {
         storage.fileId = '';
         storage.bimToken = {};
 
-        storage.replaceNext(navigator, "EquipmentMainPage")
+        storage.replaceNext(navigator, "EquipmentMainPage", {top:true})
     }
     //模型预览
     onEquipmentModleAction = () => {
         this.close();
         let navigator = this.props.navigation;
-        BimFileEntry.chooseQualityModelFromHome(navigator, true);
+        BimFileEntry.chooseQualityModelFromHome(navigator, true, true);
     }
 
     onSettingAction = () => {
         this.close();
-        storage.replaceNext(this.props.navigation, 'SettingPage');
+        storage.replaceNext(this.props.navigation, 'SettingPage', {top:true});
     }
     componentDidMount() {
     }

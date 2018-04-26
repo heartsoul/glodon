@@ -29,21 +29,24 @@ export function newSelect(navigation) {
 /**
  *  从质检单首页进入图纸选择
  */
-export function chooseBlueprintFromHome(navigator, replace = false) {
+export function chooseBlueprintFromHome(navigator, replace = false, top = false) {
     let next = replace ? storage.replaceNext : storage.pushNext;
     next(navigator, "BimFileChooserPage", {
+        top:top,
         fileId: 0,
         dataType: "图纸文件",
         pageType: PageType.PAGE_TYPE_QUALITY_MODEL
+        
     });
 }
 
 /**
  *  从质检单首页进入模型选择
  */
-export function chooseQualityModelFromHome(navigator, replace = false) {
+export function chooseQualityModelFromHome(navigator, replace = false, top = false) {
     let next = replace ? storage.replaceNext : storage.pushNext;
     next(navigator, "BimFileChooserPage", {
+        top:top,
         fileId: 0,
         dataType: "模型文件",
         pageType: PageType.PAGE_TYPE_QUALITY_MODEL
@@ -103,9 +106,10 @@ export function chooseModelFromQualityNew(navigator, gdocFileId, elementId, buil
 /**
  *  从材设单首页进入模型选择
  */
-export function chooseEquipmentModelFromHome(navigator, replace = false) {
+export function chooseEquipmentModelFromHome(navigator, replace = false, top = false) {
     let next = replace ? storage.replaceNext : storage.pushNext;
     next(navigator, "BimFileChooserPage", {
+        top:top,
         fileId: 0,
         dataType: "模型文件",
         pageType: PageType.PAGE_TYPE_EQUIPMENT_MODEL

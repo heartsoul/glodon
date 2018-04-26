@@ -39,7 +39,7 @@ export default class BimFileChooser extends Component {
             headerTintColor: "#FFF",
             headerStyle: { backgroundColor: "#00baf3" },
             headerLeft: (
-                <LeftBarButtons navigation={navigation} currentItem={currentItem} />
+                <LeftBarButtons top={navigation.getParam('top')}  navigation={navigation} currentItem={currentItem} />
               ),
         }
     };

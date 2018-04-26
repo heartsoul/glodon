@@ -50,7 +50,7 @@ export default class extends React.Component {
       <RightBarButtons navigation={navigation} />
     ),
     headerLeft: (
-      <LeftBarButtons navigation={navigation} currentItem={API.APP_QUALITY} />
+      <LeftBarButtons top={navigation.getParam('top')} navigation={navigation} currentItem={API.APP_QUALITY} />
     ),
   });
   render() {
