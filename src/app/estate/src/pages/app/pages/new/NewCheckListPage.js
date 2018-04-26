@@ -159,13 +159,13 @@ class NewCheckListPage extends Component {
                             if (this.activeTab == 0) {
                                 this.activePage = ref;
                             }
-                        }} params={(this.state.inspectParams)} type={tabs[0].type}></NewPage>
+                        }} params={(this.state.inspectParams)} type={tabs[0].type} navigator = {this.props.navigation}></NewPage>
                         <NewPage setRef={(ref) => {
                             this.acceptancePage = ref;
                             if (this.activeTab == 1) {
                                 this.activePage = ref;
                             }
-                        }} params={(this.state.acceptanceParams)} type={tabs[1].type}></NewPage>
+                        }} params={(this.state.acceptanceParams)} type={tabs[1].type} navigator = {this.props.navigation}></NewPage>
                     </Tabs>
                 </View>
 

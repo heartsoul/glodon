@@ -18,7 +18,7 @@ import {
     Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
-import {ActionModal} from 'app-components'
+import { ActionModal } from 'app-components'
 import { Modal, Toast } from 'antd-mobile';
 import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'app-3rd/teaset';
 import { ImageChooserView } from 'app-components';
@@ -31,6 +31,8 @@ import * as PageType from '../navigation/bim/PageTypes';
 import * as API from "app-api";
 import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
 import * as NewQualityAction from "./../../actions/NewQualityAction";
+import * as UpdateDataAction from "./../../actions/updateDataAction";
+
 
 
 var { width, height } = Dimensions.get("window");
@@ -47,12 +49,11 @@ class NewPage extends React.Component {
     constructor(props) {
         super(props);
         let filesIn = [];
-        if(props.params) {
-            if(props.params.files) {
+        if (props.params) {
+            if (props.params.files) {
                 filesIn = props.params.files;
             }
         }
-
         this.state = {
             isLoading: false,
 
@@ -74,7 +75,7 @@ class NewPage extends React.Component {
             showDescriptionStar: false,
             showCheckpointStar: false,
             showRectificationStar: false,
-            files:filesIn, //附件图片
+            files: filesIn, //附件图片
         }
 
     };
@@ -156,6 +157,7 @@ class NewPage extends React.Component {
         let requestParams = this.assembleParams();
         NewQualityAction.submit(requestParams, this.refs[REF_PHOTO], navigation, (params) => {
             this.setState(params);
+            this.props.updateData();
         });
     }
 
@@ -165,12 +167,16 @@ class NewPage extends React.Component {
         NewQualityAction.save(requestParams, this.refs[REF_PHOTO], (params) => {
             this.setState(params)
             Toast.success('保存成功', 1);
+            this.props.updateData();
         });
     }
 
     //删除
     delete = (navigation) => {
-        NewQualityAction.deleteInspection(this.state.inspectId, this.props.type, this.props.navigation);
+        NewQualityAction.deleteInspection(this.state.inspectId, this.props.type,()=>{
+            this.props.updateData();
+            storage.goBack(this.props.navigator, null);
+        });
     }
 
     //选择图纸文件
@@ -247,7 +253,7 @@ class NewPage extends React.Component {
 
     renderData = () => {
         return (
-            <View>
+            <View style={{paddingBottom:100}}>
                 <SelectView
                     ref={REF_INSPECT_COMPANY}
                     title={(this.props.type === "acceptance") ? ("验收单位") : ("检查单位")}
@@ -439,6 +445,10 @@ export default connect(
         selectedCheckPoint: state.checkPointList.selectedCheckPoint,
     }),
     dispatch => ({
-
+        updateData: () => {
+            if (dispatch) {
+                dispatch(UpdateDataAction.updateData());
+            }
+        },
     })
 )(NewPage);
