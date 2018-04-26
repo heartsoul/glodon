@@ -155,12 +155,12 @@ const styles = StyleSheet.create({
     markImage: {
         width: 15,
         height: 15,
-        marginLeft: 20,
+        marginLeft: 5,
     },
     addImage: {
         width: 15,
         height: 15,
-        marginRight: 20,
+        marginRight: 5,
     },
     arrow: {
         width: 15,
