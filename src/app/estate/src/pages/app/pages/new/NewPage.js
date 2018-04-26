@@ -63,7 +63,7 @@ class NewPage extends React.Component {
         }
         this.state = {
             isLoading: false,
-
+            inspectionInfo: {},//初始草稿数据
             editInfo: {},//编辑的时候获取的详情
 
             projectId: storage.loadProject(),
@@ -83,6 +83,7 @@ class NewPage extends React.Component {
             showCheckpointStar: false,
             showRectificationStar: false,
             files: filesIn, //附件图片
+
         }
 
     };
@@ -103,17 +104,25 @@ class NewPage extends React.Component {
     }
     //返回
     goBack = (navigation) => {
-        ActionModal.alert('是否确认退出当前页面？', "您还未保存当前数据！", [
-            {
-                text: '取消', style: { color: '#5b5b5b' }
-            },
-            {
-                text: '不保存', style: { color: '#e75452' }, onPress: () => { navigation.goBack() }
-            },
-            {
-                text: '保存', style: { color: '#00baf3' }, onPress: () => { this.save() }
+        //判断信息是否改变
+        let requestParams = this.assembleParams();
+        NewQualityAction.isEditInfoChange(requestParams, this.state.inspectionInfo, this.refs[REF_PHOTO], (isChange) => {
+            if (isChange) {
+                ActionModal.alert('是否确认退出当前页面？', "您还未保存当前数据！", [
+                    {
+                        text: '取消', style: { color: '#5b5b5b' }
+                    },
+                    {
+                        text: '不保存', style: { color: '#e75452' }, onPress: () => { navigation.goBack() }
+                    },
+                    {
+                        text: '保存', style: { color: '#00baf3' }, onPress: () => { this.save() }
+                    }
+                ]);
+            } else {
+                navigation.goBack();
             }
-        ]);
+        })
     }
 
     /**
@@ -180,7 +189,7 @@ class NewPage extends React.Component {
 
     //删除
     delete = (navigation) => {
-        NewQualityAction.deleteInspection(this.state.inspectId, this.props.type,()=>{
+        NewQualityAction.deleteInspection(this.state.inspectId, this.props.type, () => {
             this.props.updateData();
             storage.goBack(this.props.navigator, null);
         });
@@ -260,7 +269,7 @@ class NewPage extends React.Component {
 
     renderData = () => {
         return (
-            <View style={{paddingBottom:100}}>
+            <View style={{ paddingBottom: 100 }}>
                 <SelectView
                     ref={REF_INSPECT_COMPANY}
                     title={(this.props.type === "acceptance") ? ("验收单位") : ("检查单位")}

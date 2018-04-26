@@ -311,6 +311,71 @@ function editSaveInspection(params) {
         })
 }
 
+
+export function isEditInfoChange(requestParams, inspectionInfo, imageChooserEle, callback) {
+    imageChooserEle._loadFile((files) => {
+
+        if (isFileChange(inspectionInfo.files, files)) {
+            callback(true);
+        } else if (isParamsChange(requestParams, inspectionInfo)) {
+            callback(true);
+        } else {
+            callback(false);
+        }
+    });
+}
+
+function isFileChange(oldFiles, newFiles) {
+    let oldLen = oldFiles ? oldFiles.length : 0;
+    let newLen = newFiles ? newFiles.length : 0;
+    if (oldLen != newLen) {
+        return true;
+    } else {
+        for (file in newFiles) {
+            if (!file.objectId) {
+                return true;
+            }
+        }
+        return false;
+    }
+    return false;
+}
+
+function isParamsChange(requestParams, inspectionInfo) {
+    let params = assembleParams(requestParams);
+
+    if (inspectionInfo.code != params.code) {
+        return true;
+    }
+    if (inspectionInfo.qualityCheckpointName != params.qualityCheckpointName) {
+        return true;
+    }
+    if (inspectionInfo.inspectionCompanyId != params.inspectionCompanyId) {
+        return true;
+    }
+    if (inspectionInfo.constructionCompanyId != params.constructionCompanyId) {
+        return true;
+    }
+    if (inspectionInfo.needRectification != params.needRectification) {
+        return true;
+    }
+    if (inspectionInfo.needRectification && params.needRectification) {
+        if (qualityInfo.lastRectificationDate != params.lastRectificationDate) {
+            return true;
+        }
+    }
+    if (inspectionInfo.description != params.description) {
+        return true;
+    }
+
+    if (inspectionInfo.responsibleUserId != params.responsibleUserId) {
+        return true;
+    }
+
+    return false;
+}
+
+
 /**
  * 删除草稿
  */
@@ -370,6 +435,7 @@ export function getQualityInspectionDetail(fileId, callback) {
             let editInfo = {};
             if (responseData.data && responseData.data.inspectionInfo) {
                 editInfo = getDetailInfo(responseData.data.inspectionInfo)
+                editInfo.inspectionInfo = responseData.data.inspectionInfo;
             }
             editInfo.isLoading = false;
             callback(editInfo);
@@ -384,6 +450,7 @@ export function getQualityInspectionDetail(fileId, callback) {
  * @param {*} info 
  */
 function getDetailInfo(info) {
+
     let contentDescription = info.description;
     let inspectId = info.id;
     let code = info.code;
