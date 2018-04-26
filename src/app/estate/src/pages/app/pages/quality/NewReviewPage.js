@@ -15,7 +15,7 @@ import {
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ListRow } from 'app-3rd/teaset';
-import { DatePicker, List } from 'antd-mobile';
+import { DatePicker, List, Modal, Toast } from 'antd-mobile';
 
 import WideButton from "./../../components/WideButton";
 import { ImageChooserView, ActionModal } from 'app-components';
@@ -90,6 +90,11 @@ class NewReviewPage extends Component {
         }
         return true;
     }
+
+    componentWillUnmount() {
+        Toast.hide();
+    }
+
     /**
      * 编辑草稿时，设置数据
      */

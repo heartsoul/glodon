@@ -44,11 +44,11 @@ export default class QualityListCell extends PureComponent {
     }
     // 复查
     _onReviewAction = (item, index) => {
-        BimFileEntry.showNewReviewPage(null,item.value.qualityCheckListId,API.CREATE_TYPE_REVIEW);
+        BimFileEntry.showNewReviewPage(null,item.value.id,API.CREATE_TYPE_REVIEW);
     }
     // 整改
     _onRectifyAction = (item, index) => {
-        BimFileEntry.showNewReviewPage(null,item.value.qualityCheckListId,API.CREATE_TYPE_RECTIFY);
+        BimFileEntry.showNewReviewPage(null,item.value.id,API.CREATE_TYPE_RECTIFY);
     }
     // 验收
     _onAcceptAction = (item, index) => {

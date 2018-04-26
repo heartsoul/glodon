@@ -13,16 +13,16 @@ import * as API from "app-api";
 import QualityDetailView from "./QualityDetailView"
 
 import * as actions from '../../actions/qualityInfoAction'
- 
+
 class QualityDetailPage extends Component {
-    static navigationOptions = ({navigation, screenProps}) => ({
+    static navigationOptions = ({ navigation, screenProps }) => ({
         // title: navigation.state.params.title?navigation.state.params.title : '详情',
-        title: navigation.state.params.loadTitle?navigation.state.params.loadTitle(): '详情',
+        title: navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : '详情',
         tabBarVisible: false,
         headerTintColor: "#FFF",
         headerStyle: { backgroundColor: "#00baf3" },
         gesturesEnabled: true,
-        headerRight:navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle(): null
+        headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null
     })
     constructor(props) {
         super(props);
@@ -33,22 +33,27 @@ class QualityDetailPage extends Component {
             errorInfo: "",
             qualityInfo: null,
         }
-        this.props.navigation.setParams({loadTitle:this.loadTitle, loadRightTitle:this.loadRightTitle}) 
+        this.props.navigation.setParams({ loadTitle: this.loadTitle, loadRightTitle: this.loadRightTitle })
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.updateIndex != this.props.updateIndex){
-            const {fetchData} = this.props;
-            const {item} = this.props.navigation.state.params;
+        if (nextProps.updateIndex != this.props.updateIndex) {
+            const { fetchData } = this.props;
+            const { item } = this.props.navigation.state.params;
             fetchData(item.value.id);
+        }
+        let preQcState = this.props.qualityInfo.inspectionInfo ? this.props.qualityInfo.inspectionInfo.qcState : null;
+        let nextQcState = nextProps.qualityInfo.inspectionInfo ? nextProps.qualityInfo.inspectionInfo.qcState : null;
+        if (nextQcState && nextQcState != preQcState) {//单据状态不一样的时候更新title
+            this.props.navigation.setParams({ loadTitle: this.loadTitle, loadRightTitle: this.loadRightTitle })
         }
     }
 
     newUnreviewed = (qualityCheckListId) => {
-        BimFileEntry.showNewReviewPage(this.props.navigation,qualityCheckListId,API.CREATE_TYPE_REVIEW);
+        BimFileEntry.showNewReviewPage(this.props.navigation, qualityCheckListId, API.CREATE_TYPE_REVIEW);
     }
     newUnrectified = (qualityCheckListId) => {
-        BimFileEntry.showNewReviewPage(this.props.navigation,qualityCheckListId,API.CREATE_TYPE_RECTIFY);
+        BimFileEntry.showNewReviewPage(this.props.navigation, qualityCheckListId, API.CREATE_TYPE_RECTIFY);
     }
     loadRightTitle = () => {
         const { inspectionInfo } = this.props.qualityInfo;
@@ -74,22 +79,22 @@ class QualityDetailPage extends Component {
     loadTitle = () => {
         const { inspectionInfo } = this.props.qualityInfo;
         let title = '详情';
-            if(inspectionInfo.inspectionType == API.TYPE_INSPECTION[0]) {
-                title = API.TYPE_INSPECTION_NAME[0]
-            } else if(inspectionInfo.inspectionType == API.TYPE_INSPECTION[1]) {
-                title = API.TYPE_INSPECTION_NAME[1]
-            }
+        if (inspectionInfo.inspectionType == API.TYPE_INSPECTION[0]) {
+            title = API.TYPE_INSPECTION_NAME[0]
+        } else if (inspectionInfo.inspectionType == API.TYPE_INSPECTION[1]) {
+            title = API.TYPE_INSPECTION_NAME[1]
+        }
         return title;
     }
 
     componentDidMount() {
-        const {fetchData} = this.props;
-        const {item} = this.props.navigation.state.params;
+        const { fetchData } = this.props;
+        const { item } = this.props.navigation.state.params;
         fetchData(item.value.id);
     }
 
-    componentWillUnmount () {
-        const {resetData} = this.props;
+    componentWillUnmount() {
+        const { resetData } = this.props;
         resetData();
     }
     //加载等待的view
@@ -127,7 +132,7 @@ class QualityDetailPage extends Component {
         const qualityInfo = this.props.qualityInfo;
         return (
             <ScrollView style={{ backgroundColor: '#FFFFFF' }}>
-                <QualityDetailView qualityInfo={qualityInfo}/>
+                <QualityDetailView qualityInfo={qualityInfo} />
             </ScrollView>
         );
     }
@@ -150,20 +155,20 @@ export default connect(
     state => ({
         qualityInfo: state.qualityInfo.data,
         isLoading: state.qualityInfo.isLoading,
-        item:state.qualityInfo.item,
-        error:state.qualityInfo.error,
+        item: state.qualityInfo.item,
+        error: state.qualityInfo.error,
         updateIndex: state.updateData.updateIndex,
     }),
     dispatch => ({
-      fetchData: (fileId) =>{
-        if(dispatch) {
-          dispatch(actions.fetchData(fileId))
-        }
-      },
-      resetData: () =>{
-        if(dispatch) {
-          dispatch(actions.reset())
-        }
-      },
+        fetchData: (fileId) => {
+            if (dispatch) {
+                dispatch(actions.fetchData(fileId))
+            }
+        },
+        resetData: () => {
+            if (dispatch) {
+                dispatch(actions.reset())
+            }
+        },
     })
-  )(QualityDetailPage)
+)(QualityDetailPage)

@@ -103,7 +103,7 @@ function assembleRepairParams(inspectionId, description, qualityInfo, editInfo) 
         code: editInfo.code,
         description: description,
         inspectionId: inspectionId,
-        flawId: getFlawId(qualityInfo),
+        flawId: getFlawId(qualityInfo, inspectionId),
     }
     return ret;
 }
@@ -124,16 +124,15 @@ function getRectificationId(qualityInfo) {
 /**
  * 整改单flawId，最后一条如果是复查单  传此code 如果没有  则是检查单的code
  */
-function getFlawId(qualityInfo) {
+function getFlawId(qualityInfo, inspectionId) {
+    let flawId = inspectionId;
     if (qualityInfo) {
         let progressInfos = qualityInfo.progressInfos;
         if (progressInfos && progressInfos.length > 0) {
-            return progressInfos[progressInfos.length - 1].id;
-        } else {
-            return qualityInfo.inspectionInfo.id;
-        }
+            flawId = progressInfos[progressInfos.length - 1].id;
+        } 
     }
-    return "";
+    return flawId;
 }
 
 /**
@@ -235,6 +234,8 @@ function submitReview(inspectionId, description, status, lastRectificationDate, 
                     dispatch(UpdateDataAction.updateData());
                     storage.goBack(navigator, null)
                     Toast.hide();
+                }).catch((err)=>{
+                    Toast.info("提交失败!", 1);
                 })
             } else {//编辑提交
                 API.editSubmitReview(storage.loadProject(), reviewId, props).then(responseData => {
@@ -242,6 +243,8 @@ function submitReview(inspectionId, description, status, lastRectificationDate, 
                     dispatch(UpdateDataAction.updateData());
                     storage.goBack(navigator, null)
                     Toast.hide();
+                }).catch((err)=>{
+                    Toast.info("提交失败!", 1);
                 })
             }
 
@@ -281,6 +284,8 @@ function submitRepair(inspectionId, description, qualityInfo, editInfo, dispatch
                     dispatch(UpdateDataAction.updateData())
                     storage.goBack(navigator, null);
                     Toast.hide();
+                }).catch((err)=>{
+                    Toast.info("提交失败!", 1);
                 })
             } else {//编辑提交
                 API.editSubmitRepair(storage.loadProject(), reviewId, props).then(responseData => {
@@ -288,6 +293,8 @@ function submitRepair(inspectionId, description, qualityInfo, editInfo, dispatch
                     dispatch(UpdateDataAction.updateData())
                     storage.goBack(navigator, null);
                     Toast.hide();
+                }).catch((err)=>{
+                    Toast.info("提交失败!", 1);
                 })
             }
         });
@@ -352,6 +359,8 @@ function saveReview(inspectionId, description, status, lastRectificationDate, qu
                     dispatch(_loadEditInfoSuccess(resetEditInfo))
                     Toast.hide();
                     Toast.info("保存成功！", 1);
+                }).catch((err)=>{
+                    Toast.info("保存失败!", 1);
                 })
             } else {//编辑保存
                 API.editSaveReview(storage.loadProject(), reviewId, props).then(responseData => {
@@ -366,6 +375,8 @@ function saveReview(inspectionId, description, status, lastRectificationDate, qu
                     //"保存成功！" 
                     Toast.hide();
                     Toast.info("保存成功！", 1);
+                }).catch((err)=>{
+                    Toast.info("保存失败!", 1);
                 })
             }
         });
@@ -399,6 +410,7 @@ function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, 
             if (!reviewId) {//新建保存
                 API.createSaveRepair(storage.loadProject(), props).then(responseData => {
                     //"保存成功！"  { data: { id: 5200032, code: 'ZLFC_20180424_001' } }
+  
                     let resetEditInfo = {
                         id: responseData.data.id,
                         code: responseData.data.code,
@@ -407,6 +419,8 @@ function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, 
                     dispatch(_loadEditInfoSuccess(resetEditInfo))
                     Toast.hide();
                     Toast.info("保存成功！", 1);
+                }).catch((err)=>{
+                    Toast.info("保存失败!", 1);
                 })
             } else {//编辑保存
                 API.editSaveRepair(storage.loadProject(), reviewId, props).then(responseData => {
@@ -419,6 +433,8 @@ function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, 
                     Toast.hide();
                     //"保存成功！" 
                     Toast.info("保存成功！", 1);
+                }).catch((err)=>{
+                    Toast.info("保存失败!", 1);
                 })
             }
 
