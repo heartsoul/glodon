@@ -87,7 +87,7 @@ export default class QualityListCell extends PureComponent {
     }
     renderImage = (item) => {
         let imageSource = projectImage;
-        if (item.value.files && item.value.files.length > 0) {
+        if (item.value.files && item.value.files.length > 0 && item.value.files[0].url && item.value.files[0].url.length>1) {
             imageSource = { uri: item.value.files[0].url };
         }
         return (<Image source={imageSource} style={[styles.image]} />)

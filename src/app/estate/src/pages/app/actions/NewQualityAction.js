@@ -169,6 +169,7 @@ function uploadFile(imageChooserEle, uploadCallback) {
     imageChooserEle._loadFile((files) => {
         if (files && files.length > 0) {
             API.upLoadFiles(files, (code, result) => {
+                console.log('uploadresult:'+code+',data:'+ JSON.stringify(result));
                 uploadCallback(result);
             });
         } else {

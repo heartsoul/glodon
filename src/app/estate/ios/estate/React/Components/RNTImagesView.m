@@ -376,7 +376,7 @@
   }
   // 检查是否已经存在了
   NSMutableDictionary * item = [[NSMutableDictionary alloc] initWithAsset:asset photoQuality:UploadPhotoQualityNormal];
-  __block NSString * itemid = [[item getIdentifier] stringByAppendingPathExtension:@"data"];
+  __block NSString * itemid = [[item getIdentifier] stringByAppendingPathExtension:@"png"];
   SDDataCache * sd = [SDDataCache fileDataCache];
   if([sd existInCachePathForKey:itemid]) {
     NSString * path = [[sd imageCache] defaultCachePathForKey:itemid];
