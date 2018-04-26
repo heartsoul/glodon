@@ -35,6 +35,9 @@ class QualityListView extends PureComponent {
     //网络请求
     _fetchData = (qcState, page) => {
        this.props.fetchData(qcState, page, this.props.dataMap,this.props.qualityCheckpointId,this.props.qualityCheckpointName);
+       if(page < 1 && this.props.updateNumber) {
+        this.props.updateNumber();
+    }
     }
 
     componentDidMount() {
@@ -46,6 +49,9 @@ class QualityListView extends PureComponent {
     componentWillReceiveProps= (nextProps) =>{
         if (nextProps.updateIndex != this.props.updateIndex && this.props.selected) {
             this.fetchData(this.props.qcState,this.props.qualityCheckpointId,this.props.qualityCheckpointName);
+            if(this.props.updateNumber) {
+                this.props.updateNumber();
+            }
             return true;
         }
         return true;

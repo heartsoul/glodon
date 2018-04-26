@@ -62,7 +62,7 @@ export default class qualityList extends PureComponent {
         //请求数据
         // this._onRefresh();
         storage.qualityNavigation = this.props.navigation;
-        this._loadInspectionSummary();
+        // this._loadInspectionSummary();
         // this.refs.sectionList.fetchData(API.CLASSIFY_STATES[0]);
         // this._onSegmentedBarChange(0);
     }
@@ -70,7 +70,7 @@ export default class qualityList extends PureComponent {
     _onSegmentedBarChange = (index) => {
         this.setState({ activeIndex: index });
         this.state.qualityView[index].fetchData(API.CLASSIFY_STATES[index]);
-        this._loadInspectionSummary();
+        // this._loadInspectionSummary();
     }
     _toTop = () => {
         let index = this.state.activeIndex;
@@ -101,6 +101,7 @@ export default class qualityList extends PureComponent {
                                 style={{flex:1}} 
                                 qcState={''+item.state}
                                 selected={this.state.activeIndex === index}
+                                updateNumber={()=>{this._loadInspectionSummary()}}
                                 qualityCheckpointId={qualityCheckpointId}
                                 qualityCheckpointName = {qualityCheckpointName}
                                 loadData={index ==0 ? true: false} /> 

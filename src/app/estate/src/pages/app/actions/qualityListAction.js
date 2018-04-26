@@ -1,6 +1,7 @@
 import * as API from 'app-api'
 
 import * as types from '../constants/qualityListTypes'
+import * as updateAction from './updateDataAction'
 import { BimFileEntry, AuthorityManager } from "app-entry";
 
 // 删除草稿
@@ -8,7 +9,7 @@ export function deleteData(qcState, inspectId, inspectionType, qualityCheckpoint
   return dispatch => {
     API.createDeleteInspection(storage.loadProject(), inspectionType, inspectId)
       .then(data => {
-        __fetchData(qcState, 0, new Map(), dispatch, qualityCheckpointId, qualityCheckpointName)
+        dispatch(updateAction.updateData())
       }).catch(error => {
         dispatch(_loadError(error, qcState, 0, qualityCheckpointId, qualityCheckpointName));
       });
@@ -19,7 +20,7 @@ export function submitData(qcState, inspectId, inspectionType, qualityCheckpoint
     BimFileEntry.submitInspectionFromList(inspectId, (data) => {
         // data { res: "error", data: err } { res: "success", data: "" }
         if(data.res === "success"){
-            __fetchData(qcState, 0, new Map(), dispatch, qualityCheckpointId, qualityCheckpointName)
+            dispatch(updateAction.updateData())
         } else {
             dispatch(_loadError(data.data, qcState, page, qualityCheckpointId, qualityCheckpointName));
         }
