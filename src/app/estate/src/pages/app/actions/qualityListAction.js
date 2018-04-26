@@ -1,6 +1,7 @@
 import * as API from 'app-api'
 
 import * as types from '../constants/qualityListTypes'
+import { BimFileEntry, AuthorityManager } from "app-entry";
 
 // 删除草稿
 export function deleteData(qcState, inspectId, inspectionType, qualityCheckpointId = 0, qualityCheckpointName = '') {
@@ -15,13 +16,14 @@ export function deleteData(qcState, inspectId, inspectionType, qualityCheckpoint
 }
 export function submitData(qcState, inspectId, inspectionType, qualityCheckpointId = 0, qualityCheckpointName = '') {
   return dispatch => {
-    let props = {};
-    API.editSubmitInspection(storage.loadProject(), inspectId, inspectionType, props)
-      .then(data => {
-        __fetchData(qcState, 0, new Map(), dispatch, qualityCheckpointId, qualityCheckpointName)
-      }).catch(error => {
-        dispatch(_loadError(error, qcState, page, qualityCheckpointId, qualityCheckpointName));
-      });
+    BimFileEntry.submitInspectionFromList(inspectId, (data) => {
+        // data { res: "error", data: err } { res: "success", data: "" }
+        if(data.res === "success"){
+            __fetchData(qcState, 0, new Map(), dispatch, qualityCheckpointId, qualityCheckpointName)
+        } else {
+            dispatch(_loadError(data.data, qcState, page, qualityCheckpointId, qualityCheckpointName));
+        }
+    })
   }
 }
 
