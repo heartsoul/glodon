@@ -1,118 +1,19 @@
 import React from 'react';
-import {StyleSheet, Button, View, Text, Image, TouchableOpacity, NativeModules,Dimensions } from 'react-native';
-import { StackNavigator, DrawerNavigator, withNavigation } from 'app-3rd/react-navigation'; 
-import { SegmentedBar, Label, ActionSheet } from 'app-3rd/teaset';
-import QualityList from './qualityList'
+import { StyleSheet, Button, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { withNavigation } from 'app-3rd/react-navigation';
 import * as API from 'app-api'
-import {LeftBarButtons} from "app-components"
-var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
-var { width, height } = Dimensions.get("window");
-class DetailsScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Details Screen</Text>
-        <Button
-          title="Go to Details... again"
-          onPress={() => this.props.navigation.navigate('Notifications')}
-        />
-        <Button
-          title="展开/合并"
-          onPress={() => this.props.navigation.navigate("DrawerToggle")}
-        />
-      </View>
-    );
-  }
-}
+import { LeftBarButtons } from "app-components"
+import { BimFileEntry, AuthorityManager } from 'app-entry';
 
-const RootStack = DrawerNavigator({
-  Home: {
-    screen: QualityList,
-  },
-  Notifications: {
-    screen: DetailsScreen,
-  },
-}, {
-    drawerWidth: 200, // 抽屉宽
-    drawerPosition: 'right', // 抽屉在左边还是右边
-    // contentComponent: CustomDrawerContentComponent,  // 自定义抽屉组件
-    contentOptions: {
-      initialRouteName: 'Home', // 默认页面组件
-      activeItemKey: 'Home',
-      labelStyle: {//标签样式
-        color: 'red',
-        height: 30,
-      },
-      activeTintColor: 'white',  // 选中文字颜色
-      activeBackgroundColor: '#ff8500', // 选中背景颜色
-      inactiveTintColor: '#666',  // 未选中文字颜色
-      inactiveBackgroundColor: '#fff', // 未选中背景颜色
-      // style: {  // 样式
-      //    marginVertical: 0, 
-      // },
-    },
-
-  });
-
-
-const MyNavScreen = ({ navigation, banner }) => (
-  <ScrollView>
-    <Button
-      onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
-      title="Go to a profile screen"
-    />
-    <Button
-      onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
-      title="Go to a photos screen"
-    />
-    <Button
-      onPress={() => navigation.goBack(null)}
-      title="Go back"
-    />
-  </ScrollView>
-);
+import QualityList from './qualityList'
 
 class RightBarButtons extends React.Component {
   _onSearchPress = (navigation) => {
     console.log(navigation);
     navigation.navigate("SearchPage")
-    // storage.qualityNavigation.navigate('DrawerToggle')
-    
   }
   _onNewPress = (navigation) => {
-    let items = [
-      {title: '拍照', onPress: () => {
-        RNBridgeModule.RNInvokeOCCallBack(
-        {
-          caller: "gldrn",
-          name: "callNative",
-          ver: "1.0",
-          data: { subName: "photo", message: "调用相机" }
-        },
-        (data, request) => {
-          console.log(data);
-          console.log(request);
-        }
-      );}},
-      {title: '从手机相册选择', onPress: () => {
-        RNBridgeModule.RNInvokeOCCallBack(
-          {
-            caller: "gldrn",
-            name: "callNative",
-            ver: "1.0",
-            data: { subName: "photo", message: "调用相机" }
-          },
-          (data, request) => {
-            console.log(data);
-            console.log(request);
-          }
-        );
-      }},
-      {title: '无需图片,直接新建', disabled: false, onPress: () => {navigation.navigate("NewPage");}},
-    ];
-    let cancelItem = {title: '取消'};
-    ActionSheet.show(items, cancelItem);
-    // navigation.navigate("NewPage");
+    AuthorityManager.isQualityCreate() ? BimFileEntry.newSelect(navigation) : null;
   }
   render() {
     return <View style={{
@@ -122,22 +23,24 @@ class RightBarButtons extends React.Component {
       justifyContent: 'flex-end',
       width: 70,
     }}>
-       <TouchableOpacity onPress={() => this._onSearchPress(this.props.navigation)} >
-      <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_search_white.png')} />
-    </TouchableOpacity>
-    <View style={styles.spliteItem} />
-       <TouchableOpacity onPress={() => this._onNewPress(this.props.navigation)} >
-      <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_camera_white.png')} />
-    </TouchableOpacity>
-    <View style={styles.spliteItem} />
+      <TouchableOpacity onPress={() => this._onSearchPress(this.props.navigation)} >
+        <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_search_white.png')} />
+      </TouchableOpacity>
+      <View style={styles.spliteItem} />
+      {
+        AuthorityManager.isQualityCreate() ?
+          <TouchableOpacity onPress={() => this._onNewPress(this.props.navigation)} >
+            <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_camera_white.png')} />
+          </TouchableOpacity> : null
+      }
+      {
+        AuthorityManager.isQualityCreate() ? <View style={styles.spliteItem} /> : null
+      }
     </View>
   }
 }
-
-// let RightButton = withNavigation(RightBarButtons);
-// let LeftButton = withNavigation(RightBarButtons);
 export default class extends React.Component {
-  static navigationOptions = ({navigation, screenProps}) => ({
+  static navigationOptions = ({ navigation, screenProps }) => ({
     title: '质检清单',
     tabBarVisible: false,
     headerTintColor: "#FFF",
@@ -149,21 +52,9 @@ export default class extends React.Component {
     headerLeft: (
       <LeftBarButtons navigation={navigation} currentItem={API.APP_QUALITY} />
     ),
-    // headerLeft: (
-    //   //let drawer = null; Drawer.open(view, 'left');
-    //   // <Button onPress={()=>storage.qualityNavigation.navigate('DrawerToggle')
-    // // } title="菜单" color="#fff" />
-    // <View style={{alignItems: 'center',
-    // flexDirection: 'row',
-    // flexWrap: 'wrap',
-    // justifyContent:'flex-start',}}>
-    //   <BackButton />
-    //   <MenuButton />
-    // </View>
-    // ),
   });
   render() {
-    return <RootStack />;
+    return <QualityList navigation={this.props.navigation} />;
   }
 };
 

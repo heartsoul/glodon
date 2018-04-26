@@ -30,21 +30,21 @@ class QualityListView extends PureComponent {
         // if(this.props.page > 0) {
         //     return;
         // }
-        this._fetchData(qcState, 0);
+        this._fetchData(qcState, 0, this.props.qualityCheckpointId,this.props.qualityCheckpointName);
     }
     //网络请求
     _fetchData = (qcState, page) => {
-       this.props.fetchData(qcState, page, this.props.dataMap);
+       this.props.fetchData(qcState, page, this.props.dataMap,this.props.qualityCheckpointId,this.props.qualityCheckpointName);
     }
 
     componentDidMount() {
         if(this.props.loadData === true) {
-            this.fetchData(this.props.qcState);
+            this.fetchData(this.props.qcState,this.props.qualityCheckpointId,this.props.qualityCheckpointName);
         }
     }
 
     componentWillReceiveProps= (nextProps) =>{
-        nextProps
+
         return true;
     }
 
@@ -74,11 +74,11 @@ class QualityListView extends PureComponent {
     }
     onCellAction = (item, index, type) => {
         if(type == 'delete') {
-            this.props.deleteData(this.props.qcState,item.value.id, item.value.inspectionType)
+            this.props.deleteData(this.props.qcState,item.value.id, item.value.inspectionType,this.props.qualityCheckpointId,this.props.qualityCheckpointName)
             return;
         }
         if(type == 'submit') {
-            this.props.submitData(this.props.qcState,item.value.id, item.value.inspectionType)
+            this.props.submitData(this.props.qcState,item.value.id, item.value.inspectionType,this.props.qualityCheckpointId,this.props.qualityCheckpointName)
             return;
         }
         
@@ -201,31 +201,41 @@ function mapStateToProps(state) {
 
   function mapDispatchToProps(dispatch) {
     return {
-        fetchData: (qcState,page,dataMap) =>{
+        fetchData: (qcState,page,dataMap,qualityCheckpointId,qualityCheckpointName) =>{
           if(dispatch) {
-            dispatch(actions.fetchData(qcState,page,dataMap))
+            dispatch(actions.fetchData(qcState,page,dataMap,qualityCheckpointId,qualityCheckpointName))
           }
         },
-        resetData: (qcState) =>{
+        resetData: (qcState,qualityCheckpointId,qualityCheckpointName) =>{
           if(dispatch) {
-            dispatch(actions.reset(qcState))
+            dispatch(actions.reset(qcState,qualityCheckpointId,qualityCheckpointName))
           }
         },
-        deleteData: (qcState, inspectId, inspectionType) =>{
+        deleteData: (qcState, inspectId, inspectionType,qualityCheckpointId,qualityCheckpointName) =>{
             if(dispatch) {
-              dispatch(actions.deleteData(qcState, inspectId, inspectionType))
+              dispatch(actions.deleteData(qcState, inspectId, inspectionType,qualityCheckpointId,qualityCheckpointName))
             }
           },
-          submitData: (qcState, inspectId, inspectionType) =>{
+        submitData: (qcState, inspectId, inspectionType,qualityCheckpointId,qualityCheckpointName) =>{
             if(dispatch) {
-              dispatch(actions.submitData(qcState, inspectId, inspectionType))
+              dispatch(actions.submitData(qcState, inspectId, inspectionType,qualityCheckpointId,qualityCheckpointName))
             }
           },
       }
   }
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
-    
+    if(ownProps.qualityCheckpointId != 0) {
+        return Object.assign({}, ownProps,dispatchProps, {
+            dataArray: stateProps.qualityList.datas_n[ownProps.qcState].data,
+            dataMap:stateProps.qualityList.datas_n[ownProps.qcState].dataMap,
+            page:stateProps.qualityList.datas_n[ownProps.qcState].page,
+            isLoading: stateProps.qualityList.datas_n[ownProps.qcState].isLoading,
+            error:stateProps.qualityList.datas_n[ownProps.qcState].error,
+            hasMore:stateProps.qualityList.datas_n[ownProps.qcState].hasMore,
+            updateIndex:stateProps.updateData.updateIndex
+        })
+    }
     return Object.assign({}, ownProps,dispatchProps, {
         dataArray: stateProps.qualityList.datas[ownProps.qcState].data,
         dataMap:stateProps.qualityList.datas[ownProps.qcState].dataMap,
@@ -235,6 +245,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         hasMore:stateProps.qualityList.datas[ownProps.qcState].hasMore,
         updateIndex:stateProps.updateData.updateIndex
     })
+    
   }
   
   

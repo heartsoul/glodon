@@ -6,7 +6,7 @@ import { Overlay, Label, Button, ActionSheet } from 'app-3rd/teaset';
 
 import * as API from 'app-api'
 
-import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
+import { AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
 import { ImageChooserView } from 'app-components';
 import PaneViewItem from './PaneViewItem'
 const { width, height } = Dimensions.get("window");

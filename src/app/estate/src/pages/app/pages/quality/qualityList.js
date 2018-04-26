@@ -46,7 +46,9 @@ export default class qualityList extends PureComponent {
     }
     _keyExtractor = (item, index) => index;
     _loadInspectionSummary = () =>{
-        API.getQualityInspectionSummary(storage.loadProject()).then(
+        let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
+        let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointI');
+        API.getQualityInspectionSummary(storage.loadProject(),qualityCheckpointId,qualityCheckpointName).then(
             (responseData) => {
                 // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
                 let items = responseData.data;
@@ -89,7 +91,14 @@ export default class qualityList extends PureComponent {
         }
     }
     renderData() {
-
+        let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
+        let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointI');
+        if(!qualityCheckpointId) {
+            qualityCheckpointId = 0
+        }
+        if(!qualityCheckpointName) {
+            qualityCheckpointName = ''
+        }
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
@@ -101,7 +110,9 @@ export default class qualityList extends PureComponent {
                                 <QualityListView 
                                 onRef={ (ref) => {this.state.qualityView[index] = ref}} 
                                 style={{flex:1}} 
-                                qcState={''+item.state} 
+                                qcState={''+item.state}
+                                qualityCheckpointId={qualityCheckpointId}
+                                qualityCheckpointName = {qualityCheckpointName}
                                 loadData={index ==0 ? true: false} /> 
                             </SegmentedView.Sheet>
                            );

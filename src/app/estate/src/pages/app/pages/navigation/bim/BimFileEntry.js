@@ -21,6 +21,9 @@ import {GLDNewMenuView} from 'app-components'
 export function homeSelect(navigation) {
     GLDNewMenuView.openMenu(navigation);
 }
+export function newSelect(navigation) {
+    GLDNewMenuView.openChoose(navigation);
+}
 
 /**
  *  从质检单首页进入图纸选择

@@ -36,15 +36,19 @@ class CheckPointListPage extends Component {
         this.props.getCheckPoints();
     }
 
+    toQualityCheckList= (item) =>{
+        storage.pushNext(this.props.navigation, 'QualityMainPage',{ 'qualityCheckpointId': item.id, 'qualityCheckpointName': item.name }); 
+    }
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.navPage) {
             let navigator = this.props.navigation;
             if(nextProps.navPage === 'QualityStatardsPage'){
                 storage.pushNext(navigator, "QualityStatardsPage", { 'qualityCheckpointId': nextProps.selectedCheckPoint.id, 'qualityCheckpointName': nextProps.selectedCheckPoint.name });
-            }else{
-                storage.pushNext(navigator, nextProps.navPage);
+            } else if(nextProps.navPage === 'QualityMainPage'){
+                storage.pushNext(navigator, nextProps.navPage,{ 'qualityCheckpointId': nextProps.selectedCheckPoint.id, 'qualityCheckpointName': nextProps.selectedCheckPoint.name });
+            } else {
+                storage.pushNext(navigator, nextProps.navPage,{ 'qualityCheckpointId': nextProps.selectedCheckPoint.id, 'qualityCheckpointName': nextProps.selectedCheckPoint.name });
             }
-            // this.props.navSuccess();
             return false;
         }
         return true
@@ -77,7 +81,7 @@ class CheckPointListPage extends Component {
 
     renderItem = (item) => {
         return (
-            <TouchableOpacity onPress={() => { this.props.toQualityCheckList(item) }} >
+            <TouchableOpacity onPress={() => { this.toQualityCheckList(item) }} >
                 <View style={styles.itemView} >
                     <Text style={styles.listText}>{item.name}</Text>
                     <TouchableOpacity style={{ paddingRight: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.props.toCheckPointInfoPage(item) }}>
