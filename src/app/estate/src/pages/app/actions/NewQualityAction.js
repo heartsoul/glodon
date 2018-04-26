@@ -406,7 +406,7 @@ function getDetailInfo(info) {
         code: code,
         projectId: projectId,
         projectName: projectName,
-        files: [],//图片
+        files: info.files,//图片
         selectedCheckPoint: selectedCheckPoint,//选中的质检项目
         relevantBluePrint: relevantBlueprint,//关联图纸
         relevantModel: relevantModel,//关联模型
