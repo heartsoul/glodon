@@ -100,6 +100,7 @@ export default class qualityList extends PureComponent {
                                 onRef={ (ref) => {this.state.qualityView[index] = ref}} 
                                 style={{flex:1}} 
                                 qcState={''+item.state}
+                                selected={this.state.activeIndex === index}
                                 qualityCheckpointId={qualityCheckpointId}
                                 qualityCheckpointName = {qualityCheckpointName}
                                 loadData={index ==0 ? true: false} /> 
