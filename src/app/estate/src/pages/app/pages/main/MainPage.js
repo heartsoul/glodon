@@ -153,7 +153,6 @@ var styles = StyleSheet.create({
         height: 203,
         alignItems: 'center',
         justifyContent: 'center',
-        justifyContent: 'center',
     },
     topImage: {
     },
