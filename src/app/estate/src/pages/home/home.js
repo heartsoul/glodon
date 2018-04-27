@@ -4,6 +4,7 @@ import { withNavigation,StackNavigator, TabNavigator, TabBarBottom } from 'app-3
 import { TabView, Theme, BasePage, NavigationPage, TeaNavigator, Overlay, Label} from 'app-3rd/teaset'
 //Theme.set(Theme.themes.black);
 import { BimFileEntry, AuthorityManager } from 'app-entry';
+import * as CONSTANTS from 'app-api';
 const primaryColor = '#00baf3';
 Theme.set({
   primaryColor: primaryColor,
@@ -100,9 +101,25 @@ class HomePage extends NavigationPage {
     return <Tab1 style={{backgroundColor:'#FFFFFF'}} />
   }
 }
-class Page extends React.Component {
-  constructor() {
-    super();
+
+export default class MainPage extends React.Component {
+  static navigationOptions = ({navigation, screenProps}) =>{
+    storage.homeNavigation = navigation;
+    const options = navigation.getParam('options')
+    if(options) {
+      return options();
+    }  
+   return ({
+    title:'首页',
+    // header: {mode:'screen'},
+  })
+};
+  constructor(props) {
+    super(props)
+    storage.homeNavigation = this.props.navigation;
+  }
+  componentDidMount = () => {
+    storage.page = this.refs.page;
   }
   onNewClick = () =>{
     BimFileEntry.homeSelect(this.props.navigation);
@@ -137,58 +154,83 @@ class Page extends React.Component {
     }
     return null;
   }
+
+  options = (page) => {
+    let title = this.props.navigation.getParam(title);
+    if(page == CONSTANTS.PAGE_INNDX_HOME) {
+      return ({
+        title:title ? title : CONSTANTS.PAGE_NAME_HOME,
+        // header: {mode:'screen'},
+      })
+    } 
+    
+    if(page == CONSTANTS.PAGE_INNDX_SUBSCRIBE) {
+      return ({
+        title:title ? title : CONSTANTS.PAGE_NAME_SUBSCRIBE,
+        // header: {mode:'screen'},
+      })
+    }
+
+    if(page == CONSTANTS.PAGE_INNDX_MESSAGE) {
+      return ({
+        title:title ? title : CONSTANTS.PAGE_NAME_MESSAGE,
+        // header: {mode:'screen'},
+      })
+    }
+
+    if(page == CONSTANTS.PAGE_INNDX_MINE) {
+      return ({
+        title:'',
+        // header: null,
+      })
+    }
+    return ({
+      title:'BIM协同',
+      // header: {mode:'screen'},
+    })
+  }
+
+  onChange = (index) =>{
+    this.props.navigation.setParams({'options':()=>{return this.options(index)}})
+  }
   render() {
-    return (<TabView style={{ flex: 1 ,height:'100%'}} type='projector'>
+    return (<TabView ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1 ,height:'100%'}} type='projector'>
       <TabView.Sheet
-        title='首页'
+        title={CONSTANTS.PAGE_NAME_HOME}
         icon={require('app-images/home/icon_main_main_page.png')}
         activeIcon={require('app-images/home/icon_main_page_selected.png')}
       >
-        <HomePage />
+        <Tab1 />
       </TabView.Sheet>
       <TabView.Sheet
-        title='订阅'
+        title={CONSTANTS.PAGE_NAME_SUBSCRIBE}
         icon={require('app-images/home/icon_main_subscribe.png')}
         activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
         badge={1}
       >
-        <SubscribePage />
+        <Tab4 />
       </TabView.Sheet>
       {
         // 是否可以新建
         this.renderCreate()
       }
       <TabView.Sheet
-        title='消息'
+        title={CONSTANTS.PAGE_NAME_MESSAGE}
         icon={require('app-images/home/icon_main_message.png')}
         activeIcon={require('app-images/home/icon_main_message_selected.png')}
         badge={9}
       >
-        <MessagePage />
+        <Tab2 />
       </TabView.Sheet>
       <TabView.Sheet
-        title='我'
+        title={CONSTANTS.PAGE_NAME_MINE}
         icon={require('app-images/home/icon_main_mine.png')}
         activeIcon={require('app-images/home/icon_main_mine_selected.png')}
       // badge={'new'}
       >
-        <MinePage /> 
+        <Tab5 /> 
       </TabView.Sheet>
     </TabView>);
-  }
-}
-export default class MainPage extends React.Component {
-  static navigationOptions = {
-    title: '首页',
-    header: null
-  }
-  componentDidMount = () => {
-    storage.homeNavigation = this.props.navigation;
-    storage.page = this.refs.page;
-    this.page
-  }
-  render() {
-  return (<Page style={{height:'100%'}} ref={'page'} />);
   }
 };
 

@@ -1,3 +1,14 @@
+// 应用相关定义
+export const PAGE_INNDX_HOME = 0;
+export const PAGE_INNDX_SUBSCRIBE = 1;
+export const PAGE_INNDX_MESSAGE = 2;
+export const PAGE_INNDX_MINE = 3;
+
+export const PAGE_NAME_HOME = '首页'
+export const PAGE_NAME_SUBSCRIBE = '订阅'
+export const PAGE_NAME_MESSAGE = '消息'
+export const PAGE_NAME_MINE = '我'
+
 // 质检相关常量定义
 // 单据类型
 export const TYPE_INSPECTION =[

@@ -87,12 +87,13 @@ const RootStack = StackNavigator(
       return {
         headerStyle: {
           backgroundColor: '#00baf3',
+          borderBottomColor: '#00baf3',
         },
         headerTintColor: '#fff',
         tabBarVisible: false,
         headerTitleStyle: {
           fontWeight: 'bold',
-          fontSize:17,
+          fontSize:19,
         },
         // headerLeft: (
         //   <LeftBarButtons top={false} currentItem={""} />

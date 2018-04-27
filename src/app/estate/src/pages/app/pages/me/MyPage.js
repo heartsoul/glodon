@@ -13,24 +13,27 @@ import {
 } from 'react-native';
 import {loginOut, uaaLoginOut} from "app-api";
 import {NavigationPage} from 'app-3rd/teaset'
-
+import * as CONSTANTS from 'app-api';
 var { width, height } = Dimensions.get("window");
 var name = '' ;
 
-export default class extends NavigationPage {
+export default class extends Component {
   
   static navigationOptions = {
     title: '',
+    header: null
   };
+
   constructor() {
       super();
+      if(storage.loadUserInfo().accountInfo){
+        name = storage.loadUserInfo().accountInfo.name;
+    }
   };
   
   componentDidMount = () => {
-    console.log("componentDidMount");
-    if(storage.loadUserInfo().accountInfo){
-        name = storage.loadUserInfo().accountInfo.name;
-    }
+    // console.log("componentDidMount");
+    
   };
 
   _logout=()=>{
