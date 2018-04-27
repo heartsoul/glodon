@@ -169,8 +169,13 @@ function uploadFile(imageChooserEle, uploadCallback) {
     imageChooserEle._loadFile((files) => {
         if (files && files.length > 0) {
             API.upLoadFiles(files, (code, result) => {
-                console.log('uploadresult:'+code+',data:'+ JSON.stringify(result));
-                uploadCallback(result);
+                console.log('uploadresult:' + code + ',data:' + JSON.stringify(result));
+                if (code === "success") {
+                    uploadCallback(result);
+                } else {
+                    Toast.hide();
+                    Toast.info("上传图片失败", 1);
+                }
             });
         } else {
             uploadCallback();
@@ -220,8 +225,11 @@ export function submitFromList(inspectId, callback) {
             API.editSubmitInspection(storage.loadProject(), inspectId, params.inspectionType, JSON.stringify(params))
                 .then(data => {
                     callback({ res: "success", data: data, });
+                }).catch(err =>{
+                    Toast.hide();
                 })
         }).catch(err => {
+            Toast.hide();
             callback({ res: "error", data: err });
         });
 }
@@ -239,6 +247,9 @@ function createSubmitInspection(params, navigator) {
             if (data && data.data && data.data.id) {
                 storage.goBack(navigator, null);
             }
+        }).catch(err => {
+            Toast.hide();
+            Toast.info("提交失败", 1);
         })
 }
 /**
@@ -250,6 +261,9 @@ function editSubmitInspection(params, navigator) {
         .then(data => {
             Toast.hide();
             storage.goBack(navigator, null);
+        }).catch(err => {
+            Toast.hide();
+            Toast.info("提交失败", 1);
         })
 }
 /**
@@ -291,27 +305,45 @@ function createSaveInspection(params, callback) {
         .then(data => {
             Toast.hide();
             if (data) {
+                params.id = data.data.id;
+                params.code = data.data.code;
                 callback({
                     inspectId: data.data.id,
                     code: data.data.code,
+                    inspectionInfo: params,
                 });
             }
+        }).catch(err =>{
+            Toast.hide();
+            Toast.info("保存失败", 1);
         })
 }
 /**
  * 检查单 编辑   保存
  * @param {*} params 
  */
-function editSaveInspection(params) {
+function editSaveInspection(params, callback) {
     let requestParams = JSON.stringify(params);
     API.editSaveInspection(storage.loadProject(), params.inspectId, params.inspectionType, requestParams)
         .then(data => {
             console.log(data)
             Toast.hide();
+            callback({
+                inspectionInfo: params,
+            });
+        }).catch(err =>{
+            Toast.hide();
+            Toast.info("保存失败", 1);
         })
 }
 
-
+/**
+ * 是否有过修改
+ * @param {*} requestParams 
+ * @param {*} inspectionInfo 原始数据或者保存后的数据
+ * @param {*} imageChooserEle 
+ * @param {*} callback 
+ */
 export function isEditInfoChange(requestParams, inspectionInfo, imageChooserEle, callback) {
     imageChooserEle._loadFile((files) => {
 
@@ -383,6 +415,9 @@ export function deleteInspection(inspectId, inspectionType, callback) {
     API.createDeleteInspection(storage.loadProject(), inspectionType, inspectId)
         .then(data => {
             callback();
+        }).catch(err =>{
+            Toast.hide();
+            Toast.info("删除失败", 1);
         })
 }
 
