@@ -733,3 +733,129 @@ export async function deleteRepair(projectId, fileId) {
         method: 'DELETE',
     });
 }
+
+
+
+/**
+ * 材设 新增提交
+ */
+export async function equipmentCreateSubmit(projectId, props) {
+    let api = `/quality/${projectId}/facilityAcceptance/commit`;
+    return requestJSON(api, {
+        method: 'POST',
+        body: props,
+    });
+}
+/**
+ * 材设 编辑提交
+ * @param {*} projectId 
+ * @param {*} id 材设单id
+ * @param {*} props 
+ */
+export async function equipmentEditSubmit(projectId, id, props) {
+    let api = `/quality/${projectId}/facilityAcceptance/${id}/commit`;
+    return requestJSON(api, {
+        method: 'PUT',
+        body: props,
+    });
+}
+
+/**
+ * 材设 新增 保存
+ */
+export async function equipmentCreateSave(projectId, props) {
+    let api = `/quality/${projectId}/facilityAcceptance`;
+    return requestJSON(api, {
+        method: 'POST',
+        body: props,
+    });
+}
+
+/**
+ * 材设 编辑保存
+ * @param {*} id 材设单id
+ */
+export async function equipmentEditSave(projectId, id, props) {
+    let api = `/quality/${projectId}/facilityAcceptance/${id}`;
+    return requestJSON(api, {
+        method: 'PUT',
+        body: props,
+    });
+}
+
+/**
+ * 材设 删除
+ * @param {*} id 材设单id
+ */
+export async function equipmentDelete(projectId, id) {
+    let api = `/quality/${projectId}/facilityAcceptance/${id}`;
+    return requestJSON(api, {
+        method: 'DELETE',
+    });
+}
+
+/**
+ * 根据id查询详情和保存后的编辑信息
+ */
+export async function equipmentDetail(projectId, id) {
+    let api = `/quality/${projectId}/facilityAcceptance/${id}`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 获取项目下验收单位列表
+ */
+export async function equipmentAcceptanceCompanies(projectId) {
+    let api = `/quality/${projectId}/facilityAcceptance/acceptanceCompanys`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 材设列表 全部
+ */
+export async function equipmentList(projectId, page, size, sort) {
+    let filter = `?page=${page}&size=${size}&sort=${sort}`;
+    let api = `/quality/${projectId}/facilityAcceptance${filter}`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 材设列表 待提交
+ * @param {boolean} committed committed
+ */
+export async function equipmentList(projectId, page, size, sort, committed) {
+    let filter = `?page=${page}&size=${size}&sort=${sort}&committed=${committed}`;
+    let api = `/quality/${projectId}/facilityAcceptance${filter}`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 材设列表 合格不合格
+ * @param {boolean} committed committed
+ * @param {boolean} qualified qualified
+ */
+export async function equipmentList(projectId, page, size, sort, committed, qualified) {
+    let filter = `?page=${page}&size=${size}&sort=${sort}&committed=${committed}&qualified=${qualified}`;
+    let api = `/quality/${projectId}/facilityAcceptance${filter}`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 材设列表 数量
+ */
+export async function equipmentListNum(projectId) {
+    let api = `/quality/${projectId}/facilityAcceptance/state/summary`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
