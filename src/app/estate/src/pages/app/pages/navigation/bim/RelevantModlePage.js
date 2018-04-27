@@ -30,7 +30,7 @@ function callMessage(action, data, callbackName) { \
   if(data) { dataIn = data;}\
   if(callbackName) { callbackNameIn = callbackName; } \
   let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});\
-  console.log('执行命令：'+cmd);\
+//   console.log('执行命令：'+cmd);\
   window.postMessage(cmd);\
 }\
 window.modelEvent = {\
@@ -67,7 +67,7 @@ export default class RelevantModelPage extends Component {
     }
 
     componentDidMount = () => {
-        console.log(this.props.navigation.state.params);
+        // console.log(this.props.navigation.state.params);
         let params = this.props.navigation.state.params;
         let pageType = params.pageType;
         let relevantModel = params.relevantModel;
@@ -180,7 +180,7 @@ export default class RelevantModelPage extends Component {
     }
 
     onMessage = (e) => {
-        console.log(e.nativeEvent.data);
+        // console.log(e.nativeEvent.data);
         let data = JSON.parse(e.nativeEvent.data);
         let action = data.action;
         if (action) {
@@ -293,8 +293,8 @@ export default class RelevantModelPage extends Component {
     //在WebView中注册该回调方法
 
     onNavigationStateChange(event) {
-        console.log('onNavigationStateChange:');
-        console.log(event); //打印出event中属性
+        // console.log('onNavigationStateChange:');
+        // console.log(event); //打印出event中属性
     }
 
 

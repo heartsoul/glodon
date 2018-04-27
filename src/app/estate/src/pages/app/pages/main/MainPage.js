@@ -67,7 +67,7 @@ export default class extends NavigationPage {
     componentDidMount() {
         //请求数据
         // this.fetchData();
-        console.log("componentDidMount")
+        // console.log("componentDidMount")
     }
     fetchData = () => {
         this.render()

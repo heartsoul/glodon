@@ -22,7 +22,7 @@ function callMessage(action, data, callbackName) { \
   if(data) { dataIn = data;}\
   if(callbackName) { callbackNameIn = callbackName; } \
   let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});\
-  console.log('执行命令：'+cmd);\
+  // console.log('执行命令：'+cmd);\
   window.postMessage(cmd);\
 }\
 window.modelEvent = {\

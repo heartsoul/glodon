@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 class NewCheckListTabBar extends Component {
     constructor(props) {
         super(props);
-        console.log('>>>props.activeTab:' + props.defaultProps.activeTab);
+        // console.log('>>>props.activeTab:' + props.defaultProps.activeTab);
         this.state = {
             activeTab: props.defaultProps.activeTab,//当前选中的tab
         };

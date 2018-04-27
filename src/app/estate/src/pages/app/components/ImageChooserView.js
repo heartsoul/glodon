@@ -18,7 +18,7 @@ export default class ImageChooserView extends React.Component {
         
     }
     _onLoadFile = (files) =>{
-         console.log(files);
+        //  console.log(files);
     }
     /**
      * 获取GLDPhoto中的选中的图片信息
@@ -35,7 +35,7 @@ export default class ImageChooserView extends React.Component {
    static takePhoto=(retFun)=>{
         PM.takePhoto(
             (data,bSuccess) => {
-              console.log(data);
+            //   console.log(data);
               retFun(data,bSuccess)
             }
           );
@@ -47,7 +47,7 @@ export default class ImageChooserView extends React.Component {
    static pickerImages=(retFun)=>{
     PM.pickerImages(
         (data,bSuccess) => {
-          console.log(data);
+        //   console.log(data);
           retFun(data,bSuccess)
         }
       );

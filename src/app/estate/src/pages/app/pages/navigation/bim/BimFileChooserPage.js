@@ -67,7 +67,7 @@ export default class BimFileChooser extends Component {
             API.getModelLatestVersion(storage.loadProject()).then((responseData) => {
                 let latestVersion = responseData.data.data.versionId;
                 global.storage.projectIdVersionId = latestVersion;
-                console.log(responseData)
+                // console.log(responseData)
                 this.setState({
                     latestVersion: latestVersion,
                 });
@@ -83,7 +83,7 @@ export default class BimFileChooser extends Component {
         // 这个是js的访问网络的方法
         API.getModelBimFileChildren(projectId, latestVersion, page, this.state.fileId).then(
             (responseData) => {
-                console.log(responseData)
+                // console.log(responseData)
                 let data = responseData.data.data.items;
                 data = this.filterData(data);
 
@@ -127,9 +127,9 @@ export default class BimFileChooser extends Component {
     }
     //过滤模型和图纸
     filterData = (data) => {
-        console.log('---------------')
-        console.log(this.state.fileId)
-        console.log(this.state.dataType)
+        // console.log('---------------')
+        // console.log(this.state.fileId)
+        // console.log(this.state.dataType)
         if ((!this.state.fileId || this.state.fileId == 0) && data.length > 0 && this.state.dataType) {
             //根据dataType过滤 图纸和模型
             let filterData = data.filter((item) => {
@@ -159,7 +159,7 @@ export default class BimFileChooser extends Component {
         let fileId = params.fileId;
         let dataType = params.dataType;
 
-        console.log(params)
+        // console.log(params)
         this.setState({
             fileId: fileId,
             dataType: dataType,
@@ -255,7 +255,7 @@ export default class BimFileChooser extends Component {
     _onEndReached = () => {
     }
     _onRefreshing = () => {
-        console.log(this.state.refreshing);
+        // console.log(this.state.refreshing);
         if (this.state.refreshing) {
             return;
         }

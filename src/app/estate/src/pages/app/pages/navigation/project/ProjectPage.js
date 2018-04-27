@@ -190,7 +190,7 @@ export default class projectList extends Component {
         // if(!this.setState.hasMore) {
         //     return;
         // }
-        console.log(this.state.refreshing);
+        // console.log(this.state.refreshing);
         if(this.state.refreshing) {
             return;
         }
@@ -203,7 +203,7 @@ export default class projectList extends Component {
         }, 1500);
     }
     _onRefreshing = () => {
-        console.log(this.state.refreshing);
+        // console.log(this.state.refreshing);
         if(this.state.refreshing) {
             return;
         }

@@ -25,12 +25,12 @@ class SettingPage extends Component{
         title:'设置',
       });
       componentDidMount=()=> {
-        console.log(this.props.navigation.state.params);
+        // console.log(this.props.navigation.state.params);
         //请求数据
          this.props.navigation.setParams({rightNavigatePress:this._rightAction }) 
       }
       _rightAction = ()=> {
-        console.log("执行_rightAction");
+        // console.log("执行_rightAction");
       }
     constructor() {
         super();

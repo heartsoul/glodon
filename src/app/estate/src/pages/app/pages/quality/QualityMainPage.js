@@ -9,7 +9,7 @@ import QualityList from './qualityList'
 
 class RightBarButtons extends React.Component {
   _onSearchPress = (navigation) => {
-    console.log(navigation);
+    // console.log(navigation);
     navigation.navigate("SearchPage")
   }
   _onNewPress = (navigation) => {

@@ -29,7 +29,7 @@ function callMessage(action, data, callbackName) { \
   if(data) { dataIn = data;}\
   if(callbackName) { callbackNameIn = callbackName; } \
   let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});\
-  console.log('执行命令：'+cmd);\
+//   console.log('执行命令：'+cmd);\
   window.postMessage(cmd);\
 }\
 window.modelEvent = {\
@@ -240,7 +240,7 @@ export default class RelevantBlueprintPage extends Component {
             drawingPositionX: this.state.drawingPositionX,
             drawingPositionY: this.state.drawingPositionY,
         }
-        console.log(this.state.pageType)
+        // console.log(this.state.pageType)
         // 0新建检查单 1检查单编辑状态 2详情查看  3图纸模式
         if (this.state.pageType == PageType.PAGE_TYPE_NEW_QUALITY) {
             storage.bimFileChooseCallback(relevantBlueprint, '图纸文件');
@@ -256,7 +256,7 @@ export default class RelevantBlueprintPage extends Component {
     }
 
     onMessage = (e) => {
-        console.log(e.nativeEvent.data);
+        // console.log(e.nativeEvent.data);
         let data = JSON.parse(e.nativeEvent.data);
         let action = data.action;
         if (action) {
@@ -304,8 +304,8 @@ export default class RelevantBlueprintPage extends Component {
     //在WebView中注册该回调方法
 
     onNavigationStateChange(event) {
-        console.log('onNavigationStateChange:');
-        console.log(event); //打印出event中属性
+        // console.log('onNavigationStateChange:');
+        // console.log(event); //打印出event中属性
     }
     //渲染
     render() {

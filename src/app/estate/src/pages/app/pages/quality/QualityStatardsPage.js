@@ -183,7 +183,7 @@ export default class QualityStatardsPage extends Component {
 
         </BODY>
         </HTML>`;
-        console.log('>>>>>html:\n' + html);
+        // console.log('>>>>>html:\n' + html);
         return html;
     }
 

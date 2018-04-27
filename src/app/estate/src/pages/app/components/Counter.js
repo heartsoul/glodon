@@ -10,8 +10,8 @@ export default class Counter extends Component {
   }
 
   render() {
-    console.log('counter')
-    console.log(this.props)
+    // console.log('counter')
+    // console.log(this.props)
     const { decrementFn, incrementFn, counter } = this.props
     return (
       <View style={styles.container}>

@@ -89,7 +89,6 @@ class HomePage extends NavigationPage {
   };
   
   renderNavigationRightView = () => {
-    // console.log(renderNavigationRightView);
     return <SearchButton/>
   }
 

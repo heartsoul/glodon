@@ -9,7 +9,6 @@ import * as GLD from '../pages'
 import configureStore, { history } from '../store/ConfigureStore'
 
 const store = configureStore()
-console.log("HomePage:" + GLD.HomePage)
 // LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage
 const RootStack = StackNavigator(
   {

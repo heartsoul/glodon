@@ -55,7 +55,6 @@ class LoginPage extends React.Component {
     // 登录完成,切成功登录
     if (nextProps.status === '登陆成功' && nextProps.isSuccess) {
       let navigator = this.props.navigation;
-      console.log("\n>>>>>hasChoose:ret:"+navigator)
       Toast.hide();
       if(nextProps.hasChoose) {
         storage.gotoMain(navigator);
@@ -77,7 +76,6 @@ class LoginPage extends React.Component {
       // this.passwordTextInput.setSelectionRange(0, this.passwordTextInput.value.length);
       return;
     }
-    console.log("_onUserNameChangeText" + text);
     this.setState({ username: text });
   };
   _onUserNameBlur = () => {

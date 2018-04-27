@@ -102,7 +102,7 @@ export default class extends PureComponent {
     }
 
     render() {
-        console.log('render:' + JSON.stringify(this.state.equipmentBadge))
+        // console.log('render:' + JSON.stringify(this.state.equipmentBadge))
         //加载数据
         return this.renderData();
     }

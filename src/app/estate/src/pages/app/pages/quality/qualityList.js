@@ -118,7 +118,7 @@ export default class qualityList extends PureComponent {
     }
 
     render() {
-        console.log('render:' + JSON.stringify(this.state.qualityBadge))
+        // console.log('render:' + JSON.stringify(this.state.qualityBadge))
         //加载数据
         return this.renderData();
     }

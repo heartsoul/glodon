@@ -6,13 +6,11 @@ import {NativeModules} from 'react-native'
 var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
 
 export function login(username, pwd) {
-  console.log("》》》》开始登录")
   return loginOld(username, pwd);
   // return loginNew(username, pwd);
 }
 
 export function logout() {
-  console.log('退出登录方法')
   return dispatch => {
     dispatch(logoutSuccess())
   }
@@ -54,7 +52,6 @@ function loginNew(username, pwd) {
 }
 function loadAccount(dispatch,response,username, pwd) {
   API.accountInfo().then((userInfo) => {
-    console.log(userInfo);
     if (userInfo.err) {
       dispatch(loginError(false));
       return;
@@ -87,7 +84,6 @@ function loadAccount(dispatch,response,username, pwd) {
 }
 
 function logoutSuccess() {
-  console.log('log success')
   return {
     type: types.LOGIN_IN_INIT,
   }
@@ -100,7 +96,6 @@ function isLogining() {
 }
 
 function loginSuccess(isSuccess, user) {
-  console.log('success')
   return {
     type: types.LOGIN_IN_DONE,
     user,
@@ -108,7 +103,6 @@ function loginSuccess(isSuccess, user) {
 }
 
 function loginSuccessChoose(isSuccess, user) {
-  console.log('success')
   return {
     type: types.LOGIN_IN_DONE_CHOOSE,
     user,
@@ -116,14 +110,12 @@ function loginSuccessChoose(isSuccess, user) {
 }
 
 function loginError(isSuccess) {
-  console.log('error')
   return {
     type: types.LOGIN_IN_ERROR,
   }
 }
 
 function loginRetry(isSuccess) {
-  console.log('error')
   return {
     type: types.LOGIN_IN_RETRY,
   }
