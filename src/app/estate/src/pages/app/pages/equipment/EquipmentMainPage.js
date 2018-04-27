@@ -24,13 +24,13 @@ class RightBarButtons extends React.Component {
       width: 70,
     }}>
       <TouchableOpacity onPress={() => this._onSearchPress(this.props.navigation)} >
-        <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_search_white.png')} />
+        <Image style={styles.barItemImage} source={require('app-images/icon_search_white.png')} />
       </TouchableOpacity>
       <View style={styles.spliteItem} />
       {
         AuthorityManager.isQualityCreate() ?
           <TouchableOpacity onPress={() => this._onNewPress(this.props.navigation)} >
-            <Image style={styles.barItemImage} resizeMode='center' source={require('app-images/icon_camera_white.png')} />
+            <Image style={styles.barItemImage} source={require('app-images/icon_camera_white.png')} />
           </TouchableOpacity> : null
       }
       {
@@ -63,8 +63,9 @@ const styles = StyleSheet.create({
     width: 70,
   },
   barItemImage: {
-    width: 26,
-    height: 26,
+    width: 24,
+    height: 24,
+    resizeMode:'contain'
   },
   spliteItem: {
     width: 10,

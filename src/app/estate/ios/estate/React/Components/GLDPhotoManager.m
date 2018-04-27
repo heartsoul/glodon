@@ -15,7 +15,7 @@
 #import "NSDictionary+SoulPhotoModel.h"
 
 #import "RNTImagesView.h"
-
+#import "WaitViewUtil.h"
 
 @interface RCTConvert (RNTImagesView)
 
@@ -68,7 +68,9 @@ RCT_EXPORT_METHOD (loadFileByReactTag:(nonnull NSNumber *)reactTag callback:(RCT
   if (![view isKindOfClass:[RNTImagesView class]]) {
     RCTLogError(@"Invalid view returned from registry, expecting RCTWebView, got: %@", view);
   } else {
+    [WaitViewUtil startLoading];
     [view loadFiles:^(NSArray *files) {
+      [WaitViewUtil endLoading];
       callback(@[files]);
     }];
     
@@ -85,7 +87,9 @@ RCT_EXPORT_METHOD (loadFile:(nonnull NSDictionary *)params callback:(RCTResponse
   if (![view isKindOfClass:[RNTImagesView class]]) {
     RCTLogError(@"Invalid view returned from registry, expecting RCTWebView, got: %@", view);
   } else {
+    [WaitViewUtil startLoading];
     [view loadFiles:^(NSArray *files) {
+      [WaitViewUtil endLoading];
       callback(@[files]);
     }];
     

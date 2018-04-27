@@ -8,11 +8,8 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <React/RCTBundleURLProvider.h>
-#import <React/RCTRootView.h>
-@interface AppDelegate : UIResponder <UIApplicationDelegate,RCTBridgeDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
-@property (nonatomic, strong) RCTBridge *bridge;
 
 @end

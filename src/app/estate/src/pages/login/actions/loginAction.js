@@ -24,7 +24,7 @@ function loginOld(username, pwd) {
     dispatch(isLogining())
     RNBridgeModule.RNInvokeOCCallBack(
       {
-        caller: "gldrn",
+        caller: "soulrn",
         name: "clearCookie",
         ver: "1.0",
         data: { title: "登录", message: "是否确认登录？" }

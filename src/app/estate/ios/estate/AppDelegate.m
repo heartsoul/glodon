@@ -20,6 +20,7 @@
   
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   
+//  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForFallbackResource:nil fallbackExtension:nil];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"estate"
                                                initialProperties:nil
@@ -31,6 +32,9 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  self.window.backgroundColor = [UIColor whiteColor];
+  [UINavigationBar appearance].backIndicatorImage = [UIImage imageNamed:@"icon_fanhui"];
+  [UINavigationBar appearance].backIndicatorTransitionMaskImage = [UIImage imageNamed:@"icon_fanhui"];
   return YES;
 }
 

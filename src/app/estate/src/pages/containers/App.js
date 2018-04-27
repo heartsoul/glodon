@@ -95,9 +95,9 @@ const RootStack = StackNavigator(
           fontWeight: 'bold',
           fontSize:17,
         },
-        headerLeft: (
-          <LeftBarButtons top={false} currentItem={""} />
-        )
+        // headerLeft: (
+        //   <LeftBarButtons top={false} currentItem={""} />
+        // )
       }
     },
   }

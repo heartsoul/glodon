@@ -113,9 +113,6 @@
 		247E2C1F2046373400016F63 /* SoulDatabaseBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2BCC2046373300016F63 /* SoulDatabaseBase.m */; };
 		247E2C202046373400016F63 /* SoulDatabaseBase+cache.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2BCD2046373300016F63 /* SoulDatabaseBase+cache.m */; };
 		247E2C3920463AC200016F63 /* CKSecurityTool.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 247E2C3A20463AC200016F63 /* CKSecurityTool.framework */; };
-		247E2C6320464F1800016F63 /* TestRNViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2C6120464F1800016F63 /* TestRNViewController.m */; };
-		247E2C6620466D8D00016F63 /* TestRNViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 247E2C6520466D8D00016F63 /* TestRNViewController.storyboard */; };
-		247E2C6920466E2F00016F63 /* TestRNXXViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2C6820466E2F00016F63 /* TestRNXXViewController.m */; };
 		248E0CFE205FA0F10053F5AA /* GLDPhotoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0CFD205FA0F10053F5AA /* GLDPhotoManager.m */; };
 		248E0D01205FB1440053F5AA /* GLDDemoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D00205FB1440053F5AA /* GLDDemoManager.m */; };
 		248E0D2A2060A4760053F5AA /* RNTSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D292060A4760053F5AA /* RNTSwitch.m */; };
@@ -404,7 +401,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
 		00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGeolocation.xcodeproj; path = "../node_modules/react-native/Libraries/Geolocation/RCTGeolocation.xcodeproj"; sourceTree = "<group>"; };
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
@@ -610,11 +606,6 @@
 		247E2BCE2046373300016F63 /* SoulDatabaseBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoulDatabaseBase.h; sourceTree = "<group>"; };
 		247E2BCF2046373300016F63 /* BaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseModel.h; sourceTree = "<group>"; };
 		247E2C3A20463AC200016F63 /* CKSecurityTool.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CKSecurityTool.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		247E2C6020464F1800016F63 /* TestRNViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRNViewController.h; sourceTree = "<group>"; };
-		247E2C6120464F1800016F63 /* TestRNViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRNViewController.m; sourceTree = "<group>"; };
-		247E2C6520466D8D00016F63 /* TestRNViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TestRNViewController.storyboard; sourceTree = "<group>"; };
-		247E2C6720466E2F00016F63 /* TestRNXXViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRNXXViewController.h; sourceTree = "<group>"; };
-		247E2C6820466E2F00016F63 /* TestRNXXViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRNXXViewController.m; sourceTree = "<group>"; };
 		248E0CFC205FA0F10053F5AA /* GLDPhotoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLDPhotoManager.h; sourceTree = "<group>"; };
 		248E0CFD205FA0F10053F5AA /* GLDPhotoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDPhotoManager.m; sourceTree = "<group>"; };
 		248E0CFF205FB1440053F5AA /* GLDDemoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLDDemoManager.h; sourceTree = "<group>"; };
@@ -770,7 +761,6 @@
 			children = (
 				247E2B112046373300016F63 /* Framework */,
 				247E2B09204631A600016F63 /* React */,
-				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -809,11 +799,6 @@
 			children = (
 				248E0CE0205FA09D0053F5AA /* Components */,
 				247E2B0A204631A600016F63 /* Vender */,
-				247E2C6020464F1800016F63 /* TestRNViewController.h */,
-				247E2C6120464F1800016F63 /* TestRNViewController.m */,
-				247E2C6720466E2F00016F63 /* TestRNXXViewController.h */,
-				247E2C6820466E2F00016F63 /* TestRNXXViewController.m */,
-				247E2C6520466D8D00016F63 /* TestRNViewController.storyboard */,
 			);
 			name = React;
 			path = estate/React;
@@ -1751,7 +1736,6 @@
 			files = (
 				06958C842082E7220015C54F /* SoulActionToolbarViews.xib in Resources */,
 				247E2BFC2046373400016F63 /* XHDatePickerView.xib in Resources */,
-				247E2C6620466D8D00016F63 /* TestRNViewController.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				06958C812082E7220015C54F /* SoulCameraEditView.xib in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
@@ -1773,7 +1757,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n# RCT_DEV 调试模式，自动查找服务器 SKIP_BUNDLING 设置来跳过真机器自动打包 FORCE_BUNDLING 模拟器下也打进行打包\n";
+			shellScript = "# SKIP_BUNDLING = true\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n# RCT_DEV 调试模式，自动查找服务器 SKIP_BUNDLING 设置来跳过真机器自动打包 FORCE_BUNDLING 模拟器下也打进行打包\n";
 		};
 		247E2B072043CD5300016F63 /* [AU] Set Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1886,7 +1870,6 @@
 				247E2C052046373400016F63 /* DownSheetCell.m in Sources */,
 				247E2BDC2046373300016F63 /* UIImage+TintColor.m in Sources */,
 				247E2C042046373400016F63 /* UIMenuTableView.m in Sources */,
-				247E2C6920466E2F00016F63 /* TestRNXXViewController.m in Sources */,
 				247E2C012046373400016F63 /* RadioButton.m in Sources */,
 				247E2BFD2046373400016F63 /* XHDatePickerView.m in Sources */,
 				06958C852082E7220015C54F /* SoulCameraViewController.m in Sources */,
@@ -1946,7 +1929,6 @@
 				248E0CFE205FA0F10053F5AA /* GLDPhotoManager.m in Sources */,
 				247E2BEF2046373400016F63 /* NetManager.m in Sources */,
 				06958C822082E7220015C54F /* SoulPhotoEditViewController.m in Sources */,
-				247E2C6320464F1800016F63 /* TestRNViewController.m in Sources */,
 				247E2BF62046373400016F63 /* ParserFactory.m in Sources */,
 				247E2C092046373400016F63 /* UIShowModalView.m in Sources */,
 				247E2C142046373400016F63 /* SBJsonStreamWriter.m in Sources */,

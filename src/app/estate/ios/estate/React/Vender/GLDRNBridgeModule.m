@@ -11,7 +11,6 @@
 #import <libextobjc/EXTScope.h>
 #import "GLDRNEventEmitter.h"
 #import "NSObject+SoulAlertView.h"
-#import "TestRNViewController.h"
 #import "AppDelegate.h"
 const NSStringRNAPI RNAPI_version = @"version";
 const NSStringRNAPI RNAPI_alert = @"alert";
@@ -277,7 +276,7 @@ NSArray* apiSet() {
 + (void)callNative:(NSDictionary*)data {
   NSLog(@"callNative:%@",@"successed");
   
-  [TestRNViewController callPhotoTest];
+//  [TestRNViewController callPhotoTest];
 }
 
 + (void)api_push:(NSDictionary *)dictionary finishBlock:(FinishJSApiBlock) finishBlock {
@@ -356,11 +355,11 @@ NSArray* apiSet() {
 + (void)push:(NSDictionary*)data {
 //  TestRNViewController * viewController = [[TestRNViewController alloc] initWithNibName:@"TestRNViewController" bundle:[NSBundle mainBundle]];
   
-  UIStoryboard *secondStoryBoard = [UIStoryboard storyboardWithName:@"TestRNViewController" bundle:nil];
-  TestRNViewController* viewController = [secondStoryBoard instantiateInitialViewController];  //viewController为viewcontroller
+//  UIStoryboard *secondStoryBoard = [UIStoryboard storyboardWithName:@"TestRNViewController" bundle:nil];
+//  TestRNViewController* viewController = [secondStoryBoard instantiateInitialViewController];  //viewController为viewcontroller
 //  UIViewController * rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
-  [UIApplication sharedApplication].keyWindow.rootViewController = viewController;
-  [[UIApplication sharedApplication].keyWindow makeKeyAndVisible];
+//  [UIApplication sharedApplication].keyWindow.rootViewController = viewController;
+//  [[UIApplication sharedApplication].keyWindow makeKeyAndVisible];
 }
 + (void)present:(NSDictionary*)data {
   [NSObject showTipWithTitle:@"abc" message:@"Hello" closeButtonTitle:@"close"];

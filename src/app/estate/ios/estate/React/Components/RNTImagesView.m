@@ -23,7 +23,7 @@
 
 #import "GLDPhotoPreviewViewController.h"
 #import "SoulCameraViewController.h"
-
+#import "WaitViewUtil.h"
 @interface LPDImagePickerControllerEx : LPDImagePickerController
 @end
 
@@ -153,8 +153,9 @@
         PHAsset * asset = [NSMutableDictionary getPHAsset:localIdentifier];
         @strongify(self);
         [navcDelegate dismissViewControllerAnimated:NO completion:nil];
-        
+        [WaitViewUtil startLoading];
         [self.class loadItem:asset finish:^(NSDictionary *data) {
+           [WaitViewUtil endLoading];
           callback(@[data]);
         }];
       } else {
@@ -185,7 +186,9 @@
     lpdImagePickerVc.maxImagesCount = 3;
     
   [lpdImagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
+    [WaitViewUtil startLoading];
     [self.class loadFiles:assets finish:^(NSArray *datas) {
+      [WaitViewUtil endLoading];
       callback(datas);
     }];
   }];

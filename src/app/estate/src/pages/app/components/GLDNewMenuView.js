@@ -47,7 +47,13 @@ export default class GLDNewMenuView extends Component {
         Overlay.show(overlayView);
     }
     static openChoose(navigation, finish) {
-
+        if(!navigation) {
+            navigation = storage.homeNavigation;
+        }
+        if(!navigation) {
+            alert('无法正常操作');
+            return;
+        }
         let items = [
             {
                 title: '拍照', onPress: () => {
@@ -59,7 +65,14 @@ export default class GLDNewMenuView extends Component {
                             finish(files);
                             return;
                         }
-                        storage.pushNext(navigation, "NewPage", {...navigation.state.params, 'files': files });
+                        let p = navigation.state;
+                    if(p) {
+                        p = p.params
+                    }
+                    if(!p) {
+                        p = {}
+                    }
+                        storage.pushNext(navigation, "NewPage", {...p, 'files': files });
                     })
                 }
             },
@@ -74,7 +87,14 @@ export default class GLDNewMenuView extends Component {
                             finish(files);
                             return;
                         }
-                        storage.pushNext(navigation, "NewPage", {...navigation.state.params,'files': files });
+                        let p = navigation.state;
+                    if(p) {
+                        p = p.params
+                    }
+                    if(!p) {
+                        p = {}
+                    }
+                        storage.pushNext(navigation, "NewPage", {...p,'files': files });
                     })
                 }
             },
@@ -84,7 +104,17 @@ export default class GLDNewMenuView extends Component {
                         finish([]);
                         return;
                     }
-                    storage.pushNext(navigation, "NewPage",{...navigation.state.params,});
+                    let p = navigation;
+                    if(p) {
+                        p = p.state
+                    }
+                    if(p) {
+                        p = p.params
+                    }
+                    if(!p) {
+                        p = {}
+                    }
+                    storage.pushNext(navigation, "NewPage",{...p});
                 }
             },
         ];
