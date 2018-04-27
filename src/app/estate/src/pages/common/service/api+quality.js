@@ -738,6 +738,47 @@ export async function deleteRepair(projectId, fileId) {
 
 /**
  * 材设 新增提交
+ * @param {*} props {
+  "acceptanceCompanyId": 0,
+  "acceptanceCompanyName": "string",
+  "approachDate": "2018-04-27T08:05:47.683Z",
+  "batchCode": "string",
+  "brand": "string",
+  "buildingId": 0,
+  "buildingName": "string",
+  "code": "string",
+  "elementId": "string",
+  "elementName": "string",
+  "facilityCode": "string",
+  "facilityName": "string",
+  "files": [
+    {
+      "objectId": "string",
+      "name": "string",
+      "extension": "string",
+      "length": 0,
+      "digest": "string",
+      "targetId": "string",
+      "targetType": "string",
+      "uploadId": "string",
+      "uploadTime": "2018-04-27T08:05:47.683Z",
+      "remark": "string",
+      "extData": "string"
+    }
+  ],
+  "gdocFileId": "string",
+  "manufacturer": "string",
+  "modelId": "string",
+  "modelNum": "string",
+  "projectId": 0,
+  "projectName": "string",
+  "qualified": true,
+  "quantity": 0,
+  "specification": "string",
+  "supplier": "string",
+  "unit": "string",
+  "versionId": "string"
+}
  */
 export async function equipmentCreateSubmit(projectId, props) {
     let api = `/quality/${projectId}/facilityAcceptance/commit`;
@@ -829,7 +870,7 @@ export async function equipmentList(projectId, page, size, sort) {
  * 材设列表 待提交
  * @param {boolean} committed committed
  */
-export async function equipmentList(projectId, page, size, sort, committed) {
+export async function equipmentListCommitted(projectId, page, size, sort, committed) {
     let filter = `?page=${page}&size=${size}&sort=${sort}&committed=${committed}`;
     let api = `/quality/${projectId}/facilityAcceptance${filter}`;
     return requestJSON(api, {
@@ -842,7 +883,7 @@ export async function equipmentList(projectId, page, size, sort, committed) {
  * @param {boolean} committed committed
  * @param {boolean} qualified qualified
  */
-export async function equipmentList(projectId, page, size, sort, committed, qualified) {
+export async function equipmentListQualified(projectId, page, size, sort, committed, qualified) {
     let filter = `?page=${page}&size=${size}&sort=${sort}&committed=${committed}&qualified=${qualified}`;
     let api = `/quality/${projectId}/facilityAcceptance${filter}`;
     return requestJSON(api, {
