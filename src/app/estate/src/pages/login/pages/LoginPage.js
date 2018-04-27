@@ -53,7 +53,7 @@ class LoginPage extends React.Component {
       return false;
     }
     // 登录完成,切成功登录
-    if (nextProps.status === '登陆成功' && nextProps.isSuccess) {
+    if (nextProps.status === '登录成功' && nextProps.isSuccess) {
       let navigator = this.props.navigation;
       Toast.hide();
       if(nextProps.hasChoose) {
@@ -190,7 +190,8 @@ class LoginPage extends React.Component {
             text="登 录"
           >
           </ActionButton> 
-          <Text style={styles.style_loginText}>{this.props.status}</Text>
+          
+          <Text style={[styles.style_loginText,this.props.status === '登录出错'?{color:'red'}:{}]}>{this.props.status}</Text>
         </View>
       </KeyboardAwareScrollView>
     );
