@@ -5,19 +5,23 @@ import thunk from 'redux-thunk';
 const icon_login_password_delete = require("app-images/login/icon_login_password_delete.png")
 const icon_login_password_hide = require("app-images/login/icon_login_password_hide.png")
 const icon_login_password_show = require("app-images/login/icon_login_password_show.png")
-export class TextInputNormal extends TextInput {
-
+export class TextInputNormal extends Component {
+  textInput = null;
   constructor(props) {
     super(props);
+    this.textInput = null;
     /*用来指示是否显示Loading提示符号*/
     this.state = {
       disabled: false,
     };
   }
-
+  focus = () =>{
+    this.textInput.focus();
+  }
   render() {
     return (
       <TextInput
+      ref={(ref)=>{this.textInput=ref}}
       style={styles.style_user_input}
       numberOfLines={1}
       autoFocus={true}
@@ -50,8 +54,9 @@ TextInputNormal.propTypes = {
   onChangeText: PropTypes.func.isRequired,
 }
 
-export class TextInputPassword extends TextInput {
+export class TextInputPassword extends Component {
 
+  textInput = null;
   constructor(props) {
     super(props);
     this.textInput = null;
@@ -80,6 +85,9 @@ export class TextInputPassword extends TextInput {
       });
     }
     // this.textInput.setSelectionRange(0, this.textInput.value.length);
+  }
+  focus = () =>{
+    this.textInput.focus();
   }
   render() {
     return (
@@ -113,7 +121,7 @@ export class TextInputPassword extends TextInput {
       onFocus={this.props.onFocus}
     />
     <View  style={[styles.style_input_action,]}>
-    <TouchableOpacity onPress={this._onClearTextEntry}><Image style={[styles.style_image_delete,this.state.value.length ? {display:'none'} : {display:'none'}]} source={icon_login_password_delete}/></TouchableOpacity>
+    <TouchableOpacity onPress={this._onClearTextEntry}><Image style={[styles.style_image_delete,this.state.value.length ? {display:''} : {display:'none'}]} source={icon_login_password_delete}/></TouchableOpacity>
     <TouchableOpacity onPress={this._onSecureTextEntry}><Image style={styles.style_image} source={this.state.secureTextEntry ? icon_login_password_show : icon_login_password_hide}/></TouchableOpacity>
     </View>
     </View>
