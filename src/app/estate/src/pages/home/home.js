@@ -68,8 +68,8 @@ class MessagePage extends NavigationPage {
 
 class SearchaBarItem extends React.Component {
   render() {
-    return  <TouchableOpacity  onPress={()=>this.props.navigation.navigate("SearchPage")} >  
-          <Image resizeMode='center' source={require('app-images/icon_search_white.png')} />
+    return  <TouchableOpacity style={{marginRight:10}}  onPress={()=>this.props.navigation.navigate("SearchPage")} >  
+          <Image style={{width: 24,height: 24,resizeMode:'contain'}} source={require('app-images/icon_search_white.png')} />
     </TouchableOpacity> 
   }
 }

@@ -92,16 +92,19 @@ export default class extends NavigationPage {
         return (
             <View style={{ backgroundColor: '#FFFFFE' }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <ImageBackground style={{ height: 238 }} resizeMode='center' source={require('app-images/icon_main_page_top_bg.png')}>
-                    <Carousel ref={'carousel'} style={{ height: 238 }} carousel={false} scrollEnabled={false}>
+                <ImageBackground style={{ height: 203, marginTop:44}} resizeMode='contain' source={require('app-images/icon_main_page_top_bg.png')}>
+                    <Carousel ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
                     {
-                        qShow ? 
-                        <Image style={styles.topImage} resizeMode='center' source={require('app-images/icon_main_page_top_quality.png')} />
+                        qShow ? <View style={styles.topImageView}>
+                        <Image style={[styles.topImage,{width:121,height:87}]} source={require('app-images/icon_main_page_top_quality.png')} />
+                        </View>
                         : null
                     }
                      {
                         eShow ? 
-                        <Image style={styles.topImage} resizeMode='center' source={require('app-images/icon_main_page_top_equipment.png')} />
+                        <View style={styles.topImageView}>
+                        <Image style={[styles.topImage,{width:27,height:74}]} source={require('app-images/icon_main_page_top_equipment.png')} />
+                        </View>
                         : null
                     }
                     </Carousel>
@@ -145,9 +148,14 @@ var styles = StyleSheet.create({
     style_fogotText: {
         color: 'green',
     },
-    topImage: {
+    topImageView: {
         width: width,
-        height: 238,
+        height: 203,
+        alignItems: 'center',
+        justifyContent: 'center',
+        justifyContent: 'center',
+    },
+    topImage: {
     },
     spliteItem: {
         width: 10,
