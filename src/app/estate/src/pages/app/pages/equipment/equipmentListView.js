@@ -35,6 +35,9 @@ class EquipmentListView extends PureComponent {
     //网络请求
     _fetchData = (qcState, page) => {
        this.props.fetchData(qcState, page, this.props.dataMap);
+       if(page < 1 && this.props.updateNumber) {
+        this.props.updateNumber();
+    }
     }
 
     componentDidMount() {

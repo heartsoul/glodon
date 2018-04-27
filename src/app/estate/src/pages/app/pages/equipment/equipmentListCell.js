@@ -11,8 +11,8 @@ var { width, height } = Dimensions.get("window");
 
 import { BimFileEntry, AuthorityManager } from "app-entry";
 
-const projectImage = require("app-images/icon_choose_project_item.png");
-const projectTimeImage = require("app-images/icon_time_black.png");
+const standardImage = require("app-images/icon_up_to_standard.png");
+const notStandardImage = require("app-images/icon_not_up_to_standard.png");
 
 
 export default class EquipmentListCell extends PureComponent {
@@ -75,10 +75,12 @@ export default class EquipmentListCell extends PureComponent {
                         <Text style={[styles.contentStatus, { color: API.toQcStateShowColor(item.value.qcState) }]}>{item.value.qcStateShow}</Text>
                     </View>
                     <View style={[styles.contentView, !bToolbar? styles.contentView_border:{}]}>
+                        <Text style={styles.content}>批号：{item.value.description}</Text>
+                        <Text style={styles.content}>编码：{item.value.description}</Text>
+                        <Text style={styles.content}>名称：{item.value.description}</Text>
                         {
                             this.renderImage(item)
                         }
-                        <Text style={styles.content}>{item.value.description}</Text>
                     </View>
                     {barItem}
                 </View>
@@ -86,19 +88,26 @@ export default class EquipmentListCell extends PureComponent {
         );
     }
     renderImage = (item) => {
-        let imageSource = projectImage;
-        if (item.value.files && item.value.files.length > 0) {
-            imageSource = { uri: item.value.files[0].url };
+        // if(item.value.qcState != API.QC_STATE_EDIT) return;
+        let imageSource = null
+        if(item.value.qcState != API.QC_STATE_STANDARD) {
+            imageSource = standardImage;
+        } else if(item.value.qcState != API.QC_STATE_NOT_STANDARD) {
+            imageSource = notStandardImage;
         }
-        return (<Image source={imageSource} style={[styles.image]} />)
+        if(imageSource) {
+            return (<Image source={imageSource} style={[styles.image]} />)
+        }
+        return null
+       
     }
     // 提交 & 删除
     renderSubmitAndDeleteAction = (item, index) => {
         if (!AuthorityManager.isMe(item.value.creatorId)) {
             return null;
         }
-        let bSubmit = AuthorityManager.isQualityCheckSubmit();
-        let bDelete = AuthorityManager.isQualityCheckDelete();
+        let bSubmit = AuthorityManager.isEquipmentCreate();
+        let bDelete = AuthorityManager.isEquipmentDelete();
         if (!(bSubmit || bDelete)) {
             return null;
         }
@@ -116,53 +125,18 @@ export default class EquipmentListCell extends PureComponent {
         )
     }
 
-    // 整改
-    renderRectifyAction = (item, index) => {
-        if (AuthorityManager.isCreateRectify() && AuthorityManager.isMe(item.value.responsibleUserId)) {
-            return (
-                <View style={[styles.contentActionView]}>
-                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)} width={80} marginRight={20}
-                        onClick={() => { this._onRectifyAction(item, index) }} text={API.TYPE_NEW_NAME_RECTIFY} />
-                </View>
-            )
-        }
-        return null;
-    }
-    // 复查
-    renderReviewAction = (item, index) => {
-        if (AuthorityManager.isCreateReview() && AuthorityManager.isMe(item.value.creatorId)) {
-            return (
-                <View style={[styles.contentActionView]}>
-                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)} width={80} marginRight={20}
-                        onClick={() => { this._onReviewAction(item, index) }} text={API.TYPE_NEW_NAME_REVIEW} />
-                </View>
-            )
-        }
-        return null;
-    }
     // 操作条
     renderActionBar = (item, index) => {
-        return null;
         switch (item.value.qcState) {
-            case API.QC_STATE_STAGED: {
+            case API.QC_STATE_EDIT: {
                 return this.renderSubmitAndDeleteAction(item, index)
             }
                 break;
-            case API.QC_STATE_UNRECTIFIED: {
-                return this.renderRectifyAction(item, index)
-            }
-                break;
-            case API.QC_STATE_UNREVIEWED: {
-                return this.renderReviewAction(item, index)
-            }
-                break;
-            case API.QC_STATE_DELAYED: {
-                return this.renderRectifyAction(item, index)
-            }
-                break;
+           
             default:
                 break;
         }
+        return null;
     }
 }
 
@@ -206,19 +180,20 @@ const styles = StyleSheet.create({
         backgroundColor: '#fafafa',
         overflow: 'hidden',
         // alignItems: "center",
-        alignContent: "center",
-        flexDirection: 'row',
+        // alignContent: "center",
+        flexDirection: 'column',
     },
     contentView_border: {
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
     },
     image: {
-        marginTop: 10,
-        marginBottom: 10,
-        marginLeft: 10,
-        width: 60,
-        height: 60,
+        marginTop: 26,
+        width: 75,
+        height: 75,
+        right: 10,
+        bottom: 0,
+        position:'absolute'
     },
     imageTime: {
         marginLeft: 10,

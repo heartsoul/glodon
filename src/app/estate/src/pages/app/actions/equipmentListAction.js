@@ -41,7 +41,7 @@ function __fetchData(qcState, page, dataMapIn, dispatch) {
   if (page < 0) {
     page = 0;
   }
-  API.getQualityInspectionAll(storage.loadProject(), qcState, page, 35).then(
+  API.equipmentList(storage.loadProject(), qcState, page, 35,'').then(
     (responseData) => {
       let data = responseData.data.content;
       let hasMore = responseData.data.last == false;

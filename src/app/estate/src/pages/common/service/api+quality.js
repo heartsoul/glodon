@@ -920,7 +920,16 @@ export async function equipmentAcceptanceCompanies(projectId) {
   "number": 0
 }
  */
-export async function equipmentList(projectId, page, size, sort) {
+export async function equipmentList(projectId, qcState, page, size, sort) {
+    if(qcState == CONSTANT.QC_STATE_EDIT) {
+        return equipmentListCommitted(projectId, page, size, sort, false)
+    }
+    if(qcState == CONSTANT.QC_STATE_STANDARD) {
+        return equipmentListQualified(projectId, page, size, sort, true, true)
+    }
+    if(qcState == CONSTANT.QC_STATE_NOT_STANDARD) {
+        return equipmentListQualified(projectId, page, size, sort, true, false)
+    }
     let filter = `?page=${page}&size=${size}&sort=${sort}`;
     let api = `/quality/${projectId}/facilityAcceptance${filter}`;
     return requestJSON(api, {

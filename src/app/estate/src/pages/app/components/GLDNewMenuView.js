@@ -34,7 +34,7 @@ export default class GLDNewMenuView extends Component {
                     }
                     <View style={[{ width: 50, height: 50 }, (AuthorityManager.isQualityCreate() && AuthorityManager.isEquipmentCreate()) ? {} : { display: 'none' }]} />
                     {
-                        AuthorityManager.isQualityCreate() ? (
+                        AuthorityManager.isEquipmentCreate() ? (
                             <TouchableOpacity onPress={() => {this.overlayView && this.overlayView.close(); storage.pushNext(navigation, "EquipmentNewPage");}} style={{ borderColor: '#8a6d3b' }}>
                                 <Image style={{ width: 80, height: 80 }} source={equipmentCreateImage} />
                                 <Label style={{ color: '#ffffff', fontSize: 16, marginTop: 10 }} text='新建材设单' />

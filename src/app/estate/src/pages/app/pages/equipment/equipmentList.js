@@ -35,38 +35,36 @@ export default class extends PureComponent {
     }
     _keyExtractor = (item, index) => index;
     _loadInspectionSummary = () =>{
-        // let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
-        // let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointI');
-        // // API.getQualityInspectionSummary(storage.loadProject(),qualityCheckpointId,qualityCheckpointName).then(
-        //     (responseData) => {
-        //         // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
-        //         let items = responseData.data;
-        //         let qualityBadgeItem = this.state.qualityBadge.item;
-        //         items.map((item, index) => {
-        //             let find = API.CLASSIFY_STATES_SUMMARY.indexOf(item.qcState);
-        //             if (find > 0) {
-        //                 qualityBadgeItem[find] = item.count;
-        //             }
-        //         });
-        //         console.log(JSON.stringify(qualityBadgeItem));
-        //          this.setState({
-        //                 qualityBadge:{item:qualityBadgeItem},
-        //             })
-        //         // 获取数量数据
-        //     }
-        // ).catch(err=>{
+          API.equipmentListNum(storage.loadProject()).then(
+            (responseData) => {
+                // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
+                let items = responseData.data;
+                let qualityBadgeItem = this.state.equipmentBadge.item;
+                items.map((item, index) => {
+                    let find = API.EQUIPMENT_CLASSIFY_STATES_SUMMARY.indexOf(item.qcState);
+                    if (find > 0) {
+                        qualityBadgeItem[find] = item.count;
+                    }
+                });
+                console.log(JSON.stringify(qualityBadgeItem));
+                 this.setState({
+                    equipmentBadge:{item:qualityBadgeItem},
+                    })
+                // 获取数量数据
+            }
+        ).catch(err=>{
 
-        // });
+        });
     }
     componentDidMount = () => {
         storage.equipmentNavigation = this.props.navigation;
-        this._loadInspectionSummary();
+        // this._loadInspectionSummary();
     }
 
     _onSegmentedBarChange = (index) => {
         this.setState({ activeIndex: index });
         this.state.equipmentView[index].fetchData(API.EQUIPMENT_CLASSIFY_STATES[index]);
-        this._loadInspectionSummary();
+        // this._loadInspectionSummary();
     }
     _toTop = () => {
         let index = this.state.activeIndex;
@@ -88,6 +86,7 @@ export default class extends PureComponent {
                                 onRef={ (ref) => {this.state.equipmentView[index] = ref}} 
                                 style={{flex:1}} 
                                 qcState={''+item.state}
+                                updateNumber={()=>{this._loadInspectionSummary()}}
                                 loadData={index ==0 ? true: false} /> 
                             </SegmentedView.Sheet>
                            );
