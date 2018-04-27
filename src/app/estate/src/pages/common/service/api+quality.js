@@ -779,6 +779,10 @@ export async function deleteRepair(projectId, fileId) {
   "unit": "string",
   "versionId": "string"
 }
+response {
+  "id": 5200398,
+  "code": "string"
+}
  */
 export async function equipmentCreateSubmit(projectId, props) {
     let api = `/quality/${projectId}/facilityAcceptance/commit`;
@@ -803,6 +807,10 @@ export async function equipmentEditSubmit(projectId, id, props) {
 
 /**
  * 材设 新增 保存
+ * response {
+  "id": 5200399,
+  "code": "CSYS_20180427_001"
+}
  */
 export async function equipmentCreateSave(projectId, props) {
     let api = `/quality/${projectId}/facilityAcceptance`;
@@ -837,6 +845,34 @@ export async function equipmentDelete(projectId, id) {
 
 /**
  * 根据id查询详情和保存后的编辑信息
+ * {
+  "id": 5200398,
+  "code": "string",
+  "projectId": 0,
+  "projectName": "string",
+  "batchCode": "string",
+  "facilityCode": "string",
+  "facilityName": "string",
+  "specification": "string",
+  "modelNum": "string",
+  "approachDate": 1524758400000,
+  "manufacturer": "string",
+  "brand": "string",
+  "unit": "string",
+  "quantity": 0,
+  "supplier": "string",
+  "qualified": true,
+  "buildingId": 0,
+  "buildingName": "string",
+  "elementId": "",
+  "elementName": "",
+  "gdocFileId": "string",
+  "committed": true,
+  "updateTime": 1524817180000,
+  "acceptanceCompanyId": 0,
+  "acceptanceCompanyName": "string",
+  "files": []
+}
  */
 export async function equipmentDetail(projectId, id) {
     let api = `/quality/${projectId}/facilityAcceptance/${id}`;
@@ -847,6 +883,21 @@ export async function equipmentDetail(projectId, id) {
 
 /**
  * 获取项目下验收单位列表
+ * [
+  {
+    "parentId": null,
+    "code": "s1t1ri1n1g",
+    "name": "11301919",
+    "alias": null,
+    "type": "GROUP",
+    "extData": null,
+    "id": 5211919,
+    "treePath": "5211919/",
+    "orderNum": 1,
+    "external": false,
+    "formal": true
+  }
+]
  */
 export async function equipmentAcceptanceCompanies(projectId) {
     let api = `/quality/${projectId}/facilityAcceptance/acceptanceCompanys`;
@@ -857,6 +908,17 @@ export async function equipmentAcceptanceCompanies(projectId) {
 
 /**
  * 材设列表 全部
+ * {
+  "content": [],
+  "last": true,
+  "totalElements": 0,
+  "totalPages": 0,
+  "sort": null,
+  "first": true,
+  "numberOfElements": 0,
+  "size": 2,
+  "number": 0
+}
  */
 export async function equipmentList(projectId, page, size, sort) {
     let filter = `?page=${page}&size=${size}&sort=${sort}`;
