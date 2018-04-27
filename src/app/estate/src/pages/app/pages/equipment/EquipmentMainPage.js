@@ -10,10 +10,10 @@ import EquipmentList from './equipmentList'
 class RightBarButtons extends React.Component {
   _onSearchPress = (navigation) => {
     // console.log(navigation);
-    navigation.navigate("SearchPage")
+    navigation.navigate("EquipmentSearchPage")
   }
   _onNewPress = (navigation) => {
-    AuthorityManager.isEquipmentCreate() ? BimFileEntry.newSelect(navigation) : null;
+    AuthorityManager.isEquipmentCreate() ? (storage.pushNext(navigation, "EquipmentNewPage")) : null;
   }
   render() {
     return <View style={{

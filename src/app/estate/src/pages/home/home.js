@@ -27,45 +27,7 @@ Theme.set({
   navSeparatorColor: primaryColor,
 });
 
-import {
-  MainPage as Tab1,
-  MyPage as Tab5,
-  MessagePage as Tab2,
-  SubscribePage as Tab4,
-  NewPage as Tab3,
-} from '../pages'
-
-class MinePage extends NavigationPage {
-  static defaultProps = {
-    ...NavigationPage.defaultProps,
-    title: '',
-    showBackButton: false,
-  };
-  renderPage() {
-    return <Tab5 />
-  }
-}
-
-class SubscribePage extends NavigationPage {
-  static defaultProps = {
-    ...NavigationPage.defaultProps,
-    title: "订阅",
-    showBackButton: false,
-  };
-  renderPage() {
-    return <Tab4 />
-  }
-}
-class MessagePage extends NavigationPage {
-  static defaultProps = {
-    ...NavigationPage.defaultProps,
-    title: "消息",
-    showBackButton: false,
-  };
-  renderPage() {
-    return <Tab2 />
-  }
-}
+import * as PAGES from '../pages'
 
 class SearchaBarItem extends React.Component {
   render() {
@@ -79,30 +41,7 @@ class SearchaBarItem extends React.Component {
 // navigation prop
 var SearchButton =  withNavigation(SearchaBarItem);
 
-class HomePage extends NavigationPage {
-  static defaultProps = {
-    ...NavigationPage.defaultProps,
-    // title: storage.loadCurrentProjectName(()=>{}),
-    showBackButton: false,
-  };
-  constructor() {
-    super();
-  };
-  
-  renderNavigationRightView = () => {
-    return <SearchButton/>
-  }
-
-  renderNavigationTitle = () => {
-    return storage.loadCurrentProjectName(()=>{});
-  }
-
-  renderPage() {
-    return <Tab1 style={{backgroundColor:'#FFFFFF'}} />
-  }
-}
-
-export default class MainPage extends React.Component {
+export default class extends React.Component {
   static navigationOptions = ({navigation, screenProps}) =>{
     storage.homeNavigation = navigation;
     const options = navigation.getParam('options')
@@ -111,12 +50,12 @@ export default class MainPage extends React.Component {
     }  
    return ({
     title:'首页',
-    // header: {mode:'screen'},
   })
 };
   constructor(props) {
     super(props)
     storage.homeNavigation = this.props.navigation;
+    props.navigation.setParams({'options':()=>{return this.options(CONSTANTS.PAGE_INNDX_HOME)}})
   }
   componentDidMount = () => {
     storage.page = this.refs.page;
@@ -160,6 +99,7 @@ export default class MainPage extends React.Component {
     if(page == CONSTANTS.PAGE_INNDX_HOME) {
       return ({
         title:title ? title : CONSTANTS.PAGE_NAME_HOME,
+        headerRight:(<SearchaBarItem navigation={this.props.navigation}/>)
         // header: {mode:'screen'},
       })
     } 
@@ -200,7 +140,7 @@ export default class MainPage extends React.Component {
         icon={require('app-images/home/icon_main_main_page.png')}
         activeIcon={require('app-images/home/icon_main_page_selected.png')}
       >
-        <Tab1 />
+        <PAGES.MainPage />
       </TabView.Sheet>
       <TabView.Sheet
         title={CONSTANTS.PAGE_NAME_SUBSCRIBE}
@@ -208,7 +148,7 @@ export default class MainPage extends React.Component {
         activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
         badge={1}
       >
-        <Tab4 />
+        <PAGES.SubscribePage />
       </TabView.Sheet>
       {
         // 是否可以新建
@@ -220,7 +160,7 @@ export default class MainPage extends React.Component {
         activeIcon={require('app-images/home/icon_main_message_selected.png')}
         badge={9}
       >
-        <Tab2 />
+        <PAGES.MessagePage />
       </TabView.Sheet>
       <TabView.Sheet
         title={CONSTANTS.PAGE_NAME_MINE}
@@ -228,7 +168,7 @@ export default class MainPage extends React.Component {
         activeIcon={require('app-images/home/icon_main_mine_selected.png')}
       // badge={'new'}
       >
-        <Tab5 /> 
+        <PAGES.MyPage /> 
       </TabView.Sheet>
     </TabView>);
   }

@@ -10,7 +10,7 @@ import QualityList from './qualityList'
 class RightBarButtons extends React.Component {
   _onSearchPress = (navigation) => {
     // console.log(navigation);
-    navigation.navigate("SearchPage")
+    navigation.navigate("QualitySearchPage")
   }
   _onNewPress = (navigation) => {
     AuthorityManager.isQualityCreate() ? BimFileEntry.newSelect(navigation) : null;

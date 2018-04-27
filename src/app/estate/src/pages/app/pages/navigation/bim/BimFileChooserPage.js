@@ -4,7 +4,7 @@
 'use strict';
 import React, { Component, } from "react";
 import {
-    ActivityIndicator, Animated, FlatList, SectionList,
+    ActivityIndicator, Animated, FlatList,
     ScrollView, StyleSheet,
     Text, View, StatusBar, Image, TouchableOpacity, RefreshControl, Dimensions
 } from "react-native";
@@ -17,8 +17,26 @@ import { LeftBarButtons } from "app-components"
 import * as BimFileEntry from "./BimFileEntry";
 
 var { width, height } = Dimensions.get("window");
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-
+class RightBarButtons extends React.Component {
+    _onSearchPress = (navigation) => {
+        // console.log(navigation);
+        navigation.navigate("BimSearchPage")
+    }
+    render() {
+        return <View style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
+            justifyContent: 'flex-end',
+            width: 70,
+        }}>
+            <TouchableOpacity onPress={() => this._onSearchPress(this.props.navigation)} >
+                <Image style={styles.barItemImage} source={require('app-images/icon_search_white.png')} />
+            </TouchableOpacity>
+            <View style={styles.spliteItem} />
+        </View>
+    }
+}
 export default class BimFileChooser extends Component {
 
     static navigationOptions = ({ navigation }) => {
@@ -35,9 +53,10 @@ export default class BimFileChooser extends Component {
         }
         return {
             title: title,
+            headerRight: (<RightBarButtons navigation={navigation} />),
             headerLeft: (
-                <LeftBarButtons top={navigation.getParam('top')}  navigation={navigation} currentItem={currentItem} />
-              ),
+                <LeftBarButtons top={navigation.getParam('top')} navigation={navigation} currentItem={currentItem} />
+            ),
         }
     };
 
@@ -346,6 +365,20 @@ const styles = StyleSheet.create({
     image: {
         width: 30,
         height: 25,
-    }
-
+    },
+    barItem: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
+        justifyContent: 'flex-start',
+        width: 70,
+    },
+    barItemImage: {
+        width: 24,
+        height: 24,
+        resizeMode: 'contain'
+    },
+    spliteItem: {
+        width: 10,
+    },
 });

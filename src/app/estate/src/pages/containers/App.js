@@ -77,7 +77,34 @@ const RootStack = StackNavigator(
     },
     EquipmentMainPage: {
       screen: GLD.EquipmentMainPage
-    }
+    },
+    EquipmentDetailPage: {
+      screen: GLD.EquipmentDetailPage
+    },
+    EquipmentNewPage: {
+      screen: GLD.EquipmentNewPage
+    },
+    SearchPage: {
+      screen: GLD.SearchPage
+    },
+    QualitySearchPage: {
+      screen: GLD.QualitySearchPage
+    },
+    EquipmentSearchPage: {
+      screen: GLD.EquipmentSearchPage
+    },
+    BimSearchPage: {
+      screen: GLD.BimSearchPage
+    },
+    AboutPage: {
+      screen: GLD.AboutPage
+    },
+    PasswordPage: {
+      screen: GLD.PasswordPage
+    },
+    FeedbackPage: {
+      screen: GLD.FeedbackPage
+    },
   },
   {
     // initialRouteName: storage.isGuide(()=>{}) ? 'GuidePage' : 'LoginPage',

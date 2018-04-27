@@ -26,6 +26,15 @@ import RelevantBlueprintPage from './app/pages/navigation/bim/RelevantBlueprintP
 import RelevantModlePage from './app/pages/navigation/bim/RelevantModlePage'
 import CheckPointListPage from './app/pages/navigation/bim/CheckPointListPage'
 import EquipmentMainPage from './app/pages/equipment/EquipmentMainPage'
+import EquipmentNewPage from './app/pages/new/EquipmentNewPage'
+import EquipmentDetailPage from './app/pages/equipment/EquipmentDetailPage'
+import SearchPage from './app/pages/search/SearchPage'
+import QualitySearchPage from './app/pages/search/QualitySearchPage'
+import EquipmentSearchPage from './app/pages/search/EquipmentSearchPage'
+import BimSearchPage from './app/pages/search/BimSearchPage'
+import AboutPage from './app/pages/me/AboutPage'
+import FeedbackPage from './app/pages/me/FeedbackPage'
+import PasswordPage from './login/pages/PasswordPage'
 
 export {
     LoginPage,
@@ -53,4 +62,13 @@ export {
     NewCheckListPage,
     NewReviewPage,
     EquipmentMainPage,
+    EquipmentDetailPage,
+    EquipmentNewPage,
+    SearchPage,
+    QualitySearchPage,
+    EquipmentSearchPage,
+    BimSearchPage,
+    AboutPage,
+    PasswordPage,
+    FeedbackPage,
 }
