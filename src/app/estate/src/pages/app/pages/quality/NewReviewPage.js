@@ -129,7 +129,25 @@ class NewReviewPage extends Component {
     }
 
     goBack = () => {
-        storage.goBack(this.props.navigation)
+        let params = this.props.navigation.state.params;
+        reviewRepairAction.isEditInfoChange(this.state.description,this.state.status, this.state.lastRectificationDate,this.props.editInfo,params.createType, this.refs[REF_PHOTO],
+            (isChange) => {
+                if (isChange) {
+                    ActionModal.alert('是否确认退出当前页面？', "您还未保存当前数据！", [
+                        {
+                            text: '取消', style: { color: '#5b5b5b' }
+                        },
+                        {
+                            text: '不保存', style: { color: '#e75452' }, onPress: () => {  storage.goBack(this.props.navigation, null); }
+                        },
+                        {
+                            text: '保存', style: { color: '#00baf3' }, onPress: () => { this.save() }
+                        }
+                    ]);
+                } else {
+                    storage.goBack(this.props.navigation, null);
+                }
+            })
     }
 
     save = () => {
@@ -163,10 +181,12 @@ class NewReviewPage extends Component {
     }
 
     deleteForm = () => {
-        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消'}, { text: '删除', onPress:()=>{
-            let params = this.props.navigation.state.params;
-            this.props.deleteForm(this.props.editInfo.id, params.createType, this.props.navigation);
-        } });
+        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消' }, {
+            text: '删除', onPress: () => {
+                let params = this.props.navigation.state.params;
+                this.props.deleteForm(this.props.editInfo.id, params.createType, this.props.navigation);
+            }
+        });
     }
 
     onChangeSwitch = (value) => {

@@ -60,7 +60,7 @@ export default class RectificationView extends Component {
     getRectificationData = () => {
         let date = '';
         if (this.state.needRectification && this.state.date) {
-            date =   this.state.date.getTime();
+            date =   new Date(this.state.date.setHours(0, 0, 0, 0)).getTime();
         }
         return {
             value: this.state.needRectification,

@@ -1,6 +1,8 @@
 package com.estate;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.estate.react.GLDReactPackage;
 import com.facebook.react.ReactApplication;
@@ -50,6 +52,9 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    SharedPreferences mPreferences =    PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    mPreferences.edit().putString("debug_http_host","10.0.2.2:9999").commit();
+
     instance = this;
     ScreenUtil.init(this);
     SoLoader.init(this, /* native exopackage */ false);

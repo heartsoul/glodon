@@ -60,7 +60,11 @@ function uploadFile(imageChooserEle, uploadCallback) {
     imageChooserEle._loadFile((files) => {
         if (files && files.length > 0) {
             API.upLoadFiles(files, (code, result) => {
-                uploadCallback(result);
+                if (code === "success") {
+                    uploadCallback(result);
+                } else {
+                    Toast.info("上传图片失败！", 1)
+                }
             });
         } else {
             uploadCallback();
@@ -83,8 +87,8 @@ function assembleReviewParams(inspectionId, description, status, lastRectificati
         description: description,
         inspectionId: inspectionId,
         status: status,
-        //整改期限
-        lastRectificationDate: lastRectificationDate.getTime(),
+        //整改期限 
+        lastRectificationDate: new Date(lastRectificationDate.setHours(0, 0, 0, 0)).getTime(),
         // 复查单对应的整改单的id
         rectificationId: getRectificationId(qualityInfo),
     }
@@ -130,7 +134,7 @@ function getFlawId(qualityInfo, inspectionId) {
         let progressInfos = qualityInfo.progressInfos;
         if (progressInfos && progressInfos.length > 0) {
             flawId = progressInfos[progressInfos.length - 1].id;
-        } 
+        }
     }
     return flawId;
 }
@@ -234,7 +238,7 @@ function submitReview(inspectionId, description, status, lastRectificationDate, 
                     dispatch(UpdateDataAction.updateData());
                     storage.goBack(navigator, null)
                     Toast.hide();
-                }).catch((err)=>{
+                }).catch((err) => {
                     Toast.info("提交失败!", 1);
                 })
             } else {//编辑提交
@@ -243,7 +247,7 @@ function submitReview(inspectionId, description, status, lastRectificationDate, 
                     dispatch(UpdateDataAction.updateData());
                     storage.goBack(navigator, null)
                     Toast.hide();
-                }).catch((err)=>{
+                }).catch((err) => {
                     Toast.info("提交失败!", 1);
                 })
             }
@@ -284,7 +288,7 @@ function submitRepair(inspectionId, description, qualityInfo, editInfo, dispatch
                     dispatch(UpdateDataAction.updateData())
                     storage.goBack(navigator, null);
                     Toast.hide();
-                }).catch((err)=>{
+                }).catch((err) => {
                     Toast.info("提交失败!", 1);
                 })
             } else {//编辑提交
@@ -293,7 +297,7 @@ function submitRepair(inspectionId, description, qualityInfo, editInfo, dispatch
                     dispatch(UpdateDataAction.updateData())
                     storage.goBack(navigator, null);
                     Toast.hide();
-                }).catch((err)=>{
+                }).catch((err) => {
                     Toast.info("提交失败!", 1);
                 })
             }
@@ -353,13 +357,14 @@ function saveReview(inspectionId, description, status, lastRectificationDate, qu
                         id: responseData.data.id,
                         code: responseData.data.code,
                         description: description,
-                        lastRectificationDate: lastRectificationDate,
+                        lastRectificationDate: new Date(lastRectificationDate.setHours(0, 0, 0, 0)).getTime(),
                         status: status,
+                        files:files,
                     }
                     dispatch(_loadEditInfoSuccess(resetEditInfo))
                     Toast.hide();
                     Toast.info("保存成功！", 1);
-                }).catch((err)=>{
+                }).catch((err) => {
                     Toast.info("保存失败!", 1);
                 })
             } else {//编辑保存
@@ -368,14 +373,15 @@ function saveReview(inspectionId, description, status, lastRectificationDate, qu
                         id: editInfo.id,
                         code: editInfo.code,
                         description: description,
-                        lastRectificationDate: lastRectificationDate,
+                        lastRectificationDate: new Date(lastRectificationDate.setHours(0, 0, 0, 0)).getTime(),
                         status: status,
+                        files:files,
                     }
                     dispatch(_loadEditInfoSuccess(editInfo))
                     //"保存成功！" 
                     Toast.hide();
                     Toast.info("保存成功！", 1);
-                }).catch((err)=>{
+                }).catch((err) => {
                     Toast.info("保存失败!", 1);
                 })
             }
@@ -410,16 +416,17 @@ function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, 
             if (!reviewId) {//新建保存
                 API.createSaveRepair(storage.loadProject(), props).then(responseData => {
                     //"保存成功！"  { data: { id: 5200032, code: 'ZLFC_20180424_001' } }
-  
+
                     let resetEditInfo = {
                         id: responseData.data.id,
                         code: responseData.data.code,
                         description: description,
+                        files:files,
                     }
                     dispatch(_loadEditInfoSuccess(resetEditInfo))
                     Toast.hide();
                     Toast.info("保存成功！", 1);
-                }).catch((err)=>{
+                }).catch((err) => {
                     Toast.info("保存失败!", 1);
                 })
             } else {//编辑保存
@@ -428,12 +435,13 @@ function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, 
                         id: editInfo.id,
                         code: editInfo.code,
                         description: description,
+                        files:files,
                     }
                     dispatch(_loadEditInfoSuccess(editInfo))
                     Toast.hide();
                     //"保存成功！" 
                     Toast.info("保存成功！", 1);
-                }).catch((err)=>{
+                }).catch((err) => {
                     Toast.info("保存失败!", 1);
                 })
             }
@@ -468,6 +476,53 @@ export function deleteForm(fileId, type, navigator) {
     }
 }
 
+/**
+ * 是否有过修改
+ */
+export function isEditInfoChange(description, status, lastRectificationDate, editInfo, type, imageChooserEle, callback) {
+    imageChooserEle._loadFile((files) => {
+        if (isFileChange(editInfo.files, files)) {
+            callback(true);
+        } else if (isParamsChange(description, status, lastRectificationDate, editInfo, type)) {
+            callback(true);
+        } else {
+            callback(false);
+        }
+    });
+}
+
+function isFileChange(oldFiles, newFiles) {
+    let oldLen = oldFiles ? oldFiles.length : 0;
+    let newLen = newFiles ? newFiles.length : 0;
+    if (oldLen != newLen) {
+        return true;
+    } else {
+        for (file in newFiles) {
+            if (!file.objectId) {
+                return true;
+            }
+        }
+        return false;
+    }
+    return false;
+}
+
+function isParamsChange(description, status, lastRectificationDate, editInfo, type) {
+    if(!editInfo.description){
+        if(description.length > 0){
+            return true;
+        }
+        return false;
+    }
+    if (type === API.CREATE_TYPE_REVIEW) {
+        if (status != editInfo.status) {
+            return true;
+        } else if ( new Date(lastRectificationDate.setHours(0, 0, 0, 0)).getTime() != editInfo.lastRectificationDate) {
+            return true;
+        }
+    }
+    return false;
+}
 
 export function _loadDetailSuccess(data) {
     return {
