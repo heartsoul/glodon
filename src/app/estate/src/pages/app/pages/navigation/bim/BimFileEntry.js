@@ -1,6 +1,8 @@
 'use strict'
 import { GLDNewMenuView } from 'app-components'
 import * as NewQualityAction from "./../../../actions/NewQualityAction";
+import * as NewEquipmentAction from "./../../../actions/NewEquipmentAction";
+
 /**
  * 图纸模型选择及展示入口;
  * PageType 0新建检查单 1检查单编辑状态 2详情查看  3质检单模型模式  4新建材设进场 5新增材设进场编辑状态  6材设模型模式
@@ -236,4 +238,13 @@ export function showNewReviewPage(navigator, qualityCheckListId, createType) {
  */
 export function submitInspectionFromList(inspectId, callback) {
     NewQualityAction.submitFromList(inspectId, callback);
+}
+
+/**
+ * 从列表提交材设单
+ * @param {*} id 材设单id
+ * @param {*} callback 提交完成后回调 ,callback的参数 { res: "error", data: err } { res: "success", data: "" }
+ */
+export function submitEquipmentFromList(id, callback) {
+    NewEquipmentAction.submitEquipmentFromList(id, callback);
 }

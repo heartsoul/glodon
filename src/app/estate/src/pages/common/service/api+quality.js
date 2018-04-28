@@ -941,7 +941,7 @@ export async function equipmentList(projectId, qcState, page, size, sort) {
  * 材设列表 待提交
  * @param {boolean} committed committed
  */
-export async function equipmentListCommitted(projectId, page, size, sort, committed) {
+function equipmentListCommitted(projectId, page, size, sort, committed) {
     let filter = `?page=${page}&size=${size}&sort=${sort}&committed=${committed}`;
     let api = `/quality/${projectId}/facilityAcceptance${filter}`;
     return requestJSON(api, {
@@ -954,7 +954,7 @@ export async function equipmentListCommitted(projectId, page, size, sort, commit
  * @param {boolean} committed committed
  * @param {boolean} qualified qualified
  */
-export async function equipmentListQualified(projectId, page, size, sort, committed, qualified) {
+function equipmentListQualified(projectId, page, size, sort, committed, qualified) {
     let filter = `?page=${page}&size=${size}&sort=${sort}&committed=${committed}&qualified=${qualified}`;
     let api = `/quality/${projectId}/facilityAcceptance${filter}`;
     return requestJSON(api, {

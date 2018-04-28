@@ -22,7 +22,7 @@ export function submitData(qcState, inspectId, inspectionType, qualityCheckpoint
         if(data.res === "success"){
             dispatch(updateAction.updateData())
         } else {
-            dispatch(_loadError(data.data, qcState, page, qualityCheckpointId, qualityCheckpointName));
+            dispatch(_loadError(data.data, qcState, 0, qualityCheckpointId, qualityCheckpointName));
         }
     })
   }

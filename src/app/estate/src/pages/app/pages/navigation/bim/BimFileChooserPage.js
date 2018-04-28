@@ -71,7 +71,6 @@ export default class BimFileChooser extends Component {
             dataArray: [],
             page: 0,
             hasMore: true,
-            projectId: storage.loadProject(),
             latestVersion: global.storage.projectIdVersionId,
             fileId: 0,
             dataType: "",//图纸文件 模型文件 
@@ -81,7 +80,7 @@ export default class BimFileChooser extends Component {
     _keyExtractor = (item, index) => index;
 
     fetchData = (page) => {
-        if (this.state.projectId === 0 || this.state.latestVersion === '') {
+        if (storage.loadProject() === 0 || this.state.latestVersion === '') {
 
             API.getModelLatestVersion(storage.loadProject()).then((responseData) => {
                 let latestVersion = responseData.data.data.versionId;
@@ -90,10 +89,10 @@ export default class BimFileChooser extends Component {
                 this.setState({
                     latestVersion: latestVersion,
                 });
-                this.fetchDataInner(page, projectId, latestVersion);
+                this.fetchDataInner(page, storage.loadProject(), latestVersion);
             });
         } else {
-            this.fetchDataInner(page, this.state.projectId, this.state.latestVersion);
+            this.fetchDataInner(page, storage.loadProject(), this.state.latestVersion);
         }
 
     }
@@ -221,7 +220,7 @@ export default class BimFileChooser extends Component {
         if (item.value.folder === true) {
             global.storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType });
         } else {
-            MODELAPI.getModelBimFileToken(this.state.projectId, this.state.latestVersion, item.value.fileId).then((responseData) => {
+            MODELAPI.getModelBimFileToken(storage.loadProject(), this.state.latestVersion, item.value.fileId).then((responseData) => {
                 let token = responseData.data.data;
                 global.storage.bimToken = token;
                 if (this.state.dataType === '图纸文件') {

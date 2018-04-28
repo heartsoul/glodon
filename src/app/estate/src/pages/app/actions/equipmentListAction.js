@@ -3,9 +3,9 @@ import * as API from 'app-api'
 import * as types from '../constants/equipmentListTypes'
 
 // 删除草稿
-export function deleteData(qcState, inspectId, inspectionType) {
+export function deleteData(qcState, id) {
   return dispatch => {
-    API.createDeleteInspection(storage.loadProject(), inspectionType, inspectId)
+    API.equipmentDelete(storage.loadProject(), id)
       .then(data => {
         __fetchData(qcState, 0, new Map(), dispatch)
       }).catch(error => {
@@ -13,15 +13,16 @@ export function deleteData(qcState, inspectId, inspectionType) {
       });
   }
 }
-export function submitData(qcState, inspectId, inspectionType) {
+export function submitData(qcState, id) {
   return dispatch => {
-    let props = {};
-    API.editSubmitInspection(storage.loadProject(), inspectId, inspectionType, props)
-      .then(data => {
-        __fetchData(qcState, 0, new Map(), dispatch)
-      }).catch(error => {
-        dispatch(_loadError(error, qcState, page));
-      });
+    BimFileEntry.submitEquipmentFromList(id, (data) => {
+      // data { res: "error", data: err } { res: "success", data: "" }
+      if(data.res === "success"){
+          dispatch(updateAction.updateData())
+      } else {
+          dispatch(_loadError(data.data, qcState, 0));
+      }
+  })
   }
 }
 
