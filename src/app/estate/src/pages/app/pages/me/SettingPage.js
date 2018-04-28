@@ -84,15 +84,8 @@ class SettingPage extends Component {
         <SettingItemView icon={require('app-images/icon_setting_contact_us.png')} title='联系我们' hideArrow={true} ></SettingItemView>
         <View style={styles.settingItemLine}></View>
         <SettingItemView icon={require('app-images/icon_setting_about_us.png')} title='关于我们' onPress={() => this._about()} ></SettingItemView>
-
         <View style={{ height: 10 }}></View>
-
-        <SettingItemView icon={require('app-images/icon_setting_change_project.png')} title='切换项目' onPress={() => this._tenantChoose()} ></SettingItemView>
-
-        <View style={{ height: 10 }}></View>
-
         <SettingItemView icon={require('app-images/icon_setting_offline.png')} title='离线设置' ></SettingItemView>
-
         <TouchableHighlight
           onPress={this._logout}
           underlayColor="#0099f3"

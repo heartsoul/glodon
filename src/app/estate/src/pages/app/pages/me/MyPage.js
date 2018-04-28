@@ -46,6 +46,11 @@ export default class extends Component {
     });
 
   }
+  _gotoTenantChoose = () => {
+    let navigator = this.props.navigation;
+    storage.projectIdVersionId = '';
+    storage.pushNext(navigator, "TenantPage")
+  }
   _gotoSetting=()=>{
     let navigator = this.props.navigation;
     storage.pushNext(navigator,'SettingPage');
@@ -75,11 +80,13 @@ export default class extends Component {
           
             <MineItemView icon = {require('app-images/icon_mine_plan.png')} title='我的计划' onPress={()=>this._gotoPlan()}></MineItemView>
             <View style={styles.mineItemLine}></View>
-          
             <MineItemView icon = {require('app-images/icon_mine_setting.png')} title='设置' onPress={()=>this._gotoSetting()}></MineItemView>
-
           </View>
-
+          <View style={{ height: 20 }}></View>
+          <View style={{backgroundColor:'#ffffff'}}>
+            <View style={styles.mineItemLine}></View>
+            <MineItemView icon={require('app-images/icon_setting_change_project.png')} title='切换项目' onPress={() => this._gotoTenantChoose()} ></MineItemView>
+          </View>
         </View>
       </SafeAreaView>
     );
