@@ -16,6 +16,7 @@ import * as API from "app-api";
 import { LeftBarButtons } from "app-components"
 import * as BimFileEntry from "./BimFileEntry";
 import BimFileFilterView from "./BimFileFilterView";
+import Breadcrumb from "./../../../components/Breadcrumb";
 
 var { width, height } = Dimensions.get("window");
 class RightBarButtons extends React.Component {
@@ -77,6 +78,7 @@ export default class BimFileChooser extends Component {
             fileId: 0,
             dataType: "",//图纸文件 模型文件 
             pageType: PageType.PAGE_TYPE_NEW_QUALITY,
+            navData: [],
         }
     }
     _keyExtractor = (item, index) => index;
@@ -145,9 +147,6 @@ export default class BimFileChooser extends Component {
     }
     //过滤模型和图纸
     filterData = (data) => {
-        // console.log('---------------')
-        // console.log(this.state.fileId)
-        // console.log(this.state.dataType)
         if ((!this.state.fileId || this.state.fileId == 0) && data.length > 0 && this.state.dataType) {
             //根据dataType过滤 图纸和模型
             let filterData = data.filter((item) => {
@@ -177,11 +176,13 @@ export default class BimFileChooser extends Component {
         let fileId = params.fileId;
         let dataType = params.dataType;
 
+        let navData = params.navData ? params.navData : [];
         // console.log(params)
         this.setState({
             fileId: fileId,
             dataType: dataType,
             pageType: params.pageType,
+            navData: navData,
         }, () => {
             //请求数据
             this.fetchData(1);
@@ -218,7 +219,13 @@ export default class BimFileChooser extends Component {
     _itemClick = (item, index) => {
         let navigator = this.props.navigation;
         if (item.value.folder === true) {
-            global.storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType });
+            let navData = [];
+            this.state.navData.forEach((child) => {
+                navData.push(child);
+            })
+            navData.push(item.value);
+
+            global.storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType, navData: navData });
         } else {
             API.getModelBimFileToken(this.state.projectId, this.state.latestVersion, item.value.fileId).then((responseData) => {
                 let token = responseData.data.data;
@@ -315,50 +322,69 @@ export default class BimFileChooser extends Component {
             }).catch(err => {
             });
     }
+    /**
+     * 模型图纸列表
+     */
+    renderList = () => {
+        return (
+            <FlatList style={{ width: width }}
+                data={this.state.dataArray}
+                renderItem={this.renderItemView}
+                ItemSeparatorComponent={this._separator}
+                onEndReached={this._onEndReached}
+                onRefresh={this._onRefreshing}
+                refreshing={this.state.refreshing}
+                onEndReachedThreshold={0.1}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                    />
+                }
+            />
+        );
+    }
+    /**
+     * 带导航的View
+     */
+    renderDataWithBreadcrumb = () => {
+        return (
+            <View>
+                <Breadcrumb data={this.state.navData} onItemClick={(item, index) => {
+                    let len = this.state.navData.length;
+                    this.props.navigation.pop(len - index);
+                }}></Breadcrumb>
+                {
+                    this.renderList()
+                }
+            </View>
+        );
+    }
+    /**
+     * 模型筛选的
+     */
+    renderDataWithFilter = () => {
+        return (
+            <BimFileFilterView
+                onFilterChange={(specialty, building) => { this.onFilterChange(specialty, building) }}
+            >
+                {
+                    this.renderList()
+                }
+            </BimFileFilterView>
+        );
+    }
+
     renderData = () => {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 {
                     (this.state.dataType === '模型文件' && this.state.fileId === 0) ? (
-                        <BimFileFilterView
-                            onFilterChange={(specialty, building) => { this.onFilterChange(specialty, building) }}
-                        >
-                            <FlatList style={{ width: width }}
-                                data={this.state.dataArray}
-                                renderItem={this.renderItemView}
-                                ItemSeparatorComponent={this._separator}
-                                onEndReached={this._onEndReached}
-                                onRefresh={this._onRefreshing}
-                                refreshing={this.state.refreshing}
-                                onEndReachedThreshold={0.1}
-                                refreshControl={
-                                    <RefreshControl
-                                        refreshing={this.state.refreshing}
-                                    />
-                                }
-                            />
-                        </BimFileFilterView>
+                        this.renderDataWithFilter()
                     ) : (
-
-                            <FlatList style={{ width: width }}
-                                data={this.state.dataArray}
-                                renderItem={this.renderItemView}
-                                ItemSeparatorComponent={this._separator}
-                                onEndReached={this._onEndReached}
-                                onRefresh={this._onRefreshing}
-                                refreshing={this.state.refreshing}
-                                onEndReachedThreshold={0.1}
-                                refreshControl={
-                                    <RefreshControl
-                                        refreshing={this.state.refreshing}
-                                    />
-                                }
-                            />
+                            this.renderDataWithBreadcrumb()
                         )
                 }
-
-
 
             </View>
         );
