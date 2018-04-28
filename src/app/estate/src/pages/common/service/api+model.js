@@ -129,7 +129,7 @@ export async function getModelBimFiles(projectId, projectVersionId, buildingId =
     if (!(buildingId === 0)) {
         filter += '&buildingId=' + buildingId;
     }
-    if (!(qualityCheckpointName === '')) {
+    if (!(specialtyCode === '')) {
         filter += '&specialtyCode=' + specialtyCode;
     }
     return requestJSON(api + '?' + filter, {

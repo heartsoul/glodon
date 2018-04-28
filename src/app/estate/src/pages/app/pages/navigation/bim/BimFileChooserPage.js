@@ -15,6 +15,7 @@ import * as PageType from "./PageTypes";
 import * as API from "app-api";
 import { LeftBarButtons } from "app-components"
 import * as BimFileEntry from "./BimFileEntry";
+import BimFileFilterView from "./BimFileFilterView";
 
 var { width, height } = Dimensions.get("window");
 class RightBarButtons extends React.Component {
@@ -71,7 +72,8 @@ export default class BimFileChooser extends Component {
             dataArray: [],
             page: 0,
             hasMore: true,
-            latestVersion: global.storage.projectIdVersionId,
+            projectId: storage.loadProject(),
+            latestVersion: storage.projectIdVersionId,
             fileId: 0,
             dataType: "",//图纸文件 模型文件 
             pageType: PageType.PAGE_TYPE_NEW_QUALITY,
@@ -80,12 +82,10 @@ export default class BimFileChooser extends Component {
     _keyExtractor = (item, index) => index;
 
     fetchData = (page) => {
-        if (storage.loadProject() === 0 || this.state.latestVersion === '') {
-
+        if (this.state.latestVersion === '') {
             API.getModelLatestVersion(storage.loadProject()).then((responseData) => {
                 let latestVersion = responseData.data.data.versionId;
-                global.storage.projectIdVersionId = latestVersion;
-                // console.log(responseData)
+                storage.projectIdVersionId = latestVersion;
                 this.setState({
                     latestVersion: latestVersion,
                 });
@@ -220,7 +220,7 @@ export default class BimFileChooser extends Component {
         if (item.value.folder === true) {
             global.storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType });
         } else {
-            MODELAPI.getModelBimFileToken(storage.loadProject(), this.state.latestVersion, item.value.fileId).then((responseData) => {
+            API.getModelBimFileToken(this.state.projectId, this.state.latestVersion, item.value.fileId).then((responseData) => {
                 let token = responseData.data.data;
                 global.storage.bimToken = token;
                 if (this.state.dataType === '图纸文件') {
@@ -288,24 +288,78 @@ export default class BimFileChooser extends Component {
             this.fetchData(this.state.page);
         }, 1500);
     }
+    onFilterChange = (specialty, building) => {
+        let specialtyCode = specialty ? specialty.Code : "";
+        let buildingId = building ? building.id : 0;
+
+        API.getModelBimFiles(storage.loadProject(), storage.projectIdVersionId, buildingId, specialtyCode)
+            .then(responseData => {
+                if (responseData) {
+                    let list = responseData.data.data;
+                    let dataBlob = [];
+                    if (list.length > 0) {
+                        list.forEach(item => {
+                            item.name = item.fileName;
+                            dataBlob.push({
+                                key: "P0" + item.fileId,
+                                value: item
+                            });
+                        })
+                        this.setState({
+                            dataArray: dataBlob,
+                        });
+                    }
+                }
+
+
+            }).catch(err => {
+            });
+    }
     renderData = () => {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <FlatList style={{ width: width }}
-                    data={this.state.dataArray}
-                    renderItem={this.renderItemView}
-                    ItemSeparatorComponent={this._separator}
-                    onEndReached={this._onEndReached}
-                    onRefresh={this._onRefreshing}
-                    refreshing={this.state.refreshing}
-                    onEndReachedThreshold={0.1}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.state.refreshing}
-                        />
-                    }
-                />
+                {
+                    (this.state.dataType === '模型文件' && this.state.fileId === 0) ? (
+                        <BimFileFilterView
+                            onFilterChange={(specialty, building) => { this.onFilterChange(specialty, building) }}
+                        >
+                            <FlatList style={{ width: width }}
+                                data={this.state.dataArray}
+                                renderItem={this.renderItemView}
+                                ItemSeparatorComponent={this._separator}
+                                onEndReached={this._onEndReached}
+                                onRefresh={this._onRefreshing}
+                                refreshing={this.state.refreshing}
+                                onEndReachedThreshold={0.1}
+                                refreshControl={
+                                    <RefreshControl
+                                        refreshing={this.state.refreshing}
+                                    />
+                                }
+                            />
+                        </BimFileFilterView>
+                    ) : (
+
+                            <FlatList style={{ width: width }}
+                                data={this.state.dataArray}
+                                renderItem={this.renderItemView}
+                                ItemSeparatorComponent={this._separator}
+                                onEndReached={this._onEndReached}
+                                onRefresh={this._onRefreshing}
+                                refreshing={this.state.refreshing}
+                                onEndReachedThreshold={0.1}
+                                refreshControl={
+                                    <RefreshControl
+                                        refreshing={this.state.refreshing}
+                                    />
+                                }
+                            />
+                        )
+                }
+
+
+
             </View>
         );
     }
@@ -326,9 +380,6 @@ export default class BimFileChooser extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#FFFFFF',
     },
     containerFolderView: {
