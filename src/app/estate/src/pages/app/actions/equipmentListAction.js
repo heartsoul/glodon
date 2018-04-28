@@ -56,11 +56,8 @@ function __fetchData(qcState, page, dataMapIn, dispatch) {
       data.forEach(item => {
         item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
         item.index = i;
-        item.qcStateShow = "" + API.toQcStateShow(item.qcState);
-        if (item.files && item.files.size > 0) {
-          item.url = item.files[0].url;
-          // console.log(item.url);
-        }
+        item.qcStateShow =  item.committed == true ? "" : "" + API.toQcStateShow(API.QC_STATE_STAGED);
+        item.qcStateColor =  item.committed == true ? "#FFFFFF" : "" + API.toQcStateShowColor(API.QC_STATE_STAGED);
         let groupTime = item.showTime.substring(0, 10);
         let dataBlob = dataMap.get(groupTime);
         if (dataBlob == undefined) {

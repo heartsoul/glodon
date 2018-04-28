@@ -25,9 +25,9 @@ function demoData(size) {
             "updateTime": t + 1000,
         });
     }
-    return ret;
+    return { "data": { "content": ret, 'last': false } };
 }
-var dataLast = { "data": { "content": demoData(100), 'last': false } };
+// var dataLast = { "data": { "content": demoData(100), 'last': false } };
 
 /**
  * 获取质检清单
@@ -91,7 +91,7 @@ var dataLast = { "data": { "content": demoData(100), 'last': false } };
 }
  */
 export async function getQualityInspectionAll(projectId, qcState, page, size, qualityCheckpointId = 0, qualityCheckpointName = '') {
-    // return dataLast;
+    // return demoData(100);
     let api = "/quality/" + projectId + "/qualityInspection/all";
     let filter = '';
     if (!(qualityCheckpointId === 0)) {
@@ -738,7 +738,8 @@ export async function deleteRepair(projectId, fileId) {
 
 /**
  * 材设 新增提交
- * @param {*} props {
+ * @param {*} props 
+ * 数据{
   "acceptanceCompanyId": 0,
   "acceptanceCompanyName": "string",
   "approachDate": "2018-04-27T08:05:47.683Z",
@@ -779,7 +780,8 @@ export async function deleteRepair(projectId, fileId) {
   "unit": "string",
   "versionId": "string"
 }
-response {
+ * @return 
+ * 返回数据  response {
   "id": 5200398,
   "code": "string"
 }
@@ -796,6 +798,47 @@ export async function equipmentCreateSubmit(projectId, props) {
  * @param {*} projectId 
  * @param {*} id 材设单id
  * @param {*} props 
+ * {
+  "acceptanceCompanyId": 0,
+  "acceptanceCompanyName": "string",
+  "approachDate": "2018-04-28T02:55:51.647Z",
+  "batchCode": "string",
+  "brand": "string",
+  "buildingId": 0,
+  "buildingName": "string",
+  "code": "string",
+  "elementId": "string",
+  "elementName": "string",
+  "facilityCode": "string",
+  "facilityName": "string",
+  "files": [
+    {
+      "objectId": "string",
+      "name": "string",
+      "extension": "string",
+      "length": 0,
+      "digest": "string",
+      "targetId": "string",
+      "targetType": "string",
+      "uploadId": "string",
+      "uploadTime": "2018-04-28T02:55:51.647Z",
+      "remark": "string",
+      "extData": "string"
+    }
+  ],
+  "gdocFileId": "string",
+  "manufacturer": "string",
+  "modelId": "string",
+  "modelNum": "string",
+  "projectId": 0,
+  "projectName": "string",
+  "qualified": true,
+  "quantity": 0,
+  "specification": "string",
+  "supplier": "string",
+  "unit": "string",
+  "versionId": "string"
+}
  */
 export async function equipmentEditSubmit(projectId, id, props) {
     let api = `/quality/${projectId}/facilityAcceptance/${id}/commit`;
@@ -807,7 +850,51 @@ export async function equipmentEditSubmit(projectId, id, props) {
 
 /**
  * 材设 新增 保存
- * response {
+ * @param {*} projectId 
+ * @param {*} props 
+ * {
+  "acceptanceCompanyId": 0,
+  "acceptanceCompanyName": "string",
+  "approachDate": "2018-04-28T02:55:51.501Z",
+  "batchCode": "string",
+  "brand": "string",
+  "buildingId": 0,
+  "buildingName": "string",
+  "code": "string",
+  "elementId": "string",
+  "elementName": "string",
+  "facilityCode": "string",
+  "facilityName": "string",
+  "files": [
+    {
+      "objectId": "string",
+      "name": "string",
+      "extension": "string",
+      "length": 0,
+      "digest": "string",
+      "targetId": "string",
+      "targetType": "string",
+      "uploadId": "string",
+      "uploadTime": "2018-04-28T02:55:51.501Z",
+      "remark": "string",
+      "extData": "string"
+    }
+  ],
+  "gdocFileId": "string",
+  "manufacturer": "string",
+  "modelId": "string",
+  "modelNum": "string",
+  "projectId": 0,
+  "projectName": "string",
+  "qualified": true,
+  "quantity": 0,
+  "specification": "string",
+  "supplier": "string",
+  "unit": "string",
+  "versionId": "string"
+}
+ * 
+ * @return response {
   "id": 5200399,
   "code": "CSYS_20180427_001"
 }
@@ -822,7 +909,54 @@ export async function equipmentCreateSave(projectId, props) {
 
 /**
  * 材设 编辑保存
+ * @param {*} projectId 
  * @param {*} id 材设单id
+ * @param {*} props 
+ * {
+  "acceptanceCompanyId": 0,
+  "acceptanceCompanyName": "string",
+  "approachDate": "2018-04-28T02:55:51.635Z",
+  "batchCode": "string",
+  "brand": "string",
+  "buildingId": 0,
+  "buildingName": "string",
+  "code": "string",
+  "elementId": "string",
+  "elementName": "string",
+  "facilityCode": "string",
+  "facilityName": "string",
+  "files": [
+    {
+      "objectId": "string",
+      "name": "string",
+      "extension": "string",
+      "length": 0,
+      "digest": "string",
+      "targetId": "string",
+      "targetType": "string",
+      "uploadId": "string",
+      "uploadTime": "2018-04-28T02:55:51.635Z",
+      "remark": "string",
+      "extData": "string"
+    }
+  ],
+  "gdocFileId": "string",
+  "manufacturer": "string",
+  "modelId": "string",
+  "modelNum": "string",
+  "projectId": 0,
+  "projectName": "string",
+  "qualified": true,
+  "quantity": 0,
+  "specification": "string",
+  "supplier": "string",
+  "unit": "string",
+  "versionId": "string"
+} 
+ * @return response {
+  "id": 5200399,
+  "code": "CSYS_20180427_001"
+}
  */
 export async function equipmentEditSave(projectId, id, props) {
     let api = `/quality/${projectId}/facilityAcceptance/${id}`;
@@ -846,35 +980,107 @@ export async function equipmentDelete(projectId, id) {
 /**
  * 根据id查询详情和保存后的编辑信息
  * {
-  "id": 5200398,
-  "code": "string",
-  "projectId": 0,
-  "projectName": "string",
-  "batchCode": "string",
-  "facilityCode": "string",
-  "facilityName": "string",
-  "specification": "string",
-  "modelNum": "string",
-  "approachDate": 1524758400000,
-  "manufacturer": "string",
-  "brand": "string",
-  "unit": "string",
-  "quantity": 0,
-  "supplier": "string",
-  "qualified": true,
-  "buildingId": 0,
-  "buildingName": "string",
-  "elementId": "",
-  "elementName": "",
-  "gdocFileId": "string",
-  "committed": true,
-  "updateTime": 1524817180000,
   "acceptanceCompanyId": 0,
   "acceptanceCompanyName": "string",
-  "files": []
+  "approachDate": "2018-04-28T02:55:51.625Z",
+  "batchCode": "string",
+  "brand": "string",
+  "buildingId": 0,
+  "buildingName": "string",
+  "code": "string",
+  "committed": true,
+  "elementId": "string",
+  "elementName": "string",
+  "facilityCode": "string",
+  "facilityName": "string",
+  "files": [
+    {
+      "createTime": "2018-04-28T02:55:51.625Z",
+      "creatorId": 0,
+      "creatorName": "string",
+      "digest": "string",
+      "extData": "string",
+      "extension": "string",
+      "id": 0,
+      "length": 0,
+      "name": "string",
+      "objectId": "string",
+      "remark": "string",
+      "targetId": "string",
+      "targetType": "string",
+      "updateTime": "2018-04-28T02:55:51.625Z",
+      "updatorId": 0,
+      "updatorName": "string",
+      "uploadId": "string",
+      "uploadTime": "2018-04-28T02:55:51.625Z",
+      "url": "string"
+    }
+  ],
+  "gdocFileId": "string",
+  "id": 0,
+  "manufacturer": "string",
+  "modelNum": "string",
+  "projectId": 0,
+  "projectName": "string",
+  "qualified": true,
+  "quantity": 0,
+  "specification": "string",
+  "supplier": "string",
+  "unit": "string",
+  "updateTime": "2018-04-28T02:55:51.625Z"
 }
  */
 export async function equipmentDetail(projectId, id) {
+    return { "data":{
+        "acceptanceCompanyId": 0,
+        "acceptanceCompanyName": "string",
+        "approachDate": "1518853268000",
+        "batchCode": "string",
+        "brand": "string",
+        "buildingId": 0,
+        "buildingName": "string",
+        "code": "string",
+        "committed": true,
+        "elementId": "string",
+        "elementName": "string",
+        "facilityCode": "string",
+        "facilityName": "string",
+        "files": [
+          {
+            "createTime": "1518853268000",
+            "creatorId": 0,
+            "creatorName": "string",
+            "digest": "string",
+            "extData": "string",
+            "extension": "string",
+            "id": 0,
+            "length": 0,
+            "name": "string",
+            "objectId": "string",
+            "remark": "string",
+            "targetId": "string",
+            "targetType": "string",
+            "updateTime": "1518853268000",
+            "updatorId": 0,
+            "updatorName": "string",
+            "uploadId": "string",
+            "uploadTime": "1518853268000",
+            "url": "string"
+          }
+        ],
+        "gdocFileId": "string",
+        "id": 0,
+        "manufacturer": "string",
+        "modelNum": "string",
+        "projectId": 0,
+        "projectName": "string",
+        "qualified": true,
+        "quantity": 0,
+        "specification": "string",
+        "supplier": "string",
+        "unit": "string",
+        "updateTime": "1518853268000"
+      }}
     let api = `/quality/${projectId}/facilityAcceptance/${id}`;
     return requestJSON(api, {
         method: 'GET',
@@ -907,20 +1113,132 @@ export async function equipmentAcceptanceCompanies(projectId) {
 }
 
 /**
+ * 生产测试数据
+    // public long id;
+    // public String code;//单据编号
+    // public long projectId;//项目id
+    // public String projectName;//项目名称
+
+    // //模型
+    // public String gdocFileId;//模型的文件id
+    // public Long buildingId;//单体id
+    // public String buildingName;//单体name
+    // public String elementId;//构件id
+    // public String elementName;//构件name
+    // //必填项
+    // public long acceptanceCompanyId;//验收单位
+    // public String acceptanceCompanyName;//验收单位
+    // public String batchCode;//批次编号
+    // public String facilityCode;//材设编码
+    // public String facilityName;//材设名称
+    // public String approachDate;//进场日期
+
+    // //非必填项
+    // public String quantity;//进场数量
+    // public String unit;//单位
+    // public String specification;//规格
+    // public String modelNum;//型号
+    // public String manufacturer;//厂家
+    // public String brand;//品牌
+    // public String supplier;//供应商
+
+    // //图片
+    // public List<QualityCheckListBeanItemFile> files;//图片
+    // public boolean qualified;//是否合格
+
+ * @param {number} size 生产的条数
+ * @returns 
+ */
+function demoDataEquipment(size) {
+    let ret = [];
+    let ts = 1518853268000; // 2018-03-07 10:21:08
+    let te = 1520389268000; // //2018-03-07 10:21:08
+    let tstep = te - ts;
+
+    for (let i = 0; i < size; i++) {
+        let t = parseInt(Math.random() * (tstep) + ts);
+        ret.push({
+            "id": "100" + i,
+            "batchCode": "batchCode " + i,
+            "facilityCode": "facilityCode " + i,
+            "facilityName": "facilityName " + i,
+            "qualified": i%3 == 1 ? true : false,
+            "committed": i%5 == 1 ? false : true,
+            "qcState": i%5 == 1 ? CONSTANT.QC_STATE_EDIT : "",
+            "approachDate": t,
+            "updateTime": t+1000
+        });
+    }
+    return { "data": { "content": ret, 'last': false } };
+}
+
+/**
  * 材设列表 全部
- * {
-  "content": [],
-  "last": true,
-  "totalElements": 0,
-  "totalPages": 0,
-  "sort": null,
+ * 返回数据 {
+  "content": [
+    {
+      "acceptanceCompanyId": 0,
+      "acceptanceCompanyName": "string",
+      "approachDate": "2018-04-28T02:55:51.478Z",
+      "batchCode": "string",
+      "brand": "string",
+      "buildingId": 0,
+      "buildingName": "string",
+      "code": "string",
+      "committed": true,
+      "elementId": "string",
+      "elementName": "string",
+      "facilityCode": "string",
+      "facilityName": "string",
+      "files": [
+        {
+          "createTime": "2018-04-28T02:55:51.479Z",
+          "creatorId": 0,
+          "creatorName": "string",
+          "digest": "string",
+          "extData": "string",
+          "extension": "string",
+          "id": 0,
+          "length": 0,
+          "name": "string",
+          "objectId": "string",
+          "remark": "string",
+          "targetId": "string",
+          "targetType": "string",
+          "updateTime": "2018-04-28T02:55:51.479Z",
+          "updatorId": 0,
+          "updatorName": "string",
+          "uploadId": "string",
+          "uploadTime": "2018-04-28T02:55:51.479Z",
+          "url": "string"
+        }
+      ],
+      "gdocFileId": "string",
+      "id": 0,
+      "manufacturer": "string",
+      "modelNum": "string",
+      "projectId": 0,
+      "projectName": "string",
+      "qualified": true,
+      "quantity": 0,
+      "specification": "string",
+      "supplier": "string",
+      "unit": "string",
+      "updateTime": "2018-04-28T02:55:51.479Z"
+    }
+  ],
   "first": true,
+  "last": true,
+  "number": 0,
   "numberOfElements": 0,
-  "size": 2,
-  "number": 0
+  "size": 0,
+  "sort": {},
+  "totalElements": 0,
+  "totalPages": 0
 }
  */
 export async function equipmentList(projectId, qcState, page, size, sort) {
+    return demoDataEquipment(100);
     if(qcState == CONSTANT.QC_STATE_EDIT) {
         return equipmentListCommitted(projectId, page, size, sort, false)
     }
@@ -964,6 +1282,11 @@ function equipmentListQualified(projectId, page, size, sort, committed, qualifie
 
 /**
  * 材设列表 数量
+ * @return 数据 response = {
+  "qualifiedCount": 0,
+  "uncommittedCount": 0,
+  "unqualifiedCount": 0
+}
  */
 export async function equipmentListNum(projectId) {
     let api = `/quality/${projectId}/facilityAcceptance/state/summary`;

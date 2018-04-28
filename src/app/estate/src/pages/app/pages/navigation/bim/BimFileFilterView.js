@@ -184,7 +184,7 @@ class BimFileFilterView extends Component {
 
                 {
                     (this.state.show) ? (
-                        <View style={[{ width: width, height: height, backgroundColor: "rgba(0, 0, 0, 0.5)", position: "absolute", top: 44 }, (this.state.show) ? { display: "flex" } : { display: "none" }]}>
+                        <View style={[{ width: width, height: height, backgroundColor: "#00000033", position: "absolute", top: 44 }, (this.state.show) ? { display: "flex" } : { display: "none" }]}>
                             <View style={{ width: width, height: 192, backgroundColor: "#ffffff" }}>
                                 {
                                     this.renderFilterView()

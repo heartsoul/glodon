@@ -59,6 +59,13 @@ export const QC_STATE_EDIT = "edit";
 export const QC_STATE_STANDARD = "standard";
 export const QC_STATE_NOT_STANDARD = "notStandard";
 
+/** 
+ * 编辑页面类型
+*/
+export const EQUIPMENT_EDIT_TYPE_CONFIRM = "confirmPage"; // 最后的确认页面，同详情页面
+export const EQUIPMENT_EDIT_TYPE_BASE = "basePage"; // 基本信息编辑页面
+export const EQUIPMENT_EDIT_TYPE_OTHER = "otherPage"; // 其他信息页面
+export const EQUIPMENT_EDIT_TYPE_IMAGE = 'imagePage';// 图片编辑页面
 /**
  * 侧滑菜单项目
  */
@@ -77,7 +84,7 @@ export const EQUIPMENT_CLASSIFY_NAMES = ["全部", "待提交", "合格", "不�
 export const EQUIPMENT_CLASSIFY_STATES = [QC_STATE_ALL, QC_STATE_EDIT, QC_STATE_STANDARD, QC_STATE_NOT_STANDARD];
 
 // 状态
-export const EQUIPMENT_CLASSIFY_STATES_SUMMARY = ["-"+QC_STATE_ALL, QC_STATE_EDIT, QC_STATE_STANDARD, QC_STATE_NOT_STANDARD];
+export const EQUIPMENT_CLASSIFY_STATES_SUMMARY = ["-"+QC_STATE_ALL,  'uncommittedCount', 'qualifiedCount','unqualifiedCount'];
 
 // 状态显示颜色
 export const CLASSIFY_STATES_COLOR = ["#979797"

@@ -41,9 +41,9 @@ export default class extends PureComponent {
                 let items = responseData.data;
                 let qualityBadgeItem = this.state.equipmentBadge.item;
                 items.map((item, index) => {
-                    let find = API.EQUIPMENT_CLASSIFY_STATES_SUMMARY.indexOf(item.qcState);
+                    let find = API.EQUIPMENT_CLASSIFY_STATES_SUMMARY.indexOf(item);
                     if (find > 0) {
-                        qualityBadgeItem[find] = item.count;
+                        qualityBadgeItem[find] = item;
                     }
                 });
                 console.log(JSON.stringify(qualityBadgeItem));

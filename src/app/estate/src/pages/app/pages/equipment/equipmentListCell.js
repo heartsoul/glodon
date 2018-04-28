@@ -13,7 +13,7 @@ import { BimFileEntry, AuthorityManager } from "app-entry";
 
 const standardImage = require("app-images/icon_up_to_standard.png");
 const notStandardImage = require("app-images/icon_not_up_to_standard.png");
-
+const projectTimeImage = require("app-images/icon_time_black.png");
 
 export default class EquipmentListCell extends PureComponent {
     constructor(props) {
@@ -57,32 +57,35 @@ export default class EquipmentListCell extends PureComponent {
 
     _toDetail = (item) => {
         // 未提交状态就进入编辑
-        if (item.value.qcState === API.QC_STATE_EDIT) {
-            storage.pushNext(null, "EquipmentNewPage", { "item": item });
-        } else {
+        if (item.value.committed === true) {
             storage.pushNext(null, "EquipmentDetailPage", { "item": item });
+        } else {
+            storage.pushNext(null, "EquipmentNewPage", { "item": item });
         }
     }
     renderItem = (item, index) => {
         let barItem = this.renderActionBar(item, index);
         let bToolbar = barItem ? true : false;
+        let renderLine = bToolbar ? (<View style={{height:1, backgroundColor:'#fafafa'}}></View>) : null
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={() => { this._toDetail(item) }}>
                 <View style={[styles.containerView,]}>
                     <View style={[styles.contentHeaderView]}>
                         <Image source={projectTimeImage} style={styles.imageTime} />
-                        <Text style={styles.contentTime}>{item.value.showTime}</Text>
-                        <Text style={[styles.contentStatus, { color: API.toQcStateShowColor(item.value.qcState) }]}>{item.value.qcStateShow}</Text>
+                        <Text style={styles.contentTime}>进场日期：{item.value.showTime}</Text>
+                        <Text style={[styles.contentStatus, { color: item.value.qcStateColor }]}>{item.value.qcStateShow}</Text>
                     </View>
+                    <View style={{height:1, backgroundColor:'#fafafa'}}></View>
                     <View style={[styles.contentView, !bToolbar? styles.contentView_border:{}]}>
-                        <Text style={styles.content}>批号：{item.value.description}</Text>
-                        <Text style={styles.content}>编码：{item.value.description}</Text>
-                        <Text style={styles.content}>名称：{item.value.description}</Text>
-                        {
-                            this.renderImage(item)
-                        }
+                        <Text style={styles.content}>批号：{item.value.batchCode}</Text>
+                        <Text style={styles.content}>编码：{item.value.facilityCode}</Text>
+                        <Text style={styles.content}>名称：{item.value.facilityName}</Text>
+                        
+                        <View style={{height:10, backgroundColor:'#ffffff'}}></View>
                     </View>
+                    {renderLine}
                     {barItem}
+                    {this.renderImage(item)}
                 </View>
             </TouchableOpacity>
         );
@@ -90,22 +93,24 @@ export default class EquipmentListCell extends PureComponent {
     renderImage = (item) => {
         // if(item.value.qcState != API.QC_STATE_EDIT) return;
         let imageSource = null
-        if(item.value.qcState != API.QC_STATE_STANDARD) {
-            imageSource = standardImage;
-        } else if(item.value.qcState != API.QC_STATE_NOT_STANDARD) {
-            imageSource = notStandardImage;
+        if (item.value.committed === true) {
+            if(item.value.qualified === true) {
+                imageSource = standardImage;
+            } else {
+                imageSource = notStandardImage;
+            }
+            if(imageSource) {
+                return (<Image source={imageSource} style={[styles.image]} />)
+            }
         }
-        if(imageSource) {
-            return (<Image source={imageSource} style={[styles.image]} />)
-        }
+        
         return null
-       
     }
     // 提交 & 删除
     renderSubmitAndDeleteAction = (item, index) => {
-        if (!AuthorityManager.isMe(item.value.creatorId)) {
-            return null;
-        }
+        // if (!AuthorityManager.isMe(item.value.creatorId)) {
+        //     return null;
+        // }
         let bSubmit = AuthorityManager.isEquipmentCreate();
         let bDelete = AuthorityManager.isEquipmentDelete();
         if (!(bSubmit || bDelete)) {
@@ -162,6 +167,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 1.5, height: 5 }, // iOS
         shadowOpacity: 0.15, // iOS
         shadowRadius: 3, // iOS
+    
     },
     contentHeaderView: {
         height: 40,
@@ -171,13 +177,13 @@ const styles = StyleSheet.create({
     },
     content: {
         marginTop: 10,
-        marginLeft: 10,
+        marginLeft: 20,
         fontSize: 15,
-        color: 'black',
+        color: '#666',
     },
     contentView: {
         left: 0,
-        backgroundColor: '#fafafa',
+        backgroundColor: '#ffffff',
         overflow: 'hidden',
         // alignItems: "center",
         // alignContent: "center",
@@ -188,12 +194,13 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 8,
     },
     image: {
-        marginTop: 26,
+        marginTop: 16,
         width: 75,
         height: 75,
-        right: 10,
-        bottom: 0,
-        position:'absolute'
+        right: 20,
+        bottom: -7,
+        position:'absolute',
+        resizeMode:'contain',
     },
     imageTime: {
         marginLeft: 10,
@@ -203,7 +210,7 @@ const styles = StyleSheet.create({
     contentTime: {
         marginLeft: 10,
         fontSize: 14,
-        color: 'black',
+        color: '#666',
     },
     contentStatus: {
         right: 10,
