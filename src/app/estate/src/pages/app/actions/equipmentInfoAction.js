@@ -7,7 +7,7 @@ export function fetchData(fieldId) {
     // dispatch(_loading());
     API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
       dispatch(_loadSuccess(responseData.data));
-    }).catch(err => {
+    }).catch(error => {
       dispatch(_loadError(error));
     });
   }

@@ -1031,56 +1031,56 @@ export async function equipmentDelete(projectId, id) {
 }
  */
 export async function equipmentDetail(projectId, id) {
-    return { "data":{
-        "acceptanceCompanyId": 0,
-        "acceptanceCompanyName": "string",
-        "approachDate": "1518853268000",
-        "batchCode": "string",
-        "brand": "string",
-        "buildingId": 0,
-        "buildingName": "string",
-        "code": "string",
-        "committed": true,
-        "elementId": "string",
-        "elementName": "string",
-        "facilityCode": "string",
-        "facilityName": "string",
-        "files": [
-          {
-            "createTime": "1518853268000",
-            "creatorId": 0,
-            "creatorName": "string",
-            "digest": "string",
-            "extData": "string",
-            "extension": "string",
-            "id": 0,
-            "length": 0,
-            "name": "string",
-            "objectId": "string",
-            "remark": "string",
-            "targetId": "string",
-            "targetType": "string",
-            "updateTime": "1518853268000",
-            "updatorId": 0,
-            "updatorName": "string",
-            "uploadId": "string",
-            "uploadTime": "1518853268000",
-            "url": "string"
-          }
-        ],
-        "gdocFileId": "string",
-        "id": 0,
-        "manufacturer": "string",
-        "modelNum": "string",
-        "projectId": 0,
-        "projectName": "string",
-        "qualified": true,
-        "quantity": 0,
-        "specification": "string",
-        "supplier": "string",
-        "unit": "string",
-        "updateTime": "1518853268000"
-      }}
+    // return { "data":{
+    //     "acceptanceCompanyId": 0,
+    //     "acceptanceCompanyName": "string",
+    //     "approachDate": "1518853268000",
+    //     "batchCode": "string",
+    //     "brand": "string",
+    //     "buildingId": 0,
+    //     "buildingName": "string",
+    //     "code": "string",
+    //     "committed": true,
+    //     "elementId": "string",
+    //     "elementName": "string",
+    //     "facilityCode": "string",
+    //     "facilityName": "string",
+    //     "files": [
+    //       {
+    //         "createTime": "1518853268000",
+    //         "creatorId": 0,
+    //         "creatorName": "string",
+    //         "digest": "string",
+    //         "extData": "string",
+    //         "extension": "string",
+    //         "id": 0,
+    //         "length": 0,
+    //         "name": "string",
+    //         "objectId": "string",
+    //         "remark": "string",
+    //         "targetId": "string",
+    //         "targetType": "string",
+    //         "updateTime": "1518853268000",
+    //         "updatorId": 0,
+    //         "updatorName": "string",
+    //         "uploadId": "string",
+    //         "uploadTime": "1518853268000",
+    //         "url": "string"
+    //       }
+    //     ],
+    //     "gdocFileId": "string",
+    //     "id": 0,
+    //     "manufacturer": "string",
+    //     "modelNum": "string",
+    //     "projectId": 0,
+    //     "projectName": "string",
+    //     "qualified": true,
+    //     "quantity": 0,
+    //     "specification": "string",
+    //     "supplier": "string",
+    //     "unit": "string",
+    //     "updateTime": "1518853268000"
+    //   }}
     let api = `/quality/${projectId}/facilityAcceptance/${id}`;
     return requestJSON(api, {
         method: 'GET',
@@ -1238,7 +1238,7 @@ function demoDataEquipment(size) {
 }
  */
 export async function equipmentList(projectId, qcState, page, size, sort) {
-    return demoDataEquipment(100);
+    // return demoDataEquipment(100);
     if(qcState == CONSTANT.QC_STATE_EDIT) {
         return equipmentListCommitted(projectId, page, size, sort, false)
     }

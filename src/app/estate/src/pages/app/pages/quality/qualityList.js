@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     contentList: {
         flex: 1,
         backgroundColor: '#fafafa',
+        paddingTop:5,
         //  height:120,
     },
     dataList: {

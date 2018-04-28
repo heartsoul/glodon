@@ -40,13 +40,13 @@ export default class extends PureComponent {
                 // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
                 let items = responseData.data;
                 let qualityBadgeItem = this.state.equipmentBadge.item;
-                items.map((item, index) => {
-                    let find = API.EQUIPMENT_CLASSIFY_STATES_SUMMARY.indexOf(item);
-                    if (find > 0) {
-                        qualityBadgeItem[find] = item;
+                API.EQUIPMENT_CLASSIFY_STATES_SUMMARY.map((item, index) => {
+                    let find = items[item];
+                    if (find) {
+                        qualityBadgeItem[index] = find;
                     }
                 });
-                console.log(JSON.stringify(qualityBadgeItem));
+                // console.log(JSON.stringify(qualityBadgeItem));
                  this.setState({
                     equipmentBadge:{item:qualityBadgeItem},
                     })
@@ -77,7 +77,7 @@ export default class extends PureComponent {
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <SegmentedView style={{ flex: 1 }} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
+                <SegmentedView style={{ flex: 1}} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
                     {
                        API.EQUIPMENT_CLASSIFY_STATUS_LIST.map((item,index)=>{
                            return (
@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     contentList: {
         flex: 1,
         backgroundColor: '#fafafa',
+        paddingTop:5,
         //  height:120,
     },
     dataList: {

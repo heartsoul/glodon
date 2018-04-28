@@ -17,7 +17,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case types.EQUIPMENT_INFO_DOING:
+        case types.EQUIPMENT_NEW_DOING:
             return {
                 ...state,
                 isLoading: true,
@@ -25,7 +25,7 @@ export default (state = initialState, action) => {
                 isSuccessed:false,
                 editType:action.editType,
             }
-        case types.EQUIPMENT_INFO_DONE:
+        case types.EQUIPMENT_NEW_DONE:
             return {
                 ...state,
                 isLoading: false,
@@ -34,7 +34,7 @@ export default (state = initialState, action) => {
                 isSuccessed:true,
                 editType:action.editType,
             }
-        case types.EQUIPMENT_INFO_ERROR:
+        case types.EQUIPMENT_NEW_ERROR:
             return {
                 ...state,
                 isLoading: false,
@@ -42,7 +42,7 @@ export default (state = initialState, action) => {
                 isSuccessed:false,
                 editType:action.editType,
             }
-        case types.EQUIPMENT_INFO_INIT:
+        case types.EQUIPMENT_NEW_INIT:
             return initialState;
         default:
             return state;

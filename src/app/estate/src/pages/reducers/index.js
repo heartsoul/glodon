@@ -8,6 +8,7 @@ import updateData from '../app/reducers/updateDataReducer'
 import reviewRepair from '../app/reducers/reviewRepairReducer' 
 import equipmentList from '../app/reducers/equipmentListReducer' 
 import equipmentInfo from '../app/reducers/equipmentInfoReducer' 
+import equipmentNew from '../app/reducers/equipmentNewReducer' 
 import projectList from '../app/reducers/projectReducer' 
 const rootReducer = combineReducers({
   loginIn,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   reviewRepair,
   equipmentInfo,
   projectList,
+  equipmentNew,
 })
 
 export default rootReducer

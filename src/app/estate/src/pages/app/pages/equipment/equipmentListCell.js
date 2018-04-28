@@ -56,12 +56,7 @@ export default class EquipmentListCell extends PureComponent {
     }
 
     _toDetail = (item) => {
-        // 未提交状态就进入编辑
-        if (item.value.committed === true) {
-            storage.pushNext(null, "EquipmentDetailPage", { "item": item });
-        } else {
-            storage.pushNext(null, "EquipmentNewPage", { "item": item });
-        }
+        storage.pushNext(null, "EquipmentDetailPage", { "item": item });
     }
     renderItem = (item, index) => {
         let barItem = this.renderActionBar(item, index);
@@ -132,14 +127,8 @@ export default class EquipmentListCell extends PureComponent {
 
     // 操作条
     renderActionBar = (item, index) => {
-        switch (item.value.qcState) {
-            case API.QC_STATE_EDIT: {
-                return this.renderSubmitAndDeleteAction(item, index)
-            }
-                break;
-           
-            default:
-                break;
+        if (!item.value.committed === true) {
+           return this.renderSubmitAndDeleteAction(item, index)
         }
         return null;
     }

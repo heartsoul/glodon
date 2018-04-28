@@ -110,11 +110,12 @@ EquipmentInfoItem.propTypes = {
 const styles = StyleSheet.create({
 
     containerView: {
-        marginTop: 10,
-        marginBottom: 0,
+        marginTop: 15,
+        marginBottom: 5,
         marginLeft: 20,
         marginRight: 20,
         flexDirection: 'row',
+        
     },
     content: {
         fontSize: 14,
@@ -143,11 +144,13 @@ const styles = StyleSheet.create({
     },
     titleView: {
         flexDirection: 'row',
+       
+        alignItems: 'center',
     },
     contentView: {
         flexDirection: 'row',
-        marginRight: 75,
-        alignItems: 'center'
+        
+        alignItems: 'center',
     },
     infoMark: {
         // marginLeft: 5,
@@ -156,15 +159,16 @@ const styles = StyleSheet.create({
         resizeMode:'contain'
     },
     rightAction: {
-        right: 20,
-        width: 40,
+        right: 0,
+        width: 20,
+        flexDirection: 'row-reverse',
         position: 'absolute',
     },
     lineView: {
-        height: 0.5,
+        height: 1,
         marginTop: 20,
-        marginLeft: 10,
+        marginLeft: 20,
         width: '100%',
-        backgroundColor: '#cccccc'
+        backgroundColor: '#fafafa'
     },
 });

@@ -34,9 +34,9 @@ class EquipmentDetailPage extends Component {
     }
 
     _onSubmit = (id) => {
-        BimFileEntry.submitEquipmentFromList(id, ()=>{
-          console.log("提交完成");
-        });
+        // BimFileEntry.submitEquipmentFromList(id, ()=>{
+        //   console.log("提交完成");
+        // });
     }
     loadRightTitle = () => {
         const equipmentInfo = this.props.equipmentInfo;
@@ -94,6 +94,7 @@ class EquipmentDetailPage extends Component {
         const equipmentInfo = this.props.equipmentInfo;
         return (
             <ScrollView style={{ backgroundColor: '#FAFAFA' }}>
+            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <EquipmentDetailView equipmentInfo={equipmentInfo} />
             </ScrollView>
         );
