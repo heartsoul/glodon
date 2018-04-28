@@ -50,8 +50,9 @@ document.addEventListener('message', function(e) {eval(e.data);});\
 export default class RelevantModelPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: '',
-        header: null,
+        headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>点击选择</Text>),
+        headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
+        headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null,
     });
 
     constructor(props) {
@@ -64,6 +65,40 @@ export default class RelevantModelPage extends Component {
             relevantModel: {},//选中的模型
             url: '',
         };
+        this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
+    }
+
+    loadLeftTitle = () => {
+        return (
+            <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                <TouchableOpacity onPress={() => { this.goBack() }}>
+                    <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 20 }} />
+                </TouchableOpacity>
+                {
+                    //编辑状态的可以切换模型
+                    (this.state.showChangeMode) ? (
+                        <TouchableOpacity onPress={() => { this.changeModel() }}>
+                            <Image source={require('app-images/icon_change_model.png')} style={{ width: 25, height: 24, marginLeft: 20 }} />
+                        </TouchableOpacity>
+                    ) : (null)
+                }
+            </View>
+        )
+    }
+
+    loadRightTitle = () => {
+        return (
+            <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                {
+                    //显示创建
+                    (this.state.showAddIcon) ? (
+                        <TouchableOpacity onPress={() => { this.add() }}>
+                            <Text style={{ color: '#ffffff', fontSize: 25, marginTop: 5, alignSelf: 'flex-end', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5 }}>+</Text>
+                        </TouchableOpacity>
+                    ) : (null)
+                }
+            </View>
+        )
     }
 
     componentDidMount = () => {
@@ -299,51 +334,12 @@ export default class RelevantModelPage extends Component {
 
 
 
-    renderHeaderView = () => {
-        let title = '点击选择';
-        return (
-            <View style={{ height: 43, flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0.5)', alignItems: 'center' }}>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <TouchableOpacity onPress={() => { this.goBack() }}>
-                        <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 20 }} />
-                    </TouchableOpacity>
-                    {
-                        //编辑状态的可以切换模型
-                        (this.state.showChangeMode) ? (
-                            <TouchableOpacity onPress={() => { this.changeModel() }}>
-                                <Image source={require('app-images/icon_change_model.png')} style={{ width: 25, height: 24, marginLeft: 20 }} />
-                            </TouchableOpacity>
-                        ) : (null)
-                    }
-
-                </View>
-                <View style={{ flex: 1 }}>
-                    <Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: 'center' }}>{title}</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                    {
-                        //显示创建
-                        (this.state.showAddIcon) ? (
-                            <TouchableOpacity onPress={() => { this.add() }}>
-                                <Text style={{ color: '#ffffff', fontSize: 25, marginTop: 5, alignSelf: 'flex-end', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5 }}>+</Text>
-                            </TouchableOpacity>
-                        ) : (null)
-                    }
-                </View>
-            </View>
-        );
-    }
-
 
     //渲染
     render() {
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="rgba(0, 0, 0, 0.5)" />
-                {
-                    this.renderHeaderView()
-                }
-
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={styles.container}>
 
                     <WebView bounces={false}

@@ -45,8 +45,9 @@ document.addEventListener('message', function(e) {eval(e.data);});\
 export default class RelevantBlueprintPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: '',
-        header: null,
+        headerTitle: navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : null,
+        headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
+        headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null,
     });
 
     constructor(props) {
@@ -62,8 +63,76 @@ export default class RelevantBlueprintPage extends Component {
             showCreateButton: true,//显示创建按钮
             url: '',
         };
+        this.props.navigation.setParams({ loadTitle: this.loadTitle, loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
+
+    }
+    loadTitle = () => {
+        return (
+            <Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>{this.state.drawingName ? this.state.drawingName : '图纸'}</Text>
+        );
+    }
+    renderEditLeftTitle = () => {
+        return (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <TouchableOpacity onPress={() => { this.goBack() }}>
+                    <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 20 }} />
+                </TouchableOpacity>
+
+                {
+                    //编辑状态的可以切换图纸
+                    (this.state.pageType == PageType.PAGE_TYPE_EDIT_QUALITY) ? (
+                        <TouchableOpacity onPress={() => { this.changeBluePrint() }}>
+                            <Image source={require('app-images/icon_change_blueprint.png')} style={{ width: 25, height: 24, marginLeft: 20 }} />
+                        </TouchableOpacity>
+                    ) : (
+                            null
+                        )
+                }
+            </View>
+        );
     }
 
+    loadLeftTitle = () => {
+        return (
+            <View style={{ flexDirection: "row", alignItems: "center" }} >
+                {
+                    this.state.showFinishView ? (
+                        <View>
+                            <TouchableOpacity onPress={() => { this.removePosition() }}>
+                                <Text style={{ color: '#ffffff', fontSize: 15, marginTop: 5, marginLeft: 20 }}>取消</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ) : (
+                            this.renderEditLeftTitle()
+                        )
+                }
+            </View>
+        );
+    }
+
+    renderEditRightTitle = () => {
+        if (this.state.showFinishView) {
+            return (
+                <View style={{ flex: 1, alignItems: "center" }}>
+                    <TouchableOpacity onPress={() => { this.finish() }}>
+                        <Text style={{ color: '#ffffff', fontSize: 15, marginTop: 5,  marginRight: 20 }}>完成</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+        } else if (this.state.showCreateButton) {
+            return (
+                <Text style={{ color: '#ffffff', fontSize: 15, marginRight: 20, marginTop: 5, }}>长按新建</Text>
+            );
+        }
+        return null;
+    }
+
+    loadRightTitle = () => {
+        if (this.state.pageType != PageType.PAGE_TYPE_DETAIL) {
+            return this.renderEditRightTitle();
+        }
+        return null;
+    }
     componentDidMount = () => {
         let params = this.props.navigation.state.params;
 
@@ -110,8 +179,6 @@ export default class RelevantBlueprintPage extends Component {
             })
         }, 4000);
 
-        //请求数据
-        this.props.navigation.setParams({ title: relevantBluePrint.title, rightNavigatePress: this._rightAction })
 
         BimToken.getBimFileToken(relevantBluePrint.drawingGdocFileId, (token) => {
             let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
@@ -120,80 +187,6 @@ export default class RelevantBlueprintPage extends Component {
             });
         })
 
-    }
-
-    //详情页查看图纸的header
-    headerDetailView = () => {
-        let title = this.state.drawingName ? this.state.drawingName : '图纸';
-        return (
-            <View style={{ height: 43, flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0.5)', alignItems: 'center' }}>
-                <View style={{ flex: 1 }}>
-                    <TouchableOpacity onPress={() => { this.goBack() }}>
-                        <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 20 }} />
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flex: 1 }}>
-                    <Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: 'center' }}>{title}</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                </View>
-            </View>
-        );
-    }
-
-    headerCreateView = () => {
-        let title = this.state.drawingName ? this.state.drawingName : '图纸';
-        return (
-            <View style={{ height: 43, flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0.5)', alignItems: 'center' }}>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <TouchableOpacity onPress={() => { this.goBack() }}>
-                        <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 20 }} />
-                    </TouchableOpacity>
-                    {
-                        //编辑状态的可以切换图纸
-                        (this.state.pageType == PageType.PAGE_TYPE_EDIT_QUALITY) ? (
-                            <TouchableOpacity onPress={() => { this.changeBluePrint() }}>
-                                <Image source={require('app-images/icon_change_blueprint.png')} style={{ width: 25, height: 24, marginLeft: 20 }} />
-                            </TouchableOpacity>
-                        ) : (
-                                null
-                            )
-                    }
-
-                </View>
-                <View style={{ flex: 1 }}>
-                    <Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: 'center' }}>{title}</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                    {
-                        (this.state.showCreateButton) ? (
-                            <Text style={{ color: '#ffffff', fontSize: 15, alignSelf: 'flex-end', marginRight: 20, marginTop: 5, }}>长按新建</Text>
-                        ) : (null)
-                    }
-                </View>
-            </View>
-        );
-    }
-
-    headerFinishView = () => {
-        let title = this.state.drawingName ? this.state.drawingName : '图纸';
-        return (
-            <View style={{ height: 43, flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0.5)', alignItems: 'center' }}>
-                <View style={{ flex: 1 }}>
-                    <TouchableOpacity onPress={() => { this.removePosition() }}>
-                        <Text style={{ color: '#ffffff', fontSize: 15, marginTop: 5, marginLeft: 20 }}>取消</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flex: 1 }}>
-                    <Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: 'center' }}>{title}</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                    <TouchableOpacity onPress={() => { this.finish() }}>
-                        <Text style={{ color: '#ffffff', fontSize: 15, marginTop: 5, alignSelf: 'flex-end', marginRight: 20 }}>完成</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        );
     }
 
     createNoticeView = () => {
@@ -314,19 +307,7 @@ export default class RelevantBlueprintPage extends Component {
 
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="rgba(0, 0, 0, 0.5)" />
-                {
-                    (this.state.pageType === PageType.PAGE_TYPE_DETAIL) ? (
-                        this.headerDetailView()
-                    ) : (
-                            this.state.showFinishView ? (
-                                this.headerFinishView()
-                            ) : (
-                                    this.headerCreateView()
-                                )
-                        )
-                }
-
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={styles.container}>
 
                     <WebView bounces={false}

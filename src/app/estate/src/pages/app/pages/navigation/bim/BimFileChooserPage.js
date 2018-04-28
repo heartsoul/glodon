@@ -54,7 +54,7 @@ export default class BimFileChooser extends Component {
             currentItem = API.APP_QUALITY_MODLE;
         }
         return {
-            title: title,
+            headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>{title}</Text>),
             headerRight: (<RightBarButtons navigation={navigation} />),
             headerLeft: (
                 <LeftBarButtons top={navigation.getParam('top')} navigation={navigation} currentItem={currentItem} />
