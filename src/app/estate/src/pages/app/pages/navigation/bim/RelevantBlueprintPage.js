@@ -29,7 +29,6 @@ function callMessage(action, data, callbackName) { \
   if(data) { dataIn = data;}\
   if(callbackName) { callbackNameIn = callbackName; } \
   let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});\
-//   console.log('执行命令：'+cmd);\
   window.postMessage(cmd);\
 }\
 window.modelEvent = {\
@@ -115,7 +114,7 @@ export default class RelevantBlueprintPage extends Component {
             return (
                 <View style={{ flex: 1, alignItems: "center" }}>
                     <TouchableOpacity onPress={() => { this.finish() }}>
-                        <Text style={{ color: '#ffffff', fontSize: 15, marginTop: 5,  marginRight: 20 }}>完成</Text>
+                        <Text style={{ color: '#ffffff', fontSize: 15, marginTop: 5, marginRight: 20 }}>完成</Text>
                     </TouchableOpacity>
                 </View>
             );
@@ -221,6 +220,8 @@ export default class RelevantBlueprintPage extends Component {
 
         this.setState({
             showFinishView: false,
+        },() => {
+            this.props.navigation.setParams({ loadTitle: this.loadTitle, loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
         });
     }
 
@@ -288,6 +289,8 @@ export default class RelevantBlueprintPage extends Component {
             drawingPositionX: json.x,
             drawingPositionY: json.y,
             showFinishView: true,
+        }, () => {
+            this.props.navigation.setParams({ loadTitle: this.loadTitle, loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
         })
     }
     //点击圆点 返回信息

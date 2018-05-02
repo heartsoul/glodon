@@ -12,11 +12,13 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { Toast } from 'antd-mobile';
+import { connect } from 'react-redux';
 
 import * as AppConfig from "common-module"
 import * as PageType from "./PageTypes";
 import * as BimToken from "./BimFileTokenUtil";
 import * as AuthorityManager from "./../project/AuthorityManager";
+import * as RelevantModelAction from "./../../../actions/relevantModelAction";
 
 //获取设备的宽度和高度
 var {
@@ -30,7 +32,6 @@ function callMessage(action, data, callbackName) { \
   if(data) { dataIn = data;}\
   if(callbackName) { callbackNameIn = callbackName; } \
   let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});\
-//   console.log('执行命令：'+cmd);\
   window.postMessage(cmd);\
 }\
 window.modelEvent = {\
@@ -47,7 +48,7 @@ document.addEventListener('message', function(e) {eval(e.data);});\
 /**
  * 关联模型
  */
-export default class RelevantModelPage extends Component {
+class RelevantModelPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>点击选择</Text>),
@@ -203,12 +204,16 @@ export default class RelevantModelPage extends Component {
             this.props.navigation.replace('NewPage', { relevantModel: relevantModel });
         } else if (this.state.pageType == PageType.PAGE_TYPE_NEW_EQUIPMENT) {
             // pop到新建材设单页面
-
+            this.props.transformInfo(relevantModel);
+            this.props.navigation.pop("EquipmentNewPage");
         } else if (this.state.pageType == PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
             //编辑材设单
+            this.props.transformInfo(relevantModel);
             this.props.navigation.goBack();
         } else if (this.state.pageType == PageType.PAGE_TYPE_EQUIPMENT_MODEL) {
             //从材设单模型进入 replace为新建材设单页面
+            this.props.transformInfo(relevantModel);
+            this.props.navigation.replace('EquipmentNewPage');
         } else if (this.state.pageType == PageType.PAGE_TYPE_DETAIL) {
             this.props.navigation.goBack();
         }
@@ -374,4 +379,16 @@ const styles = StyleSheet.create({
         paddingTop: 0
     }
 });
+
+export default connect(
+    state => ({
+    }),
+    dispatch => ({
+        transformInfo: (relevantModel) => {
+            if (dispatch) {
+                dispatch(RelevantModelAction.transformInfo(relevantModel));
+            }
+        }
+    })
+)(RelevantModelPage);
 
