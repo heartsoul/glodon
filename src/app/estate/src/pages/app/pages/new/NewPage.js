@@ -258,7 +258,7 @@ class NewPage extends React.Component {
                 underlineColorAndroid={"transparent"}
                 textAlign="left"
                 onChangeText={(text) => { this.state.contentDescription = text; this.contentDescription = text;}}
-                value={this.state.contentDescription}
+                value={this.contentDescription}
             />
         );
     }

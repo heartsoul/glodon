@@ -21,7 +21,7 @@ export default class SelectCheckPointView extends Component {
         super(props);
         this.state = {
             selectedCheckPoint: {
-                id: -1,
+                id: 0,
                 name: '',
             },
             inputName: '',
@@ -31,7 +31,7 @@ export default class SelectCheckPointView extends Component {
 
     componentWillReceiveProps(nextProps) {
         let selectedCheckPoint = this.props.selectedCheckPoint;
-        if (selectedCheckPoint && selectedCheckPoint.id && selectedCheckPoint.id != -1) {
+        if (selectedCheckPoint && selectedCheckPoint.id && selectedCheckPoint.id != 0) {
             this.setState({
                 selectedCheckPoint: selectedCheckPoint,
                 inputName: selectedCheckPoint.name,
@@ -64,7 +64,7 @@ export default class SelectCheckPointView extends Component {
     getSelectedCheckPoint = () => {
         let selectedCheckPoint = {
             name: this.state.inputName,
-            id: -1,
+            id: 0,
         }
         if (this.state.selectedCheckPoint.name === this.state.inputName) {
             selectedCheckPoint.id = this.state.selectedCheckPoint.id;
@@ -75,7 +75,7 @@ export default class SelectCheckPointView extends Component {
     textInputChange = (text) => {
         let isShowMark = this.state.selectedCheckPoint
             && this.state.selectedCheckPoint.name === text
-            && this.state.selectedCheckPoint.id && this.state.selectedCheckPoint.id != -1;
+            && this.state.selectedCheckPoint.id && this.state.selectedCheckPoint.id != 0;
         this.setState({
             inputName: text,
             isShowMark: isShowMark,
