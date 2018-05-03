@@ -4,9 +4,9 @@
 'use strict';
 import React, { Component } from "react";
 import {
-    ActivityIndicator, 
-    Text, 
-    View, 
+    ActivityIndicator,
+    Text,
+    View,
     Image
 } from "react-native";
 import PropTypes from 'prop-types'
@@ -16,9 +16,9 @@ import * as API from "app-api";
 
 import QualityInfoCellItem from "./QualityInfoCellItem";
 import QualityInfoItem from "./QualityInfoItem"
- 
+
 export default class QualityDetailView extends Component {
-    
+
     constructor(props) {
         super(props);
     }
@@ -67,7 +67,7 @@ export default class QualityDetailView extends Component {
         // fetchData(item.value.id);
     }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
         // const {resetData} = this.props;
         // resetData();
     }
@@ -80,7 +80,7 @@ export default class QualityDetailView extends Component {
             "handleDate": inspectionInfo.updateTime,
             "handlerId": inspectionInfo.creatorId,
             "handlerName": inspectionInfo.creatorName,
-            "handlerTitle": inspectionInfo.responsibleUserTitle,
+            "handlerTitle": inspectionInfo.inspectionUserTitle,
             "commitTime": inspectionInfo.commitTime,
             "files": inspectionInfo.files
         };
@@ -88,10 +88,11 @@ export default class QualityDetailView extends Component {
     }
 
     renderProgressInfoItem = (progressInfo, index) => {
-        
+        let title = (progressInfo.handlerTitle && progressInfo.handlerTitle.length > 0)?"-"+ progressInfo.handlerTitle : ""
+        let name = progressInfo.handlerName + title;
         if (progressInfo.files.length <= 0) {
             return <View key={"renderProgressInfoItem" + index} style={{ marginTop: 10 }}>
-                <QualityInfoCellItem userName={progressInfo.handlerName + '-' + progressInfo.handlerTitle} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
+                <QualityInfoCellItem userName={name} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
                     actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
                 <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestampSimple(progressInfo.handleDate) : null} showType="description" />
                 <QualityInfoItem showType="line" />
@@ -100,7 +101,7 @@ export default class QualityDetailView extends Component {
         if (progressInfo.files.length == 1) {
             return (
                 <View key={"renderProgressInfoItem" + index} style={{ marginTop: 10 }}>
-                    <QualityInfoCellItem userName={progressInfo.handlerName} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
+                    <QualityInfoCellItem userName={name} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
                         actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
                     <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestampSimple(progressInfo.handleDate) : null} showType="description" />
                     <QualityInfoCellItem url={progressInfo.files[0].url} showType="image" />
@@ -114,7 +115,7 @@ export default class QualityDetailView extends Component {
         })
 
         return <View key={"renderProgressInfoItem" + index} style={{ marginTop: 10 }}>
-            <QualityInfoCellItem userName={progressInfo.handlerName} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
+            <QualityInfoCellItem userName={name} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
                 actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
             <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestamp(progressInfo.handleDate) : null} showType="description" />
             <QualityInfoCellItem urls={urls}
@@ -127,8 +128,9 @@ export default class QualityDetailView extends Component {
         return (
             <View>
                 <View style={{ marginTop: 10 }}>
-                    <QualityInfoItem leftTitle={inspectionInfo.inspectionType === 'inspection' ? "施工单位：" : "施工单位："} content={inspectionInfo.constructionCompanyName} />
-                    <QualityInfoItem leftTitle="责任人：" content={inspectionInfo.inspectionCompanyName} />
+                    <QualityInfoItem leftTitle={inspectionInfo.inspectionType === 'inspection' ? "检查单位：" : "验收单位："} content={inspectionInfo.inspectionCompanyName} />
+                    <QualityInfoItem leftTitle={"施工单位："} content={inspectionInfo.constructionCompanyName} />
+                    <QualityInfoItem leftTitle="责任人：" content={inspectionInfo.responsibleUserName} />
                     {
                         inspectionInfo.qualityCheckpointId > 0 ? (
                             <QualityInfoItem leftTitle="质检项目：" showType="info" onClick={() => { this.onCheckPointAction(inspectionInfo) }} content={inspectionInfo.qualityCheckpointName} />
@@ -163,4 +165,4 @@ export default class QualityDetailView extends Component {
 
 QualityDetailView.propTypes = {
     qualityInfo: PropTypes.any.isRequired,
-  }
+}
