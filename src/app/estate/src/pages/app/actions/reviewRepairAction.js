@@ -88,7 +88,7 @@ function assembleReviewParams(inspectionId, description, status, lastRectificati
         inspectionId: inspectionId,
         status: status,
         //整改期限 
-        lastRectificationDate: new Date(lastRectificationDate.setHours(0, 0, 0, 0)).getTime(),
+        lastRectificationDate: lastRectificationDate.getTime(),
         // 复查单对应的整改单的id
         rectificationId: getRectificationId(qualityInfo),
     }
@@ -357,9 +357,9 @@ function saveReview(inspectionId, description, status, lastRectificationDate, qu
                         id: responseData.data.id,
                         code: responseData.data.code,
                         description: description,
-                        lastRectificationDate: new Date(lastRectificationDate.setHours(0, 0, 0, 0)).getTime(),
+                        lastRectificationDate: lastRectificationDate.getTime(),
                         status: status,
-                        files:files,
+                        files: files,
                     }
                     dispatch(_loadEditInfoSuccess(resetEditInfo))
                     Toast.hide();
@@ -373,9 +373,9 @@ function saveReview(inspectionId, description, status, lastRectificationDate, qu
                         id: editInfo.id,
                         code: editInfo.code,
                         description: description,
-                        lastRectificationDate: new Date(lastRectificationDate.setHours(0, 0, 0, 0)).getTime(),
+                        lastRectificationDate: lastRectificationDate.getTime(),
                         status: status,
-                        files:files,
+                        files: files,
                     }
                     dispatch(_loadEditInfoSuccess(editInfo))
                     //"保存成功！" 
@@ -421,7 +421,7 @@ function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, 
                         id: responseData.data.id,
                         code: responseData.data.code,
                         description: description,
-                        files:files,
+                        files: files,
                     }
                     dispatch(_loadEditInfoSuccess(resetEditInfo))
                     Toast.hide();
@@ -435,7 +435,7 @@ function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, 
                         id: editInfo.id,
                         code: editInfo.code,
                         description: description,
-                        files:files,
+                        files: files,
                     }
                     dispatch(_loadEditInfoSuccess(editInfo))
                     Toast.hide();
@@ -508,8 +508,8 @@ function isFileChange(oldFiles, newFiles) {
 }
 
 function isParamsChange(description, status, lastRectificationDate, editInfo, type) {
-    if(!editInfo.description){
-        if(description.length > 0){
+    if (!editInfo.description) {
+        if (description.length > 0) {
             return true;
         }
         return false;
@@ -517,12 +517,23 @@ function isParamsChange(description, status, lastRectificationDate, editInfo, ty
     if (type === API.CREATE_TYPE_REVIEW) {
         if (status != editInfo.status) {
             return true;
-        } else if ( new Date(lastRectificationDate.setHours(0, 0, 0, 0)).getTime() != editInfo.lastRectificationDate) {
+        } else if (!isDateEqual) {
             return true;
         }
     }
     return false;
 }
+/**
+ * 
+ * @param {*} lastRectificationDate  date
+ * @param {*} editInfoLastRectificationDate  long
+ */
+function isDateEqual(lastRectificationDate, editInfoLastRectificationDate) {
+    let timeStamp = new Date(lastRectificationDate.setHours(0, 0, 0, 0)).getTime();
+    let editTimeStamp = new Date(new Date(editInfoLastRectificationDate).setHours(0, 0, 0, 0)).getTime();;
+    return timeStamp == editTimeStamp;
+}
+
 
 export function _loadDetailSuccess(data) {
     return {
