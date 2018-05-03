@@ -180,6 +180,9 @@ class SelectView extends Component {
      */
     getSelectedData = () => {
         if (this.state.selectIndex == -1) {
+            if(this.props.title === '责任人'){
+                this.props.value.userId = this.props.value.id;
+            }
             return this.props.value;
         } else {
             let ret = this.state.dataList[this.state.selectIndex];

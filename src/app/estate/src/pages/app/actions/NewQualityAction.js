@@ -44,7 +44,7 @@ function assembleParams(requestParams) {
     params.lastRectificationDate = rectificationData.date;
 
     params.projectId = storage.loadProject();
-    params.projectName = '';
+    params.projectName = storage.loadCurrentProjectName();
 
     //质检项目
     let checkPoint = requestParams.checkPoint;
@@ -395,7 +395,7 @@ function isParamsChange(requestParams, inspectionInfo) {
         return true;
     }
     if (inspectionInfo.needRectification && params.needRectification) {
-        if (qualityInfo.lastRectificationDate != params.lastRectificationDate) {
+        if (inspectionInfo.lastRectificationDate != params.lastRectificationDate) {
             return true;
         }
     }
@@ -471,13 +471,13 @@ export function getQualityInspectionDetail(fileId, callback) {
     API.getQualityInspectionDetail(storage.loadProject(), fileId)
         .then((responseData) => {
 
-            let editInfo = {};
+            let params = {};
             if (responseData.data && responseData.data.inspectionInfo) {
-                editInfo = getDetailInfo(responseData.data.inspectionInfo)
-                editInfo.inspectionInfo = responseData.data.inspectionInfo;
+                params = getDetailInfo(responseData.data.inspectionInfo)
+                params.inspectionInfo = responseData.data.inspectionInfo;
             }
-            editInfo.isLoading = false;
-            callback(editInfo);
+            params.isLoading = false;
+            callback(params);
         }).catch(err => {
             callback({
                 isLoading: false,

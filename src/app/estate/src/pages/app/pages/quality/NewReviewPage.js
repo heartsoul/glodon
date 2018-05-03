@@ -32,9 +32,8 @@ var { width, height } = Dimensions.get("window");
  * 新建复查单整改单
  */
 class NewReviewPage extends Component {
-
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: '复查单',
+        headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>{navigation.state.params.createType === API.CREATE_TYPE_REVIEW ? '复查单' : "整改单"}</Text>),
         headerRight: (
             <Text onPress={() => navigation.state.params.rightNavigatePress()} style={{ marginRight: 20, color: '#FFFFFF', width: 60, textAlign: "right" }} >
                 提交
@@ -130,7 +129,7 @@ class NewReviewPage extends Component {
 
     goBack = () => {
         let params = this.props.navigation.state.params;
-        reviewRepairAction.isEditInfoChange(this.state.description,this.state.status, this.state.lastRectificationDate,this.props.editInfo,params.createType, this.refs[REF_PHOTO],
+        reviewRepairAction.isEditInfoChange(this.state.description, this.state.status, this.state.lastRectificationDate, this.props.editInfo, params.createType, this.refs[REF_PHOTO],
             (isChange) => {
                 if (isChange) {
                     ActionModal.alert('是否确认退出当前页面？', "您还未保存当前数据！", [
@@ -138,7 +137,7 @@ class NewReviewPage extends Component {
                             text: '取消', style: { color: '#5b5b5b' }
                         },
                         {
-                            text: '不保存', style: { color: '#e75452' }, onPress: () => {  storage.goBack(this.props.navigation, null); }
+                            text: '不保存', style: { color: '#e75452' }, onPress: () => { storage.goBack(this.props.navigation, null); }
                         },
                         {
                             text: '保存', style: { color: '#00baf3' }, onPress: () => { this.save() }
@@ -323,5 +322,13 @@ const styles = StyleSheet.create({
         paddingBottom: 0,
         backgroundColor: '#ffffff',
         minHeight: 120
+    },
+    title: {
+        color: '#ffffff',
+        fontSize: 17,
+        marginTop: 5,
+        alignSelf: "center",
+        flex: 1,
+        textAlign: "center"
     }
 })
