@@ -87,7 +87,8 @@ export function isQualityBrowser(){
             (
                     Quality_Rectification_Bean.actionRights.contains(AuthorityConfig.BrowseAll)||
                     Quality_Rectification_Bean.actionRights.contains(AuthorityConfig.BrowseSelf)||
-                    Quality_Rectification_Bean.actionRights.contains(AuthorityConfig.BrowseGrant)
+                    Quality_Rectification_Bean.actionRights.contains(AuthorityConfig.BrowseGrant)||
+                    Quality_Rectification_Bean.actionRights.contains(AuthorityConfig.BrowseUnit)
             );
 }
 
@@ -143,7 +144,8 @@ export function isEquipmentBrowser(){
             (
                     Quality_Facility_Bean.actionRights.contains(AuthorityConfig.BrowseAll)||
                     Quality_Facility_Bean.actionRights.contains(AuthorityConfig.BrowseSelf)||
-                    Quality_Facility_Bean.actionRights.contains(AuthorityConfig.BrowseGrant)
+                    Quality_Facility_Bean.actionRights.contains(AuthorityConfig.BrowseGrant)||
+                    Quality_Facility_Bean.actionRights.contains(AuthorityConfig.BrowseUnit)
             );
 }
 //---------------------------材设--------------------------------------
