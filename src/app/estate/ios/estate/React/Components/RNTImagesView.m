@@ -7,7 +7,7 @@
 //
 
 #import "RNTImagesView.h"
-
+#import <CommonCrypto/CommonDigest.h>
 #import <libextobjc/EXTScope.h>
 #import <LPDQuoteImagesView.h>
 #import <LPDAssetModel.h>
@@ -39,10 +39,10 @@
 // lpdImagePicker每次选照片后的保存和更新操作
 - (void)imagePickerController:(LPDImagePickerController *)picker didFinishPickingPhotos:(NSArray *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
   [self processImages:photos assets:assets replace:NO];
-//  self.selectedPhotos = [NSMutableArray arrayWithArray:photos];
-//  self.selectedAssets = [NSMutableArray arrayWithArray:assets];
-//
-//  [self.collectionView reloadData];
+  //  self.selectedPhotos = [NSMutableArray arrayWithArray:photos];
+  //  self.selectedAssets = [NSMutableArray arrayWithArray:assets];
+  //
+  //  [self.collectionView reloadData];
   
   //test**********[self printAssetsName:assets];
 }
@@ -106,7 +106,7 @@
     [self takePhoto];
   }]];
   [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-   
+    
   }]];
   [self.navcDelegate presentViewController:ac animated:YES completion:nil];
 }
@@ -130,9 +130,9 @@
     }];
     @strongify(vc);
     
-//    [vc dismissViewControllerAnimated:YES completion:^{
-//
-//    }];
+    //    [vc dismissViewControllerAnimated:YES completion:^{
+    //
+    //    }];
     [vc presentViewController:vc1 animated:NO completion:^{
       
     }];
@@ -196,7 +196,7 @@
         [navcDelegate dismissViewControllerAnimated:NO completion:nil];
         [WaitViewUtil startLoading];
         [self.class loadItem:asset finish:^(NSDictionary *data) {
-           [WaitViewUtil endLoading];
+          [WaitViewUtil endLoading];
           callback(@[data]);
         }];
       } else {
@@ -215,7 +215,7 @@
 }
 
 + (void)takePhoto:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback {
-
+  
   SoulCameraViewControllerOrigin * vc = [[SoulCameraViewControllerOrigin alloc] init];
   UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
   if (![UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
@@ -266,11 +266,11 @@
   lpdImagePickerVc.allowTakePicture = NO;
   lpdImagePickerVc.sortAscendingByModificationDate = NO;
   
-    lpdImagePickerVc.selectedAssets =[NSMutableArray array];
-    lpdImagePickerVc.showSelectBtn = NO;
-    lpdImagePickerVc.allowPreview = NO;
-    lpdImagePickerVc.maxImagesCount = 3;
-    
+  lpdImagePickerVc.selectedAssets =[NSMutableArray array];
+  lpdImagePickerVc.showSelectBtn = NO;
+  lpdImagePickerVc.allowPreview = NO;
+  lpdImagePickerVc.maxImagesCount = 3;
+  
   [lpdImagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
     [WaitViewUtil startLoading];
     [self.class loadFiles:assets finish:^(NSArray *datas) {
@@ -457,11 +457,31 @@
   }
   [self.collectionView reloadData];
   self.collectionView.contentSize = CGSizeMake(0, ((self.selectedPhotos.count + 2) / 3 ) * (_myMargin + _myItemWH));
-//  if(self.onChange) {
-//    self.onChange(@{@"images":@[]});
-//  }
+  //  if(self.onChange) {
+  //    self.onChange(@{@"images":@[]});
+  //  }
 }
-
++ (NSString*)getMD5WithData:(NSData *)data{
+  const char* original_str = (const char *)[data bytes];
+  unsigned char digist[CC_MD5_DIGEST_LENGTH]; //CC_MD5_DIGEST_LENGTH = 16
+  CC_MD5(original_str, (uint)data.length, digist);
+  NSMutableString* outPutStr = [NSMutableString stringWithCapacity:10];
+  for(int  i =0; i<CC_MD5_DIGEST_LENGTH;i++){
+    [outPutStr appendFormat:@"%02x",digist[i]];//小写x表示输出的是小写MD5，大写X表示输出的是大写MD5
+  }
+  
+  //也可以定义一个字节数组来接收计算得到的MD5值
+  //    Byte byte[16];
+  //    CC_MD5(original_str, strlen(original_str), byte);
+  //    NSMutableString* outPutStr = [NSMutableString stringWithCapacity:10];
+  //    for(int  i = 0; i<CC_MD5_DIGEST_LENGTH;i++){
+  //        [outPutStr appendFormat:@"%02x",byte[i]];
+  //    }
+  //    [temp release];
+  
+  return [outPutStr lowercaseString];
+  
+}
 + (void)loadItem:(PHAsset *)asset finish:(void(^)(NSDictionary *))finish {
   if ([asset isKindOfClass:[NSDictionary class]]) {
     finish((NSDictionary*)asset); // 传入的文件，直接就返回原数据。
@@ -479,7 +499,7 @@
     if (attr[NSFileSize]) {
       size = attr[NSFileSize];
     }
-    finish(@{@"path":path,@"key":itemid,@"name":fileUrl.lastPathComponent,@"length":size});
+    NSString * md5 = [self.class getMD5WithData:[NSData dataWithContentsOfURL:fileUrl]]; finish(@{@"path":path,@"key":itemid,@"md5":md5,@"name":fileUrl.lastPathComponent,@"length":size});
     return;
   }
   [item loadImageData:^(NSData *imageData) {
@@ -487,7 +507,7 @@
     NSString * path = [[[SDDataCache fileDataCache] imageCache] defaultCachePathForKey:itemid];
     NSURL * fileUrl = [NSURL fileURLWithPath:path];
     path = fileUrl.absoluteString;
-    finish(@{@"path":path,@"key":itemid,@"name":fileUrl.lastPathComponent,@"length":@(imageData.length)});
+    NSString * md5 = [self.class getMD5WithData:[NSData dataWithContentsOfURL:fileUrl]]; finish(@{@"path":path,@"key":itemid,@"md5":md5,@"name":fileUrl.lastPathComponent,@"length":@(imageData.length)});
   }];
 }
 + (void)loadNext:(NSMutableArray *)ret asset:(PHAsset *)asset next:(PHAsset *(^)(void))next{
@@ -566,4 +586,5 @@
   return self;
 }
 @end
+
 

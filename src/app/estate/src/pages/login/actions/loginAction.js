@@ -1,13 +1,16 @@
 import * as API from 'app-api'
-
+import {SERVER_TYPE} from 'common-module'
 import * as types from '../constants/loginTypes'
 
 import {NativeModules} from 'react-native'
 var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
 
 export function login(username, pwd) {
-  // return loginOld(username, pwd);
-  return loginNew(username, pwd);
+  if(SERVER_TYPE === "TEST") {
+    return loginNew(username, pwd);
+  } else {
+    return loginOld(username, pwd);
+  }
 }
 
 export function logout() {

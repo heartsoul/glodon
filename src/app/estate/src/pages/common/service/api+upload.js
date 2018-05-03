@@ -51,7 +51,7 @@ export async function upLoadFiles(fileData, callback) {
     fileData.map((file) => {
         let path = "file://" + file.path;
         if(!isUploadedFile(file)){
-            getOperationCode(path, file.name, file.length, callback);
+            getOperationCode(path, file.name, file.length, callback,file.md5);
         }
     });
 }
@@ -86,12 +86,13 @@ function isUploadedFile(file) {
  * @param {*} name 文件名称
  * @param {*} length 文件大小
  * @param {*} callback 回调
+ * @param {*} digest md5签名
  */
-async function getOperationCode(filePath, name, length, callback) {
+async function getOperationCode(filePath, name, length, callback,digest=null) {
 
     let api = "/bimpm/attachment/operationCode";
     let timestamp = new Date().getTime();
-    let filter = "?containerId=" + timestamp + "&name=" + name + "&digest=" + name + "&length=" + length;
+    let filter = "?containerId=" + timestamp + "&name=" + name + "&digest=" + (digest?digest:name) + "&length=" + length;
 
     let ops = {
         method: 'POST',
@@ -105,10 +106,11 @@ async function getOperationCode(filePath, name, length, callback) {
     if (storage.isLogin()) {
         ops.headers.Authorization = "Bearer " + storage.getLoginToken();
     }
-
+    console.log("getOperationCode:"+AppConfig.BASE_URL + api + filter);
     return fetch(AppConfig.BASE_URL + api + filter, ...ops)
         .then((response) => response.text())
         .then((responseData) => {
+            console.log("getOperationCode result:"+responseData);
             upLoad(filePath, name, responseData, callback);
         })
         .catch((error) => {
@@ -128,7 +130,7 @@ async function upLoad(filePath, name, operationCode, callback) {
 
     let api = "/v1/insecure/objects?operationCode=" + operationCode;
     let formData = new FormData();
-    let file = { uri: filePath, type: 'application/octet-stream', name: name };
+    let file = { uri: filePath, type: 'application/octet-stream', name: 'i'+name };
     formData.append("uploaded_file", file);   //这里的uploaded_file就是后台需',要的key  
     let ops = {
         method: 'POST',
@@ -138,6 +140,8 @@ async function upLoad(filePath, name, operationCode, callback) {
         body: formData,
     };
 
+    console.log("upload2:"+BASE_UPLOAD_URL + api);
+    console.log("upload filePath:"+filePath);
     return fetch(BASE_UPLOAD_URL + api, ops)
         .then((response) => response.json())
         .then((data) => {

@@ -366,7 +366,7 @@ function isFileChange(oldFiles, newFiles) {
     if (oldLen != newLen) {
         return true;
     } else {
-        for (file in newFiles) {
+        for (let file in newFiles) {
             if (!file.objectId) {
                 return true;
             }
