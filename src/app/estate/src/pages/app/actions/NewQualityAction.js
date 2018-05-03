@@ -44,7 +44,7 @@ function assembleParams(requestParams) {
     params.lastRectificationDate = rectificationData.date;
 
     params.projectId = storage.loadProject();
-    params.projectName = '';
+    params.projectName = storage.loadCurrentProjectName();
 
     //质检项目
     let checkPoint = requestParams.checkPoint;
