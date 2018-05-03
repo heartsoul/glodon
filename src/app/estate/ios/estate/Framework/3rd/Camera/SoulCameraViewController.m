@@ -57,7 +57,7 @@
     if ( [self checkCameraPermission]) {
         [self customCamera];
         [self initSubViews];
-        [self focusAtPoint:CGPointMake(0.5, 0.5)];
+//        [self focusAtPoint:CGPointMake(0.5, 0.5)];
     }
     
     
@@ -370,8 +370,10 @@
 
 
 
-- (void)disMiss
-{
+- (void)disMiss {
+  if (self.didCancelBlock) {
+    self.didCancelBlock();
+  }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -433,4 +435,37 @@
 //-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
 //    [self dismissViewControllerAnimated:YES completion:NULL];
 //}
+@end
+
+@implementation SoulCameraViewControllerOrigin
+
+#pragma mark - UIImagePickerController
+
+- (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+//  [picker dismissViewControllerAnimated:YES completion:nil];
+  NSString *type = [info objectForKey:UIImagePickerControllerMediaType];
+  if ([type isEqualToString:@"public.image"]) {
+  
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    //  保存图片，获取到asset
+    if (!image) {
+      return;
+    }
+    if (self.didFinishPickingBlock) {
+      self.didFinishPickingBlock(image);
+    } else {
+      [self disMiss];
+    }
+  }
+}
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+     [self disMiss];
+}
+- (void)disMiss
+{
+  if (self.didCancelBlock) {
+    self.didCancelBlock();
+  }
+  [self dismissViewControllerAnimated:YES completion:nil];
+}
 @end

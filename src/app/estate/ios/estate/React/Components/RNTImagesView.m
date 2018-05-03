@@ -14,6 +14,7 @@
 #import <UIView+HandyValue.h>
 #import <LPDImageManager.h>
 #import <LPDProgressView.h>
+#import <React/RCTUIManager.h>
 
 #import "NSDictionary+SoulPhotoModel.h"
 #import "NSObject+SoulAlertView.h"
@@ -109,7 +110,7 @@
   }]];
   [self.navcDelegate presentViewController:ac animated:YES completion:nil];
 }
-- (void)takePhoto {
+- (void)takePhotoOld {
   SoulCameraViewController * vc = [[SoulCameraViewController alloc] initWithNibName:nil bundle:nil];
   @weakify(vc,self);
   [vc setDidFinishPickingBlock:^(UIImage * _Nonnull image){
@@ -140,7 +141,47 @@
   }];
   [self.navcDelegate presentViewController:vc animated:YES completion:nil];
 }
-+ (void)takePhoto:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback {
+- (void)takePhoto {
+  SoulCameraViewControllerOrigin * vc = [[SoulCameraViewControllerOrigin alloc] init];
+  UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
+  if (![UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
+    NSLog(@"模拟器中无法打开照相机,请在真机中使用");
+  } else {
+    vc.sourceType = sourceType;
+    vc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+  }
+  
+  vc.delegate = vc;
+  @weakify(vc,self);
+  [vc setDidFinishPickingBlock:^(UIImage * _Nonnull image){
+    SoulPhotoEditViewController * vc1 = [[SoulPhotoEditViewController alloc] initWithNibName:nil bundle:nil];
+    vc1.inputImageBlock = ^UIImage * _Nonnull{
+      return image;
+    };
+    [vc1 setDidFinishPickingBlock:^(NSString *localIdentifier) {
+      if (localIdentifier) {
+        PHAsset * asset = [NSMutableDictionary getPHAsset:localIdentifier];
+        NSMutableDictionary * dic =  [[NSMutableDictionary alloc] initWithAsset:asset photoQuality:UploadPhotoQualityNormal];
+        UIImage * thumbImage = [dic getThumbnail:NO];
+        @strongify(self);
+        [self.navcDelegate dismissViewControllerAnimated:NO completion:nil];
+        [self refreshCollectionViewWithAddedAsset:(id)asset image:thumbImage];
+      }
+    }];
+    @strongify(vc);
+    
+    //    [vc dismissViewControllerAnimated:YES completion:^{
+    //
+    //    }];
+    [vc presentViewController:vc1 animated:NO completion:^{
+      
+    }];
+    
+    
+  }];
+  [self.navcDelegate presentViewController:vc animated:YES completion:nil];
+}
++ (void)takePhotoOld:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback {
   SoulCameraViewController * vc = [[SoulCameraViewController alloc] initWithNibName:nil bundle:nil];
   @weakify(vc,self);
   [vc setDidFinishPickingBlock:^(UIImage * _Nonnull image){
@@ -172,6 +213,51 @@
   }];
   [navcDelegate presentViewController:vc animated:YES completion:nil];
 }
+
++ (void)takePhoto:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback {
+
+  SoulCameraViewControllerOrigin * vc = [[SoulCameraViewControllerOrigin alloc] init];
+  UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
+  if (![UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
+    NSLog(@"模拟器中无法打开照相机,请在真机中使用");
+  } else {
+    vc.sourceType = sourceType;
+    vc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+  }
+  
+  vc.delegate = vc;
+  @weakify(vc,self);
+  [vc setDidFinishPickingBlock:^(UIImage * _Nonnull image){
+    SoulPhotoEditViewController * vc1 = [[SoulPhotoEditViewController alloc] initWithNibName:nil bundle:nil];
+    vc1.inputImageBlock = ^UIImage * _Nonnull{
+      return image;
+    };
+    [vc1 setDidFinishPickingBlock:^(NSString *localIdentifier) {
+      if (localIdentifier) {
+        PHAsset * asset = [NSMutableDictionary getPHAsset:localIdentifier];
+        @strongify(self);
+        [navcDelegate dismissViewControllerAnimated:NO completion:nil];
+        [WaitViewUtil startLoading];
+        [self.class loadItem:asset finish:^(NSDictionary *data) {
+          [WaitViewUtil endLoading];
+          callback(@[data]);
+        }];
+      } else {
+        callback(@[]);
+      }
+    }];
+    @strongify(vc);
+    [vc1 setDidCancelBlock:^{
+      callback(@[]);
+    }];
+    [vc presentViewController:vc1 animated:NO completion:^{
+      
+    }];
+  }];
+  [navcDelegate presentViewController:vc animated:YES completion:nil];
+}
+
+
 + (void)imagePicker:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback {
   LPDImagePickerController *lpdImagePickerVc = [[LPDImagePickerControllerEx alloc] initWithMaxImagesCount:3 columnNumber:5 delegate:nil pushPhotoPickerVc:YES];
   lpdImagePickerVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
@@ -308,6 +394,10 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+  if(!self.navcDelegate) {
+    UIViewController *root = RCTPresentedViewController();
+    self.navcDelegate = (UIViewController<LPDQuoteImagesViewDelegate>*) root ;    //self 至少是一个控制
+  }
   if (indexPath.row == self.selectedPhotos.count) {
     
     [self pushImagePickerController];

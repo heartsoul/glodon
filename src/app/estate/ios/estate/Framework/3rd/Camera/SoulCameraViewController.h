@@ -22,3 +22,9 @@
 - (void)imagePickerController:(nonnull SoulCameraViewController *)picker didFinishPickingMediaWithInfo:(nonnull NSDictionary<NSString *,id> *)info;
 - (void)imagePickerControllerDidCancel:(nonnull SoulCameraViewController *)picker;
 @end
+@interface SoulCameraViewControllerOrigin : UIImagePickerController<UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+
+@property(nonatomic,copy,nullable) void(^didFinishPickingBlock)(UIImage* _Nonnull);
+@property(nonatomic,copy,nullable) void (^didCancelBlock)();
+@end
+
