@@ -129,7 +129,7 @@ export class TextInputPassword extends Component {
 }
 
 TextInputPassword.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   placeholder: PropTypes.string.isRequired,
   onBlur: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,

@@ -188,14 +188,18 @@ export default class extends React.Component {
       hasLoad: false,
     }
   }
+  componentDidMount() {
+    if(storage.hasChoose()) {
+      let tenant = storage.loadLastTenant();
+      API.setCurrentTenant(tenant).then((responseData) => {
+      }).catch((e) => {
+        console.log(e);
+      });
+    }
+  }
   renderPage() {
     if(storage.isLogin()) {
       if(storage.hasChoose()) {
-        let tenant = storage.loadLastTenant();
-        API.setCurrentTenant(tenant).then((responseData) => {
-        }).catch((e) => {
-          console.log(e);
-        });
         return (<Provider store={store}><RootMainStack /></Provider>)
       }
       return (<Provider store={store}><RootChooseStack /></Provider>)
