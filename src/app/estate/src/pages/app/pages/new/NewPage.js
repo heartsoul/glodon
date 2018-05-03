@@ -18,7 +18,7 @@ import {
     Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { ActionModal } from 'app-components'
+import { ActionModal } from 'app-components';
 import { Modal, Toast } from 'antd-mobile';
 import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'app-3rd/teaset';
 import { ImageChooserView } from 'app-components';
@@ -192,10 +192,13 @@ class NewPage extends React.Component {
 
     //删除
     delete = (navigation) => {
-        NewQualityAction.deleteInspection(this.state.inspectId, this.props.type, () => {
-            this.props.updateData();
-            storage.goBack(this.props.navigator, null);
-        });
+        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消'}, { text: '删除', onPress:()=>{
+            NewQualityAction.deleteInspection(this.state.inspectId, this.props.type, () => {
+                this.props.updateData();
+                storage.goBack(this.props.navigator, null);
+            });
+        } });
+
     }
 
     //选择图纸文件
