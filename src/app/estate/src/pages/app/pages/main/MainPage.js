@@ -47,7 +47,7 @@ export default class extends Component {
     //模型预览
     _moduleChoose = () => {
         let navigator = this.props.navigation;
-        BimFileEntry.chooseQualityModelFromHome(navigator);
+        BimFileEntry.chooseEquipmentModelFromHome(navigator);
     }
 
     //质检项目

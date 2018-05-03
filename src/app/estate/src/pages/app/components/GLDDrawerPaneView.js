@@ -99,7 +99,7 @@ export default class GLDDrawerPaneView extends Component {
     onEquipmentModleAction = () => {
         this.close();
         let navigator = this.props.navigation;
-        BimFileEntry.chooseQualityModelFromHome(navigator, true, true);
+        BimFileEntry.chooseEquipmentModelFromHome(navigator, true, true);
     }
 
     onSettingAction = () => {
