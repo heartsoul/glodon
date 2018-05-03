@@ -99,7 +99,7 @@ class LoginPage extends React.Component {
     });
   };
   _onPasswordChangeText = text => {
-    if(text.indexOf('\n')>=0) {
+    if(text && text.indexOf('\n')>=0) {
      if(this._checkInput()) {
        this.doLogin();
      }

@@ -20,12 +20,15 @@ function assembleParams(requestParams) {
     let state = requestParams.state;
     //施工单位
     let companyData = requestParams.companyData;
-    params.constructionCompanyId = companyData.id;
+    params.constructionCompanyId = companyData.coperationId;
     params.constructionCompanyName = companyData.name;
     //描述
     params.description = state.contentDescription;
     //检查单id
     params.inspectId = state.inspectId;
+    if (params.inspectId && params.inspectId < 0) {
+        params.inspectId = 0;
+    }
     params.code = state.code;
 
     //检查单位 
@@ -50,7 +53,7 @@ function assembleParams(requestParams) {
 
     //责任人
     let personData = requestParams.personData;
-    params.responsibleUserId = personData.id;
+    params.responsibleUserId = personData.userId;
     params.responsibleUserName = personData.name;
     params.responsibleUserTitle = personData.title;
 
@@ -204,7 +207,7 @@ export function submit(requestParams, imageChooserEle, navigator, callback) {
                 params.files = files;
             }
             //区分新增提交和编辑提交
-            if (params.inspectId == '-1') {
+            if (params.inspectId === 0) {
                 createSubmitInspection(params, navigator);
             } else {
                 editSubmitInspection(params, navigator);
@@ -286,7 +289,7 @@ export function save(requestParams, imageChooserEle, callback) {
                 params.files = files;
             }
             //区分新增提交和编辑提交
-            if (params.inspectId == '-1') {
+            if (params.inspectId === 0) {
                 createSaveInspection(params, callback);
             } else {
                 editSaveInspection(params, callback);
