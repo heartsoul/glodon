@@ -4,15 +4,15 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 
 export default class StatusActionButton extends Component {
     render = () => {
-        const { text, onClick, color, borderColor,width,marginLeft,marginRight,styleIn,backgroundColor} = this.props;
-        let style = styleIn;
+        const { text, onClick, color, borderColor,width,marginLeft,marginRight,style,backgroundColor} = this.props;
+        let styleIn = style;
         if(!styleIn) {
-            style = [width?{width:width}:{},borderColor ? {borderColor:borderColor} : {}
+            styleIn = [width?{width:width}:{},borderColor ? {borderColor:borderColor} : {}
             , marginLeft ? { marginLeft: marginLeft } : {}, marginRight ? { marginRight: marginRight } : {},backgroundColor?{backgroundColor:backgroundColor}:{}];
         }
         if(onClick) {
         return (<TouchableOpacity
-            style={[styles.button,...style]}
+            style={[styles.button,...styleIn]}
             activeOpacity={0.5}
             onPress={onClick}>
             <Text style={[styles.buttonText, { color: color }]}>{text}</Text>
@@ -20,7 +20,7 @@ export default class StatusActionButton extends Component {
         )
     }
         return (<TouchableOpacity
-            style={[styles.button,...style]}
+            style={[styles.button,...styleIn]}
             activeOpacity={1}>
             <Text style={[styles.buttonText, { color: color }]}>{text}</Text>
         </TouchableOpacity>
@@ -32,11 +32,11 @@ StatusActionButton.propTypes = {
     text: PropTypes.string.isRequired,
     onClick: PropTypes.func,
     color: PropTypes.any.isRequired,
-    // borderColor: PropTypes.string,
-    // backgroundColor: PropTypes.string,
-    // width: PropTypes.any,
-    // marginLeft: PropTypes.any,
-    // marginRight: PropTypes.any,
+    borderColor: PropTypes.string,
+    backgroundColor: PropTypes.string,
+    width: PropTypes.any,
+    marginLeft: PropTypes.any,
+    marginRight: PropTypes.any,
 }
 
 const styles = StyleSheet.create({

@@ -105,11 +105,11 @@ export default class QualityListCell extends PureComponent {
         return (
             <View style={[styles.contentActionView]}>
                 {
-                    bSubmit ? (<StatusActionButton style={{width:80,marginRight:20}} color={API.toBillTypeColor(API.BILL_TYPE_ITEM_SUBMIT)} 
+                    bSubmit ? (<StatusActionButton width={80} marginRight={20} color={API.toBillTypeColor(API.BILL_TYPE_ITEM_SUBMIT)} 
                         onClick={() => { this._onSubmitAction(item, index) }} text={API.BILL_TYPE_ITEM_SUBMIT} />) : (null)
                 }
                 {
-                    bDelete ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE)} style={{width:80,marginRight:20}}
+                    bDelete ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE)} width={80} marginRight={20}
                         onClick={() => { this._onDeleteAction(item, index) }} text={API.BILL_TYPE_ITEM_DELETE} />) : (null)
                 }
             </View>
@@ -121,7 +121,7 @@ export default class QualityListCell extends PureComponent {
         if (AuthorityManager.isCreateRectify() && AuthorityManager.isMe(item.value.responsibleUserId)) {
             return (
                 <View style={[styles.contentActionView]}>
-                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)} style={{width:80,marginRight:20}}
+                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)}  width={80} marginRight={20}
                         onClick={() => { this._onRectifyAction(item, index) }} text={API.TYPE_NEW_NAME_RECTIFY} />
                 </View>
             )
@@ -133,7 +133,7 @@ export default class QualityListCell extends PureComponent {
         if (AuthorityManager.isCreateReview() && AuthorityManager.isMe(item.value.creatorId)) {
             return (
                 <View style={[styles.contentActionView]}>
-                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)} style={{width:80,marginRight:20}}
+                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)} width={80} marginRight={20}
                         onClick={() => { this._onReviewAction(item, index) }} text={API.TYPE_NEW_NAME_REVIEW} />
                 </View>
             )
@@ -197,6 +197,7 @@ const styles = StyleSheet.create({
     content: {
         marginTop: 10,
         marginLeft: 10,
+        marginRight: 80,
         fontSize: 15,
         color: 'black',
     },

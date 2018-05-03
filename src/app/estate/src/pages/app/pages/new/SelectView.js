@@ -78,7 +78,9 @@ class SelectView extends Component {
                     selectIndex: this.getSelectIndex(data.data, true),
                 });
 
-            });
+            }).catch((e) => {
+                console.log(e);
+              });
     }
 
     /**
@@ -95,7 +97,9 @@ class SelectView extends Component {
                 if (this.props.selectCallback && data.data.length > 0) {
                     this.props.selectCallback(data.data[0])
                 }
-            });
+            }).catch((e) => {
+                console.log(e);
+              });
     }
 
     /**
@@ -118,7 +122,9 @@ class SelectView extends Component {
                         this.showActionSheet();
                     });
 
-                });
+                }).catch((e) => {
+                    console.log(e);
+                  });
         });
     }
     /**

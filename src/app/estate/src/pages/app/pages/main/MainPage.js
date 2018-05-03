@@ -4,6 +4,7 @@ import {
     StyleSheet,
     Text,
     View,
+    ScrollView,
     StatusBar,
     TouchableHighlight,
     Image,
@@ -114,6 +115,8 @@ export default class extends Component {
                         qShow ? 
                             <SegmentedView.Sheet title='质量检查'>
                                 <View style={styles.tabContent}>
+                                    <View style={styles.spliteItem} />
+                                    <View style={styles.spliteItem} />
                                     <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={() => this._loadQualityForm()} title="质检清单" />
                                     <View style={styles.spliteItem} />
                                     <ModelItemView source={require('app-images/icon_main_pager_blueprint.png')} onPress={() => this._fileChoose()} title="图纸" />
@@ -121,6 +124,7 @@ export default class extends Component {
                                     <ModelItemView source={require('app-images/icon_main_pager_model.png')} onPress={() => this._projectChoose()} title="模型" />
                                     <View style={styles.spliteItem} />
                                     <ModelItemView source={require('app-images/icon_main_pager_module.png')} onPress={() => this._checkPointChoose()} title="质检项目" />
+                                    <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
                                 </View>
                             </SegmentedView.Sheet>
@@ -130,9 +134,13 @@ export default class extends Component {
                         eShow ? 
                     <SegmentedView.Sheet title='材设进场'>
                         <View style={styles.tabContent}>
+                            <View style={styles.spliteItem} />
+                            <View style={styles.spliteItem} />
                             <ModelItemView source={require('app-images/icon_main_pager_csjc.png')} onPress={() => this._loadEquipmentForm()} title="材设清单" />
                             <View style={styles.spliteItem} />
                             <ModelItemView source={require('app-images/icon_main_pager_equipment_model.png')} onPress={() => this._moduleChoose()} title="模型预览" />
+                            <View style={styles.spliteItem} />
+                            <View style={styles.spliteItem} />
                         </View>
                     </SegmentedView.Sheet>
                     : null
@@ -158,6 +166,7 @@ var styles = StyleSheet.create({
     },
     spliteItem: {
         width: 10,
+        height:80,
     },
     tabContent: {
         alignItems: 'center',
@@ -165,9 +174,9 @@ var styles = StyleSheet.create({
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
         // flex: 1,
-        marginLeft: 20,
+        marginLeft: 0,
         marginTop: 40,
-        marginRight: 20,
+        marginRight: 0,
         marginBottom: 40,
         backgroundColor: '#f8f8f8',
     },

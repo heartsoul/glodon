@@ -6,10 +6,11 @@ import {
   View,
   StatusBar,
   Image,
+  Dimensions,
   TouchableOpacity
 } from 'react-native';
 import { Label } from 'app-3rd/teaset';
-
+var { width, height } = Dimensions.get("window");
 export default class extends React.Component {
     constructor() {
         super();
@@ -30,12 +31,12 @@ export default class extends React.Component {
   
   var styles = StyleSheet.create({
       image:{
-          width:80,
-          height:80
+          width: (width - 70) / 4,
+          height:(width - 70) / 4
       },
       imageView:{
-        width:80,
-        height:120,
+        width:(width - 70) / 4,
+        height:(width - 70) / 4 + 40,
         // justifyContent:'center',
         alignItems:'center'
     },

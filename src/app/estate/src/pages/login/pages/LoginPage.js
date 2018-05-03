@@ -171,7 +171,7 @@ class LoginPage extends React.Component {
         <TextInputPassword
           placeholder={this.state.focusPassword == 1 ? "" : "请输入用户密码"}
           onChangeText={text => this._onPasswordChangeText(text)}
-          value={this.state.password}
+          // value={this.state.password}
           onBlur={() => this._onPasswordBlur()}
           onFocus={() => this._onPasswordFocus()}
           ref={(ref)=>{this.passwordTextInput=ref}}

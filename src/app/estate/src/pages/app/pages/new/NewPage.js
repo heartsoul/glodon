@@ -45,7 +45,8 @@ const REF_CHECKPOINT = 'REF_CHECKPOINT';//质检项目
 
 
 class NewPage extends React.Component {
-
+    
+    contentDescription = ''
     constructor(props) {
         super(props);
         let filesIn = [];
@@ -61,6 +62,7 @@ class NewPage extends React.Component {
                 };
             }
         }
+        
         this.state = {
             isLoading: false,
             inspectionInfo: {},//初始草稿数据
@@ -69,7 +71,7 @@ class NewPage extends React.Component {
             projectId: storage.loadProject(),
             inspectId: -1,//检查单id
             code: '',
-            contentDescription: PropTypes.string,//内容描述
+            contentDescription: '',//内容描述
 
             selectedCheckPoint: selectedCheckPoint,//选中的质检项目
 
@@ -99,6 +101,7 @@ class NewPage extends React.Component {
         let params = this.props.params;
         NewQualityAction.initialState(params, this.props.selectedCheckPoint, (params) => {
             this.setState(params);
+            this.contentDescription = params.contentDescription;
         })
 
     }
@@ -254,8 +257,8 @@ class NewPage extends React.Component {
                 multiline={true}
                 underlineColorAndroid={"transparent"}
                 textAlign="left"
-                onChangeText={(text) => { this.setState({ contentDescription: text }) }}
-                value={(typeof this.state.contentDescription === 'string') ? (this.state.contentDescription) : ('')}
+                onChangeText={(text) => { this.state.contentDescription = text; this.contentDescription = text;}}
+                value={this.state.contentDescription}
             />
         );
     }

@@ -276,7 +276,7 @@ class GLDStorage extends BaseStorage {
     hasChoose = (retFun) => {
         let t = this.loadTenant();
         let p = this.loadProject();
-        console.log(`hasChoose:(${t},${p})`);
+        // console.log(`hasChoose:(${t},${p})`);
         let retValue = (t && p && t != '0' && p != '0');
         if (retFun) {
             retFun(retValue);

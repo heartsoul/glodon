@@ -3,7 +3,8 @@ import { Provider } from 'react-redux'
 import { View, ActivityIndicator } from 'react-native'
 import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 
-import { LeftBarButtons } from "app-components"
+import * as API from 'app-api'
+// import { LeftBarButtons } from "app-components"
 import * as GLD from '../pages'
 import BaseStorage from '../../common/store/store+base'
 import configureStore, { history } from '../store/ConfigureStore'
@@ -187,19 +188,14 @@ export default class extends React.Component {
       hasLoad: false,
     }
   }
-
-  // componentWillMount() {
-  //   storage._loadStorageData(() => {
-  //     this.setState({
-  //       hasLoad: true
-  //     })
-      
-  //   });
-    
-  // }
   renderPage() {
     if(storage.isLogin()) {
       if(storage.hasChoose()) {
+        let tenant = storage.loadLastTenant();
+        API.setCurrentTenant(tenant).then((responseData) => {
+        }).catch((e) => {
+          console.log(e);
+        });
         return (<Provider store={store}><RootMainStack /></Provider>)
       }
       return (<Provider store={store}><RootChooseStack /></Provider>)
