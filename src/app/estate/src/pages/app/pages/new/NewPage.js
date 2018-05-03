@@ -56,8 +56,8 @@ class NewPage extends React.Component {
             }
             if (props.params.qualityCheckpointId) {
                 selectedCheckPoint = {
-                    id:props.params.qualityCheckpointId,
-                    name:props.params.qualityCheckpointName
+                    id: props.params.qualityCheckpointId,
+                    name: props.params.qualityCheckpointName
                 };
             }
         }
@@ -225,16 +225,9 @@ class NewPage extends React.Component {
                 relevantBluePrint: data,
             });
         } else if (dataType === '模型文件') {
-            API.getModelElementProperty(storage.loadProject(), storage.projectIdVersionId, data.gdocFileId, data.elementId)
-                .then(responseData => {
-                    let relevantModel = {
-                        ...data,
-                        elementName: responseData.data.data.name,
-                    }
-                    this.setState({
-                        relevantModel: relevantModel,
-                    });
-                });
+            NewQualityAction.getModelElementProperty(data, (params) => {
+                this.setState(params);
+            });
         }
     }
 

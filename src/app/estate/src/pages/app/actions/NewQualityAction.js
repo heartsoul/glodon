@@ -225,7 +225,7 @@ export function submitFromList(inspectId, callback) {
             API.editSubmitInspection(storage.loadProject(), inspectId, params.inspectionType, JSON.stringify(params))
                 .then(data => {
                     callback({ res: "success", data: data, });
-                }).catch(err =>{
+                }).catch(err => {
                     Toast.hide();
                 })
         }).catch(err => {
@@ -313,7 +313,7 @@ function createSaveInspection(params, callback) {
                     inspectionInfo: params,
                 });
             }
-        }).catch(err =>{
+        }).catch(err => {
             Toast.hide();
             Toast.info("保存失败", 1);
         })
@@ -331,7 +331,7 @@ function editSaveInspection(params, callback) {
             callback({
                 inspectionInfo: params,
             });
-        }).catch(err =>{
+        }).catch(err => {
             Toast.hide();
             Toast.info("保存失败", 1);
         })
@@ -415,7 +415,7 @@ export function deleteInspection(inspectId, inspectionType, callback) {
     API.createDeleteInspection(storage.loadProject(), inspectionType, inspectId)
         .then(data => {
             callback();
-        }).catch(err =>{
+        }).catch(err => {
             Toast.hide();
             Toast.info("删除失败", 1);
         })
@@ -448,6 +448,7 @@ export function initialState(params, checkPoint, callback) {
         let relevantModel = {};
         if (params.relevantModel) {
             relevantModel = params.relevantModel;
+            getModelElementProperty(relevantModel, callback);
         }
         let temp = {
             relevantBluePrint: relevantBlueprint,
@@ -536,4 +537,15 @@ function getDetailInfo(info) {
     };
 
     return ret;
+}
+
+/**
+ * 获取选择模型构件的信息
+ */
+export function getModelElementProperty(relevantModel, callback) {
+    API.getModelElementProperty(storage.loadProject(), storage.projectIdVersionId, relevantModel.gdocFileId, relevantModel.elementId)
+        .then(responseData => {
+            relevantModel.elementName = responseData.data.data.name;
+            callback({ relevantModel: relevantModel })
+        });
 }

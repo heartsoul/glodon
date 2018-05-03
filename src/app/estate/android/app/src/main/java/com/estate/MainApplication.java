@@ -52,8 +52,8 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-    SharedPreferences mPreferences =    PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-    mPreferences.edit().putString("debug_http_host","10.0.2.2:9999").commit();
+    // SharedPreferences mPreferences =    PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    // mPreferences.edit().putString("debug_http_host","10.0.2.2:9999").commit();
 
     instance = this;
     ScreenUtil.init(this);

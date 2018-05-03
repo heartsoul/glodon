@@ -111,17 +111,17 @@ class NewCheckListPage extends Component {
 
     }
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this.goBack();
-            return true;
-        });
+        // BackHandler.addEventListener('hardwareBackPress', () => {
+        //     this.goBack();
+        //     return true;
+        // });
 
     }
 
     componentWillUnmount() {
-        if (Platform.OS === 'android') {
-            BackHandler.removeEventListener('hardwareBackPress');
-        }
+        // if (Platform.OS === 'android') {
+        //     BackHandler.removeEventListener('hardwareBackPress');
+        // }
     }
 
     submit = () => {
