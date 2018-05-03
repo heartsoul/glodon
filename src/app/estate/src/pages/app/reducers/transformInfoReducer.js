@@ -3,7 +3,8 @@
 import * as types from '../constants/transformInfoTypes';
 
 const initialState = {
-    item:{},
+    item: {},
+    relevantEquipmentModle: {},//材设关联模型
 }
 
 export default (state = initialState, action) => {
