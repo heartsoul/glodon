@@ -9,7 +9,7 @@ const benchmarkImage = require("app-images/icon_benchmark.png");
 const userImage = require("app-images/icon_mine_default_header.png");
 
 
-export default class EquipmentInfoCellItem extends React.Component {
+export default class EquipmentInfoEditItem extends React.Component {
     onClick = (event) => {
         if (!this.props.onClick) {
             return;
@@ -30,7 +30,7 @@ export default class EquipmentInfoCellItem extends React.Component {
                 {
                     this.props.onAction ?
                         <View style={styles.actionButtion}>
-                            <StatusActionButton color={this.props.actionColor} borderColor={this.props.actionColor} text={this.props.actionText} />
+                            <StatusActionButton color={this.props.actionColor} style={{borderColor:this.props.actionColor}} text={this.props.actionText} />
                         </View>
                         : null
                 }
@@ -74,45 +74,6 @@ export default class EquipmentInfoCellItem extends React.Component {
             </View>
         );
     }
-    bigImage = (images, index) => {
-        let media = [];
-        images.map((url, index) => {
-            media.push({
-                photo: url,
-            });
-        });
-        storage.pushNext(null, 'BigImageViewPage', { media: media, index: index })
-
-    }
-    renderImage = () => {
-        const { url } = this.props;
-        return (
-            <View style={styles.containerView} >
-                <TouchableOpacity activeOpacity={0.5} onPress={(event) => {
-                    this.bigImage([url], 0);
-                }}>
-                    <Image source={{ uri: url }} style={styles.imageMax} />
-                </TouchableOpacity>
-            </View>
-        );
-    }
-    renderImages = () => {
-        return (
-            <View style={styles.containerView} >
-                {
-                    this.props.urls.map((url, index) => {
-                        return (
-                            <TouchableOpacity key={'xxx' + index} activeOpacity={0.5} onPress={(event) => { this.bigImage(this.props.urls, index); }}>
-                                <Image source={{ uri: url }} style={styles.imageNarmal} />
-                            </TouchableOpacity>
-                        );
-                    })
-                }
-
-            </View>
-        );
-    }
-
     renderItem = () => {
         return (
             <View style={styles.containerView} >
@@ -126,12 +87,7 @@ export default class EquipmentInfoCellItem extends React.Component {
         );
     }
     render = () => {
-        if (this.props.showType === 'image') {
-            return this.renderImage();
-        }
-        if (this.props.showType === 'images') {
-            return this.renderImages();
-        }
+        
         if (this.props.showType === 'user') {
             return this.renderUser();
         }
@@ -141,7 +97,7 @@ export default class EquipmentInfoCellItem extends React.Component {
         return this.renderItem();
     }
 }
-EquipmentInfoCellItem.propTypes = {
+EquipmentInfoEditItem.propTypes = {
 
     /**
      * 控件展现类型 user|image|images|description
@@ -170,17 +126,7 @@ EquipmentInfoCellItem.propTypes = {
      */
     actionColor: PropTypes.string,
 
-    // image 类型需要的数据
-    /**
-    * 图片链接
-    */
-    url: PropTypes.string,
-    // images 类型需要的数据
-    /**
-    * 图片链接
-    */
-    urls: PropTypes.array,
-
+    
     /**
      * description类型需要的数据
      */
@@ -253,16 +199,4 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "100",
     },
-    imageNarmal: {
-        marginRight: 10,
-        width: 106,
-        height: 106,
-        resizeMode: 'cover'
-    },
-    imageMax: {
-        width: 230,
-        height: 230,
-        resizeMode: 'contain'
-    },
-
 });

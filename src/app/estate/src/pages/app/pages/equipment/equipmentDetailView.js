@@ -16,7 +16,7 @@ import { ActionModal } from "app-components"
 import { BimFileEntry, AuthorityManager } from "app-entry";
 import * as API from "app-api";
 
-import EquipmentInfoCellItem from "./equipmentInfoCellItem";
+import EquipmentInfoEditItem from "./equipmentInfoEditItem";
 import EquipmentInfoItem from "./equipmentInfoItem"
 import { ActionButton } from "app-components";
 
@@ -125,7 +125,7 @@ export default class EquipmentDetailView extends Component {
             info.files.map((file, index) => {
                 urls.push(file.url);
             })
-            image = urls.length > 1 ? (<EquipmentInfoCellItem url={urls[0]} showType="image" />) : (<EquipmentInfoCellItem urls={urls} showType="images" />);
+            image = urls.length > 1 ? (<EquipmentInfoItem url={urls[0]} showType="image" />) : (<EquipmentInfoItem urls={urls} showType="images" />);
         }
 
         return <View style={{ marginTop: 20, paddingBottom: 10, backgroundColor: '#ffffff' }}>

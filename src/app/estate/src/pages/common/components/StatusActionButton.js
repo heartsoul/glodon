@@ -4,11 +4,15 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 
 export default class StatusActionButton extends Component {
     render = () => {
-        const { text, onClick, color, borderColor,width,marginLeft,marginRight} = this.props;
+        const { text, onClick, color, borderColor,width,marginLeft,marginRight,styleIn,backgroundColor} = this.props;
+        let style = styleIn;
+        if(!styleIn) {
+            style = [width?{width:width}:{},borderColor ? {borderColor:borderColor} : {}
+            , marginLeft ? { marginLeft: marginLeft } : {}, marginRight ? { marginRight: marginRight } : {},backgroundColor?{backgroundColor:backgroundColor}:{}];
+        }
         if(onClick) {
         return (<TouchableOpacity
-            style={[styles.button,width?{width:width}:{},borderColor ? {borderColor:borderColor} : {}
-                , marginLeft ? { marginLeft: marginLeft } : {}, marginRight ? { marginRight: marginRight } : {}]}
+            style={[styles.button,...style]}
             activeOpacity={0.5}
             onPress={onClick}>
             <Text style={[styles.buttonText, { color: color }]}>{text}</Text>
@@ -16,8 +20,7 @@ export default class StatusActionButton extends Component {
         )
     }
         return (<TouchableOpacity
-            style={[styles.button,width?{width:width}:{},borderColor ? {borderColor:borderColor} : {}
-                , marginLeft ? { marginLeft: marginLeft } : {}, marginRight ? { marginRight: marginRight } : {}]}
+            style={[styles.button,...style]}
             activeOpacity={1}>
             <Text style={[styles.buttonText, { color: color }]}>{text}</Text>
         </TouchableOpacity>
@@ -29,10 +32,11 @@ StatusActionButton.propTypes = {
     text: PropTypes.string.isRequired,
     onClick: PropTypes.func,
     color: PropTypes.any.isRequired,
-    borderColor: PropTypes.string,
-    width: PropTypes.any,
-    marginLeft: PropTypes.any,
-    marginRight: PropTypes.any,
+    // borderColor: PropTypes.string,
+    // backgroundColor: PropTypes.string,
+    // width: PropTypes.any,
+    // marginLeft: PropTypes.any,
+    // marginRight: PropTypes.any,
 }
 
 const styles = StyleSheet.create({

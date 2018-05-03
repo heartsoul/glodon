@@ -6,8 +6,8 @@ import {NativeModules} from 'react-native'
 var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
 
 export function login(username, pwd) {
-  return loginOld(username, pwd);
-  // return loginNew(username, pwd);
+  // return loginOld(username, pwd);
+  return loginNew(username, pwd);
 }
 
 export function logout() {
@@ -43,17 +43,19 @@ function loginNew(username, pwd) {
     dispatch(isLogining())
 
     API.authToken(username, pwd).then((response) => {
-      storage.saveLoginToken(response.data.access_token);
-      loadAccount(dispatch,response,username, pwd);
+      // console.log('response.data.access_token:'+response.data.access_token);
+      loadAccount(dispatch,response,username, pwd,response.data.access_token);
     }).catch((e) => {
       dispatch(loginError(false));
     });
   }
 }
-function loadAccount(dispatch,response,username, pwd) {
+function loadAccount(dispatch,response,username, pwd, token = 'cookie_token') {
+  storage.saveLoginToken(token);
   API.accountInfo().then((userInfo) => {
     if (userInfo.err) {
       dispatch(loginError(false));
+      storage.saveLoginToken('');
       return;
     }
     let data = userInfo["data"];
@@ -61,25 +63,43 @@ function loadAccount(dispatch,response,username, pwd) {
       dispatch(loginRetry(false));
       return;
     }
-    storage.saveUserInfo(data);
+    
     let ac = data["accountInfo"];
     if (!ac) {
       dispatch(loginError(false));
+      storage.saveLoginToken('');
       return;
     }
+    let gldAccountId = data["gldAccountId"];
+    if (!gldAccountId) {
+      gldAccountId = '0';
+    }
+    
+    if(token) {
+      storage.saveLoginToken(token,gldAccountId);
+    } 
+    storage.saveUserInfo(data);
     storage.hasChoose((ret) => {
       if (!ret) {
         dispatch(loginSuccessChoose(true, response.data))
         return;
       }
-      storage.loadTenant((tenant) => {
+      let tenant = storage.loadLastTenant();
+      if(tenant != '0') {
         API.setCurrentTenant(tenant).then((responseData) => {
           dispatch(loginSuccess(true, response.data))
+        }).catch((e) => {
+          storage.saveLastTenant('0');
+          dispatch(loginError(false));
         });
-      });
+      }
+      dispatch(loginSuccess(true, response.data))
+      return;
+      
     });
-  }).catch((e) => {
+  }).catch((e) => { 
     dispatch(loginError(false));
+    storage.saveLoginToken('');
   });
 }
 

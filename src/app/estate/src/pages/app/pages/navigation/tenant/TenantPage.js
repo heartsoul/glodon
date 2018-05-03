@@ -97,6 +97,8 @@ export default class tenantList extends Component {
          USERAPI.setCurrentTenant(item.value.tenantId).then((responseData)=>{
             let navigator = this.props.navigation;
              storage.saveTenant(item.value.id);
+             storage.saveLastTenant(item.value.tenantId);
+
              storage.pushNext(navigator, "ProjectPage")
 
          });

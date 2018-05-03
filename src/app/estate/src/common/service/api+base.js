@@ -79,7 +79,7 @@ export function requestJSON(url, options) {
         // credentials: 'include', // 带上cookie
     };
     // Authorization  Bearer 6515033c-6c5f-4d6a-8033-ec0906d4f085
-    if(storage.isLogin()) {
+    if(storage.isLogin() && storage.getLoginToken() != 'cookie_token') {
         ops.headers.Authorization = "Bearer "+storage.getLoginToken();
     }
     for (const i in ops) {

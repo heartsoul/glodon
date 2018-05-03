@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {View, StyleSheet,Text as Label,Image, TouchableOpacity} from 'react-native';
 const benchmarkImage = require("app-images/icon_benchmark.png");
-import {StatusActionButton} from "app-components"
 
 
 export default class QualityInfoItem extends React.Component {
