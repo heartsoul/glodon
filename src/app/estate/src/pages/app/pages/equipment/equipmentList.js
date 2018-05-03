@@ -39,7 +39,7 @@ export default class extends PureComponent {
             (responseData) => {
                 // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
                 let items = responseData.data;
-                let qualityBadgeItem = this.state.equipmentBadge.item;
+                let qualityBadgeItem = [0,0,0,0];
                 API.EQUIPMENT_CLASSIFY_STATES_SUMMARY.map((item, index) => {
                     let find = items[item];
                     if (find) {

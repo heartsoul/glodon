@@ -41,7 +41,7 @@ export default class qualityList extends PureComponent {
             (responseData) => {
                 // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
                 let items = responseData.data;
-                let qualityBadgeItem = this.state.qualityBadge.item;
+                let qualityBadgeItem = [0,0,0,0,0,0,0,0,0,0];
                 items.map((item, index) => {
                     let find = API.CLASSIFY_STATES_SUMMARY.indexOf(item.qcState);
                     if (find > 0) {
