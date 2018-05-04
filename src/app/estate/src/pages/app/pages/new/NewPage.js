@@ -26,6 +26,7 @@ import SelectView from './SelectView';
 import RectificationView from './RectificationView';//整改
 import SelectCheckPointView from './SelectCheckPointView';
 import StarView from "./StarView";
+import WideButton from "./../../components/WideButton";
 
 import * as PageType from '../navigation/bim/PageTypes';
 import * as API from "app-api";
@@ -268,7 +269,7 @@ class NewPage extends React.Component {
 
     renderData = () => {
         return (
-            <View style={{ paddingBottom: 100 }}>
+            <View style={{ paddingBottom: 30 }}>
                 <SelectView
                     ref={REF_INSPECT_COMPANY}
                     title={(this.props.type === "acceptance") ? ("验收单位") : ("检查单位")}
@@ -314,48 +315,12 @@ class NewPage extends React.Component {
                 <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint ? this.state.relevantBluePrint.drawingName : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
                 <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel.elementName ? this.state.relevantModel.elementName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
 
-                <View style={{ marginBottom: 30 }}>
-                    <TouchableHighlight
-                        underlayColor="#0099f3"
-                        activeOpacity={1.0}
-
-                        style={
-                            this.state.pressed
-                                ? styles.saveTextViewPressed
-                                : styles.saveTextView
-                        }
-                        onHideUnderlay={() => {
-                            this.setState({ pressed: false });
-                        }}
-                        onShowUnderlay={() => {
-                            this.setState({ pressed: true });
-                        }}
-                    >
-                        <Text style={styles.saveText} onPress={() => { this.save() }}>保存</Text>
-                    </TouchableHighlight>
-                    {
-                        (this.state.inspectId != -1) ? (
-                            <TouchableHighlight
-                                underlayColor="#0099f3"
-                                activeOpacity={1.0}
-                                style={
-                                    this.state.pressed
-                                        ? styles.deleteTextViewPressed
-                                        : styles.deleteTextView
-                                }
-                                onHideUnderlay={() => {
-                                    this.setState({ pressed: false });
-                                }}
-                                onShowUnderlay={() => {
-                                    this.setState({ pressed: true });
-                                }}
-                            >
-                                <Text style={styles.deleteText} onPress={() => { this.delete() }}>删除</Text>
-                            </TouchableHighlight>
-                        ) : (null)
-                    }
-
-                </View>
+                <WideButton text="保存" onClick={this.save} style={{ marginTop: 30 }} />
+                {
+                    (this.state.inspectId != -1) ? (
+                        <WideButton text="删除" type="gray" onClick={this.delete} style={{ marginTop: 20 }} />
+                    ) : (null)
+                }
             </View>
         );
     }
@@ -363,88 +328,20 @@ class NewPage extends React.Component {
     render() {
 
         return (
-            <ScrollView>
+            <View>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 {
                     this.renderData()
                     // this.state.isLoading ? (this.renderLoadingView()) : (this.renderData())
                 }
-            </ScrollView>
+            </View>
 
         );
     }
 };
 
 var styles = StyleSheet.create({
-    dividerLine: {
-        height: 10,
-        marginLeft: 19,
-        flex: 1,
-        backgroundColor: '#ff0000'
-    },
-    saveText: {
-        overflow: "hidden",
-        height: 20,
-        marginTop: 10,
-        marginLeft: 38,
-        marginRight: 38,
-        borderRadius: 20,
-        alignItems: "center",
-        textAlign: "center",
-        fontSize: 16,
-        color: "#fff"
-    },
-    saveTextView: {
-        overflow: "hidden",
-        height: 40,
-        backgroundColor: "#00baf3",
-        borderRadius: 20,
-        marginLeft: 38,
-        marginRight: 38,
-        marginTop: 30,
-    },
 
-    saveTextViewPressed: {
-        overflow: "hidden",
-        height: 40,
-        backgroundColor: "#33baf3",
-        borderRadius: 20,
-        marginLeft: 38,
-        marginRight: 38,
-        marginTop: 30,
-    },
-
-    deleteText: {
-        overflow: "hidden",
-        height: 20,
-        marginTop: 10,
-        marginLeft: 38,
-        marginRight: 38,
-        borderRadius: 20,
-        alignItems: "center",
-        textAlign: "center",
-        fontSize: 16,
-        color: "#5b5b5b"
-    },
-    deleteTextView: {
-        overflow: "hidden",
-        height: 40,
-        backgroundColor: "#cbcbcb",
-        borderRadius: 20,
-        marginLeft: 38,
-        marginRight: 38,
-        marginTop: 30,
-    },
-
-    deleteTextViewPressed: {
-        overflow: "hidden",
-        height: 40,
-        backgroundColor: "#cbcbcb",
-        borderRadius: 20,
-        marginLeft: 38,
-        marginRight: 38,
-        marginTop: 30,
-    },
 });
 
 NewPage.propTypes = {
