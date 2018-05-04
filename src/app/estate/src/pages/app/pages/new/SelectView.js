@@ -20,23 +20,17 @@ class SelectView extends Component {
             dataList: [],
             selectIndex: -1,
             showStar: false,
+            showEmpty: false,
         };
-    }
-    /**
-     * 获取数据之前先检查是否已经选择项目
-     */
-    fetchData = (fetchData) => {
-        fetchData();
-        
     }
 
     componentDidMount() {
         let { title } = this.props
 
         if (this.props.title === '检查单位' || this.props.title === '验收单位') {
-            this.fetchData(this.getInspectionCompanies);
+            this.getInspectionCompanies();
         } else if (this.props.title === '施工单位') {
-            this.fetchData(this.getCompaniesList);
+            this.getCompaniesList();
         }
     }
     componentWillReceiveProps(nextProps) {
@@ -80,7 +74,7 @@ class SelectView extends Component {
 
             }).catch((e) => {
                 console.log(e);
-              });
+            });
     }
 
     /**
@@ -89,17 +83,25 @@ class SelectView extends Component {
     getCompaniesList = () => {
         API.getCompaniesList(storage.loadProject(), 'SGDW')
             .then(data => {
-                this.setState({
-                    dataList: data.data,
-                    selectIndex: this.getSelectIndex(data.data, true),
-                });
+                if (data && data.data && data.data.length > 0) {
+                    this.setState({
+                        dataList: data.data,
+                        selectIndex: this.getSelectIndex(data.data, true),
+                    });
 
-                if (this.props.selectCallback && data.data.length > 0) {
-                    this.props.selectCallback(data.data[0])
+                    if (this.props.selectCallback && data.data.length > 0) {
+                        this.props.selectCallback(data.data[0])
+                    }
+                } else {
+                    //显示
+                    this.setState({
+                        showEmpty: true,
+                    })
                 }
+
             }).catch((e) => {
                 console.log(e);
-              });
+            });
     }
 
     /**
@@ -108,24 +110,32 @@ class SelectView extends Component {
     getPersonList = () => {
         let extraData = this.props.extraData;//施工单位
         if (!extraData) {
+            //显示
+            this.setState({
+                showEmpty: true,
+            })
             return;
         }
-        this.fetchData(() => {
-            let coperationId = extraData.coperationId;
-            API.getPersonList(storage.loadProject(), coperationId)
-                .then(data => {
+        let coperationId = extraData.coperationId;
+        API.getPersonList(storage.loadProject(), coperationId)
+            .then(data => {
+                if (data && data.data && data.data.length > 0) {
                     let selectIndex = this.getSelectPersonIndex(data.data);
                     this.setState({
                         dataList: data.data,
                         selectIndex: selectIndex,
+                        showEmpty: false,
                     }, () => {
                         this.showActionSheet();
                     });
-
-                }).catch((e) => {
-                    console.log(e);
-                  });
-        });
+                } else {
+                    this.setState({
+                        showEmpty: true,
+                    })
+                }
+            }).catch((e) => {
+                console.log(e);
+            });
     }
     /**
      * 重新设置选中的责任人，切换施工单位时候，index会改变
@@ -152,7 +162,9 @@ class SelectView extends Component {
         if (this.props.title === '责任人') {
             this.getPersonList();
         } else {
-            this.showActionSheet();
+            if(!this.state.showEmpty){
+                this.showActionSheet();
+            }
         }
     }
 
@@ -180,7 +192,7 @@ class SelectView extends Component {
      */
     getSelectedData = () => {
         if (this.state.selectIndex == -1) {
-            if(this.props.title === '责任人'){
+            if (this.props.title === '责任人') {
                 this.props.value.userId = this.props.value.id;
             }
             return this.props.value;
@@ -194,6 +206,9 @@ class SelectView extends Component {
      * 选中的name
      */
     getDetail = () => {
+        if (this.state.showEmpty) {
+            return (this.props.title === '责任人') ? "您需要去PC端添加责任人数据" : "您需要去PC端添加施工单位数据";
+        }
         let detail = '';
         if (this.props.value) {
             detail = this.props.value.name;
