@@ -254,7 +254,9 @@ const styles = StyleSheet.create({
     textInput: {
         color: '#666666',
         fontWeight: '100',
-        height:30,
+        marginTop: 5,
+        marginBottom: 5,
+
     },
     content: {
         fontSize: 14,

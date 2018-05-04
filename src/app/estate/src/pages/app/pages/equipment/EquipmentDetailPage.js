@@ -15,6 +15,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { LeftBarButtons } from "app-components";
 
 import * as actions from '../../actions/equipmentInfoAction'
+
 class EquipmentDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '材设进场记录',
@@ -170,7 +171,11 @@ class EquipmentDetailPage extends Component {
         return (
             <KeyboardAwareScrollView style={{ backgroundColor: '#FAFAFA' }}>
             <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <EquipmentDetailView equipmentInfo={equipmentInfo} switchPage={this.switchPage}/>
+                <EquipmentDetailView 
+                equipmentInfo={equipmentInfo} 
+                acceptanceCompanies = { this.props.acceptanceCompanies }
+                switchPage={this.switchPage}
+                />
             </KeyboardAwareScrollView>
         );
     }
@@ -192,6 +197,7 @@ class EquipmentDetailPage extends Component {
 export default connect(
     state => ({
         equipmentInfo: state.equipmentInfo.data,
+        acceptanceCompanies: state.equipmentInfo.acceptanceCompanies,
         isLoading: state.equipmentInfo.isLoading,
         error: state.equipmentInfo.error,
         updateIndex: state.updateData.updateIndex,

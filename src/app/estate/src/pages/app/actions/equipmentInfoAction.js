@@ -61,7 +61,7 @@ export function equipmentDelete(fieldId) {
     return dispatch => {
         API.equipmentDelete(storage.loadProject(), fieldId)
             .then((responseData) => {
-                
+
             }).catch(error => {
                 console.log(error);
             })
@@ -70,23 +70,39 @@ export function equipmentDelete(fieldId) {
 
 // 获取数据
 export function fetchData(fieldId) {
-  return dispatch => {
-    if(!fieldId) {
-      dispatch(_loadSuccess({}));
-      return;
+    return dispatch => {
+
+        equipmentAcceptanceCompanies(dispatch);
+
+        if (!fieldId) {
+            dispatch(_loadSuccess({}));
+            return;
+        }
+        // dispatch(_loading());
+        API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
+            dispatch(_loadSuccess(responseData.data));
+        }).catch(error => {
+            dispatch(_loadError(error));
+        });
+
     }
-    // dispatch(_loading());
-    API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
-      dispatch(_loadSuccess(responseData.data));
-    }).catch(error => {
-      dispatch(_loadError(error));
-    });
-  }
 }
+
+function equipmentAcceptanceCompanies(dispatch) {
+    API.equipmentAcceptanceCompanies(storage.loadProject())
+        .then(responseData => {
+            console.log('====================================');
+            console.log(responseData);
+            console.log('====================================');
+            dispatch(_loadingAcceptanceCompaniesSuccess(responseData.data));
+        }).catch(error => { })
+}
+
+
 export function switchPage(data) {
-  return dispatch => {
-      dispatch(_loadSuccess(data));
-   }
+    return dispatch => {
+        dispatch(_loadSuccess(data));
+    }
 }
 
 export function reset() {
@@ -98,6 +114,13 @@ export function reset() {
 function _loading() {
     return {
         type: types.EQUIPMENT_INFO_DOING,
+    }
+}
+
+function _loadingAcceptanceCompaniesSuccess(data){
+    return {
+        type: types.EQUIPMENT_ACCEPTANCE_COMPANIES,
+        acceptanceCompanies: data,
     }
 }
 

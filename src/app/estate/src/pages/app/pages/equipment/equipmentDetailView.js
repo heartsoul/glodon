@@ -16,10 +16,13 @@ import PropTypes from 'prop-types'
 
 import { ActionModal, ImageChooserView } from "app-components"
 import { BimFileEntry, AuthorityManager } from "app-entry";
+import { PullPicker } from 'app-3rd/teaset';
+
 import * as API from "app-api";
 
 import EquipmentInfoItem from "./equipmentInfoItem"
-import { ActionButton,StatusActionButton } from "app-components";
+import { ActionButton, StatusActionButton } from "app-components";
+
 
 const standardImage = require("app-images/icon_up_to_standard.png");
 const notStandardImage = require("app-images/icon_not_up_to_standard.png");
@@ -27,9 +30,25 @@ const notStandardImage = require("app-images/icon_not_up_to_standard.png");
 var { width, height } = Dimensions.get("window");
 
 export default class EquipmentDetailView extends Component {
+    /**
+     * 
+     * requestParams:{
+            acceptanceCompanyId;//验收单位
+            acceptanceCompanyName;//验收单位
+            batchCode;//批次编号
+            facilityCode;//材设编码
+            facilityName;//材设名称
+            approachDate;//进场日期
 
+        }
+     */
     constructor(props) {
         super(props);
+        this.state={
+            requestParams:{
+                
+            }
+        }
     }
 
     onOpenModleAction = (info) => {
@@ -77,13 +96,40 @@ export default class EquipmentDetailView extends Component {
         this.props.switchPage(data);
     }
     _onSaveAction = (info) => {
-    
+
     }
     _onDeleteAction = (info) => {
-        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消'}, { text: '删除', onPress:()=>{
-            // this.props.onCellAction(item,index,'delete');
-        } });
+        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消' }, {
+            text: '删除', onPress: () => {
+                // this.props.onCellAction(item,index,'delete');
+            }
+        });
     }
+
+    showActionSheet = () => {
+        PullPicker.show(
+            `选择验收单位`,
+            this.props.acceptanceCompanies,
+            this.getSelectedCompaniesIndex(),
+            (item, index) => { this.setState({requestParams:{...this.state.requestParams,acceptanceCompanyId:item}} )},
+            { getItemText: (item, index) => { return item.name } }
+        );
+    }
+
+    getSelectedCompaniesIndex = () => {
+        let selectedData = this.state.requestParams.company;
+        if (!selectedData) {
+            return 0;
+        }
+        for (let i = 0; this.props.acceptanceCompanies && i < this.props.acceptanceCompanies.length; i++) {
+            if (selectedData.id === this.props.acceptanceCompanies[i].id) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+
     renderBaseInfo = (info) => {
         let power = AuthorityManager.isEquipmentModify();
         return <View style={{ paddingTop: 20, paddingBottom: 10, backgroundColor: '#ffffff' }}>
@@ -176,8 +222,8 @@ export default class EquipmentDetailView extends Component {
         let data = {...info, preEditType:API.EQUIPMENT_EDIT_TYPE_IMAGE, editType:API.EQUIPMENT_EDIT_TYPE_CONFIRM};
         this.props.switchPage(data);
     }
-    renderBaseEdit = (info) => { 
-        return <View style={{ paddingTop: 10, paddingBottom: 10 }}> 
+    renderBaseEdit = (info) => {
+        return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
             <EquipmentInfoItem leftTitle="请依次完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
             <EquipmentInfoItem leftTitle="批次编号：" content={info.batchCode} showType="input"/>
@@ -194,32 +240,32 @@ export default class EquipmentDetailView extends Component {
             </View>
         </View>
     }
-    renderOtherEdit = (info) => { 
-        return<View style={{ paddingTop: 10, paddingBottom: 10 }}> 
+    renderOtherEdit = (info) => {
+        return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
             <EquipmentInfoItem leftTitle="请根据需要选择完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
-         <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
-            <EquipmentInfoItem leftTitle="进场数量：" content={info.quantity} showType="input" />
-            <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem leftTitle="单位：" content={info.unit}  showType="input"/>
-            <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem leftTitle="规格：" content={info.specification} showType="input" />
-            <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem leftTitle="型号：" content={info.modelNum} showType="input"/>
-            <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem leftTitle="构件位置：" showType="link" onClick={() => {
-                this.onOpenModleAction(info);
-            }} content={info.elementName} />
-            <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem leftTitle="厂家：" content={info.manufacturer} showType="input" />
-            <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem leftTitle="品牌：" content={info.brand} showType="input" />
-            <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem leftTitle="供应商：" content={info.supplier} showType="input"/>
-            
-        </View>
+            <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
+                <EquipmentInfoItem leftTitle="进场数量：" content={info.quantity} showType="input" />
+                <EquipmentInfoItem showType="line" />
+                <EquipmentInfoItem leftTitle="单位：" content={info.unit} showType="input" />
+                <EquipmentInfoItem showType="line" />
+                <EquipmentInfoItem leftTitle="规格：" content={info.specification} showType="input" />
+                <EquipmentInfoItem showType="line" />
+                <EquipmentInfoItem leftTitle="型号：" content={info.modelNum} showType="input" />
+                <EquipmentInfoItem showType="line" />
+                <EquipmentInfoItem leftTitle="构件位置：" showType="link" onClick={() => {
+                    this.onOpenModleAction(info);
+                }} content={info.elementName} />
+                <EquipmentInfoItem showType="line" />
+                <EquipmentInfoItem leftTitle="厂家：" content={info.manufacturer} showType="input" />
+                <EquipmentInfoItem showType="line" />
+                <EquipmentInfoItem leftTitle="品牌：" content={info.brand} showType="input" />
+                <EquipmentInfoItem showType="line" />
+                <EquipmentInfoItem leftTitle="供应商：" content={info.supplier} showType="input" />
+
+            </View>
             <View style={{ marginTop: 20 }}>
-            {this.renderActionNextInfo(info,this._toImageInfoAction)}
-        </View>
+                {this.renderActionNextInfo(info, this._toImageInfoAction)}
+            </View>
         </View>
     }
     onChangeSwitch = (value,info) =>{
@@ -254,10 +300,10 @@ export default class EquipmentDetailView extends Component {
         if(editType == API.EQUIPMENT_EDIT_TYPE_BASE) {
             return this.renderBaseEdit(equipmentInfo);
         }
-        if(editType == API.EQUIPMENT_EDIT_TYPE_IMAGE) {
+        if (editType == API.EQUIPMENT_EDIT_TYPE_IMAGE) {
             return this.renderImageEdit(equipmentInfo);
         }
-        if(editType == API.EQUIPMENT_EDIT_TYPE_OTHER) {
+        if (editType == API.EQUIPMENT_EDIT_TYPE_OTHER) {
             return this.renderOtherEdit(equipmentInfo);
         }
         return (
@@ -267,7 +313,7 @@ export default class EquipmentDetailView extends Component {
                 {this.renderImageInfo(equipmentInfo)}
                 {this.renderActionSaveInfo(equipmentInfo)}
                 {this.renderActionDeleteInfo(equipmentInfo)}
-                
+
             </View>
         );
     }
@@ -275,7 +321,8 @@ export default class EquipmentDetailView extends Component {
 
 EquipmentDetailView.propTypes = {
     equipmentInfo: PropTypes.any.isRequired,
-    switchPage:PropTypes.func.isRequired,
+    acceptanceCompanies: PropTypes.any.isRequired,
+    switchPage: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({
