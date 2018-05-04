@@ -11,6 +11,7 @@ import { connect } from 'react-redux' // 引入connect函数
 import { BimFileEntry, AuthorityManager } from "app-entry";
 import * as API from "app-api";
 import EquipmentDetailView from "./equipmentDetailView"
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import * as actions from '../../actions/equipmentInfoAction'
 class EquipmentDetailPage extends Component {
@@ -104,10 +105,10 @@ class EquipmentDetailPage extends Component {
     renderData = () => {
         const equipmentInfo = this.props.equipmentInfo;
         return (
-            <ScrollView style={{ backgroundColor: '#FAFAFA' }}>
+            <KeyboardAwareScrollView style={{ backgroundColor: '#FAFAFA' }}>
             <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <EquipmentDetailView equipmentInfo={equipmentInfo} switchPage={(info)=>{this.props.switchPage(info)}}/>
-            </ScrollView>
+            </KeyboardAwareScrollView>
         );
     }
 
