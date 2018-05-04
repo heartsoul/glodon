@@ -1994,7 +1994,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.soul.estate01;
-				PRODUCT_NAME = "BIM协同D";
+				PRODUCT_NAME = estate;
 				PROVISIONING_PROFILE = "0774c7dd-a786-4d85-bb42-5c65ab38d911";
 				PROVISIONING_PROFILE_SPECIFIER = "dev-5BWXTQUBDE.org.soul.*";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2021,7 +2021,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.soul.estate;
-				PRODUCT_NAME = "BIM协同";
+				PRODUCT_NAME = estate;
 				PROVISIONING_PROFILE = "0774c7dd-a786-4d85-bb42-5c65ab38d911";
 				PROVISIONING_PROFILE_SPECIFIER = "dev-5BWXTQUBDE.org.soul.*";
 				VERSIONING_SYSTEM = "apple-generic";
