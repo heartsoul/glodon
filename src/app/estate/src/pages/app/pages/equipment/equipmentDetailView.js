@@ -226,7 +226,7 @@ export default class EquipmentDetailView extends Component {
         return<View style={{ paddingTop: 10, paddingBottom: 10 }}> 
             <EquipmentInfoItem leftTitle="您可记录现场图片" leftTitleColor='#00b5f2' showType="headerInfo" />
          <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
-            <ImageChooserView files={[]} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" />
+            <ImageChooserView files={info.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" />
             <EquipmentInfoItem showType="line" />
             <Switch onValueChange={(value) => { this.onChangeSwitch(value) }} />   
         </View>
