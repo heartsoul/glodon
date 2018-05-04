@@ -14,6 +14,7 @@ import {
 import { Tabs, } from 'antd-mobile';
 import NewCheckListTabBar from "./NewCheckListTabBar";
 import NewPage from "./NewPage";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 var { width, height } = Dimensions.get("window");
 
@@ -142,7 +143,7 @@ class NewCheckListPage extends Component {
 
     render() {
         return (
-            <View>
+            <KeyboardAwareScrollView>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{ height: height + 44, marginTop: -44 }}>
                     <Tabs
@@ -169,7 +170,7 @@ class NewCheckListPage extends Component {
                     </Tabs>
                 </View>
 
-            </View>
+            </KeyboardAwareScrollView>
         );
     }
 }
