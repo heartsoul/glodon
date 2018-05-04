@@ -145,7 +145,7 @@ class NewCheckListPage extends Component {
         return (
             <KeyboardAwareScrollView>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <View style={{ height: height + 44, marginTop: -44 }}>
+                <View style={{ marginTop: -44 }}>
                     <Tabs
                         tabs={tabs}
                         initialPage={this.activeTab}
