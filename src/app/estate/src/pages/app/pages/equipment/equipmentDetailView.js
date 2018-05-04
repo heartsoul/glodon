@@ -65,16 +65,16 @@ export default class EquipmentDetailView extends Component {
     }
 
     _onOpenEditBaseInfoAction = (info) => {
-        info.editType = API.EQUIPMENT_EDIT_TYPE_BASE;
-        storage.pushNext(null, "EquipmentDetailPage", { "item": info, editType: info.editType });
+        let data = {...info,batchCode:'112322', preEditType:API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType:API.EQUIPMENT_EDIT_TYPE_BASE};
+        this.props.switchPage(data);
     }
     _onOpenEditOtherInfoAction = (info) => {
-        info.editType = API.EQUIPMENT_EDIT_TYPE_OTHER;
-        storage.pushNext(null, "EquipmentDetailPage", { "item": info, editType: info.editType });
+        let data = {...info,quantity:'sssss', preEditType:API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType:API.EQUIPMENT_EDIT_TYPE_OTHER};
+        this.props.switchPage(data);
     }
     _onOpenEditImageInfoAction = (info) => {
-        info.editType = API.EQUIPMENT_EDIT_TYPE_IMAGE;
-        storage.pushNext(null, "EquipmentDetailPage", { "item": info, editType: info.editType });
+        let data = {...info, preEditType:API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType:API.EQUIPMENT_EDIT_TYPE_IMAGE};
+        this.props.switchPage(data);
     }
     _onSaveAction = (info) => {
     
@@ -91,7 +91,7 @@ export default class EquipmentDetailView extends Component {
                 onClick={power ? () => { this._onOpenEditBaseInfoAction(info); } : null} />
             <EquipmentInfoItem showType="line" />
             <EquipmentInfoItem leftTitle="批次编号：" content={info.batchCode} />
-            <EquipmentInfoItem leftTitle="进场日期：" content={API.formatUnixtimestampSimple(info.approachDate)} />
+            <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate?API.formatUnixtimestampSimple(info.approachDate):null} />
             <EquipmentInfoItem leftTitle="材设编码：" content={info.facilityCode} />
             <EquipmentInfoItem leftTitle="材设名称：" content={info.facilityName} />
             {this.renderImage(info)}
@@ -99,7 +99,7 @@ export default class EquipmentDetailView extends Component {
     }
     renderOtherInfo = (info) => {
         let power = AuthorityManager.isEquipmentModify();
-        return <View style={{ marginTop: 20, paddingBottom: 10, backgroundColor: '#ffffff' }}>
+        return <View style={{ marginTop: 20, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
             <EquipmentInfoItem leftTitle="其他信息" showType="headerInfo"
                 onClick={power ? () => { this._onOpenEditOtherInfoAction(info); } : null} />
             <EquipmentInfoItem showType="line" />
@@ -127,7 +127,7 @@ export default class EquipmentDetailView extends Component {
             image = urls.length > 1 ? (<EquipmentInfoItem url={urls[0]} showType="image" />) : (<EquipmentInfoItem urls={urls} showType="images" />);
         }
 
-        return <View style={{ marginTop: 20, paddingBottom: 10, backgroundColor: '#ffffff' }}>
+        return <View style={{ marginTop: 20, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
             <EquipmentInfoItem leftTitle="现场照片" showType="headerInfo"
                 onClick={power ? () => { this._onOpenEditImageInfoAction(info); } : null} />
             <EquipmentInfoItem showType="line" />
@@ -136,21 +136,23 @@ export default class EquipmentDetailView extends Component {
     }
     renderActionSaveInfo = (info) => {
         let power = AuthorityManager.isEquipmentModify();
-        return <View style={{ marginTop: 0 }}>
-            <StatusActionButton text='保存' height={40} marginRight={20} marginLeft={20} color='#ffffff' onClick={() => this._onSaveAction(info)} />
+        return <View style={{ marginTop: 20 }}>
+            <StatusActionButton text='保存' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => this._onSaveAction(info)} />
         </View>
     }
     renderActionDeleteInfo = (info) => {
         let power = AuthorityManager.isEquipmentDelete();
-        return <View style={{ marginTop: 0 }}>
-            <StatusActionButton text='删除' height={40} marginRight={20} marginLeft={20} color='#ffffff' onClick={() => this._onDeleteAction(info)} />
+        if(!power || !info.id) return null;
+
+        return <View style={{ marginTop: 20 }}>
+            <StatusActionButton text='删除' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => this._onDeleteAction(info)} />
         </View>
     }
     renderActionNextInfo = (info,nextAction) => {
-        if(info.id) {
+        if(info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
             // 是编辑
             return <View style={{ marginTop: 0 }}>
-            <StatusActionButton text='确定' height={40} marginRight={20} marginLeft={20} color='#ffffff' onClick={() => this._onConfirmAction(info)} />
+            <StatusActionButton text='确定' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => this._onConfirmAction(info)} />
         </View>
         }
         return <View style={{ marginTop: 0 }}>
@@ -158,25 +160,29 @@ export default class EquipmentDetailView extends Component {
         </View>
     }
     _toOtherInfoAction = (info) => {
-        let data = {...info, editType:API.EQUIPMENT_EDIT_TYPE_OTHER};
+        let data = {...info, preEditType:API.EQUIPMENT_EDIT_TYPE_BASE, editType:API.EQUIPMENT_EDIT_TYPE_OTHER};
         this.props.switchPage(data);
         // storage.pushNext(null, "EquipmentDetailPage", { "item": info, editType: info.editType });
     }
     _toImageInfoAction = (info) => {
-        let data = {...info, editType:API.EQUIPMENT_EDIT_TYPE_IMAGE};
+        let data = {...info, preEditType:API.EQUIPMENT_EDIT_TYPE_OTHER, editType:API.EQUIPMENT_EDIT_TYPE_IMAGE};
+        this.props.switchPage(data);
+    }
+    _toConfirmInfoAction = (info) => {
+        let data = {...info, preEditType:API.EQUIPMENT_EDIT_TYPE_IMAGE, editType:API.EQUIPMENT_EDIT_TYPE_CONFIRM};
         this.props.switchPage(data);
     }
     renderBaseEdit = (info) => { 
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}> 
             <EquipmentInfoItem leftTitle="请依次完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
-            <EquipmentInfoItem leftTitle="批次编号：" showType="input"/>
+            <EquipmentInfoItem leftTitle="批次编号：" content={info.batchCode} showType="input"/>
             <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem leftTitle="进场日期：" showType="input" />
+            <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate ? API.formatUnixtimestampSimple(info.approachDate) : null} showType="input" />
             <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem leftTitle="材设编码：" showType="input" />
+            <EquipmentInfoItem leftTitle="材设编码：" content={info.facilityCode} showType="input" />
             <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem leftTitle="材设名称：" showType="input" />
+            <EquipmentInfoItem leftTitle="材设名称：" content={info.facilityName} showType="input" />
             
         </View>
         <View style={{ marginTop: 20 }}>
@@ -218,12 +224,10 @@ export default class EquipmentDetailView extends Component {
          <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
             <ImageChooserView files={[]} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" />
             <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem showType="line" />
-            <EquipmentInfoItem showType="line" />
             <Switch onValueChange={(value) => { this.onChangeSwitch(value) }} />   
         </View>
             <View style={{ marginTop: 20 }}>
-            <StatusActionButton text='保存' height={40} marginRight={20} marginLeft={20} backgroundColor='#00b5f2' color='#ffffff' onClick={() => this._onSaveAction(info)} />
+            {this.renderActionNextInfo(info,this._toConfirmInfoAction)}
        
         </View>
         </View>

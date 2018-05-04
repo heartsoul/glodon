@@ -4,7 +4,11 @@ import React from 'react';
 import { View, StyleSheet, Text,TextInput, Image, TouchableOpacity,Dimensions} from 'react-native';
 const rightImage = require("app-images/icon_arrow_right_gray.png");
 var { width, height } = Dimensions.get("window");
-
+class TextInputWithData extends TextInput {
+    componentDidMount = () => {
+        this.value = 'abc:'+this.props.defaultValue;
+    }
+} 
 export default class EquipmentInfoItem extends React.Component {
     onClick = (event) => {
         if (!this.props.onClick) {
@@ -21,7 +25,7 @@ export default class EquipmentInfoItem extends React.Component {
                         <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                     </View>
                     <View style={styles.contentInputView}>
-                        <TextInput style={styles.textInput} onTextChange={this.props.onTextChange}></TextInput>
+                        <TextInputWithData value={this.props.content} style={styles.textInput} onTextChange={this.props.onTextChange}></TextInputWithData>
                     </View>
                 </View>
             );
@@ -32,7 +36,7 @@ export default class EquipmentInfoItem extends React.Component {
                 <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={styles.contentInputView}>
-                    <TextInput style={styles.textInput}></TextInput>
+                    <TextInputWithData value={this.props.content} style={styles.textInput}></TextInputWithData>
                 </View>
                 <TouchableOpacity style={styles.rightAction} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                         <Image source={rightImage} style={styles.infoMark} />

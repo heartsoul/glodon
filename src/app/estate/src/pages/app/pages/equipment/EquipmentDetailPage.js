@@ -12,17 +12,19 @@ import { BimFileEntry, AuthorityManager } from "app-entry";
 import * as API from "app-api";
 import EquipmentDetailView from "./equipmentDetailView"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { LeftBarButtons } from "app-components";
 
 import * as actions from '../../actions/equipmentInfoAction'
 class EquipmentDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '材设进场记录',
-        gesturesEnabled: true,
+        gesturesEnabled: navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
+        headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
         headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null
     })
     constructor(props) {
         super(props);
-        this.props.navigation.setParams({loadRightTitle: this.loadRightTitle })
+        this.props.navigation.setParams({loadLeftTitle: this.loadLeftTitle,loadRightTitle: this.loadRightTitle,gesturesEnabled: this.gesturesEnabled })
     }
 
     componentWillReceiveProps(nextProps) {
@@ -40,17 +42,71 @@ class EquipmentDetailPage extends Component {
         //   console.log("提交完成");
         // });
     }
+    gesturesEnabled = () => {
+        return false;
+    }
     loadRightTitle = () => {
         const equipmentInfo = this.props.equipmentInfo;
-        let power = 
-            power = (AuthorityManager.isEquipmentCreate())
-            if (power) {
-                return (<Text onPress={() => this._onSubmit(equipmentInfo.id)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >提交</Text>)
+        let power = AuthorityManager.isEquipmentCreate()
+        const {editType,id} = equipmentInfo;
+        if(!id) {
+            if(editType != API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
+                power = false;
             }
+        } else {
+            if(editType == API.EQUIPMENT_EDIT_TYPE_BASE ||editType == API.EQUIPMENT_EDIT_TYPE_OTHER || editType == API.EQUIPMENT_EDIT_TYPE_IMAGE) {
+                power = false;
+            }
+        }
+        
+        if (power) {
+            return (<Text onPress={() => this._onSubmit(equipmentInfo.id)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >提交</Text>)
+        }
         
         return null;
     }
+    needBack = (backFun) => {
+        const equipmentInfo = this.props.equipmentInfo;
+        const {editType,preEditType} = equipmentInfo;
+        if(preEditType) {
+            if(preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
+                let data = {...equipmentInfo, preEditType:null, editType:preEditType};
+                this.props.switchPage(data);
+                // 这里要处理保存操作
+                if(backFun) {
+                    backFun(false);
+                }
+                return;
+            } else {
+                if(preEditType === API.EQUIPMENT_EDIT_TYPE_BASE || preEditType === API.EQUIPMENT_EDIT_TYPE_OTHER || preEditType === API.EQUIPMENT_EDIT_TYPE_IMAGE) {
+                    let p = null
+                    if(preEditType === API.EQUIPMENT_EDIT_TYPE_IMAGE) {
+                        p = API.EQUIPMENT_EDIT_TYPE_OTHER
+                    } else if(preEditType === API.EQUIPMENT_EDIT_TYPE_OTHER) {
+                        p = API.EQUIPMENT_EDIT_TYPE_BASE
+                    } else if(preEditType === API.EQUIPMENT_EDIT_TYPE_BASE) {
+                        p = null
+                    }
+                    let data = {...equipmentInfo, preEditType:p, editType:preEditType};
+                    this.props.switchPage(data);
+                    // 这里要处理保存操作
+                    if(backFun) {
+                        backFun(false);
+                    }
+                    return;
+                }
+            }
+        }
+        // 这里要处理保存操作
+        if(backFun) {
+            backFun(true);
+        }
+    }
+    loadLeftTitle = () => {
+        return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
+    }
 
+    
     componentDidMount() {
         const { fetchData } = this.props;
         const { item } = this.props.navigation.state.params;

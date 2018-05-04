@@ -5,6 +5,14 @@ import GLDDrawerPaneView from "./GLDDrawerPaneView"
 
 export default class LeftBarButtons extends React.Component {
   _onBackPress = (navigation) => {
+    if(this.props.needBack) {
+      this.props.needBack((needBack)=>{
+        if(needBack) {
+          storage.pop(navigation,1)
+        }
+      })
+      return;
+    }
     storage.pop(navigation,1)
   }
 
@@ -34,6 +42,7 @@ LeftBarButtons.propTypes = {
   currentItem: PropTypes.string.isRequired,
   navigation:PropTypes.any,
   top:PropTypes.any,
+  needBack:PropTypes.func, // 是否需要返回，不需要的话在回调函数中返回fasle
 }
 const styles = StyleSheet.create({
   barItem: {
