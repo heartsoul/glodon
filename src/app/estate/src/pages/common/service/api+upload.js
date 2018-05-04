@@ -50,7 +50,7 @@ export async function upLoadFiles(fileData, callback) {
     resultArray = [];
     fileData.map((file) => {
         let path = "file://" + file.path;
-        if(!isUploadedFile(file)){
+        if(!isUploadedFile(file, callback)){
             getOperationCode(path, file.name, file.length, callback,file.md5);
         }
     });
@@ -59,7 +59,7 @@ export async function upLoadFiles(fileData, callback) {
  * 已经上传过的文件不再上传
  * @param {*} file 
  */
-function isUploadedFile(file) {
+function isUploadedFile(file,callback) {
     if (file && file.objectId) {
         let res = {
             name: file.name,

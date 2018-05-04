@@ -81,7 +81,7 @@ const screens = {
     screen: GLD.EquipmentDetailPage
   },
   EquipmentNewPage: {
-    screen: GLD.EquipmentNewPage
+    screen: GLD.EquipmentDetailPage
   },
   SearchPage: {
     screen: GLD.SearchPage

@@ -9,19 +9,22 @@ import {
     View,
     Image,
     StyleSheet,
+    Switch,
+    Dimensions,
 } from "react-native";
 import PropTypes from 'prop-types'
 
-import { ActionModal } from "app-components"
+import { ActionModal, ImageChooserView } from "app-components"
 import { BimFileEntry, AuthorityManager } from "app-entry";
 import * as API from "app-api";
 
-import EquipmentInfoEditItem from "./equipmentInfoEditItem";
 import EquipmentInfoItem from "./equipmentInfoItem"
-import { ActionButton } from "app-components";
+import { ActionButton,StatusActionButton } from "app-components";
 
 const standardImage = require("app-images/icon_up_to_standard.png");
 const notStandardImage = require("app-images/icon_not_up_to_standard.png");
+
+var { width, height } = Dimensions.get("window");
 
 export default class EquipmentDetailView extends Component {
 
@@ -63,19 +66,15 @@ export default class EquipmentDetailView extends Component {
 
     _onOpenEditBaseInfoAction = (info) => {
         info.editType = API.EQUIPMENT_EDIT_TYPE_BASE;
-        storage.pushNext(null, "EquipmentNewPage", { "item": info, editType: info.editType });
+        storage.pushNext(null, "EquipmentDetailPage", { "item": info, editType: info.editType });
     }
     _onOpenEditOtherInfoAction = (info) => {
         info.editType = API.EQUIPMENT_EDIT_TYPE_OTHER;
-        storage.pushNext(null, "EquipmentNewPage", { "item": info, editType: info.editType });
+        storage.pushNext(null, "EquipmentDetailPage", { "item": info, editType: info.editType });
     }
     _onOpenEditImageInfoAction = (info) => {
         info.editType = API.EQUIPMENT_EDIT_TYPE_IMAGE;
-        storage.pushNext(null, "EquipmentNewPage", { "item": info, editType: info.editType });
-    }
-    _onOpenEditImageInfoAction = (info) => {
-        info.editType = API.EQUIPMENT_EDIT_TYPE_IMAGE;
-        storage.pushNext(null, "EquipmentNewPage", { "item": info, editType: info.editType });
+        storage.pushNext(null, "EquipmentDetailPage", { "item": info, editType: info.editType });
     }
     _onSaveAction = (info) => {
     
@@ -88,7 +87,7 @@ export default class EquipmentDetailView extends Component {
     renderBaseInfo = (info) => {
         let power = AuthorityManager.isEquipmentModify();
         return <View style={{ paddingTop: 20, paddingBottom: 10, backgroundColor: '#ffffff' }}>
-            <EquipmentInfoItem leftTitle="基本信息" showType="info"
+            <EquipmentInfoItem leftTitle="基本信息" showType="headerInfo"
                 onClick={power ? () => { this._onOpenEditBaseInfoAction(info); } : null} />
             <EquipmentInfoItem showType="line" />
             <EquipmentInfoItem leftTitle="批次编号：" content={info.batchCode} />
@@ -101,7 +100,7 @@ export default class EquipmentDetailView extends Component {
     renderOtherInfo = (info) => {
         let power = AuthorityManager.isEquipmentModify();
         return <View style={{ marginTop: 20, paddingBottom: 10, backgroundColor: '#ffffff' }}>
-            <EquipmentInfoItem leftTitle="其他信息" showType="info"
+            <EquipmentInfoItem leftTitle="其他信息" showType="headerInfo"
                 onClick={power ? () => { this._onOpenEditOtherInfoAction(info); } : null} />
             <EquipmentInfoItem showType="line" />
             <EquipmentInfoItem leftTitle="进场数量：" content={info.quantity} />
@@ -129,7 +128,7 @@ export default class EquipmentDetailView extends Component {
         }
 
         return <View style={{ marginTop: 20, paddingBottom: 10, backgroundColor: '#ffffff' }}>
-            <EquipmentInfoItem leftTitle="现场照片" showType="info"
+            <EquipmentInfoItem leftTitle="现场照片" showType="headerInfo"
                 onClick={power ? () => { this._onOpenEditImageInfoAction(info); } : null} />
             <EquipmentInfoItem showType="line" />
             {image}
@@ -138,18 +137,109 @@ export default class EquipmentDetailView extends Component {
     renderActionSaveInfo = (info) => {
         let power = AuthorityManager.isEquipmentModify();
         return <View style={{ marginTop: 0 }}>
-            <ActionButton text='保存' onPress={() => this._onSaveAction(info)} isDisabled={()=>{return false}} />
+            <StatusActionButton text='保存' height={40} marginRight={20} marginLeft={20} color='#ffffff' onClick={() => this._onSaveAction(info)} />
         </View>
     }
     renderActionDeleteInfo = (info) => {
         let power = AuthorityManager.isEquipmentDelete();
         return <View style={{ marginTop: 0 }}>
-            <ActionButton text='删除' onPress={() => this._onDeleteAction(info)} isDisabled={()=>{return false}} />
+            <StatusActionButton text='删除' height={40} marginRight={20} marginLeft={20} color='#ffffff' onClick={() => this._onDeleteAction(info)} />
         </View>
     }
-
+    renderActionNextInfo = (info,nextAction) => {
+        if(info.id) {
+            // 是编辑
+            return <View style={{ marginTop: 0 }}>
+            <StatusActionButton text='确定' height={40} marginRight={20} marginLeft={20} color='#ffffff' onClick={() => this._onConfirmAction(info)} />
+        </View>
+        }
+        return <View style={{ marginTop: 0 }}>
+            <StatusActionButton text='下一步' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
+        </View>
+    }
+    _toOtherInfoAction = (info) => {
+        let data = {...info, editType:API.EQUIPMENT_EDIT_TYPE_OTHER};
+        this.props.switchPage(data);
+        // storage.pushNext(null, "EquipmentDetailPage", { "item": info, editType: info.editType });
+    }
+    _toImageInfoAction = (info) => {
+        let data = {...info, editType:API.EQUIPMENT_EDIT_TYPE_IMAGE};
+        this.props.switchPage(data);
+    }
+    renderBaseEdit = (info) => { 
+        return <View style={{ paddingTop: 10, paddingBottom: 10 }}> 
+            <EquipmentInfoItem leftTitle="请依次完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
+            <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
+            <EquipmentInfoItem leftTitle="批次编号：" showType="input"/>
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem leftTitle="进场日期：" showType="input" />
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem leftTitle="材设编码：" showType="input" />
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem leftTitle="材设名称：" showType="input" />
+            
+        </View>
+        <View style={{ marginTop: 20 }}>
+            {this.renderActionNextInfo(info,this._toOtherInfoAction)}
+            </View>
+        </View>
+    }
+    renderOtherEdit = (info) => { 
+        return<View style={{ paddingTop: 10, paddingBottom: 10 }}> 
+            <EquipmentInfoItem leftTitle="请根据需要选择完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
+         <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
+            <EquipmentInfoItem leftTitle="进场数量：" content={info.quantity} showType="input" />
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem leftTitle="单位：" content={info.unit}  showType="input"/>
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem leftTitle="规格：" content={info.specification} showType="input" />
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem leftTitle="型号：" content={info.modelNum} showType="input"/>
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem leftTitle="构件位置：" showType="link" onClick={() => {
+                this.onOpenModleAction(info);
+            }} content={info.elementName} />
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem leftTitle="厂家：" content={info.manufacturer} showType="input" />
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem leftTitle="品牌：" content={info.brand} showType="input" />
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem leftTitle="供应商：" content={info.supplier} showType="input"/>
+            
+        </View>
+            <View style={{ marginTop: 20 }}>
+            {this.renderActionNextInfo(info,this._toImageInfoAction)}
+        </View>
+        </View>
+    }
+    renderImageEdit = (info) => { 
+        return<View style={{ paddingTop: 10, paddingBottom: 10 }}> 
+            <EquipmentInfoItem leftTitle="您可记录现场图片" leftTitleColor='#00b5f2' showType="headerInfo" />
+         <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
+            <ImageChooserView files={[]} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" />
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem showType="line" />
+            <EquipmentInfoItem showType="line" />
+            <Switch onValueChange={(value) => { this.onChangeSwitch(value) }} />   
+        </View>
+            <View style={{ marginTop: 20 }}>
+            <StatusActionButton text='保存' height={40} marginRight={20} marginLeft={20} backgroundColor='#00b5f2' color='#ffffff' onClick={() => this._onSaveAction(info)} />
+       
+        </View>
+        </View>
+    }
     render = () => {
         const equipmentInfo = this.props.equipmentInfo;
+        const {editType} = equipmentInfo;
+        if(!editType || editType == API.EQUIPMENT_EDIT_TYPE_BASE) {
+            return this.renderBaseEdit(equipmentInfo);
+        }
+        if(editType == API.EQUIPMENT_EDIT_TYPE_IMAGE) {
+            return this.renderImageEdit(equipmentInfo);
+        }
+        if(editType == API.EQUIPMENT_EDIT_TYPE_OTHER) {
+            return this.renderOtherEdit(equipmentInfo);
+        }
         return (
             <View>
                 {this.renderBaseInfo(equipmentInfo)}
@@ -165,6 +255,7 @@ export default class EquipmentDetailView extends Component {
 
 EquipmentDetailView.propTypes = {
     equipmentInfo: PropTypes.any.isRequired,
+    switchPage:PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({

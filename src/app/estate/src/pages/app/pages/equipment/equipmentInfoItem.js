@@ -1,9 +1,9 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text,TextInput, Image, TouchableOpacity,Dimensions} from 'react-native';
 const rightImage = require("app-images/icon_arrow_right_gray.png");
-
+var { width, height } = Dimensions.get("window");
 
 export default class EquipmentInfoItem extends React.Component {
     onClick = (event) => {
@@ -12,12 +12,42 @@ export default class EquipmentInfoItem extends React.Component {
         }
         this.props.onClick();
     }
-    renderInfo = () => {
+
+    renderInput = () => {
         if (!this.props.onClick) {
             return (
                 <View style={styles.containerView} >
                     <View style={styles.titleView}>
-                        <Text style={styles.leftTitle}>{this.props.leftTitle}</Text>
+                        <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
+                    </View>
+                    <View style={styles.contentInputView}>
+                        <TextInput style={styles.textInput} onTextChange={this.props.onTextChange}></TextInput>
+                    </View>
+                </View>
+            );
+        }
+        return (
+            <View style={styles.containerView} >
+                <View style={styles.titleView}>
+                <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
+                </View>
+                <View style={styles.contentInputView}>
+                    <TextInput style={styles.textInput}></TextInput>
+                </View>
+                <TouchableOpacity style={styles.rightAction} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                        <Image source={rightImage} style={styles.infoMark} />
+                    </TouchableOpacity>
+            </View>
+        );
+    }
+
+    renderHeaderInfo = () => {
+        if (!this.props.onClick) {
+            return (
+                <View style={styles.containerView} >
+                    <View style={styles.titleView}>
+                    <Text style={{backgroundColor:'#00b5f2',width:2,marginRight:5,height:16,fontSize:20,fontWeight:'bold'}}>{' '}</Text>
+                    <Text style={[styles.leftTitleHeader,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                     </View>
                     <View style={styles.contentView}>
                         <Text style={styles.content}>{this.props.content}</Text>
@@ -28,7 +58,35 @@ export default class EquipmentInfoItem extends React.Component {
         return (
             <View style={styles.containerView} >
                 <View style={styles.titleView}>
-                <Text style={{backgroundColor:'#00b5f2',width:2,marginRight:5,height:16,fontSize:20,fontWeight:'bold'}}>{' '}</Text><Text style={styles.leftTitleHeader}>{this.props.leftTitle}</Text>
+                <Text style={{backgroundColor:'#00b5f2',width:2,marginRight:5,height:16,fontSize:20,fontWeight:'bold'}}>{' '}</Text>
+                <Text style={[styles.leftTitleHeader,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
+                </View>
+                <View style={styles.contentView}>
+                    <Text style={styles.content}>{this.props.content}</Text>
+                </View>
+                <TouchableOpacity style={styles.rightAction} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                        <Image source={rightImage} style={styles.infoMark} />
+                    </TouchableOpacity>
+            </View>
+        );
+    }
+    renderInfo = () => {
+        if (!this.props.onClick) {
+            return (
+                <View style={styles.containerView} >
+                    <View style={styles.titleView}>
+                    <Text style={styles.leftTitle}>{this.props.leftTitle}</Text>
+                    </View>
+                    <View style={styles.contentView}>
+                        <Text style={styles.content}>{this.props.content}</Text>
+                    </View>
+                </View>
+            );
+        }
+        return (
+            <View style={styles.containerView} >
+                <View style={styles.titleView}>
+                <Text style={[styles.leftTitleHeader,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.content}>{this.props.content}</Text>
@@ -110,6 +168,9 @@ export default class EquipmentInfoItem extends React.Component {
         );
     }
     render = () => {
+        if (this.props.showType === 'headerInfo') {
+            return this.renderHeaderInfo();
+        }
         if (this.props.showType === 'info') {
             return this.renderInfo();
         }
@@ -125,13 +186,16 @@ export default class EquipmentInfoItem extends React.Component {
         if (this.props.showType === 'images') {
             return this.renderImages();
         }
+        if (this.props.showType === 'input') {
+            return this.renderInput();
+        }
         return this.renderItem();
     }
 }
 EquipmentInfoItem.propTypes = {
 
     /**
-     * 控件展现类型 default|info|link|line
+     * 控件展现类型 default|info|headerInfo|link|line|image|images|input
      */
     showType: PropTypes.string,
     /**
@@ -139,10 +203,22 @@ EquipmentInfoItem.propTypes = {
      */
     onClick: PropTypes.func,
     /**
+     * 数据变化响应
+     */
+    onTextChange: PropTypes.func,
+    /**
+     * 内容变更
+     */
+    onValueChange: PropTypes.func,
+    /**
      * 左侧标题
      */
     leftTitle: PropTypes.any,
 
+    /**
+     * 左侧标题颜色
+     */
+    leftTitleColor: PropTypes.any,
     /**
      * 内容
      */
@@ -164,12 +240,17 @@ EquipmentInfoItem.propTypes = {
 const styles = StyleSheet.create({
 
     containerView: {
-        marginTop: 15,
+        marginTop: 5,
         marginBottom: 5,
         marginLeft: 20,
         marginRight: 20,
         flexDirection: 'row',
         
+    },
+    textInput: {
+        color: '#666666',
+        fontWeight: '100',
+        height:30,
     },
     content: {
         fontSize: 14,
@@ -191,7 +272,7 @@ const styles = StyleSheet.create({
     },
     leftTitleHeader: {
         fontSize: 15,
-        width: 175,
+        width: '80%',
         color: '#666666',
         fontWeight: '200',
         // fontFamily:"PingFangSC-Light",
@@ -205,6 +286,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         
         alignItems: 'center',
+    },
+    contentInputView: {
+        width:width-75-40,
     },
     infoMark: {
         // marginLeft: 5,
@@ -220,7 +304,8 @@ const styles = StyleSheet.create({
     },
     lineView: {
         height: 1,
-        marginTop: 20,
+        marginTop: 10,
+        marginBottom: 10,
         marginLeft: 20,
         width: '100%',
         backgroundColor: '#fafafa'

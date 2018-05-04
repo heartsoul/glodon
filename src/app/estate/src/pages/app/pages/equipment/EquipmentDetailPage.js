@@ -4,7 +4,7 @@
 'use strict';
 import React, { Component } from "react";
 import {
-    ActivityIndicator, ScrollView, StyleSheet, Text, View, StatusBar, Image,
+    ActivityIndicator, ScrollView, StyleSheet, Text, View, StatusBar,
 } from "react-native";
 import { connect } from 'react-redux' // 引入connect函数
 
@@ -13,7 +13,6 @@ import * as API from "app-api";
 import EquipmentDetailView from "./equipmentDetailView"
 
 import * as actions from '../../actions/equipmentInfoAction'
-
 class EquipmentDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '材设进场记录',
@@ -29,7 +28,9 @@ class EquipmentDetailPage extends Component {
         if (nextProps.updateIndex != this.props.updateIndex) {
             const { fetchData } = this.props;
             const { item } = this.props.navigation.state.params;
-            fetchData(item.value.id);
+            if(item && item.value && item.id) {
+                fetchData(item.value.id);
+            }
         }
     }
 
@@ -52,7 +53,17 @@ class EquipmentDetailPage extends Component {
     componentDidMount() {
         const { fetchData } = this.props;
         const { item } = this.props.navigation.state.params;
-        fetchData(item.value.id);
+        if(item) {
+            if(item.id) {
+                fetchData(item.id);
+                return;
+            } else if(item.value && item.value.id) {
+                fetchData(item.value.id);
+                return;
+            }
+        } 
+        fetchData(null);
+           
     }
 
     componentWillUnmount() {
@@ -95,7 +106,7 @@ class EquipmentDetailPage extends Component {
         return (
             <ScrollView style={{ backgroundColor: '#FAFAFA' }}>
             <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <EquipmentDetailView equipmentInfo={equipmentInfo} />
+                <EquipmentDetailView equipmentInfo={equipmentInfo} switchPage={(info)=>{this.props.switchPage(info)}}/>
             </ScrollView>
         );
     }
@@ -132,5 +143,11 @@ export default connect(
                 dispatch(actions.reset())
             }
         },
+        switchPage: (equipmentInfo) => {
+            if (dispatch) {
+                dispatch(actions.switchPage(equipmentInfo))
+            }
+        },
+        
     })
 )(EquipmentDetailPage)

@@ -1,18 +1,6 @@
 import * as API from 'app-api'
 import * as types from '../constants/equipmentInfoTypes'
 
-// 获取数据
-export function fetchData(fieldId) {
-    return dispatch => {
-        // dispatch(_loading());
-        API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
-            dispatch(_loadSuccess(responseData.data));
-        }).catch(error => {
-            dispatch(_loadError(error));
-        });
-    }
-}
-
 /**
  * 提交材设单 新增时的response {"id": 5200418,"code": "CSYS_20180504_002"}，编辑时response未测试。
  * @param {*} params 
@@ -78,6 +66,27 @@ export function equipmentDelete(fieldId) {
                 console.log(error);
             })
     }
+}
+
+// 获取数据
+export function fetchData(fieldId) {
+  return dispatch => {
+    if(!fieldId) {
+      dispatch(_loadSuccess({}));
+      return;
+    }
+    // dispatch(_loading());
+    API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
+      dispatch(_loadSuccess(responseData.data));
+    }).catch(error => {
+      dispatch(_loadError(error));
+    });
+  }
+}
+export function switchPage(data) {
+  return dispatch => {
+      dispatch(_loadSuccess(data));
+   }
 }
 
 export function reset() {
