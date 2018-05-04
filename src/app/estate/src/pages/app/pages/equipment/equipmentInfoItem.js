@@ -25,7 +25,7 @@ export default class EquipmentInfoItem extends React.Component {
                         <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                     </View>
                     <View style={styles.contentInputView}>
-                        <TextInputWithData value={this.props.content} style={styles.textInput} onTextChange={this.props.onTextChange}></TextInputWithData>
+                        <TextInputWithData  underlineColorAndroid={"transparent"} value={this.props.content} style={styles.textInput} onChangeText={this.props.onChangeText}></TextInputWithData>
                     </View>
                 </View>
             );
@@ -209,7 +209,7 @@ EquipmentInfoItem.propTypes = {
     /**
      * 数据变化响应
      */
-    onTextChange: PropTypes.func,
+    onChangeText: PropTypes.func,
     /**
      * 内容变更
      */

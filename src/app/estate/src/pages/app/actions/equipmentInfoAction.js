@@ -91,9 +91,6 @@ export function fetchData(fieldId) {
 function equipmentAcceptanceCompanies(dispatch) {
     API.equipmentAcceptanceCompanies(storage.loadProject())
         .then(responseData => {
-            console.log('====================================');
-            console.log(responseData);
-            console.log('====================================');
             dispatch(_loadingAcceptanceCompaniesSuccess(responseData.data));
         }).catch(error => { })
 }
