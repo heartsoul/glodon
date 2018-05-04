@@ -499,6 +499,7 @@
     if (attr[NSFileSize]) {
       size = attr[NSFileSize];
     }
+    path = fileUrl.absoluteString;
     NSString * md5 = [self.class getMD5WithData:[NSData dataWithContentsOfURL:fileUrl]]; finish(@{@"path":path,@"key":itemid,@"md5":md5,@"name":fileUrl.lastPathComponent,@"length":size});
     return;
   }

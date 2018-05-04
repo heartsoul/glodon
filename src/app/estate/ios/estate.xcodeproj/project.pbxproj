@@ -427,7 +427,7 @@
 		06958CD8208366880015C54F /* GLDPhotoPickerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDPhotoPickerController.m; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* estate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = estate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* BIM协同D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BIM协同D.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = estate/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = estate/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -1324,7 +1324,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* estate.app */,
+				13B07F961A680F5B00A75B9A /* BIM协同D.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1370,7 +1370,7 @@
 			);
 			name = estate;
 			productName = "Hello World";
-			productReference = 13B07F961A680F5B00A75B9A /* estate.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* BIM协同D.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1993,8 +1993,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.soul.estate;
-				PRODUCT_NAME = estate;
+				PRODUCT_BUNDLE_IDENTIFIER = org.soul.estate01;
+				PRODUCT_NAME = "BIM协同D";
 				PROVISIONING_PROFILE = "0774c7dd-a786-4d85-bb42-5c65ab38d911";
 				PROVISIONING_PROFILE_SPECIFIER = "dev-5BWXTQUBDE.org.soul.*";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2021,7 +2021,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.soul.estate;
-				PRODUCT_NAME = estate;
+				PRODUCT_NAME = "BIM协同";
 				PROVISIONING_PROFILE = "0774c7dd-a786-4d85-bb42-5c65ab38d911";
 				PROVISIONING_PROFILE_SPECIFIER = "dev-5BWXTQUBDE.org.soul.*";
 				VERSIONING_SYSTEM = "apple-generic";
