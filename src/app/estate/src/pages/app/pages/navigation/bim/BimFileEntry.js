@@ -1,7 +1,7 @@
 'use strict'
 import { GLDNewMenuView } from 'app-components'
 import * as NewQualityAction from "./../../../actions/NewQualityAction";
-import * as NewEquipmentAction from "./../../../actions/newEquipmentAction";
+import * as NewEquipmentAction from "./../../../actions/equipmentAction";
 
 /**
  * 图纸模型选择及展示入口;
