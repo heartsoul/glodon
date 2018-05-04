@@ -35,6 +35,9 @@ class EquipmentDetailPage extends Component {
                 fetchData(item.value.id);
             }
         }
+        if (nextProps.equipmentInfo.editType != this.props.equipmentInfo.editType) {
+            this.props.navigation.setParams({loadLeftTitle: this.loadLeftTitle,loadRightTitle: this.loadRightTitle,gesturesEnabled: this.gesturesEnabled })
+        }
     }
 
     _onSubmit = (id) => {
@@ -48,13 +51,15 @@ class EquipmentDetailPage extends Component {
     loadRightTitle = () => {
         const equipmentInfo = this.props.equipmentInfo;
         let power = AuthorityManager.isEquipmentCreate()
-        const {editType,id} = equipmentInfo;
+        const {editType,id,preEditType} = equipmentInfo;
         if(!id) {
             if(editType != API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
                 power = false;
             }
         } else {
-            if(editType == API.EQUIPMENT_EDIT_TYPE_BASE ||editType == API.EQUIPMENT_EDIT_TYPE_OTHER || editType == API.EQUIPMENT_EDIT_TYPE_IMAGE) {
+            if(editType == API.EQUIPMENT_EDIT_TYPE_BASE 
+                || editType == API.EQUIPMENT_EDIT_TYPE_OTHER 
+                || editType == API.EQUIPMENT_EDIT_TYPE_IMAGE) {
                 power = false;
             }
         }
@@ -71,7 +76,7 @@ class EquipmentDetailPage extends Component {
         if(preEditType) {
             if(preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
                 let data = {...equipmentInfo, preEditType:null, editType:preEditType};
-                this.props.switchPage(data);
+                this.switchPage(data);
                 // 这里要处理保存操作
                 if(backFun) {
                     backFun(false);
@@ -88,7 +93,7 @@ class EquipmentDetailPage extends Component {
                         p = null
                     }
                     let data = {...equipmentInfo, preEditType:p, editType:preEditType};
-                    this.props.switchPage(data);
+                    this.switchPage(data);
                     // 这里要处理保存操作
                     if(backFun) {
                         backFun(false);
@@ -105,7 +110,9 @@ class EquipmentDetailPage extends Component {
     loadLeftTitle = () => {
         return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
     }
-
+    switchPage = (info) =>{
+        this.props.switchPage(info);
+    }
     
     componentDidMount() {
         const { fetchData } = this.props;
@@ -163,7 +170,7 @@ class EquipmentDetailPage extends Component {
         return (
             <KeyboardAwareScrollView style={{ backgroundColor: '#FAFAFA' }}>
             <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <EquipmentDetailView equipmentInfo={equipmentInfo} switchPage={(info)=>{this.props.switchPage(info)}}/>
+                <EquipmentDetailView equipmentInfo={equipmentInfo} switchPage={this.switchPage}/>
             </KeyboardAwareScrollView>
         );
     }

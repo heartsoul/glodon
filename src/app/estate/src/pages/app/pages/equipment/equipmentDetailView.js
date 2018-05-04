@@ -148,6 +148,10 @@ export default class EquipmentDetailView extends Component {
             <StatusActionButton text='删除' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => this._onDeleteAction(info)} />
         </View>
     }
+    _onConfirmAction (info) {
+        let data = {...info, preEditType:API.EQUIPMENT_EDIT_TYPE_IMAGE, editType:API.EQUIPMENT_EDIT_TYPE_CONFIRM};
+        this.props.switchPage(data); 
+    }
     renderActionNextInfo = (info,nextAction) => {
         if(info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
             // 是编辑
@@ -234,8 +238,16 @@ export default class EquipmentDetailView extends Component {
     }
     render = () => {
         const equipmentInfo = this.props.equipmentInfo;
-        const {editType} = equipmentInfo;
-        if(!editType || editType == API.EQUIPMENT_EDIT_TYPE_BASE) {
+        let {editType} = equipmentInfo;
+        if(!editType) {
+            if(!equipmentInfo.id) {
+                equipmentInfo.editType = API.EQUIPMENT_EDIT_TYPE_BASE;
+            } else {
+                equipmentInfo.editType = API.EQUIPMENT_EDIT_TYPE_CONFIRM;
+            }
+            editType = equipmentInfo.editType;
+         }
+        if(editType == API.EQUIPMENT_EDIT_TYPE_BASE) {
             return this.renderBaseEdit(equipmentInfo);
         }
         if(editType == API.EQUIPMENT_EDIT_TYPE_IMAGE) {
