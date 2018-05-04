@@ -18,6 +18,7 @@ import * as types from '../../../constants/checkPointListTypes';
 
 import * as API from 'app-api'
 import { LeftBarButtons } from "app-components"
+import { BimFileEntry } from 'app-entry';
 
 class CheckPointListPage extends Component {
 
@@ -38,7 +39,12 @@ class CheckPointListPage extends Component {
     
     
     toAddPage= (item) =>{
-        storage.pushNext(this.props.navigation, 'NewPage',{ 'qualityCheckpointId': item.id, 'qualityCheckpointName': item.name }); 
+        let p = this.props.navigation.state.params;
+        if(!p) {
+            p = {};
+        }
+        this.props.navigation.state.params = {...p, qualityCheckpointId: item.id, qualityCheckpointName: item.name };
+        BimFileEntry.newSelect(this.props.navigation)
     }
     toCheckPointInfoPage= (item) =>{
         storage.pushNext(this.props.navigation, 'QualityStatardsPage',{ 'qualityCheckpointId': item.id, 'qualityCheckpointName': item.name }); 

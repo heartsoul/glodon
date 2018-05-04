@@ -31,11 +31,11 @@ export default class SelectCheckPointView extends Component {
 
     componentWillReceiveProps(nextProps) {
         let selectedCheckPoint = this.props.selectedCheckPoint;
-        if (selectedCheckPoint && selectedCheckPoint.id && selectedCheckPoint.id != 0) {
+        if (selectedCheckPoint && selectedCheckPoint.name) {
             this.setState({
                 selectedCheckPoint: selectedCheckPoint,
                 inputName: selectedCheckPoint.name,
-                isShowMark: true,
+                isShowMark: selectedCheckPoint.id && selectedCheckPoint.id != 0,
             })
         }
     }
