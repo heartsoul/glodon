@@ -222,13 +222,17 @@ export default class EquipmentDetailView extends Component {
         </View>
         </View>
     }
+    onChangeSwitch = (value,info) =>{
+        let data = {...info, qualified:(value == true ? true : false)};
+        this.props.switchPage(data);
+    }
     renderImageEdit = (info) => { 
         return<View style={{ paddingTop: 10, paddingBottom: 10 }}> 
             <EquipmentInfoItem leftTitle="您可记录现场图片" leftTitleColor='#00b5f2' showType="headerInfo" />
          <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
             <ImageChooserView files={info.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" />
             <EquipmentInfoItem showType="line" />
-            <Switch onValueChange={(value) => { this.onChangeSwitch(value) }} />   
+            <Text>验收合格:</Text><Switch value={info.qualified == true ? true : false} onValueChange={(value) => { this.onChangeSwitch(value,info) }} />   
         </View>
             <View style={{ marginTop: 20 }}>
             {this.renderActionNextInfo(info,this._toConfirmInfoAction)}
