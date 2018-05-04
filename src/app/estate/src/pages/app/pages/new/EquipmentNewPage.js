@@ -30,7 +30,7 @@ import StarView from "./StarView";
 import * as PageType from '../navigation/bim/PageTypes';
 import * as API from "app-api";
 import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
-import * as NewEquipmentAction from "./../../actions/newEquipmentAction";
+import * as NewEquipmentAction from "./../../actions/equipmentAction";
 import * as UpdateDataAction from "./../../actions/updateDataAction";
 
 import EquipmentNewBaseView from './equipmentNewBaseView'
