@@ -7,28 +7,36 @@ import { Toast } from 'antd-mobile';
  * @param {*} params 
  */
 export function submit(params, navigator) {
+    params.projectId = storage.loadProject();
+    params.projectName = storage.loadCurrentProjectName();
     let fieldId = params.id;//根据单据id区分编辑和新增
     loadingToast();
     return dispatch => {
-        if (fieldId && fieldId != 0) {
-            API.equipmentEditSubmit(storage.loadProject(), fieldId, JSON.stringify(params))
-                .then((responseData) => {
-                    Toast.hide();
-                    storage.goBack(navigator, null);
-                }).catch(error => {
-                    Toast.hide();
-                    console.log(error);
-                })
-        } else {
-            API.equipmentCreateSubmit(storage.loadProject(), JSON.stringify(params))
-                .then((responseData) => {
-                    Toast.hide();
-                    storage.goBack(navigator, null);
-                }).catch(error => {
-                    Toast.hide();
-                    console.log(error);
-                })
-        }
+        uploadFile(params.files, (files) => {
+            if (files) {
+                params.files = files;
+            }
+            if (fieldId && fieldId != 0) {
+                API.equipmentEditSubmit(storage.loadProject(), fieldId, JSON.stringify(params))
+                    .then((responseData) => {
+                        Toast.hide();
+                        storage.goBack(navigator, null);
+                    }).catch(error => {
+                        Toast.hide();
+                        console.log(error);
+                    })
+            } else {
+                API.equipmentCreateSubmit(storage.loadProject(), JSON.stringify(params))
+                    .then((responseData) => {
+                        Toast.hide();
+                        storage.goBack(navigator, null);
+                    }).catch(error => {
+                        Toast.hide();
+                        console.log(error);
+                    })
+            }
+        });
+        
     }
 }
 
@@ -42,27 +50,33 @@ export function save(params) {
     let fieldId = params.id;//根据单据id区分编辑和新增
     loadingToast();
     return dispatch => {
-        if (fieldId && fieldId != 0) {
-            API.equipmentEditSave(storage.loadProject(), fieldId, JSON.stringify(params))
-                .then((responseData) => {
-                    dispatch(_loadSuccess( {...params}));
-                    Toast.hide();
-                }).catch(error => {
-                    Toast.hide();
-                    console.log(error);
-                })
-        } else {
-            API.equipmentCreateSave(storage.loadProject(), JSON.stringify(params))
-                .then((responseData) => {
-                    params.id = responseData.data.id;
-                    params.code = responseData.data.code;
-                    dispatch(_loadSuccess({...params}));
-                    Toast.hide();
-                }).catch(error => {
-                    console.log(error);
-                    Toast.hide();
-                })
-        }
+        uploadFile(params.files, (files) => {
+            if (files) {
+                params.files = files;
+            }
+            if (fieldId && fieldId != 0) {
+                API.equipmentEditSave(storage.loadProject(), fieldId, JSON.stringify(params))
+                    .then((responseData) => {
+                        dispatch(_loadSuccess({ ...params }));
+                        Toast.hide();
+                    }).catch(error => {
+                        Toast.hide();
+                        console.log(error);
+                    })
+            } else {
+                API.equipmentCreateSave(storage.loadProject(), JSON.stringify(params))
+                    .then((responseData) => {
+                        params.id = responseData.data.id;
+                        params.code = responseData.data.code;
+                        dispatch(_loadSuccess({ ...params }));
+                        Toast.hide();
+                    }).catch(error => {
+                        console.log(error);
+                        Toast.hide();
+                    })
+            }
+           
+        });
     }
 }
 
@@ -102,6 +116,47 @@ export function fetchData(fieldId) {
 
     }
 }
+
+/**
+ * 上传图片
+ * @param {*} imageChooserEle 图片组件
+ * @param {*} uploadCallback 
+ */
+function uploadFile(files, uploadCallback) {
+    if (files && files.length > 0) {
+        API.upLoadFiles(files, (code, result) => {
+            if (code === "success") {
+                uploadCallback(result);
+            } else {
+                Toast.hide();
+                Toast.info("上传图片失败", 1);
+            }
+        });
+    } else {
+        uploadCallback();
+    }
+}
+/**
+ * 获取选择模型构件的信息
+ */
+export function getModelElementProperty(relevantEquipmentModle, equipmentInfo) {
+    return dispatch => {
+        API.getModelElementProperty(storage.loadProject(), storage.projectIdVersionId, relevantEquipmentModle.gdocFileId, relevantEquipmentModle.elementId)
+        .then(responseData => {
+            if(!equipmentInfo){
+                equipmentInfo = {};
+            }
+            equipmentInfo.gdocFileId = relevantEquipmentModle.gdocFileId;
+            equipmentInfo.buildingId = relevantEquipmentModle.buildingId;
+            equipmentInfo.buildingName = relevantEquipmentModle.buildingName;
+            equipmentInfo.elementId = relevantEquipmentModle.elementId;
+            equipmentInfo.elementName = responseData.data.data.name;
+            equipmentInfo.approachDate = new Date().getTime();
+            dispatch(_loadSuccess({ ...equipmentInfo }));
+        });
+    }
+}
+
 function loadingToast() {
     Toast.loading('加载中...', 0, null, true);
 }
@@ -132,7 +187,7 @@ function _loading() {
     }
 }
 
-function _loadingAcceptanceCompaniesSuccess(data){
+function _loadingAcceptanceCompaniesSuccess(data) {
     return {
         type: types.EQUIPMENT_ACCEPTANCE_COMPANIES,
         acceptanceCompanies: data,

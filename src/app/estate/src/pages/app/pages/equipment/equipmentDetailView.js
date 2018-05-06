@@ -28,6 +28,7 @@ const standardImage = require("app-images/icon_up_to_standard.png");
 const notStandardImage = require("app-images/icon_not_up_to_standard.png");
 
 var { width, height } = Dimensions.get("window");
+const REF_PHOTO = 'gldPhoto';
 
 export default class EquipmentDetailView extends Component {
 
@@ -42,6 +43,7 @@ export default class EquipmentDetailView extends Component {
         if(!this.props.equipmentInfo.approachDate){
             this.props.equipmentInfo.approachDate = new Date().getTime();
         }
+        this.props.setDetailRef(this);
     }
 
     onOpenModleAction = (info) => {
@@ -52,7 +54,15 @@ export default class EquipmentDetailView extends Component {
         // "gdocFileId": "a5b812dff199438dba5bacee0b373497",
         // alert(inspectionInfo.gdocFileId);
         // storage.pushNext(null, "RelevantModlePage", { title: inspectionInfo.elementName, fileId: inspectionInfo.gdocFileId, pageType: 1, relevantBluePrint: { "data": inspectionInfo } });
-        BimFileEntry.showModelFromDetail(null, info.gdocFileId, info.elementId);
+
+        BimFileEntry.chooseEquipmentModelFromNew(null, 
+            info.gdocFileId, 
+            info.elementId, 
+            info.buildingId, 
+            info.buildingName);
+            //详情页使用下面的方法
+        // BimFileEntry.showModelFromDetail(null, info.gdocFileId, info.elementId);
+        
     }
 
     componentDidMount() {
@@ -94,7 +104,7 @@ export default class EquipmentDetailView extends Component {
         this.props.switchPage(data);
     }
     _onSaveAction = (info) => {
-        this.props.save(info);
+        this.props.save(info, this.refs[REF_PHOTO]);
     }
     _onDeleteAction = (info) => {
         ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消' }, {
@@ -207,6 +217,14 @@ export default class EquipmentDetailView extends Component {
         </View>
     }
     _onConfirmAction(info) {
+        if(!this._checkBasicInfo(info)){
+            return;
+        }
+        this.refs[REF_PHOTO]._loadFile((files) => {
+            info.files = files;
+            let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_IMAGE, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
+            this.props.switchPage(data);
+        });
         let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_IMAGE, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
         this.props.switchPage(data);
     }
@@ -221,7 +239,29 @@ export default class EquipmentDetailView extends Component {
             <StatusActionButton text='下一步' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
         </View>
     }
+    
+    _checkBasicInfo = (info) => {
+        let ret = info && info.acceptanceCompanyName && info.acceptanceCompanyName.length > 0
+                && info.batchCode  && info.batchCode.length > 0
+                && info.approachDate  && info.approachDate > 0
+                && info.facilityCode  && info.facilityCode.length > 0
+                && info.facilityName  && info.facilityName.length > 0
+                console.log('====================================');
+                console.log( info.acceptanceCompanyName && info.acceptanceCompanyName.length);
+                console.log( info.batchCode  && info.batchCode.length > 0);
+                console.log(info.approachDate  && info.approachDate > 0)
+                console.log(info.facilityCode  && info.facilityCode.length > 0)
+                console.log(info.facilityName  && info.facilityName.length > 0)
+           
+                console.log('====================================');
+        return ret;
+    }
+
     _toOtherInfoAction = (info) => {
+        if(!this._checkBasicInfo(info)){
+            return;
+        }
+
         let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_BASE, editType: API.EQUIPMENT_EDIT_TYPE_OTHER };
         this.props.switchPage(data);
         // storage.pushNext(null, "EquipmentDetailPage", { "item": info, editType: info.editType });
@@ -231,8 +271,11 @@ export default class EquipmentDetailView extends Component {
         this.props.switchPage(data);
     }
     _toConfirmInfoAction = (info) => {
-        let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_IMAGE, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
-        this.props.switchPage(data);
+        this.refs[REF_PHOTO]._loadFile((files) => {
+            info.files = files;
+            let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_IMAGE, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
+            this.props.switchPage(data);
+        });
     }
     renderBaseEdit = (info) => {
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
@@ -246,7 +289,7 @@ export default class EquipmentDetailView extends Component {
                     mode="date"
                     title=" "
                     extra=" "
-                    value={new Date(info.approachDate)}
+                    value={info.approachDate ? new Date(info.approachDate):new Date()}
                     onChange={date => { info.approachDate = date.getTime(); this.props.switchPage({ ...info }) }}
                 >
                     <List.Item arrow="horizontal" >
@@ -303,7 +346,7 @@ export default class EquipmentDetailView extends Component {
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
             <EquipmentInfoItem leftTitle="您可记录现场图片" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
-                <ImageChooserView files={info.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" />
+                <ImageChooserView ref={REF_PHOTO}  files={info.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" />
                 <EquipmentInfoItem showType="line" />
                 <Text>验收合格:</Text><Switch value={info.qualified == true ? true : false} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
             </View>
@@ -351,8 +394,8 @@ EquipmentDetailView.propTypes = {
     acceptanceCompanies: PropTypes.any.isRequired,
     switchPage: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
-    submit: PropTypes.func.isRequired,
     equipmentDelete: PropTypes.func.isRequired,
+    setDetailRef: PropTypes.func.isRequired,//外部引用
 }
 
 const styles = StyleSheet.create({

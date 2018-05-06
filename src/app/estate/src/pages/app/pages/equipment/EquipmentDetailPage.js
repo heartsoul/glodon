@@ -15,17 +15,20 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { LeftBarButtons } from "app-components";
 
 import * as actions from '../../actions/equipmentInfoAction'
+import { getModelElementProperty } from "app-api";
 
 class EquipmentDetailPage extends Component {
+    detailRef = null;
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '材设进场记录',
-        gesturesEnabled: navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
-        headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
-        headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null
+        gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
+        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
+        headerRight: navigation.state.params && navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null
     })
     constructor(props) {
         super(props);
         this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle, gesturesEnabled: this.gesturesEnabled })
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -39,6 +42,10 @@ class EquipmentDetailPage extends Component {
         if (nextProps.equipmentInfo.editType != this.props.equipmentInfo.editType) {
             this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle, gesturesEnabled: this.gesturesEnabled })
         }
+        if(nextProps.relevantEquipmentModle != this.props.relevantEquipmentModle){
+            this.props.getModelElementProperty(nextProps.relevantEquipmentModle,this.props.equipmentInfo)
+        }
+
     }
 
     _onSubmit = (info) => {
@@ -126,7 +133,7 @@ class EquipmentDetailPage extends Component {
             }
         }
         fetchData(null);
-
+        this.props.getModelElementProperty(this.props.relevantEquipmentModle,this.props.equipmentInfo)
     }
 
     componentWillUnmount() {
@@ -174,7 +181,7 @@ class EquipmentDetailPage extends Component {
                     acceptanceCompanies={this.props.acceptanceCompanies}
                     switchPage={this.switchPage}
                     save={this.props.save}
-                    submit={this.props.submit}
+                    setDetailRef={(ref)=>{this.detailRef = ref}}
                     equipmentDelete={(params)=>{this.props.equipmentDelete(params, this.props.navigation)}}
                 />
             </KeyboardAwareScrollView>
@@ -202,6 +209,7 @@ export default connect(
         isLoading: state.equipmentInfo.isLoading,
         error: state.equipmentInfo.error,
         updateIndex: state.updateData.updateIndex,
+        relevantEquipmentModle: state.transformInfo.relevantEquipmentModle,
     }),
     dispatch => ({
         fetchData: (fileId) => {
@@ -233,6 +241,11 @@ export default connect(
             if (dispatch) {
                 dispatch(actions.equipmentDelete(fieldId, navigator))
             }
-        }
+        },
+        getModelElementProperty:  (relevantEquipmentModle, equipmentInfo) => {
+            if (dispatch) {
+                dispatch(actions.getModelElementProperty(relevantEquipmentModle, equipmentInfo))
+            }
+        },
     })
 )(EquipmentDetailPage)
