@@ -25,26 +25,24 @@ class EquipmentDetailPage extends Component {
     })
     constructor(props) {
         super(props);
-        this.props.navigation.setParams({loadLeftTitle: this.loadLeftTitle,loadRightTitle: this.loadRightTitle,gesturesEnabled: this.gesturesEnabled })
+        this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle, gesturesEnabled: this.gesturesEnabled })
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.updateIndex != this.props.updateIndex) {
             const { fetchData } = this.props;
             const { item } = this.props.navigation.state.params;
-            if(item && item.value && item.id) {
+            if (item && item.value && item.id) {
                 fetchData(item.value.id);
             }
         }
         if (nextProps.equipmentInfo.editType != this.props.equipmentInfo.editType) {
-            this.props.navigation.setParams({loadLeftTitle: this.loadLeftTitle,loadRightTitle: this.loadRightTitle,gesturesEnabled: this.gesturesEnabled })
+            this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle, gesturesEnabled: this.gesturesEnabled })
         }
     }
 
-    _onSubmit = (id) => {
-        // BimFileEntry.submitEquipmentFromList(id, ()=>{
-        //   console.log("提交完成");
-        // });
+    _onSubmit = (info) => {
+        this.props.submit(info, this.props.navigation)
     }
     gesturesEnabled = () => {
         return false;
@@ -52,51 +50,51 @@ class EquipmentDetailPage extends Component {
     loadRightTitle = () => {
         const equipmentInfo = this.props.equipmentInfo;
         let power = AuthorityManager.isEquipmentCreate()
-        const {editType,id,preEditType} = equipmentInfo;
-        if(!id) {
-            if(editType != API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
+        const { editType, id, preEditType } = equipmentInfo;
+        if (!id) {
+            if (editType != API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
                 power = false;
             }
         } else {
-            if(editType == API.EQUIPMENT_EDIT_TYPE_BASE 
-                || editType == API.EQUIPMENT_EDIT_TYPE_OTHER 
+            if (editType == API.EQUIPMENT_EDIT_TYPE_BASE
+                || editType == API.EQUIPMENT_EDIT_TYPE_OTHER
                 || editType == API.EQUIPMENT_EDIT_TYPE_IMAGE) {
                 power = false;
             }
         }
-        
+
         if (power) {
-            return (<Text onPress={() => this._onSubmit(equipmentInfo.id)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >提交</Text>)
+            return (<Text onPress={() => this._onSubmit(equipmentInfo)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >提交</Text>)
         }
-        
+
         return null;
     }
     needBack = (backFun) => {
         const equipmentInfo = this.props.equipmentInfo;
-        const {editType,preEditType} = equipmentInfo;
-        if(preEditType) {
-            if(preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
-                let data = {...equipmentInfo, preEditType:null, editType:preEditType};
+        const { editType, preEditType } = equipmentInfo;
+        if (preEditType) {
+            if (preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
+                let data = { ...equipmentInfo, preEditType: null, editType: preEditType };
                 this.switchPage(data);
                 // 这里要处理保存操作
-                if(backFun) {
+                if (backFun) {
                     backFun(false);
                 }
                 return;
             } else {
-                if(preEditType === API.EQUIPMENT_EDIT_TYPE_BASE || preEditType === API.EQUIPMENT_EDIT_TYPE_OTHER || preEditType === API.EQUIPMENT_EDIT_TYPE_IMAGE) {
+                if (preEditType === API.EQUIPMENT_EDIT_TYPE_BASE || preEditType === API.EQUIPMENT_EDIT_TYPE_OTHER || preEditType === API.EQUIPMENT_EDIT_TYPE_IMAGE) {
                     let p = null
-                    if(preEditType === API.EQUIPMENT_EDIT_TYPE_IMAGE) {
+                    if (preEditType === API.EQUIPMENT_EDIT_TYPE_IMAGE) {
                         p = API.EQUIPMENT_EDIT_TYPE_OTHER
-                    } else if(preEditType === API.EQUIPMENT_EDIT_TYPE_OTHER) {
+                    } else if (preEditType === API.EQUIPMENT_EDIT_TYPE_OTHER) {
                         p = API.EQUIPMENT_EDIT_TYPE_BASE
-                    } else if(preEditType === API.EQUIPMENT_EDIT_TYPE_BASE) {
+                    } else if (preEditType === API.EQUIPMENT_EDIT_TYPE_BASE) {
                         p = null
                     }
-                    let data = {...equipmentInfo, preEditType:p, editType:preEditType};
+                    let data = { ...equipmentInfo, preEditType: p, editType: preEditType };
                     this.switchPage(data);
                     // 这里要处理保存操作
-                    if(backFun) {
+                    if (backFun) {
                         backFun(false);
                     }
                     return;
@@ -104,31 +102,31 @@ class EquipmentDetailPage extends Component {
             }
         }
         // 这里要处理保存操作
-        if(backFun) {
+        if (backFun) {
             backFun(true);
         }
     }
     loadLeftTitle = () => {
         return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
     }
-    switchPage = (info) =>{
+    switchPage = (info) => {
         this.props.switchPage(info);
     }
-    
+
     componentDidMount() {
         const { fetchData } = this.props;
         const { item } = this.props.navigation.state.params;
-        if(item) {
-            if(item.id) {
+        if (item) {
+            if (item.id) {
                 fetchData(item.id);
                 return;
-            } else if(item.value && item.value.id) {
+            } else if (item.value && item.value.id) {
                 fetchData(item.value.id);
                 return;
             }
-        } 
+        }
         fetchData(null);
-           
+
     }
 
     componentWillUnmount() {
@@ -170,11 +168,14 @@ class EquipmentDetailPage extends Component {
         const equipmentInfo = this.props.equipmentInfo;
         return (
             <KeyboardAwareScrollView style={{ backgroundColor: '#FAFAFA' }}>
-            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <EquipmentDetailView 
-                equipmentInfo={equipmentInfo} 
-                acceptanceCompanies = { this.props.acceptanceCompanies }
-                switchPage={this.switchPage}
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                <EquipmentDetailView
+                    equipmentInfo={equipmentInfo}
+                    acceptanceCompanies={this.props.acceptanceCompanies}
+                    switchPage={this.switchPage}
+                    save={this.props.save}
+                    submit={this.props.submit}
+                    equipmentDelete={(params)=>{this.props.equipmentDelete(params, this.props.navigation)}}
                 />
             </KeyboardAwareScrollView>
         );
@@ -218,6 +219,20 @@ export default connect(
                 dispatch(actions.switchPage(equipmentInfo))
             }
         },
-        
+        save: (params) => {
+            if (dispatch) {
+                dispatch(actions.save(params))
+            }
+        },
+        submit: (params, navigator) => {
+            if (dispatch) {
+                dispatch(actions.submit(params, navigator))
+            }
+        },
+        equipmentDelete: (fieldId, navigator) => {
+            if (dispatch) {
+                dispatch(actions.equipmentDelete(fieldId, navigator))
+            }
+        }
     })
 )(EquipmentDetailPage)

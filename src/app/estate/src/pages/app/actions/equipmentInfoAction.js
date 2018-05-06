@@ -1,26 +1,31 @@
 import * as API from 'app-api'
 import * as types from '../constants/equipmentInfoTypes'
+import { Toast } from 'antd-mobile';
 
 /**
  * 提交材设单 新增时的response {"id": 5200418,"code": "CSYS_20180504_002"}，编辑时response未测试。
  * @param {*} params 
  */
-export function submit(params) {
+export function submit(params, navigator) {
     let fieldId = params.id;//根据单据id区分编辑和新增
-    fieldId = 0;//单据的id
+    loadingToast();
     return dispatch => {
         if (fieldId && fieldId != 0) {
-            API.equipmentEditSubmit(storage.loadProject(), fieldId, params)
+            API.equipmentEditSubmit(storage.loadProject(), fieldId, JSON.stringify(params))
                 .then((responseData) => {
-
+                    Toast.hide();
+                    storage.goBack(navigator, null);
                 }).catch(error => {
+                    Toast.hide();
                     console.log(error);
                 })
         } else {
-            API.equipmentCreateSubmit(storage.loadProject(), params)
+            API.equipmentCreateSubmit(storage.loadProject(), JSON.stringify(params))
                 .then((responseData) => {
-
+                    Toast.hide();
+                    storage.goBack(navigator, null);
                 }).catch(error => {
+                    Toast.hide();
                     console.log(error);
                 })
         }
@@ -32,22 +37,30 @@ export function submit(params) {
  * @param {*} params 
  */
 export function save(params) {
+    params.projectId = storage.loadProject();
+    params.projectName = storage.loadCurrentProjectName();
     let fieldId = params.id;//根据单据id区分编辑和新增
-    fieldId = 0;//单据的id
+    loadingToast();
     return dispatch => {
         if (fieldId && fieldId != 0) {
-            API.equipmentEditSave(storage.loadProject(), fieldId, params)
+            API.equipmentEditSave(storage.loadProject(), fieldId, JSON.stringify(params))
                 .then((responseData) => {
-
+                    dispatch(_loadSuccess( {...params}));
+                    Toast.hide();
                 }).catch(error => {
+                    Toast.hide();
                     console.log(error);
                 })
         } else {
-            API.equipmentCreateSave(storage.loadProject(), params)
+            API.equipmentCreateSave(storage.loadProject(), JSON.stringify(params))
                 .then((responseData) => {
-
+                    params.id = responseData.data.id;
+                    params.code = responseData.data.code;
+                    dispatch(_loadSuccess({...params}));
+                    Toast.hide();
                 }).catch(error => {
                     console.log(error);
+                    Toast.hide();
                 })
         }
     }
@@ -57,13 +70,15 @@ export function save(params) {
  * 删除，response no content
  * @param {*} fieldId 单据id 
  */
-export function equipmentDelete(fieldId) {
+export function equipmentDelete(fieldId, navigator) {
     return dispatch => {
         API.equipmentDelete(storage.loadProject(), fieldId)
             .then((responseData) => {
-
+                Toast.hide();
+                storage.goBack(navigator, null);
             }).catch(error => {
                 console.log(error);
+                Toast.hide();
             })
     }
 }
@@ -86,6 +101,9 @@ export function fetchData(fieldId) {
         });
 
     }
+}
+function loadingToast() {
+    Toast.loading('加载中...', 0, null, true);
 }
 
 function equipmentAcceptanceCompanies(dispatch) {

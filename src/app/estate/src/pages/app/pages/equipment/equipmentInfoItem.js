@@ -25,7 +25,7 @@ export default class EquipmentInfoItem extends React.Component {
                         <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                     </View>
                     <View style={styles.contentInputView}>
-                        <TextInputWithData  underlineColorAndroid={"transparent"} value={this.props.content} style={styles.textInput} onChangeText={this.props.onChangeText}></TextInputWithData>
+                        <TextInputWithData  returnKeyType="next" underlineColorAndroid={"transparent"} defaultValue={this.props.content} style={styles.textInput} onChangeText={this.props.onChangeText}></TextInputWithData>
                     </View>
                 </View>
             );
@@ -36,7 +36,7 @@ export default class EquipmentInfoItem extends React.Component {
                 <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={styles.contentInputView}>
-                    <TextInputWithData value={this.props.content} style={styles.textInput}></TextInputWithData>
+                    <TextInputWithData defaultValue={this.props.content} style={styles.textInput}></TextInputWithData>
                 </View>
                 <TouchableOpacity style={styles.rightAction} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                         <Image source={rightImage} style={styles.infoMark} />
