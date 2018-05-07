@@ -47,7 +47,10 @@ class EquipmentListView extends PureComponent {
     }
 
     componentWillReceiveProps= (nextProps) =>{
-
+        if (nextProps.updateIndex != this.props.updateIndex ) {
+            this._fetchData(this.props.qcState, 0);
+            return true;
+        }
         return true;
     }
 
