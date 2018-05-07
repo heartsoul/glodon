@@ -1162,11 +1162,11 @@ function demoDataEquipment(size) {
             "batchCode": "batchCode " + i,
             "facilityCode": "facilityCode " + i,
             "facilityName": "facilityName " + i,
-            "qualified": i%3 == 1 ? true : false,
-            "committed": i%5 == 1 ? false : true,
-            "qcState": i%5 == 1 ? CONSTANT.QC_STATE_EDIT : "",
+            "qualified": i % 3 == 1 ? true : false,
+            "committed": i % 5 == 1 ? false : true,
+            "qcState": i % 5 == 1 ? CONSTANT.QC_STATE_EDIT : "",
             "approachDate": t,
-            "updateTime": t+1000
+            "updateTime": t + 1000
         });
     }
     return { "data": { "content": ret, 'last': false } };
@@ -1239,13 +1239,13 @@ function demoDataEquipment(size) {
  */
 export async function equipmentList(projectId, qcState, page, size, sort) {
     // return demoDataEquipment(100);
-    if(qcState == CONSTANT.QC_STATE_EDIT) {
+    if (qcState == CONSTANT.QC_STATE_EDIT) {
         return equipmentListCommitted(projectId, page, size, sort, false)
     }
-    if(qcState == CONSTANT.QC_STATE_STANDARD) {
+    if (qcState == CONSTANT.QC_STATE_STANDARD) {
         return equipmentListQualified(projectId, page, size, sort, true, true)
     }
-    if(qcState == CONSTANT.QC_STATE_NOT_STANDARD) {
+    if (qcState == CONSTANT.QC_STATE_NOT_STANDARD) {
         return equipmentListQualified(projectId, page, size, sort, true, false)
     }
     let filter = `?page=${page}&size=${size}&sort=${sort}`;
@@ -1291,6 +1291,35 @@ function equipmentListQualified(projectId, page, size, sort, committed, qualifie
 export async function equipmentListNum(projectId) {
     let api = `/quality/${projectId}/facilityAcceptance/state/summary`;
     return requestJSON(api, {
+        method: 'GET',
+    });
+}
+/**
+ * 搜索质检单
+ * @param {*} projectId 
+ * @param {*} keywords 
+ * @param {*} page 
+ * @param {*} size 
+ */
+export async function searchQualityData(projectId, keywords, page, size) {
+    let api = `/quality/${projectId}/qualityInspection/fuzzyMatchResults`;
+    let filter = `?keywords=${keywords}&page=${page}&size=${size}`;
+    return requestJSON(api + filter, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 搜索材设单 
+ * @param {*} projectId 
+ * @param {*} keywords 
+ * @param {*} page 
+ * @param {*} size 
+ */
+export async function searchEquipmentData(projectId, keywords, page, size) {
+    let api = `/quality/${projectId}/facilityAcceptance/fuzzyMatchResults`;
+    let filter = `?keywords=${keywords}&page=${page}&size=${size}`;
+    return requestJSON(api + filter, {
         method: 'GET',
     });
 }

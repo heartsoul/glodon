@@ -10,6 +10,7 @@ import equipmentList from '../app/reducers/equipmentListReducer'
 import equipmentInfo from '../app/reducers/equipmentInfoReducer' 
 import equipmentNew from '../app/reducers/equipmentNewReducer' 
 import projectList from '../app/reducers/projectReducer' 
+import search from '../app/reducers/searchReducer' 
 const rootReducer = combineReducers({
   loginIn,
   checkPointList,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   equipmentInfo,
   projectList,
   equipmentNew,
+  search,
 })
 
 export default rootReducer
