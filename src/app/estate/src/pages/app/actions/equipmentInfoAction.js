@@ -1,6 +1,7 @@
 import * as API from 'app-api'
 import * as types from '../constants/equipmentInfoTypes'
 import { Toast } from 'antd-mobile';
+import * as UpdateDataAction from "./updateDataAction";
 
 /**
  * 提交材设单 新增时的response {"id": 5200418,"code": "CSYS_20180504_002"}，编辑时response未测试。
@@ -20,6 +21,7 @@ export function submit(params, navigator) {
                 API.equipmentEditSubmit(storage.loadProject(), fieldId, JSON.stringify(params))
                     .then((responseData) => {
                         Toast.hide();
+                        dispatch(UpdateDataAction.updateData());
                         storage.goBack(navigator, null);
                     }).catch(error => {
                         Toast.hide();
@@ -29,6 +31,7 @@ export function submit(params, navigator) {
                 API.equipmentCreateSubmit(storage.loadProject(), JSON.stringify(params))
                     .then((responseData) => {
                         Toast.hide();
+                        dispatch(UpdateDataAction.updateData());
                         storage.goBack(navigator, null);
                     }).catch(error => {
                         Toast.hide();
@@ -56,7 +59,9 @@ export function save(params) {
             }
             if (fieldId && fieldId != 0) {
                 API.equipmentEditSave(storage.loadProject(), fieldId, JSON.stringify(params))
-                    .then((responseData) => {
+                    .then((responseData) => 
+                    {
+                        dispatch(UpdateDataAction.updateData());
                         dispatch(_loadSuccess({ ...params }));
                         Toast.hide();
                     }).catch(error => {
@@ -68,6 +73,7 @@ export function save(params) {
                     .then((responseData) => {
                         params.id = responseData.data.id;
                         params.code = responseData.data.code;
+                        dispatch(UpdateDataAction.updateData());
                         dispatch(_loadSuccess({ ...params }));
                         Toast.hide();
                     }).catch(error => {
@@ -89,6 +95,7 @@ export function equipmentDelete(fieldId, navigator) {
         API.equipmentDelete(storage.loadProject(), fieldId)
             .then((responseData) => {
                 Toast.hide();
+                dispatch(UpdateDataAction.updateData());
                 storage.goBack(navigator, null);
             }).catch(error => {
                 console.log(error);

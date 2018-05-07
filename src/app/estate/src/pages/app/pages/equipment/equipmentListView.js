@@ -47,7 +47,10 @@ class EquipmentListView extends PureComponent {
     }
 
     componentWillReceiveProps= (nextProps) =>{
-
+        if (nextProps.updateIndex != this.props.updateIndex ) {
+            this._fetchData(this.props.qcState, 0);
+            return true;
+        }
         return true;
     }
 
@@ -77,11 +80,11 @@ class EquipmentListView extends PureComponent {
     }
     onCellAction = (item, index, type) => {
         if(type == 'delete') {
-            this.props.deleteData(this.props.qcState,item.value.id, item.value.inspectionType)
+            this.props.deleteData(item.value.id)
             return;
         }
         if(type == 'submit') {
-            this.props.submitData(this.props.qcState,item.value.id, item.value.inspectionType)
+            this.props.submitData(item.value.id)
             return;
         }
         
@@ -214,14 +217,14 @@ function mapStateToProps(state) {
             dispatch(actions.reset(qcState,qualityCheckpointId,qualityCheckpointName))
           }
         },
-        deleteData: (qcState, inspectId, inspectionType,qualityCheckpointId,qualityCheckpointName) =>{
+        deleteData: (id) =>{
             if(dispatch) {
-              dispatch(actions.deleteData(qcState, inspectId, inspectionType,qualityCheckpointId,qualityCheckpointName))
+              dispatch(actions.deleteData(id))
             }
           },
-        submitData: (qcState, inspectId, inspectionType,qualityCheckpointId,qualityCheckpointName) =>{
+        submitData: (id) =>{
             if(dispatch) {
-              dispatch(actions.submitData(qcState, inspectId, inspectionType,qualityCheckpointId,qualityCheckpointName))
+              dispatch(actions.submitData(id))
             }
           },
       }
