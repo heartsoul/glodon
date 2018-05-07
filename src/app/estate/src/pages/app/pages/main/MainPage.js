@@ -69,11 +69,13 @@ export default class extends Component {
         //请求数据
         // this.fetchData();
         // console.log("componentDidMount")
+        this.scrollToPage(0);
     }
     fetchData = () => {
         this.render()
     }
     scrollToPage = (index) => {
+        console.log("index ============= "+index)
         if (parseInt('' + index) != parseInt('' + this.refs.carousel.activeIndex)) {
             this.refs.carousel.scrollToPage(index);
         }
@@ -97,14 +99,14 @@ export default class extends Component {
                     <Carousel ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
                     {
                         qShow ? <View style={styles.topImageView}>
-                        <Image style={[styles.topImage,{width:121,height:87}]} source={require('app-images/icon_main_page_top_quality.png')} />
+                        <Image style={[styles.topImage,{width:27,height:74}]} source={require('app-images/icon_main_page_top_quality.png')} />
                         </View>
                         : null
                     }
                      {
                         eShow ? 
                         <View style={styles.topImageView}>
-                        <Image style={[styles.topImage,{width:27,height:74}]} source={require('app-images/icon_main_page_top_equipment.png')} />
+                        <Image style={[styles.topImage,{width:121,height:87}]} source={require('app-images/icon_main_page_top_equipment.png')} />
                         </View>
                         : null
                     }
