@@ -1,28 +1,34 @@
 import * as API from 'app-api'
 
 import * as types from '../constants/equipmentListTypes'
+import * as UpdateDataAction from "./updateDataAction";
 
 // 删除草稿
-export function deleteData(qcState, id) {
+export function deleteData(id) {
   return dispatch => {
     API.equipmentDelete(storage.loadProject(), id)
-      .then(data => {
-        __fetchData(qcState, 0, new Map(), dispatch)
-      }).catch(error => {
-        dispatch(_loadError(error, qcState, 0));
-      });
-  }
+        .then((responseData) => {
+            dispatch(UpdateDataAction.updateData());
+        }).catch(error => {
+            console.log(error);
+        })
+    }
 }
-export function submitData(qcState, id) {
+
+export function submitData(id) {
   return dispatch => {
-    BimFileEntry.submitEquipmentFromList(id, (data) => {
-      // data { res: "error", data: err } { res: "success", data: "" }
-      if(data.res === "success"){
-          dispatch(updateAction.updateData())
-      } else {
-          dispatch(_loadError(data.data, qcState, 0));
-      }
-  })
+    API.equipmentDetail(storage.loadProject(), id).then((responseData) => {
+        let params = responseData.data;
+        API.equipmentEditSubmit(storage.loadProject(), id, JSON.stringify(params))
+        .then((responseData) => {
+            dispatch(UpdateDataAction.updateData());
+        }).catch(error => {
+            console.log(error);
+        })
+    }).catch(error => {
+        console.log(error)
+    });
+   
   }
 }
 
