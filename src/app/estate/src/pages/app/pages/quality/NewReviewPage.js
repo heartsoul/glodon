@@ -243,7 +243,7 @@ class NewReviewPage extends Component {
                     underlineColorAndroid={"transparent"}
                     textAlign="left"
                     onChangeText={(text) => { this.setState({ description: text }) }}
-                    value={(typeof this.state.description === 'string') ? (this.state.description) : ('')}
+                    defaultValue={(typeof this.state.description === 'string') ? (this.state.description) : ('')}
                 />
 
                 <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" onChange={() => alert('收到!')} />

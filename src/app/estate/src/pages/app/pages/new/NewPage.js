@@ -178,7 +178,7 @@ class NewPage extends React.Component {
         NewQualityAction.submit(requestParams, this.refs[REF_PHOTO], navigation, (params) => {
             this.setState(params);
             this.props.updateData();
-        });
+        }, this.props.updateData);
     }
 
     //保存

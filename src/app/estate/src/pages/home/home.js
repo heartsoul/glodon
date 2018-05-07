@@ -98,8 +98,10 @@ export default class extends React.Component {
     let title = this.props.navigation.getParam(title);
     if(page == CONSTANTS.PAGE_INNDX_HOME) {
       return ({
-        title:title ? title : CONSTANTS.PAGE_NAME_HOME,
-        headerRight:(<SearchaBarItem navigation={this.props.navigation}/>)
+        // title:title ? title : CONSTANTS.PAGE_NAME_HOME,
+        headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>{title ? title : storage.loadCurrentProjectName()}</Text>),
+        headerRight:(<SearchaBarItem navigation={this.props.navigation}/>),
+        headerLeft: <View></View>,
         // header: {mode:'screen'},
       })
     } 

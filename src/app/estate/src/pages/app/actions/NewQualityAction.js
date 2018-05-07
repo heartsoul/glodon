@@ -198,7 +198,7 @@ function uploadFile(imageChooserEle, uploadCallback) {
  * state NewPage的state
  * @param {*} navigator navigator
  */
-export function submit(requestParams, imageChooserEle, navigator, callback) {
+export function submit(requestParams, imageChooserEle, navigator, callback, updateData) {
     let params = assembleParams(requestParams);
     if (checkMustInfo(params, callback)) {
         loadingToast();
@@ -208,9 +208,9 @@ export function submit(requestParams, imageChooserEle, navigator, callback) {
             }
             //区分新增提交和编辑提交
             if (params.inspectId === 0) {
-                createSubmitInspection(params, navigator);
+                createSubmitInspection(params, navigator, updateData);
             } else {
-                editSubmitInspection(params, navigator);
+                editSubmitInspection(params, navigator, updateData);
             }
         });
 
@@ -242,10 +242,13 @@ export function submitFromList(inspectId, callback) {
  * 检查单 新增 提交
  * @param {*} params 
  */
-function createSubmitInspection(params, navigator) {
+function createSubmitInspection(params, navigator, updateData) {
     let requestParams = JSON.stringify(params);
     API.createSubmitInspection(storage.loadProject(), params.inspectionType, requestParams)
         .then(data => {
+            if(updateData){
+                updateData();
+            }
             Toast.hide();
             if (data && data.data && data.data.id) {
                 storage.goBack(navigator, null);
@@ -258,10 +261,13 @@ function createSubmitInspection(params, navigator) {
 /**
  * 检查单 编辑   提交
  */
-function editSubmitInspection(params, navigator) {
+function editSubmitInspection(params, navigator, updateData) {
     let requestParams = JSON.stringify(params);
     API.editSubmitInspection(storage.loadProject(), params.inspectId, params.inspectionType, requestParams)
         .then(data => {
+            if(updateData){
+                updateData();
+            }
             Toast.hide();
             storage.goBack(navigator, null);
         }).catch(err => {
