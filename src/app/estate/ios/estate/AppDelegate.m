@@ -32,6 +32,7 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  self.window.tintColor = [UIColor colorWithRed:0x00/255.0f green:0xba/255.0f blue:0xfa/255.0f alpha:0xff/255.0f];
   self.window.backgroundColor = [UIColor whiteColor];
   [UINavigationBar appearance].backIndicatorImage = [UIImage imageNamed:@"icon_fanhui"];
   [UINavigationBar appearance].backIndicatorTransitionMaskImage = [UIImage imageNamed:@"icon_fanhui"];

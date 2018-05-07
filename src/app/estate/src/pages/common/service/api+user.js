@@ -23,6 +23,16 @@ const api_pmbasic_projects_available = '/pmbasic/projects/available'; // GET pag
 // 设置当前选中的租户
 const api_user_currentTenant = '/user/currentTenant'; // PUT tenantId=
 
+// {
+// 	"name": "1",
+// 	"email": "2@1.com",
+// 	"title": "sss",
+// 	"content": "xxx"
+// }
+const api_backend_feedbacks = '/backend/feedbacks'; // POST 
+
+
+
 // 用户登录
 export async function login(username, password) {
     // console.log(requestHTML);
@@ -71,5 +81,18 @@ export async function loginOut() {
 export async function uaaLoginOut() {
     return requestHTML(api_uaa_logout, {
         method: 'GET',
+    });
+}
+
+// {
+// 	"name": "1",
+// 	"email": "2@1.com",
+// 	"title": "sss",
+// 	"content": "xxx"
+// }
+export async function feedbacks(jsonData) {
+    return requestJSON(api_backend_feedbacks, {
+        method: 'POST',
+        body: JSON.stringify(jsonData),
     });
 }
