@@ -18,7 +18,6 @@ import * as actions from '../../actions/equipmentInfoAction'
 import { getModelElementProperty } from "app-api";
 
 class EquipmentDetailPage extends Component {
-    detailRef = null;
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '材设进场记录',
         gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
@@ -27,6 +26,10 @@ class EquipmentDetailPage extends Component {
     })
     constructor(props) {
         super(props);
+        const { item } = this.props.navigation.state.params;
+        this.state = {
+            committed: item && item.value &&item.value.committed,
+        };
         this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle, gesturesEnabled: this.gesturesEnabled })
 
     }
@@ -42,8 +45,8 @@ class EquipmentDetailPage extends Component {
         if (nextProps.equipmentInfo.editType != this.props.equipmentInfo.editType) {
             this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle, gesturesEnabled: this.gesturesEnabled })
         }
-        if(nextProps.relevantEquipmentModle != this.props.relevantEquipmentModle){
-            this.props.getModelElementProperty(nextProps.relevantEquipmentModle,this.props.equipmentInfo)
+        if (nextProps.relevantEquipmentModle != this.props.relevantEquipmentModle) {
+            this.props.getModelElementProperty(nextProps.relevantEquipmentModle, this.props.equipmentInfo)
         }
 
     }
@@ -56,7 +59,7 @@ class EquipmentDetailPage extends Component {
     }
     loadRightTitle = () => {
         const equipmentInfo = this.props.equipmentInfo;
-        let power = AuthorityManager.isEquipmentCreate()
+        let power = AuthorityManager.isEquipmentCreate() && !this.state.committed;
         const { editType, id, preEditType } = equipmentInfo;
         if (!id) {
             if (editType != API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
@@ -133,7 +136,7 @@ class EquipmentDetailPage extends Component {
             }
         }
         fetchData(null);
-        this.props.getModelElementProperty(this.props.relevantEquipmentModle,this.props.equipmentInfo)
+        this.props.getModelElementProperty(this.props.relevantEquipmentModle, this.props.equipmentInfo)
     }
 
     componentWillUnmount() {
@@ -177,12 +180,12 @@ class EquipmentDetailPage extends Component {
             <KeyboardAwareScrollView style={{ backgroundColor: '#FAFAFA' }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <EquipmentDetailView
+                    committed={this.state.committed}
                     equipmentInfo={equipmentInfo}
                     acceptanceCompanies={this.props.acceptanceCompanies}
                     switchPage={this.switchPage}
                     save={this.props.save}
-                    setDetailRef={(ref)=>{this.detailRef = ref}}
-                    equipmentDelete={(params)=>{this.props.equipmentDelete(params, this.props.navigation)}}
+                    equipmentDelete={(params) => { this.props.equipmentDelete(params, this.props.navigation) }}
                 />
             </KeyboardAwareScrollView>
         );
@@ -242,7 +245,7 @@ export default connect(
                 dispatch(actions.equipmentDelete(fieldId, navigator))
             }
         },
-        getModelElementProperty:  (relevantEquipmentModle, equipmentInfo) => {
+        getModelElementProperty: (relevantEquipmentModle, equipmentInfo) => {
             if (dispatch) {
                 dispatch(actions.getModelElementProperty(relevantEquipmentModle, equipmentInfo))
             }

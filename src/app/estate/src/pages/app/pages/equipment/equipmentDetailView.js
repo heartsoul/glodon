@@ -30,6 +30,7 @@ const notStandardImage = require("app-images/icon_not_up_to_standard.png");
 var { width, height } = Dimensions.get("window");
 const REF_PHOTO = 'gldPhoto';
 
+
 export default class EquipmentDetailView extends Component {
 
     constructor(props) {
@@ -43,7 +44,6 @@ export default class EquipmentDetailView extends Component {
         if(!this.props.equipmentInfo.approachDate){
             this.props.equipmentInfo.approachDate = new Date().getTime();
         }
-        this.props.setDetailRef(this);
     }
 
     onOpenModleAction = (info) => {
@@ -152,7 +152,7 @@ export default class EquipmentDetailView extends Component {
 
 
     renderBaseInfo = (info) => {
-        let power = AuthorityManager.isEquipmentModify();
+        let power = AuthorityManager.isEquipmentModify() && !this.props.committed;
         return <View style={{ paddingTop: 20, paddingBottom: 10, backgroundColor: '#ffffff' }}>
             <EquipmentInfoItem leftTitle="基本信息" showType="headerInfo"
                 onClick={power ? () => { this._onOpenEditBaseInfoAction(info); } : null} />
@@ -166,7 +166,7 @@ export default class EquipmentDetailView extends Component {
         </View>
     }
     renderOtherInfo = (info) => {
-        let power = AuthorityManager.isEquipmentModify();
+        let power = AuthorityManager.isEquipmentModify()  && !this.props.committed;
         return <View style={{ marginTop: 20, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
             <EquipmentInfoItem leftTitle="其他信息" showType="headerInfo"
                 onClick={power ? () => { this._onOpenEditOtherInfoAction(info); } : null} />
@@ -185,7 +185,7 @@ export default class EquipmentDetailView extends Component {
     }
 
     renderImageInfo = (info) => {
-        let power = AuthorityManager.isEquipmentModify();
+        let power = AuthorityManager.isEquipmentModify()  && !this.props.committed;
         let image = null;
         if ((info.files && info.files.length)) {
             let urls = [];
@@ -203,13 +203,14 @@ export default class EquipmentDetailView extends Component {
         </View>
     }
     renderActionSaveInfo = (info) => {
-        let power = AuthorityManager.isEquipmentModify();
+        let power = AuthorityManager.isEquipmentModify()  && !this.props.committed;
+        if (!power) return null;
         return <View style={{ marginTop: 20 }}>
             <StatusActionButton text='保存' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => this._onSaveAction(info)} />
         </View>
     }
     renderActionDeleteInfo = (info) => {
-        let power = AuthorityManager.isEquipmentDelete();
+        let power = AuthorityManager.isEquipmentDelete()  && !this.props.committed;
         if (!power || !info.id) return null;
 
         return <View style={{ marginTop: 20 }}>
@@ -401,7 +402,7 @@ EquipmentDetailView.propTypes = {
     switchPage: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
     equipmentDelete: PropTypes.func.isRequired,
-    setDetailRef: PropTypes.func.isRequired,//外部引用
+    committed:PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
