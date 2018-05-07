@@ -192,7 +192,7 @@ export default class EquipmentDetailView extends Component {
             info.files.map((file, index) => {
                 urls.push(file.url);
             })
-            image = urls.length > 1 ? (<EquipmentInfoItem url={urls[0]} showType="image" />) : (<EquipmentInfoItem urls={urls} showType="images" />);
+            image = urls.length > 1 ? (<EquipmentInfoItem urls={urls} showType="images" />) : (<EquipmentInfoItem url={urls[0]} showType="image" />);
         }
 
         return <View style={{ marginTop: 20, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
@@ -221,6 +221,7 @@ export default class EquipmentDetailView extends Component {
             return;
         }
         this.refs[REF_PHOTO]._loadFile((files) => {
+            this._addUrlPropsToFiles(files);
             info.files = files;
             let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_IMAGE, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
             this.props.switchPage(data);
@@ -246,14 +247,6 @@ export default class EquipmentDetailView extends Component {
                 && info.approachDate  && info.approachDate > 0
                 && info.facilityCode  && info.facilityCode.length > 0
                 && info.facilityName  && info.facilityName.length > 0
-                console.log('====================================');
-                console.log( info.acceptanceCompanyName && info.acceptanceCompanyName.length);
-                console.log( info.batchCode  && info.batchCode.length > 0);
-                console.log(info.approachDate  && info.approachDate > 0)
-                console.log(info.facilityCode  && info.facilityCode.length > 0)
-                console.log(info.facilityName  && info.facilityName.length > 0)
-           
-                console.log('====================================');
         return ret;
     }
 
@@ -272,13 +265,26 @@ export default class EquipmentDetailView extends Component {
     }
     _toConfirmInfoAction = (info) => {
         this.refs[REF_PHOTO]._loadFile((files) => {
+            this._addUrlPropsToFiles(files);
             info.files = files;
             let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_IMAGE, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
             this.props.switchPage(data);
         });
     }
+
+    _addUrlPropsToFiles(files){
+        files.map((item)=>{
+            let url = item.path;;
+            if(!item.path.startsWith("http")){
+                url = "file://" + url;
+            }
+            item.url = url;
+        })
+    }
+
     renderBaseEdit = (info) => {
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
+        
             <EquipmentInfoItem leftTitle="请依次完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
 
