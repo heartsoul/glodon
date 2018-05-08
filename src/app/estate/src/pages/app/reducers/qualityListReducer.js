@@ -83,6 +83,14 @@ const initialState = {
             hasMore: true,
             data: [],
             dataMap: new Map(),
+        },
+        "search": {
+            page: 0,
+            isLoading: true,
+            error: null,
+            hasMore: true,
+            data: [],
+            dataMap: new Map(),
         }
     },
     datas_n: {
@@ -164,6 +172,14 @@ const initialState = {
             hasMore: true,
             data: [],
             dataMap: new Map(),
+        },
+        "search": {
+            page: 0,
+            isLoading: true,
+            error: null,
+            hasMore: true,
+            data: [],
+            dataMap: new Map(),
         }
     },
 
@@ -173,6 +189,7 @@ export default (state = initialState, action) => {
 
     switch (action.type) {
         case types.QUALITY_LIST_DOING: {
+
             let dataItem = state.datas[action.qcState]
             if (!dataItem) {
                 dataItem = initialState.datas[""]
@@ -202,6 +219,8 @@ export default (state = initialState, action) => {
         }
 
         case types.QUALITY_LIST_DONE: {
+            console.log(action.qcState+"QUALITY_LIST_DONE----------")
+
             let dataItem = state.datas[action.qcState]
             if (!dataItem) {
                 dataItem = initialState.datas[""]

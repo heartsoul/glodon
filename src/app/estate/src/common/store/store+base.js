@@ -347,6 +347,17 @@ class GLDStorage extends BaseStorage {
         bimChooserKey: '',//选择图纸模型的时候记录目录页面的初始navigation key，goBack from this page.
         bimChooserCallback: () => { },//选择图纸模型后的回调
     };
+
+    // 获取单据搜索历史
+    loadSearchHistory = () => {
+        let history = this.getItem(__KEY_searchHistory+userId());
+        return history;
+    }
+    // 保存单据搜索历史
+    setSearchHistory = (history) => {
+        this.setItem(__KEY_searchHistory+userId(), history);
+    }
+    
 }
 // 全局变量
 if (!global.storage) {
@@ -374,3 +385,4 @@ const __KEY_currentProjectName = "currentProjectName"; // 当前选择项目名
 const __KEY_currentTenant = "currentTenant"; // 当前租户
 const __KEY_lastTenant = "lastTenant"; // 上一选择租户
 const __KEY_actionRights = "actionRights"; // 当前所有权限
+const __KEY_searchHistory = "searchHistory"; // 单据搜索历史

@@ -1,71 +1,157 @@
 'use strict';
 import React, { Component } from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  StatusBar,
-  SafeAreaView,
-  Dimensions
+    StyleSheet,
+    Text,
+    View,
+    StatusBar,
+    SafeAreaView,
+    ScrollView
 } from 'react-native';
-import { SearchBar } from 'antd-mobile';
-var { width, height } = Dimensions.get("window");
+import { connect } from 'react-redux';
+import * as API from "app-api";
 
-import SearchBarStyle from 'antd-mobile/lib/search-bar/style/index.native';
-const ss =  {
-  ...SearchBarStyle,
-  inputWrapper:{
-    ...SearchBarStyle.inputWrapper,
-    backgroundColor:"#00baf3"
-  }
-}
+import BaseSearchPage from "./BaseSearchPage"
+import * as SearchAction from "./../../actions/searchAction";
+import QualityListCell from "./../quality/qualityListCell";
+import EquipmentListCell from "./../equipment/equipmentListCell";
 
-export default class extends React.Component {
-  static navigationOptions = {
-    headerStyle:{marginLeft:-100,marginRight:-100,backgroundColor:"#efeff4"},
-    headerLeft: <View ></View>,
-    headerRight: <View></View>,
-    headerTitle: <View style={{flex:1,alignItems:"center"}}>
-    <View style={{width:width,alignItems:"center"}}>
-      <SearchBar style={StyleSheet.create(ss).inputWrapper} placeholder="Search" />
-    </View>
-    </View>,
-  };
+class SearchPage extends BaseSearchPage {
 
-  constructor() {
-    super();
-    // variables.search_bar_fill = "#00baf3";
+    constructor(props) {
+        super(props);
+        super.setFunc(this.renderContent,this.props.search)
+    };
+    
+    onCellAction = () => {
 
-  };
-  componentDidMount() {
-    console.log('====================================');
-    console.log(SearchBarStyle.wrapper);
-    console.log(StyleSheet.create(ss));
-    console.log('====================================');
-  }
-  render() {
-    return (
-      <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
-        <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-        <View style={{position:"absolute",marginTop:-44}}>
-          <SearchBar placeholder="Search" maxLength={8} />
+    }
 
-        </View>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-          <Text style={styles.text}> 敬请期待 </Text>
-        </View>
-      </SafeAreaView>
+    /**
+     * 设置给BaseSearchView的content
+     */
+    renderContent() {
+        return (
+            <ScrollView style={{ marginBottom: 20 }}>
+                <View>
+                    {
+                        this.renderQualityContent()
+                    }
+                    {
+                        this.renderEquipmentContent()
+                    }
+                </View>
+            </ScrollView>
+        );
+    }
 
-    );
-  }
+    //返回itemView
+    renderQualityItemView = ({ item, index }) => {
+        item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
+        item.index = index;
+        item.qcStateShow = "" + API.toQcStateShow(item.qcState);
+        if (item.files && item.files.size > 0) {
+            item.url = item.files[0].url;
+        }
+        item = {
+            key: "" + item.id,
+            value: item,
+        }
+        return (
+            <QualityListCell key={item.key} onCellAction={this.onCellAction} item={item} index={index} />
+        );
+    }
+    //返回itemView
+    renderEquipmentItemView = ({ item, index }) => {
+        item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
+        item.index = index;
+        item.qcStateShow = item.committed == true ? "" : "" + API.toQcStateShow(API.QC_STATE_STAGED);
+        item.qcStateColor = item.committed == true ? "#FFFFFF" : "" + API.toQcStateShowColor(API.QC_STATE_STAGED);
+        item = {
+            key: "" + item.id,
+            value: item,
+        }
+        return (
+            <EquipmentListCell key={item.key} onCellAction={this.onCellAction} item={item} index={index} />
+        );
+    }
+
+    renderQualityContent = () => {
+        if (this.props.qualityList && this.props.qualityList.length > 0) {
+            return (
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: "#5e5e5e", fontSize: 14, marginLeft: 20, marginTop: 5 }}>质检清单</Text>
+                    {
+                        this.props.qualityList.map((item, index) => {
+                            return this.renderQualityItemView({ item, index })
+                        })
+                    }
+                    {
+                        this.props.qualityList.length < this.props.totalQuality ? this.renderMoreView(this.moreQuality) : null
+                    }
+                </View>
+            );
+        } else {
+            return null;
+        }
+    }
+
+    renderEquipmentContent = () => {
+        if (this.props.equipmentList && this.props.equipmentList.length > 0) {
+            return (
+                <View>
+                    <Text style={{ color: "#5e5e5e", fontSize: 14, marginLeft: 20, marginTop: 5 }}>材设清单</Text>
+                    {
+                        this.props.equipmentList.map((item, index) => {
+                            return this.renderEquipmentItemView({ item, index })
+                        })
+                    }
+
+                    {
+                        this.props.equipmentList.length < this.props.totalEquipment ? this.renderMoreView(this.moreEquipment) : null
+                    }
+                </View>
+            );
+        } else {
+            return null;
+        }
+    }
+
+
+
 };
 
-var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  text: {
-    fontSize: 18,
-    color: 'gray'
-  },
-});
+function mapStateToProps(state) {
+    return { ...state }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        search: (keywords) => {
+            if (dispatch) {
+                dispatch(SearchAction.search(keywords));
+            }
+        },
+        loadHistory: () => {
+            if (dispatch) {
+                dispatch(SearchAction.loadHistory());
+            }
+        }
+    }
+}
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+    return Object.assign({}, ownProps, dispatchProps, {
+        qualityList: stateProps.search.qualityList,
+        totalQuality: stateProps.search.totalQuality,
+        equipmentList: stateProps.search.equipmentList,
+        totalEquipment: stateProps.search.totalEquipment,
+        searchHistory: stateProps.search.searchHistory,
+    })
+
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps, mergeProps, { withRef: true }
+)(SearchPage);
