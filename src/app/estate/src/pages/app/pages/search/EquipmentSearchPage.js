@@ -1,39 +1,85 @@
 'use strict';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  StatusBar,
-  SafeAreaView
+    StyleSheet,
+    Text,
+    View,
+    StatusBar,
+    SafeAreaView,
+    ScrollView
 } from 'react-native';
-export default class extends React.Component {
-  static navigationOptions = {
-    title: '材设搜索',
-  };
-  
-  constructor() {
-      super();
+import { connect } from 'react-redux';
+import * as API from "app-api";
+
+import BaseSearchPage from "./BaseSearchPage"
+import * as SearchAction from "./../../actions/searchAction";
+import EquipmentListCell from "./../equipment/equipmentListCell";
+import EquipmentListView from "./../equipment/equipmentListView";
+
+class EquipmentSearchPage extends BaseSearchPage {
+    listRef = null;
+    constructor(props) {
+        super(props);
+        super.setFunc(this.renderContent, this.search)
+        this.states = {
+            keywords: "",
+        }
     };
-  render() {
-    return (
-      <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
-      <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-      <View style={{flex:1,alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
-      <Text style={styles.text}> 敬请期待 </Text>
-      </View>
-      </SafeAreaView>
-      
-    );
-  }
+
+    search = (keywords) => {
+        this.setState({
+            keywords: keywords,
+        }, () => {
+            if (this.listRef) {
+                this.listRef.fetchData("search")
+            }
+        });
+    }
+
+    renderContent() {
+        return (
+            <EquipmentListView
+                onRef={(ref) => { this.listRef = ref }}
+                style={{ flex: 1 }}
+                qcState={'search'}
+                keywords={this.state.keywords}
+                loadData={false}  />
+        );
+    }
+
 };
 
-var styles = StyleSheet.create({
-    container:{
-      flex:1,
-    },
-    text:{
-      fontSize:18,
-      color:'gray'
-    },
-});
+function mapStateToProps(state) {
+    return { ...state }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        search: (keywords) => {
+            if (dispatch) {
+                dispatch(SearchAction.search(keywords));
+            }
+        },
+        loadHistory: () => {
+            if (dispatch) {
+                dispatch(SearchAction.loadHistory());
+            }
+        }
+    }
+}
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+    return Object.assign({}, ownProps, dispatchProps, {
+        qualityList: stateProps.search.qualityList,
+        totalQuality: stateProps.search.totalQuality,
+        equipmentList: stateProps.search.equipmentList,
+        totalEquipment: stateProps.search.totalEquipment,
+        searchHistory: stateProps.search.searchHistory,
+    })
+
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps, mergeProps, { withRef: true }
+)(EquipmentSearchPage);

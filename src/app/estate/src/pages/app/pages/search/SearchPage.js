@@ -15,15 +15,46 @@ import BaseSearchPage from "./BaseSearchPage"
 import * as SearchAction from "./../../actions/searchAction";
 import QualityListCell from "./../quality/qualityListCell";
 import EquipmentListCell from "./../equipment/equipmentListCell";
+import * as qualityListAction from '../../actions/qualityListAction'
 
 class SearchPage extends BaseSearchPage {
 
     constructor(props) {
         super(props);
-        super.setFunc(this.renderContent,this.props.search)
+        super.setFunc(this.renderContent, this.search)
+        this.states = {
+            keywords: "",
+        }
     };
-    
-    onCellAction = () => {
+
+    search = (keywords) => {
+        this.setState({
+            keywords: keywords,
+        }, () => {
+            this.props.search(keywords);
+        })
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.updateIndex != this.props.updateIndex) {
+            if (this.state.keywords && this.state.keywords.length > 0) {
+                this.props.search(this.state.keywords);
+            }
+        }
+    }
+
+    onQualityCellAction = (item, index, type) => {
+        if (type == 'delete') {
+            this.props.deleteQualityData("", item.value.id, item.value.inspectionType)
+            return;
+        }
+        if (type == 'submit') {
+            this.props.submitQualityData("", item.value.id, item.value.inspectionType)
+            return;
+        }
+    }
+
+    onEquipmentCellAction = () => {
 
     }
 
@@ -58,7 +89,7 @@ class SearchPage extends BaseSearchPage {
             value: item,
         }
         return (
-            <QualityListCell key={item.key} onCellAction={this.onCellAction} item={item} index={index} />
+            <QualityListCell key={item.key} onCellAction={this.onQualityCellAction} item={item} index={index} />
         );
     }
     //返回itemView
@@ -72,7 +103,7 @@ class SearchPage extends BaseSearchPage {
             value: item,
         }
         return (
-            <EquipmentListCell key={item.key} onCellAction={this.onCellAction} item={item} index={index} />
+            <EquipmentListCell key={item.key} onCellAction={this.onEquipmentCellAction} item={item} index={index} />
         );
     }
 
@@ -136,7 +167,17 @@ function mapDispatchToProps(dispatch) {
             if (dispatch) {
                 dispatch(SearchAction.loadHistory());
             }
-        }
+        },
+        deleteQualityData: (qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName) => {
+            if (dispatch) {
+                dispatch(qualityListAction.deleteData(qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName))
+            }
+        },
+        submitQualityData: (qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName) => {
+            if (dispatch) {
+                dispatch(qualityListAction.submitData(qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName))
+            }
+        },
     }
 }
 
@@ -147,6 +188,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         equipmentList: stateProps.search.equipmentList,
         totalEquipment: stateProps.search.totalEquipment,
         searchHistory: stateProps.search.searchHistory,
+        updateIndex: stateProps.updateData.updateIndex
+
     })
 
 }

@@ -35,7 +35,15 @@ const initialState = {
             hasMore: true,
             data: [],
             dataMap: new Map(),
-        }
+        },
+        "search": {
+            page: 0,
+            isLoading: true,
+            error: null,
+            hasMore: true,
+            data: [],
+            dataMap: new Map(),
+        },
     },
 
 }

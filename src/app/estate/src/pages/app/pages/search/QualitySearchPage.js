@@ -21,23 +21,29 @@ class QualitySearchPage extends BaseSearchPage {
     listRef = null;
     constructor(props) {
         super(props);
-        super.setFunc(this.renderContent,this.search)
-
+        super.setFunc(this.renderContent, this.search)
+        this.states = {
+            keywords: "",
+        }
     };
 
     search = (keywords) => {
-        if(this.listRef){
-            this.listRef.fetchData("search")
-        }
+        this.setState({
+            keywords: keywords,
+        }, () => {
+            if (this.listRef) {
+                this.listRef.fetchData("search")
+            }
+        });
     }
 
     renderContent() {
         let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
         let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointI');
-        if(!qualityCheckpointId) {
+        if (!qualityCheckpointId) {
             qualityCheckpointId = 0
         }
-        if(!qualityCheckpointName) {
+        if (!qualityCheckpointName) {
             qualityCheckpointName = ''
         }
         return (
@@ -45,29 +51,13 @@ class QualitySearchPage extends BaseSearchPage {
                 onRef={(ref) => { this.listRef = ref }}
                 style={{ flex: 1 }}
                 qcState={'search'}
+                keywords={this.state.keywords}
                 selected={true}
-                loadData={true} qualityCheckpointId={qualityCheckpointId}
-                qualityCheckpointName = {qualityCheckpointName}/>
+                loadData={false} 
+                qualityCheckpointId={qualityCheckpointId}
+                qualityCheckpointName={qualityCheckpointName} />
         );
     }
-
-    //返回itemView
-    renderQualityItemView = ({ item, index }) => {
-        item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
-        item.index = index;
-        item.qcStateShow = "" + API.toQcStateShow(item.qcState);
-        if (item.files && item.files.size > 0) {
-            item.url = item.files[0].url;
-        }
-        item = {
-            key: "" + item.id,
-            value: item,
-        }
-        return (
-            <QualityListCell key={item.key} onCellAction={this.onCellAction} item={item} index={index} />
-        );
-    }
-
 };
 
 function mapStateToProps(state) {

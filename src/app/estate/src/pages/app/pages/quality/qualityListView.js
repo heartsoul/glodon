@@ -36,7 +36,7 @@ class QualityListView extends PureComponent {
     //网络请求
     _fetchData = (qcState, page) => {
         if (qcState === "search") {
-            this.props.searchData("墙", page, qcState, )
+            this.props.searchData(this.props.keywords, page, qcState, this.props.dataMap)
         } else {
             this.props.fetchData(qcState, page, this.props.dataMap, this.props.qualityCheckpointId, this.props.qualityCheckpointName);
             if (page < 1 && this.props.updateNumber) {
@@ -53,7 +53,6 @@ class QualityListView extends PureComponent {
     }
 
     componentWillReceiveProps = (nextProps) => {
-        console.log(nextProps)
         if (nextProps.updateIndex != this.props.updateIndex && this.props.selected) {
             this.fetchData(this.props.qcState, this.props.qualityCheckpointId, this.props.qualityCheckpointName);
             if (this.props.updateNumber) {
@@ -237,9 +236,9 @@ function mapDispatchToProps(dispatch) {
                 dispatch(actions.submitData(qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName))
             }
         },
-        searchData: (keywords, page, qcState) => {
+        searchData: (keywords, page, qcState,dataMap) => {
             if (dispatch) {
-                dispatch(actions.searchData(keywords, page, qcState))
+                dispatch(actions.searchData(keywords, page, qcState,dataMap))
             }
         }
     }

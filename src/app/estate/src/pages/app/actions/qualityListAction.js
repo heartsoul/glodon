@@ -1,6 +1,8 @@
 import * as API from 'app-api'
 
 import * as types from '../constants/qualityListTypes'
+import * as searchTypes from "./../constants/searchTypes";
+
 import * as updateAction from './updateDataAction'
 import { BimFileEntry, AuthorityManager } from "app-entry";
 
@@ -28,15 +30,16 @@ export function submitData(qcState, inspectId, inspectionType, qualityCheckpoint
     }
 }
 
-export function searchData(keywords, page, qcState) {
+export function searchData(keywords, page, qcState, dataMapIn) {
     return dispatch => {
         if (page == 0) {
+            saveHistory(keywords, dispatch);
             dispatch(_loading(qcState, page));
         }
         if (page < 0) {
             page = 0;
         }
-        API.searchQualityData(storage.loadProject(), keywords, 0, 3)
+        API.searchQualityData(storage.loadProject(), keywords, page, 20)
             .then((responseData) => {
 
                 let data = responseData.data.content;
@@ -48,7 +51,7 @@ export function searchData(keywords, page, qcState) {
                 if (page > 0 && dataMapIn) {
                     dataMap = dataMapIn;
                 }
-    
+
                 data.forEach(item => {
                     item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
                     item.index = i;
@@ -69,7 +72,6 @@ export function searchData(keywords, page, qcState) {
                     });
                     i++;
                 });
-
                 dataMap.forEach(function (value, key, map) {
                     sectionLob.push({
                         key: key,
@@ -78,16 +80,43 @@ export function searchData(keywords, page, qcState) {
                 });
                 dispatch(_loadSuccess(sectionLob, dataMap, qcState, page, hasMore));
                 data = null;
-            dataBlob = null;
-            sectionLob = null;
-            dataMap = null;
-               
+                dataBlob = null;
+                sectionLob = null;
+                dataMap = null;
+
             }).catch(error => {
                 dispatch(_loadError(error, qcState, page));
             });
     }
 }
 
+function saveHistory(keywords, dispatch) {
+    let history = storage.loadSearchHistory();
+    let items = [];
+    if (history && history.length > 0) {
+        items = history.split(",")
+    }
+    let index = items.findIndex((value) => {
+        return keywords === value;
+    });
+    if (index >= 0) {
+        items.splice(index, 1)
+    }
+    items.unshift(keywords);
+    if (items.length > 20) {
+        items.pop();
+    }
+    let newHistory = items.join(",");
+    storage.setSearchHistory(newHistory);
+    dispatch(loadHistoryDone(items))
+}
+
+function loadHistoryDone(items) {
+    return {
+        type: searchTypes.LOAD_SEARCH_HISTORY,
+        searchHistory: items,
+    }
+}
 
 // 获取数据
 export function fetchData(qcState, page, dataMapIn, qualityCheckpointId = 0, qualityCheckpointName = '') {
@@ -170,7 +199,6 @@ function _loading(qcState, page, qualityCheckpointId = 0, qualityCheckpointName 
 }
 
 function _loadSuccess(data, dataMap, qcState, page, hasMore, qualityCheckpointId = 0, qualityCheckpointName = '') {
-    console.log(qcState+"----------")
     return {
         type: types.QUALITY_LIST_DONE,
         data: data,
