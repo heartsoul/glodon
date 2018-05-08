@@ -68,6 +68,7 @@ class NewReviewPage extends Component {
             showRectificationView: showRectificationView,//是否显示复查合格
             files: filesIn, //附件图片
         };
+        this.description = "";
         this.props.navigation.setParams({ leftNavigatePress: this.goBack, rightNavigatePress: this.submit })
     }
 
@@ -114,6 +115,7 @@ class NewReviewPage extends Component {
             switchValue: switchValue,
             files: editInfo.files,
         });
+        this.description = editInfo.description;
     }
 
 
@@ -242,8 +244,8 @@ class NewReviewPage extends Component {
                     multiline={true}
                     underlineColorAndroid={"transparent"}
                     textAlign="left"
-                    onChangeText={(text) => { this.setState({ description: text }) }}
-                    defaultValue={(typeof this.state.description === 'string') ? (this.state.description) : ('')}
+                    onChangeText={(text) => { this.state.description = text}}
+                    defaultValue={this.description}
                 />
 
                 <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" onChange={() => alert('收到!')} />

@@ -512,10 +512,18 @@ function isParamsChange(description, status, lastRectificationDate, editInfo, ty
         if (description.length > 0) {
             return true;
         }
-        return false;
+    } else {
+        if(!(editInfo.description == description)) {
+            return true;
+        }
+       
     }
     if (type === API.CREATE_TYPE_REVIEW) {
-        if (status != editInfo.status) {
+        let perStatus = editInfo.status;
+        if(perStatus != API.STATUS_CLOSED) {
+            perStatus = API.STATUS_NOT_ACCEPTED;
+        }
+        if (status != perStatus) {
             return true;
         } else if (!isDateEqual) {
             return true;
