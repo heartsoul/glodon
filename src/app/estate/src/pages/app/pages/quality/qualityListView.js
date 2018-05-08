@@ -246,7 +246,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
-    if (ownProps.qualityCheckpointId != 0) {
+    if (ownProps.qualityCheckpointId && ownProps.qualityCheckpointId != 0) {
         return Object.assign({}, ownProps, dispatchProps, {
             dataArray: stateProps.qualityList.datas_n[ownProps.qcState].data,
             dataMap: stateProps.qualityList.datas_n[ownProps.qcState].dataMap,

@@ -32,13 +32,22 @@ class QualitySearchPage extends BaseSearchPage {
     }
 
     renderContent() {
+        let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
+        let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointI');
+        if(!qualityCheckpointId) {
+            qualityCheckpointId = 0
+        }
+        if(!qualityCheckpointName) {
+            qualityCheckpointName = ''
+        }
         return (
             <QualityListView
                 onRef={(ref) => { this.listRef = ref }}
                 style={{ flex: 1 }}
                 qcState={'search'}
                 selected={true}
-                loadData={true} />
+                loadData={true} qualityCheckpointId={qualityCheckpointId}
+                qualityCheckpointName = {qualityCheckpointName}/>
         );
     }
 

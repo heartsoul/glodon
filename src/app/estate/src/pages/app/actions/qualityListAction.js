@@ -77,6 +77,10 @@ export function searchData(keywords, page, qcState) {
                     });
                 });
                 dispatch(_loadSuccess(sectionLob, dataMap, qcState, page, hasMore));
+                data = null;
+            dataBlob = null;
+            sectionLob = null;
+            dataMap = null;
                
             }).catch(error => {
                 dispatch(_loadError(error, qcState, page));
