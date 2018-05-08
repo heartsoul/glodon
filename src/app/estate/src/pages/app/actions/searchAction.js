@@ -30,6 +30,46 @@ export function search(keywords) {
     }
 }
 
+function parseQualityData(data, dataMapIn, page) {
+    let dataBlob = [];
+    let dataMap = new Map();
+    let i = 0;
+    let sectionLob = [];
+    if (page > 0 && dataMapIn) {
+        dataMap = dataMapIn;
+    }
+    data.forEach(item => {
+        item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
+        item.index = i;
+        item.qcStateShow = "" + API.toQcStateShow(item.qcState);
+        if (item.files && item.files.size > 0) {
+            item.url = item.files[0].url;
+        }
+        let groupTime = item.showTime.substring(0, 10);
+        let dataBlob = dataMap.get(groupTime);
+        if (dataBlob == undefined) {
+            dataBlob = [];
+            dataMap.set(groupTime, dataBlob);
+        }
+        dataBlob.push({
+            key: "" + item.id,
+            value: item,
+        });
+        i++;
+    });
+
+    dataMap.forEach(function (value, key, map) {
+        sectionLob.push({
+            key: key,
+            data: value,
+        });
+    });
+    return {
+        sectionLob: sectionLob,
+        dataMap: dataMap,
+    }
+}
+
 /**
  * 加载搜索历史
  * @param {*} items 
