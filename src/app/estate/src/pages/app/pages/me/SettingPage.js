@@ -54,7 +54,7 @@ class SettingPage extends Component {
   }
   _password = () => {
     let navigator = this.props.navigation;
-    storage.pushNext(navigator, "PasswordPage")
+    storage.pushNext(navigator, "ForgotPage")
   }
 
   _logout = () => {

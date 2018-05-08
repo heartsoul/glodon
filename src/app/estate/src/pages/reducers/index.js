@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import loginIn from '../login/reducers/loginReducer'
+import forgot from '../login/reducers/forgotReducer'
 import checkPointList from '../app/reducers/checkPointListReducer' 
 import qualityInfo from '../app/reducers/qualityInfoReducer' 
 import qualityList from '../app/reducers/qualityListReducer' 
@@ -13,6 +14,7 @@ import projectList from '../app/reducers/projectReducer'
 import search from '../app/reducers/searchReducer' 
 const rootReducer = combineReducers({
   loginIn,
+  forgot,
   checkPointList,
   qualityInfo,
   qualityList,

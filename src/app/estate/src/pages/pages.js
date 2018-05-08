@@ -34,7 +34,7 @@ import EquipmentSearchPage from './app/pages/search/EquipmentSearchPage'
 import BimSearchPage from './app/pages/search/BimSearchPage'
 import AboutPage from './app/pages/me/AboutPage'
 import FeedbackPage from './app/pages/me/FeedbackPage'
-import PasswordPage from './login/pages/PasswordPage'
+import ForgotPage from './login/pages/ForgotPage'
 
 export {
     LoginPage,
@@ -69,6 +69,6 @@ export {
     EquipmentSearchPage,
     BimSearchPage,
     AboutPage,
-    PasswordPage,
+    ForgotPage,
     FeedbackPage,
 }

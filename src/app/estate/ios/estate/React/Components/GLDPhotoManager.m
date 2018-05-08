@@ -16,6 +16,7 @@
 
 #import "RNTImagesView.h"
 #import "WaitViewUtil.h"
+#import "SDDataCache.h"
 
 @interface RCTConvert (RNTImagesView)
 
@@ -93,6 +94,21 @@ RCT_EXPORT_METHOD (loadFile:(nonnull NSDictionary *)params callback:(RCTResponse
       callback(@[files]);
     }];
     
+  }
+  return;
+}
+
+RCT_EXPORT_METHOD (savePhoto:(NSDictionary*)dicData callback:(RCTResponseSenderBlock)callback) {
+ 
+  NSString * url = @"";
+  if(dicData && dicData[@"data"]) {
+    NSData* imageData = dicData[@"data"];
+    NSString * itemId = @"imageCode";
+    [[SDDataCache fileDataCache] storeData:imageData forKey:itemId];
+    url = [[[SDDataCache fileDataCache] imageCache] defaultCachePathForKey:itemId];
+    callback(@[url,@(YES)]);
+  } else {
+    callback(@[url,@(NO)]);
   }
   return;
 }

@@ -29,6 +29,8 @@ export class TextInputNormal extends Component {
       enablesReturnKeyAutomatically={true}
       underlineColorAndroid={"transparent"}
       textAlign="left"
+      autoCorrect={false}
+      autoCapitalize='none'
       placeholder={this.props.placeholder}
       onSubmitEditing ={(text)=>{
         this.props.onChangeText('\n');
@@ -100,6 +102,8 @@ export class TextInputPassword extends Component {
       secureTextEntry={this.state.secureTextEntry}
       enablesReturnKeyAutomatically={true}
       textAlign="left"
+      autoCorrect={false}
+      autoCapitalize='none'
       // autoFocus={true}
       placeholder={this.props.placeholder}
       onSubmitEditing ={(text)=>{
@@ -121,19 +125,83 @@ export class TextInputPassword extends Component {
       onFocus={this.props.onFocus}
     />
     <View  style={[styles.style_input_action,]}>
-    <TouchableOpacity onPress={this._onSecureTextEntry}><Image style={styles.style_image} source={this.state.secureTextEntry ? icon_login_password_show : icon_login_password_hide}/></TouchableOpacity>
+    <TouchableOpacity onPress={this._onSecureTextEntry}><Image style={styles.style_image} source={this.state.secureTextEntry ? icon_login_password_hide : icon_login_password_show}/></TouchableOpacity>
     </View>
     </View>
     )
   }
 }
-
 TextInputPassword.propTypes = {
   value: PropTypes.string,
   placeholder: PropTypes.string.isRequired,
   onBlur: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,
   onChangeText: PropTypes.func.isRequired,
+}
+
+export class TextInputImage extends Component {
+
+  textInput = null;
+  constructor(props) {
+    super(props);
+    this.textInput = null;
+    /*用来指示是否显示Loading提示符号*/
+    this.state = {
+      disabled: false,
+      resetData:false,
+      value:this.props.value
+    };
+  }
+  _onClearTextEntry = () =>{
+    this.setState({
+      value:'',
+    });
+  }
+ 
+  focus = () =>{
+    this.textInput.focus();
+  }
+  render() {
+    return (
+      <View  style={[styles.style_input,]}>
+      <TextInput ref={(ref)=>{this.textInput=ref}}
+      style={[styles.style_pwd_input]}
+      numberOfLines={1}
+      returnKeyType = "done"
+      underlineColorAndroid={"transparent"}
+      enablesReturnKeyAutomatically={true}
+      textAlign="left"
+      // autoFocus={true}
+      placeholder={this.props.placeholder}
+      autoCorrect={false}
+      autoCapitalize='none'
+      onSubmitEditing ={(text)=>{
+        this.props.onChangeText('\n');
+      }
+      }
+      onChangeText={(text)=>{
+        this.props.onChangeText(text);}
+      }
+      value={this.state.value}
+      onBlur={this.props.onBlur}
+      onFocus={this.props.onFocus}
+    />
+    <View  style={[styles.style_input_action,]}>
+    <TouchableOpacity onPress={this.props.onImageClick}><Image style={styles.style_image_captcha} source={{uri:this.props.imageUrl}}/></TouchableOpacity>
+    </View>
+    </View>
+    )
+  }
+}
+
+TextInputImage.propTypes = {
+  value: PropTypes.string,
+  placeholder: PropTypes.string.isRequired,
+  onBlur: PropTypes.func.isRequired,
+  onFocus: PropTypes.func.isRequired,
+  onChangeText: PropTypes.func.isRequired,
+  imageUrl:PropTypes.string.isRequired,
+  onImageClick:PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -162,6 +230,13 @@ const styles = StyleSheet.create({
     height:27,
     marginRight:0
    },
+   style_image_captcha: {
+    width:160,
+    height:40,
+    marginRight:0,
+    resizeMode:'center',
+   },
+   
    style_image_delete: {
     width:20,
     height:20,

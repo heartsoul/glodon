@@ -98,8 +98,8 @@ const screens = {
   AboutPage: {
     screen: GLD.AboutPage
   },
-  PasswordPage: {
-    screen: GLD.PasswordPage
+  ForgotPage: {
+    screen: GLD.ForgotPage
   },
   FeedbackPage: {
     screen: GLD.FeedbackPage
