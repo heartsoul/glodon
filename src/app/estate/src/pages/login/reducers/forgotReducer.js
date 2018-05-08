@@ -12,6 +12,7 @@ const initialState = {
   signupKey:'',
   tip:null,
   type:null,
+  errorCount:0,
 }
 // 不同类别的事件使用switch对应处理过程
 
@@ -34,6 +35,7 @@ export default function forgot(state = initialState, action) {
         type:action.type,
         status: '',
         isSuccess: true,
+        userName:action.userName,
         page: 1,
         tip:null,
       }
@@ -44,6 +46,7 @@ export default function forgot(state = initialState, action) {
         status: '',
         isSuccess: true,
         page: 2,
+        userName:action.userName,
         tip:'手机验证码已经发送',
       }
     // break
@@ -53,7 +56,8 @@ export default function forgot(state = initialState, action) {
         type:action.type,
         status: action.errorMessage,
         isSuccess: false,
-        tip:null
+        tip:null,
+        errorCount:state.errorCount+1,
       }
 
     // break
@@ -64,6 +68,7 @@ export default function forgot(state = initialState, action) {
         status: '',
         isSuccess: true,
         page:3,
+        verifyCode:action.verifyCode,
         tip:null
       }
     case types.FORGOT_RESET:

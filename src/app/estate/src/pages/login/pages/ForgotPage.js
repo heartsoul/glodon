@@ -1,5 +1,5 @@
 'use strict';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,7 +14,7 @@ import { Toast } from 'antd-mobile' // 引入connect函数
 import * as fogotAction from '../actions/forgotAction' // 导入action方法 
 import * as types from '../constants/forgotTypes'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { ActionButton,TextInputNormal,TextInputPassword,TextInputImage,LeftBarButtons } from 'app-components';
+import { ActionButton, TextInputNormal, TextInputPassword, TextInputImage, LeftBarButtons } from 'app-components';
 import * as API from 'app-api'
 
 var { width, height } = Dimensions.get("window");
@@ -23,8 +23,8 @@ class ForgotPage extends React.Component {
     gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
     headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
     title: navigation.state.params && navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : "密码管理"
-})
-  
+  })
+
   constructor(props) {
     super(props);
     this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadTitle: this.loadTitle, gesturesEnabled: this.gesturesEnabled })
@@ -50,64 +50,67 @@ class ForgotPage extends React.Component {
       focusPhone: 1, // 焦点 0: 没有 1:
       focusPhoneCode: 1, // 焦点 0: 没有 1:
       focusImageCode: 1, // 焦点 0: 没有 1:
-     };
+    };
   }
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.type === types.FORGOT_ERROR) {
       // Toast.info(nextProps.status);
       this.state.status = nextProps.status;
+      if(nextProps.page == 1) {
+        this.props.imageCode();
+      }
     }
     if (nextProps.type === types.FORGOT_RESET && nextProps.isSuccess) {
       let navigator = this.props.navigation;
-      Toast.hide();
+      // Toast.hide();
       Toast.success(nextProps.tip);
       storage.goBack(navigator);
       return false;
     }
-    if(nextProps.tip && nextProps.isSuccess) {
+    if (nextProps.tip && nextProps.isSuccess) {
       Toast.success(nextProps.tip);
     }
-  
-    if(nextProps.page != this.props.page) {
+
+    if (nextProps.page != this.props.page) {
       this.props.imageCode();
       this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadTitle: this.loadTitle, gesturesEnabled: this.gesturesEnabled })
-   
+
     }
     return true
   }
 
   gesturesEnabled = () => {
     return false;
-}
-loadTitle = () => {
-   let {page} = this.props;
-   return `密码管理（${page}/3）`
-}
-needBack = (backFun) => {
-    const {page} = this.props;
-    if(page == 1) {
+  }
+  loadTitle = () => {
+    let { page } = this.props;
+    return `密码管理（${page}/3）`
+  }
+  needBack = (backFun) => {
+    const { page } = this.props;
+    if (page == 1) {
       if (backFun) {
         backFun(true);
       }
       return;
     }
     this.switchPage(page - 1);
-      if (backFun) {
-        backFun(false);
-      }
-      return;
-}
-loadLeftTitle = () => {
+    if (backFun) {
+      backFun(false);
+    }
+    return;
+  }
+  loadLeftTitle = () => {
     return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
-}
-switchPage = (page) => {
+  }
+  switchPage = (page) => {
     this.props.gotoPage(page);
-}
+  }
 
-  componentDidMount = () =>{
+  componentDidMount = () => {
     this.props.imageCode();
   }
-  _onImageClick = () =>{
+  _onImageClick = () => {
     this.props.imageCode();
   }
   _checkInput1() {
@@ -122,144 +125,141 @@ switchPage = (page) => {
     this.state.status = '';
     return (this.state.password.length > 5 && this.state.password1.length > 5);
   }
-// page 1
+  // page 1
   _onUserNameChangeText = text => {
-    if(text.indexOf('\n')>=0) {
+    if (text.indexOf('\n') >= 0) {
       this.imageCodeTextInput.focus();
       return;
     }
     let check = (text.length > 1 && this.state.imageCode.length > 3);
-    this.setState({ username: text, disabled1:!check});
+    this.setState({ username: text, disabled1: !check });
   };
   _onUserNameBlur = () => {
-    this.setState({ focusUserName: 0, disabled1:!this._checkInput1()});
+    this.setState({ focusUserName: 0, disabled1: !this._checkInput1() });
   };
   _onUserNameFocus = () => {
     this.setState({
-        focusUserName: 1, 
-        disabled1:!this._checkInput1()
+      focusUserName: 1,
+      disabled1: !this._checkInput1()
     });
   };
   _onImageCodeChangeText = text => {
-    if(text.indexOf('\n')>=0) {
-      if(this._checkInput1()) {
+    if (text.indexOf('\n') >= 0) {
+      if (this._checkInput1()) {
         this.doNextPage(2);
-       }
+      }
       return;
     }
     let check = (text.length > 3 && this.state.username.length > 1);
-    this.setState({ imageCode: text, disabled1:!check});
+    this.setState({ imageCode: text, disabled1: !check });
   };
   _onImageCodeBlur = () => {
-    this.setState({ focusImageCode: 0, disabled1:!this._checkInput1()});
+    this.setState({ focusImageCode: 0, disabled1: !this._checkInput1() });
   };
   _onImageCodeFocus = () => {
     this.setState({
-      focusImageCode: 1, 
-        disabled1:!this._checkInput1()
+      focusImageCode: 1,
+      disabled1: !this._checkInput1()
     });
   };
 
   // page 2
   _onPhoneCodeChangeText = text => {
-    if(text.indexOf('\n')>=0) {
-      if(this._checkInput2()) {
+    if (text.indexOf('\n') >= 0) {
+      if (this._checkInput2()) {
         this.doNextPage(3);
-       }
+      }
       return;
     }
     let check = (text.length > 3);
-    this.setState({ verifyCode: text, disabled2:!check});
+    this.setState({ verifyCode: text, disabled2: !check });
   };
   _onPhoneCodeBlur = () => {
-    this.setState({ focusPhoneCode: 0, disabled2:!this._checkInput2()});
+    this.setState({ focusPhoneCode: 0, disabled2: !this._checkInput2() });
   };
   _onPhoneCodeFocus = () => {
     this.setState({
-      focusPhoneCode: 1, 
-        disabled2:!this._checkInput2()
+      focusPhoneCode: 1,
+      disabled2: !this._checkInput2()
     });
   };
 
   // page 3
   _onPasswordBlur = () => {
-    this.setState({ focusPassword: 0, disabled3:!this._checkInput3()});
+    this.setState({ focusPassword: 0, disabled3: !this._checkInput3() });
   };
   _onPasswordFocus = () => {
     this.setState({
-      focusPassword: 1, 
-      disabled3:!this._checkInput3()
+      focusPassword: 1,
+      disabled3: !this._checkInput3()
     });
   };
   _onPasswordChangeText = text => {
-    if(text && text.indexOf('\n')>=0) {
-     if(this._checkInput3()) {
-      this.password2TextInput.focus();
-     }
+    if (text && text.indexOf('\n') >= 0) {
+      if (this._checkInput3()) {
+        this.password2TextInput.focus();
+      }
       return;
     }
-    if(!text) {
+    if (!text) {
       text = ''
     }
     let check = (text.length > 5 && this.state.password1.length > 5 && text == this.state.password1);
-    this.setState({ password: text, disabled3:!check});
+    this.setState({ password: text, disabled3: !check });
   };
   _onPassword1Blur = () => {
-    this.setState({ focusPassword1: 0, disabled3:!this._checkInput3()});
+    this.setState({ focusPassword1: 0, disabled3: !this._checkInput3() });
   };
   _onPassword1Focus = () => {
     this.setState({
-      focusPassword1: 1, 
-      disabled3:!this._checkInput3()
+      focusPassword1: 1,
+      disabled3: !this._checkInput3()
     });
   };
   _onPassword1ChangeText = text => {
-    if(text && text.indexOf('\n')>=0) {
-     if(this._checkInput3()) {
-       this.doReset();
-     }
+    if (text && text.indexOf('\n') >= 0) {
+      if (this._checkInput3()) {
+        this.doReset();
+      }
       return;
     }
-    if(!text) {
+    if (!text) {
       text = ''
     }
     let check = (text.length > 5 && this.state.password.length > 5 && text == this.state.password);
-    this.setState({ password1: text, disabled3:!check});
+    this.setState({ password1: text, disabled3: !check });
   };
 
-  doNextPage =(page)=>{
+  doNextPage = (page) => {
     // Toast.loading('提交...', 0, null, true);
-    const {phoneCode, phoneCodeVerify,imageCode} = this.props
-    if(page == 2) {
-      this.switchPage(2);
-      return;
-      if(!this._checkInput1()) {
+    const { phoneCode, phoneCodeVerify, imageCode } = this.props
+    if (page == 2) {
+      if (!this._checkInput1()) {
         return;
       }
-      phoneCode(this.state.username,this.state.imageCode,this.props.signupKey);
-      imageCode();
+      phoneCode(this.state.username, this.state.imageCode, this.props.signupKey);
       return;
     }
-    if(page == 3) {
-      // if(!this._checkInput2()) {
-      //   return;
-      // }
-      phoneCodeVerify(this.state.username,this.state.verifyCode);
+    if (page == 3) { 
+      if(!this._checkInput2()) {
+        return;
+      }
+      phoneCodeVerify(this.state.username, this.state.verifyCode);
       return;
     }
   }
-  doReset=()=>{
-    if(!this._checkInput3()) {
+  doReset = () => {
+    if (!this._checkInput3()) {
       return;
     }
-    Toast.loading('提交...', 0, null, true);
+    // Toast.loading('提交...', 0, null, true);
     const { reset } = this.props
-    reset(this.state.username,this.state.verifyCode,this.state.password)
+    reset(this.state.username, this.state.verifyCode, this.state.password)
   }
-    renderPage1() {
-      return (
-        <SafeAreaView style={[styles.container, { backgroundColor: '#ffffff' }]}>       
-         <Text
+  renderPage1() {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: '#ffffff' }]}>
+        <Text
           style={[
             styles.style_input_title,
             this.state.focusUserName == 1 || this.state.username.length > 0
@@ -277,7 +277,7 @@ switchPage = (page) => {
           onFocus={() => this._onUserNameFocus()}
           onChangeText={text => this._onUserNameChangeText(text)}
           value={this.props.userName ? this.props.userName : ''}
-          ref={(ref)=>{this.userNameTextInput=ref}}
+          ref={(ref) => { this.userNameTextInput = ref }}
         />
         <View
           style={
@@ -296,7 +296,7 @@ switchPage = (page) => {
             { marginTop: 20 }
           ]}
         >
-         图片验证码 
+          图片验证码
         </Text>
         <TextInputImage
           imageUrl={this.props.url}
@@ -305,7 +305,7 @@ switchPage = (page) => {
           onBlur={() => this._onImageCodeBlur()}
           onFocus={() => this._onImageCodeFocus()}
           onChangeText={text => this._onImageCodeChangeText(text)}
-          ref={(ref)=>{this.imageCodeTextInput=ref}}
+          ref={(ref) => { this.imageCodeTextInput = ref }}
           value=''
         />
         <View
@@ -317,25 +317,25 @@ switchPage = (page) => {
         />
         <View>
           <ActionButton
-            onPress={()=>{this.doNextPage(2)}}
-            isDisabled={()=>{return this.state.disabled1}}
+            onPress={() => { this.doNextPage(2) }}
+            isDisabled={() => { return this.state.disabled1 }}
             text="下一步"
           >
-          </ActionButton> 
-          </View>
-        </SafeAreaView>
-        
-      );
-    }
-    renderPage2() {
-      return (
-        <SafeAreaView style={[styles.container, { backgroundColor: '#ffffff' }]}>
+          </ActionButton>
+        </View>
+      </SafeAreaView>
+
+    );
+  }
+  renderPage2() {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: '#ffffff' }]}>
         <View>
-          <Text style={[styles.style_tip,styles.style_tip_phone]
-            
+          <Text style={[styles.style_tip, styles.style_tip_phone]
+
           }>请输入 {this.state.username} 收到的短信验证码</Text>
-          
-          </View>
+
+        </View>
         <Text
           style={[
             styles.style_input_title,
@@ -346,15 +346,15 @@ switchPage = (page) => {
             { marginTop: 0 }
           ]}
         >
-         手机验证码 
+          手机验证码
         </Text>
         <TextInputNormal
           placeholder={this.state.focusPhoneCode == 1 ? "" : "请输入手机验证码"}
           onBlur={() => this._onPhoneCodeBlur()}
           onFocus={() => this._onPhoneCodeFocus()}
           onChangeText={text => this._onPhoneCodeChangeText(text)}
-          value=''
-          ref={(ref)=>{this.phoneCodeTextInput=ref}}
+          value={this.props.verifyCode}
+          ref={(ref) => { this.phoneCodeTextInput = ref }}
         />
         <View
           style={
@@ -363,29 +363,29 @@ switchPage = (page) => {
               : styles.style_input_line_gray
           }
         />
-        
+
         <View>
           <ActionButton
-            onPress={()=>{this.doNextPage(3)}}
-            isDisabled={()=>{return false;return this.state.disabled2}}
+            onPress={() => { this.doNextPage(3) }}
+            isDisabled={() => {return this.state.disabled2 }}
             text="下一步"
           >
-          </ActionButton> 
-          </View>
-        </SafeAreaView>
-        
-      );
-    }
-    renderPage3() {
-      return (
-        <SafeAreaView style={[styles.container, { backgroundColor: '#ffffff' }]}>
+          </ActionButton>
+        </View>
+      </SafeAreaView>
+
+    );
+  }
+  renderPage3() {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: '#ffffff' }]}>
         <Text
           style={[
             styles.style_input_title,
             this.state.focusPassword == 1 || this.state.password.length > 0
               ? { color: "rgb(153,153,146)" }
               : { color: "transparent" },
-              { marginTop: 68 }
+            { marginTop: 20 }
           ]}
         >
           密码
@@ -396,7 +396,7 @@ switchPage = (page) => {
           // value={this.state.password}
           onBlur={() => this._onPasswordBlur()}
           onFocus={() => this._onPasswordFocus()}
-          ref={(ref)=>{this.passwordTextInput=ref}}
+          ref={(ref) => { this.passwordTextInput = ref }}
           value=''
         />
         <View
@@ -411,7 +411,8 @@ switchPage = (page) => {
             styles.style_input_title,
             this.state.focusPassword1 == 1 || this.state.password1.length > 0
               ? { color: "rgb(153,153,146)" }
-              : { color: "transparent" }
+              : { color: "transparent" },
+              { marginTop: 20 }
           ]}
         >
           确认
@@ -422,7 +423,7 @@ switchPage = (page) => {
           value=''
           onBlur={() => this._onPassword1Blur()}
           onFocus={() => this._onPassword1Focus()}
-          ref={(ref)=>{this.passwordTextInput2=ref}}
+          ref={(ref) => { this.passwordTextInput2 = ref }}
         />
         <View
           style={
@@ -435,203 +436,206 @@ switchPage = (page) => {
           <Text style={
             styles.style_tip
           }>备注：请将新密码设置为6-20位，至少含数字／字母／字符两种组合，不能能与旧密码相同</Text>
-          </View>
+        </View>
         <View>
           <ActionButton
-            onPress={()=>{this.doReset()}}
-            isDisabled={()=>{return this.state.disabled3}}
+            onPress={() => { this.doReset() }}
+            isDisabled={() => { return this.state.disabled3 }}
             text="提交"
           >
-          </ActionButton> 
-          </View>
-          <Text style={[styles.style_loginText,this.props.status === '登录出错'?{color:'red'}:{}]}>{this.props.status}</Text>
-        </SafeAreaView>
-        
-      );
-    }
-    renderPage = () => {
-      const {page} = this.props;
-      if(page == 1) {
-        return this.renderPage1();
-      }
-      if(page == 2) {
-        return this.renderPage2();
-      }
-      if(page == 3) {
-        return this.renderPage3();
-      }
+          </ActionButton>
+        </View>
+        <Text style={[styles.style_loginText, this.props.status === '登录出错' ? { color: 'red' } : {}]}>{this.props.status}</Text>
+      </SafeAreaView>
+
+    );
+  }
+  renderPage = () => {
+    const { page } = this.props;
+    if (page == 1) {
       return this.renderPage1();
     }
+    if (page == 2) {
+      return this.renderPage2();
+    }
+    if (page == 3) {
+      return this.renderPage3();
+    }
+    return this.renderPage1();
+  }
   render() {
     return (
-      <KeyboardAwareScrollView style={{backgroundColor: "#ffffff",flex: 1, marginLeft: 0, marginRight: 0}}>
+      <KeyboardAwareScrollView style={{ backgroundColor: "#ffffff", flex: 1, marginLeft: 0, marginRight: 0 }}>
         <StatusBar
           barStyle="light-content"
           backgroundColor="#00baf3"
           translucent={true}
         />
-        <View style={[{flex:1,height:40,alignContent:'center',alignItems:'center',justifyContent:'center',}]}>
-          <Text style={[styles.style_tip,styles.style_tip_phone,{marginBottom:0,marginTop:20,}]}>
-          {this.state.status}</Text>
-          </View>
+        <View style={[{ flex: 1, height: 40, alignContent: 'center', alignItems: 'center', justifyContent: 'center', }]}>
+          <Text style={[styles.style_tip, styles.style_tip_phone, { marginBottom: 0, marginTop: 20, }]}>
+            {this.state.status}</Text>
+        </View>
         {this.renderPage()}
       </KeyboardAwareScrollView>
-      
+
     );
   }
 };
 
 var styles = StyleSheet.create({
-    container:{
-      flex:1,
-      marginLeft:20,
-      marginRight:20,
+  container: {
+    flex: 1,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  text: {
+    fontSize: 18,
+    color: 'gray'
+  },
+  style_tip: {
+    marginTop: 40,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 40,
+    fontSize: 12,
+    lineHeight: 20,
+    color: '#ababab'
+  },
+  style_tip_phone: {
+    color: 'red'
+  },
+  style_login_title: {
+    fontSize: 36,
+    height: 50,
+    width: 76,
+    marginTop: 80,
+    marginLeft: 0
+  },
+  style_login_image: {
+    height: width * 759 / 1125,
+    width: width,
+    marginTop: 0,
+    marginLeft: 0,
+    resizeMode: "contain"
+  },
+  style_input_title: {
+    fontSize: 12,
+    height: 14,
+    width: 76,
+    marginTop: 5,
+    marginLeft: 20
+  },
+  style_image: {
+    borderRadius: 35,
+    height: 70,
+    width: 70,
+    marginTop: 440,
+    alignSelf: "center"
+  },
+
+  style_input_line: {
+    height: 1,
+    backgroundColor: "#00baf3",
+    marginLeft: 20,
+    marginRight: 20
+  },
+  style_input_line_gray: {
+    height: 1,
+    backgroundColor: "rgb(243,242,242)",
+    marginLeft: 20,
+    marginRight: 20
+  },
+  style_view_unlogin: {
+    fontSize: 12,
+    color: "#63B8FF",
+    marginLeft: 10
+  },
+  style_view_register: {
+    fontSize: 12,
+    color: "#63B8FF",
+    marginRight: 10,
+    alignItems: "flex-end",
+    flex: 1,
+    flexDirection: "row",
+    textAlign: "right"
+  },
+
+  style_fogotText: {
+    overflow: "hidden",
+    height: 20,
+    marginTop: 10,
+    marginLeft: 20,
+    marginRight: 20,
+    alignItems: "center",
+    textAlign: "center",
+    fontSize: 14,
+    color: "#000"
+  },
+
+  style_loginText: {
+    overflow: "hidden",
+    height: 20,
+    marginTop: 10,
+    marginLeft: 20,
+    marginRight: 20,
+    borderRadius: 20,
+    alignItems: "center",
+    textAlign: "center",
+    fontSize: 16,
+    color: "#fff"
+  },
+  style_fogotTextView: {
+    overflow: "hidden",
+    height: 40,
+    // backgroundColor: '#0FF',
+    marginTop: 10,
+    width: 100,
+    marginLeft: width / 2 - 50
+  },
+});
+
+export default connect(
+  state => ({
+    type: state.forgot.type,
+    status: state.forgot.status,
+    isSuccess: state.forgot.isSuccess,
+    page: state.forgot.page,
+    url: state.forgot.url,
+    verifyCode: state.forgot.verifyCode,
+    userName: state.forgot.userName,
+    signupKey: state.forgot.signupKey,
+    errorCount: state.forgot.errorCount,
+  }),
+  dispatch => ({
+    imageCode: () => {
+      if (dispatch) {
+        dispatch(fogotAction.imageCode())
+      }
     },
-    text:{
-      fontSize:18,
-      color:'gray'
+    userCheck: (username) => {
+      if (dispatch) {
+        dispatch(fogotAction.userCheck(username))
+      }
     },
-    style_tip:{
-      marginTop: 40,
-      marginLeft: 20,
-      marginRight: 20,
-      marginBottom: 40,
-      fontSize:12,
-      lineHeight:20,
-      color:'#ababab'
+    phoneCode: (mobile, captcha, signupKey) => {
+      if (dispatch) {
+        dispatch(fogotAction.phoneCode(mobile, captcha, signupKey))
+      }
     },
-    style_tip_phone:{
-      color:'red'
+    phoneCodeVerify: (mobile, verifyCode) => {
+      if (dispatch) {
+        dispatch(fogotAction.phoneCodeVerify(mobile, verifyCode))
+      }
     },
-      style_login_title: {
-        fontSize: 36,
-        height: 50,
-        width: 76,
-        marginTop: 80,
-        marginLeft: 0
-      },
-      style_login_image: {
-        height: width * 759 / 1125,
-        width: width,
-        marginTop: 0,
-        marginLeft: 0,
-        resizeMode: "contain"
-      },
-      style_input_title: {
-        fontSize: 12,
-        height: 14,
-        width: 76,
-        marginTop: 5,
-        marginLeft: 20
-      },
-      style_image: {
-        borderRadius: 35,
-        height: 70,
-        width: 70,
-        marginTop: 440,
-        alignSelf: "center"
-      },
-     
-      style_input_line: {
-        height: 1,
-        backgroundColor: "#00baf3",
-        marginLeft: 20,
-        marginRight: 20
-      },
-      style_input_line_gray: {
-        height: 1,
-        backgroundColor: "rgb(243,242,242)",
-        marginLeft: 20,
-        marginRight: 20
-      },
-      style_view_unlogin: {
-        fontSize: 12,
-        color: "#63B8FF",
-        marginLeft: 10
-      },
-      style_view_register: {
-        fontSize: 12,
-        color: "#63B8FF",
-        marginRight: 10,
-        alignItems: "flex-end",
-        flex: 1,
-        flexDirection: "row",
-        textAlign: "right"
-      },
-    
-      style_fogotText: {
-        overflow: "hidden",
-        height: 20,
-        marginTop: 10,
-        marginLeft: 20,
-        marginRight: 20,
-        alignItems: "center",
-        textAlign: "center",
-        fontSize: 14,
-        color: "#000"
-      },
-    
-      style_loginText: {
-        overflow: "hidden",
-        height: 20,
-        marginTop: 10,
-        marginLeft: 20,
-        marginRight: 20,
-        borderRadius: 20,
-        alignItems: "center",
-        textAlign: "center",
-        fontSize: 16,
-        color: "#fff"
-      },
-      style_fogotTextView: {
-        overflow: "hidden",
-        height: 40,
-        // backgroundColor: '#0FF',
-        marginTop: 10,
-        width: 100,
-        marginLeft: width / 2 - 50
-      },
-    });
-    
-    export default connect(
-      state => ({
-        type:state.forgot.type,
-        status: state.forgot.status,
-        isSuccess: state.forgot.isSuccess,
-        page: state.forgot.page,
-        url:state.forgot.url,
-        signupKey:state.forgot.signupKey,
-      }),
-      dispatch => ({
-        imageCode: () =>{
-          if(dispatch) {
-            dispatch(fogotAction.imageCode())
-          }
-        },
-        userCheck: (username) =>{
-          if(dispatch) {
-            dispatch(fogotAction.userCheck(username))
-          }
-        },
-        phoneCode: (mobile,captcha,signupKey) =>{
-          if(dispatch) {
-            dispatch(fogotAction.phoneCode(mobile,captcha,signupKey))
-          }
-        },
-        phoneCodeVerify: (mobile,verifyCode) =>{
-          if(dispatch) {
-            dispatch(fogotAction.phoneCodeVerify(mobile,verifyCode))
-          }
-        },
-        reset: (mobile,verifyCode,pwd) =>{
-          if(dispatch) {
-            dispatch(fogotAction.reset(mobile,verifyCode,pwd))
-          }
-        },
-        gotoPage: (page) =>{
-          if(dispatch) {
-            dispatch(fogotAction.gotoPage(page))
-          }
-        },
-      })
-    )(ForgotPage)
+    reset: (mobile, verifyCode, pwd) => {
+      if (dispatch) {
+        dispatch(fogotAction.reset(mobile, verifyCode, pwd))
+      }
+    },
+    gotoPage: (page) => {
+      if (dispatch) {
+        dispatch(fogotAction.gotoPage(page))
+      }
+    },
+  })
+)(ForgotPage)

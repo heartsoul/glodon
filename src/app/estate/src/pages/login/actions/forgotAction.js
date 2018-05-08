@@ -23,7 +23,7 @@ export function userCheck(username) {
     API.forgotCheck(username).then((data)=>{
       let {success,statusCode,errorMessage} = data;
       if(success == true && statusCode == 200) {
-        dispatch(_userCheck())
+        dispatch(_userCheck(username))
       } else {
         dispatch(_passwordError(null,statusCode,errorMessage));
       }
@@ -38,7 +38,7 @@ export function phoneCode(mobile,captcha,signupKey) {
     API.forgotCode(mobile,captcha,signupKey).then((data)=>{
       let {success,statusCode,errorMessage} = data;
       if(success == true && statusCode == 200) {
-        dispatch(_phoneCode())
+        dispatch(_phoneCode(mobile))
       } else {
         dispatch(_passwordError(null,statusCode,errorMessage));
       }
@@ -88,15 +88,17 @@ function _imageCode(url,signupKey) {
   }
 }
 
-function _userCheck() {
+function _userCheck(userName) {
   return {
     type: types.FORGOT_USER_CHECK,
+    userName:userName
   }
 }
 
-function _phoneCode() {
+function _phoneCode(mobile) {
   return {
     type: types.FORGOT_PHONE_CODE,
+    userName:mobile
   }
 }
 
