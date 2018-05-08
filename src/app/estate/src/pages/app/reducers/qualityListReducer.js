@@ -219,8 +219,6 @@ export default (state = initialState, action) => {
         }
 
         case types.QUALITY_LIST_DONE: {
-            console.log(action.qcState+"QUALITY_LIST_DONE----------")
-
             let dataItem = state.datas[action.qcState]
             if (!dataItem) {
                 dataItem = initialState.datas[""]

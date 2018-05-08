@@ -37,26 +37,7 @@ export default class BaseSearchPage extends React.Component {
         headerStyle: { marginLeft: -100, marginRight: -100, backgroundColor: "#00baf3" },
         headerLeft: <View ></View>,
         headerRight: <View></View>,
-        headerTitle: (
-            <View style={{ flex: 1, alignItems: "center" }}>
-                <View style={{ width: width - 20, alignItems: "center" }}>
-                    <SearchBar
-                        ref={(ref) => {
-                            searchRef = ref;
-                        }}
-                        styles={StyleSheet.create(newStyle)}
-                        placeholder="搜索"
-                        showCancelButton={true}
-                        defaultValue={searchKeywords}
-                        onSubmit={navigation.state.params && navigation.state.params.onSubmit ? navigation.state.params.onSubmit : () => { }}
-                        onBlur={navigation.state.params && navigation.state.params.onBlur ? navigation.state.params.onBlur : () => { }}
-                        onFocus={navigation.state.params && navigation.state.params.onFocus ? navigation.state.params.onFocus : () => { }}
-                        onCancel={navigation.state.params && navigation.state.params.onCancel ? navigation.state.params.onCancel : () => { }}
-                        onChange={navigation.state.params && navigation.state.params.onChange ? navigation.state.params.onChange : () => { }}
-                    />
-                </View>
-            </View>
-        ),
+        headerTitle: navigation.state.params && navigation.state.params.renderHeaderTitle ? navigation.state.params.renderHeaderTitle() : null,
     });
     renderFunc = null;
     searchFunc = null;
@@ -66,10 +47,39 @@ export default class BaseSearchPage extends React.Component {
             showHistory: true,
             showContent: false,
         };
-        this.props.navigation.setParams({ onSubmit: this.onSearch, onBlur: this.onBlur, onFocus: this.onFocus, onCancel: this.onCancel });
+        this.props.navigation.setParams({ renderHeaderTitle: this.renderHeaderTitle });
         this.props.loadHistory();
-
     }
+
+    componentWillUnmount() {
+        searchRef = null;
+        searchKeywords = null;
+    }
+
+    renderHeaderTitle = () => {
+        return (
+            <View style={{ flex: 1, alignItems: "center" }}>
+                <View style={{ width: width - 20, alignItems: "center" }}>
+                    <SearchBar
+                        ref={(ref) => {
+                            searchRef = ref;
+                        }}
+                        styles={StyleSheet.create(newStyle)}
+                        placeholder="搜索"
+                        showCancelButton={true}
+                        value={null}
+                        defaultValue={searchKeywords}
+                        onSubmit={this.onSearch}
+                        onBlur={this.onBlur}
+                        onFocus={this.onFocus}
+                        onCancel={this.onCancel}
+                        onChange={this.onChange}
+                    />
+                </View>
+            </View>
+        );
+    }
+
 
     setFunc(renderFunc, searchFunc) {
         this.renderFunc = renderFunc;
@@ -84,8 +94,8 @@ export default class BaseSearchPage extends React.Component {
         }
     }
 
-    onSearch = (keywords) => {
-        if (!keywords || keywords.length == 0) {
+    onSearch = () => {
+        if (!searchKeywords || searchKeywords.length == 0) {
             return;
         }
         this.setState({
@@ -93,7 +103,7 @@ export default class BaseSearchPage extends React.Component {
             showContent: true,
         });
         if (this.searchFunc) {
-            this.searchFunc(keywords);
+            this.searchFunc(searchKeywords);
         }
     }
 
@@ -112,25 +122,28 @@ export default class BaseSearchPage extends React.Component {
     renderSearchHistory = () => {
         if (this.props.searchHistory && this.props.searchHistory.length > 0) {
             return (
-                <View style={{ width: width, height: height }}>
-                    {
-                        this.props.searchHistory.map((item, index) => {
-                            return (
-                                <TouchableOpacity key={'history' + index} style={{ height: 52, justifyContent: "center", borderBottomColor: "#e6e6e6", borderBottomWidth: 0.5 }} onPress={() => {
-                                    this.onChange(item);
-                                    this.props.navigation.setParams({ value: item });
-                                    if (searchRef && searchRef.inputRef) {
-                                        searchRef.inputRef.blur();
-                                    }
-                                    this.onSearch(item)
-                                }}>
-                                    <Text style={{ fontSize: 16, marginLeft: 20, color: "#000000" }}>{item}</Text>
-                                </TouchableOpacity>
-                            );
-                        })
-                    }
+                <ScrollView>
+                    <View style={{ width: width, height: height }}>
+                        {
+                            this.props.searchHistory.map((item, index) => {
+                                return (
+                                    <TouchableOpacity key={'history' + index} style={{ height: 52, justifyContent: "center", borderBottomColor: "#e6e6e6", borderBottomWidth: 0.5 }} onPress={() => {
+                                        this.onChange(item);
+                                        this.props.navigation.setParams({ renderHeaderTitle: this.renderHeaderTitle });
+                                        if (searchRef && searchRef.inputRef) {
+                                            searchRef.inputRef.blur();
+                                        }
+                                        this.onSearch(item)
+                                    }}>
+                                        <Text style={{ fontSize: 16, marginLeft: 20, color: "#000000" }}>{item}</Text>
+                                    </TouchableOpacity>
+                                );
+                            })
+                        }
 
-                </View>
+                    </View>
+                </ScrollView>
+
             );
         }
         return null;
