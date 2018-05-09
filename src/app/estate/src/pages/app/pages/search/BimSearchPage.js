@@ -31,12 +31,12 @@ class BimSearchPage extends BaseSearchPage {
 
     componentDidMount() {
         const { params } = this.props.navigation.state;
-        this.state = {
+        this.setState({
             pageType: params.pageType,
             dataType: params.dataType,
-        }
+        });
     }
-    
+
     search = (keywords) => {
         let suffix = "";
         let isModel = true;
