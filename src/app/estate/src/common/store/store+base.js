@@ -115,7 +115,7 @@ export default class BaseStorage extends Component {
                 if (!value || value == null) {
                     this.storageData = {};
                 }
-                console.log("_loadStorageData"+value)
+                // console.log("_loadStorageData"+value)
                 if(funRet) {
                     funRet();
                 }
@@ -153,13 +153,18 @@ class GLDStorage extends BaseStorage {
         return this.loadItem(__KEY_userId, '0', null);
     }
     // 保存登录token
-    saveLoginToken = (token, userId ='0') => {
+    saveLoginToken = (token, userId ='0',userName='') => {
         // console.log('response.data.access_token1:'+token);
         this.setItem(__KEY_guide, '1');
         this.setItem(__KEY_userId, userId);
         this.setItem(__KEY_loginToken, token);
-        
-        
+    }
+    saveLoginUserName = (userName='') => {
+        this.setItem(__KEY_loginUserName, userName);
+    }
+    // 获取登录的用户名
+    getLoginUserName = () => {
+        return this.loadItem(__KEY_loginUserName, '', null);
     }
     // 获取登录的token
     getLoginToken = () => {
@@ -378,6 +383,7 @@ function userId() {
 const __KEY_storageData = "__storageData_"+BASE_URL; // 所有数据
 const __KEY_userInfo = "userInfo"; // 用户数据
 const __KEY_loginToken = "loginToken"; // token
+const __KEY_loginUserName = "loginUserName"; // userName
 const __KEY_currentProject = "currentProject"; // 当前项目
 const __KEY_guide = "guide"; // 启动引导页面 0: 未启动 1:已经启动过了
 const __KEY_userId = "userId"; // 启动引导页面 0: 未启动 1:已经启动过了

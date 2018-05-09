@@ -19,6 +19,7 @@ export default function loginIn(state = initialState, action) {
         status: '正在登录',
         hasChoose: false,
         isSuccess: false,
+        userName:action.userName,
         user: null,
       }
       break
@@ -29,7 +30,7 @@ export default function loginIn(state = initialState, action) {
         status: '登录成功',
 
         isSuccess: true,
-
+        userName:action.userName,
         user: action.user,
         retryTimes:3,
       }
@@ -40,7 +41,7 @@ export default function loginIn(state = initialState, action) {
         status: '登录成功',
 
         isSuccess: true,
-
+        userName:action.userName,
         user: action.user,
         retryTimes:3,
       }
@@ -49,7 +50,7 @@ export default function loginIn(state = initialState, action) {
       return {
         ...state,
 
-        status: '登录出错',
+        status: action.message,
 
         isSuccess: true,
 
@@ -72,7 +73,7 @@ export default function loginIn(state = initialState, action) {
       return {
         ...state,
 
-        status: '登录出错',
+        status: '登录失败',
 
         isSuccess: false,
 

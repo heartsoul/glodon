@@ -22,7 +22,7 @@ export function logout() {
 // 访问登录接口 根据返回结果来划分action属于哪个type,然后返回对象,给reducer处理
 function loginOld(username, pwd) {
   return dispatch => {
-    dispatch(isLogining())
+    dispatch(isLogining(username))
     RNBridgeModule.RNInvokeOCCallBack(
       {
         caller: "soulrn",
@@ -43,10 +43,10 @@ function loginOld(username, pwd) {
 // 访问登录接口 根据返回结果来划分action属于哪个type,然后返回对象,给reducer处理
 function loginNew(username, pwd) {
   return dispatch => {
-    dispatch(isLogining())
+    dispatch(isLogining(username))
 
     API.authToken(username, pwd).then((response) => {
-      // console.log('response.data.access_token:'+response.data.access_token);
+       console.log('response.data:'+response.data1);
       loadAccount(dispatch,response,username, pwd,response.data.access_token);
     }).catch((e) => {
       dispatch(loginError(false));
@@ -80,23 +80,24 @@ function loadAccount(dispatch,response,username, pwd, token = 'cookie_token') {
     
     if(token) {
       storage.saveLoginToken(token,gldAccountId);
+      storage.saveLoginUserName(username);
     } 
     storage.saveUserInfo(data);
     storage.hasChoose((ret) => {
       if (!ret) {
-        dispatch(loginSuccessChoose(true, response.data))
+        dispatch(loginSuccessChoose(true, response.data,username))
         return;
       }
       let tenant = storage.loadLastTenant();
       if(tenant != '0') {
         API.setCurrentTenant(tenant).then((responseData) => {
-          dispatch(loginSuccess(true, response.data))
+          dispatch(loginSuccess(true, response.data,username))
         }).catch((e) => {
           storage.saveLastTenant('0');
           dispatch(loginError(false));
         });
       }
-      dispatch(loginSuccess(true, response.data))
+      dispatch(loginSuccess(true, response.data,username))
       return;
       
     });
@@ -112,29 +113,33 @@ function logoutSuccess() {
   }
 }
 
-function isLogining() {
+function isLogining(userName) {
   return {
     type: types.LOGIN_IN_DOING,
+    userName:userName,
   }
 }
 
-function loginSuccess(isSuccess, user) {
+function loginSuccess(isSuccess, user, userName) {
   return {
     type: types.LOGIN_IN_DONE,
-    user,
+    user:user,
+    userName:userName,
   }
 }
 
-function loginSuccessChoose(isSuccess, user) {
+function loginSuccessChoose(isSuccess, user, userName) {
   return {
     type: types.LOGIN_IN_DONE_CHOOSE,
-    user,
+    user:user,
+    userName:userName,
   }
 }
 
-function loginError(isSuccess) {
+function loginError(isSuccess,message='登录失败') {
   return {
     type: types.LOGIN_IN_ERROR,
+    message:message
   }
 }
 

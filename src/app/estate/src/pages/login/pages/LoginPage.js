@@ -38,10 +38,10 @@ class LoginPage extends React.Component {
     this.state = {
       disabled: false,
       pressed: false,
-      username: "15822320523", // props.userName,
-      password: "123qwe", //props.password,
-      focusUserName: 1, // 焦点 0: 没有 1:
-      focusPassword: 0, // 焦点 0: 没有 1:
+      username: props.userName,
+      password: "", //props.password,
+      focusUserName: 0, // 焦点 1: 没有 0:
+      focusPassword: 0, // 焦点 1: 没有 0:
       events: "",
       msg: ""
     };
@@ -132,7 +132,7 @@ class LoginPage extends React.Component {
           source={require("app-images/login/icon_login_top_bg.png")}
           style={[styles.style_login_image]}
         />
-        <Text style={[styles.style_loginText,this.props.status === '登录出错'?{color:'red'}:{},{marginTop:20,height:20,alignContent:'center',justifyContent:'center'}]}>{this.props.status}</Text>
+        <Text style={[styles.style_loginText,this.props.status === '登录失败'?{color:'red'}:{},{marginTop:20,height:20,alignContent:'center',justifyContent:'center'}]}>{this.props.status}</Text>
         <Text
           style={[
             styles.style_input_title,
@@ -150,7 +150,7 @@ class LoginPage extends React.Component {
           onBlur={() => this._onUserNameBlur()}
           onFocus={() => this._onUserNameFocus()}
           onChangeText={text => this._onUserNameChangeText(text)}
-          value={this.state.username}
+          defaultValue={this.props.userName}
           ref={(ref)=>{this.userNameTextInput=ref}}
         />
         <View
@@ -300,7 +300,7 @@ export default connect(
   state => ({
     status: state.loginIn.status,
     isSuccess: state.loginIn.isSuccess,
-    user: state.loginIn.user,
+    userName: storage.getLoginUserName(),
     hasChoose: state.loginIn.hasChoose,
     retryTimes:state.loginIn.retryTimes,
   }),
