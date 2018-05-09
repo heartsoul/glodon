@@ -525,7 +525,7 @@ function isParamsChange(description, status, lastRectificationDate, editInfo, ty
         }
         if (status != perStatus) {
             return true;
-        } else if (!isDateEqual) {
+        } else if (!isDateEqual(lastRectificationDate, editInfo.lastRectificationDate)) {
             return true;
         }
     }

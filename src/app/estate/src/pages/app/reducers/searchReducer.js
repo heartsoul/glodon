@@ -7,6 +7,7 @@ const initialState = {
     totalEquipment: 0,
     keywords: "",
     searchHistory: [],
+    bimFiles: [],
 }
 
 export default (state = initialState, action) => {
@@ -34,6 +35,16 @@ export default (state = initialState, action) => {
                 equipmentList: action.equipmentList,
                 totalEquipment: action.totalEquipment,
                 keywords: action.keywords,
+            }
+        case types.SEARCH_BIMFILE_DONE:
+            return {
+                ...state,
+                bimFiles: action.bimFiles,
+            }
+        case types.SEARCH_BIMFILE_RESET:
+            return {
+                ...state,
+                bimFiles: [],
             }
         case types.LOAD_SEARCH_HISTORY:
             return {

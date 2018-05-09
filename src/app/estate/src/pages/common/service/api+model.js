@@ -3,31 +3,31 @@ import { requestJSON } from "common-module"
  * 模型相关API
  */
 
- /**
- * 获取当前已发布的最新版本
- * 
- * @export
- * @param {number} projectId 项目id
- * @returns 
- {
-  "code": "string",
-  "data": {
-    "baseVersionId": "string",
-    "businessStatus": "string",
-    "containerId": "string",
-    "createTime": 0,
-    "latest": true,
-    "modelId": "string",
-    "name": "string",
-    "projectId": 0,
-    "released": true,
-    "type": "string",
-    "updateTime": 0,
-    "versionId": "string"
-  },
-  "message": "string"
+/**
+* 获取当前已发布的最新版本
+* 
+* @export
+* @param {number} projectId 项目id
+* @returns 
+{
+ "code": "string",
+ "data": {
+   "baseVersionId": "string",
+   "businessStatus": "string",
+   "containerId": "string",
+   "createTime": 0,
+   "latest": true,
+   "modelId": "string",
+   "name": "string",
+   "projectId": 0,
+   "released": true,
+   "type": "string",
+   "updateTime": 0,
+   "versionId": "string"
+ },
+ "message": "string"
 }
- */
+*/
 export async function getModelLatestVersion(projectId) {
     let api = "/model/" + projectId + "/projectVersion/latestVersion";
     return requestJSON(api, {
@@ -124,7 +124,7 @@ export async function getModelElementProperty(projectId, versionId, fileId, elem
   }
  */
 export async function getModelBimFiles(projectId, projectVersionId, buildingId = 0, specialtyCode = '') {
-    let api = "/model/" + projectId +"/"+projectVersionId+ "/bimFiles";
+    let api = "/model/" + projectId + "/" + projectVersionId + "/bimFiles";
     let filter = '';
     if (!(buildingId === 0)) {
         filter += '&buildingId=' + buildingId;
@@ -204,7 +204,7 @@ export async function getModelBimFileChildren(projectId, projectVersionId, pageI
     if (!(fileId === 0)) {
         filter += '&fileId=' + fileId;
     }
-   
+
     return requestJSON(api + '?' + filter, {
         method: 'GET',
     });
@@ -214,12 +214,13 @@ export async function getModelBimFileChildren(projectId, projectVersionId, pageI
  * 搜索模型或图纸
  * @param {*} projectId 
  * @param {*} projectVersionId 项目版本
- * @param {*} facilityName 搜索关键字
+ * @param {*} name 搜索关键字
  * @param {*} suffix 模型rvt  图纸dwg
+ * @param {*} isModle 默认true
  */
-export async function search(projectId,projectVersionId,facilityName,suffix) {
+export async function searchModuleBlueprint(projectId, projectVersionId, name, suffix, isModel = false) {
     let api = `/model/${projectId}/${projectVersionId}/bim/file/query`;
-    let filter = `?facilityName=${facilityName}&suffix=${suffix}`;
+    let filter = `?name=${name}&suffix=${suffix}&isModel=${isModel}`;
     return requestJSON(api + filter, {
         method: 'POST',
     });
@@ -237,3 +238,4 @@ export async function getBluePrintThumbnail(projectId, projectVersion, fileId) {
         method: 'GET',
     });
 }
+
