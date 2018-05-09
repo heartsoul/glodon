@@ -89,7 +89,11 @@ class ForgotPage extends React.Component {
   }
   loadTitle = () => {
     let { page } = this.props;
-    return `密码管理（${page}/3）`
+    let title = this.props.navigation.getParam('title');
+    if(!title) {
+      title = '密码管理';
+    }
+    return `${title}（${page}/3）`
   }
   needBack = (backFun) => {
     const { page } = this.props;
@@ -463,7 +467,7 @@ class ForgotPage extends React.Component {
           <ActionButton
             onPress={() => { this.doReset() }}
             isDisabled={() => { return this.state.disabled3 }}
-            text="提交"
+            text="完  成"
           >
           </ActionButton>
         </View>

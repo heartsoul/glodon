@@ -10,7 +10,7 @@ import {
   View,
   Dimensions,
   TextInput,
-  TouchableHighlight,
+  TouchableOpacity,
   SafeAreaView,
   StatusBar
 } from "react-native";
@@ -109,7 +109,8 @@ class LoginPage extends React.Component {
     this.setState({ password: text });
   };
   _fogotAction = () => {
-   
+    let navigator = this.props.navigation;
+    storage.pushNext(navigator, "ForgotPage",{title:'找回密码'})
   };
   doLogin=()=>{
     Toast.loading('正在登录...', 0, null, true);
@@ -131,6 +132,7 @@ class LoginPage extends React.Component {
           source={require("app-images/login/icon_login_top_bg.png")}
           style={[styles.style_login_image]}
         />
+        <Text style={[styles.style_loginText,this.props.status === '登录出错'?{color:'red'}:{},{marginTop:20,height:20,alignContent:'center',justifyContent:'center'}]}>{this.props.status}</Text>
         <Text
           style={[
             styles.style_input_title,
@@ -138,7 +140,7 @@ class LoginPage extends React.Component {
               ? { color: "rgb(153,153,146)" }
               : { color: "transparent" },
             ,
-            { marginTop: 68 }
+            { marginTop: 28 }
           ]}
         >
           账户名
@@ -163,7 +165,8 @@ class LoginPage extends React.Component {
             styles.style_input_title,
             this.state.focusPassword == 1 || this.state.password.length > 0
               ? { color: "rgb(153,153,146)" }
-              : { color: "transparent" }
+              : { color: "transparent" },
+              { marginTop: 20 }
           ]}
         >
           密码
@@ -190,8 +193,11 @@ class LoginPage extends React.Component {
             text="登 录"
           >
           </ActionButton> 
-          
-          <Text style={[styles.style_loginText,this.props.status === '登录出错'?{color:'red'}:{}]}>{this.props.status}</Text>
+        </View>
+        <View style={styles.style_fogotTextView}>
+        <TouchableOpacity onPressOut={this._fogotAction}>
+        <Text style={[styles.style_fogotText]}>忘记密码</Text>
+        </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
     );
@@ -256,7 +262,6 @@ const styles = StyleSheet.create({
   },
 
   style_fogotText: {
-    overflow: "hidden",
     height: 20,
     marginTop: 10,
     marginLeft: 20,
@@ -264,7 +269,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     fontSize: 14,
-    color: "#000"
+    color: "#00baf3"
   },
 
   style_loginText: {
@@ -280,9 +285,11 @@ const styles = StyleSheet.create({
     color: "#fff"
   },
   style_fogotTextView: {
-    overflow: "hidden",
+    alignItems: "flex-end",
+    flex: 1,
+    flexDirection: "row",
+    
     height: 40,
-    // backgroundColor: '#0FF',
     marginTop: 10,
     width: 100,
     marginLeft: width / 2 - 50

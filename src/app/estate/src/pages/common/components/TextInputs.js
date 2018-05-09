@@ -187,7 +187,8 @@ export class TextInputImage extends Component {
       onFocus={this.props.onFocus}
     />
     <View  style={[styles.style_input_action,{}]}>
-    <TouchableOpacity onPress={this.props.onImageClick}><Image style={styles.style_image_captcha} source={{uri:this.props.imageUrl}}/></TouchableOpacity>
+    <TouchableOpacity onPress={this.props.onImageClick}>
+    <Image style={styles.style_image_captcha} source={this.props.imageUrl ? {uri:this.props.imageUrl} : icon_login_password_delete}/></TouchableOpacity>
     </View>
     </View>
     )

@@ -6,7 +6,7 @@ const initialState = {
   status: '',
   isSuccess: true,
   page: 1,
-  url:'abc',
+  url:null,
   userName:'',
   verifyCode:'',
   signupKey:'',
