@@ -53,7 +53,7 @@ class LoginPage extends React.Component {
       return false;
     }
     // 登录完成,切成功登录
-    if (nextProps.status === '登录成功' && nextProps.isSuccess) {
+    if (nextProps.status === '登录成功' && nextProps.isSuccess && storage.isLogin()) {
       let navigator = this.props.navigation;
       Toast.hide();
       if(nextProps.hasChoose) {
