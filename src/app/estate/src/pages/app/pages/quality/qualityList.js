@@ -8,6 +8,7 @@ import {SegmentedView} from 'app-3rd/teaset';
 
 import * as API from "app-api";
 import QualityListView from "./qualityListView";
+import { AuthorityManager } from "app-entry";
 
 var { width, height } = Dimensions.get("window");
 
@@ -35,6 +36,10 @@ export default class qualityList extends PureComponent {
     }
     _keyExtractor = (item, index) => index;
     _loadInspectionSummary = () =>{
+        let qShow = AuthorityManager.isQualityBrowser()
+        if (!qShow) {
+            return;
+        }
         let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
         let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointI');
         API.getQualityInspectionSummary(storage.loadProject(),qualityCheckpointId,qualityCheckpointName).then(

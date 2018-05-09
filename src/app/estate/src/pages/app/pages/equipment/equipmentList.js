@@ -3,10 +3,11 @@
  */
 'use strict';
 import React, { Component, PureComponent } from "react";
-import {StyleSheet, View, StatusBar, Dimensions} from "react-native";
-import {SegmentedView} from 'app-3rd/teaset';
+import { StyleSheet, View, StatusBar, Dimensions } from "react-native";
+import { SegmentedView } from 'app-3rd/teaset';
 
 import * as API from "app-api";
+import { AuthorityManager } from "app-entry";
 import EquipmentListView from "./equipmentListView";
 
 var { width, height } = Dimensions.get("window");
@@ -28,18 +29,23 @@ export default class extends PureComponent {
             isLoading: true,
             activeIndex: 0,
             equipmentView: [{}, {}, {}, {}],
-            equipmentBadge:{
-                item:[0,0,0,0]
+            equipmentBadge: {
+                item: [0, 0, 0, 0]
             },
         }
     }
     _keyExtractor = (item, index) => index;
-    _loadInspectionSummary = () =>{
-          API.equipmentListNum(storage.loadProject()).then(
+    _loadInspectionSummary = () => {
+        let eShow = AuthorityManager.isEquipmentBrowser()
+        if (!eShow) {
+            return;
+        }
+        return;
+        API.equipmentListNum(storage.loadProject()).then(
             (responseData) => {
                 // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
                 let items = responseData.data;
-                let qualityBadgeItem = [0,0,0,0];
+                let qualityBadgeItem = [0, 0, 0, 0];
                 API.EQUIPMENT_CLASSIFY_STATES_SUMMARY.map((item, index) => {
                     let find = items[item];
                     if (find) {
@@ -47,12 +53,12 @@ export default class extends PureComponent {
                     }
                 });
                 // console.log(JSON.stringify(qualityBadgeItem));
-                 this.setState({
-                    equipmentBadge:{item:qualityBadgeItem},
-                    })
+                this.setState({
+                    equipmentBadge: { item: qualityBadgeItem },
+                })
                 // 获取数量数据
             }
-        ).catch(err=>{
+        ).catch(err => {
 
         });
     }
@@ -69,7 +75,7 @@ export default class extends PureComponent {
     _toTop = () => {
         let index = this.state.activeIndex;
         let equipmentView = this.state.equipmentView[index];
-        if(equipmentView.scrollToOffset) {
+        if (equipmentView.scrollToOffset) {
             equipmentView.scrollToOffset();
         }
     }
@@ -77,21 +83,21 @@ export default class extends PureComponent {
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <SegmentedView style={{ flex: 1}} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
+                <SegmentedView style={{ flex: 1 }} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
                     {
-                       API.EQUIPMENT_CLASSIFY_STATUS_LIST.map((item,index)=>{
-                           return (
-                               <SegmentedView.Sheet key={item.name} title={item.name} badge={this.state.equipmentBadge.item[index]}>
-                                <EquipmentListView 
-                                onRef={ (ref) => {this.state.equipmentView[index] = ref}} 
-                                style={{flex:1}} 
-                                qcState={''+item.state}
-                                updateNumber={()=>{this._loadInspectionSummary()}}
-                                loadData={index ==0 ? true: false} /> 
-                            </SegmentedView.Sheet>
-                           );
-                       })
-                   }
+                        API.EQUIPMENT_CLASSIFY_STATUS_LIST.map((item, index) => {
+                            return (
+                                <SegmentedView.Sheet key={item.name} title={item.name} badge={this.state.equipmentBadge.item[index]}>
+                                    <EquipmentListView
+                                        onRef={(ref) => { this.state.equipmentView[index] = ref }}
+                                        style={{ flex: 1 }}
+                                        qcState={'' + item.state}
+                                        updateNumber={() => { this._loadInspectionSummary() }}
+                                        loadData={index == 0 ? true : false} />
+                                </SegmentedView.Sheet>
+                            );
+                        })
+                    }
                 </SegmentedView>
                 {/* <TouchableOpacity style={styles.topBtn} onPress={()=>this._toTop()}>
             <Text style={styles.topBtnText}>置顶</Text>
@@ -111,7 +117,7 @@ const styles = StyleSheet.create({
     contentList: {
         flex: 1,
         backgroundColor: '#fafafa',
-        paddingTop:5,
+        paddingTop: 5,
         //  height:120,
     },
     dataList: {
