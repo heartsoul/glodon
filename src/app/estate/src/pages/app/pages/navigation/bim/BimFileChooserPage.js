@@ -22,7 +22,9 @@ var { width, height } = Dimensions.get("window");
 class RightBarButtons extends React.Component {
     _onSearchPress = (navigation) => {
         // console.log(navigation);
-        navigation.navigate("BimSearchPage")
+        // navigation.navigate("BimSearchPage")
+        global.storage.pushNext(navigation, "BimSearchPage", { dataType: navigation.state.params.dataType, pageType: navigation.state.params.pageType });
+
     }
     render() {
         return <View style={{
@@ -78,7 +80,7 @@ export default class BimFileChooser extends Component {
             fileId: 0,
             dataType: "",//图纸文件 模型文件 
             pageType: PageType.PAGE_TYPE_NEW_QUALITY,
-            navData: [],
+            navData: [],//导航条面包屑数据
         }
     }
     _keyExtractor = (item, index) => index;

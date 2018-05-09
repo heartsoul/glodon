@@ -106,6 +106,37 @@ function saveHistory(keywords, dispatch) {
     dispatch(loadHistoryDone(items))
 }
 
+export function searchBimFile(keywords, suffix, isModel) {
+    return dispatch => {
+        loadingToast();
+        saveHistory(keywords, dispatch);
+        API.searchModuleBlueprint(storage.loadProject(), storage.projectIdVersionId, keywords, suffix, isModel)
+            .then((responseData) => {
+                let data = responseData.data;
+                let bimFiles = [];
+                if (data && data.message === "success") {
+                    bimFiles = data.data;
+                    bimFiles.map((item)=>{
+                        item.name = parseBimFileName(item.name);
+                    })
+                }
+                dispatch(searchBimFileDone(bimFiles))
+                Toast.hide()
+            }).catch((error) => {
+                console.log(error);
+            })
+
+    }
+}
+
+function parseBimFileName(htmlName){
+    // 电缆沟<span class=\'highlight-search\'>图</span>纸.<span class=\'highlight-search\'>dwg</span>
+    var reg1=new RegExp(/<span class='highlight-search'>/g); 
+    var reg2=new RegExp(/<\/span>/g); 
+    var str1 = htmlName.replace(reg1,''); 
+    var str2 = str1.replace(reg2,''); 
+    return str2;
+}
 
 function loadingToast() {
     Toast.loading('加载中...', 0, null, true);
@@ -141,6 +172,19 @@ function searchEquipmentDone(equipmentList, totalEquipment, keywords) {
         keywords: keywords,
     }
 }
+
+function searchBimFileDone(bimFiles) {
+    return {
+        type: types.SEARCH_BIMFILE_DONE,
+        bimFiles: bimFiles,
+    }
+}
+export function searchBimFileReset(bimFiles) {
+    return {
+        type: types.SEARCH_BIMFILE_RESET,
+    }
+}
+
 function loadHistoryDone(items) {
     return {
         type: types.LOAD_SEARCH_HISTORY,
