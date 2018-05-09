@@ -37,7 +37,7 @@ export default class BaseStorage extends Component {
     }
     // 存储数据
     _setItem = (key, value) => {
-        console.log("_setItem:"+value)
+        // console.log("_setItem:"+value)
         this.storage.setItem(key, value, (error, result) => {
         });
     }

@@ -20,7 +20,7 @@ export default class LeftBarButtons extends React.Component {
     GLDDrawerPaneView.open(this.props.currentItem,navigation);
   }
   
-  render() {
+  render = () => {
     return <View style={styles.barItem}>
       <View style={styles.spliteItem} />
       <TouchableOpacity onPress={() => this._onBackPress(this.props.navigation)} >

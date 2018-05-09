@@ -1,10 +1,10 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import { View, ActivityIndicator } from 'react-native'
+import { View, Image, ActivityIndicator ,Platform, StyleSheet} from 'react-native'
 import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 
 import * as API from 'app-api'
-// import { LeftBarButtons } from "app-components"
+import { LeftBarButtons } from "app-components"
 import * as GLD from '../pages'
 import BaseStorage from '../../common/store/store+base'
 import configureStore, { history } from '../store/ConfigureStore'
@@ -111,16 +111,27 @@ const options = () => {
     headerStyle: {
       backgroundColor: '#00baf3',
       borderBottomColor: '#00baf3',
+      shadowColor: '#00baf3',
+      shadowOpacity: 0.1,
+    shadowRadius: 0,
+    shadowOffset: {
+      height: 0,
+    },
+    elevation: 0,
     },
     headerTintColor: '#fff',
     tabBarVisible: false,
     headerTitleStyle: {
-      fontWeight: 'bold',
-      fontSize:19,
+      // fontWeight: 'bold',
+      // fontSize:19,
+      // width:'auto',
+      // backgroundColor: '#FF0000',
+      // textAlign: Platform.OS === 'ios' ? 'center' : 'center',
     },
-    // headerLeft: (
-    //   <LeftBarButtons top={false} currentItem={""} />
-    // )
+    headerLeft: ()=>{ 
+      return (
+      <LeftBarButtons top={false} currentItem={""} />
+    )}
   }
 }
 // LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage
@@ -210,11 +221,90 @@ export default class extends React.Component {
     return (<Provider store={store}><RootGuideStack /></Provider>)
   }
   render() {
-    // if (this.state.hasLoad) {
       return this.renderPage();
-    // }
-    // return <View style={{ backgroundColor: '#FFFFFF', justifyContent: 'center', flex: 1, alignItems: 'center', alignContent: 'center' }}>
-    //   <ActivityIndicator size='large' />
-    // </View>
   }
 }
+
+let platformContainerStyles;
+if (Platform.OS === 'ios') {
+  platformContainerStyles = {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#A7A7AA',
+  };
+} else {
+  platformContainerStyles = {
+    shadowColor: 'black',
+    shadowOpacity: 0.1,
+    shadowRadius: StyleSheet.hairlineWidth,
+    shadowOffset: {
+      height: StyleSheet.hairlineWidth,
+    },
+    elevation: 4,
+  };
+}
+const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
+    ...platformContainerStyles,
+  },
+  transparentContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    ...platformContainerStyles,
+  },
+  header: {
+    ...StyleSheet.absoluteFillObject,
+    flexDirection: 'row',
+  },
+  item: {
+    backgroundColor: 'transparent',
+  },
+  iconMaskContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  iconMaskFillerRect: {
+    flex: 1,
+    backgroundColor: '#d8d8d8',
+    marginLeft: -3,
+  },
+  iconMask: {
+    // These are mostly the same as the icon in ModularHeaderBackButton
+    height: 21,
+    width: 12,
+    marginLeft: 9,
+    marginTop: -0.5, // resizes down to 20.5
+    alignSelf: 'center',
+    resizeMode: 'contain',
+  },
+  title: {
+    bottom: 0,
+    top: 0,
+    left: TITLE_OFFSET,
+    right: TITLE_OFFSET,
+    position: 'absolute',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: Platform.OS === 'ios' ? 'center' : 'flex-start',
+  },
+  left: {
+    left: 0,
+    bottom: 0,
+    top: 0,
+    position: 'absolute',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  right: {
+    right: 0,
+    bottom: 0,
+    top: 0,
+    position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+});

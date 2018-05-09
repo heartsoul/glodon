@@ -12,6 +12,7 @@ import {
     Platform,
 } from 'react-native';
 import { Tabs, } from 'antd-mobile';
+import { LeftBarButtons } from "app-components"
 import NewCheckListTabBar from "./NewCheckListTabBar";
 import NewPage from "./NewPage";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -26,7 +27,11 @@ const REF_INSPECTION = 'REF_INSPECTION';//
 const REF_ACCEPTANCE = 'REF_ACCEPTANCE';//
 
 class NewCheckListPage extends Component {
-
+    static navigationOptions = ({ navigation, screenProps }) => ({
+        gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
+        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
+        title: navigation.state.params && navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : "密码管理"
+      })
     static navigationOptions = ({ navigation, screenProps }) => ({
         // title: '新建',
         headerTitle: (navigation.state.params.headerTitle),
@@ -37,11 +42,7 @@ class NewCheckListPage extends Component {
                 提交
         </Text>
         ),
-        headerLeft: (
-            <Text onPress={() => navigation.state.params.leftNavigatePress()} style={{ marginLeft: 20, color: '#FFFFFF', width: 60, textAlign: "left" }} >
-                返回
-        </Text>
-        ),
+        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle():null,
         gesturesEnabled: false,
         // header: null
     });
@@ -75,8 +76,19 @@ class NewCheckListPage extends Component {
                 }}
             >
             </Tabs></View>);
-        this.props.navigation.setParams({ leftNavigatePress: this.goBack, rightNavigatePress: this.submit, onChangePage: this.onChangePage, headerTitle: headerTitle })
+        this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, rightNavigatePress: this.submit, onChangePage: this.onChangePage, headerTitle: headerTitle })
     }
+
+    needBack = (backFun) => {
+        if (backFun) {
+          backFun(false);
+        }
+        this.goBack();
+        return;
+      }
+      loadLeftTitle = () => {
+        return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={''} />
+      }
 
     getCheckListParams = () => {
         let params = this.props.navigation.state.params;
