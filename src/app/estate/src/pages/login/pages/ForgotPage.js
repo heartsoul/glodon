@@ -302,7 +302,7 @@ class ForgotPage extends React.Component {
           onBlur={() => this._onUserNameBlur()}
           onFocus={() => this._onUserNameFocus()}
           onChangeText={text => this._onUserNameChangeText(text)}
-          value={this.props.userName ? this.props.userName : ''}
+          defaultValue={this.props.userName ? this.props.userName : ''}
           ref={(ref) => { this.userNameTextInput = ref }}
         />
         <View
