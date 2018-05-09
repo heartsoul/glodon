@@ -287,9 +287,10 @@ export default class EquipmentDetailView extends Component {
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
         
             <EquipmentInfoItem leftTitle="请依次完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
-            <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
+            <View style={{ marginTop: 0, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
 
                 <EquipmentInfoItem leftTitle="验收单位：" content={info.acceptanceCompanyName} showType="info" onClick={() => { this.showActionSheet() }} />
+                <EquipmentInfoItem showType="line" />
                 <EquipmentInfoItem leftTitle="批次编号：" content={info.batchCode} showType="input" onChangeText={(value) => { info.batchCode = value }} />
                 <EquipmentInfoItem showType="line" />
                 <DatePicker
@@ -300,13 +301,11 @@ export default class EquipmentDetailView extends Component {
                     onChange={date => { info.approachDate = date.getTime(); this.props.switchPage({ ...info }) }}
                 >
                     <List.Item arrow="horizontal" >
-                        <Text style={{ fontSize: 15, color: "#000000" }}>
-                            进场日期：
-                                </Text>
+                        <Text style={{paddingLeft:4, fontSize: 14, color: "#666666" }}>进场日期：</Text>
                     </List.Item>
                 </DatePicker>
                 {/* <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate ? API.formatUnixtimestampSimple(info.approachDate) : null} showType="input" /> */}
-                <EquipmentInfoItem showType="line" />
+                {/* <EquipmentInfoItem showType="line" /> */}
                 <EquipmentInfoItem leftTitle="材设编码：" content={info.facilityCode} showType="input" onChangeText={(value) => { info.facilityCode = value }} />
                 <EquipmentInfoItem showType="line" />
                 <EquipmentInfoItem leftTitle="材设名称：" content={info.facilityName} showType="input" onChangeText={(value) => { info.facilityName = value }} />
@@ -320,7 +319,7 @@ export default class EquipmentDetailView extends Component {
     renderOtherEdit = (info) => {
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
             <EquipmentInfoItem leftTitle="请根据需要选择完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
-            <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
+            <View style={{ marginTop: 0, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
                 <EquipmentInfoItem leftTitle="进场数量：" content={info.quantity} showType="input" onChangeText={(value) => { info.quantity = value }} />
                 <EquipmentInfoItem showType="line" />
                 <EquipmentInfoItem leftTitle="单位：" content={info.unit} showType="input" onChangeText={(value) => { info.unit = value }} />
@@ -352,7 +351,7 @@ export default class EquipmentDetailView extends Component {
     renderImageEdit = (info) => {
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
             <EquipmentInfoItem leftTitle="您可记录现场图片" leftTitleColor='#00b5f2' showType="headerInfo" />
-            <View style={{ marginTop: 10, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
+            <View style={{ marginTop: 0, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
                 <ImageChooserView ref={REF_PHOTO}  files={info.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" />
                 <EquipmentInfoItem showType="line" />
                 <Text>验收合格:</Text><Switch value={info.qualified == true ? true : false} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />

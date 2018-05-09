@@ -160,6 +160,8 @@ export function getModelElementProperty(relevantEquipmentModle, equipmentInfo) {
             equipmentInfo.elementName = responseData.data.data.name;
             equipmentInfo.approachDate = new Date().getTime();
             dispatch(_loadSuccess({ ...equipmentInfo }));
+        }).catch(error => {
+            console.log(error);
         });
     }
 }

@@ -49,7 +49,7 @@ export default class EquipmentInfoItem extends React.Component {
         if (!this.props.onClick) {
             return (
                 <View style={styles.containerView} >
-                    <View style={styles.titleView}>
+                    <View style={styles.titleViewHeader}>
                     <Text style={{backgroundColor:'#00b5f2',width:2,marginRight:5,height:16,fontSize:20,fontWeight:'bold'}}>{' '}</Text>
                     <Text style={[styles.leftTitleHeader,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                     </View>
@@ -61,7 +61,7 @@ export default class EquipmentInfoItem extends React.Component {
         }
         return (
             <View style={styles.containerView} >
-                <View style={styles.titleView}>
+                <View style={styles.titleViewHeader}>
                 <Text style={{backgroundColor:'#00b5f2',width:2,marginRight:5,height:16,fontSize:20,fontWeight:'bold'}}>{' '}</Text>
                 <Text style={[styles.leftTitleHeader,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                 </View>
@@ -90,14 +90,15 @@ export default class EquipmentInfoItem extends React.Component {
         return (
             <View style={styles.containerView} >
                 <View style={styles.titleView}>
-                <Text style={[styles.leftTitleHeader,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
+                <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                 </View>
-                <View style={styles.contentView}>
+                <View style={styles.contentViewAction}>
                     <Text style={styles.content}>{this.props.content}</Text>
-                </View>
-                <TouchableOpacity style={styles.rightAction} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                    <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                         <Image source={rightImage} style={styles.infoMark} />
                     </TouchableOpacity>
+                </View>
+                
             </View>
         );
     }
@@ -249,18 +250,18 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         flexDirection: 'row',
-        
     },
     textInput: {
         color: '#666666',
         fontWeight: '100',
-        marginTop: 5,
-        marginBottom: 5,
-
+        marginTop: 0,
+        marginBottom: 0,
+        height:40,
     },
     content: {
         fontSize: 14,
         fontWeight: '100',
+        alignContent:'center'
     },
     link: {
         color: '#00b5f2',
@@ -271,30 +272,45 @@ const styles = StyleSheet.create({
     },
     leftTitle: {
         fontSize: 14,
-        width: 75,
+        width: '100%',
         color: '#666666',
         fontWeight: '100',
         // fontFamily:"PingFangSC-Light",
     },
     leftTitleHeader: {
-        fontSize: 15,
-        width: '80%',
+        fontSize: 14,
+        width: '100%',
         color: '#666666',
         fontWeight: '200',
         // fontFamily:"PingFangSC-Light",
     },
+    titleViewHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     titleView: {
         flexDirection: 'row',
-       
         alignItems: 'center',
+        width:75,
     },
     contentView: {
         flexDirection: 'row',
-        
-        alignItems: 'center',
+        marginRight: 75,
+        height:40,
+        width:width-75-40,
+    },
+    contentViewAction: {
+        flexDirection: 'row',
+        marginRight: 75,
+        height:40,
+        width:width-75-40,
+        alignContent:'center',
+        alignItems:'center',
+        justifyContent:'flex-end',
     },
     contentInputView: {
         width:width-75-40,
+        height:40,
     },
     infoMark: {
         // marginLeft: 5,
@@ -310,11 +326,11 @@ const styles = StyleSheet.create({
     },
     lineView: {
         height: 1,
-        marginTop: 10,
-        marginBottom: 10,
+        marginTop: 0,
+        marginBottom: 0,
         marginLeft: 20,
         width: '100%',
-        backgroundColor: '#fafafa'
+        backgroundColor: '#f7f7f7'
     },
     imageNarmal: {
         marginRight: 10,
