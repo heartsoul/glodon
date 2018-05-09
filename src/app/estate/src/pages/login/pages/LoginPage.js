@@ -110,7 +110,7 @@ class LoginPage extends React.Component {
     let check = text.length > 5 && this.state.username.length > 1;
     this.setState({ password: text, disabled:!check});
   };
-  _fogotAction = () => {1
+  _fogotAction = () => {
     let navigator = this.props.navigation;
     storage.pushNext(navigator, "ForgotPage",{title:'找回密码'})
   };
