@@ -37,7 +37,21 @@ export default class BaseSearchPage extends React.Component {
         headerStyle: { marginLeft: -100, marginRight: -100, backgroundColor: "#00baf3" },
         headerLeft: <View ></View>,
         headerRight: <View></View>,
-        headerTitle: navigation.state.params && navigation.state.params.renderHeaderTitle ? navigation.state.params.renderHeaderTitle() : null,
+        headerTitle: navigation.state.params && navigation.state.params.renderHeaderTitle ? navigation.state.params.renderHeaderTitle() : (
+            (
+                <View style={{ flex: 1, alignItems: "center" }}>
+                    <View style={{ width: width - 20, alignItems: "center" }}>
+                        <SearchBar
+                            styles={StyleSheet.create(newStyle)}
+                            placeholder="搜索"
+                            showCancelButton={true}
+                            value={null}
+                            defaultValue={searchKeywords}
+                        />
+                    </View>
+                </View>
+            )
+        ),
     });
     renderFunc = null;
     searchFunc = null;

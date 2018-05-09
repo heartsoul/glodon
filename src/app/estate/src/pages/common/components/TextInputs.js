@@ -200,7 +200,7 @@ TextInputImage.propTypes = {
   onBlur: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,
   onChangeText: PropTypes.func.isRequired,
-  imageUrl:PropTypes.string.isRequired,
+  imageUrl:PropTypes.string,
   onImageClick:PropTypes.func.isRequired,
 }
 
