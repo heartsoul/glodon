@@ -11,7 +11,6 @@ export function imageCode() {
   return dispatch => {
     API.forgotCaptchaUrl().then((dataRet)=>{
       let {uri,signupKey} = dataRet;
-     
       dispatch(_imageCode(uri,signupKey)) 
     }).catch((e) => {
       dispatch(_passwordError(e));

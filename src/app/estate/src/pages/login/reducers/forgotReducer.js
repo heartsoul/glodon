@@ -38,6 +38,7 @@ export default function forgot(state = initialState, action) {
         userName:action.userName,
         page: 1,
         tip:null,
+        // errorCount:state.errorCount+1,
       }
       case types.FORGOT_PHONE_CODE:
       return {
@@ -47,7 +48,9 @@ export default function forgot(state = initialState, action) {
         isSuccess: true,
         page: 2,
         userName:action.userName,
+        verifyCode:'',
         tip:'手机验证码已经发送',
+        errorCount:state.errorCount+1,
       }
     // break
     case types.FORGOT_ERROR:
@@ -57,6 +60,7 @@ export default function forgot(state = initialState, action) {
         status: action.errorMessage,
         isSuccess: false,
         tip:null,
+        statusCode:action.statusCode,
         errorCount:state.errorCount+1,
       }
 
@@ -69,7 +73,8 @@ export default function forgot(state = initialState, action) {
         isSuccess: true,
         page:3,
         verifyCode:action.verifyCode,
-        tip:null
+        tip:null,
+        errorCount:state.errorCount+1,
       }
     case types.FORGOT_RESET:
       return {
@@ -77,7 +82,8 @@ export default function forgot(state = initialState, action) {
         type:action.type,
         status: '',
         isSuccess: true,
-        tip:'修改成功'
+        tip:'修改成功',
+        errorCount:state.errorCount+1,
       }
     case types.FORGOT_STEP:
       return {

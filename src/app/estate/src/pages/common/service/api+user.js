@@ -150,7 +150,7 @@ export async function forgotCaptchaUrl(retFunc) {
 //  GET /uaa/user/password/forgot/check?identity=18610799451 HTTP/1.1
 
 export async function forgotCheck(identity) {
-    return requestJSON(api_forgot_check+'?'+identity,{
+    return requestJSON(api_forgot_check+'?identity='+identity,{
         method:'GET'
     }).then((response)=>{
         return response.data

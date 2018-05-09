@@ -35,40 +35,45 @@ class ForgotPage extends React.Component {
     this.phoneCodeTextInput = null;
     /*用来指示是否显示Loading提示符号*/
     this.state = {
-      disabled1: false,
-      disabled2: false,
-      disabled3: false,
+      disabled1: true,
+      disabled2: true,
+      disabled3: true,
       pressed: false,
       username: '',
       imageCode: "",
       verifyCode: "",
       password: "", //props.password,
       password1: "",
-      focusUserName: 1, // 焦点 0: 没有 1:
-      focusPassword: 0, // 焦点 0: 没有 1:
-      focusPassword1: 1, // 焦点 0: 没有 1:
-      focusPhone: 1, // 焦点 0: 没有 1:
-      focusPhoneCode: 1, // 焦点 0: 没有 1:
-      focusImageCode: 1, // 焦点 0: 没有 1:
+      focusUserName: 0, // 焦点 1: 没有 0:
+      focusPassword: 0, // 焦点 1: 没有 0:
+      focusPassword1: 0, // 焦点 1: 没有 0:
+      focusPhoneCode: 0, // 焦点 1: 没有 0:
+      focusImageCode: 0, // 焦点 1: 没有 0:
     };
   }
   shouldComponentUpdate(nextProps, nextState) {
+    
     if (nextProps.type === types.FORGOT_ERROR) {
       // Toast.info(nextProps.status);
+      Toast.hide();
       this.state.status = nextProps.status;
-      if(nextProps.page == 1) {
+      if(nextProps.page == 1 && this.props.statusCode == '601') {
         this.props.imageCode();
       }
     }
     if (nextProps.type === types.FORGOT_RESET && nextProps.isSuccess) {
       let navigator = this.props.navigation;
-      // Toast.hide();
-      Toast.success(nextProps.tip);
-      storage.goBack(navigator);
+      Toast.hide();
+      Toast.success(nextProps.tip,3);
+      setTimeout(() => {
+        Toast.hide();
+        storage.pop(navigator,1)
+      }, 3500);
+      
       return false;
     }
     if (nextProps.tip && nextProps.isSuccess) {
-      Toast.success(nextProps.tip);
+      Toast.success(nextProps.tip, 2);
     }
 
     if (nextProps.page != this.props.page) {
@@ -136,6 +141,10 @@ class ForgotPage extends React.Component {
   };
   _onUserNameBlur = () => {
     this.setState({ focusUserName: 0, disabled1: !this._checkInput1() });
+    if(this.state.username.length > 1 && this.state.username != this.props.userName) {
+      const { userCheck } = this.props
+      userCheck(this.state.username);
+    }
   };
   _onUserNameFocus = () => {
     this.setState({
@@ -235,6 +244,10 @@ class ForgotPage extends React.Component {
     const { phoneCode, phoneCodeVerify, imageCode } = this.props
     if (page == 2) {
       if (!this._checkInput1()) {
+        this.setState({
+          status:'请输入有效信息后重试',
+          disabled3: true
+        });
         return;
       }
       phoneCode(this.state.username, this.state.imageCode, this.props.signupKey);
@@ -242,6 +255,10 @@ class ForgotPage extends React.Component {
     }
     if (page == 3) { 
       if(!this._checkInput2()) {
+        this.setState({
+          status:'请输入有效的验证码',
+          disabled3: true
+        });
         return;
       }
       phoneCodeVerify(this.state.username, this.state.verifyCode);
@@ -250,9 +267,14 @@ class ForgotPage extends React.Component {
   }
   doReset = () => {
     if (!this._checkInput3()) {
+      this.setState({
+        status:'两次密码输入不一致',
+        disabled3: true
+      });
       return;
     }
-    // Toast.loading('提交...', 0, null, true);
+    
+    Toast.loading('', 0, null, true);
     const { reset } = this.props
     reset(this.state.username, this.state.verifyCode, this.state.password)
   }
@@ -598,17 +620,19 @@ export default connect(
   state => ({
     type: state.forgot.type,
     status: state.forgot.status,
+    tip: state.forgot.tip,
     isSuccess: state.forgot.isSuccess,
     page: state.forgot.page,
     url: state.forgot.url,
     verifyCode: state.forgot.verifyCode,
     userName: state.forgot.userName,
     signupKey: state.forgot.signupKey,
+    statusCode: state.forgot.statusCode,
     errorCount: state.forgot.errorCount,
   }),
   dispatch => ({
     imageCode: () => {
-      if (dispatch) {
+      if (dispatch) {250179
         dispatch(fogotAction.imageCode())
       }
     },
