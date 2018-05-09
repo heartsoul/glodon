@@ -40,7 +40,7 @@ export class TextInputNormal extends Component {
         this.props.onChangeText(text);
       }
       }
-      value={this.props.value}
+      defaultValue={this.props.defaultValue}
       onBlur={this.props.onBlur}
       onFocus={this.props.onFocus}
     />
@@ -49,7 +49,7 @@ export class TextInputNormal extends Component {
 }
 
 TextInputNormal.propTypes = {
-  value: PropTypes.string.isRequired,
+  defaultValue: PropTypes.string,
   placeholder: PropTypes.string.isRequired,
   onBlur: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,
@@ -120,7 +120,6 @@ export class TextInputPassword extends Component {
         } 
         this.props.onChangeText(text);}
       }
-      value={this.state.value}
       onBlur={this.props.onBlur}
       onFocus={this.props.onFocus}
     />
@@ -182,7 +181,7 @@ export class TextInputImage extends Component {
       onChangeText={(text)=>{
         this.props.onChangeText(text);}
       }
-      value={this.state.value}
+      defaultValue={this.props.defaultValue}
       onBlur={this.props.onBlur}
       onFocus={this.props.onFocus}
     />
@@ -196,7 +195,7 @@ export class TextInputImage extends Component {
 }
 
 TextInputImage.propTypes = {
-  value: PropTypes.string,
+  defaultValue: PropTypes.string,
   placeholder: PropTypes.string.isRequired,
   onBlur: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,
