@@ -68,7 +68,7 @@ class LoginPage extends React.Component {
   }
 
   _checkInput() {
-    return (this.state.username.length && this.state.password.length);
+    return (this.state.username.length > 1 && this.state.password.length > 5);
   }
   _onUserNameChangeText = text => {
     if(text.indexOf('\n')>=0) {
@@ -76,7 +76,8 @@ class LoginPage extends React.Component {
       // this.passwordTextInput.setSelectionRange(0, this.passwordTextInput.value.length);
       return;
     }
-    this.setState({ username: text });
+    let check = text.length > 1 && this.state.password.length > 5;
+    this.setState({ username: text, disabled:!check});
   };
   _onUserNameBlur = () => {
 
@@ -105,10 +106,11 @@ class LoginPage extends React.Component {
      }
       return;
     }
-    console.log("_onPasswordChangeText" + text);
-    this.setState({ password: text });
+    // console.log("_onPasswordChangeText" + text);
+    let check = text.length > 5 && this.state.username.length > 1;
+    this.setState({ password: text, disabled:!check});
   };
-  _fogotAction = () => {
+  _fogotAction = () => {1
     let navigator = this.props.navigation;
     storage.pushNext(navigator, "ForgotPage",{title:'找回密码'})
   };
