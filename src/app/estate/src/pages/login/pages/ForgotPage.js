@@ -495,7 +495,7 @@ class ForgotPage extends React.Component {
         <StatusBar
           barStyle="light-content"
           backgroundColor="#00baf3"
-          translucent={true}
+          translucent={false}
         />
         <View style={[{ flex: 1, height: 40, alignContent: 'center', alignItems: 'center', justifyContent: 'center', }]}>
           <Text style={[styles.style_tip, styles.style_tip_phone, { marginBottom: 0, marginTop: 20, }]}>
