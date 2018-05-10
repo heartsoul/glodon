@@ -19,7 +19,9 @@ import * as PageType from "./PageTypes";
 import * as BimToken from "./BimFileTokenUtil";
 import * as AuthorityManager from "./../project/AuthorityManager";
 import * as RelevantModelAction from "./../../../actions/relevantModelAction";
-
+import * as API from "app-api";
+import { ActionSheet } from 'app-3rd/teaset';
+import { BimFileEntry } from "app-entry";
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
@@ -55,6 +57,10 @@ class RelevantModelPage extends Component {
         headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
         headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null,
     });
+    mQualityPositionMap = [];
+    mEquipmentPositionMap = [];
+    requestElementNameCount = 0;
+    requestEquipmentElementNameCount = 0;
 
     constructor(props) {
         super(props);
@@ -182,7 +188,9 @@ class RelevantModelPage extends Component {
      */
     add = () => {
         //会出发getPosition方法
-        this.refs.webview.injectJavaScript("javascript:getSelectedComponent();")
+        // this.refs.webview.injectJavaScript("javascript:getSelectedComponent();")
+        this.refs.webview.injectJavaScript("javascript:loadCircleItems('" + JSON.stringify(this.mEquipmentPositionMap) + "');")
+
     }
 
     /**
@@ -213,7 +221,7 @@ class RelevantModelPage extends Component {
         } else if (this.state.pageType == PageType.PAGE_TYPE_EQUIPMENT_MODEL) {
             //从材设单模型进入 replace为新建材设单页面
             this.props.transformInfo(relevantModel);
-            this.props.navigation.replace('EquipmentNewPage',{});
+            this.props.navigation.replace('EquipmentNewPage', {});
         } else if (this.state.pageType == PageType.PAGE_TYPE_DETAIL) {
             this.props.navigation.goBack();
         }
@@ -296,13 +304,85 @@ class RelevantModelPage extends Component {
      * 显示质检单模型历史选择信息
      */
     getElements = () => {
-
+        API.getElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
+            .then(responseData => {
+                if (responseData && responseData.data) {
+                    let len = responseData.data.length;
+                    responseData.data.map((item) => {
+                        this.getModelElementProperty(item, len, "quality");
+                    })
+                }
+            }).catch(error => { })
     }
+
+    getModelElementProperty = (item, len, type) => {
+        API.getModelElementProperty(storage.loadProject(), storage.projectIdVersionId, this.state.relevantModel.gdocFileId, item.elementId)
+            .then(responseData => {
+                if (type === "quality") {
+                    this.requestElementNameCount++;
+                } else {
+                    this.requestEquipmentElementNameCount++;
+                }
+                modelElementInfo = responseData.data;
+                if (modelElementInfo && modelElementInfo.data && modelElementInfo.data.boundingBox) {
+                    let min = modelElementInfo.data.boundingBox.min;
+                    let max = modelElementInfo.data.boundingBox.max;
+                    if (max && min) {
+                        item.drawingPositionX = (max.x + min.x) / 2;
+                        item.drawingPositionY = (max.y + min.y) / 2;
+                        item.drawingPositionZ = max.z > min.z ? max.z : min.z;
+                        if (type === "quality") {
+                            this.mQualityPositionMap.push(item);
+                        } else {
+                            this.mEquipmentPositionMap.push(item);
+                        }
+                        this.setModelDot(len, type);
+                    }
+                }
+            }).catch(error => {
+                if (type === "quality") {
+                    this.requestElementNameCount++;
+                } else {
+                    this.requestEquipmentElementNameCount++;
+                }
+                this.setModelDot(len, type);
+            });
+    }
+
+
+    setModelDot = (len, type) => {
+        if (type === "quality") {
+            if (this.requestElementNameCount === len) {
+                this.refs.webview.injectJavaScript("javascript:loadCircleItems('" + JSON.stringify(this.mQualityPositionMap) + "');")
+            }
+        } else {
+            if (this.requestEquipmentElementNameCount === len) {
+                this.refs.webview.injectJavaScript("javascript:loadCircleItems('" + JSON.stringify(this.mEquipmentPositionMap) + "');")
+            };
+        }
+    }
+
     /**
      * 显示材设单模型历史选择信息
      */
     getEquipmentList = () => {
-
+        API.getQualityFacilityAcceptanceElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
+            .then(responseData => {
+                if (responseData && responseData.data) {
+                    let len = responseData.data.length;
+                    for (let i = 0; i < len; i++) {
+                        let item = responseData.data[i];
+                        if (item.committed) {
+                            item.qcState = item.qualified ? API.QC_STATE_STANDARD : API.QC_STATE_NOT_STANDARD;
+                        } else {
+                            item.qcState = API.QC_STATE_EDIT;
+                        }
+                    }
+                    responseData.data.map((item) => {
+                        this.getModelElementProperty(item, len, "equipment");
+                    })
+                }
+            }).catch(error => { })
     }
 
     cancelPosition = () => {
@@ -328,7 +408,137 @@ class RelevantModelPage extends Component {
 
     //点击圆点 返回信息
     getPositionInfo = (json) => {
+        switch (this.state.pageType) {
+            case PageType.PAGE_TYPE_QUALITY_MODEL:
+                handleQuality(json);
+                break;
+            case PageType.PAGE_TYPE_EQUIPMENT_MODEL:
+                handleEquipment(json);
+                break;
+        }
+    }
 
+    handleQuality = (dot) => {
+        if (dot) {
+            switch (dot.qcState) {
+                case API.QC_STATE_UNRECTIFIED://"待整改"
+                case API.QC_STATE_DELAYED://"已延迟"
+                    this.showRepairDialog(dot, AuthorityManager.isCreateRectify() && AuthorityManager.isMe(dot.responsibleUserId), AuthorityManager.isQualityBrowser());
+                    break;
+                case API.QC_STATE_UNREVIEWED://"待复查"
+                    this.showReviewDialog(dot, AuthorityManager.isCreateReview() && AuthorityManager.isMe(dot.inspectionUserId), AuthorityManager.isQualityBrowser());
+                    break;
+                case API.QC_STATE_INSPECTED://"已检查"
+                case API.QC_STATE_REVIEWED://"已复查"
+                case API.QC_STATE_ACCEPTED://"已验收"
+                    this.showDetailDialog(dot, AuthorityManager.isQualityBrowser());
+                    break;
+            }
+        }
+    }
+    showRepairDialog = (dot, create, browser) => {
+        let items = [];
+        if (create) {
+            items.push({
+                title: "新建整改单",
+                onPress: () => {
+                    BimFileEntry.showNewReviewPage(this.props.navigation, dot.inspectionId, API.CREATE_TYPE_RECTIFY);
+                }
+            });
+        }
+        if (browser) {
+            items.push({
+                title: "查看检查单",
+                onPress: () => {
+                    let item = {}
+                    item.value = {}
+                    item.value.id = dot.inspectionId;
+                    storage.pushNext(null, "QualityDetailPage", { "item": item });
+                }
+            });
+        }
+        let cancelItem = { title: '取消' };
+        if (items.length > 0) {
+            ActionSheet.show(items, cancelItem);
+        }
+    }
+    showReviewDialog = (dot, create, browser) => {
+        let items = [];
+        if (create) {
+            items.push({
+                title: "新建复查单",
+                onPress: () => {
+                    BimFileEntry.showNewReviewPage(this.props.navigation, dot.inspectionId, API.CREATE_TYPE_REVIEW);
+                }
+            });
+        }
+        if (browser) {
+            items.push({
+                title: "查看检查单",
+
+                onPress: () => {
+                    let item = {}
+                    item.value = {}
+                    item.value.id = dot.inspectionId;
+                    storage.pushNext(null, "QualityDetailPage", { "item": item });
+                }
+            });
+        }
+        let cancelItem = { title: '取消' };
+        if (items.length > 0) {
+            ActionSheet.show(items, cancelItem);
+        }
+    }
+
+    showDetailDialog = (dot, browser) => {
+        let items = [];
+        if (browser) {
+            items.push({
+                title: "查看检查单",
+
+                onPress: () => {
+                    let item = {}
+                    item.value = {}
+                    item.value.id = dot.inspectionId;
+                    storage.pushNext(null, "QualityDetailPage", { "item": item });
+                }
+            });
+        }
+        let cancelItem = { title: '取消' };
+        if (items.length > 0) {
+            ActionSheet.show(items, cancelItem);
+        }
+    }
+
+    handleEquipment = (dot) => {
+        if (dot) {
+            switch (dot.qcState) {
+                case API.QC_STATE_STANDARD://合格
+                case API.QC_STATE_NOT_STANDARD://不合格
+                    if (AuthorityManager.isEquipmentBrowser()) {
+                        this.showEquipmentDialog(dot);
+                    }
+                    break;
+            }
+
+        }
+    }
+
+    showEquipmentDialog = (dot) => {
+        let items = [];
+        items.push({
+            title: "查看详情",
+            onPress: () => {
+                let item = {}
+                item.value = {}
+                item.value.id = dot.facilityId;
+                item.value.committed = dot.committed;
+                storage.pushNext(null, "EquipmentDetailPage", { "item": item });
+            }
+        });
+
+        let cancelItem = { title: '取消' };
+        ActionSheet.show(items, cancelItem);
     }
     //在WebView中注册该回调方法
 
@@ -336,9 +546,6 @@ class RelevantModelPage extends Component {
         // console.log('onNavigationStateChange:');
         // console.log(event); //打印出event中属性
     }
-
-
-
 
     //渲染
     render() {
@@ -355,7 +562,7 @@ class RelevantModelPage extends Component {
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
                         injectedJavaScript={cmdString}
-                        onLoadEnd={() => this.setPosition()}
+                        onLoadEnd={() => { this.setPosition(); }}
                         source={{ uri: this.state.url, method: 'GET' }}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>

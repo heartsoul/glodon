@@ -521,6 +521,15 @@ export async function getBluePrintDots(projectId, drawingGdocFileId) {
         method: 'GET',
     });
 }
+/**
+ * App端查询模型文件对应的所有关联构件
+ */
+export async function getElements(projectId, gdocFileId) {
+    let api = `/quality/${projectId}/qualityInspection/all/model/${gdocFileId}/elements`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
 
 
 /**
