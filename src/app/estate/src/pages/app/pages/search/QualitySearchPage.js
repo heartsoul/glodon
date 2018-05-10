@@ -21,9 +21,14 @@ class QualitySearchPage extends BaseSearchPage {
     listRef = null;
     constructor(props) {
         super(props);
+        let keywords = "";
+        let state = this.props.navigation.state
+        if(state && state.params && state.params.keywords){
+            keywords = state.params.keywords;
+        }
         super.setFunc(this.renderContent, this.search)
         this.states = {
-            keywords: "",
+            keywords: keywords,
         }
     };
 

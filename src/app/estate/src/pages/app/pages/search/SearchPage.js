@@ -6,7 +6,9 @@ import {
     View,
     StatusBar,
     SafeAreaView,
-    ScrollView
+    ScrollView,
+    Image,
+    TouchableOpacity,
 } from 'react-native';
 import { connect } from 'react-redux';
 import * as API from "app-api";
@@ -148,6 +150,26 @@ class SearchPage extends BaseSearchPage {
         }
     }
 
+    renderMoreView = (moreCallback) => {
+        return (
+            <TouchableOpacity onPress={moreCallback}>
+                <View style={{ flexDirection: "row", alignItems: "center", paddingLeft: 20, paddingRight: 20, marginTop: 5 }}>
+                    <View style={{ height: 1, backgroundColor: "#e6e6e6", flex: 1 }}></View>
+                    <Text style={{ color: "#b0b0b0", fontSize: 14, marginLeft: 10 }}>查看更多</Text>
+                    <Image style={{ width: 14, height: 8, marginLeft: 5, marginRight: 10 }} source={require("app-images/icon_drawer_arrow_down.png")} />
+                    <View style={{ height: 1, backgroundColor: "#e6e6e6", flex: 1 }}></View>
+                </View>
+            </TouchableOpacity>
+        );
+    }
+
+    moreQuality = () => {
+        this.props.navigation.navigate("QualitySearchPage", { keywords: this.state.keywords })
+    }
+
+    moreEquipment = () => {
+        this.props. navigation.navigate("EquipmentSearchPage", { keywords: this.state.keywords })
+    }
 
 
 };
