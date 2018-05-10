@@ -385,6 +385,11 @@ export default class EquipmentDetailView extends Component {
         this.props.switchPage(data);
     }
     renderImageEdit = (info) => {
+        if(info.qualified === false) {
+            info.qualified = false
+        } else {
+            info.qualified = true
+        }
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
             <EquipmentInfoItem leftTitle="您可记录现场图片" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ paddingLeft: 0, marginTop: 0, paddingTop: 10, paddingBottom: 0, backgroundColor: '#ffffff' }}>
@@ -398,7 +403,7 @@ export default class EquipmentDetailView extends Component {
                     justifyContent: 'flex-start',
                 }}>
                     <Text style={{ color: '#666666' }}>验收合格:</Text>
-                    <Switch style={{ right: 0, position: 'absolute', }} value={info.qualified === false ? false : true} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
+                    <Switch style={{ right: 0, position: 'absolute', }} value={info.qualified === true ? true : true} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
                 </View>
             </View>
             <View style={{ marginTop: 20 }}>

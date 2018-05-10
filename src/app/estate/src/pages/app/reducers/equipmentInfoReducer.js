@@ -29,7 +29,7 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 data: action.data,
-                oldData:action.data,
+                oldData:{...action.data},
                 error: null,
                 isSuccessed: true,
                 editType: action.editType,
