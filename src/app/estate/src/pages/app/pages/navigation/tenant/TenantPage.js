@@ -103,7 +103,7 @@ export default class tenantList extends Component {
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <Text>
-                    Fail: {error}
+                加载失败
                 </Text>
             </View>
         );

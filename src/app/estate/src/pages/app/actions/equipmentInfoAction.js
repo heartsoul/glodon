@@ -17,8 +17,11 @@ export function isEditInfoChange(info, oldInfo,callback) {
     }
 }
 function isParamsChange(info, oldInfo) {
-    return true;
+   
     let ret = false;
+    if(!info.id) {
+        return true;
+    }
     if(info.acceptanceCompanyName != oldInfo.acceptanceCompanyName) {
         return true;
     }

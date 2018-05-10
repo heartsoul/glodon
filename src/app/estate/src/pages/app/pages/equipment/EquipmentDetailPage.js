@@ -219,7 +219,7 @@ class EquipmentDetailPage extends Component {
             <View>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <Text>
-                    Fail: {error}
+                    加载失败
                 </Text>
             </View>
         );
