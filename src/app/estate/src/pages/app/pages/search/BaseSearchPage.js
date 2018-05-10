@@ -57,12 +57,22 @@ export default class BaseSearchPage extends React.Component {
     searchFunc = null;
     constructor(props) {
         super(props);
+        let showHistory = true;
+        let state = this.props.navigation.state
+        if (state && state.params && state.params.keywords && state.params.keywords.length > 0) {
+            searchKeywords = state.params.keywords;
+            showHistory = false;
+        }
+
         this.state = {
-            showHistory: true,
-            showContent: false,
+            showHistory: showHistory,
+            showContent: !showHistory,
         };
         this.props.navigation.setParams({ renderHeaderTitle: this.renderHeaderTitle });
         this.props.loadHistory();
+    }
+    componentDidMount(){
+        this.onSearch(searchKeywords)
     }
 
     componentWillUnmount() {
@@ -132,6 +142,14 @@ export default class BaseSearchPage extends React.Component {
         storage.goBack(this.props.navigation, null);
     }
 
+    searchHistory = (item) => {
+        this.onChange(item);
+        this.props.navigation.setParams({ renderHeaderTitle: this.renderHeaderTitle });
+        if (searchRef && searchRef.inputRef) {
+            searchRef.inputRef.blur();
+        }
+        this.onSearch(item)
+    }
 
     renderSearchHistory = () => {
         if (this.props.searchHistory && this.props.searchHistory.length > 0) {
@@ -142,12 +160,7 @@ export default class BaseSearchPage extends React.Component {
                             this.props.searchHistory.map((item, index) => {
                                 return (
                                     <TouchableOpacity key={'history' + index} style={{ height: 52, justifyContent: "center", borderBottomColor: "#e6e6e6", borderBottomWidth: 0.5 }} onPress={() => {
-                                        this.onChange(item);
-                                        this.props.navigation.setParams({ renderHeaderTitle: this.renderHeaderTitle });
-                                        if (searchRef && searchRef.inputRef) {
-                                            searchRef.inputRef.blur();
-                                        }
-                                        this.onSearch(item)
+                                        this.searchHistory(item);
                                     }}>
                                         <Text style={{ fontSize: 16, marginLeft: 20, color: "#000000" }}>{item}</Text>
                                     </TouchableOpacity>
