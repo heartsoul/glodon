@@ -21,10 +21,10 @@ export default class EquipmentInfoItem extends React.Component {
         if (!this.props.onClick) {
             return (
                 <View style={styles.containerView} >
-                    <View style={styles.titleView}>
+                    <View style={[styles.titleView,this.props.titleWidth?{width:this.props.titleWidth}:null]}>
                         <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                     </View>
-                    <View style={styles.contentInputView}>
+                    <View style={[styles.contentInputView,this.props.titleWidth?{width:width-40-this.props.titleWidth}:null]}>
                         <TextInputWithData  returnKeyType="next" underlineColorAndroid={"transparent"} defaultValue={this.props.content} style={styles.textInput} onChangeText={this.props.onChangeText}></TextInputWithData>
                     </View>
                 </View>
@@ -32,7 +32,7 @@ export default class EquipmentInfoItem extends React.Component {
         }
         return (
             <View style={styles.containerView} >
-                <View style={styles.titleView}>
+                <View style={[styles.titleView,this.props.titleWidth?{width:this.props.titleWidth}:null]}>
                 <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={styles.contentInputView}>
@@ -240,6 +240,11 @@ EquipmentInfoItem.propTypes = {
    * 图片链接
    */
    urls: PropTypes.array,
+   /**
+     * 标题宽度
+     */
+    titleWidth: PropTypes.any,
+   
 
 };
 

@@ -22,16 +22,17 @@ export default class LeftBarButtons extends React.Component {
   
   render = () => {
     return <View style={styles.barItem}>
+      
+      <TouchableOpacity style={styles.actionView} onPress={() => this._onBackPress(this.props.navigation)} >
       <View style={styles.spliteItem} />
-      <TouchableOpacity onPress={() => this._onBackPress(this.props.navigation)} >
         <Image style={styles.barItemImage}  source={require('app-images/icon_back_white.png')} />
+        <View style={styles.spliteItem} />
       </TouchableOpacity>
-      {this.props.top === true ? 
-      <View style={styles.spliteItem} />
-      : null}
        {this.props.top === true ? 
-      <TouchableOpacity onPress={() => this._onMenuPress(this.props.navigation)} >
+      <TouchableOpacity style={styles.actionView} onPress={() => this._onMenuPress(this.props.navigation)} >
+       <View style={styles.spliteItem} />
         <Image style={styles.barItemImage} source={require('app-images/icon_quality_check_menu.png')} />
+        <View style={styles.spliteItem} />
       </TouchableOpacity>
       : null}
     </View>
@@ -50,14 +51,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'nowrap',
     justifyContent: 'flex-start',
-    width: 70,
+  },
+  actionView: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignContent: 'center',
+    width: 30,
+    height: 40,
   },
   barItemImage: {
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
     resizeMode:'contain'
   },
   spliteItem: {
-    width: 10,
+    width: 5,
   },
 });

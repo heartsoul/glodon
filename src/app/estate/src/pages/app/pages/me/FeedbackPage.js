@@ -80,14 +80,14 @@ export default class extends React.Component {
     return (
       <KeyboardAwareScrollView style={[styles.container, { backgroundColor: '#ffffff' }]}>
       <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-      <EquipmentInfoItem leftTitle="姓名：" showType="input" onChangeText={this.onChangeTextName} />
+      <EquipmentInfoItem leftTitle="姓名：" titleWidth={45} showType="input" onChangeText={this.onChangeTextName} />
       <EquipmentInfoItem showType="line" />
-      <EquipmentInfoItem leftTitle="邮箱：" showType="input" onChangeText={this.onChangeTextEmail} />
+      <EquipmentInfoItem leftTitle="邮箱：" titleWidth={45} showType="input" onChangeText={this.onChangeTextEmail} />
       <EquipmentInfoItem showType="line" />
-      <EquipmentInfoItem leftTitle="标题：" showType="input" onChangeText={this.onChangeTextTitle} />
+      <EquipmentInfoItem leftTitle="标题：" titleWidth={45} showType="input" onChangeText={this.onChangeTextTitle} />
       <EquipmentInfoItem showType="line" />
 
-      <TextInput onChangeText={this.onChangeTextContent} multiline={true} style={styles.text} placeholder='留言内容'></TextInput>
+      <TextInput underlineColorAndroid={"transparent"} onChangeText={this.onChangeTextContent} multiline={true} style={styles.text} placeholder='留言内容...'></TextInput>
       </KeyboardAwareScrollView>
       
     );
@@ -100,31 +100,19 @@ var styles = StyleSheet.create({
       height:'100%'
     },
     text:{
-      fontSize:18,
-      width:'90%',
-      height:100,
-      marginRight:20,
-      marginLeft:20,
-      paddingRight:10,
-      paddingLeft:10,
+      fontSize:15,
+      textAlignVertical: 'top',
+      // width:'100%',
+      minHeight:120,
+      marginRight:0,
+      marginLeft:0,
+      paddingRight:20,
+      paddingLeft:20,
       paddingTop:10,
       marginTop:20,
       color: '#666666',
         fontWeight: '100',
         marginBottom: 0,
-      // borderWidth:1,
-      // borderColor:'#ededed',
-    },
-    textLine:{
-      fontSize:18,
-      width:'90%',
-      height:30,
-      color:'gray',
-      marginRight:20,
-      paddingLeft:10,
-      marginLeft:20,
-      marginTop:20,
-      borderWidth:1,
-      borderColor:'#ededed',
+        backgroundColor:'#FAFAFA'
     },
 });
