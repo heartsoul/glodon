@@ -63,7 +63,10 @@
 
 - (void)disMiss
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
+    if(self.didCancelBlock) {
+      self.didCancelBlock();
+    }
 }
 
 

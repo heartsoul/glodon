@@ -152,29 +152,28 @@
   }
   
   vc.delegate = vc;
-  @weakify(vc,self);
+  @weakify(self);
   [vc setDidFinishPickingBlock:^(UIImage * _Nonnull image){
-    SoulPhotoEditViewController * vc1 = [[SoulPhotoEditViewController alloc] initWithNibName:nil bundle:nil];
-    vc1.inputImageBlock = ^UIImage * _Nonnull{
-      return image;
-    };
-    [vc1 setDidFinishPickingBlock:^(NSString *localIdentifier) {
-      if (localIdentifier) {
-        PHAsset * asset = [NSMutableDictionary getPHAsset:localIdentifier];
-        NSMutableDictionary * dic =  [[NSMutableDictionary alloc] initWithAsset:asset photoQuality:UploadPhotoQualityNormal];
-        UIImage * thumbImage = [dic getThumbnail:NO];
-        @strongify(self);
-        [self.navcDelegate dismissViewControllerAnimated:NO completion:nil];
-        [self refreshCollectionViewWithAddedAsset:(id)asset image:thumbImage];
-      }
-    }];
-    @strongify(vc);
     
-    //    [vc dismissViewControllerAnimated:YES completion:^{
-    //
-    //    }];
-    [vc presentViewController:vc1 animated:NO completion:^{
-      
+    @strongify(self);
+    [self.navcDelegate dismissViewControllerAnimated:NO completion:^{
+      @strongify(self);
+      SoulPhotoEditViewController * vc1 = [[SoulPhotoEditViewController alloc] initWithNibName:nil bundle:nil];
+      vc1.inputImageBlock = ^UIImage * _Nonnull{
+        return image;
+      };
+      [vc1 setDidFinishPickingBlock:^(NSString *localIdentifier) {
+        @strongify(self);
+        if (localIdentifier) {
+          PHAsset * asset = [NSMutableDictionary getPHAsset:localIdentifier];
+          NSMutableDictionary * dic =  [[NSMutableDictionary alloc] initWithAsset:asset photoQuality:UploadPhotoQualityNormal];
+          UIImage * thumbImage = [dic getThumbnail:NO];
+          [self refreshCollectionViewWithAddedAsset:(id)asset image:thumbImage];
+        }
+      }];
+      [vc1 setDidCancelBlock:^{
+      }];
+      [self.navcDelegate presentViewController:vc1 animated:NO completion:nil];
     }];
     
     
@@ -183,32 +182,31 @@
 }
 + (void)takePhotoOld:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback {
   SoulCameraViewController * vc = [[SoulCameraViewController alloc] initWithNibName:nil bundle:nil];
-  @weakify(vc,self);
+  @weakify(self);
   [vc setDidFinishPickingBlock:^(UIImage * _Nonnull image){
-    SoulPhotoEditViewController * vc1 = [[SoulPhotoEditViewController alloc] initWithNibName:nil bundle:nil];
-    vc1.inputImageBlock = ^UIImage * _Nonnull{
-      return image;
-    };
-    [vc1 setDidFinishPickingBlock:^(NSString *localIdentifier) {
-      if (localIdentifier) {
-        PHAsset * asset = [NSMutableDictionary getPHAsset:localIdentifier];
-        @strongify(self);
-        [navcDelegate dismissViewControllerAnimated:NO completion:nil];
-        [WaitViewUtil startLoading];
-        [self.class loadItem:asset finish:^(NSDictionary *data) {
-          [WaitViewUtil endLoading];
-          callback(@[data]);
-        }];
-      } else {
+    [navcDelegate dismissViewControllerAnimated:NO completion:^{
+      SoulPhotoEditViewController * vc1 = [[SoulPhotoEditViewController alloc] initWithNibName:nil bundle:nil];
+      vc1.inputImageBlock = ^UIImage * _Nonnull{
+        return image;
+      };
+      [vc1 setDidFinishPickingBlock:^(NSString *localIdentifier) {
+        if (localIdentifier) {
+          PHAsset * asset = [NSMutableDictionary getPHAsset:localIdentifier];
+          @strongify(self);
+          [navcDelegate dismissViewControllerAnimated:NO completion:nil];
+          [WaitViewUtil startLoading];
+          [self.class loadItem:asset finish:^(NSDictionary *data) {
+            [WaitViewUtil endLoading];
+            callback(@[data]);
+          }];
+        } else {
+          callback(@[]);
+        }
+      }];
+      [vc1 setDidCancelBlock:^{
         callback(@[]);
-      }
-    }];
-    @strongify(vc);
-    [vc1 setDidCancelBlock:^{
-      callback(@[]);
-    }];
-    [vc presentViewController:vc1 animated:NO completion:^{
-      
+      }];
+      [navcDelegate presentViewController:vc1 animated:NO completion:nil];
     }];
   }];
   [navcDelegate presentViewController:vc animated:YES completion:nil];
@@ -226,32 +224,31 @@
   }
   
   vc.delegate = vc;
-  @weakify(vc,self);
+  @weakify(self);
   [vc setDidFinishPickingBlock:^(UIImage * _Nonnull image){
-    SoulPhotoEditViewController * vc1 = [[SoulPhotoEditViewController alloc] initWithNibName:nil bundle:nil];
-    vc1.inputImageBlock = ^UIImage * _Nonnull{
-      return image;
-    };
-    [vc1 setDidFinishPickingBlock:^(NSString *localIdentifier) {
-      if (localIdentifier) {
-        PHAsset * asset = [NSMutableDictionary getPHAsset:localIdentifier];
-        @strongify(self);
-        [navcDelegate dismissViewControllerAnimated:NO completion:nil];
-        [WaitViewUtil startLoading];
-        [self.class loadItem:asset finish:^(NSDictionary *data) {
-          [WaitViewUtil endLoading];
-          callback(@[data]);
-        }];
-      } else {
+    [navcDelegate dismissViewControllerAnimated:NO completion:^{
+      SoulPhotoEditViewController * vc1 = [[SoulPhotoEditViewController alloc] initWithNibName:nil bundle:nil];
+      vc1.inputImageBlock = ^UIImage * _Nonnull{
+        return image;
+      };
+
+      [vc1 setDidFinishPickingBlock:^(NSString *localIdentifier) {
+        if (localIdentifier) {
+          PHAsset * asset = [NSMutableDictionary getPHAsset:localIdentifier];
+          @strongify(self);
+          [WaitViewUtil startLoading];
+          [self.class loadItem:asset finish:^(NSDictionary *data) {
+            [WaitViewUtil endLoading];
+            callback(@[data]);
+          }];
+        } else {
+          callback(@[]);
+        }
+      }];
+      [vc1 setDidCancelBlock:^{
         callback(@[]);
-      }
-    }];
-    @strongify(vc);
-    [vc1 setDidCancelBlock:^{
-      callback(@[]);
-    }];
-    [vc presentViewController:vc1 animated:NO completion:^{
-      
+      }];
+      [navcDelegate presentViewController:vc1 animated:NO completion:nil];
     }];
   }];
   [navcDelegate presentViewController:vc animated:YES completion:nil];

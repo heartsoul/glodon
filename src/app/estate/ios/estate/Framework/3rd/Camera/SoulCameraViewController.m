@@ -452,7 +452,7 @@
       return;
     }
     if (self.didFinishPickingBlock) {
-      self.didFinishPickingBlock(image);
+        self.didFinishPickingBlock(image);
     } else {
       [self disMiss];
     }
