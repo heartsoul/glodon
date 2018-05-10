@@ -4,8 +4,9 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 
 export default class StatusActionButton extends Component {
     render = () => {
-        const { text, onClick, color, borderColor,width,height,marginLeft,marginRight,style,backgroundColor} = this.props;
+        const { text, onClick, color, borderColor,width,height,marginLeft,marginRight,style,backgroundColor,disabled} = this.props;
         let styleIn = style;
+        
         if(!styleIn) {
             styleIn = [width?{width:width}:{},borderColor ? {borderColor:borderColor} : {}
             , marginLeft ? { marginLeft: marginLeft } : {}, marginRight ? { marginRight: marginRight } : {}
@@ -16,6 +17,7 @@ export default class StatusActionButton extends Component {
         return (<TouchableOpacity
             style={[styles.button,...styleIn]}
             activeOpacity={0.5}
+            disabled={disabled?true:false}
             onPress={onClick}>
             <Text style={[styles.buttonText, { color: color }]}>{text}</Text>
         </TouchableOpacity>
@@ -39,6 +41,7 @@ StatusActionButton.propTypes = {
     width: PropTypes.any,
     marginLeft: PropTypes.any,
     marginRight: PropTypes.any,
+    disabled:PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

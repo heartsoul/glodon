@@ -93,7 +93,9 @@ export default class EquipmentInfoItem extends React.Component {
                 <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={styles.contentViewAction}>
+                <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                     <Text style={styles.content}>{this.props.content}</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                         <Image source={rightImage} style={styles.infoMark} />
                     </TouchableOpacity>
@@ -250,6 +252,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         flexDirection: 'row',
+        alignItems: 'center',
     },
     textInput: {
         color: '#666666',
@@ -261,7 +264,7 @@ const styles = StyleSheet.create({
     content: {
         fontSize: 14,
         fontWeight: '100',
-        alignContent:'center'
+        alignContent:'center',
     },
     link: {
         color: '#00b5f2',
@@ -298,12 +301,13 @@ const styles = StyleSheet.create({
         marginRight: 75,
         height:40,
         width:width-75-40,
+        alignItems: 'center',
     },
     contentViewAction: {
         flexDirection: 'row',
         marginRight: 75,
         height:40,
-        width:width-75-40,
+        width:width-75-30,
         alignContent:'center',
         alignItems:'center',
         justifyContent:'flex-end',
@@ -313,7 +317,7 @@ const styles = StyleSheet.create({
         height:40,
     },
     infoMark: {
-        // marginLeft: 5,
+        marginRight: -1,
         width: 17,
         height: 17,
         resizeMode:'contain'
@@ -323,6 +327,9 @@ const styles = StyleSheet.create({
         width: 20,
         flexDirection: 'row-reverse',
         position: 'absolute',
+        alignItems: 'center',
+        alignContent:'flex-start',
+        justifyContent:'flex-start',
     },
     lineView: {
         height: 1,

@@ -37,6 +37,7 @@ export default class EquipmentDetailView extends Component {
         super(props);
         this.state = {
             updateIndex: 0,
+            allowNextAction:true,
         }
         if(!this.props.equipmentInfo ){
             this.props.equipmentInfo = {};
@@ -44,6 +45,7 @@ export default class EquipmentDetailView extends Component {
         if(!this.props.equipmentInfo.approachDate){
             this.props.equipmentInfo.approachDate = new Date().getTime();
         }
+
     }
 
     onOpenModleAction = (info) => {
@@ -66,6 +68,12 @@ export default class EquipmentDetailView extends Component {
     }
 
     componentDidMount() {
+        const equipmentInfo = this.props.equipmentInfo;
+        if(!this.check(equipmentInfo)) {
+            this.setState({
+                allowNextAction:false,
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -131,7 +139,8 @@ export default class EquipmentDetailView extends Component {
             (item, index) => {
                 this.props.equipmentInfo.acceptanceCompanyName = item.name;
                 this.props.equipmentInfo.acceptanceCompanyId = item.id;
-                this.setState({ updateIndex: this.updateIndex++ });
+                let ret = this.check(info);
+                this.setState({ updateIndex: this.updateIndex++,allowNextAction:false,ret });
             },
             { getItemText: (item, index) => { return item.name } }
         );
@@ -238,16 +247,24 @@ export default class EquipmentDetailView extends Component {
             </View>
         }
         return <View style={{ marginTop: 0 }}>
-            <StatusActionButton text='下一步' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
+            <StatusActionButton disabled={!this.state.allowNextAction} text='下一步' height={40} marginRight={20} backgroundColor={this.state.allowNextAction ? '#00b5f2':'#C8C8C8'} marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
         </View>
     }
-    
-    _checkBasicInfo = (info) => {
+    check = (info) => {
         let ret = info && info.acceptanceCompanyName && info.acceptanceCompanyName.length > 0
                 && info.batchCode  && info.batchCode.length > 0
                 && info.approachDate  && info.approachDate > 0
                 && info.facilityCode  && info.facilityCode.length > 0
-                && info.facilityName  && info.facilityName.length > 0
+                && info.facilityName  && info.facilityName.length > 0;
+            return ret;
+    }
+    _checkBasicInfo = (info) => {
+        let ret = this.check(info);
+        if(ret != this.state.allowNextAction) {
+            this.setState({
+                allowNextAction:ret,
+            });
+        }
         return ret;
     }
 
@@ -291,24 +308,24 @@ export default class EquipmentDetailView extends Component {
 
                 <EquipmentInfoItem leftTitle="验收单位：" content={info.acceptanceCompanyName} showType="info" onClick={() => { this.showActionSheet() }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="批次编号：" content={info.batchCode} showType="input" onChangeText={(value) => { info.batchCode = value }} />
+                <EquipmentInfoItem leftTitle="批次编号：" content={info.batchCode} showType="input" onChangeText={(value) => { info.batchCode = value;this._checkBasicInfo(info)}} />
                 <EquipmentInfoItem showType="line" />
                 <DatePicker
                     mode="date"
                     title=" "
                     extra=" "
                     value={info.approachDate ? new Date(info.approachDate):new Date()}
-                    onChange={date => { info.approachDate = date.getTime(); this.props.switchPage({ ...info }) }}
+                    onChange={date => { info.approachDate = date.getTime();this._checkBasicInfo(info); this.props.switchPage({ ...info }) }}
                 >
                     <List.Item arrow="horizontal" >
-                        <Text style={{paddingLeft:4, fontSize: 14, color: "#666666" }}>进场日期：</Text>
+                        <Text style={{paddingLeft:4, fontSize: 14, color: "#666666",fontWeight: '100', }}>进场日期：</Text>
                     </List.Item>
                 </DatePicker>
                 {/* <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate ? API.formatUnixtimestampSimple(info.approachDate) : null} showType="input" /> */}
                 {/* <EquipmentInfoItem showType="line" /> */}
-                <EquipmentInfoItem leftTitle="材设编码：" content={info.facilityCode} showType="input" onChangeText={(value) => { info.facilityCode = value }} />
+                <EquipmentInfoItem leftTitle="材设编码：" content={info.facilityCode} showType="input" onChangeText={(value) => { info.facilityCode = value;this._checkBasicInfo(info) }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="材设名称：" content={info.facilityName} showType="input" onChangeText={(value) => { info.facilityName = value }} />
+                <EquipmentInfoItem leftTitle="材设名称：" content={info.facilityName} showType="input" onChangeText={(value) => { info.facilityName = value;this._checkBasicInfo(info) }} />
 
             </View>
             <View style={{ marginTop: 20 }}>
