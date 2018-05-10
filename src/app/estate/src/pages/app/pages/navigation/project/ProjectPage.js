@@ -46,7 +46,7 @@ class ProjectPage extends Component {
                 <ActivityIndicator
                     animating={true}
                     style={[styles.gray, { height: 80 }]}
-                    color='red'
+                    color='00baf3'
                     size="large"
                 />
             </View>
@@ -59,7 +59,7 @@ class ProjectPage extends Component {
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <Text>
-                    Fail: {error}
+                加载失败
                 </Text>
             </View>
         );

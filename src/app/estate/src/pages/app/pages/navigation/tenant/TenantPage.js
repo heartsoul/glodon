@@ -29,13 +29,12 @@ export default class tenantList extends Component {
 
     //网络请求
     fetchData = () => {
-        //请求数据
-        if (storage.loadLastTenant() != '') {
+        
+       //请求数据
+        if (this.props.navigation.getParam('change') === true && storage.loadLastTenant() != '') {
             let navigator = this.props.navigation;
             storage.pushNext(navigator, "ProjectPage")
-            return;
         }
-       
         let userInfo = storage.loadUserInfo();
         if (userInfo && userInfo["accountInfo"]) {
 
@@ -91,7 +90,7 @@ export default class tenantList extends Component {
                 <ActivityIndicator
                     animating={true}
                     style={[styles.gray, { height: 80 }]}
-                    color='red'
+                    color='#00baf3'
                     size="large"
                 />
             </View>
