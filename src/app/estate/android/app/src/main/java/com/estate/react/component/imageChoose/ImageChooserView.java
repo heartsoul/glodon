@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +21,8 @@ import com.estate.R;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.glodon.bim.basic.image.ImageLoader;
@@ -28,6 +31,7 @@ import com.glodon.bim.customview.album.AlbumConfig;
 import com.glodon.bim.customview.album.AlbumData;
 import com.glodon.bim.customview.album.AlbumEditActivity;
 import com.glodon.bim.customview.album.ImageItem;
+import com.glodon.bim.customview.photopreview.PhotoPreviewActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,6 +45,7 @@ import java.util.List;
 public class ImageChooserView extends LinearLayout {
     private LocalBroadcastManager broadcastManager;
     public static final int OPEN_ALBUM_REQUEST_CODE = 0X1000;
+    public static final int REQUEST_CODE_PHOTO_PREVIEW = 0X1001;
 
 
     //图片描述
@@ -50,6 +55,7 @@ public class ImageChooserView extends LinearLayout {
 
     private String tag;
     private AlbumData albumData = null;//选中的图片数据
+    public ReadableArray originalData;//从rn传过来的数据
 
     public ImageChooserView(Context context) {
         super(context);
@@ -101,16 +107,37 @@ public class ImageChooserView extends LinearLayout {
                 }
                 ImageLoader.showImageCenterCrop(getContext(), url, list.get(position), R.mipmap.ic_launcher);
                 list.get(position).setOnClickListener(null);
+                list.get(position).setOnClickListener(new OpenPreViewListener(position));
                 position++;
             }
 
             list.get(position).setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_add_picture));
             list.get(position).setOnClickListener(openAlbumListener);
+            if(position == 3){
+                list.get(position).setVisibility(View.GONE);
+            }else{
+                list.get(position).setVisibility(View.VISIBLE);
+            }
         } else {
             mPhoto0.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_add_picture));
             mPhoto0.setOnClickListener(openAlbumListener);
         }
     }
+    class  OpenPreViewListener implements OnClickListener {
+        private int position;
+
+        public OpenPreViewListener(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getContext(), PhotoPreviewActivity.class);
+            intent.putExtra(AlbumConfig.ALBUM_DATA_KEY, albumData);
+            intent.putExtra(AlbumConfig.ALBUM_POSITION, position);
+            activity.startActivityForResult(intent, REQUEST_CODE_PHOTO_PREVIEW);
+        }
+    };
 
     private OnClickListener openAlbumListener = new OnClickListener() {
         @Override
@@ -141,6 +168,9 @@ public class ImageChooserView extends LinearLayout {
                         albumData = (AlbumData) data.getSerializableExtra(AlbumConfig.ALBUM_DATA_KEY);
                         setPhoto();
                     }
+                }else  if (REQUEST_CODE_PHOTO_PREVIEW == requestCode && resultCode == Activity.RESULT_OK  && data != null) {
+                    albumData = (AlbumData) data.getSerializableExtra(AlbumConfig.ALBUM_DATA_KEY);
+                    setPhoto();
                 }
             }
 
@@ -160,16 +190,42 @@ public class ImageChooserView extends LinearLayout {
         WritableArray files = Arguments.createArray();
         if (albumData != null && albumData.map != null) {
             for (ImageItem entry : albumData.map.getValueList()) {
-                File file = new File(entry.imagePath);
-                long length = file.length();
-                String name = file.getName();
-                WritableMap data = Arguments.createMap();
-                data.putString("path", entry.imagePath);
-                data.putString("name", name);
-                data.putString("length", length + "");
-                files.pushMap(data);
+                if (entry.originalIndex >= 0 && originalData != null) {
+                    WritableMap data = Arguments.createMap();
+                    data.merge(originalData.getMap(entry.originalIndex));
+                    files.pushMap(data);
+                }else{
+                    File file = new File(entry.imagePath);
+                    long length = file.length();
+                    String name = file.getName();
+                    WritableMap data = Arguments.createMap();
+                    data.putString("path", entry.imagePath);
+                    data.putString("name", name);
+                    data.putString("length", length + "");
+                    files.pushMap(data);
+                }
             }
         }
         return files;
+    }
+
+    public void setFiles(ReadableArray array) {
+        originalData = array;
+        if (array != null && array.size() > 0) {
+
+            if(albumData == null){
+                albumData = new AlbumData(null);
+            }
+            LinkedHashList<String, ImageItem> mSelectedMap = new LinkedHashList<>();
+            for (int i = 0; i < array.size(); i++) {
+                ReadableMap readableMap = array.getMap(i);
+                ImageItem imageItem = new ImageItem();
+                imageItem.imagePath = readableMap.getString("url");
+                imageItem.originalIndex = i;
+                mSelectedMap.put(imageItem.imagePath,imageItem);
+            }
+            albumData.map = mSelectedMap;
+            setPhoto();
+        }
     }
 }

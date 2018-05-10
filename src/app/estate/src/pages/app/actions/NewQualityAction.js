@@ -246,7 +246,7 @@ function createSubmitInspection(params, navigator, updateData) {
     let requestParams = JSON.stringify(params);
     API.createSubmitInspection(storage.loadProject(), params.inspectionType, requestParams)
         .then(data => {
-            if(updateData){
+            if (updateData) {
                 updateData();
             }
             Toast.hide();
@@ -265,7 +265,7 @@ function editSubmitInspection(params, navigator, updateData) {
     let requestParams = JSON.stringify(params);
     API.editSubmitInspection(storage.loadProject(), params.inspectId, params.inspectionType, requestParams)
         .then(data => {
-            if(updateData){
+            if (updateData) {
                 updateData();
             }
             Toast.hide();
@@ -355,7 +355,6 @@ function editSaveInspection(params, callback) {
  */
 export function isEditInfoChange(requestParams, inspectionInfo, imageChooserEle, callback) {
     imageChooserEle._loadFile((files) => {
-
         if (isFileChange(inspectionInfo.files, files)) {
             callback(true);
         } else if (isParamsChange(requestParams, inspectionInfo)) {
@@ -369,11 +368,12 @@ export function isEditInfoChange(requestParams, inspectionInfo, imageChooserEle,
 function isFileChange(oldFiles, newFiles) {
     let oldLen = oldFiles ? oldFiles.length : 0;
     let newLen = newFiles ? newFiles.length : 0;
+    resetFiles(oldFiles, newFiles);
     if (oldLen != newLen) {
         return true;
     } else {
-        for (let file in newFiles) {
-            if (!file.objectId) {
+        for (let index in newFiles) {
+            if (!(newFiles[index]).objectId) {
                 return true;
             }
         }
@@ -381,6 +381,34 @@ function isFileChange(oldFiles, newFiles) {
     }
     return false;
 }
+
+function resetFiles(oldFiles, newFiles) {
+    if (newFiles) {
+        newFiles.map((item) => {
+            let oldFile = relateOldFile(oldFiles,item);
+            if(oldFile){
+                item.name = oldFile.name;
+                item.objectId = oldFile.objectId;
+                item.extension = oldFile.extension;
+                item.digest = oldFile.digest;
+                item.length = oldFile.length;
+                item.uploadTime = oldFile.uploadTime;
+            }
+        })
+    }
+}
+
+function relateOldFile(oldFiles, file) {
+    if(oldFiles){
+        for (let index in oldFiles) {
+            if(oldFiles[index].path === file.path){
+                return oldFiles[index];
+            }
+        }
+    }
+    return null;
+}
+
 
 function isParamsChange(requestParams, inspectionInfo) {
     let params = assembleParams(requestParams);

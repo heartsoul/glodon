@@ -1,7 +1,10 @@
 package com.glodon.bim.customview.album;
 
 
+import com.facebook.react.bridge.ReadableMap;
+
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Description:  一个图片对象
@@ -25,4 +28,7 @@ public class ImageItem implements Serializable {
 //	public CreateCheckListParamsFile urlFile;
 
 	public String objectId = "-1";
+	//是否有已经上传过的图片数据，大于等于0时存在，可以从rn传过来的ReadableMap中取出来
+	public int originalIndex = -1;
+
 }
