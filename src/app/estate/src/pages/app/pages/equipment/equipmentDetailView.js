@@ -37,12 +37,12 @@ export default class EquipmentDetailView extends Component {
         super(props);
         this.state = {
             updateIndex: 0,
-            allowNextAction:true,
+            allowNextAction: true,
         }
-        if(!this.props.equipmentInfo ){
+        if (!this.props.equipmentInfo) {
             this.props.equipmentInfo = {};
         }
-        if(!this.props.equipmentInfo.approachDate){
+        if (!this.props.equipmentInfo.approachDate) {
             this.props.equipmentInfo.approachDate = new Date().getTime();
         }
 
@@ -57,21 +57,21 @@ export default class EquipmentDetailView extends Component {
         // alert(inspectionInfo.gdocFileId);
         // storage.pushNext(null, "RelevantModlePage", { title: inspectionInfo.elementName, fileId: inspectionInfo.gdocFileId, pageType: 1, relevantBluePrint: { "data": inspectionInfo } });
 
-        BimFileEntry.chooseEquipmentModelFromNew(null, 
-            info.gdocFileId, 
-            info.elementId, 
-            info.buildingId, 
+        BimFileEntry.chooseEquipmentModelFromNew(null,
+            info.gdocFileId,
+            info.elementId,
+            info.buildingId,
             info.buildingName);
-            //详情页使用下面的方法
+        //详情页使用下面的方法
         // BimFileEntry.showModelFromDetail(null, info.gdocFileId, info.elementId);
-        
+
     }
 
     componentDidMount() {
         const equipmentInfo = this.props.equipmentInfo;
-        if(!this.check(equipmentInfo)) {
+        if (!this.check(equipmentInfo)) {
             this.setState({
-                allowNextAction:false,
+                allowNextAction: false,
             });
         }
     }
@@ -82,7 +82,7 @@ export default class EquipmentDetailView extends Component {
     componentWillReceiveProps(nextProps) {
         this.setDefaultCompany();
     }
-    
+
     renderImage = (item) => {
         let imageSource = null
         if (item.committed === true) {
@@ -123,7 +123,7 @@ export default class EquipmentDetailView extends Component {
     }
 
     setDefaultCompany = () => {
-        if(this.props.acceptanceCompanies && this.props.acceptanceCompanies.length > 0 && !this.props.equipmentInfo.acceptanceCompanyId){
+        if (this.props.acceptanceCompanies && this.props.acceptanceCompanies.length > 0 && !this.props.equipmentInfo.acceptanceCompanyId) {
             let item = this.props.acceptanceCompanies[0];
             this.props.equipmentInfo.acceptanceCompanyName = item.name;
             this.props.equipmentInfo.acceptanceCompanyId = item.id;
@@ -140,7 +140,7 @@ export default class EquipmentDetailView extends Component {
                 this.props.equipmentInfo.acceptanceCompanyName = item.name;
                 this.props.equipmentInfo.acceptanceCompanyId = item.id;
                 let ret = this.check(info);
-                this.setState({ updateIndex: this.updateIndex++,allowNextAction:false,ret });
+                this.setState({ updateIndex: this.updateIndex++, allowNextAction: false, ret });
             },
             { getItemText: (item, index) => { return item.name } }
         );
@@ -175,7 +175,7 @@ export default class EquipmentDetailView extends Component {
         </View>
     }
     renderOtherInfo = (info) => {
-        let power = AuthorityManager.isEquipmentModify()  && !this.props.committed;
+        let power = AuthorityManager.isEquipmentModify() && !this.props.committed;
         return <View style={{ marginTop: 20, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
             <EquipmentInfoItem leftTitle="其他信息" showType="headerInfo"
                 onClick={power ? () => { this._onOpenEditOtherInfoAction(info); } : null} />
@@ -194,7 +194,7 @@ export default class EquipmentDetailView extends Component {
     }
 
     renderImageInfo = (info) => {
-        let power = AuthorityManager.isEquipmentModify()  && !this.props.committed;
+        let power = AuthorityManager.isEquipmentModify() && !this.props.committed;
         let image = null;
         if ((info.files && info.files.length)) {
             let urls = [];
@@ -212,14 +212,14 @@ export default class EquipmentDetailView extends Component {
         </View>
     }
     renderActionSaveInfo = (info) => {
-        let power = AuthorityManager.isEquipmentModify()  && !this.props.committed;
+        let power = AuthorityManager.isEquipmentModify() && !this.props.committed;
         if (!power) return null;
         return <View style={{ marginTop: 20 }}>
             <StatusActionButton text='保存' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => this._onSaveAction(info)} />
         </View>
     }
     renderActionDeleteInfo = (info) => {
-        let power = AuthorityManager.isEquipmentDelete()  && !this.props.committed;
+        let power = AuthorityManager.isEquipmentDelete() && !this.props.committed;
         if (!power || !info.id) return null;
 
         return <View style={{ marginTop: 20 }}>
@@ -227,7 +227,7 @@ export default class EquipmentDetailView extends Component {
         </View>
     }
     _onConfirmAction(info) {
-        if(!this._checkBasicInfo(info)){
+        if (!this._checkBasicInfo(info)) {
             return;
         }
         this.refs[REF_PHOTO]._loadFile((files) => {
@@ -247,29 +247,29 @@ export default class EquipmentDetailView extends Component {
             </View>
         }
         return <View style={{ marginTop: 0 }}>
-            <StatusActionButton disabled={!this.state.allowNextAction} text='下一步' height={40} marginRight={20} backgroundColor={this.state.allowNextAction ? '#00b5f2':'#C8C8C8'} marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
+            <StatusActionButton disabled={!this.state.allowNextAction} text='下一步' height={40} marginRight={20} backgroundColor={this.state.allowNextAction ? '#00b5f2' : '#C8C8C8'} marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
         </View>
     }
     check = (info) => {
         let ret = info && info.acceptanceCompanyName && info.acceptanceCompanyName.length > 0
-                && info.batchCode  && info.batchCode.length > 0
-                && info.approachDate  && info.approachDate > 0
-                && info.facilityCode  && info.facilityCode.length > 0
-                && info.facilityName  && info.facilityName.length > 0;
-            return ret;
+            && info.batchCode && info.batchCode.length > 0
+            && info.approachDate && info.approachDate > 0
+            && info.facilityCode && info.facilityCode.length > 0
+            && info.facilityName && info.facilityName.length > 0;
+        return ret;
     }
     _checkBasicInfo = (info) => {
         let ret = this.check(info);
-        if(ret != this.state.allowNextAction) {
+        if (ret != this.state.allowNextAction) {
             this.setState({
-                allowNextAction:ret,
+                allowNextAction: ret,
             });
         }
         return ret;
     }
 
     _toOtherInfoAction = (info) => {
-        if(!this._checkBasicInfo(info)){
+        if (!this._checkBasicInfo(info)) {
             return;
         }
 
@@ -290,10 +290,10 @@ export default class EquipmentDetailView extends Component {
         });
     }
 
-    _addUrlPropsToFiles(files){
-        files.map((item)=>{
+    _addUrlPropsToFiles(files) {
+        files.map((item) => {
             let url = item.path;;
-            if(!item.path.startsWith("http")){
+            if (!item.path.startsWith("http")) {
                 url = "file://" + url;
             }
             item.url = url;
@@ -302,30 +302,30 @@ export default class EquipmentDetailView extends Component {
 
     renderBaseEdit = (info) => {
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
-        
+
             <EquipmentInfoItem leftTitle="请依次完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ marginTop: 0, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
 
                 <EquipmentInfoItem leftTitle="验收单位：" content={info.acceptanceCompanyName} showType="info" onClick={() => { this.showActionSheet() }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="批次编号：" content={info.batchCode} showType="input" onChangeText={(value) => { info.batchCode = value;this._checkBasicInfo(info)}} />
+                <EquipmentInfoItem leftTitle="批次编号：" content={info.batchCode} showType="input" onChangeText={(value) => { info.batchCode = value; this._checkBasicInfo(info) }} />
                 <EquipmentInfoItem showType="line" />
                 <DatePicker
                     mode="date"
                     title=" "
                     extra=" "
-                    value={info.approachDate ? new Date(info.approachDate):new Date()}
-                    onChange={date => { info.approachDate = date.getTime();this._checkBasicInfo(info); this.props.switchPage({ ...info }) }}
+                    value={info.approachDate ? new Date(info.approachDate) : new Date()}
+                    onChange={date => { info.approachDate = date.getTime(); this._checkBasicInfo(info); this.props.switchPage({ ...info }) }}
                 >
                     <List.Item arrow="horizontal" >
-                        <Text style={{paddingLeft:4, fontSize: 14, color: "#666666",fontWeight: '100', }}>进场日期：</Text>
+                        <Text style={{ paddingLeft: 4, fontSize: 14, color: "#666666", fontWeight: '100', }}>进场日期：</Text>
                     </List.Item>
                 </DatePicker>
                 {/* <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate ? API.formatUnixtimestampSimple(info.approachDate) : null} showType="input" /> */}
                 {/* <EquipmentInfoItem showType="line" /> */}
-                <EquipmentInfoItem leftTitle="材设编码：" content={info.facilityCode} showType="input" onChangeText={(value) => { info.facilityCode = value;this._checkBasicInfo(info) }} />
+                <EquipmentInfoItem leftTitle="材设编码：" content={info.facilityCode} showType="input" onChangeText={(value) => { info.facilityCode = value; this._checkBasicInfo(info) }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="材设名称：" content={info.facilityName} showType="input" onChangeText={(value) => { info.facilityName = value;this._checkBasicInfo(info) }} />
+                <EquipmentInfoItem leftTitle="材设名称：" content={info.facilityName} showType="input" onChangeText={(value) => { info.facilityName = value; this._checkBasicInfo(info) }} />
 
             </View>
             <View style={{ marginTop: 20 }}>
@@ -368,10 +368,19 @@ export default class EquipmentDetailView extends Component {
     renderImageEdit = (info) => {
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
             <EquipmentInfoItem leftTitle="您可记录现场图片" leftTitleColor='#00b5f2' showType="headerInfo" />
-            <View style={{ marginTop: 0, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
-                <ImageChooserView ref={REF_PHOTO}  files={info.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" />
+            <View style={{ paddingLeft: 0, marginTop: 0, paddingTop: 10, paddingBottom: 0, backgroundColor: '#ffffff' }}>
+                <ImageChooserView ref={REF_PHOTO} files={info.files} style={{ top: 0, left: 0, width: width, height: 105, marginLeft: 20, marginRight: 20 }} />
                 <EquipmentInfoItem showType="line" />
-                <Text>验收合格:</Text><Switch value={info.qualified == true ? true : false} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
+                <View style={{
+                    marginLeft: 20, marginRight: 20, marginTop: 0, flexDirection: 'row',
+                    height: 50,
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                }}>
+                    <Text style={{ color: '#666666' }}>验收合格:</Text>
+                    <Switch style={{ right: 0, position: 'absolute', }} value={info.qualified == true ? true : false} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
+                </View>
             </View>
             <View style={{ marginTop: 20 }}>
                 {this.renderActionNextInfo(info, this._toConfirmInfoAction)}
@@ -391,7 +400,7 @@ export default class EquipmentDetailView extends Component {
             editType = equipmentInfo.editType;
         }
         if (editType == API.EQUIPMENT_EDIT_TYPE_BASE) {
-            return this.renderBaseEdit(equipmentInfo);
+            return this.renderImageEdit(equipmentInfo);
         }
         if (editType == API.EQUIPMENT_EDIT_TYPE_IMAGE) {
             return this.renderImageEdit(equipmentInfo);
@@ -418,7 +427,7 @@ EquipmentDetailView.propTypes = {
     switchPage: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
     equipmentDelete: PropTypes.func.isRequired,
-    committed:PropTypes.bool,
+    committed: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
