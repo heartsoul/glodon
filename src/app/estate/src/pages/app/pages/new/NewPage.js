@@ -63,6 +63,7 @@ class NewPage extends React.Component {
                 };
             }
         }
+
         
         this.state = {
             isLoading: false,

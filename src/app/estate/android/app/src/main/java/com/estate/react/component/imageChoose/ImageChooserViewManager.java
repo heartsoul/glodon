@@ -90,6 +90,10 @@ public class ImageChooserViewManager extends ViewGroupManager<ImageChooserView> 
     public void setColor(ImageChooserView view, String color) {
         view.setBackgroundColor(Color.parseColor(color));
     }
+    @ReactProp(name = "files")
+    public void setFile(ImageChooserView view, ReadableArray array){
+        view.setFiles(array);
+    }
 
     class ImageChooserViewEvent extends Event {
 

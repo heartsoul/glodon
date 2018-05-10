@@ -51,7 +51,7 @@ export async function upLoadFiles(fileData, callback) {
     fileData.map((file) => {
         let path = "file://" + file.path;
         if(!isUploadedFile(file, callback)){
-            getOperationCode(path, file.name, file.length, callback,file.md5);
+            getOperationCode(path, file.name, file.length, callback,file.md5,file);
         }
     });
 }
@@ -88,7 +88,7 @@ function isUploadedFile(file,callback) {
  * @param {*} callback 回调
  * @param {*} digest md5签名
  */
-async function getOperationCode(filePath, name, length, callback,digest=null) {
+async function getOperationCode(filePath, name, length, callback,digest=null,file) {
 
     let api = "/bimpm/attachment/operationCode";
     let timestamp = new Date().getTime();
@@ -111,7 +111,7 @@ async function getOperationCode(filePath, name, length, callback,digest=null) {
         .then((response) => response.text())
         .then((responseData) => {
             console.log("getOperationCode result:"+responseData);
-            upLoad(filePath, name, responseData, callback);
+            upLoad(filePath, name, responseData, callback,file);
         })
         .catch((error) => {
             alert(error)
@@ -126,7 +126,7 @@ async function getOperationCode(filePath, name, length, callback,digest=null) {
  * @param {*} operationCode 操作码 
  * @param {*} callback 回调
  */
-async function upLoad(filePath, name, operationCode, callback) {
+async function upLoad(filePath, name, operationCode, callback,nativeFile) {
 
     let api = "/v1/insecure/objects?operationCode=" + operationCode;
     let formData = new FormData();
@@ -150,7 +150,7 @@ async function upLoad(filePath, name, operationCode, callback) {
                 count++;
                 let res = parseUploadData(data.data);
                 if (res && res.name) {
-                    resultArray.push(res);
+                    resultArray.push({...nativeFile,...res});
                 }
             } else {
                 callback("fail", data);

@@ -494,6 +494,7 @@ export function isEditInfoChange(description, status, lastRectificationDate, edi
 function isFileChange(oldFiles, newFiles) {
     let oldLen = oldFiles ? oldFiles.length : 0;
     let newLen = newFiles ? newFiles.length : 0;
+    resetFiles(oldFiles, newFiles);
     if (oldLen != newLen) {
         return true;
     } else {
@@ -505,6 +506,32 @@ function isFileChange(oldFiles, newFiles) {
         return false;
     }
     return false;
+}
+function resetFiles(oldFiles, newFiles) {
+    if (newFiles) {
+        newFiles.map((item) => {
+            let oldFile = relateOldFile(oldFiles,item);
+            if(oldFile){
+                item.name = oldFile.name;
+                item.objectId = oldFile.objectId;
+                item.extension = oldFile.extension;
+                item.digest = oldFile.digest;
+                item.length = oldFile.length;
+                item.uploadTime = oldFile.uploadTime;
+            }
+        })
+    }
+}
+
+function relateOldFile(oldFiles, file) {
+    if(oldFiles){
+        for (let index in oldFiles) {
+            if(oldFiles[index].path === file.path){
+                return oldFiles[index];
+            }
+        }
+    }
+    return null;
 }
 
 function isParamsChange(description, status, lastRectificationDate, editInfo, type) {

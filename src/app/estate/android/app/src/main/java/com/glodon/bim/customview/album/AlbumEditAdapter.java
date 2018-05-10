@@ -108,9 +108,6 @@ public class AlbumEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if(data!=null && data.map!=null && data.map.size()>0){
             mSelectedMap = data.map;
         }
-
-
-
     }
 
     class ImageHolder extends RecyclerView.ViewHolder{
