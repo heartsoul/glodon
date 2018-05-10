@@ -152,13 +152,13 @@ RCT_EXPORT_METHOD (pickerImages:(RCTResponseSenderBlock)callbackRet) {
 - (NSArray<id<RCTBridgeMethod>> *)methodsToExport {
   return @[];
 }
-//- (NSDictionary *)constantsToExport {
-//  CGFloat w = [UIApplication sharedApplication].keyWindow.frame.size.width;
-//  CGFloat h = w / 5 + 34;
-//
-//  return @{ @"ComponentHeight": @(w),
-//            @"ComponentWidth": @(h)};
-//}
+- (NSDictionary *)constantsToExport {
+  CGFloat w = [UIApplication sharedApplication].keyWindow.frame.size.width;
+  CGFloat h = w / 5 + 34;
+
+  return @{ @"ComponentHeight": @(w),
+            @"ComponentWidth": @(h)};
+}
 @end
 
 @implementation RCTConvert(RNTImagesView)

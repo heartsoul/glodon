@@ -157,14 +157,14 @@ class NewCheckListPage extends Component {
         return (
             <KeyboardAwareScrollView>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <View style={{ marginTop: -44 }}>
+                <View style={{ marginTop: -44}}>
                     <Tabs
                         tabs={tabs}
                         initialPage={this.activeTab}
                         ananimated={true}
                         swipeable={false}
                         renderTabBar={(props) => {
-                            return <NewCheckListTabBar ref={(ref) => { this.hiddenBar = ref; }} activeTab={this.activeTab} defaultProps={props} />
+                            return <NewCheckListTabBar backgroundColor='#FFFFFF' ref={(ref) => { this.hiddenBar = ref; }} activeTab={this.activeTab} defaultProps={props} />
                         }}
                     >
                         <NewPage setRef={(ref) => {

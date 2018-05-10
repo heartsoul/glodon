@@ -2,9 +2,9 @@
  * Created by Soul on 2018/03/16.
  */
 'use strict';
-import React, {Component,} from "react";
-import {ActivityIndicator, Animated, FlatList, ScrollView, StyleSheet, Text, View,StatusBar,Image,TouchableOpacity} from "react-native";
-import * as USERAPI from "app-api"; 
+import React, { Component, } from "react";
+import { ActivityIndicator, Animated, FlatList, ScrollView, StyleSheet, Text, View, StatusBar, Image, TouchableOpacity } from "react-native";
+import * as USERAPI from "app-api";
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 export default class tenantList extends Component {
@@ -14,6 +14,9 @@ export default class tenantList extends Component {
 
     constructor(props) {
         super(props);
+        if (!storage.homeNavigation) {
+            storage.homeNavigation = this.props.navigation;
+        }
         this.state = {
             isLoading: true,
             //网络请求状态
@@ -21,58 +24,73 @@ export default class tenantList extends Component {
             errorInfo: "",
             dataArray: [],
         }
+         
     }
 
     //网络请求
-    fetchData = ()=> {
+    fetchData = () => {
+        //请求数据
+        if (storage.loadLastTenant() != '') {
+            let navigator = this.props.navigation;
+            storage.pushNext(navigator, "ProjectPage")
+            return;
+        }
+       
         let userInfo = storage.loadUserInfo();
-        if(userInfo && userInfo["accountInfo"]) {
-            
+        if (userInfo && userInfo["accountInfo"]) {
+
         } else {
             storage.gotoLogin(this.props.navigation);
             return;
         }
-      let userTenants = userInfo["accountInfo"]["userTenants"];
-        if(userTenants) {
-                let data = userTenants;
-                let dataBlob = [];
-                let i = 0;
-                data.map(function (item) {
-                    dataBlob.push({
-                        key: "A0"+i,
-                        value: item,
-                    })
-                    i++;
-                    
-                });
-                this.setState({
-                    //复制数据源
-                    dataArray: dataBlob,
-                    isLoading: false,
-                });
-                data = null;
-                dataBlob = null;
+        let userTenants = userInfo["accountInfo"]["userTenants"];
+        if (userTenants) {
+            let data = userTenants;
+            let dataBlob = [];
+            let i = 0;
+            data.map(function (item) {
+                dataBlob.push({
+                    key: "A0" + i,
+                    value: item,
+                })
+                i++;
+
+            });
+            if(dataBlob.length == 1) {
+                this._clickItem(dataBlob[0],0)
+                return;
+            }
+            this.setState({
+                //复制数据源
+                dataArray: dataBlob,
+                isLoading: false,
+            });
+            data = null;
+            dataBlob = null;
         } else {
             this.setState({
-                            error: true,
-                            errorInfo: {"errorInfo":"未登录"},
-                        });
+                error: true,
+                errorInfo: { "errorInfo": "未登录" },
+            });
         }
     }
 
     componentDidMount() {
-        //请求数据
-        this.fetchData();
+        
+    }
+    componentWillMount() {
+       //请求数据
+       this.fetchData();
     }
 
     //加载等待的view
     renderLoadingView() {
         return (
             <View style={styles.container}>
-            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <ActivityIndicator
                     animating={true}
-                    style={[styles.gray, {height: 80}]}
+                    style={[styles.gray, { height: 80 }]}
                     color='red'
                     size="large"
                 />
@@ -84,62 +102,62 @@ export default class tenantList extends Component {
     renderErrorView(error) {
         return (
             <View style={styles.container}>
-            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <Text>
                     Fail: {error}
                 </Text>
             </View>
         );
     }
-  //点击列表点击每一行
-    _clickItem = (item,index) => {
+    //点击列表点击每一行
+    _clickItem = (item, index) => {
         //   alert(item.value.tenantId);
-         USERAPI.setCurrentTenant(item.value.tenantId).then((responseData)=>{
+        USERAPI.setCurrentTenant(item.value.tenantId).then((responseData) => {
             let navigator = this.props.navigation;
-             storage.saveTenant(item.value.id);
-             storage.saveLastTenant(item.value.tenantId);
+            storage.saveTenant(item.value.id);
+            storage.saveLastTenant(item.value.tenantId);
 
-             storage.pushNext(navigator, "ProjectPage")
+            storage.pushNext(navigator, "ProjectPage")
 
-         });
+        });
     }
     //返回itemView
-    renderItemView = ({item,index}) => {
+    renderItemView = ({ item, index }) => {
         return (
-            <TouchableOpacity key={index} activeOpacity={0.5}  onPress={() => this._clickItem(item,index)}>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._clickItem(item, index)}>
                 <View style={styles.containerView}>
-                 <Image
-          source={require("app-images/icon_choose_tenant_item.png")}
-          style={styles.image}/> 
-                 <Text style={styles.content}> {item.value.tenantName}</Text>
+                    <Image
+                        source={require("app-images/icon_choose_tenant_item.png")}
+                        style={styles.image} />
+                    <Text style={[styles.content,item.value.tenantId == storage.loadLastTenant()? {color:'#00baf3'} : null]}> {item.value.tenantName}</Text>
                 </View>
             </TouchableOpacity>
         );
     }
     createEmptyView() {
         return (
-         <Text style={{fontSize: 40, alignSelf: 'center'}}>还没有数据哦！</Text>
+            <Text style={{ fontSize: 40, alignSelf: 'center' }}>还没有数据哦！</Text>
         );
-      }
-      _keyExtractor = (item, index) => index;
+    }
+    _keyExtractor = (item, index) => index;
     renderData() {
         return (
             <ScrollView >
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-        <Text style={{color:"transparent",height:30}}> 租户列表 </Text>
+                <Text style={{ color: "transparent", height: 30 }}> 租户列表 </Text>
                 <AnimatedFlatList
                     data={this.state.dataArray}
                     renderItem={this.renderItemView}
                     ListEmptyComponent={this.createEmptyView}
                     getItemLayout={(data, index) => ({
                         length: 60, offset: (44 + 1) * index, index
-                      })}
+                    })}
                 />
             </ScrollView>
         );
     }
 
-   
+
     render() {
         //第一次加载等待的view
         if (this.state.isLoading && !this.state.error) {
@@ -160,25 +178,25 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
-        height:180
+        height: 180
     },
-    containerView:{
+    containerView: {
         flex: 1,
-        borderRadius:8,
+        borderRadius: 8,
         // borderWidth:1,
         // borderColor:"#0F0",
-        height:60,
+        height: 60,
         marginTop: 5,
-        
+
         marginBottom: 15,
         marginLeft: 40,
         marginRight: 40,
         backgroundColor: '#FFF',
-        elevation:5, // android 
-        shadowColor:"#333", // iOS
-        shadowOffset:{width:3,height:7}, // iOS
-        shadowOpacity:0.15, // iOS
-        shadowRadius:3, // iOS
+        elevation: 5, // android 
+        shadowColor: "#333", // iOS
+        shadowOffset: { width: 3, height: 7 }, // iOS
+        shadowOpacity: 0.15, // iOS
+        shadowRadius: 3, // iOS
 
     },
     title: {
@@ -191,11 +209,11 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: 'black',
     },
-    image:{
-        left:10,
-        top:10,
-        width:40,
-        height:40,
+    image: {
+        left: 10,
+        top: 10,
+        width: 40,
+        height: 40,
     }
 
 });

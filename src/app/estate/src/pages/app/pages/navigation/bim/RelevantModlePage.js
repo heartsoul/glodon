@@ -73,7 +73,7 @@ class RelevantModelPage extends Component {
         return (
             <View style={{ flexDirection: 'row', alignItems: "center" }}>
                 <TouchableOpacity onPress={() => { this.goBack() }}>
-                    <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 20 }} />
+                    <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 10 }} />
                 </TouchableOpacity>
                 {
                     //编辑状态的可以切换模型
@@ -141,7 +141,7 @@ class RelevantModelPage extends Component {
             this.setState({
                 url: url
             });
-        })
+        });
     }
 
 

@@ -12,8 +12,7 @@ import { BimFileEntry, AuthorityManager } from "app-entry";
 import * as API from "app-api";
 import EquipmentDetailView from "./equipmentDetailView"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { LeftBarButtons } from "app-components";
-
+import { LeftBarButtons, ActionModal } from "app-components";
 import * as actions from '../../actions/equipmentInfoAction'
 import { getModelElementProperty } from "app-api";
 
@@ -52,8 +51,18 @@ class EquipmentDetailPage extends Component {
     }
 
     _onSubmit = (info) => {
+        if(info.skip == true) {
+            info = {...info,quantity:'',unit:'',specification:'',modelNum:'',elementId:'',elementName:'',manufacturer:'',brand:'',supplier:'',}
+        }
         this.props.submit(info, this.props.navigation)
     }
+    _onSave = (info) => {
+        if(info.skip == true) {
+            info = {...info,quantity:'',unit:'',specification:'',modelNum:'',elementId:'',elementName:'',manufacturer:'',brand:'',supplier:'',}
+        }
+        this.props.save(info)
+    }
+    
     gesturesEnabled = () => {
         return false;
     }
@@ -79,9 +88,51 @@ class EquipmentDetailPage extends Component {
 
         return null;
     }
+    check = (info) => {
+        const { editType, preEditType } = info;
+        if(editType != API.EQUIPMENT_EDIT_TYPE_BASE) {
+            return false;
+        }
+        let ret = info && info.acceptanceCompanyName && info.acceptanceCompanyName.length > 0
+        && info.batchCode && info.batchCode.length > 0
+        && info.approachDate && info.approachDate > 0
+        && info.facilityCode && info.facilityCode.length > 0
+        && info.facilityName && info.facilityName.length > 0;
+        return ret;
+    }
+    tipSave = (backFun,info) => {
+        actions.isEditInfoChange(info, this.props.oldData, (isChange) => {
+            if (isChange) {
+                ActionModal.alert('是否确认退出当前页面？', "您还未保存当前数据！", [
+                    {
+                        text: '取消', style: { color: '#5b5b5b'},onPress: () => { if (backFun) {
+                            backFun(false);
+                        } }
+                    },
+                    {
+                        text: '不保存', style: { color: '#e75452' }, onPress: () => { if (backFun) {
+                            backFun(true);
+                        } }
+                    },
+                    {
+                        text: '保存', style: { color: '#00baf3' }, onPress: () => { this._onSave(info) }
+                    }
+                ]);
+            } else {
+
+                if (backFun) {
+                    backFun(true);
+                }
+            }
+        })
+    }
     needBack = (backFun) => {
         const equipmentInfo = this.props.equipmentInfo;
-        const { editType, preEditType } = equipmentInfo;
+        const { editType, preEditType} = equipmentInfo;
+        if(editType == API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
+            this.tipSave(backFun,equipmentInfo);
+            return;
+        }
         if (preEditType) {
             if (preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
                 let data = { ...equipmentInfo, preEditType: null, editType: preEditType };
@@ -184,7 +235,7 @@ class EquipmentDetailPage extends Component {
                     equipmentInfo={equipmentInfo}
                     acceptanceCompanies={this.props.acceptanceCompanies}
                     switchPage={this.switchPage}
-                    save={this.props.save}
+                    save={this._onSave}
                     equipmentDelete={(params) => { this.props.equipmentDelete(params, this.props.navigation) }}
                 />
             </KeyboardAwareScrollView>
@@ -208,6 +259,7 @@ class EquipmentDetailPage extends Component {
 export default connect(
     state => ({
         equipmentInfo: state.equipmentInfo.data,
+        oldData:state.equipmentInfo.oldData,
         acceptanceCompanies: state.equipmentInfo.acceptanceCompanies,
         isLoading: state.equipmentInfo.isLoading,
         error: state.equipmentInfo.error,

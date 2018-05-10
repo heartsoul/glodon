@@ -20,6 +20,9 @@ class ProjectPage extends Component {
 
     constructor(props) {
         super(props);
+        if(!storage.homeNavigation) {
+            storage.homeNavigation = this.props.navigation;
+          }
     }
     _keyExtractor = (item, index) => index;
     //网络请求
@@ -81,7 +84,7 @@ class ProjectPage extends Component {
         return (
             <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
                 <View style={styles.containerView}>
-                    <Text style={styles.content}> {item.value.name}</Text>
+                    <Text style={[styles.content,item.value.id == storage.loadProject()? {color:'#00baf3'} : null]}> {item.value.name}</Text>
                 </View>
             </TouchableOpacity>
         );

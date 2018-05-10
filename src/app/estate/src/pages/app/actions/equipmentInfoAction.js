@@ -4,6 +4,73 @@ import { Toast } from 'antd-mobile';
 import * as UpdateDataAction from "./updateDataAction";
 
 /**
+ * 是否有过修改
+ * @param {*} info 
+ * @param {*} oldInfo 原始数据或者保存后的数据
+ * @param {*} callback 
+ */
+export function isEditInfoChange(info, oldInfo,callback) {
+    if (isParamsChange(info, oldInfo)) {
+        callback(true);
+    } else {
+        callback(false);
+    }
+}
+function isParamsChange(info, oldInfo) {
+    return true;
+    let ret = false;
+    if(info.acceptanceCompanyName != oldInfo.acceptanceCompanyName) {
+        return true;
+    }
+    if(info.batchCode != oldInfo.batchCode) {
+        return true;
+    }
+    if(info.approachDate != oldInfo.approachDate) {
+        return true;
+    }
+    if(info.facilityCode != oldInfo.facilityCode) {
+        return true;
+    }
+    if(info.facilityName != oldInfo.facilityName) {
+        return true;
+    }
+    
+    if(info.quantity != oldInfo.quantity) {
+        return true;
+    }
+    if(info.unit != oldInfo.unit) {
+        return true;
+    }
+    if(info.specification != oldInfo.specification) {
+        return true;
+    }
+    if(info.modelNum != oldInfo.modelNum) {
+        return true;
+    }
+    if(info.elementId != oldInfo.elementId) {
+        return true;
+    }
+    if(info.elementName != oldInfo.elementName) {
+        return true;
+    }
+    if(info.manufacturer != oldInfo.manufacturer) {
+        return true;
+    }
+    if(info.elementName != oldInfo.elementName) {
+        return true;
+    }
+    if(info.brand != oldInfo.brand) {
+        return true;
+    }
+    if(info.supplier != oldInfo.supplier) {
+        return true;
+    }
+    if(info.qualified != oldInfo.qualified) {
+        return true;
+    }    
+    return ret;
+}
+/**
  * 提交材设单 新增时的response {"id": 5200418,"code": "CSYS_20180504_002"}，编辑时response未测试。
  * @param {*} params 
  */
@@ -159,7 +226,7 @@ export function getModelElementProperty(relevantEquipmentModle, equipmentInfo) {
             equipmentInfo.elementId = relevantEquipmentModle.elementId;
             equipmentInfo.elementName = responseData.data.data.name;
             equipmentInfo.approachDate = new Date().getTime();
-            dispatch(_loadSuccess({ ...equipmentInfo }));
+            dispatch(_loadPage({ ...equipmentInfo }));
         }).catch(error => {
             console.log(error);
         });
@@ -180,7 +247,7 @@ function equipmentAcceptanceCompanies(dispatch) {
 
 export function switchPage(data) {
     return dispatch => {
-        dispatch(_loadSuccess(data));
+        dispatch(_loadPage(data));
     }
 }
 
@@ -210,6 +277,12 @@ function _loadSuccess(data) {
     }
 }
 
+function _loadPage(data) {
+    return {
+        type: types.EQUIPMENT_INFO_PAGE,
+        data: data,
+    }
+}
 function _reset() {
     return {
         type: types.EQUIPMENT_INFO_INIT,

@@ -49,7 +49,7 @@ class NewCheckListTabBar extends Component {
 
     render() {
         return (
-            <View style={styles.tabBar}>
+            <View style={[styles.tabBar,this.props.backgroundColor ? {backgroundColor:this.props.backgroundColor} : null]}>
                 <View style={styles.tabItemContainer}>
                     {
                         this.props.defaultProps.tabs.map((item, index) => {

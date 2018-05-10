@@ -1,5 +1,6 @@
 
 import * as API from 'app-api';
+import { Toast } from 'antd-mobile';
 /**
  * 每次加载模型图纸后重新获取token
  * @param {*} fileId 
@@ -10,6 +11,8 @@ function getLastetVersion(fileId, callback) {
         let latestVersion = responseData.data.data.versionId;
         storage.projectIdVersionId = latestVersion;
         getToken(fileId, callback);
+    }).catch((error)=>{
+        Toast.info('抱歉，您目前没有查看此模型的权限，请联系系统管理员。', 3);
     });
 
 }
@@ -19,6 +22,8 @@ function getToken(fileId, callback) {
         let token = responseData.data.data;
         global.storage.bimToken = token;
         callback(token);
+    }).catch((error)=>{
+        Toast.info('抱歉，您目前没有查看此模型的权限，请联系系统管理员。', 3);
     });
 }
 

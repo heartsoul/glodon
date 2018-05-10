@@ -52,16 +52,16 @@ class BimSearchPage extends BaseSearchPage {
     }
 
     _itemClick = (item) => {
-        API.getModelBimFileToken(storage.loadProject(), storage.projectIdVersionId, item.fileId)
-            .then((responseData) => {
-                let token = responseData.data.data;
-                global.storage.bimToken = token;
+        // API.getModelBimFileToken(storage.loadProject(), storage.projectIdVersionId, item.fileId)
+        //     .then((responseData) => {
+        //         let token = responseData.data.data;
+        //         global.storage.bimToken = token;
                 if (this.state.dataType === '图纸文件') {
                     BimFileEntry.showBlueprintFromChoose(this.props.navigation, this.state.pageType, item.fileId, item.name);
                 } else {
                     BimFileEntry.showModelFromChoose(this.props.navigation, this.state.pageType, item.fileId, item.buildingId, item.buildingName)
                 }
-            });
+            // });
     }
 
 

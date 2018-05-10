@@ -248,8 +248,9 @@ class NewReviewPage extends Component {
                     defaultValue={this.description}
                 />
 
-                <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" onChange={() => alert('收到!')} />
-
+                <View style={{ width: '100%', height: 130, marginTop: 10,marginBottom: 0,backgroundColor:'#FFFFFF'}}>
+                <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{width: width, height: 100, marginTop: 10,marginLeft: 10,marginRight: 10, }} onChange={() => {}} />
+                </View>
                 {
                     this.state.showRectificationView ? (
                         <View style={styles.container}>

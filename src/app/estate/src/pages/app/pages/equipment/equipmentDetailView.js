@@ -85,18 +85,14 @@ export default class EquipmentDetailView extends Component {
 
     renderImage = (item) => {
         let imageSource = null
-        if (item.committed === true) {
-            if (item.qualified === true) {
-                imageSource = standardImage;
-            } else {
-                imageSource = notStandardImage;
-            }
-            if (imageSource) {
-                return (<Image source={imageSource} style={[styles.image]} />)
-            }
+        if (item.qualified === true) {
+            imageSource = standardImage;
+        } else {
+            imageSource = notStandardImage;
         }
-
-        return null
+        if (imageSource) {
+            return (<Image source={imageSource} style={[styles.image]} />)
+        }
     }
 
     _onOpenEditBaseInfoAction = (info) => {
@@ -139,7 +135,7 @@ export default class EquipmentDetailView extends Component {
             (item, index) => {
                 this.props.equipmentInfo.acceptanceCompanyName = item.name;
                 this.props.equipmentInfo.acceptanceCompanyId = item.id;
-                let ret = this.check(info);
+                let ret = this.check(this.props.equipmentInfo);
                 this.setState({ updateIndex: this.updateIndex++, allowNextAction: false, ret });
             },
             { getItemText: (item, index) => { return item.name } }
@@ -239,11 +235,16 @@ export default class EquipmentDetailView extends Component {
         let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_IMAGE, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
         this.props.switchPage(data);
     }
-    renderActionNextInfo = (info, nextAction) => {
+    renderActionNextInfo = (info, nextAction, isLink = false) => {
+        if (isLink) {
+            return <View style={{ marginTop: 0 }}>
+                <StatusActionButton disabled={false} color='#00b5f2' borderColor='transparent' text='跳过' height={40} marginRight={20} backgroundColor={'transparent'} marginLeft={20} onClick={() => nextAction(info)} />
+            </View>
+        }
         if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
             // 是编辑
             return <View style={{ marginTop: 0 }}>
-                <StatusActionButton text='确定' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => this._onConfirmAction(info)} />
+                <StatusActionButton text='确定' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
             </View>
         }
         return <View style={{ marginTop: 0 }}>
@@ -272,20 +273,35 @@ export default class EquipmentDetailView extends Component {
         if (!this._checkBasicInfo(info)) {
             return;
         }
-
         let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_BASE, editType: API.EQUIPMENT_EDIT_TYPE_OTHER };
+        if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM){
+            data = { ...data, preEditType: API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
+        }
         this.props.switchPage(data);
         // storage.pushNext(null, "EquipmentDetailPage", { "item": info, editType: info.editType });
     }
     _toImageInfoAction = (info) => {
-        let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_OTHER, editType: API.EQUIPMENT_EDIT_TYPE_IMAGE };
+        let data = { ...info, skip: false, preEditType: API.EQUIPMENT_EDIT_TYPE_OTHER, editType: API.EQUIPMENT_EDIT_TYPE_IMAGE };
+        if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM){
+            data = { ...data, preEditType: API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
+        }
         this.props.switchPage(data);
     }
+    _toImageInfoSkipAction = (info) => {
+        let data = { ...info, skip: true, preEditType: API.EQUIPMENT_EDIT_TYPE_OTHER, editType: API.EQUIPMENT_EDIT_TYPE_IMAGE };
+        this.props.switchPage(data);
+    }
+    
     _toConfirmInfoAction = (info) => {
+        
         this.refs[REF_PHOTO]._loadFile((files) => {
             this._addUrlPropsToFiles(files);
             info.files = files;
+            
             let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_IMAGE, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
+            if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM){
+                data = { ...data, preEditType: API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
+            }
             this.props.switchPage(data);
         });
     }
@@ -345,7 +361,7 @@ export default class EquipmentDetailView extends Component {
                 <EquipmentInfoItem showType="line" />
                 <EquipmentInfoItem leftTitle="型号：" content={info.modelNum} showType="input" onChangeText={(value) => { info.modelNum = value }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="构件位置：" showType="link" onClick={() => {
+                <EquipmentInfoItem leftTitle="构件位置：" showType="info" onClick={() => {
                     this.onOpenModleAction(info);
                 }} content={info.elementName} />
                 <EquipmentInfoItem showType="line" />
@@ -358,6 +374,9 @@ export default class EquipmentDetailView extends Component {
             </View>
             <View style={{ marginTop: 20 }}>
                 {this.renderActionNextInfo(info, this._toImageInfoAction)}
+            </View>
+            <View style={{ marginTop: 20 }}>
+                {this.renderActionNextInfo(info, this._toImageInfoSkipAction, true)}
             </View>
         </View>
     }
@@ -379,7 +398,7 @@ export default class EquipmentDetailView extends Component {
                     justifyContent: 'flex-start',
                 }}>
                     <Text style={{ color: '#666666' }}>验收合格:</Text>
-                    <Switch style={{ right: 0, position: 'absolute', }} value={info.qualified == true ? true : false} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
+                    <Switch style={{ right: 0, position: 'absolute', }} value={info.qualified === false ? false : true} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
                 </View>
             </View>
             <View style={{ marginTop: 20 }}>
@@ -400,7 +419,7 @@ export default class EquipmentDetailView extends Component {
             editType = equipmentInfo.editType;
         }
         if (editType == API.EQUIPMENT_EDIT_TYPE_BASE) {
-            return this.renderImageEdit(equipmentInfo);
+            return this.renderBaseEdit(equipmentInfo);
         }
         if (editType == API.EQUIPMENT_EDIT_TYPE_IMAGE) {
             return this.renderImageEdit(equipmentInfo);

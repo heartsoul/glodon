@@ -88,7 +88,7 @@
   layout.minimumInteritemSpacing = _margin;
   layout.minimumLineSpacing = _margin;
   _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.lpd_width, self.lpd_height) collectionViewLayout:layout];
-  _collectionView.alwaysBounceVertical = YES;
+  _collectionView.alwaysBounceVertical = NO;
   _collectionView.backgroundColor = [UIColor whiteColor];
   _collectionView.contentInset = _contentInsets;
   _collectionView.dataSource = self;

@@ -13,6 +13,7 @@ import { StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-naviga
 import ThumbnailImage from "./ThumbnailImage"
 import * as PageType from "./PageTypes";
 import * as API from "app-api";
+import { Toast } from 'antd-mobile';
 import { LeftBarButtons } from "app-components"
 import * as BimFileEntry from "./BimFileEntry";
 import BimFileFilterView from "./BimFileFilterView";
@@ -229,15 +230,23 @@ export default class BimFileChooser extends Component {
 
             global.storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType, navData: navData });
         } else {
-            API.getModelBimFileToken(this.state.projectId, this.state.latestVersion, item.value.fileId).then((responseData) => {
-                let token = responseData.data.data;
-                global.storage.bimToken = token;
+            // API.getModelBimFileToken(this.state.projectId, this.state.latestVersion, item.value.fileId).then((responseData) => {
+            //     let token = responseData.data.data;
+            //     global.storage.bimToken = token;
                 if (this.state.dataType === '图纸文件') {
                     BimFileEntry.showBlueprintFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.name);
                 } else {
                     BimFileEntry.showModelFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.buildingId, item.value.buildingName)
                 }
-            });
+            // }).catch((error)=>{
+
+            //     if (this.state.dataType === '图纸文件') {
+            //         Toast.info('抱歉，您目前没有查看此图纸的权限，请联系系统管理员。', 3);
+            //     } else {
+            //         Toast.info('抱歉，您目前没有查看此模型的权限，请联系系统管理员。', 3);
+            //     }
+                
+            // });
 
         }
     }

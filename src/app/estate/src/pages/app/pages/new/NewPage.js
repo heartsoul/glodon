@@ -305,8 +305,9 @@ class NewPage extends React.Component {
                     showStar={this.state.showDescriptionStar}
                     childView={this.renderDescriptionView()}
                 ></StarView>
-
-                <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{ top: 0, left: 0, width: width, height: 100, marginTop: 20 }} backgroundColor="#00baf3" onChange={() => alert('收到!')} />
+                <View style={{ width: '100%', height: 130, marginTop: 10,marginBottom: 0,backgroundColor:'#FFFFFF'}}>
+                <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{width: width, height: 100, marginTop: 10,marginLeft: 10,marginRight: 10, }} onChange={() => {}} />
+                </View>
                 <RectificationView ref={REF_RECTIFICATION} rectificationData={this.state.rectificationData} showStar={this.state.showRectificationStar}></RectificationView>
                 <StarView
                     showStar={this.state.showCheckpointStar}

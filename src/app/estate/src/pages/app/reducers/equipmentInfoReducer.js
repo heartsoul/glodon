@@ -5,10 +5,8 @@ import * as types from '../constants/equipmentInfoTypes';
 
 
 const initialState = {
-    data: {
-        inspectionInfo: {},
-        progressInfos: []
-    },
+    data: {},
+    oldData:{},
     isLoading: true,
     error: null,
     isSuccessed: false,
@@ -27,6 +25,16 @@ export default (state = initialState, action) => {
                 editType: action.editType,
             }
         case types.EQUIPMENT_INFO_DONE:
+            return {
+                ...state,
+                isLoading: false,
+                data: action.data,
+                oldData:action.data,
+                error: null,
+                isSuccessed: true,
+                editType: action.editType,
+            }
+        case types.EQUIPMENT_INFO_PAGE:
             return {
                 ...state,
                 isLoading: false,

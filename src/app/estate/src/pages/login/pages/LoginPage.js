@@ -32,6 +32,9 @@ class LoginPage extends React.Component {
 }
   constructor(props) {
     super(props);
+    if(!storage.homeNavigation) {
+      storage.homeNavigation = this.props.navigation;
+    }
     this.passwordTextInput = null;
     this.userNameTextInput = null;
     /*用来指示是否显示Loading提示符号*/

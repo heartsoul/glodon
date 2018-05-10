@@ -118,7 +118,7 @@ RectificationView.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 20,
+        marginTop: 5,
         marginBottom: 11
     },
 })

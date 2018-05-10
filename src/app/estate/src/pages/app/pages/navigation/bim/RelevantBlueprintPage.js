@@ -12,6 +12,8 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
+import { Toast } from 'antd-mobile';
+
 import * as AppConfig from "common-module";
 import * as PageType from "./PageTypes";
 import * as BimToken from "./BimFileTokenUtil";
@@ -77,7 +79,7 @@ export default class RelevantBlueprintPage extends Component {
         return (
             <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <TouchableOpacity onPress={() => { this.goBack() }}>
-                    <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 20 }} />
+                    <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 10 }} />
                 </TouchableOpacity>
 
                 {

@@ -40,7 +40,6 @@ export default class extends PureComponent {
         if (!eShow) {
             return;
         }
-        return;
         API.equipmentListNum(storage.loadProject()).then(
             (responseData) => {
                 // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))

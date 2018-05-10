@@ -5,7 +5,7 @@
  */
 
 import {BASE_URL} from 'common-module'
-
+import { Toast } from 'antd-mobile';
 // 关于fetch https://github.com/github/fetch
 // fetch('/users', {
 //   method: 'POST',
@@ -36,7 +36,9 @@ function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
         return response;
     } else if (response.status === 403) {
-        alert('请联系管理员获取相应操作权限');
+        // alert('请联系管理员获取相应操作权限');
+        // Toast.info('请联系管理员获取相应操作权限(code:403)',3)
+        console.log('请联系管理员获取相应操作权限(code:403)')
         const error = new Error("请联系管理员获取相应操作权限");
         error.response = response;
         throw error;
@@ -46,9 +48,11 @@ function checkStatus(response) {
         storage.gotoLogin();
     }
     else if (response.status === 500) {
-        alert('数据获取失败(code:500).');
+        // alert('数据获取失败(code:500).');
         // return ;
         // Message.error('请联系管理员获取相应操作权限');
+        // Toast.info('数据获取失败(code:500)',3)
+        console.log('数据获取失败(code:500)')
         const error = new Error("数据获取失败");
         error.response = response;
         throw error;
