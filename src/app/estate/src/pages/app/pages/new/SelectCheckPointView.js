@@ -91,13 +91,13 @@ export default class SelectCheckPointView extends Component {
         return (
             <View style={{ flexDirection: 'row', flex: 1, }}>
                 <TextInput
-                    style={{ flex: 1, textAlignVertical: 'top', paddingLeft: 12, paddingRight: 12, paddingTop: 12, paddingBottom: 0, backgroundColor: '#ffffff' }}
+                    style={{ flex: 1, textAlignVertical: 'top', paddingLeft: 12, paddingRight: 12, paddingTop: 2, paddingBottom: 0, backgroundColor: '#ffffff' }}
                     placeholder={''}
                     multiline={false}
                     underlineColorAndroid={"transparent"}
                     textAlign="right"
                     onChangeText={(text) => { this.textInputChange(text) }}
-                    value={this.state.inputName}
+                    defaultValue={this.state.selectedCheckPoint.name}
                 />
                 {
                     (this.state.isShowMark) ? (
