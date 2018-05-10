@@ -6,7 +6,7 @@ const rightImage = require("app-images/icon_arrow_right_gray.png");
 var { width, height } = Dimensions.get("window");
 class TextInputWithData extends TextInput {
     componentDidMount = () => {
-        this.value = 'abc:'+this.props.defaultValue;
+        this.value = ''+this.props.defaultValue;
     }
 } 
 export default class EquipmentInfoItem extends React.Component {

@@ -11,6 +11,7 @@ import {
 import { Toast } from 'antd-mobile';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as API from 'app-api'
+import EquipmentInfoItem from "../equipment/equipmentInfoItem"
 export default class extends React.Component {
   static navigationOptions= ({ navigation, screenProps }) => ({
     title: '意见反馈',
@@ -79,10 +80,14 @@ export default class extends React.Component {
     return (
       <KeyboardAwareScrollView style={[styles.container, { backgroundColor: '#ffffff' }]}>
       <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-      <TextInput onChangeText={this.onChangeTextName} multiline={false} style={styles.textLine} placeholder='姓名'></TextInput>
-      <TextInput onChangeText={this.onChangeTextEmail} multiline={false} style={styles.textLine} placeholder='邮箱'></TextInput>
-      <TextInput onChangeText={this.onChangeTextTitle} multiline={false} style={styles.textLine} placeholder='标题'></TextInput>
-      <TextInput onChangeText={this.onChangeTextContent} multiline={true} style={styles.text} placeholder='请输入意见反馈内容'></TextInput>
+      <EquipmentInfoItem leftTitle="姓名：" showType="input" onChangeText={this.onChangeTextName} />
+      <EquipmentInfoItem showType="line" />
+      <EquipmentInfoItem leftTitle="邮箱：" showType="input" onChangeText={this.onChangeTextEmail} />
+      <EquipmentInfoItem showType="line" />
+      <EquipmentInfoItem leftTitle="标题：" showType="input" onChangeText={this.onChangeTextTitle} />
+      <EquipmentInfoItem showType="line" />
+
+      <TextInput onChangeText={this.onChangeTextContent} multiline={true} style={styles.text} placeholder='留言内容'></TextInput>
       </KeyboardAwareScrollView>
       
     );
@@ -98,15 +103,17 @@ var styles = StyleSheet.create({
       fontSize:18,
       width:'90%',
       height:100,
-      color:'gray',
       marginRight:20,
       marginLeft:20,
       paddingRight:10,
       paddingLeft:10,
       paddingTop:10,
       marginTop:20,
-      borderWidth:1,
-      borderColor:'#ededed',
+      color: '#666666',
+        fontWeight: '100',
+        marginBottom: 0,
+      // borderWidth:1,
+      // borderColor:'#ededed',
     },
     textLine:{
       fontSize:18,
