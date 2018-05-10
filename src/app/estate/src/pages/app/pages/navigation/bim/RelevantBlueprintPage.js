@@ -16,6 +16,9 @@ import * as AppConfig from "common-module";
 import * as PageType from "./PageTypes";
 import * as BimToken from "./BimFileTokenUtil";
 import * as AuthorityManager from "./../project/AuthorityManager";
+import * as API from "app-api";
+import { ActionSheet } from 'app-3rd/teaset';
+import { BimFileEntry } from "app-entry";
 
 //获取设备的宽度和高度
 var {
@@ -220,7 +223,7 @@ export default class RelevantBlueprintPage extends Component {
 
         this.setState({
             showFinishView: false,
-        },() => {
+        }, () => {
             this.props.navigation.setParams({ loadTitle: this.loadTitle, loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
         });
     }
@@ -267,7 +270,7 @@ export default class RelevantBlueprintPage extends Component {
                     break;
                 case 'getPositionInfo':
                     {
-                        this.getPositionInfo();
+                        this.getPositionInfo(data.data);
                     }
                     break;
                 default:
@@ -295,13 +298,117 @@ export default class RelevantBlueprintPage extends Component {
     }
     //点击圆点 返回信息
     getPositionInfo(json) {
+        if (!json) {
+            return;
+        }
+        let dot = JSON.parse(json);
+        switch (dot.qcState) {
+            case API.QC_STATE_UNRECTIFIED://"待整改"
+            case API.QC_STATE_DELAYED://"已延迟"
+                this.showRepairDialog(dot, AuthorityManager.isCreateRectify() && AuthorityManager.isMe(dot.responsibleUserId), AuthorityManager.isQualityBrowser());
+                break;
+            case API.QC_STATE_UNREVIEWED://"待复查"
+                this.showReviewDialog(dot, AuthorityManager.isCreateReview() && AuthorityManager.isMe(dot.inspectionUserId), AuthorityManager.isQualityBrowser());
+                break;
+            case API.QC_STATE_INSPECTED://"已检查"
+            case API.QC_STATE_REVIEWED://"已复查"
+            case API.QC_STATE_ACCEPTED://"已验收"
+                this.showDetailDialog(dot, AuthorityManager.isQualityBrowser());
+                break;
+        }
 
+
+    }
+
+    showRepairDialog = (dot, create, browser) => {
+        let items = [];
+        if (create) {
+            items.push({
+                title: "新建整改单",
+                onPress: () => {
+                    BimFileEntry.showNewReviewPage(this.props.navigation, dot.inspectionId, API.CREATE_TYPE_RECTIFY);
+                }
+            });
+        }
+        if (browser) {
+            items.push({
+                title: "查看检查单",
+                onPress: () => {
+                    let item = {}
+                    item.value = {}
+                    item.value.id = dot.inspectionId;
+                    storage.pushNext(null, "QualityDetailPage", { "item": item });
+                }
+            });
+        }
+        let cancelItem = { title: '取消' };
+        if (items.length > 0) {
+            ActionSheet.show(items, cancelItem);
+        }
+    }
+    showReviewDialog = (dot, create, browser) => {
+        let items = [];
+        if (create) {
+            items.push({
+                title: "新建复查单",
+                onPress: () => {
+                    BimFileEntry.showNewReviewPage(this.props.navigation, dot.inspectionId, API.CREATE_TYPE_REVIEW);
+                }
+            });
+        }
+        if (browser) {
+            items.push({
+                title: "查看检查单",
+
+                onPress: () => {
+                    let item = {}
+                    item.value = {}
+                    item.value.id = dot.inspectionId;
+                    storage.pushNext(null, "QualityDetailPage", { "item": item });
+                }
+            });
+        }
+        let cancelItem = { title: '取消' };
+        if (items.length > 0) {
+            ActionSheet.show(items, cancelItem);
+        }
+    }
+
+    showDetailDialog = (dot, browser) => {
+        let items = [];
+        if (browser) {
+            items.push({
+                title: "查看检查单",
+
+                onPress: () => {
+                    let item = {}
+                    item.value = {}
+                    item.value.id = dot.inspectionId;
+                    storage.pushNext(null, "QualityDetailPage", { "item": item });
+                }
+            });
+        }
+        let cancelItem = { title: '取消' };
+        if (items.length > 0) {
+            ActionSheet.show(items, cancelItem);
+        }
     }
     //在WebView中注册该回调方法
 
     onNavigationStateChange(event) {
         // console.log('onNavigationStateChange:');
         // console.log(event); //打印出event中属性
+    }
+
+    getBluePrintDots = () => {
+        if (this.state.pageType == PageType.PAGE_TYPE_QUALITY_MODEL) {
+            API.getBluePrintDots(storage.loadProject(), this.state.drawingGdocFileId)
+                .then(responseData => {
+                    this.refs.webview.injectJavaScript("javascript:loadCircleItems('" + JSON.stringify(responseData.data) + "');")
+                }).catch(error => {
+                    console.log(error)
+                })
+        }
     }
     //渲染
     render() {
@@ -321,7 +428,7 @@ export default class RelevantBlueprintPage extends Component {
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
                         injectedJavaScript={cmdString}
-                        onLoadEnd={() => this.setPosition()}
+                        onLoadEnd={() => { this.setPosition(); this.getBluePrintDots() }}
                         source={{ uri: this.state.url, method: 'GET' }}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
