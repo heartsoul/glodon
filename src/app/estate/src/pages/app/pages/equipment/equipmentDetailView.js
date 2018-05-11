@@ -300,7 +300,7 @@ export default class EquipmentDetailView extends Component {
     }
 
     _toConfirmInfoAction = (info) => {
-        if(info.skip) {
+        if(info.skip === true) {
             info.skip = false;
             info.quantity = '';
             info.unit = '';

@@ -51,13 +51,13 @@ class EquipmentDetailPage extends Component {
     }
 
     _onSubmit = (info) => {
-        if(info.skip == true) {
+        if(info.skip === true) {
             info = {...info,quantity:'',unit:'',specification:'',modelNum:'',elementId:'',elementName:'',manufacturer:'',brand:'',supplier:'',}
         }
         this.props.submit(info, this.props.navigation)
     }
     _onSave = (info) => {
-        if(info.skip == true) {
+        if(info.skip === true) {
             info = {...info,quantity:'',unit:'',specification:'',modelNum:'',elementId:'',elementName:'',manufacturer:'',brand:'',supplier:'',}
         }
         this.props.save(info)
