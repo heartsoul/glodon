@@ -104,14 +104,14 @@ export default class QualityDetailView extends Component {
                     <QualityInfoCellItem userName={name} actionDate={API.formatUnixtimestamp(progressInfo.commitTime)} showType="user"
                         actionText={progressInfo.billType} actionColor={API.toBillTypeColor(progressInfo.billType)} onAction={() => { this.onAction(progressInfo) }} />
                     <QualityInfoCellItem description={progressInfo.description} descriptionDate={progressInfo.handleDate ? "整改期" + API.formatUnixtimestampSimple(progressInfo.handleDate) : null} showType="description" />
-                    <QualityInfoCellItem url={progressInfo.files[0].url} showType="image" />
+                    <QualityInfoCellItem url={progressInfo.files[0]} showType="image" />
                     <QualityInfoItem showType="line" />
                 </View>
             );
         }
         let urls = [];
         progressInfo.files.map((file, index) => {
-            urls.push(file.url);
+            urls.push(file);
         })
 
         return <View key={"renderProgressInfoItem" + index} style={{ marginTop: 10 }}>

@@ -120,6 +120,38 @@ async function getOperationCode(filePath, name, length, callback,digest=null,fil
 }
 
 /**
+ * 获取图片路径
+ * @param {*} objectId 文件对象id
+ * @param {*} thumbnail 是否是缩略图， 默认是大图
+ */
+export async function getBimFileUrl(objectId, callback) {
+
+    let api = `${AppConfig.BASE_URL}/bimpm/attachment/attachment/url?objectId=${objectId}&thumbnail=${true}&thumbnailSize=preview`;
+    let ops = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json;charset=utf-8",
+            "X-Requested-With": "XMLHttpRequest",
+        },
+        credentials: 'include', // 带上cookie
+    };
+
+    if (storage.isLogin()) {
+        ops.headers.Authorization = "Bearer " + storage.getLoginToken();
+    }
+    return fetch(api, ...ops)
+        .then((response) => response.text())
+        .then((responseData) => {
+            let url = responseData;
+            callback(true,url);
+           return {url};
+        })
+        .catch((error) => {
+            callback(false,error);
+        });
+}
+
+/**
  * 上传文件
  * @param {*} filePath 文件路径
  * @param {*} name 文件名

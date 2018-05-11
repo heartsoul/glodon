@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { View, StyleSheet, Text as Label, Image, TouchableOpacity } from 'react-native';
 import { StatusActionButton } from "app-components"
+import * as API from "app-api"
 import { push } from 'connected-react-router';
 
 const benchmarkImage = require("app-images/icon_benchmark.png");
@@ -76,11 +77,13 @@ export default class QualityInfoCellItem extends React.Component {
     }
     bigImage = (images, index) => {
         let media = [];
-        images.map((url, index) => {
+        images.map((item, index) => {
             media.push({
-                photo: url,
+                photo: item.url,
+                objectId:item.objectId
             });
         });
+        
         storage.pushNext(null, 'BigImageViewPage', { media: media, index: index })
 
     }
@@ -91,7 +94,7 @@ export default class QualityInfoCellItem extends React.Component {
                 <TouchableOpacity activeOpacity={0.5} onPress={(event) => {
                     this.bigImage([url], 0);
                 }}>
-                    <Image source={{ uri: url }} style={styles.imageMax} />
+                    <Image source={{ uri: url.url }} style={styles.imageMax} />
                 </TouchableOpacity>
             </View>
         );
@@ -103,7 +106,7 @@ export default class QualityInfoCellItem extends React.Component {
                     this.props.urls.map((url, index) => {
                         return (
                             <TouchableOpacity key={'xxx' + index} activeOpacity={0.5} onPress={(event) => { this.bigImage(this.props.urls, index); }}>
-                                <Image source={{ uri: url }} style={styles.imageNarmal} />
+                                <Image source={{ uri: url.url }} style={styles.imageNarmal} />
                             </TouchableOpacity>
                         );
                     })

@@ -126,9 +126,10 @@ export default class EquipmentInfoItem extends React.Component {
     }
     bigImage = (images, index) => {
         let media = [];
-        images.map((url, index) => {
+        images.map((item, index) => {
             media.push({
-                photo: url,
+                photo:item.url,
+                objectId:item.objectId
             });
         });
         storage.pushNext(null, 'BigImageViewPage', { media: media, index: index })
@@ -141,7 +142,7 @@ export default class EquipmentInfoItem extends React.Component {
                 <TouchableOpacity activeOpacity={0.5} onPress={(event) => {
                     this.bigImage([url], 0);
                 }}>
-                    <Image source={{ uri: url }} style={styles.imageMax} />
+                    <Image source={{ uri: url.url }} style={styles.imageMax} />
                 </TouchableOpacity>
             </View>
         );
@@ -153,7 +154,7 @@ export default class EquipmentInfoItem extends React.Component {
                     this.props.urls.map((url, index) => {
                         return (
                             <TouchableOpacity key={'xxx' + index} activeOpacity={0.5} onPress={(event) => { this.bigImage(this.props.urls, index); }}>
-                                <Image source={{ uri: url }} style={styles.imageNarmal} />
+                                <Image source={{ uri: url.url }} style={styles.imageNarmal} />
                             </TouchableOpacity>
                         );
                     })
@@ -234,7 +235,7 @@ EquipmentInfoItem.propTypes = {
     /**
     * 图片链接
     */
-   url: PropTypes.string,
+   url: PropTypes.any,
    // images 类型需要的数据
    /**
    * 图片链接

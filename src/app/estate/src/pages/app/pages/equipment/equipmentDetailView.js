@@ -195,7 +195,7 @@ export default class EquipmentDetailView extends Component {
         if ((info.files && info.files.length)) {
             let urls = [];
             info.files.map((file, index) => {
-                urls.push(file.url);
+                urls.push(file);
             })
             image = urls.length > 1 ? (<EquipmentInfoItem urls={urls} showType="images" />) : (<EquipmentInfoItem url={urls[0]} showType="image" />);
         }
