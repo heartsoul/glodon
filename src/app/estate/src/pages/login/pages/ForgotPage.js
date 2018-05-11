@@ -135,7 +135,7 @@ class ForgotPage extends React.Component {
   }
   _checkInput3() {
     this.state.status = '';
-    return (this.state.password.length > 5 && this.state.password1.length > 5);
+    return (this.state.password.length > 5 && this.state.password1.length > 5 && this.state.password == this.state.password1);
   }
   // page 1
   _onUserNameChangeText = text => {
