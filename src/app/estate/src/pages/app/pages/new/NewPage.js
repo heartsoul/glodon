@@ -63,7 +63,9 @@ class NewPage extends React.Component {
                 };
             }
         }
-
+        console.log('11====================================');
+        console.log(filesIn);
+        console.log('22====================================');
         
         this.state = {
             isLoading: false,

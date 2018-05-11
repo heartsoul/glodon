@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 
 import com.estate.react.GLDReactPackage;
 import com.facebook.react.ReactApplication;
-import com.imagepicker.ImagePickerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.ReactContext;
@@ -29,7 +28,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
-            new ImagePickerPackage(),
               new GLDReactPackage()
       );
     }

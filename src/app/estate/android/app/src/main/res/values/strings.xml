@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">estate</string>
+
+    <string name="str_cancel">取消</string>
+    <string name="str_finish">完成</string>
+    <string name="str_quality_create_delete_text">拖动到此处删除</string>
+    <string name="str_quality_photo_cancel">    取消    </string>
+    <string name="str_quality_photo_use_photo">使用照片</string>
+
 </resources>
