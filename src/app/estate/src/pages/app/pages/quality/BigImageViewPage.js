@@ -1,5 +1,7 @@
-import PhotoBrowser from 'react-native-photo-browser';
 import React, { Component } from 'react';
+
+import { View, Modal, ActivityIndicator,StatusBar} from 'react-native';
+import ImageViewer from 'react-native-image-zoom-viewer';
 import * as API from 'app-api';
 
 export default class BigImageViewPage extends Component {
@@ -15,8 +17,12 @@ export default class BigImageViewPage extends Component {
         const { params } = this.props.navigation.state;
         const media = params.media
         const index = params.index || 0;
+        media.map((item,index)=>{
+            item.url = item.photo;
+            delete item.photo;
+        });
         this.state = {
-            media:media,
+            media:[...media],
             bigMedia:[]
         }
         
@@ -29,7 +35,7 @@ export default class BigImageViewPage extends Component {
                 countAll --;
                 let media = this.state.media;
                 if(success) {
-                    media[index].photo = data;
+                    media[index].url = data;
                 }
                 if(countAll < 1) {
                     this.setState(
@@ -43,35 +49,31 @@ export default class BigImageViewPage extends Component {
             
         });
     }
-    _goBack = () => {
-       //2.点击返回关闭页面
-        this.props.navigation.goBack()
-    }
     render() {
         //3.获取传入的图片等信息
         const{ params } = this.props.navigation.state;
         const index = params.index || 0;
         if(this.state.bigMedia && this.state.bigMedia.length > 0) {
             return (
-                <PhotoBrowser
-                    onBack={this._goBack}
-                    mediaList={this.state.bigMedia}
-                    initialIndex={index}
-                    displayActionButton={false}
-                    displayTopBar={true}
-                    displayNavArrows={true}
-                />
+                <Modal key={'big'} visible={true} transparent={true}>
+                <ImageViewer  key={'bigImageView'} enableImageZoom={true} index={index} imageUrls={this.state.bigMedia} onClick={() => { // 图片单击事件
+                        this.props.navigation.goBack();
+                    }}/>
+            </Modal>
             );
         }
         return (
-            <PhotoBrowser
-                onBack={this._goBack}
-                mediaList={this.state.media}
-                initialIndex={index}
-                displayActionButton={false}
-                displayTopBar={true}
-                displayNavArrows={true}
+            <View style={{flex:1,alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
+            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+            <ActivityIndicator
+                animating={true}
+                style={[{ height: 80 }]}
+                color='#00baf3'
+                size="large"
             />
+        </View>
         );
     }
 }
+
+

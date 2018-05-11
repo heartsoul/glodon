@@ -66,15 +66,15 @@ class QualityListView extends PureComponent {
     //加载等待的view
     renderLoadingView() {
         return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <ActivityIndicator
-                    animating={true}
-                    style={[styles.gray, { height: 80 }]}
-                    color='green'
-                    size="large"
-                />
-            </View>
+            <View style={{flex:1,alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
+            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+            <ActivityIndicator
+                animating={true}
+                style={[{ height: 80 }]}
+                color='#00baf3'
+                size="large"
+            />
+        </View>
         );
     }
 
