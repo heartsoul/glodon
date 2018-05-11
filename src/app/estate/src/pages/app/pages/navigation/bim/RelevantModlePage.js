@@ -189,10 +189,12 @@ class RelevantModelPage extends Component {
      */
     add = () => {
         //会出发getPosition方法
-        // this.refs.webview.injectJavaScript("javascript:getSelectedComponent();")
-        this.refs.webview.injectJavaScript("javascript:loadCircleItems('" + JSON.stringify(this.mEquipmentPositionMap) + "');")
+        this.refs.webview.injectJavaScript("javascript:getSelectedComponent();")
+        // this.refs.webview.injectJavaScript("javascript:loadCircleItems('" + JSON.stringify(this.mEquipmentPositionMap) + "');")
 
     }
+
+    
 
     /**
      * 选择构件后新建，返回新建页面
