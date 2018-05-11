@@ -13,6 +13,7 @@ import {
     SafeAreaView,
 } from 'react-native';
 import ModelItemView from './ModelItemView'
+import * as CheckVersionManager from "./../../pages/me/checkVerson";
 
 import { NavigationPage, SegmentedBar, Label, SegmentedView, Button, Carousel } from 'app-3rd/teaset';
 import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
@@ -70,6 +71,7 @@ export default class extends Component {
         // this.fetchData();
         // console.log("componentDidMount")
         this.scrollToPage(0);
+        CheckVersionManager.checkVersion("auto")
     }
     fetchData = () => {
         this.render()

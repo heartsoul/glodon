@@ -108,7 +108,7 @@ export default class BaseStorage extends Component {
 
     // 加载所有数据
     _loadStorageData() {
-      return AsyncStorage.getItem(__KEY_storageData)
+        return AsyncStorage.getItem(__KEY_storageData)
             .then((value) => {
                 this.storageData = JSON.parse(value);
                 if (!value || value == null) {
@@ -116,7 +116,7 @@ export default class BaseStorage extends Component {
                 }
                 return {};
             });
-    } 
+    }
 }
 
 class GLDStorage extends BaseStorage {
@@ -136,24 +136,24 @@ class GLDStorage extends BaseStorage {
     }
     //保存用户信息
     saveUserInfo(userInfo) {
-        this.setItem(__KEY_userInfo+userId(), userInfo);
+        this.setItem(__KEY_userInfo + userId(), userInfo);
     }
     //加载用户信息
     loadUserInfo(retFun) {
-        return this.loadItem(__KEY_userInfo+userId(), {}, retFun);
+        return this.loadItem(__KEY_userInfo + userId(), {}, retFun);
     }
     // 获取用户id
     getUserId = () => {
         return this.loadItem(__KEY_userId, '0', null);
     }
     // 保存登录token
-    saveLoginToken = (token, userId ='0',userName='') => {
+    saveLoginToken = (token, userId = '0', userName = '') => {
         // console.log('response.data.access_token1:'+token);
         this.setItem(__KEY_guide, '1');
         this.setItem(__KEY_userId, userId);
         this.setItem(__KEY_loginToken, token);
     }
-    saveLoginUserName = (userName='') => {
+    saveLoginUserName = (userName = '') => {
         this.setItem(__KEY_loginUserName, userName);
     }
     // 获取登录的用户名
@@ -170,7 +170,7 @@ class GLDStorage extends BaseStorage {
     }
     // 退出登录时清空所有缓存数据
     logout = () => {
-        this.saveLoginToken('','0');
+        this.saveLoginToken('', '0');
     }
     resetData = () => {
         this.resetStorageData();
@@ -185,37 +185,37 @@ class GLDStorage extends BaseStorage {
     }
     // 保存当前租户
     saveTenant = (tenant) => {
-        this.setItem(__KEY_currentTenant+userId(), "" + tenant);
+        this.setItem(__KEY_currentTenant + userId(), "" + tenant);
     }
     // 保存当前租户
     saveLastTenant = (tenant) => {
-        this.setItem(__KEY_lastTenant+userId(), "" + tenant);
+        this.setItem(__KEY_lastTenant + userId(), "" + tenant);
     }
     // 获取当前租户
     loadTenant = (retFun) => {
 
-        return this.loadItem(__KEY_currentTenant+userId(), '0', retFun)
+        return this.loadItem(__KEY_currentTenant + userId(), '0', retFun)
     }
     // 获取上一租户
     loadLastTenant = () => {
-        return this.loadItem(__KEY_lastTenant+userId(), '0', null)
+        return this.loadItem(__KEY_lastTenant + userId(), '0', null)
     }
     // 保存当前项目，名称
     saveProject = (project, name) => {
-        this.setItem(__KEY_currentProject+userId(), "" + project);
-        this.setItem(__KEY_currentProjectName+userId(), "" + name);
+        this.setItem(__KEY_currentProject + userId(), "" + project);
+        this.setItem(__KEY_currentProjectName + userId(), "" + name);
     }
     // 获取当前选择项目
     loadProject = (retFun) => {
-        return this.loadItem(__KEY_currentProject+userId(), '0', retFun);
+        return this.loadItem(__KEY_currentProject + userId(), '0', retFun);
     }
     // 获取当前选择项目名
     loadCurrentProjectName = (retFun) => {
-        return this.loadItem(__KEY_currentProjectName+userId(), '首页', retFun);
+        return this.loadItem(__KEY_currentProjectName + userId(), '首页', retFun);
     }
     // 获取权限项
     loadAuthority = (key) => {
-        let actionRights = this.loadItem(__KEY_actionRights+userId(), {}, null);
+        let actionRights = this.loadItem(__KEY_actionRights + userId(), {}, null);
         if (actionRights[key]) {
             let rights = new ActionRightsObject();
             rights.items = actionRights[key];
@@ -229,9 +229,9 @@ class GLDStorage extends BaseStorage {
         if (!value) {
             return;
         }
-        let actionRights = this.loadItem(__KEY_actionRights+userId(), {}, null);
+        let actionRights = this.loadItem(__KEY_actionRights + userId(), {}, null);
         actionRights[key] = value;
-        this.setItem(__KEY_actionRights+userId(), actionRights);
+        this.setItem(__KEY_actionRights + userId(), actionRights);
     }
 
     // 到登录页面
@@ -245,7 +245,7 @@ class GLDStorage extends BaseStorage {
             return;
         }
         // this.logout();
-        this.saveLoginToken('','0');
+        this.saveLoginToken('', '0');
         let resetAction = NavigationActions.reset({
             index: 0,
             actions: [
@@ -346,13 +346,23 @@ class GLDStorage extends BaseStorage {
 
     // 获取单据搜索历史
     loadSearchHistory = () => {
-        let history = this.getItem(__KEY_searchHistory+userId());
+        let history = this.getItem(__KEY_searchHistory + userId());
         return history;
     }
     // 保存单据搜索历史
     setSearchHistory = (history) => {
-        this.setItem(__KEY_searchHistory+userId(), history);
+        this.setItem(__KEY_searchHistory + userId(), history);
     }
+    // wlan下自动下载
+    loadAutoDownload = () => {
+        let autoDownload = this.getItem(__KEY_autoDownload + userId());
+        return autoDownload;
+    }
+    // wlan下自动下载
+    setAutoDownload = (autoDownload) => {
+        this.setItem(__KEY_autoDownload + userId(), autoDownload);
+    }
+
     
 }
 // 全局变量
@@ -366,12 +376,12 @@ export function loadStorageData() {
 
 function userId() {
     let uid = storage.getUserId();
-    if(uid) return "_"+uid+"_";
+    if (uid) return "_" + uid + "_";
     return "_0_";
 }
 
 // 相关数据key
-const __KEY_storageData = "__storageData_"+BASE_URL; // 所有数据
+const __KEY_storageData = "__storageData_" + BASE_URL; // 所有数据
 const __KEY_userInfo = "userInfo"; // 用户数据
 const __KEY_loginToken = "loginToken"; // token
 const __KEY_loginUserName = "loginUserName"; // userName
@@ -383,3 +393,4 @@ const __KEY_currentTenant = "currentTenant"; // 当前租户
 const __KEY_lastTenant = "lastTenant"; // 上一选择租户
 const __KEY_actionRights = "actionRights"; // 当前所有权限
 const __KEY_searchHistory = "searchHistory"; // 单据搜索历史
+const __KEY_autoDownload = "autoDownload"; // Android版本更新自动下载
