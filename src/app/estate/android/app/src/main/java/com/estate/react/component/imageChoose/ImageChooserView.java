@@ -27,11 +27,15 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.glodon.bim.basic.image.ImageLoader;
+import com.glodon.bim.basic.utils.CameraUtil;
 import com.glodon.bim.basic.utils.LinkedHashList;
+import com.glodon.bim.business.qualityManage.view.PhotoEditActivity;
+import com.glodon.bim.common.CommonConfig;
 import com.glodon.bim.customview.album.AlbumConfig;
 import com.glodon.bim.customview.album.AlbumData;
 import com.glodon.bim.customview.album.AlbumEditActivity;
 import com.glodon.bim.customview.album.ImageItem;
+import com.glodon.bim.customview.dialog.PhotoAlbumDialog;
 import com.glodon.bim.customview.photopreview.PhotoPreviewActivity;
 
 import java.io.File;
@@ -44,15 +48,24 @@ import java.util.List;
  */
 
 public class ImageChooserView extends LinearLayout {
+    private PhotoAlbumDialog mPhotoAlbumDialog;
+
     private LocalBroadcastManager broadcastManager;
     //图片描述
     private LinearLayout mPhotoParent;
     private ImageView mPhoto0, mPhoto1, mPhoto2, mPhoto3;
     private Activity activity;
+    private String mPhotoPath;
 
     private String tag;
     private AlbumData albumData = null;//选中的图片数据
     public ReadableArray originalData;//从rn传过来的数据
+
+
+    public static final int OPEN_ALBUM_REQUEST_CODE = 0X2000;
+    public static final int REQUEST_CODE_PHOTO_PREVIEW = 0X2001;
+    public static final int REQUEST_CODE_TAKE_PHOTO = 0X2002;
+    public static final int REQUEST_CODE_EDIT_PHOTO = 0X2003;
 
     public ImageChooserView(Context context) {
         super(context);
@@ -133,7 +146,7 @@ public class ImageChooserView extends LinearLayout {
             Intent intent = new Intent(getContext(), PhotoPreviewActivity.class);
             intent.putExtra(AlbumConfig.ALBUM_DATA_KEY, albumData);
             intent.putExtra(AlbumConfig.ALBUM_POSITION, position);
-            activity.startActivityForResult(intent, Constants.REQUEST_CODE_PHOTO_PREVIEW);
+            activity.startActivityForResult(intent, REQUEST_CODE_PHOTO_PREVIEW);
         }
     }
 
@@ -142,16 +155,52 @@ public class ImageChooserView extends LinearLayout {
     private OnClickListener openAlbumListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(getContext(), AlbumEditActivity.class);
-            if (albumData != null) {
-                intent.putExtra(AlbumConfig.ALBUM_DATA_KEY, albumData);
+            if (mPhotoAlbumDialog == null) {
+                mPhotoAlbumDialog = new PhotoAlbumDialog(getContext());
+                mPhotoAlbumDialog.builder(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        takePhoto();
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openAlbum();
+                    }
+                });
             }
-            if (activity != null) {
-                intent.putExtra("chooserView", tag);
-                activity.startActivityForResult(intent, Constants.OPEN_ALBUM_REQUEST_CODE);
-            }
+            mPhotoAlbumDialog.show();
+
+
         }
     };
+
+    private void editPhoto(String mPhotoPath) {
+        if(TextUtils.isEmpty(mPhotoPath)){
+          return;
+        }
+        Intent intent = new Intent(MainApplication.instance.getCurrentReactContext(), PhotoEditActivity.class);
+        intent.putExtra(CommonConfig.IMAGE_PATH, mPhotoPath);
+        MainApplication.instance.getCurrentReactContext().getCurrentActivity().startActivityForResult(intent, REQUEST_CODE_EDIT_PHOTO);
+    }
+
+
+    private void takePhoto() {
+        mPhotoPath = CameraUtil.getFilePath();
+        CameraUtil.openCamera(mPhotoPath, MainApplication.instance.getCurrentReactContext().getCurrentActivity(), REQUEST_CODE_TAKE_PHOTO);
+    }
+
+
+    private void openAlbum() {
+        Intent intent = new Intent(getContext(), AlbumEditActivity.class);
+        if (albumData != null) {
+            intent.putExtra(AlbumConfig.ALBUM_DATA_KEY, albumData);
+        }
+        if (activity != null) {
+            intent.putExtra("chooserView", tag);
+            activity.startActivityForResult(intent, OPEN_ALBUM_REQUEST_CODE);
+        }
+    }
 
 
     public void setActivity(Activity activity) {
@@ -162,14 +211,26 @@ public class ImageChooserView extends LinearLayout {
         MainApplication.instance.getCurrentReactContext().addActivityEventListener(new ActivityEventListener() {
             @Override
             public void onActivityResult(final Activity activity, int requestCode, int resultCode, Intent data) {
-                if (Constants.OPEN_ALBUM_REQUEST_CODE == requestCode && resultCode == Activity.RESULT_OK) {
+                if (OPEN_ALBUM_REQUEST_CODE == requestCode && resultCode == Activity.RESULT_OK) {
                     String chooserView = data.getStringExtra("chooserView");
                     if (chooserView != null && chooserView.equals(tag)) {
                         albumData = (AlbumData) data.getSerializableExtra(AlbumConfig.ALBUM_DATA_KEY);
                         setPhoto();
                     }
-                } else if (Constants.REQUEST_CODE_PHOTO_PREVIEW == requestCode && resultCode == Activity.RESULT_OK && data != null) {
+                } else if (REQUEST_CODE_PHOTO_PREVIEW == requestCode && resultCode == Activity.RESULT_OK && data != null) {
                     albumData = (AlbumData) data.getSerializableExtra(AlbumConfig.ALBUM_DATA_KEY);
+                    setPhoto();
+                } else if (REQUEST_CODE_TAKE_PHOTO == requestCode && resultCode == Activity.RESULT_OK) {
+                    editPhoto(mPhotoPath);
+                } else if (REQUEST_CODE_EDIT_PHOTO == requestCode && resultCode == Activity.RESULT_OK && data != null) {
+                    String savePath = data.getStringExtra(CommonConfig.IAMGE_SAVE_PATH);
+                    if(albumData == null){
+                        LinkedHashList<String,ImageItem> map = new LinkedHashList<>();
+                        albumData = new AlbumData(map);
+                    }
+                    ImageItem item = new ImageItem();
+                    item.imagePath = savePath;
+                    albumData.map.put(savePath, item);
                     setPhoto();
                 }
             }
@@ -223,10 +284,10 @@ public class ImageChooserView extends LinearLayout {
 //                readableMap.hasKey()
                 String url = "";
                 String path = "";
-                if (readableMap.hasKey("url")){
+                if (readableMap.hasKey("url")) {
                     url = readableMap.getString("url");
                 }
-                if (readableMap.hasKey("path")){
+                if (readableMap.hasKey("path")) {
                     path = readableMap.getString("path");
                 }
                 if (TextUtils.isEmpty(path)) {

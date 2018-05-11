@@ -1,10 +1,247 @@
 <resources>
-    <string name="app_name">estate</string>
-
+    <!-- 通用 -->
+    <string name="app_name">BIM协同</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="str_submit">提交</string>
     <string name="str_cancel">取消</string>
+    <string name="str_save">保存</string>
+    <string name="str_not_save">不保存</string>
+    <string name="str_delete">删除</string>
+    <string name="str_next">下一步</string>
+    <string name="str_over">跳过</string>
+    <string name="str_sure">确定</string>
     <string name="str_finish">完成</string>
+    <string name="str_search">搜索</string>
+    <string name="str_set">设置</string>
+    <string name="str_edit">编辑</string>
+    <string name="str_date_format">yyyy-MM-dd</string>
+
+    <!-- 启动界面 -->
+
+    <!-- 登录 -->
+    <string name="str_login_error_psd">账号或密码不正确</string>
+    <string name="str_login_error_find_psd">找回密码</string>
+    <string name="str_login_account_name">账户名</string>
+    <string name="str_login_psd">密码</string>
+    <string name="str_login_login">登录</string>
+    <string name="str_login_forget_psd">忘记密码</string>
+    <string name="str_login_photo_code">图片验证码</string>
+    <string name="str_login_reset">重置密码</string>
+    <string name="str_login_new_psd">新密码</string>
+    <string name="str_login_confirm_psd">确认密码</string>
+    <string name="str_login_hint_psd">备注：请将新密码设置为6-20位</string>
+    <string name="str_login_sms_code">短信验证</string>
+    <string name="str_login_sms_code_">验证码</string>
+    <string name="str_login_try">立即体验</string>
+    <string name="str_toast_login_error">账户或密码错误</string>
+
+    <!-- 主界面 -->
+    <string name="str_main_quality_manage">质检管理</string>
+    <string name="str_main_quality_list">质检清单</string>
+    <string name="str_main_quality_blueprint">图纸</string>
+    <string name="str_main_quality_model">模型</string>
+    <string name="str_main_quality_module">质检项目</string>
+    <string name="str_main_equipment_manage">材设进场</string>
+    <string name="str_main_equipment_list">材设清单</string>
+    <string name="str_main_equipment_model">模型预览</string>
+    <string name="str_main_category_top_title">让您的建筑工程更简单！</string>
+    <string name="str_main_category_second_title">您的专属BIM协同管理</string>
+    <string name="str_main_category_search_hint">请输入您想要的服务</string>
+    <string name="str_main_quality_list_">质检单</string>
+    <string name="str_main_project_title">项目列表</string>
+    <string name="str_main_tenant_title">租户列表</string>
+    <string name="str_main_lab_main_page">首页</string>
+    <string name="str_main_lab_subscribe">订阅</string>
+    <string name="str_main_lab_message">消息</string>
+    <string name="str_main_lab_mine">我的</string>
+
+    <!-- 质检清单 -->
+    <string name="str_quality_create_review_num_limit">字</string>
+    <string name="str_quality_repair_date">整改期：</string>
+    <string name="str_quality_repair_test">整改</string>
+    <string name="str_quality_review_test">复查</string>
+    <string name="str_quality_inspection">检查</string>
+    <string name="str_quality_acception">验收</string>
+    <string name="str_quality_photo_title">相机胶卷</string>
+    <string name="str_quality_photo_preview">预览</string>
+    <string name="str_quality_create_title">检查单</string>
+    <string name="str_quality_create_title_repai">+整改单</string>
+    <string name="str_quality_create_title_review">+复查单</string>
+    <string name="str_quality_create_inpector">检查单位：</string>
+    <string name="str_quality_create_company">施工单位：</string>
+    <string name="str_quality_create_responsible">责任人：</string>
+    <string name="str_quality_create_module">质检项目：</string>
+    <string name="str_quality_create_des">现场描述：</string>
+    <string name="str_quality_create_des__">现场描述</string>
+    <string name="str_quality_create_save_titme">保存时间：</string>
+    <string name="str_quality_create_submit_time">提交时间：</string>
+    <string name="str_quality_create_blueprint">关联图纸：</string>
+    <string name="str_quality_create_model">关联模型：</string>
+    <string name="str_quality_create_repair">整改单</string>
+    <string name="str_quality_create_review">复查单</string>
+    <string name="str_quality_create_today">今天</string>
+    <string name="str_quality_create_yesterday">昨天</string>
+    <string name="str_quality_create_yanshou_title">验收单</string>
+    <string name="str_quality_create_inpector_">检查单位</string>
+    <string name="str_quality_create_company_">施工单位</string>
+    <string name="str_quality_create_responsible_">责任人</string>
+    <string name="str_quality_create_des_">现场情况描述....</string>
+    <string name="str_quality_create_need_repair">需要整改</string>
+    <string name="str_quality_create_repair_date">整改期限</string>
+    <string name="str_quality_create_blueprint_">关联图纸</string>
+    <string name="str_quality_create_model_">关联模型</string>
+    <string name="str_quality_create_des_hint">现场情况描述</string>
+    <string name="str_quality_create_limit_num">/255</string>
     <string name="str_quality_create_delete_text">拖动到此处删除</string>
+    <string name="str_quality_create_limit_nums">255字</string>
+    <string name="str_quality_create_reviewed">复查合格</string>
+    <string name="str_quality_model_special">专业</string>
+    <string name="str_quality_model_single">单体</string>
+    <string name="str_quality_model_hint">请先选择具体专业和单体进行筛选</string>
+    <string name="str_quality_module_standard">质检标准</string>
     <string name="str_quality_photo_cancel">    取消    </string>
     <string name="str_quality_photo_use_photo">使用照片</string>
+    <string name="str_quality_blueprint_long_press">长按新建</string>
+    <string name="str_quality_blueprint_long_press_hint">手指长按屏幕可以在当前位\n置新建检查单或者质检单哦</string>
+    <string name="str_quality_blueprint_title">点击选择</string>
+    <string name="str_quality_choose_company">选择施工单位</string>
+    <string name="str_quality_choose_inspection_company">选择检查单位</string>
+    <string name="str_quality_choose_resoponsible">选择责任人</string>
+    <string name="str_quality_model_choose_component_hint">您还未选择构件!</string>
+    <string name="str_quality_blueprint_create_hint">长按新建</string>
+    <string name="str_quality_create_company_default_text">您需要去PC端添加施工单位数据</string>
+    <string name="str_quality_create_rsponsible_default_text">您需要去PC端添加责任人数据</string>
+    <string name="str_quality_create_choose_hint">您还未选择</string>
+    <string name="str_quality_create_and">和</string>
+    <string name="str_quality_create_dot">、</string>
+    <string name="str_quality_create_sign">!</string>
+    <!--搜索-->
+    <string name="str_search_empty_hint">抱歉，未找到您要的内容</string>
+    <string name="str_search_type_quality_list">质检清单</string>
+    <string name="str_search_type_equipment_list">材设清单</string>
+    <string name="str_search_more">查看更多</string>
+
+    <!--设置-->
+    <string name="str_set_feedback_title">意见反馈</string>
+    <string name="str_set_feedback_name">姓名：</string>
+    <string name="str_set_feedback_email">邮箱：</string>
+    <string name="str_set_feedback_title_text">标题：</string>
+    <string name="str_set_feedback_content_hint">留言内容....</string>
+    <string name="str_set_change_psd">修改密码</string>
+    <string name="str_set_wlan">WLAN下自动升级</string>
+    <string name="str_set_version_info">检查更新</string>
+    <string name="str_set_version">版本号V1.1.0</string>
+    <string name="str_set_contact">联系我们</string>
+    <string name="str_set_about_us">关于我们</string>
+    <string name="str_set_change_project">切换项目</string>
+    <string name="str_set_offline">离线设置</string>
+    <string name="str_set_login_out">退出登录</string>
+    <!--我的-->
+    <string name="str_mine_pemission">我的任务</string>
+    <string name="str_mine_plan">我的计划</string>
+    <!--qrcode-->
+    <string name="str_scan_title">扫一扫</string>
+    <string name="str_open_light">开启闪光灯</string>
+    <string name="str_close_light">关闭闪光灯</string>
+    <string name="str_scan_hint">取景框对准二维码, 即可自动扫描</string>
+    <string name="str_editphoto_wrapper_title">打开相册</string>
+    <!--材设进场记录-->
+    <string name="str_equipment_edit_photo_title">编辑现场照片</string>
+    <string name="str_equipment_edit_detail_title">编辑材设详情</string>
+    <string name="str_equipment_edit_title">编辑材设基本信息</string>
+    <string name="str_equipment_edit_choose_company">"选择验收单位"</string>
+    <string name="str_equipment_create_title">材设进场记录</string>
+    <string name="str_equipment_create_basic_info">基本信息</string>
+    <string name="str_equipment_create_inspection_">验收单位</string>
+    <string name="str_equipment_create_index_">批次编号</string>
+    <string name="str_equipment_create_date_">进场日期</string>
+    <string name="str_equipment_create_code_">材设编码</string>
+    <string name="str_equipment_create_name_">材设名称</string>
+    <string name="str_equipment_create_inspection">验收单位：</string>
+    <string name="str_equipment_create_index">批次编号：</string>
+    <string name="str_equipment_create_index__">批号：</string>
+    <string name="str_equipment_create_date">进场日期：</string>
+    <string name="str_equipment_create_code">材设编码：</string>
+    <string name="str_equipment_create_code__">编码：</string>
+    <string name="str_equipment_create_name">材设名称：</string>
+    <string name="str_equipment_create_name__">名称：</string>
+
+    <string name="str_equipment_create_other_info">其他信息</string>
+    <string name="str_equipment_create_num">进场数量：</string>
+    <string name="str_equipment_create_unit">单位：</string>
+    <string name="str_equipment_create_spec">规格：</string>
+    <string name="str_equipment_create_model_num">型号：</string>
+    <string name="str_equipment_create_model">构件位置：</string>
+    <string name="str_equipment_create_factory">厂家：</string>
+    <string name="str_equipment_create_make">品牌：</string>
+    <string name="str_equipment_create_supplier">供应商：</string>
+
+    <string name="str_equipment_create_num_">进场数量</string>
+    <string name="str_equipment_create_unit_">单位</string>
+    <string name="str_equipment_create_spec_">规格</string>
+    <string name="str_equipment_create_model_num_">型号</string>
+    <string name="str_equipment_create_model_">构件位置</string>
+    <string name="str_equipment_create_factory_">厂家</string>
+    <string name="str_equipment_create_make_">品牌</string>
+    <string name="str_equipment_create_supplier_">供应商</string>
+
+    <string name="str_equipment_create_photo">现场照片</string>
+    <string name="str_equipment_create_mandatory_title">新增材设进场记录</string>
+    <string name="str_equipment_create_mandatory_input">请依次完成下列内容输入</string>
+    <string name="str_equipment_create_mandatory_input_">请根据需要选择完成下列内容输入</string>
+    <string name="str_equipment_create_not_mandatory_input">您可记录现场照片</string>
+    <string name="str_equipment_create_not_mandatory_qualitfied">验收合格</string>
+    <string name="str_equipment_create_list_stay_submit">待提交</string>
+
+    <!--Toast-->
+    <string name="str_toast_save_photo_success">图片保存成功</string>
+    <string name="str_toast_network_bad">"网络较差，请稍后重试！"</string>
+    <string name="str_toast_upload_fail">"图片上传失败！"</string>
+    <string name="str_toast_submit_success">"提交成功！"</string>
+    <string name="str_toast_save_success">"保存成功！"</string>
+    <string name="str_toast_authority_hint">抱歉，您目前没有查看此模型的权限，请联系系统管理员。</string>
+    <string name="str_toast_date_hint">整改期限不能早于当前日期！</string>
+
+    <!--Dialog-->
+    <string name="str_dialog_loading">加载中...</string>
+    <string name="str_dialog_camera">拍照</string>
+    <string name="str_dialog_album">从手机相册选择</string>
+    <string name="str_dialog_no_photo">无需照片,直接新建</string>
+    <string name="str_dialog_choose_title">你可以选择</string>
+    <string name="str_dialog_inpection_detail">查看检查单</string>
+    <string name="str_dialog_new_repair">新建整改单</string>
+    <string name="str_dialog_new_review">新建复查单</string>
+    <string name="str_dialog_detail">查看详情</string>
+    <string name="str_dialog_cho">选择施工单位</string>
+    <string name="str_dialog_save_delete_not_save_yet">您还未保存当前数据!</string>
+    <string name="str_dialog_save_delete_make_sure">是否确认退出当前页面？</string>
+    <string name="str_dialog_save_delete_hint">删除当前数据后，数据不可恢复哦!</string>
+    <string name="str_dialog_save_delete_sure">是否确认删除？</string>
+    <string name="str_dialog_save_know">知道了</string>
+    <string name="str_dialog_save_hint_message">提示信息</string>
+    <string name="str_dialog_create_review_des_hint">您还未选择现场情况描述!</string>
+    <string name="str_dialog_create_review_des_date_hint">您还未选择现场情况描述和整改期限!</string>
+    <string name="str_dialog_create_review_date_hint">您还未选择整改期限!</string>
+    <!--更新-->
+    <string name="str_dialog_update">更新</string>
+    <string name="str_dialog_wait">取消</string>
+    <string name="str_dialog_is_update">是否更新？</string>
+    <string name="str_dialog_latest_version">当前已是最新版本</string>
+    <string name="str_dialog_know">知道了</string>
+    <string name="str_dialog_old_version">您目前的版本过低</string>
+    <string name="str_dialog_update_loading">我们正在努力加载中...</string>
+    <string name="str_dialog_download_finish">下载成功，去体验吧</string>
+    <string name="str_dialog_click_update">点击升级</string>
+
+
+    <!--customview-->
+    <string name="str_view_load_more_hint_down">下拉刷新数据...</string>
+    <string name="str_view_load_more_hint">上拉加载更多...</string>
+
+    <!--下载-->
+    <string name="str_notification_download_progress">正在下载:%1$d%%</string>
+    <string name="str_notification_download_success">下载完成，点击安装</string>
+
+
 
 </resources>

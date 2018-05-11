@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/photo_album_view_photo"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_56"
+        android:gravity="center"
+        android:text="@string/str_dialog_camera"
+        android:textColor="@color/c_464646"
+        android:background="@color/white"
+        android:textSize="@dimen/dimen_20" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_0.5"
+        android:background="@color/c_d8d8d8" />
+
+    <TextView
+        android:id="@+id/photo_album_view_album"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_56"
+        android:gravity="center"
+        android:text="@string/str_dialog_album"
+        android:textColor="@color/c_464646"
+        android:background="@color/white"
+        android:textSize="@dimen/dimen_20" />
+
+    <View
+        android:id="@+id/photo_album_view_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_0.5"
+        android:background="@color/c_d8d8d8" />
+
+    <TextView
+        android:id="@+id/photo_album_view_go"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_56"
+        android:gravity="center"
+        android:text="@string/str_dialog_no_photo"
+        android:textColor="@color/c_464646"
+        android:background="@color/white"
+        android:textSize="@dimen/dimen_20" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_09"
+        android:background="@color/c_99ffffff" />
+
+    <TextView
+        android:id="@+id/photo_album_view_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_56"
+        android:gravity="center"
+        android:text="@string/str_cancel"
+        android:textColor="@color/c_464646"
+        android:background="@color/white"
+        android:textSize="@dimen/dimen_20" />
+
+</LinearLayout>
