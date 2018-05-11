@@ -76,35 +76,51 @@ public class GLDPhotoManager extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void takePhoto(final Callback callback) {
+        if (takePhotoListener != null) {
+            MainApplication.instance.getCurrentReactContext().removeActivityEventListener(takePhotoListener);
+            takePhotoListener = null;
+        }
+        takePhotoListener = new TakePhotoListener();
+        takePhotoListener.setCallback(callback);
+        MainApplication.instance.getCurrentReactContext().addActivityEventListener(takePhotoListener);
+        tokePhoto();
+    }
 
-        MainApplication.instance.getCurrentReactContext().addActivityEventListener(new ActivityEventListener() {
-            @Override
-            public void onActivityResult(final Activity activity, int requestCode, int resultCode, Intent data) {
-                if (Constants.REQUEST_CODE_TAKE_PHOTO == requestCode && resultCode == Activity.RESULT_OK) {
-                    editPhoto(mPhotoPath);
-                }
-                if (Constants.REQUEST_CODE_EDIT_PHOTO == requestCode && resultCode == Activity.RESULT_OK && data != null) {
-                    String savePath = data.getStringExtra(CommonConfig.IAMGE_SAVE_PATH);
-                    WritableArray files = Arguments.createArray();
-                    File file = new File(savePath);
-                    long length = file.length();
-                    String name = file.getName();
-                    WritableMap writableMap = Arguments.createMap();
-                    writableMap.putString("path", savePath);
-                    writableMap.putString("name", name);
-                    writableMap.putString("length", length + "");
-                    files.pushMap(writableMap);
-                    MainApplication.instance.getCurrentReactContext().removeActivityEventListener(this);
+    private TakePhotoListener takePhotoListener;
+
+    class TakePhotoListener implements ActivityEventListener {
+        Callback callback;
+        public void setCallback(Callback callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        public void onActivityResult(final Activity activity, int requestCode, int resultCode, Intent data) {
+            if (Constants.REQUEST_CODE_TAKE_PHOTO == requestCode && resultCode == Activity.RESULT_OK) {
+                editPhoto(mPhotoPath);
+            }
+            if (Constants.REQUEST_CODE_EDIT_PHOTO == requestCode && resultCode == Activity.RESULT_OK && data != null) {
+                String savePath = data.getStringExtra(CommonConfig.IAMGE_SAVE_PATH);
+                WritableArray files = Arguments.createArray();
+                File file = new File(savePath);
+                long length = file.length();
+                String name = file.getName();
+                WritableMap writableMap = Arguments.createMap();
+                writableMap.putString("path", savePath);
+                writableMap.putString("name", name);
+                writableMap.putString("length", length + "");
+                files.pushMap(writableMap);
+                MainApplication.instance.getCurrentReactContext().removeActivityEventListener(this);
+                if (callback != null) {
                     callback.invoke(files, true);
                 }
             }
+        }
 
-            @Override
-            public void onNewIntent(Intent intent) {
+        @Override
+        public void onNewIntent(Intent intent) {
 
-            }
-        });
-        tokePhoto();
+        }
     }
 
     private void editPhoto(String mPhotoPath) {
@@ -129,7 +145,7 @@ public class GLDPhotoManager extends ReactContextBaseJavaModule {
         MainApplication.instance.getCurrentReactContext().addActivityEventListener(new ActivityEventListener() {
             @Override
             public void onActivityResult(final Activity activity, int requestCode, int resultCode, Intent data) {
-                if (Constants.REQUEST_CODE_TAKE_PHOTO == requestCode && resultCode == Activity.RESULT_OK && data != null) {
+                if (Constants.OPEN_ALBUM_REQUEST_CODE == requestCode && resultCode == Activity.RESULT_OK && data != null) {
                     AlbumData albumData = (AlbumData) data.getSerializableExtra(AlbumConfig.ALBUM_DATA_KEY);
                     MainApplication.instance.getCurrentReactContext().removeActivityEventListener(this);
                     callback.invoke(parseFile(albumData), true);

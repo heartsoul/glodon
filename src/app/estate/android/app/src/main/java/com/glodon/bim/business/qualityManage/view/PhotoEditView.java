@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 
 
+import com.estate.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +76,6 @@ public class PhotoEditView extends ImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);//绘制透明色
         super.onDraw(canvas);
         mPaint.setColor(color);
         canvas.drawPath(mPath,mPaint);
