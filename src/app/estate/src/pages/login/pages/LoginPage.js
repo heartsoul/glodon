@@ -59,11 +59,7 @@ class LoginPage extends React.Component {
     if (nextProps.status === '登录成功' && nextProps.isSuccess && storage.isLogin()) {
       let navigator = this.props.navigation;
       Toast.hide();
-      if(nextProps.hasChoose) {
-        storage.gotoMain(navigator);
-      } else {
-        storage.gotoMain(navigator);
-      }   
+      storage.gotoMain(navigator);  
       return false
     }
     Toast.hide();
@@ -306,7 +302,6 @@ export default connect(
     status: state.loginIn.status,
     isSuccess: state.loginIn.isSuccess,
     userName: storage.getLoginUserName(),
-    hasChoose: state.loginIn.hasChoose,
     retryTimes:state.loginIn.retryTimes,
   }),
   dispatch => ({

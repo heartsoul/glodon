@@ -4,7 +4,6 @@ import * as types from '../constants/loginTypes' // 导入事件类别,用来做
 
 const initialState = {
   status: '点击登录',
-  hasChoose: false,
   isSuccess: false,
   user: null,
   retryTimes:3
@@ -17,7 +16,6 @@ export default function loginIn(state = initialState, action) {
       return {
         ...state,
         status: '正在登录',
-        hasChoose: false,
         isSuccess: false,
         userName:action.userName,
         user: null,

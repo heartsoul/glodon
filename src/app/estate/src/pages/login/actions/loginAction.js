@@ -1,8 +1,8 @@
-import * as API from 'app-api'
-import {SERVER_TYPE} from 'common-module'
-import * as types from '../constants/loginTypes'
+import * as API from 'app-api';
+import { SERVER_TYPE } from 'common-module';
+import { NativeModules } from 'react-native';
+import * as types from '../constants/loginTypes';
 
-import {NativeModules} from 'react-native'
 var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
 
 export function login(username, pwd) {
@@ -83,24 +83,23 @@ function loadAccount(dispatch,response,username, pwd, token = 'cookie_token') {
       storage.saveLoginUserName(username);
     } 
     storage.saveUserInfo(data);
-    storage.hasChoose((ret) => {
-      if (!ret) {
-        dispatch(loginSuccessChoose(true, response.data,username))
-        return;
-      }
-      let tenant = storage.loadLastTenant();
-      if(tenant != '0') {
-        API.setCurrentTenant(tenant).then((responseData) => {
-          dispatch(loginSuccess(true, response.data,username))
-        }).catch((e) => {
-          storage.saveLastTenant('0');
-          dispatch(loginError(false));
-        });
-      }
-      dispatch(loginSuccess(true, response.data,username))
+    let ret = storage.hasChoose();
+
+    if (!ret) {
+      dispatch(loginSuccessChoose(true, response.data, username))
       return;
-      
-    });
+    }
+    let tenant = storage.loadLastTenant();
+    if (tenant != '0') {
+      API.setCurrentTenant(tenant).then((responseData) => {
+        dispatch(loginSuccess(true, response.data, username))
+      }).catch((e) => {
+        storage.saveLastTenant('0');
+        dispatch(loginError(false));
+      });
+    }
+    dispatch(loginSuccess(true, response.data, username))
+    return;
   }).catch((e) => { 
     dispatch(loginError(false));
     storage.saveLoginToken('');

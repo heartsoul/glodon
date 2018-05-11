@@ -11,6 +11,7 @@ import { connect } from 'react-redux' // 引入connect函数
 
 import * as AuthorityManager from "./AuthorityManager";
 import * as actions from '../../../actions/projectAction'
+import { LoadingView } from "app-components";
 
 var { width, height } = Dimensions.get("window");
 class ProjectPage extends Component {
@@ -37,22 +38,6 @@ class ProjectPage extends Component {
         //请求数据
         this.fetchData(0,this.props.dataArray);
     }
-
-    //加载等待的view
-    renderLoadingView() {
-        return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <ActivityIndicator
-                    animating={true}
-                    style={[styles.gray, { height: 80 }]}
-                    color='00baf3'
-                    size="large"
-                />
-            </View>
-        );
-    }
-
     //加载失败view
     renderErrorView(error) {
         return (
@@ -99,7 +84,7 @@ class ProjectPage extends Component {
                         <Image
                             source={require("app-images/icon_choose_project_item.png")}
                             style={styles.image} />
-                        <Text style={styles.contentSimple}> {item.value.name}</Text>
+                        <Text style={[styles.contentSimple,item.value.id == storage.loadProject()? {color:'#00baf3'} : null]}> {item.value.name}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -155,7 +140,7 @@ class ProjectPage extends Component {
     render = () => {
         //第一次加载等待的view
         if (this.props.isLoading && !this.props.error) {
-            return this.renderLoadingView();
+            return (<LoadingView/>);
         } else if (this.props.error) {
             //请求失败view
             return this.renderErrorView(this.props.error);
@@ -202,8 +187,8 @@ const styles = StyleSheet.create({
     containerSimpleView: {
         flex: 1,
         borderRadius: 8,
-        // borderWidth:1,
-        // borderColor:"#0F0",
+        borderWidth:1,
+        borderColor:"#00baf3",
         height: 60,
         marginTop: 5,
 
@@ -211,11 +196,11 @@ const styles = StyleSheet.create({
         marginLeft: 40,
         marginRight: 40,
         backgroundColor: '#FFF',
-        elevation: 5, // android 
-        shadowColor: "#333", // iOS
-        shadowOffset: { width: 3, height: 7 }, // iOS
-        shadowOpacity: 0.15, // iOS
-        shadowRadius: 3, // iOS
+        // elevation: 2.5, // android 
+        // shadowColor: "#00baf3", // iOS
+        // shadowOffset: { width: 3, height: 7 }, // iOS
+        // shadowOpacity: 0.15, // iOS
+        // shadowRadius: 3, // iOS
 
     },
     containerView: {

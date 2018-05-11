@@ -62,10 +62,14 @@ class SettingPage extends Component {
     USERAPI.loginOut().then(() => {
       USERAPI.uaaLoginOut().then(() => {
 
+      }).catch((error)=>{
+      
       });
       this.props.logout();
       let navigator = this.props.navigation;
       storage.gotoLogin(navigator);
+    }).catch((error)=>{
+
     });
   }
 

@@ -107,20 +107,14 @@ export default class BaseStorage extends Component {
     }
 
     // 加载所有数据
-    _loadStorageData(funRet) {
-        // console.log("_loadStorageData-start")
-        AsyncStorage.getItem(__KEY_storageData)
+    _loadStorageData() {
+      return AsyncStorage.getItem(__KEY_storageData)
             .then((value) => {
                 this.storageData = JSON.parse(value);
                 if (!value || value == null) {
                     this.storageData = {};
                 }
-                // console.log("_loadStorageData"+value)
-                if(funRet) {
-                    funRet();
-                }
-            }).catch((err) => {
-                // console.log(err)
+                return {};
             });
     } 
 }
@@ -278,14 +272,11 @@ class GLDStorage extends BaseStorage {
         navigator.dispatch(resetAction);
     }
     // 是否选择了租户和项目
-    hasChoose = (retFun) => {
+    hasChoose = () => {
         let t = this.loadTenant();
         let p = this.loadProject();
         // console.log(`hasChoose:(${t},${p})`);
         let retValue = (t && p && t != '0' && p != '0');
-        if (retFun) {
-            retFun(retValue);
-        }
         return retValue;
     }
     // 转到页面，会替换
@@ -369,8 +360,8 @@ if (!global.storage) {
     global.storage = new GLDStorage();
 }
 
-export function loadStorageData(funRet) {
-    storage._loadStorageData(funRet)
+export function loadStorageData() {
+    return storage._loadStorageData()
 }
 
 function userId() {

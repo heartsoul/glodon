@@ -1,6 +1,6 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import { View, Image, ActivityIndicator, Platform, StyleSheet } from 'react-native'
+import { View, Text, Image, ActivityIndicator, Platform, StyleSheet } from 'react-native'
 import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 
 import * as API from 'app-api'
@@ -123,20 +123,13 @@ const options = () => {
         headerTintColor: '#fff',
         tabBarVisible: false,
         headerTitleStyle: {
-            // fontWeight: 'bold',
-            // fontSize:19,
-            // width:'auto',
-            // backgroundColor: '#FF0000',
-            // textAlign: Platform.OS === 'ios' ? 'center' : 'center',
         },
         headerLeft: () => {
             return (
                 <LeftBarButtons top={false} currentItem={""} />
             )
         },
-        headerRight:()=>{
-            return <View></View>
-        }
+        headerRight: (<View />),
     }
 }
 // LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage
@@ -226,6 +219,7 @@ export default class extends React.Component {
         return (<Provider store={store}><RootGuideStack /></Provider>)
     }
     render() {
-        return this.renderPage();
+        // return this.renderPage();
+        return (<Provider store={store}><RootMainStack /></Provider>)
     }
 }

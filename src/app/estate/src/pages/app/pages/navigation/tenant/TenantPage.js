@@ -32,6 +32,7 @@ export default class tenantList extends Component {
         
        //请求数据
         if (this.props.navigation.getParam('change') === true && storage.loadLastTenant() != '') {
+            this.props.navigation.setParams({change:false});
             let navigator = this.props.navigation;
             storage.pushNext(navigator, "ProjectPage")
         }
@@ -55,7 +56,8 @@ export default class tenantList extends Component {
                 i++;
 
             });
-            if(dataBlob.length == 1) {
+            if(dataBlob.length == 1 && storage.loadLastTenant() == '') {
+                this.props.navigation.setParams({isFirst:false});
                 this._clickItem(dataBlob[0],0)
                 return;
             }

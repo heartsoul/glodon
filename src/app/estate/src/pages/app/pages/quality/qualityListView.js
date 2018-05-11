@@ -8,6 +8,7 @@ import {
     RefreshControl, Dimensions
 } from "react-native";
 import * as API from "app-api";
+import { LoadingView } from "app-components";
 import { connect } from 'react-redux' // 引入connect函数
 import * as actions from '../../actions/qualityListAction'
 import QualityListCell from "./qualityListCell";
@@ -61,21 +62,6 @@ class QualityListView extends PureComponent {
             return true;
         }
         return true;
-    }
-
-    //加载等待的view
-    renderLoadingView() {
-        return (
-            <View style={{flex:1,alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
-            <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-            <ActivityIndicator
-                animating={true}
-                style={[{ height: 80 }]}
-                color='#00baf3'
-                size="large"
-            />
-        </View>
-        );
     }
 
     //加载失败view
@@ -154,7 +140,7 @@ class QualityListView extends PureComponent {
     render() {
         // 第一次加载等待的view
         if (this.props.isLoading && !this.props.error) {
-            return this.renderLoadingView();
+            return (<LoadingView/>);
         } else
             if (this.props.error) {
                 //请求失败view

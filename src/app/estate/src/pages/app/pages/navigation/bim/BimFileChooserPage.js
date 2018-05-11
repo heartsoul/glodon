@@ -67,6 +67,12 @@ export default class BimFileChooser extends Component {
 
     constructor(props) {
         super(props);
+        let params = this.props.navigation.state.params;
+        let fileId = params.fileId || 0;
+        let dataType = params.dataType  || '';
+
+        let navData = params.navData ? params.navData : [];
+        
         this.state = {
             isLoading: true,
             refreshing: false,
@@ -78,10 +84,10 @@ export default class BimFileChooser extends Component {
             hasMore: true,
             projectId: storage.loadProject(),
             latestVersion: storage.projectIdVersionId,
-            fileId: 0,
-            dataType: "",//图纸文件 模型文件 
+            fileId: fileId,
+            dataType: dataType,//图纸文件 模型文件 
             pageType: PageType.PAGE_TYPE_NEW_QUALITY,
-            navData: [],//导航条面包屑数据
+            navData: navData,//导航条面包屑数据
         }
     }
     _keyExtractor = (item, index) => index;
@@ -175,21 +181,10 @@ export default class BimFileChooser extends Component {
     componentDidMount() {
         //上一个页面传来的参数
 
-        let params = this.props.navigation.state.params;
-        let fileId = params.fileId;
-        let dataType = params.dataType;
-
-        let navData = params.navData ? params.navData : [];
-        // console.log(params)
-        this.setState({
-            fileId: fileId,
-            dataType: dataType,
-            pageType: params.pageType,
-            navData: navData,
-        }, () => {
+       
             //请求数据
             this.fetchData(1);
-        });
+        
 
     }
 
