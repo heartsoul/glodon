@@ -145,14 +145,18 @@ class EquipmentDetailPage extends Component {
             } else {
                 if (preEditType === API.EQUIPMENT_EDIT_TYPE_BASE || preEditType === API.EQUIPMENT_EDIT_TYPE_OTHER || preEditType === API.EQUIPMENT_EDIT_TYPE_IMAGE) {
                     let p = null
+                    let skip = equipmentInfo.skip;
                     if (preEditType === API.EQUIPMENT_EDIT_TYPE_IMAGE) {
                         p = API.EQUIPMENT_EDIT_TYPE_OTHER
+                        skip = false;
                     } else if (preEditType === API.EQUIPMENT_EDIT_TYPE_OTHER) {
                         p = API.EQUIPMENT_EDIT_TYPE_BASE
+                        skip = false;
                     } else if (preEditType === API.EQUIPMENT_EDIT_TYPE_BASE) {
                         p = null
+                        skip = false;
                     }
-                    let data = { ...equipmentInfo, preEditType: p, editType: preEditType };
+                    let data = { ...equipmentInfo,skip:skip, preEditType: p, editType: preEditType };
                     this.switchPage(data);
                     // 这里要处理保存操作
                     if (backFun) {

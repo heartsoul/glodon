@@ -96,11 +96,11 @@ export default class EquipmentDetailView extends Component {
     }
 
     _onOpenEditBaseInfoAction = (info) => {
-        let data = { ...info, batchCode: '112322', preEditType: API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType: API.EQUIPMENT_EDIT_TYPE_BASE };
+        let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType: API.EQUIPMENT_EDIT_TYPE_BASE };
         this.props.switchPage(data);
     }
     _onOpenEditOtherInfoAction = (info) => {
-        let data = { ...info, quantity: 'sssss', preEditType: API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType: API.EQUIPMENT_EDIT_TYPE_OTHER };
+        let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType: API.EQUIPMENT_EDIT_TYPE_OTHER };
         this.props.switchPage(data);
     }
     _onOpenEditImageInfoAction = (info) => {
@@ -108,7 +108,7 @@ export default class EquipmentDetailView extends Component {
         this.props.switchPage(data);
     }
     _onSaveAction = (info) => {
-        this.props.save(info, this.refs[REF_PHOTO]);
+        this.props.save(info);
     }
     _onDeleteAction = (info) => {
         ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消' }, {
@@ -236,20 +236,27 @@ export default class EquipmentDetailView extends Component {
         this.props.switchPage(data);
     }
     renderActionNextInfo = (info, nextAction, isLink = false) => {
-        if (isLink) {
-            return <View style={{ marginTop: 0 }}>
-                <StatusActionButton disabled={false} color='#00b5f2' borderColor='transparent' text='跳过' height={40} marginRight={20} backgroundColor={'transparent'} marginLeft={20} onClick={() => nextAction(info)} />
-            </View>
-        }
+
         if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
+            if (isLink) {
+                return null;
+            }
             // 是编辑
             return <View style={{ marginTop: 0 }}>
                 <StatusActionButton text='确定' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
             </View>
+        } else {
+
+            if (isLink) {
+                return <View style={{ marginTop: 0 }}>
+                    <StatusActionButton disabled={false} color='#00b5f2' borderColor='transparent' text='跳过' height={40} marginRight={20} backgroundColor={'transparent'} marginLeft={20} onClick={() => nextAction(info)} />
+                </View>
+            }
+            return <View style={{ marginTop: 0 }}>
+                <StatusActionButton disabled={!this.state.allowNextAction} text='下一步' height={40} marginRight={20} backgroundColor={this.state.allowNextAction ? '#00b5f2' : '#C8C8C8'} marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
+            </View>
         }
-        return <View style={{ marginTop: 0 }}>
-            <StatusActionButton disabled={!this.state.allowNextAction} text='下一步' height={40} marginRight={20} backgroundColor={this.state.allowNextAction ? '#00b5f2' : '#C8C8C8'} marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
-        </View>
+
     }
     check = (info) => {
         let ret = info && info.acceptanceCompanyName && info.acceptanceCompanyName.length > 0
@@ -274,7 +281,7 @@ export default class EquipmentDetailView extends Component {
             return;
         }
         let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_BASE, editType: API.EQUIPMENT_EDIT_TYPE_OTHER };
-        if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM){
+        if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
             data = { ...data, preEditType: API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
         }
         this.props.switchPage(data);
@@ -282,7 +289,7 @@ export default class EquipmentDetailView extends Component {
     }
     _toImageInfoAction = (info) => {
         let data = { ...info, skip: false, preEditType: API.EQUIPMENT_EDIT_TYPE_OTHER, editType: API.EQUIPMENT_EDIT_TYPE_IMAGE };
-        if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM){
+        if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
             data = { ...data, preEditType: API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
         }
         this.props.switchPage(data);
@@ -291,15 +298,26 @@ export default class EquipmentDetailView extends Component {
         let data = { ...info, skip: true, preEditType: API.EQUIPMENT_EDIT_TYPE_OTHER, editType: API.EQUIPMENT_EDIT_TYPE_IMAGE };
         this.props.switchPage(data);
     }
-    
+
     _toConfirmInfoAction = (info) => {
-        
+        if(info.skip) {
+            info.skip = false;
+            info.quantity = '';
+            info.unit = '';
+            info.specification = '';
+            info.modelNum = '';
+            info.elementId = '';
+            info.elementName = '';
+            info.manufacturer = '';
+            info.brand = '';
+            info.supplier = '';
+        }
         this.refs[REF_PHOTO]._loadFile((files) => {
             this._addUrlPropsToFiles(files);
             info.files = files;
-            
+
             let data = { ...info, preEditType: API.EQUIPMENT_EDIT_TYPE_IMAGE, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
-            if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM){
+            if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
                 data = { ...data, preEditType: API.EQUIPMENT_EDIT_TYPE_CONFIRM, editType: API.EQUIPMENT_EDIT_TYPE_CONFIRM };
             }
             this.props.switchPage(data);
@@ -308,11 +326,11 @@ export default class EquipmentDetailView extends Component {
 
     _addUrlPropsToFiles(files) {
         files.map((item) => {
-            let url = item.path;;
-            if (!item.path.startsWith("http")) {
+            let url = item.path;
+            if (url && !url.startsWith("http")) {
                 url = "file://" + url;
+                item.url = url;
             }
-            item.url = url;
         })
     }
 
@@ -385,7 +403,7 @@ export default class EquipmentDetailView extends Component {
         this.props.switchPage(data);
     }
     renderImageEdit = (info) => {
-        if(info.qualified === false) {
+        if (info.qualified === false) {
             info.qualified = false
         } else {
             info.qualified = true
@@ -403,7 +421,7 @@ export default class EquipmentDetailView extends Component {
                     justifyContent: 'flex-start',
                 }}>
                     <Text style={{ color: '#666666' }}>验收合格:</Text>
-                    <Switch style={{ right: 0, position: 'absolute', }} value={info.qualified === true ? true : true} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
+                    <Switch style={{ right: 0, position: 'absolute', }} value={info.qualified === true ? true : false} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
                 </View>
             </View>
             <View style={{ marginTop: 20 }}>

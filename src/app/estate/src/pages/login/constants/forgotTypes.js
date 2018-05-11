@@ -5,4 +5,6 @@ export const FORGOT_PHONE_CODE_VERIFY = 'FORGOT_PHONE_CODE_VERIFY' //
 export const FORGOT_ERROR = 'FORGOT_ERROR'
 export const FORGOT_RESET = 'FORGOT_RESET'
 export const FORGOT_STEP = 'FORGOT_STEP'
+export const FORGOT_INIT = 'FORGOT_INIT'
+
 

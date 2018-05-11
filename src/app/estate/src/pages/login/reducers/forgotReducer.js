@@ -18,7 +18,13 @@ const initialState = {
 
 export default function forgot(state = initialState, action) {
   switch (action.type) {
-    case types.FORGOT_IMAGE_CODE:
+    case types.FORGOT_INIT:
+      return {
+        ...state,
+        ...initialState,
+      }
+      break
+      case types.FORGOT_IMAGE_CODE:
       return {
         ...state,
         type:action.type,

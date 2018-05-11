@@ -52,7 +52,9 @@ class ForgotPage extends React.Component {
     };
   }
   shouldComponentUpdate(nextProps, nextState) {
-    
+    if(nextProps.type == types.FORGOT_INIT) {
+      return false;
+    }
     if (nextProps.type === types.FORGOT_ERROR) {
       // Toast.info(nextProps.status);
       Toast.hide();
@@ -64,11 +66,12 @@ class ForgotPage extends React.Component {
     if (nextProps.type === types.FORGOT_RESET && nextProps.isSuccess) {
       let navigator = this.props.navigation;
       Toast.hide();
-      Toast.success(nextProps.tip,3);
+      Toast.success(nextProps.tip,1.5);
+      this.props.init();
       setTimeout(() => {
         Toast.hide();
         storage.pop(navigator,1)
-      }, 3500);
+      }, 2000);
       
       return false;
     }
@@ -461,7 +464,7 @@ class ForgotPage extends React.Component {
         <View>
           <Text style={
             styles.style_tip
-          }>备注：请将新密码设置为6-20位，至少含数字／字母／字符两种组合，不能能与旧密码相同</Text>
+          }>备注：请将新密码设置为6-20位，至少含数字／字母／字符两种组合。</Text>
         </View>
         <View>
           <ActionButton
@@ -663,6 +666,11 @@ export default connect(
     gotoPage: (page) => {
       if (dispatch) {
         dispatch(fogotAction.gotoPage(page))
+      }
+    },
+    init: () => {
+      if (dispatch) {
+        dispatch(fogotAction.init())
       }
     },
   })

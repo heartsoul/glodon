@@ -59,9 +59,6 @@ function isParamsChange(info, oldInfo) {
     if(info.manufacturer != oldInfo.manufacturer) {
         return true;
     }
-    if(info.elementName != oldInfo.elementName) {
-        return true;
-    }
     if(info.brand != oldInfo.brand) {
         return true;
     }
@@ -70,7 +67,18 @@ function isParamsChange(info, oldInfo) {
     }
     if(info.qualified != oldInfo.qualified) {
         return true;
-    }    
+    }  
+    
+    if(info.qualified != oldInfo.qualified) {
+        return true;
+    }  
+    let f1 = !info.files? '' : JSON.stringify(info.files);
+    let f2 = !oldInfo.files? '' : JSON.stringify(oldInfo.files);
+    
+    if(f1 != f2 ) {
+        console.log(">>>>>f1:"+f1+"\n>>>>>f2:"+f2)
+        return true;
+    }
     return ret;
 }
 /**
@@ -186,14 +194,40 @@ export function fetchData(fieldId) {
         }
         // dispatch(_loading());
         API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
-            dispatch(_loadSuccess(responseData.data));
+            if(responseData.data.files&&responseData.data.files.length == 1) {
+                loadFileUrls(responseData.data.files,(files)=>{
+                    responseData.data.files = files;
+                    dispatch(_loadSuccess(responseData.data));
+                });
+            } else {
+                dispatch(_loadSuccess(responseData.data));
+            }
+            
         }).catch(error => {
             dispatch(_loadError(error));
         });
-
     }
 }
-
+function loadFileUrls(files, finsh) {
+    let countAll = files.length;
+    files.map((item,index)=>{
+        API.getBimFileUrl(item.objectId, (success, data) => {
+            countAll--;
+            if (success) {
+                files[index].url = data;
+            }
+            if (countAll < 1) {
+               finsh(files);
+            }
+        }).catch((err) => {
+            countAll--;
+            if (countAll < 1) {
+                finsh(files);
+            }
+        })
+    });
+   
+}
 /**
  * 上传图片
  * @param {*} imageChooserEle 图片组件

@@ -6,6 +6,12 @@ export function gotoPage(page) {
       dispatch(_page(page))
   }
 }
+export function init() {
+  return dispatch => {
+      dispatch(_init())
+  }
+}
+
 
 export function imageCode() {
   return dispatch => {
@@ -129,6 +135,13 @@ function _reset() {
     type: types.FORGOT_RESET,
   }
 }
+
+function _init() {
+  return {
+    type: types.FORGOT_INIT,
+  }
+}
+
 
 function _page(page) {
   return {
