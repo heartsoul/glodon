@@ -80,10 +80,11 @@ export default class BimFileChooser extends Component {
             latestVersion: storage.projectIdVersionId,
             fileId: fileId,
             dataType: dataType,//图纸文件 模型文件 
-            pageType: PageType.PAGE_TYPE_NEW_QUALITY,
+            pageType: params.pageType, 
             navData: navData,//导航条面包屑数据
         }
     }
+
     _keyExtractor = (item, index) => index;
 
     fetchData = (page) => {
