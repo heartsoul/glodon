@@ -2,22 +2,16 @@
  * Created by Soul on 2018/03/16.
  */
 'use strict';
-import React, { Component, } from "react";
-import {
-    ActivityIndicator, Animated, FlatList,
-    ScrollView, StyleSheet,
-    Text, View, StatusBar, Image, TouchableOpacity, RefreshControl, Dimensions
-} from "react-native";
-import { StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
-
-import ThumbnailImage from "./ThumbnailImage"
-import * as PageType from "./PageTypes";
 import * as API from "app-api";
-import { Toast } from 'antd-mobile';
-import { LeftBarButtons } from "app-components"
+import { LeftBarButtons, LoadingView } from "app-components";
+import React, { Component } from "react";
+import { ActivityIndicator, Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Breadcrumb from "./../../../components/Breadcrumb";
 import * as BimFileEntry from "./BimFileEntry";
 import BimFileFilterView from "./BimFileFilterView";
-import Breadcrumb from "./../../../components/Breadcrumb";
+import * as PageType from "./PageTypes";
+import ThumbnailImage from "./ThumbnailImage";
+
 
 var { width, height } = Dimensions.get("window");
 class RightBarButtons extends React.Component {
@@ -186,21 +180,6 @@ export default class BimFileChooser extends Component {
             this.fetchData(1);
         
 
-    }
-
-    //加载等待的view
-    renderLoadingView() {
-        return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <ActivityIndicator
-                    animating={true}
-                    style={[styles.gray, { height: 80 }]}
-                    color='red'
-                    size="large"
-                />
-            </View>
-        );
     }
 
     //加载失败view
@@ -399,7 +378,7 @@ export default class BimFileChooser extends Component {
     render = () => {
         //第一次加载等待的view
         if (this.state.isLoading && !this.state.error) {
-            return this.renderLoadingView();
+            return (<LoadingView/>);
         } else if (this.state.error) {
             //请求失败view
             return this.renderErrorView(this.state.errorInfo);
