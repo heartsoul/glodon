@@ -18,7 +18,7 @@ class QualityDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : '详情',
         gesturesEnabled: true,
-        headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null
+        headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : <View></View>
     })
     constructor(props) {
         super(props);
@@ -69,7 +69,7 @@ class QualityDetailPage extends Component {
                     {API.TYPE_NEW_NAME[1]}</Text>)
             }
         }
-        return null;
+        return <View></View>;
     }
 
     loadTitle = () => {
