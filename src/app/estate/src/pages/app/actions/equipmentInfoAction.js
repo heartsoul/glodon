@@ -140,7 +140,7 @@ export function save(params) {
                     .then((responseData) => 
                     {
                         dispatch(UpdateDataAction.updateData());
-                        dispatch(_loadSuccess({ ...params }));
+                        loadDetail(dispatch, fieldId);
                         Toast.hide();
                     }).catch(error => {
                         Toast.hide();
@@ -152,7 +152,7 @@ export function save(params) {
                         params.id = responseData.data.id;
                         params.code = responseData.data.code;
                         dispatch(UpdateDataAction.updateData());
-                        dispatch(_loadSuccess({ ...params }));
+                        loadDetail(dispatch, params.id);
                         Toast.hide();
                     }).catch(error => {
                         console.log(error);
@@ -193,21 +193,26 @@ export function fetchData(fieldId) {
             return;
         }
         // dispatch(_loading());
-        API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
-            if(responseData.data.files&&responseData.data.files.length == 1) {
-                loadFileUrls(responseData.data.files,(files)=>{
-                    responseData.data.files = files;
-                    dispatch(_loadSuccess(responseData.data));
-                });
-            } else {
-                dispatch(_loadSuccess(responseData.data));
-            }
-            
-        }).catch(error => {
-            dispatch(_loadError(error));
-        });
-    }
+        loadDetail(dispatch, fieldId);
+    }    
 }
+
+function loadDetail(dispatch,fieldId) {
+    API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
+        if (responseData.data.files && responseData.data.files.length == 1) {
+            loadFileUrls(responseData.data.files, (files) => {
+                responseData.data.files = files;
+                dispatch(_loadSuccess(responseData.data));
+            });
+        }
+        else {
+            dispatch(_loadSuccess(responseData.data));
+        }
+    }).catch(error => {
+        dispatch(_loadError(error));
+    });
+}
+
 function loadFileUrls(files, finsh) {
     let countAll = files.length;
     files.map((item,index)=>{

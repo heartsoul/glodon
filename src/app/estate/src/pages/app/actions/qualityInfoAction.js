@@ -6,11 +6,39 @@ export function fetchData(fieldId) {
   return dispatch => {
     // dispatch(_loading());
     API.getQualityInspectionDetail(storage.loadProject(), fieldId).then((responseData) => {
-      dispatch(_loadSuccess(responseData.data));
+      if (responseData.data.files && responseData.data.files.length == 1) {
+        loadFileUrls(responseData.data.files, (files) => {
+          responseData.data.files = files;
+          dispatch(_loadSuccess(responseData.data));
+        });
+      }
+      else {
+        dispatch(_loadSuccess(responseData.data));
+      }
     }).catch(err => {
       dispatch(_loadError(error));
     });
   }
+}
+function loadFileUrls(files, finsh) {
+  let countAll = files.length;
+  files.map((item, index) => {
+    API.getBimFileUrl(item.objectId, (success, data) => {
+      countAll--;
+      if (success) {
+        files[index].url = data;
+      }
+      if (countAll < 1) {
+        finsh(files);
+      }
+    }).catch((err) => {
+      countAll--;
+      if (countAll < 1) {
+        finsh(files);
+      }
+    })
+  });
+
 }
 export function reset() {
   return dispatch => {
@@ -27,7 +55,7 @@ function _loading() {
 function _loadSuccess(data) {
   return {
     type: types.QUALITY_INFO_DONE,
-    data:data,
+    data: data,
   }
 }
 
@@ -39,6 +67,6 @@ function _reset() {
 function _loadError(error) {
   return {
     type: types.QUALITY_INFO_ERROR,
-    error:error,
+    error: error,
   }
 }

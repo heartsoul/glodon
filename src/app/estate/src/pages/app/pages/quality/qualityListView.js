@@ -56,9 +56,6 @@ class QualityListView extends PureComponent {
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.updateIndex != this.props.updateIndex && this.props.selected) {
             this.fetchData(this.props.qcState, this.props.qualityCheckpointId, this.props.qualityCheckpointName);
-            if (this.props.updateNumber) {
-                this.props.updateNumber();
-            }
             return true;
         }
         return true;

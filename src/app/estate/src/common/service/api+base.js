@@ -53,6 +53,7 @@ function checkStatus(response) {
         // Message.error('请联系管理员获取相应操作权限');
         // Toast.info('数据获取失败(code:500)',3)
         console.log('数据获取失败(code:500)')
+        // {"code":"ERROR_SERVICE_INVOKE","message":"没有指定租户上下文"
         const error = new Error("数据获取失败");
         error.response = response;
         throw error;

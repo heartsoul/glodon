@@ -92,6 +92,7 @@ export default class extends PureComponent {
                                         style={{ flex: 1 }}
                                         qcState={'' + item.state}
                                         updateNumber={() => { this._loadInspectionSummary() }}
+                                        selected = {this.state.activeIndex == index}
                                         loadData={index == 0 ? true : false} />
                                 </SegmentedView.Sheet>
                             );

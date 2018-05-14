@@ -114,7 +114,7 @@ export default class GLDNewMenuView extends Component {
                     if(!p) {
                         p = {}
                     }
-                    storage.pushNext(navigation, "NewPage",{...p});
+                    storage.pushNext(navigation, "NewPage",{...p,noimage:true});
                 }
             },
         ];

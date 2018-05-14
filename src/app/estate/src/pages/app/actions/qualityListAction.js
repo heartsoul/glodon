@@ -78,7 +78,7 @@ export function searchData(keywords, page, qcState, dataMapIn) {
                         data: value,
                     });
                 });
-                dispatch(_loadSuccess(sectionLob, dataMap, qcState, page, hasMore));
+                dispatch(_loadSuccess(sectionLob, {...dataMap}, qcState, page, hasMore));
                 data = null;
                 dataBlob = null;
                 sectionLob = null;
@@ -165,10 +165,10 @@ function __fetchData(qcState, page, dataMapIn, dispatch, qualityCheckpointId = 0
                 });
                 i++;
             });
-
+            let ts = new Date().getTime();
             dataMap.forEach(function (value, key, map) {
                 sectionLob.push({
-                    key: key,
+                    key: key+ts,
                     data: value,
                 });
             });

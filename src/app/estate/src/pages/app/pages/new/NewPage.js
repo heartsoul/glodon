@@ -51,6 +51,7 @@ class NewPage extends React.Component {
     constructor(props) {
         super(props);
         let filesIn = [];
+        this.hasImage = true;
         let selectedCheckPoint = {}
         if (props.params) {
             if (props.params.files) {
@@ -62,11 +63,14 @@ class NewPage extends React.Component {
                     name: props.params.qualityCheckpointName
                 };
             }
+            if(props.params.noimage) {
+                this.hasImage = false;
+            }
         }
         // console.log('11====================================');
         // console.log(filesIn);
         // console.log('22====================================');
-        this.hasImage = filesIn.length > 0;
+        
         this.state = {
             isLoading: false,
             inspectionInfo: {},//初始草稿数据

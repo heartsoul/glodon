@@ -10,7 +10,9 @@ import {
   StyleSheet,
   TouchableHighlight,
   Dimensions,
+  NativeModules,
 } from "react-native";
+var PM = NativeModules.GLDPhotoManager;
 import { connect } from 'react-redux' // 引入connect函数
 import * as loginAction from '../../../login/actions/loginAction' // 导入action方法 
 
@@ -31,6 +33,9 @@ class SettingPage extends Component {
     //请求数据
     this.props.navigation.setParams({ rightNavigatePress: this._rightAction })
   }
+  componentWillUnmount = () => {
+    clearTimeout();
+  }
   _rightAction = () => {
     // console.log("执行_rightAction");
   }
@@ -40,7 +45,9 @@ class SettingPage extends Component {
       pressed: false,
     };
   }
-
+  _flexDebugShow = () => {
+    PM.flexDebugShow();
+  }
   _tenantChoose = () => {
     let navigator = this.props.navigation;
     storage.projectIdVersionId = '';
@@ -111,6 +118,8 @@ class SettingPage extends Component {
         <SettingItemView icon={require('app-images/icon_setting_contact_us.png')} title='联系我们' hideArrow={true} ></SettingItemView>
         <View style={styles.settingItemLine}></View>
         <SettingItemView icon={require('app-images/icon_setting_about_us.png')} title='关于我们' onPress={() => this._about()} ></SettingItemView>
+        <View style={{ height: 10 }}></View>
+        <SettingItemView icon={require('app-images/icon_setting_about_us.png')} title='打开FLEX' onPress={() => this._flexDebugShow()} ></SettingItemView>
         <View style={{ height: 10 }}></View>
         <SettingItemView icon={require('app-images/icon_setting_offline.png')} title='离线设置' ></SettingItemView>
         <TouchableHighlight

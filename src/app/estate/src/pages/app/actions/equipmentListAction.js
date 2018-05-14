@@ -161,8 +161,9 @@ function __fetchData(qcState, page, dataMapIn, dispatch) {
           dataBlob = [];
           dataMap.set(groupTime, dataBlob);
         }
+        let ts = new Date().getTime();
         dataBlob.push({
-          key: "" + item.id,
+          key: item.id + "-" + ts,
           value: item,
         });
         i++;

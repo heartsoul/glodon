@@ -95,6 +95,13 @@ export default class BimFileChooser extends Component {
                     latestVersion: latestVersion,
                 });
                 this.fetchDataInner(page, storage.loadProject(), latestVersion);
+            }).catch((error)=>{
+                this.setState(
+                    {
+                        isLoading:false,
+                        error:true,
+                    }
+                );
             });
         } else {
             this.fetchDataInner(page, storage.loadProject(), this.state.latestVersion);
@@ -146,7 +153,14 @@ export default class BimFileChooser extends Component {
                 data = null;
                 dataBlob = null;
             }
-        );
+        ).catch((error)=>{
+            this.setState(
+                {
+                    isLoading:false,
+                    error:true,
+                }
+            );
+        });
     }
     //过滤模型和图纸
     filterData = (data) => {

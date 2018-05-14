@@ -51,6 +51,9 @@ class ForgotPage extends React.Component {
       focusImageCode: 0, // 焦点 1: 没有 0:
     };
   }
+  componentWillUnmount = () => {
+    clearTimeout();
+  }
   shouldComponentUpdate(nextProps, nextState) {
     if(nextProps.type == types.FORGOT_INIT) {
       return false;

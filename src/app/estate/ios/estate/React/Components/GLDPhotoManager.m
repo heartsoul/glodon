@@ -18,6 +18,10 @@
 #import "WaitViewUtil.h"
 #import "SDDataCache.h"
 
+#ifdef DEBUG
+#import <FLEX.h>
+#endif
+
 @interface RCTConvert (RNTImagesView)
 
 + (NSDictionary*)toFiles:(id)json;
@@ -140,6 +144,13 @@ RCT_EXPORT_METHOD (pickerImages:(RCTResponseSenderBlock)callbackRet) {
   }];
   return;
 }
+
+RCT_EXPORT_METHOD (flexDebugShow) {
+#ifdef DEBUG
+  [[FLEXManager sharedManager] showExplorer];
+#endif
+}
+
 
 - (dispatch_queue_t)methodQueue
 {
