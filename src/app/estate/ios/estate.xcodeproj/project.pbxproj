@@ -1355,13 +1355,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "estate" */;
 			buildPhases = (
 				4C0DCCB09B1DCC3B0214FE5D /* [CP] Check Pods Manifest.lock */,
+				247E2B072043CD5300016F63 /* [AU] Set Build Number */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				852F723F778C34A30C08AC4D /* [CP] Embed Pods Frameworks */,
 				3E67E2E1161D061CB3A0D9FD /* [CP] Copy Pods Resources */,
-				247E2B072043CD5300016F63 /* [AU] Set Build Number */,
 				247E2B082043CD5600016F63 /* [AU] Reset Build Number */,
 			);
 			buildRules = (
@@ -1771,7 +1771,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# 1. Set the build number to the count of Git commits\nbuildNumber=$(git rev-list --count HEAD)\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n\n# 2. Set the key XGitCommitSHA1 to the SHA1 of current Git commit\ncommitSHA1=$(git rev-parse --short HEAD)\n/usr/libexec/PlistBuddy -c \"Set :XGitCommitSHA1 $commitSHA1\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n\n# 3. Set the key XGitBranch to the current Git branch\nbranch=$(git rev-parse --abbrev-ref HEAD)\n/usr/libexec/PlistBuddy -c \"Set :XGitBranch $branch\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+			shellScript = "# 1. Set the build number to the count of Git commits\nbuildNumber=$(git rev-list --count HEAD)\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n\n# 2. Set the key XGitCommitSHA1 to the SHA1 of current Git commit\ncommitSHA1=$(git rev-parse --short HEAD)\n/usr/libexec/PlistBuddy -c \"Set :XGitCommitSHA1 $commitSHA1\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n\n# 3. Set the key XGitBranch to the current Git branch\nbranch=$(git rev-parse --abbrev-ref HEAD)\n/usr/libexec/PlistBuddy -c \"Set :XGitBranch $branch\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n\n# 4. Set the display name on debug\nif [[ \"$CONFIGURATION\" = \"Debug\" ]]; then\ndisplayName=\"BIM测试版\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleDisplayName $displayName\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\nfi\n\n\n\n";
 		};
 		247E2B082043CD5600016F63 /* [AU] Reset Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1785,7 +1785,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Reset auto-updated values to `Auto_Update_in_Build_Phases`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion Auto_Update_in_Build_Phases\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n\n/usr/libexec/PlistBuddy -c \"Set :XGitCommitSHA1 Auto_Update_in_Build_Phases\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n\n/usr/libexec/PlistBuddy -c \"Set :XGitBranch Auto_Update_in_Build_Phases\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+			shellScript = "# Reset auto-updated values to `Auto_Update_in_Build_Phases`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion Auto_Update_in_Build_Phases\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n\n/usr/libexec/PlistBuddy -c \"Set :XGitCommitSHA1 Auto_Update_in_Build_Phases\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n\n/usr/libexec/PlistBuddy -c \"Set :XGitBranch Auto_Update_in_Build_Phases\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n\n\n# 4. Set the display name on debug\nif [[ \"$CONFIGURATION\" = \"Debug\" ]]; then\ndisplayName=\"BIM协同\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleDisplayName $displayName\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\nfi";
 		};
 		3E67E2E1161D061CB3A0D9FD /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
