@@ -36,16 +36,6 @@ export default class extends Component {
     
   };
 
-  _logout=()=>{
-    storage.logout();
-    loginOut().then(()=>{
-      uaaLoginOut().then(()=>{
-
-      });
-      storage.gotoLogin();
-    });
-
-  }
   _gotoTenantChoose = () => {
     let navigator = this.props.navigation;
     storage.projectIdVersionId = '';

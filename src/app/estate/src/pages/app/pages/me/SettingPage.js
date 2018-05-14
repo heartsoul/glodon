@@ -17,6 +17,8 @@ import * as loginAction from '../../../login/actions/loginAction' // 导入actio
 import { ListRow } from "app-3rd/teaset";
 import * as USERAPI from "app-api";
 
+import {Toast} from 'antd-mobile'
+
 var { width, height } = Dimensions.get("window");
 
 class SettingPage extends Component {
@@ -59,17 +61,19 @@ class SettingPage extends Component {
 
   _logout = () => {
     storage.logout();
+    Toast.loading('退出中...', 0, null, true);
     USERAPI.loginOut().then(() => {
       USERAPI.uaaLoginOut().then(() => {
 
       }).catch((error)=>{
-      
+        Toast.hide();
       });
-      this.props.logout();
       let navigator = this.props.navigation;
       storage.gotoLogin(navigator);
     }).catch((error)=>{
-
+      Toast.hide();
+      let navigator = this.props.navigation;
+      storage.gotoLogin(navigator);
     });
   }
 
