@@ -63,10 +63,10 @@ class NewPage extends React.Component {
                 };
             }
         }
-        console.log('11====================================');
-        console.log(filesIn);
-        console.log('22====================================');
-        
+        // console.log('11====================================');
+        // console.log(filesIn);
+        // console.log('22====================================');
+        this.hasImage = filesIn.length > 0;
         this.state = {
             isLoading: false,
             inspectionInfo: {},//初始草稿数据
@@ -307,7 +307,7 @@ class NewPage extends React.Component {
                     showStar={this.state.showDescriptionStar}
                     childView={this.renderDescriptionView()}
                 ></StarView>
-                <View style={{ width: '100%', height: 130, marginTop: 10,marginBottom: 0,backgroundColor:'#FFFFFF'}}>
+                <View style={[{ width: '100%', height: 130, marginTop: 10,marginBottom: 0,backgroundColor:'#FFFFFF'}, this.hasImage ? {} : {display:'none'}]}>
                 <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{width: width, height: 100, marginTop: 10,marginLeft: 10,marginRight: 10, }} onChange={() => {}} />
                 </View>
                 <RectificationView ref={REF_RECTIFICATION} rectificationData={this.state.rectificationData} showStar={this.state.showRectificationStar}></RectificationView>
