@@ -219,7 +219,6 @@ export default class extends React.Component {
         return (<Provider store={store}><RootGuideStack /></Provider>)
     }
     render() {
-        // return this.renderPage();
-        return (<Provider store={store}><RootMainStack /></Provider>)
+        return this.renderPage();
     }
 }

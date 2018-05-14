@@ -105,6 +105,9 @@ class LoginPage extends React.Component {
      }
       return;
     }
+    if(!text) {
+      text = '';
+    } 
     // console.log("_onPasswordChangeText" + text);
     let check = text.length > 5 && this.state.username.length > 1;
     this.setState({ password: text, disabled:!check});

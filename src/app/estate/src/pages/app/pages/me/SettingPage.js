@@ -62,19 +62,38 @@ class SettingPage extends Component {
   _logout = () => {
     storage.logout();
     Toast.loading('退出中...', 0, null, true);
+    let overTime = false;
     USERAPI.loginOut().then(() => {
+      
       USERAPI.uaaLoginOut().then(() => {
 
       }).catch((error)=>{
-        Toast.hide();
+  
       });
+      if(overTime) {
+        return;
+      }
+      overTime = true;
       let navigator = this.props.navigation;
       storage.gotoLogin(navigator);
     }).catch((error)=>{
+      if(overTime) {
+        return;
+      }
+      overTime = true;
       Toast.hide();
       let navigator = this.props.navigation;
       storage.gotoLogin(navigator);
     });
+    setTimeout(()=>{
+      if(overTime) {
+        return;
+      }
+      overTime = true;
+      Toast.hide();
+      let navigator = this.props.navigation;
+      storage.gotoLogin(navigator);
+    }, 10000);
   }
 
   render() {
