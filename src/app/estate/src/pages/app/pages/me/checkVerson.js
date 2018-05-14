@@ -14,10 +14,14 @@ export function checkVersion(type) {
         API.checkVersion()
             .then(responseData => {
                 if (responseData && responseData.data) {
+                    let autoDownload = true;
+                    if(storage.loadAutoDownload() != null && storage.loadAutoDownload()!= undefined){
+                        autoDownload = storage.loadAutoDownload();
+                    }
                     let params = {
                         type: type,
                         sysValue: responseData.data.sysValue,
-                        autoDownload: storage.loadAutoDownload(),
+                        autoDownload: autoDownload,
                     }
                     CheckVersionManager.setVersionInfo(params)
                 }
