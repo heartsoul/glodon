@@ -113,7 +113,7 @@
   cell.videoThumbnail.hidden = YES;
   if(_selectedPhotos.count<_maxSelectedCount) {
     if (indexPath.row == _selectedPhotos.count) {
-      [cell.imageThumbnail setImage:[UIImage imageNamedFromMyBundle:@"AlbumAddBtn.png"]];
+      [cell.imageThumbnail setImage:[UIImage imageNamed:@"icon_add_picture"]];
       cell.imageThumbnail.layer.borderWidth = 2;
       cell.nookDeleteBtn.hidden = YES;
       

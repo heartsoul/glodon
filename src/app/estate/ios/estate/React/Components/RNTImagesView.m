@@ -329,33 +329,33 @@
       cell.videoThumbnail.hidden = YES;
       cell.imageThumbnail.layer.cornerRadius = 0;
       
-      [cell.imageThumbnail setImage:[UIImage imageNamedFromMyBundle:@"AlbumAddBtn.png"]];
+      [cell.imageThumbnail setImage:[UIImage imageNamed:@"icon_add_picture"]];
       cell.imageThumbnail.layer.borderWidth = 0;
-      
-      CAShapeLayer *border = [CAShapeLayer new];
-      //虚线的颜色
-      border.strokeColor = [UIColor grayColor].CGColor;
-      //填充的颜色
-      border.fillColor = [UIColor clearColor].CGColor;
-      
-      UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:cell.imageThumbnail.bounds cornerRadius:0];
-      
-      //设置路径
-      border.path = path.CGPath;
-      
-      border.frame = cell.imageThumbnail.bounds;
-      //虚线的宽度
-      border.lineWidth = 1.f;
-      
-      
-      //设置线条的样式
-      //    border.lineCap = @"square";
-      //虚线的间隔
-      border.lineDashPattern = @[@3, @3];
-      
-      //      cell.imageThumbnail.layer.cornerRadius = 5.f;
-      cell.imageThumbnail.layer.masksToBounds = YES;
-      [cell.imageThumbnail.layer addSublayer:border];
+//      
+//      CAShapeLayer *border = [CAShapeLayer new];
+//      //虚线的颜色
+//      border.strokeColor = [UIColor grayColor].CGColor;
+//      //填充的颜色
+//      border.fillColor = [UIColor clearColor].CGColor;
+//      
+//      UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:cell.imageThumbnail.bounds cornerRadius:0];
+//      
+//      //设置路径
+//      border.path = path.CGPath;
+//      
+//      border.frame = cell.imageThumbnail.bounds;
+//      //虚线的宽度
+//      border.lineWidth = 1.f;
+//      
+//      
+//      //设置线条的样式
+//      //    border.lineCap = @"square";
+//      //虚线的间隔
+//      border.lineDashPattern = @[@3, @3];
+//      
+//      //      cell.imageThumbnail.layer.cornerRadius = 5.f;
+//      cell.imageThumbnail.layer.masksToBounds = YES;
+//      [cell.imageThumbnail.layer addSublayer:border];
       cell.nookDeleteBtn.hidden = YES;
       return cell;
       
