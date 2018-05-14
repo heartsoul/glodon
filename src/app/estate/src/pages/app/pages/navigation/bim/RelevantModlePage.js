@@ -144,7 +144,7 @@ class RelevantModelPage extends Component {
         this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
         BimToken.getBimFileToken(relevantModel.gdocFileId, (token) => {
             let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=false`;
-            console.log('>>>>>>>>>>>>>>>>>>\nBASE_URL_BLUEPRINT_TOKEN:'+url);
+            console.log('>>>>>>>>>>>>>>>>>>\nBASE_URL_BLUEPRINT_TOKEN:' + url);
             this.setState({
                 url: url
             });
@@ -166,14 +166,6 @@ class RelevantModelPage extends Component {
         }
         storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: '模型文件', pageType: pageType })
     }
-    setPosition = () => {
-        let position = [{
-            x: this.state.drawingPositionX,
-            y: this.state.drawingPositionY,
-            z: 0,
-        }];
-        this.refs.webview.injectJavaScript("javascript:loadPinItems('" + JSON.stringify(position) + "');")
-    }
 
     //移除图钉
     removePosition = () => {
@@ -194,7 +186,7 @@ class RelevantModelPage extends Component {
 
     }
 
-    
+
 
     /**
      * 选择构件后新建，返回新建页面
@@ -413,16 +405,17 @@ class RelevantModelPage extends Component {
     getPositionInfo = (json) => {
         switch (this.state.pageType) {
             case PageType.PAGE_TYPE_QUALITY_MODEL:
-                handleQuality(json);
+                this.handleQuality(json);
                 break;
             case PageType.PAGE_TYPE_EQUIPMENT_MODEL:
-                handleEquipment(json);
+                this.handleEquipment(json);
                 break;
         }
     }
 
     handleQuality = (dot) => {
         if (dot) {
+            dot = JSON.parse(dot);
             switch (dot.qcState) {
                 case API.QC_STATE_UNRECTIFIED://"待整改"
                 case API.QC_STATE_DELAYED://"已延迟"
@@ -515,6 +508,7 @@ class RelevantModelPage extends Component {
 
     handleEquipment = (dot) => {
         if (dot) {
+            dot = JSON.parse(dot);
             switch (dot.qcState) {
                 case API.QC_STATE_STANDARD://合格
                 case API.QC_STATE_NOT_STANDARD://不合格
@@ -565,7 +559,7 @@ class RelevantModelPage extends Component {
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
                         injectedJavaScript={cmdString}
-                        onLoadEnd={() => { this.setPosition(); }}
+                        onLoadEnd={() => { }}
                         source={{ uri: this.state.url, method: 'GET' }}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
