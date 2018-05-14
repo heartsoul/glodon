@@ -91,8 +91,8 @@ export default class SelectCheckPointView extends Component {
         return (
             <View style={{ flexDirection: 'row', flex: 1, }}>
                 <TextInput
-                    style={{ flex: 1, textAlignVertical: 'top', paddingLeft: 12, paddingRight: 12, paddingTop: 2, paddingBottom: 0, backgroundColor: '#ffffff' }}
-                    placeholder={''}
+                    style={{ flex: 1, textAlignVertical: 'top',minWidth:100, paddingLeft: 12, paddingRight: 12, paddingTop: 2, paddingBottom: 0, backgroundColor: '#ffffff' }}
+                    placeholder={'请设置'}
                     multiline={false}
                     underlineColorAndroid={"transparent"}
                     textAlign="right"
@@ -116,7 +116,7 @@ export default class SelectCheckPointView extends Component {
         return (
             <View>
                 {/* <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.getDetailName()} onPress={() => { this.selectCheckPoint() }} /> */}
-                <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.getDetailView()} onPress={() => { this.selectCheckPoint() }} />
+                <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.getDetailView()} onPress={() => {this.selectCheckPoint()}} />
             </View>
         );
     }
