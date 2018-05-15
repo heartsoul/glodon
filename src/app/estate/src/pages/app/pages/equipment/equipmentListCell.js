@@ -67,7 +67,7 @@ export default class EquipmentListCell extends PureComponent {
                 <View style={[styles.containerView,]}>
                     <View style={[styles.contentHeaderView]}>
                         <Image source={projectTimeImage} style={styles.imageTime} />
-                        <Text style={styles.contentTime}>进场日期：{item.value.showTime}</Text>
+                        <Text style={styles.contentTime}>进场日期：{API.formatUnixtimestampSimple(item.value.approachDate)}</Text>
                         <Text style={[styles.contentStatus, { color: item.value.qcStateColor }]}>{item.value.qcStateShow}</Text>
                     </View>
                     <View style={{height:1, backgroundColor:'#fafafa'}}></View>
