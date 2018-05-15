@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<!-- saved from url=(0079)http://47.95.204.243/app.html?param=20d7566c9861423eb9ad12e51a417d54&show=false -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="./App图纸选择_files/BimfaceSDKLoader@latest-release.js.下载" charset="utf-8"></script>
+    <title>App图纸选择</title>
+    <style>
+        html,body{
+            height: 100%;
+            margin:0;
+            padding: 0
+        }
+
+        .bf-toolbar[title='主菜单' ]{
+            display: none;
+        }
+        .bf-toolbar[title='ModelTree']{
+            display: none;
+        }
+    </style>
+<link href="./App图纸选择_files/lib.css" rel="stylesheet"><link href="./App图纸选择_files/Bimface.css" rel="stylesheet"><script src="./App图纸选择_files/Bimface.js.下载"></script></head>
+<body>
+
+    <div id="model" style="width:100%; height:100%;text-align:left"><div class="bf-container"><div class="bf-view"><canvas width="1920" height="235" tabindex="0" id="cloud-main-canvas" style="width: 1920px; height: 235px;"></canvas></div><div style="position: absolute; display: block; outline: 0px; right: 20px; top: 20px; opacity: 0.6; transition: opacity 0.2s ease; width: 165px; height: 165px;"><canvas width="165" height="165" style="width: 165px; height: 165px;"></canvas></div><div class="bf-toolbar bf-toolbar-bottom" title="主菜单"><div class="bf-button gld-bf-home" title="主视图"></div><div class="bf-button gld-bf-firstperson" title="漫游模式"></div><div class="bf-button gld-bf-zoomrect" title="框选放大"></div><div class="bf-button gld-bf-measure" title="测量"></div><div class="bf-button gld-bf-sectionbox" title="剖切"></div><div class="bf-button gld-bf-properties" title="属性"></div><div class="bf-button gld-bf-information" title="基本信息"></div><div class="bf-button gld-bf-settings" title="设置"></div><div class="bf-button gld-bf-maximize" title="全屏"></div></div><div class="bf-toolbar bf-toolbar bf-tree-toolbar" title="ModelTree"><div class="bf-button gld-bf-tree" title="构件树"></div></div></div></div>
+
+	<div> 
+</div>
+    <script>
+        let viewToken = getQueryString("param"),drawableContainer='',modelViewer = "",app = "" ,isShow = getQueryString("show"),initCircleData='',viewType='';
+		function ss(){
+			alert("ss");
+		}
+        function  isEmptyObject(obj = {}){
+            let name;
+            for (name in obj) {
+                return !1;
+            }
+            return !0
+        }
+        
+        function getQueryString(name){
+            var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if(r!=null)return  unescape(r[2]); return null;
+        }
+
+        function removeDrawableItem(){
+            if(!drawableContainer){
+                return;
+            }
+            drawableContainer.clear();
+
+            if(!initCircleData){
+                return ;
+            }
+            loadCircleItems(initCircleData);
+        }
+
+        function circleType(qState){
+            var circle = document.createElement('div');
+            var colorsTypes = {
+                'red':    {background: '#F33D3D', border: '1px solid #F33D3D', boxShadow: '0 1px 4px 0 #732424'},
+                'yellow': {background: '#F39B3D', border: '1px solid #F39B3D', boxShadow: '0 1px 4px 0 #9B6711'},
+                'green':  {background: '#28D575', border: '1px solid #28D575', boxShadow: '0 1px 4px 0 rgba(66,96,35,0.80)'},
+                'default':  {background: '', border: '', boxShadow: '',opacity:0},
+            };
+            var background = "#fff",border = "1px solid #28D575",boxShadow = "0 1px 4px 0 rgba(66,96,35,0.80)",type;
+            switch(qState){
+                case 'unrectified':
+                    type = "red";break;
+                case 'delayed':
+                    type = "red";break;
+                case 'unreviewed':
+                    type = "yellow";break;
+                case 'staged':
+                    type = "yellow";break;
+                case 'reviewed':
+                    type = "yellow";break;
+                case 'inspected':
+                    type = "green";break;
+                case 'accepted':
+                    type = "green";break; 
+                default: 
+                    type = "default";
+            }
+            
+            circle.style.width = '10px';
+            circle.style.height = '10px';
+            circle.style.borderRadius = '5px'; 
+            circle.style.background = colorsTypes[type].background;
+            circle.style.border = colorsTypes[type].border;
+            circle.style.boxShadow = colorsTypes[type].boxShadow;
+            return circle;
+        }
+        
+        function item3Dcircle(qState){
+            var imgSrc = "";
+            switch(qState){
+                case 'unrectified':
+                    imgSrc  = window.marker3DRed;break;
+                case 'delayed':
+                    imgSrc = window.marker3DRed;break;
+                case 'unreviewed':
+                    imgSrc = window.marker3DYellow;break;
+                case 'staged':
+                    imgSrc = window.marker3DYellow;break;
+                case 'reviewed':
+                    imgSrc = window.marker3DYellow;break;
+                case 'inspected':
+                    imgSrc = window.marker3DGreen;break;
+                case 'accepted':
+                    imgSrc = window.marker3DGreen;break; 
+                case 'standard':
+                    imgSrc = window.markerFacility3DGreen;break; 
+                case 'notStandard':
+                    imgSrc =window.markerFacility3DRed;break; 
+                case 'edit':
+                    imgSrc = window.markerFacility3DYellow;break; 
+                default: 
+                    imgSrc = window.marker3DGreen;break;
+            }
+            return imgSrc;
+        }
+
+        function load2DItems(initData){
+            var items = [];
+            for(var i in initData){
+                var config = new Glodon.Bimface.Plugins.Drawable.CustomItemConfig();             
+                var x = initData[i].drawingPositionX, y = initData[i].drawingPositionY, z = 0;
+                if(!!x && !!y){
+                    console.log(initData[i].qcState);
+                    var circle = circleType(initData[i].qcState);
+                    circle.setAttribute("id",JSON.stringify(initData[i]));
+               
+                    config.content = circle;
+                    config.viewer = modelViewer;
+                    config.worldPosition =  {x,y,z};
+
+                  
+                    var tag = new Glodon.Bimface.Plugins.Drawable.CustomItem(config);
+                    
+                    var startTime,clientX,clientY;
+                        tag._domElement.addEventListener("touchstart",function(event){
+                            startTime = new Date().getTime(),               
+                            clientX = event.changedTouches[0].clientX,
+                            clientY = event.changedTouches[0].clientY;
+                        });
+
+                        tag._domElement.addEventListener("touchend",function(item){
+							
+                            var x = event.changedTouches[0].clientX;
+                            var y = event.changedTouches[0].clientY;
+
+                            endTime = new Date().getTime();
+	
+                            if(endTime - startTime < 300 && Math.abs(x - clientX) < 10 && Math.abs(y - clientY) < 10){
+                                var tempData = item && item.changedTouches[0] && item.changedTouches[0].target.getAttribute("id") || '';
+                                getPositionInfo(tempData);
+                            } 
+                        });  
+                    items.push(tag);
+                }
+               
+            }
+            return items;
+        }
+
+        function load3DItems(tempData,drawableContainer){  
+
+            var items = [];
+			for(var i in tempData){    
+                var config = new Glodon.Bimface.Plugins.Marker3D.Marker3DConfig();    
+
+                var x = tempData[i].drawingPositionX, y = tempData[i].drawingPositionY, z = tempData[i].drawingPositionZ;
+                if(!!x && !!y && !!z){
+                    config.src = item3Dcircle(tempData[i].qcState);
+                    config.id = JSON.stringify(tempData[i]);
+                    config.worldPosition =  {x, y, z};
+                    var tag = new Glodon.Bimface.Plugins.Marker3D.Marker3D(config);
+                    tag.onClick(function(item){
+                        console.log(item.id,"item.id");
+                        getPositionInfo(item.id);
+                    });
+					 tag.onHover(function(item){
+                        console.log(item.id,"item.id");
+                    });
+                    drawableContainer.addItem(tag);
+                    modelViewer.render(); 
+                    items.push(tag);
+
+                }
+            }
+        }
+
+        function loadCircleItems(data){ 
+			data =  "[{\"facilityId\":5200041,\"elementId\":\"318370\",\"elementName\":\"常规 - 150mm\",\"committed\":true,\"qualified\":true,\"qcState\":\"standard\",\"drawingPositionX\":-3974.999,\"drawingPositionY\":1459.5561,\"drawingPositionZ\":2000}]";
+            if(!data){
+                return;
+            }  
+            initCircleData = data;
+            initData = JSON.parse(data);
+            if(!drawableContainer){
+                return ;
+            }
+            if(viewType=='DWGVIEW'){
+                drawableContainer.addItems(load2DItems(initData));
+                return ;
+            }
+            if(viewType=='3DVIEW'){
+               load3DItems(JSON.parse(initCircleData),drawableContainer);          
+                return;            
+            }
+        }
+
+        function loadPinItems(data){
+            if(!data){
+                return ;
+            }
+            initData = JSON.parse(data);
+            if(!drawableContainer){
+                return ;
+            }
+            var items = [];
+            for(var i in initData){
+                var config = new Glodon.Bimface.Plugins.Drawable.ImageConfig();
+                var x = initData[i].drawingPositionX || initData[i].x;
+                var y = initData[i].drawingPositionY || initData[i].y;
+                config.src = window.imgSrc;
+                config.worldPosition = {x,y,z:0};
+                var tag = new Glodon.Bimface.Plugins.Drawable.Image(config);
+                items.push(tag);
+            }
+            return drawableContainer.addItems(items);
+        }
+
+        function showSelectedComponent(data){
+            if(!data){
+                return;
+            }
+            initData = JSON.parse(data);
+            if(!modelViewer){
+                return ;
+            }   
+            modelViewer.setSelectedComponentsById(initData);
+            modelViewer.render();
+        }
+
+        function getSelectedComponentsEx(components){
+            if(!modelViewer){
+                return [];
+            }
+            let tempObj = modelViewer.getSelectedComponents();
+			if(!Array.isArray(tempObj) && tempObj){
+				let rtnObj = [];
+				components && Object.keys(components).map((property)=>{
+					rtnObj.push(property);
+				});
+				return rtnObj;
+			}
+			return components;
+        }
+
+        function getSelectedComponent(){
+            if(!modelViewer){
+                return ;
+            }
+            var result = {};
+            var tempObj = getSelectedComponentsEx(modelViewer.getSelectedComponents());
+            for(var i = 0;  i<tempObj.length; ++i){
+                result = Object.assign(result,{elementId: tempObj[i],fileId: '',objectId:tempObj[i]});
+            }
+
+            if(window.modelEvent && window.modelEvent.getPosition){ 
+                if(isEmptyObject(result)){
+                    window.modelEvent.getPosition("");
+                }else{
+                    window.modelEvent.getPosition(JSON.stringify(result));
+                }
+            }
+            return; 
+        }
+    
+        function getPositionInfo(obj){ 
+            if(!window.modelEvent || typeof modelEvent.getPositionInfo !='function'){
+                return 'modelEvent不存在';
+            }
+            if(window.modelEvent && window.modelEvent.getPositionInfo){   
+                window.modelEvent.getPositionInfo(obj);
+            }  
+            return;
+        }
+
+        function getPosition(obj){
+            if(!window.modelEvent || typeof modelEvent.getPosition !='function'){
+                return 'modelEvent不存在';
+            }
+            if(isEmptyObject(obj)){
+                return '无对应的位置信息';
+            }
+            if(window.modelEvent && window.modelEvent.getPosition){   
+                window.modelEvent.getPosition(JSON.stringify(obj));
+            }  
+            return;        
+        }  
+
+        function cancelPosition(){
+            if(window.modelEvent && window.modelEvent.cancelPosition){   
+                window.modelEvent.cancelPosition();
+            }  
+            return; 
+        }
+
+        var options = new BimfaceSDKLoaderConfig();
+            options.viewToken = viewToken;
+            BimfaceSDKLoader.load(options, successCallback, failureCallback);   
+
+        function successCallback(viewMetaData) {
+            var view = document.getElementById('model');
+            var appConfig = "";
+            viewType = viewMetaData.viewType.toUpperCase();
+            if(viewType == "DWGVIEW"){
+                appConfig = new Glodon.Bimface.Application.WebApplication2DConfig();
+                appConfig.domElement = view;
+
+                app = new Glodon.Bimface.Application.WebApplication2D(appConfig);
+                app.load(viewToken);  
+                modelViewer = app.getViewer();
+            }else if(viewType == "3DVIEW"){
+                appConfig = new Glodon.Bimface.Application.WebApplication3DConfig();
+                appConfig.domElement = view;
+
+                app = new Glodon.Bimface.Application.WebApplication3D(appConfig);
+                app.addView(viewToken);        
+                modelViewer = app.getViewer();       
+            }
+
+            if(!app){
+                return ;
+            }
+            
+            if(viewType == "DWGVIEW"){
+                var drawaleContainerConfig = new Glodon.Bimface.Plugins.Drawable.DrawableContainerConfig();
+                    drawaleContainerConfig.viewer = modelViewer;
+                    drawableContainer = new Glodon.Bimface.Plugins.Drawable.DrawableContainer(drawaleContainerConfig);
+           
+                var startTime, endTime,clientX,clientY;
+                var domElement = modelViewer.getDomElement();
+                var toolbar = app.getToolbar("MainToolbar");
+                var leftSubToolBar = app.getToolbar("LeftSubToolbar");
+
+                if(toolbar){
+                    toolbar.hide();
+                }
+
+                if(leftSubToolBar){
+                    leftSubToolBar.hide();
+                }
+
+                domElement.addEventListener("touchstart",function(event){
+                    startTime = new Date().getTime(),               
+                    clientX = event.changedTouches[0].clientX,
+                    clientY = event.changedTouches[0].clientY;
+                });
+
+                domElement.addEventListener("touchend",function(event){
+                    var offset = {};
+                    var x = event.changedTouches[0].clientX;
+                    var y = event.changedTouches[0].clientY;
+
+                    var viewer = self._dwgViewer,
+                    endTime = new Date().getTime(),
+                    position = domElement.getBoundingClientRect(),
+                    clientPosition = {
+                        x:  x - position.left,
+                        y:  y - position.top
+                    },
+                    worldPosition = modelViewer.clientToWorld(clientPosition); 
+                    if(endTime - startTime > 300 && Math.abs(x - clientX) < 10 && Math.abs(y - clientY) < 10 && isShow=='false'){
+                        removeDrawableItem();
+                        
+                        var config = new Glodon.Bimface.Plugins.Drawable.ImageConfig();
+                        config.src = window.imgSrc;
+                        config.draggable =true;
+                        
+                        
+                        config.worldPosition = worldPosition;
+                        var tag = new Glodon.Bimface.Plugins.Drawable.Image(config);
+
+                        drawableContainer.addItem(tag);
+                        getPosition(worldPosition);
+                    }  
+                    
+                });
+            }else if(viewType == "3DVIEW"){
+                var drawaleContainerConfig = new Glodon.Bimface.Plugins.Marker3D.Marker3DContainerConfig();
+                    drawaleContainerConfig.viewer = modelViewer;
+                    drawableContainer = new Glodon.Bimface.Plugins.Marker3D.Marker3DContainer(drawaleContainerConfig);
+					loadCircleItems("");
+                app.addEventListener(Glodon.Bimface.Application.WebApplication3DEvent.ViewAdded, function () {
+                    if(window.modelEvent && window.modelEvent.loadDotsData){   
+//                        window.modelEvent.loadDotsData();
+                        return ;
+                    }                      
+                });
+                
+            }
+        }
+    
+        function failureCallback(error) {
+            if(window.modelEvent && window.modelEvent.invalidateToken){   
+                window.modelEvent.invalidateToken();
+                return; 
+            }  
+        };
+
+    </script>
+<script src="./App图纸选择_files/lib.js.下载"></script><script src="./App图纸选择_files/app.js.下载"></script>
+</body></html>
