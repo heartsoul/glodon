@@ -16,21 +16,26 @@ class SelectView extends Component {
 
     constructor(props) {
         super(props);
+        let dataList = this.props.dataList ? this.props.dataList : [];
+        let selectIndex = this.getSelectIndex(dataList, true);
+        let showEmpty = false;
+        if(dataList.length == 0 && this.props.title != '责任人'){
+            showEmpty = true;
+        }
         this.state = {
-            dataList: [],
-            selectIndex: -1,
+            dataList: dataList,
+            selectIndex: selectIndex,
             showStar: false,
-            showEmpty: false,
+            showEmpty: showEmpty,
         };
     }
 
     componentDidMount() {
         let { title } = this.props
-
-        if (this.props.title === '检查单位' || this.props.title === '验收单位') {
-            this.getInspectionCompanies();
-        } else if (this.props.title === '施工单位') {
-            this.getCompaniesList();
+        if (this.props.title === '施工单位') {
+            if (this.props.selectCallback && this.props.dataList && this.props.dataList.length > 0) {
+                this.props.selectCallback(this.props.dataList[0])
+            }
         }
     }
     componentWillReceiveProps(nextProps) {
@@ -60,48 +65,6 @@ class SelectView extends Component {
         }
         index = parseInt(index);
         return index;
-    }
-    /**
-     * 获取项目下检查单位列表
-     */
-    getInspectionCompanies = () => {
-        API.getInspectionCompanies(storage.loadProject())
-            .then(data => {
-                this.setState({
-                    dataList: data.data,
-                    selectIndex: this.getSelectIndex(data.data, true),
-                });
-
-            }).catch((e) => {
-                console.log(e);
-            });
-    }
-
-    /**
-     * 获取施工单位列表
-     */
-    getCompaniesList = () => {
-        API.getCompaniesList(storage.loadProject(), 'SGDW')
-            .then(data => {
-                if (data && data.data && data.data.length > 0) {
-                    this.setState({
-                        dataList: data.data,
-                        selectIndex: this.getSelectIndex(data.data, true),
-                    });
-
-                    if (this.props.selectCallback && data.data.length > 0) {
-                        this.props.selectCallback(data.data[0])
-                    }
-                } else {
-                    //显示
-                    this.setState({
-                        showEmpty: true,
-                    })
-                }
-
-            }).catch((e) => {
-                console.log(e);
-            });
     }
 
     /**
@@ -162,7 +125,7 @@ class SelectView extends Component {
         if (this.props.title === '责任人') {
             this.getPersonList();
         } else {
-            if(!this.state.showEmpty){
+            if (!this.state.showEmpty) {
                 this.showActionSheet();
             }
         }
