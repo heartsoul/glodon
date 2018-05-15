@@ -6,9 +6,9 @@ package com.estate.react;
  */
 
 public class Constants {
-    public static final int OPEN_ALBUM_REQUEST_CODE = 0X1000;
-    public static final int REQUEST_CODE_PHOTO_PREVIEW = 0X1001;
-    public static final int REQUEST_CODE_TAKE_PHOTO = 0X1002;
-    public static final int REQUEST_CODE_EDIT_PHOTO = 0X1003;
+    public static final int OPEN_ALBUM_REQUEST_CODE = 10000;
+    public static final int REQUEST_CODE_PHOTO_PREVIEW = 20001;
+    public static final int REQUEST_CODE_TAKE_PHOTO = 30002;
+    public static final int REQUEST_CODE_EDIT_PHOTO = 40003;
 
 }
