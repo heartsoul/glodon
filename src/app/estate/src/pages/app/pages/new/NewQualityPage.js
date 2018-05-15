@@ -9,13 +9,16 @@ import {
     Dimensions,
     TouchableOpacity,
     BackHandler,
+    ActivityIndicator,
     Platform,
 } from 'react-native';
 import { Tabs, } from 'antd-mobile';
 import { LeftBarButtons } from "app-components"
 import NewCheckListTabBar from "./NewCheckListTabBar";
-import NewPage from "./NewPage";
+import NewQualityView from "./NewQualityView";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { connect } from 'react-redux';
+import * as actions from "./../../actions/newQualityAction2";
 
 var { width, height } = Dimensions.get("window");
 
@@ -26,12 +29,12 @@ const tabs = [
 const REF_INSPECTION = 'REF_INSPECTION';//
 const REF_ACCEPTANCE = 'REF_ACCEPTANCE';//
 
-class NewCheckListPage extends Component {
+class NewQualityPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
         headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
-        title: navigation.state.params && navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : "密码管理"
-      })
+        title: navigation.state.params && navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : ""
+    })
     static navigationOptions = ({ navigation, screenProps }) => ({
         // title: '新建',
         headerTitle: (navigation.state.params.headerTitle),
@@ -42,7 +45,7 @@ class NewCheckListPage extends Component {
                 提交
         </Text>
         ),
-        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle():null,
+        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
         gesturesEnabled: false,
         // header: null
     });
@@ -56,11 +59,8 @@ class NewCheckListPage extends Component {
         this.activePage = null;
         this.inspectionPage = null;
         this.acceptancePage = null;
-        let params = this.getCheckListParams();
-        this.state = {
-            inspectParams: params.inspectParams,
-            acceptanceParams: params.acceptanceParams,
-        };
+        this.setActiveTab();
+
         let headerTitle = (<View style={{ height: 44, width: 200 }}>
             <Tabs
                 tabs={tabs}
@@ -81,35 +81,23 @@ class NewCheckListPage extends Component {
 
     needBack = (backFun) => {
         if (backFun) {
-          backFun(false);
+            backFun(false);
         }
         this.goBack();
         return;
-      }
-      loadLeftTitle = () => {
+    }
+    loadLeftTitle = () => {
         return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={''} />
-      }
+    }
 
-    getCheckListParams = () => {
+    setActiveTab = () => {
         let params = this.props.navigation.state.params;
-        let inspectParams = {};
-        let acceptanceParams = {};
         if (params && params.item && params.item.value) {
             let editType = params.item.value.inspectionType;
-            if (editType === tabs[0].type) {
-                inspectParams = params;
-            } else {
-                acceptanceParams = params;
+            if (editType === tabs[1].type) {
                 this.activeTab = 1;
             }
-        } else {
-            inspectParams = params;
-            acceptanceParams = params;
         }
-        return ({
-            inspectParams: inspectParams,
-            acceptanceParams: acceptanceParams,
-        });
     }
     onChangePage = (data, index) => {
         if (index == 0) {
@@ -118,23 +106,15 @@ class NewCheckListPage extends Component {
             this.activePage = this.acceptancePage;
         }
         this.hiddenBar.onTabClick(index);
-        // this.formPage.goToTab(index, true, true);
     }
-    componentWillMount = () => {
 
-    }
     componentDidMount() {
         // BackHandler.addEventListener('hardwareBackPress', () => {
         //     this.goBack();
         //     return true;
         // });
+        this.props.fetchData(this.props.navigation.state.params);
 
-    }
-
-    componentWillUnmount() {
-        // if (Platform.OS === 'android') {
-        //     BackHandler.removeEventListener('hardwareBackPress');
-        // }
     }
 
     submit = () => {
@@ -152,12 +132,54 @@ class NewCheckListPage extends Component {
             alert("call error");
         }
     }
+    setRef = (ref, index) => {
+        if (index == 0) {
+            this.inspectionPage = ref;
+        } else {
+            this.acceptancePage = ref;
+        }
+        if (this.activeTab == index) {
+            this.activePage = ref;
+        }
+    }
 
+    getPageParams = (type) => {
+        let { editInfo, inspectionCompanies, isEdit, noimage, supporters } = this.props.editParams
+        let params = {
+            editInfo: editInfo,
+            inspectionCompanies: inspectionCompanies,
+            supporters: supporters,
+            noimage: noimage,
+        }
+        if (isEdit && editInfo && editInfo.editInfo && editInfo.editInfo.inspectionType != type) {
+            params.editInfo = {};
+        }
+
+        return params;
+    }
+
+    //加载等待的view
+    renderLoadingView() {
+        return (
+            <View style={styles.container}>
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                <ActivityIndicator
+                    animating={true}
+                    style={{ height: 80 }}
+                    color='#00baf3'
+                    size="large"
+                />
+            </View>
+        );
+    }
     render() {
+        if (this.props.isLoading) {
+            return this.renderLoadingView();
+        }
         return (
             <KeyboardAwareScrollView>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <View style={{ marginTop: -44}}>
+                <View style={{ marginTop: -44 }}>
                     <Tabs
                         tabs={tabs}
                         initialPage={this.activeTab}
@@ -167,18 +189,16 @@ class NewCheckListPage extends Component {
                             return <NewCheckListTabBar backgroundColor='#FFFFFF' ref={(ref) => { this.hiddenBar = ref; }} activeTab={this.activeTab} defaultProps={props} />
                         }}
                     >
-                        <NewPage setRef={(ref) => {
-                            this.inspectionPage = ref;
-                            if (this.activeTab == 0) {
-                                this.activePage = ref;
-                            }
-                        }} params={(this.state.inspectParams)} type={tabs[0].type} navigator = {this.props.navigation}></NewPage>
-                        <NewPage setRef={(ref) => {
-                            this.acceptancePage = ref;
-                            if (this.activeTab == 1) {
-                                this.activePage = ref;
-                            }
-                        }} params={(this.state.acceptanceParams)} type={tabs[1].type} navigator = {this.props.navigation}></NewPage>
+                        <NewQualityView
+                            setRef={(ref) => { this.setRef(ref, 0) }}
+                            editParams={this.getPageParams(tabs[0].type)}
+                            type={tabs[0].type}
+                            navigator={this.props.navigation} />
+                        <NewQualityView
+                            setRef={(ref) => { this.setRef(ref, 1) }}
+                            editParams={this.getPageParams(tabs[1].type)}
+                            type={tabs[1].type}
+                            navigator={this.props.navigation} />
                     </Tabs>
                 </View>
 
@@ -187,4 +207,26 @@ class NewCheckListPage extends Component {
     }
 }
 
-export default NewCheckListPage;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+        height: 180
+    },
+})
+
+
+export default connect(
+    state => ({
+        isLoading: state.newQuality.isLoading,
+        editParams: state.newQuality.editQualityParams,
+    }),
+    dispatch => ({
+        fetchData: (params) => {
+            dispatch(actions.fetchData(params))
+        },
+    })
+)(NewQualityPage);

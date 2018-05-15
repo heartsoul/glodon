@@ -61,11 +61,11 @@ public class ImageChooserView extends LinearLayout {
     private AlbumData albumData = null;//选中的图片数据
     public ReadableArray originalData;//从rn传过来的数据
 
-
-    public static final int OPEN_ALBUM_REQUEST_CODE = 0X2000;
-    public static final int REQUEST_CODE_PHOTO_PREVIEW = 0X2001;
-    public static final int REQUEST_CODE_TAKE_PHOTO = 0X2002;
-    public static final int REQUEST_CODE_EDIT_PHOTO = 0X2003;
+    public static int requestCodeIndex = 10;//每次编辑增加
+    private int OPEN_ALBUM_REQUEST_CODE = Constants.OPEN_ALBUM_REQUEST_CODE;
+    private int REQUEST_CODE_PHOTO_PREVIEW = Constants.REQUEST_CODE_PHOTO_PREVIEW;
+    private int REQUEST_CODE_TAKE_PHOTO = Constants.REQUEST_CODE_TAKE_PHOTO;
+    private int REQUEST_CODE_EDIT_PHOTO = Constants.REQUEST_CODE_EDIT_PHOTO;
 
     public ImageChooserView(Context context) {
         super(context);
@@ -94,6 +94,15 @@ public class ImageChooserView extends LinearLayout {
 
         setPhoto();
         tag = this.toString();
+        setRequestCode();
+    }
+
+    private void setRequestCode() {
+        requestCodeIndex++;
+        OPEN_ALBUM_REQUEST_CODE = Constants.OPEN_ALBUM_REQUEST_CODE + requestCodeIndex;
+        REQUEST_CODE_PHOTO_PREVIEW = Constants.REQUEST_CODE_PHOTO_PREVIEW + requestCodeIndex;
+        REQUEST_CODE_TAKE_PHOTO = Constants.REQUEST_CODE_TAKE_PHOTO + requestCodeIndex;
+        REQUEST_CODE_EDIT_PHOTO = Constants.REQUEST_CODE_EDIT_PHOTO + requestCodeIndex;
     }
 
     public void setPhoto() {
@@ -176,16 +185,18 @@ public class ImageChooserView extends LinearLayout {
     };
 
     private void editPhoto(String mPhotoPath) {
-        if(TextUtils.isEmpty(mPhotoPath)){
-          return;
+        if (TextUtils.isEmpty(mPhotoPath)) {
+            return;
         }
         Intent intent = new Intent(MainApplication.instance.getCurrentReactContext(), PhotoEditActivity.class);
         intent.putExtra(CommonConfig.IMAGE_PATH, mPhotoPath);
+        intent.putExtra("chooserView", tag);
         MainApplication.instance.getCurrentReactContext().getCurrentActivity().startActivityForResult(intent, REQUEST_CODE_EDIT_PHOTO);
     }
 
 
     private void takePhoto() {
+        setRequestCode();
         mPhotoPath = CameraUtil.getFilePath();
         CameraUtil.openCamera(mPhotoPath, MainApplication.instance.getCurrentReactContext().getCurrentActivity(), REQUEST_CODE_TAKE_PHOTO);
     }
@@ -224,8 +235,8 @@ public class ImageChooserView extends LinearLayout {
                     editPhoto(mPhotoPath);
                 } else if (REQUEST_CODE_EDIT_PHOTO == requestCode && resultCode == Activity.RESULT_OK && data != null) {
                     String savePath = data.getStringExtra(CommonConfig.IAMGE_SAVE_PATH);
-                    if(albumData == null){
-                        LinkedHashList<String,ImageItem> map = new LinkedHashList<>();
+                    if (albumData == null) {
+                        LinkedHashList<String, ImageItem> map = new LinkedHashList<>();
                         albumData = new AlbumData(map);
                     }
                     ImageItem item = new ImageItem();

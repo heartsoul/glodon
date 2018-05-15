@@ -1,0 +1,10 @@
+gradle.projectsEvaluated {
+    def currentBundleTask = tasks.create(
+            name: "ss",
+            type: Exec) {
+        println "sssb"
+    }
+
+    currentBundleTask.dependsOn("assembleRelease")
+
+}

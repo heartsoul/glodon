@@ -150,7 +150,10 @@ export default class RelevantBlueprintPage extends Component {
         }
         //详情页不响应长按事件
         let show = (pageType == PageType.PAGE_TYPE_DETAIL);
-
+        if(pageType == PageType.PAGE_TYPE_QUALITY_MODEL && !AuthorityManager.isQualityCreate()){
+            show = true;
+        }
+            
         let showCreateNoticeView = true;
         let showCreateButton = true;
         if (pageType == PageType.PAGE_TYPE_DETAIL) {

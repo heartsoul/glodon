@@ -162,7 +162,7 @@ class RelevantModelPage extends Component {
         let pageType = PageType.PAGE_TYPE_NEW_QUALITY;
 
         if (this.state.pageType === PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
-            let pageType = PageType.PAGE_TYPE_NEW_EQUIPMENT;
+            pageType = PageType.PAGE_TYPE_NEW_EQUIPMENT;
         }
         storage.pushNext(navigator, "BimFileChooserPage", { fileId: 0, dataType: '模型文件', pageType: pageType })
     }

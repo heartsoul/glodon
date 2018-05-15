@@ -68,9 +68,7 @@ const screens = {
     QualityStatardsPage: {
         screen: GLD.QualityStatardsPage
     },
-    NewCheckListPage: {
-        screen: GLD.NewCheckListPage
-    },
+
     NewReviewPage: {
         screen: GLD.NewReviewPage
     },

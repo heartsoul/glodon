@@ -45,46 +45,34 @@ const REF_RECTIFICATION = 'REF_RECTIFICATION';//整改
 const REF_CHECKPOINT = 'REF_CHECKPOINT';//质检项目
 
 
-class NewPage extends React.Component {
-    
+class NewQualityView extends React.Component {
+
     contentDescription = ''
     constructor(props) {
         super(props);
-        let filesIn = [];
         this.hasImage = true;
-        let selectedCheckPoint = {}
-        if (props.params) {
-            if (props.params.files) {
-                filesIn = props.params.files;
-            }
-            if (props.params.qualityCheckpointId) {
-                selectedCheckPoint = {
-                    id: props.params.qualityCheckpointId,
-                    name: props.params.qualityCheckpointName
-                };
-            }
-            if(props.params.noimage) {
-                this.hasImage = false;
-            }
+        if (props.editParams && props.editParams.noimage) {
+            this.hasImage = false;
         }
-        // console.log('11====================================');
-        // console.log(filesIn);
-        // console.log('22====================================');
-        
+        let editInfo = {};
+        if (props.editParams.editInfo) {
+            editInfo = props.editParams.editInfo;
+        }
+        this.contentDescription = editInfo.contentDescription ? editInfo.contentDescription : '',
         this.state = {
             isLoading: false,
-            inspectionInfo: {},//初始草稿数据
-            editInfo: {},//编辑的时候获取的详情
+            inspectionInfo: editInfo.inspectionInfo ? editInfo.inspectionInfo : {},//初始草稿数据
+            editInfo: editInfo.editInfo ? editInfo.editInfo : {},//编辑的时候获取的详情
 
             projectId: storage.loadProject(),
-            inspectId: -1,//检查单id
-            code: '',
-            contentDescription: '',//内容描述
+            inspectId: editInfo.inspectId ? editInfo.inspectId : -1,//检查单id
+            code: editInfo.code ? editInfo.code : '',
+            contentDescription: editInfo.contentDescription ? editInfo.contentDescription : '',//内容描述
 
-            selectedCheckPoint: selectedCheckPoint,//选中的质检项目
+            selectedCheckPoint: editInfo.selectedCheckPoint ? editInfo.selectedCheckPoint : {},//选中的质检项目
 
-            relevantBluePrint: {},//关联图纸
-            relevantModel: {},//关联模型
+            relevantBluePrint: editInfo.relevantBluePrint ? editInfo.relevantBluePrint : {},//关联图纸
+            relevantModel: editInfo.relevantModel ? editInfo.relevantModel : {},//关联模型
 
             showInspectCompanyStar: false,
             showCompanyStar: false,
@@ -92,10 +80,9 @@ class NewPage extends React.Component {
             showDescriptionStar: false,
             showCheckpointStar: false,
             showRectificationStar: false,
-            files: filesIn, //附件图片
+            files: editInfo.files, //附件图片
 
         }
-
     };
 
     componentDidMount = () => {
@@ -104,14 +91,6 @@ class NewPage extends React.Component {
         if (setRef) {
             setRef(this);
         }
-
-        // //从不同页面进入时初始化状态
-        let params = this.props.params;
-        NewQualityAction.initialState(params, this.props.selectedCheckPoint, (params) => {
-            this.setState(params);
-            this.contentDescription = params.contentDescription;
-        })
-
     }
     //返回
     goBack = (navigation) => {
@@ -200,12 +179,14 @@ class NewPage extends React.Component {
 
     //删除
     delete = (navigation) => {
-        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消'}, { text: '删除', onPress:()=>{
-            NewQualityAction.deleteInspection(this.state.inspectId, this.props.type, () => {
-                this.props.updateData();
-                storage.goBack(this.props.navigator, null);
-            });
-        } });
+        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消' }, {
+            text: '删除', onPress: () => {
+                NewQualityAction.deleteInspection(this.state.inspectId, this.props.type, () => {
+                    this.props.updateData();
+                    storage.goBack(this.props.navigator, null);
+                });
+            }
+        });
 
     }
 
@@ -268,7 +249,7 @@ class NewPage extends React.Component {
                 multiline={true}
                 underlineColorAndroid={"transparent"}
                 textAlign="left"
-                onChangeText={(text) => { this.state.contentDescription = text; this.contentDescription = text;}}
+                onChangeText={(text) => { this.state.contentDescription = text; this.contentDescription = text; }}
                 defaultValue={this.contentDescription}
             />
         );
@@ -284,6 +265,7 @@ class NewPage extends React.Component {
                         id: this.state.editInfo.inspectionCompanyId,
                         name: this.state.editInfo.inspectionCompanyName,
                     }) : ({})}
+                    dataList={this.props.editParams.inspectionCompanies}
                     showStar={this.state.showInspectCompanyStar}
                 />
                 <SelectView ref={REF_COMPANY} title='施工单位'
@@ -291,6 +273,7 @@ class NewPage extends React.Component {
                         id: this.state.editInfo.constructionCompanyId,
                         name: this.state.editInfo.constructionCompanyName,
                     }) : ({})}
+                    dataList={this.props.editParams.supporters}
                     selectCallback={(selectCompany) => {
                         this.setState({
                             selectCompany: selectCompany,
@@ -311,8 +294,8 @@ class NewPage extends React.Component {
                     showStar={this.state.showDescriptionStar}
                     childView={this.renderDescriptionView()}
                 ></StarView>
-                <View style={[{ width: '100%', height: 130, marginTop: 10,marginBottom: 0,backgroundColor:'#FFFFFF'}, this.hasImage ? {} : {display:'none'}]}>
-                <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{width: width, height: 100, marginTop: 10,marginLeft: 10,marginRight: 10, }} onChange={() => {}} />
+                <View style={[{ width: '100%', height: 130, marginTop: 10, marginBottom: 0, backgroundColor: '#FFFFFF' }, this.hasImage ? {} : { display: 'none' }]}>
+                    <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{ width: width, height: 100, marginTop: 10, marginLeft: 10, marginRight: 10, }} onChange={() => { }} />
                 </View>
                 <RectificationView ref={REF_RECTIFICATION} rectificationData={this.state.rectificationData} showStar={this.state.showRectificationStar}></RectificationView>
                 <StarView
@@ -352,8 +335,8 @@ var styles = StyleSheet.create({
 
 });
 
-NewPage.propTypes = {
-    params: PropTypes.object,
+NewQualityView.propTypes = {
+    editParams: PropTypes.object,
     /**
      * 区分检查单和验收单（inspection、acceptance）
      */
@@ -371,4 +354,4 @@ export default connect(
             }
         },
     })
-)(NewPage);
+)(NewQualityView);
