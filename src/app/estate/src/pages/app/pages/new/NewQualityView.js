@@ -71,7 +71,7 @@ class NewQualityView extends React.Component {
 
             selectedCheckPoint: editInfo.selectedCheckPoint ? editInfo.selectedCheckPoint : {},//选中的质检项目
 
-            relevantBluePrint: editInfo.relevantBluePrint ? editInfo.relevantBluePrint : {},//关联图纸
+            relevantBluePrint: editInfo.relevantBlueprint ? editInfo.relevantBlueprint : {},//关联图纸
             relevantModel: editInfo.relevantModel ? editInfo.relevantModel : {},//关联模型
 
             rectificationData: editInfo.rectificationData ? editInfo.rectificationData : {},//关联模型
