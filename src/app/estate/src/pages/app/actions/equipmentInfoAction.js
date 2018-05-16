@@ -199,7 +199,7 @@ export function fetchData(fieldId) {
 
 function loadDetail(dispatch,fieldId) {
     API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
-        if (responseData.data.files && responseData.data.files.length == 1) {
+        if (responseData.data.files && responseData.data.files.length > 0) {
             loadFileUrls(responseData.data.files, (files) => {
                 responseData.data.files = files;
                 dispatch(_loadSuccess(responseData.data));

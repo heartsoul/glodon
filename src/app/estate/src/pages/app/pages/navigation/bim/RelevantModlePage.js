@@ -208,7 +208,7 @@ class RelevantModelPage extends Component {
         } else if (this.state.pageType == PageType.PAGE_TYPE_NEW_EQUIPMENT) {
             // pop到新建材设单页面
             this.props.transformInfo(relevantModel);
-            this.props.navigation.pop("EquipmentNewPage");
+            this.props.navigation.pop("EquipmentDetailPage");
         } else if (this.state.pageType == PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
             //编辑材设单
             this.props.transformInfo(relevantModel);
@@ -216,7 +216,7 @@ class RelevantModelPage extends Component {
         } else if (this.state.pageType == PageType.PAGE_TYPE_EQUIPMENT_MODEL) {
             //从材设单模型进入 replace为新建材设单页面
             this.props.transformInfo(relevantModel);
-            this.props.navigation.replace('EquipmentNewPage', {});
+            this.props.navigation.replace('EquipmentDetailPage', {});
         } else if (this.state.pageType == PageType.PAGE_TYPE_DETAIL) {
             this.props.navigation.goBack();
         }

@@ -13,7 +13,7 @@ class RightBarButtons extends React.Component {
     navigation.navigate("EquipmentSearchPage")
   }
   _onNewPress = (navigation) => {
-    AuthorityManager.isEquipmentCreate() ? (storage.pushNext(navigation, "EquipmentNewPage")) : null;
+    AuthorityManager.isEquipmentCreate() ? (storage.pushNext(navigation, "EquipmentDetailPage")) : null;
   }
   render() {
     return <View style={{
