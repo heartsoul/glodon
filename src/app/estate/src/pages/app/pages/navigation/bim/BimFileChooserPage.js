@@ -296,14 +296,14 @@ export default class BimFileChooser extends Component {
         }, 1500);
     }
     onFilterChange = (specialty, building) => {
-        let specialtyCode = specialty ? specialty.Code : "";
+        let specialtyCode = specialty ? specialty.code : "";
         let buildingId = building ? building.id : 0;
 
         API.getModelBimFiles(storage.loadProject(), storage.projectIdVersionId, buildingId, specialtyCode)
             .then(responseData => {
+                let dataBlob = [];
                 if (responseData) {
                     let list = responseData.data.data;
-                    let dataBlob = [];
                     if (list.length > 0) {
                         list.forEach(item => {
                             item.name = item.fileName;
@@ -312,14 +312,17 @@ export default class BimFileChooser extends Component {
                                 value: item
                             });
                         })
-                        this.setState({
-                            dataArray: dataBlob,
-                        });
                     }
                 }
+                this.setState({
+                    dataArray: dataBlob,
+                });
 
 
             }).catch(err => {
+                this.setState({
+                    dataArray: [],
+                });
             });
     }
     /**
