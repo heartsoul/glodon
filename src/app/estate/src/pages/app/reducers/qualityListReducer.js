@@ -195,7 +195,7 @@ export default (state = initialState, action) => {
                 dataItem = initialState.datas[""]
             }
             
-            if(action.qualityCheckpointId > 0) {
+            if(action.qualityCheckpointId != 0) {
                 state.datas_n[action.qcState] = {
                     ...dataItem,
                     isLoading: true,
@@ -224,7 +224,7 @@ export default (state = initialState, action) => {
                 dataItem = initialState.datas[""]
             }
 
-            if(action.qualityCheckpointId > 0) {
+            if(action.qualityCheckpointId != 0) {
                 state.datas_n[action.qcState] = {
                     ...dataItem,
                     isLoading: false,

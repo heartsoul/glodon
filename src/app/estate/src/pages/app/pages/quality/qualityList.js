@@ -41,7 +41,7 @@ export default class qualityList extends PureComponent {
             return;
         }
         let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
-        let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointI');
+        let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointName');
         API.getQualityInspectionSummary(storage.loadProject(),qualityCheckpointId,qualityCheckpointName).then(
             (responseData) => {
                 // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
@@ -86,7 +86,7 @@ export default class qualityList extends PureComponent {
     }
     renderData() {
         let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
-        let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointI');
+        let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointName');
         if(!qualityCheckpointId) {
             qualityCheckpointId = 0
         }
