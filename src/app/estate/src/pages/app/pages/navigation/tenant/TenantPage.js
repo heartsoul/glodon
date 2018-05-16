@@ -117,7 +117,7 @@ export default class tenantList extends Component {
             let navigator = this.props.navigation;
             storage.saveTenant(item.value.id);
             storage.saveLastTenant(item.value.tenantId);
-
+            storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
             storage.pushNext(navigator, "ProjectPage")
 
         });

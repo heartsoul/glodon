@@ -13,7 +13,6 @@ import equipmentNew from '../app/reducers/equipmentNewReducer'
 import projectList from '../app/reducers/projectReducer'
 import search from '../app/reducers/searchReducer'
 import newQuality from '../app/reducers/newQualityReducer'
-import changeProject from '../app/reducers/ChangeProjectReducer' 
 const rootReducer = combineReducers({
     loginIn,
     forgot,
@@ -30,7 +29,6 @@ const rootReducer = combineReducers({
     equipmentNew,
     search,
     newQuality,
-    changeProject,
 })
 
 export default rootReducer
