@@ -102,6 +102,9 @@ const screens = {
     FeedbackPage: {
         screen: GLD.FeedbackPage
     },
+    ChangeProjectPage:{
+        screen: GLD.ChangeProjectPage
+      },
 };
 
 const options = () => {
