@@ -53,7 +53,13 @@ function getPageParams(params, dispatch) {
             .then(data => {
                 editParams.editInfo = data;
                 editParams.isEdit = true;
-                isFetchDone(params, editParams, totalRequestCount, dispatch);
+                if (data && data.files && data.files.length > 0) {
+                    loadFileUrls(editParams.editInfo.files, (files) => {
+                        isFetchDone(params, editParams, totalRequestCount, dispatch);
+                    })
+                } else {
+                    isFetchDone(params, editParams, totalRequestCount, dispatch);
+                }
             }).catch(error => {
                 isFetchDone(params, editParams, totalRequestCount, dispatch);
             });
@@ -73,6 +79,25 @@ function getPageParams(params, dispatch) {
 
 }
 
+function loadFileUrls(files, finsh) {
+    let countAll = files.length;
+    files.map((item, index) => {
+        API.getBimFileUrl(item.objectId, (success, data) => {
+            countAll--;
+            if (success) {
+                files[index].url = data;
+            }
+            if (countAll < 1) {
+                finsh(files);
+            }
+        }).catch((err) => {
+            countAll--;
+            if (countAll < 1) {
+                finsh(files);
+            }
+        })
+    });
+}
 /**
  * 请求完成
  * @param {*} params 
@@ -84,7 +109,7 @@ function isFetchDone(params, editParams, totalRequestCount, dispatch) {
     responseCount++;
     if (responseCount === totalRequestCount) {
         let transformInfo = getTransformInfo(params);
-        if(transformInfo.files || transformInfo.relevantBlueprint || transformInfo.selectedCheckPoint){
+        if (transformInfo.files || transformInfo.relevantBlueprint || transformInfo.selectedCheckPoint) {
             editParams.editInfo = transformInfo;
         }
         dispatch(_loadingDone(editParams));

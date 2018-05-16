@@ -124,7 +124,7 @@ public class ImageChooserView extends LinearLayout {
                 if (TextUtils.isEmpty(url)) {
                     url = item.imagePath;
                 }
-                ImageLoader.showImageCenterCrop(getContext(), url, list.get(position), R.mipmap.ic_launcher);
+                ImageLoader.showImageCenterCrop(getContext(), url, list.get(position), R.mipmap.icon_default_image);
                 list.get(position).setOnClickListener(null);
                 list.get(position).setOnClickListener(new OpenPreViewListener(position));
                 position++;

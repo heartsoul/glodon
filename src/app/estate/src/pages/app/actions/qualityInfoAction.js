@@ -6,7 +6,7 @@ export function fetchData(fieldId) {
   return dispatch => {
     // dispatch(_loading());
     API.getQualityInspectionDetail(storage.loadProject(), fieldId).then((responseData) => {
-      if (responseData.data.files && responseData.data.files.length == 1) {
+      if (responseData.data.files && responseData.data.files.length > 0) {
         loadFileUrls(responseData.data.files, (files) => {
           responseData.data.files = files;
           dispatch(_loadSuccess(responseData.data));
