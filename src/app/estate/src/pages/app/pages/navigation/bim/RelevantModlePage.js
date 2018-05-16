@@ -143,8 +143,10 @@ class RelevantModelPage extends Component {
 
         this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
         BimToken.getBimFileToken(relevantModel.gdocFileId, (token) => {
-            let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=false`;
-            console.log('>>>>>>>>>>>>>>>>>>\nBASE_URL_BLUEPRINT_TOKEN:' + url);
+            let url = `${AppConfig.BASE_URL_BLUEPRINT_TOKEN}${token}&show=false`;
+            console.log('>>>>>>>>>>>>>>>>>>\nimfileurl:\n' + url);
+            url = `http://192.168.43.81/bimfile/app.html?param=${token}&show=false`;
+            
             this.setState({
                 url: url
             });

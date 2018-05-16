@@ -21,7 +21,11 @@
   if (TARGET_IPHONE_SIMULATOR) {
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   } else {
+#ifdef DEBUG
+    jsCodeLocation = [NSURL URLWithString:@"http://192.168.43.81:8081/index.bundle?platform=ios&dev=true&minify=false"];
+#else
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForFallbackResource:nil fallbackExtension:nil];
+#endif
   }
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"estate"
