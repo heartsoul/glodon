@@ -56,6 +56,8 @@ class ProjectPage extends Component {
                 alert('获取权限失败');
                 return;
             }
+            storage.saveTenant(this.props.navigation.state.params.id);
+            storage.saveLastTenant(this.props.navigation.state.params.tenantId);
             storage.saveProject("" + item.value.id, "" + item.value.name);
             storage.gotoMainPage(navigator);
         });

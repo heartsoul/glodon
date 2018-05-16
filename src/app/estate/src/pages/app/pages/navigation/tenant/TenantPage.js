@@ -24,15 +24,15 @@ export default class tenantList extends Component {
             errorInfo: "",
             dataArray: [],
         }
-         
+
     }
 
     //网络请求
     fetchData = () => {
-        
-       //请求数据
+
+        //请求数据
         if (this.props.navigation.getParam('change') === true && storage.loadLastTenant() != '') {
-            this.props.navigation.setParams({change:false});
+            this.props.navigation.setParams({ change: false });
             let navigator = this.props.navigation;
             storage.pushNext(navigator, "ProjectPage")
         }
@@ -56,9 +56,9 @@ export default class tenantList extends Component {
                 i++;
 
             });
-            if(dataBlob.length == 1 && storage.loadLastTenant() == '') {
-                this.props.navigation.setParams({isFirst:false});
-                this._clickItem(dataBlob[0],0)
+            if (dataBlob.length == 1 && storage.loadLastTenant() == '') {
+                this.props.navigation.setParams({ isFirst: false });
+                this._clickItem(dataBlob[0], 0)
                 return;
             }
             this.setState({
@@ -77,11 +77,11 @@ export default class tenantList extends Component {
     }
 
     componentDidMount() {
-        
+
     }
     componentWillMount() {
-       //请求数据
-       this.fetchData();
+        //请求数据
+        this.fetchData();
     }
 
     //加载等待的view
@@ -105,7 +105,7 @@ export default class tenantList extends Component {
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <Text>
-                加载失败
+                    加载失败
                 </Text>
             </View>
         );
@@ -115,11 +115,12 @@ export default class tenantList extends Component {
         //   alert(item.value.tenantId);
         USERAPI.setCurrentTenant(item.value.tenantId).then((responseData) => {
             let navigator = this.props.navigation;
-            storage.saveTenant(item.value.id);
-            storage.saveLastTenant(item.value.tenantId);
-            storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
-            storage.pushNext(navigator, "ProjectPage")
+            // storage.saveTenant(item.value.id);
+            // storage.saveLastTenant(item.value.tenantId);
+            // storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
+            // storage.pushNext(navigator, "ProjectPage")
 
+            storage.pushNext(navigator, "ProjectPage", { tenantId: item.value.tenantId, id: item.value.id })
         });
     }
     //返回itemView
@@ -130,7 +131,7 @@ export default class tenantList extends Component {
                     <Image
                         source={require("app-images/icon_choose_tenant_item.png")}
                         style={styles.image} />
-                    <Text style={[styles.content,item.value.tenantId == storage.loadLastTenant()? {color:'#00baf3'} : null]}> {item.value.tenantName}</Text>
+                    <Text style={[styles.content, item.value.tenantId == storage.loadLastTenant() ? { color: '#00baf3' } : null]}> {item.value.tenantName}</Text>
                 </View>
             </TouchableOpacity>
         );
