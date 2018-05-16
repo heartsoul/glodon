@@ -70,7 +70,6 @@ export default class extends Component {
         //请求数据
         // this.fetchData();
         // console.log("componentDidMount")
-        this.scrollToPage(0);
         CheckVersionManager.checkVersion("auto")
     }
     fetchData = () => {
@@ -78,6 +77,7 @@ export default class extends Component {
     }
     scrollToPage = (index) => {
         console.log("index ============= " + index)
+        index = (index == 0) ? 1 : 0;//Carousel 默认显示最后一张，所以交换一下索引
         if (!this.refs.carousel) {
             return;
         }
@@ -103,18 +103,19 @@ export default class extends Component {
                 <ImageBackground style={{ height: 203, marginTop: 44 }} resizeMode='contain' source={require('app-images/icon_main_page_top_bg.png')}>
                     <Carousel ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
                         {
-                            qShow ? <View style={styles.topImageView}>
-                                <Image style={[styles.topImage, { width: 27, height: 74 }]} source={require('app-images/icon_main_page_top_quality.png')} />
-                            </View>
-                                : null
-                        }
-                        {
                             eShow ?
                                 <View style={styles.topImageView}>
                                     <Image style={[styles.topImage, { width: 121, height: 87 }]} source={require('app-images/icon_main_page_top_equipment.png')} />
                                 </View>
                                 : null
                         }
+                        {
+                            qShow ? <View style={styles.topImageView}>
+                                <Image style={[styles.topImage, { width: 27, height: 74 }]} source={require('app-images/icon_main_page_top_quality.png')} />
+                            </View>
+                                : null
+                        }
+
                     </Carousel>
                 </ImageBackground>
                 <SegmentedView style={{ flex: 0, height: 400, backgroundColor: '#f8f8f8' }} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
