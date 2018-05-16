@@ -17,9 +17,9 @@ class SelectView extends Component {
     constructor(props) {
         super(props);
         let dataList = this.props.dataList ? this.props.dataList : [];
-        let selectIndex = this.getSelectIndex(dataList, true);
+        let selectIndex = this.getSelectedIndex(dataList);
         let showEmpty = false;
-        if(dataList.length == 0 && this.props.title != '责任人'){
+        if (dataList.length == 0 && this.props.title != '责任人') {
             showEmpty = true;
         }
         this.state = {
@@ -30,11 +30,13 @@ class SelectView extends Component {
         };
     }
 
+
     componentDidMount() {
         let { title } = this.props
         if (this.props.title === '施工单位') {
             if (this.props.selectCallback && this.props.dataList && this.props.dataList.length > 0) {
-                this.props.selectCallback(this.props.dataList[0])
+                let index = this.getSelectedSupporterIndex(this.props.dataList);
+                this.props.selectCallback(this.props.dataList[index])
             }
         }
     }
@@ -42,21 +44,71 @@ class SelectView extends Component {
         this.setState({
             showStar: nextProps.showStar,
         });
+        if (this.props.title === '责任人') {
+            if (nextProps.extraData && this.props.extraData && nextProps.extraData.coperationId != this.props.extraData.coperationId) {
+                this.setState({
+                    selectIndex: -1,
+                    dataList: []
+                })
+            }
+        }
     }
 
-    /**
-     * 根据默认值来设置当前选中的值
-     */
-    getSelectIndex = (data, setDefault) => {
-        let index = -1;
+
+    getSelectedIndex = (dataList) => {
+        let index = 0;
+        if (this.props.title === '检查单位' || this.props.title === '验收单位') {
+            index = this.getSelectedInspectCompanyIndex(dataList);
+        } else if (this.props.title === '施工单位') {
+            index = this.getSelectedSupporterIndex(dataList);
+        } else if (this.props.title === '责任人') {
+            index = this.getSelectedPersonIndex(dataList);
+        }
+        return index;
+
+    }
+
+    getSelectedInspectCompanyIndex = (data) => {
+        let index = 0;
         let value = this.props.value;
         if (data && data.length > 0) {
-            if (setDefault) {
-                index = 0;
-            }
             if (value && value.id) {
                 for (let key in data) {
                     if (data[key].id === value.id) {
+                        index = key;
+                        break;
+                    }
+                }
+            }
+        }
+        index = parseInt(index);
+        return index;
+    }
+
+    getSelectedSupporterIndex = (data) => {
+        let index = 0;
+        let value = this.props.value;
+        if (data && data.length > 0) {
+            if (value && value.id) {
+                for (let key in data) {
+                    if (data[key].coperationId === value.id) {
+                        index = key;
+                        break;
+                    }
+                }
+            }
+        }
+        index = parseInt(index);
+        return index;
+    }
+
+    getSelectedPersonIndex = (data, id) => {
+        let index = -1;
+        let value = this.props.value;
+        if (data && data.length > 0) {
+            if (value && value.id) {
+                for (let key in data) {
+                    if (data[key].userId === value.id) {
                         index = key;
                         break;
                     }
@@ -108,11 +160,11 @@ class SelectView extends Component {
         if (this.state.selectIndex != -1 && persons && persons.length > this.state.selectIndex) {
             let selectedItem = this.state.dataList[this.state.selectIndex];
             let newSelectItem = persons[this.state.selectIndex];
-            if (selectedItem.id === newSelectItem.id) {
+            if (selectedItem.userId === newSelectItem.userId) {
                 selectIndex = this.state.selectIndex;
             }
         } else {
-            selectIndex = this.getSelectIndex(persons, false);
+            selectIndex = this.getSelectedPersonIndex(persons);
         }
 
         return selectIndex;
@@ -178,6 +230,9 @@ class SelectView extends Component {
         }
         if (this.state.selectIndex > -1) {
             detail = this.state.dataList[this.state.selectIndex].name;
+        }
+        if (this.props.title === '责任人' && this.state.selectIndex == -1) {
+            detail = "";
         }
         return detail;
     }
