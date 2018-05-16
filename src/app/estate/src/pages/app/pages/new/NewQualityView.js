@@ -74,6 +74,8 @@ class NewQualityView extends React.Component {
             relevantBluePrint: editInfo.relevantBluePrint ? editInfo.relevantBluePrint : {},//关联图纸
             relevantModel: editInfo.relevantModel ? editInfo.relevantModel : {},//关联模型
 
+            rectificationData: editInfo.rectificationData ? editInfo.rectificationData : {},//关联模型
+
             showInspectCompanyStar: false,
             showCompanyStar: false,
             showPersonStar: false,
