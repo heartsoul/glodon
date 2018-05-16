@@ -33,7 +33,7 @@ import * as API from "app-api";
 import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
 import * as NewQualityAction from "./../../actions/NewQualityAction";
 import * as UpdateDataAction from "./../../actions/updateDataAction";
-
+import callOnceInInterval from './callOnceInInterval';  
 
 
 var { width, height } = Dimensions.get("window");
@@ -168,17 +168,19 @@ class NewQualityView extends React.Component {
             this.props.updateData();
         }, this.props.updateData);
     }
-
+    isQualitySaveLoading = false;
     //保存
     save = () => {
-        let requestParams = this.assembleParams();
-        NewQualityAction.save(requestParams, this.refs[REF_PHOTO], (params) => {
-            this.state = {...this.state,...params}
-            Toast.success('保存成功', 1);
-            this.props.updateData();
-        },(params)=>{
-            this.setState(params)
-        });
+        callOnceInInterval(()=>{
+            let requestParams = this.assembleParams();
+            NewQualityAction.save(requestParams, this.refs[REF_PHOTO], (params) => {
+                this.state = {...this.state,...params}
+                Toast.success('保存成功', 1);
+                this.props.updateData();
+            },(params)=>{
+                this.setState(params)
+            });
+        })
     }
 
     //删除
