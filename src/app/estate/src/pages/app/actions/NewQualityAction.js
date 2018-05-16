@@ -286,9 +286,9 @@ function editSubmitInspection(params, navigator, updateData) {
  * state NewPage的state
  * @param {*} callback 请求完成后回调
  */
-export function save(requestParams, imageChooserEle, callback) {
+export function save(requestParams, imageChooserEle, callback,checkMustInfoCallback) {
     let params = assembleParams(requestParams);
-    if (checkMustInfo(params, callback)) {
+    if (checkMustInfo(params, checkMustInfoCallback)) {
         loadingToast();
         uploadFile(imageChooserEle, (files) => {
             if (files) {

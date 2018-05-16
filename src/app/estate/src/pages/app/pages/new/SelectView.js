@@ -47,7 +47,7 @@ class SelectView extends Component {
         if (this.props.title === '责任人') {
             if (nextProps.extraData && this.props.extraData && nextProps.extraData.coperationId != this.props.extraData.coperationId) {
                 this.setState({
-                    selectIndex: -1,
+                    selectIndex: -2,
                     dataList: []
                 })
             }
@@ -157,7 +157,7 @@ class SelectView extends Component {
      */
     getSelectPersonIndex = (persons) => {
         let selectIndex = -1;
-        if (this.state.selectIndex != -1 && persons && persons.length > this.state.selectIndex) {
+        if (this.state.selectIndex > -1 && persons && persons.length > this.state.selectIndex) {
             let selectedItem = this.state.dataList[this.state.selectIndex];
             let newSelectItem = persons[this.state.selectIndex];
             if (selectedItem.userId === newSelectItem.userId) {
@@ -211,7 +211,10 @@ class SelectView extends Component {
                 this.props.value.userId = this.props.value.id;
             }
             return this.props.value;
-        } else {
+        } else if(this.state.selectIndex == -2){
+            let ret = {}
+            return {};
+        }else{
             let ret = this.state.dataList[this.state.selectIndex];
             return ret;
         }
@@ -231,7 +234,7 @@ class SelectView extends Component {
         if (this.state.selectIndex > -1) {
             detail = this.state.dataList[this.state.selectIndex].name;
         }
-        if (this.props.title === '责任人' && this.state.selectIndex == -1) {
+        if (this.props.title === '责任人' && this.state.selectIndex == -2) {
             detail = "";
         }
         return detail;
