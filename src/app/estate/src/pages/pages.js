@@ -33,6 +33,7 @@ import BimSearchPage from './app/pages/search/BimSearchPage'
 import AboutPage from './app/pages/me/AboutPage'
 import FeedbackPage from './app/pages/me/FeedbackPage'
 import ForgotPage from './login/pages/ForgotPage'
+import ChangeProjectPage from './app/pages/me/ChangeProjectPage'
 
 export {
     LoginPage,
@@ -67,4 +68,5 @@ export {
     AboutPage,
     ForgotPage,
     FeedbackPage,
+    ChangeProjectPage,
 }
