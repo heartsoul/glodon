@@ -28,7 +28,6 @@ export default class tenantList extends Component {
         if(undefined != this.props.navigation.state.params && undefined!=this.props.navigation.state.params.changeProject){
             this.changeProject = this.props.navigation.state.params.changeProject;
         }
-        console.log(`changeProject=${this.changeProject}`);
       
     }
 
@@ -130,7 +129,6 @@ export default class tenantList extends Component {
                 storage.pushNext(navigator, "ProjectPage", { tenantId: item.value.tenantId, id: item.value.id })
             }else{
                 storage.loadTenantInfo((retVal) => {
-                    storage.saveLastTenant(retVal);//保存上一个租户信息
                     storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
                     storage.saveTenantInfoRefresh('1');//设置刷新
                     this.props.navigation.pop("ChangeProjectPage");

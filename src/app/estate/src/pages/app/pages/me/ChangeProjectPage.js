@@ -10,6 +10,7 @@ import {
     StyleSheet,
     TouchableHighlight,
     TouchableOpacity,
+    BackHandler,
 } from 'react-native';
 
 import { connect } from 'react-redux' // 引入connect函数
@@ -73,6 +74,12 @@ export default class ChangeProjectPage extends Component{
               
             }
           );
+
+          //硬件返回监听
+          BackHandler.addEventListener('hardwareBackPress', () => {
+            this._goBack();
+            return true;
+        });
     }
 
     //获取当前租户及项目
@@ -137,8 +144,7 @@ export default class ChangeProjectPage extends Component{
                     console.log('set tenantlllllllllllllllllllllllll');
                     storage.saveTenant(item.value.id);
                     storage.saveLastTenant(item.value.tenantId);
-                    storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
-                    storage.saveLastTenant(retVal);//保存上一个租户信息
+                    storage.saveTenantInfo(this.trueTenantStr);//保存当前的租户item信息
                 });
             }
         });
