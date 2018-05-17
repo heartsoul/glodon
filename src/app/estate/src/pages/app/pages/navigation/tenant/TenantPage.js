@@ -33,7 +33,6 @@ export default class tenantList extends Component {
 
     //网络请求
     fetchData = () => {
-
         //请求数据
         if (this.props.navigation.getParam('change') === true && storage.loadLastTenant() != '') {
             this.props.navigation.setParams({ change: false });
@@ -117,7 +116,7 @@ export default class tenantList extends Component {
     //点击列表点击每一行
     _clickItem = (item, index) => {
         //   alert(item.value.tenantId);
-        USERAPI.setCurrentTenant(item.value.tenantId).then((responseData) => {
+        // USERAPI.setCurrentTenant(item.value.tenantId).then((responseData) => {
             let navigator = this.props.navigation;
             // storage.saveTenant(item.value.id);
             // storage.saveLastTenant(item.value.tenantId);
@@ -136,7 +135,7 @@ export default class tenantList extends Component {
                 
             }
 
-        });
+        // });
     }
     //返回itemView
     renderItemView = ({ item, index }) => {

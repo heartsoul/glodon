@@ -3,20 +3,24 @@ import * as API from 'app-api'
 import * as types from '../constants/projectListTypes'
 
 // 获取数据
-export function fetchData(page, dataArray) {
+export function fetchData(page, dataArray, newTenant, prevTenant) {
+    
     return dispatch => {
-        __fetchData(page, dataArray, dispatch)
+        __fetchData(page, dataArray, dispatch, newTenant, prevTenant)
     }
 }
 
 // 获取数据
-function __fetchData(page, dataArray, dispatch) {
+function __fetchData(page, dataArray, dispatch, newTenant, prevTenant) {
 
     if (page == 0) {
         dispatch(_loading(page));
     }
     if (page < 0) {
         page = 0;
+    }
+    if(newTenant && prevTenant) {
+        storage.saveLastTenant(newTenant);
     }
     API.getProjects(page, 35).then(
         (responseData) => {
@@ -36,19 +40,29 @@ function __fetchData(page, dataArray, dispatch) {
                     })
                     i++;
                 });
+                if(newTenant && prevTenant) {
+                    storage.saveLastTenant(prevTenant);
+                }
                 Toast.hide()
                 let hasMore = last ? false : true;
                 dispatch(_loadSuccess(dataBlob, page, hasMore));
 
             } else {
+                if(newTenant && prevTenant) {
+                    storage.saveLastTenant(prevTenant);
+                }
                 Toast.hide()
                 dispatch(_loadSuccess(dataBlob, page - 1, false));
             }
 
             data = null;
             dataBlob = null;
+            
         }
     ).catch(err => {
+        if(newTenant && prevTenant) {
+            storage.saveLastTenant(prevTenant);
+        }
         Toast.hide()
         dispatch(_loadError(error, page));
     });

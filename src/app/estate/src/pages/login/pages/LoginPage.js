@@ -136,6 +136,7 @@ class LoginPage extends React.Component {
           source={require("app-images/login/icon_login_top_bg.png")}
           style={[styles.style_login_image]}
         />
+        <View style={{marginLeft:20,marginRight:20}}>
         <Text style={[styles.style_loginText,this.props.status === '登录失败'?{color:'red'}:{},{marginTop:20,height:20,alignContent:'center',justifyContent:'center'}]}>{this.props.status}</Text>
         <Text
           style={[
@@ -202,6 +203,7 @@ class LoginPage extends React.Component {
         <TouchableOpacity onPressOut={this._fogotAction}>
         <Text style={[styles.style_fogotText]}>忘记密码</Text>
         </TouchableOpacity>
+        </View>
         </View>
       </KeyboardAwareScrollView>
     );
@@ -273,7 +275,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     fontSize: 14,
-    color: "#00baf3"
+    color: "rgb(153,153,146)",
+    alignSelf:'center'
   },
 
   style_loginText: {
@@ -289,14 +292,13 @@ const styles = StyleSheet.create({
     color: "#fff"
   },
   style_fogotTextView: {
-    alignItems: "flex-end",
+    alignItems: "center",
     flex: 1,
     flexDirection: "row",
-    
+    justifyContent:"center",
+    alignContent:"center",
     height: 40,
     marginTop: 10,
-    width: 100,
-    marginLeft: width / 2 - 50
   },
 });
 

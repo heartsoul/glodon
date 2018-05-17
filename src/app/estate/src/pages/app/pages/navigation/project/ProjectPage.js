@@ -31,7 +31,9 @@ class ProjectPage extends Component {
         if(page > 0 && this.props.hasMore === false){
             return;
         } 
-        this.props.fetchData(page,dataArray);
+        let prevTenant = storage.loadLastTenant();
+        let newTenant = this.props.navigation.state.params.tenantId;
+        this.props.fetchData(page,dataArray,newTenant,prevTenant);
     }
 
     componentDidMount() {
