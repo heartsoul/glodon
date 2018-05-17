@@ -13,7 +13,8 @@ import * as API from "app-api";
 import EquipmentDetailView from "./equipmentDetailView"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { LeftBarButtons, ActionModal } from "app-components";
-import * as actions from '../../actions/equipmentInfoAction'
+import * as actions from '../../actions/equipmentInfoAction';
+import * as relevantModelAction from "../../actions/relevantModelAction";
 import { getModelElementProperty } from "app-api";
 
 class EquipmentDetailPage extends Component {
@@ -197,6 +198,7 @@ class EquipmentDetailPage extends Component {
     componentWillUnmount() {
         const { resetData } = this.props;
         resetData();
+        this.props.resetTransformInfo();
     }
     //加载等待的view
     renderLoadingView() {
@@ -306,5 +308,11 @@ export default connect(
                 dispatch(actions.getModelElementProperty(relevantEquipmentModle, equipmentInfo))
             }
         },
+        resetTransformInfo: () => {
+            if (dispatch) {
+                dispatch(relevantModelAction.resetTransformInfo())
+            }
+        },
+        
     })
 )(EquipmentDetailPage)

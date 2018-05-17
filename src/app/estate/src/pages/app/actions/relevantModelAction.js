@@ -10,3 +10,14 @@ export function transformInfo(relevantModel) {
         relevantEquipmentModle: relevantModel,
     }
 }
+
+/**
+ * 设置选中的模型信息
+ * @param {*} relevantModel 
+ */
+export function resetTransformInfo() {
+    return {
+        type: types.TRANSFORM_INFO_SET,
+        relevantEquipmentModle: {},
+    }
+}
