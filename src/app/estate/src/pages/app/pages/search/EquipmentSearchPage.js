@@ -22,10 +22,10 @@ class EquipmentSearchPage extends BaseSearchPage {
         super(props);
         let keywords = "";
         let state = this.props.navigation.state
-        if(state && state.params && state.params.keywords){
+        if (state && state.params && state.params.keywords) {
             keywords = state.params.keywords;
         }
-        super.setFunc(this.renderContent, this.search)
+        super.setFunc(this.renderContent, this.search, "请输入构件名称/材设名称")
         this.states = {
             keywords: keywords,
         }
@@ -47,8 +47,9 @@ class EquipmentSearchPage extends BaseSearchPage {
                 onRef={(ref) => { this.listRef = ref }}
                 style={{ flex: 1 }}
                 qcState={'search'}
+                selected={true}
                 keywords={this.state.keywords}
-                loadData={false}  />
+                loadData={false} />
         );
     }
 

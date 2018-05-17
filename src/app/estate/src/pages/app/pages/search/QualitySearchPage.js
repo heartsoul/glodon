@@ -23,10 +23,10 @@ class QualitySearchPage extends BaseSearchPage {
         super(props);
         let keywords = "";
         let state = this.props.navigation.state
-        if(state && state.params && state.params.keywords){
+        if (state && state.params && state.params.keywords) {
             keywords = state.params.keywords;
         }
-        super.setFunc(this.renderContent, this.search)
+        super.setFunc(this.renderContent, this.search, "请输入构件名称/质检项")
         this.states = {
             keywords: keywords,
         }
@@ -58,7 +58,7 @@ class QualitySearchPage extends BaseSearchPage {
                 qcState={'search'}
                 keywords={this.state.keywords}
                 selected={true}
-                loadData={false} 
+                loadData={false}
                 qualityCheckpointId={qualityCheckpointId}
                 qualityCheckpointName={qualityCheckpointName} />
         );
