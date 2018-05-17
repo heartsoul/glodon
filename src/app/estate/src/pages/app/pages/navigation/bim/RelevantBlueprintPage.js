@@ -1,49 +1,40 @@
-import React, { Component } from 'react';
-import {
-    AppRegistry,
-    StyleSheet,
-    Dimensions,
-    Text,
-    View,
-    Image,
-    WebView,
-    SafeAreaView,
-    StatusBar,
-    TouchableOpacity,
-} from 'react-native';
-
 import { Toast } from 'antd-mobile';
-
-import * as AppConfig from "common-module";
-import * as PageType from "./PageTypes";
-import * as BimToken from "./BimFileTokenUtil";
-import * as AuthorityManager from "./../project/AuthorityManager";
-import * as API from "app-api";
 import { ActionSheet } from 'app-3rd/teaset';
+import * as API from "app-api";
+import { LoadingView, NoDataView } from 'app-components';
 import { BimFileEntry } from "app-entry";
+import * as AppConfig from "common-module";
+import React, { Component } from 'react';
+import { Dimensions, Image, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View, WebView } from 'react-native';
+import * as AuthorityManager from "./../project/AuthorityManager";
+import * as BimToken from "./BimFileTokenUtil";
+import * as PageType from "./PageTypes";
+import { bimfileHtml } from './bimfileHtml';
+
 
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
     width: deviceWidth
 } = Dimensions.get('window');
-const cmdString = "\
-function callMessage(action, data, callbackName) { \
-  let actionIn = 'unknown'; let dataIn = {}; let callbackNameIn = 'defaultReturn';\
-  if(action) { actionIn = action;} else {alert('无效调用');return;}\
-  if(data) { dataIn = data;}\
-  if(callbackName) { callbackNameIn = callbackName; } \
-  let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});\
-  window.postMessage(cmd);\
-}\
-window.modelEvent = {\
-  defaultReturn : function(data) {console.log('执行命令成功:'+data);},\
-  invalidateToken : function() { callMessage('invalidateToken');},\
-  getPosition : function(jsonData) { callMessage('getPosition', jsonData);},\
-  getPositionInfo : function(jsonData) { callMessage('getPositionInfo', jsonData);},\
-};\
-document.addEventListener('message', function(e) {eval(e.data);});\
-";
+const cmdString = `
+function callMessage(action, data, callbackName) { 
+  let actionIn = 'unknown'; let dataIn = {}; let callbackNameIn = 'defaultReturn';
+  if(action) { actionIn = action;} else {alert('无效调用');return;}
+  if(data) { dataIn = data;}
+  if(callbackName) { callbackNameIn = callbackName; } 
+  let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});
+  window.postMessage(cmd,'${AppConfig.BASE_URL}');
+}
+window.modelEvent = {
+  defaultReturn : function(data) {console.log('执行命令成功:'+data);},
+  invalidateToken : function() { callMessage('invalidateToken');},
+  loadDotsData : function() { callMessage('loadDotsData');},
+  getPosition : function(jsonData) { callMessage('getPosition', jsonData);},
+  getPositionInfo : function(jsonData) { callMessage('getPositionInfo', jsonData);},
+};
+document.addEventListener('message', function(e) {eval(e.data);});
+`;
 
 //关联图纸
 export default class RelevantBlueprintPage extends Component {
@@ -66,6 +57,8 @@ export default class RelevantBlueprintPage extends Component {
             showCreateNoticeView: true,//新建提示弹窗
             showCreateButton: true,//显示创建按钮
             url: '',
+            html: '',
+            error:null
         };
         this.props.navigation.setParams({ loadTitle: this.loadTitle, loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
 
@@ -187,10 +180,21 @@ export default class RelevantBlueprintPage extends Component {
         }, 4000);
 
 
-        BimToken.getBimFileToken(relevantBlueprint.drawingGdocFileId, (token) => {
+        BimToken.getBimFileToken(relevantBluePrint.drawingGdocFileId, (token) => {
+            if(!token) {
+                this.setState({
+                    url: '',
+                    html:'',
+                    error:new Error('加载失败！')
+                })
+                return;
+            }
             let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
+            let html = bimfileHtml(cmdString,token,this.state.show);
             this.setState({
-                url: url
+                url: url,
+                html:html,
+                error:null
             });
         })
 
@@ -258,7 +262,6 @@ export default class RelevantBlueprintPage extends Component {
     }
 
     onMessage = (e) => {
-        // console.log(e.nativeEvent.data);
         let data = JSON.parse(e.nativeEvent.data);
         let action = data.action;
         if (action) {
@@ -277,6 +280,10 @@ export default class RelevantBlueprintPage extends Component {
                     {
                         this.getPositionInfo(data.data);
                     }
+                case 'loadDotsData':
+                    {
+                        this.loadDotsData();
+                    }
                     break;
                 default:
                     break;
@@ -287,6 +294,7 @@ export default class RelevantBlueprintPage extends Component {
     invalidateToken() {
         // LogUtil.e("invalidateToken");
         // showTokenError();
+        Toast.info('invalidate token ', 2)
     }
 
 
@@ -415,11 +423,23 @@ export default class RelevantBlueprintPage extends Component {
                 })
         }
     }
+    loadDotsData = () => {
+        this.setPosition(); 
+        this.getBluePrintDots();
+    }
+    onLoadEnd = () =>{
+    }
     //渲染
     render() {
 
-        // let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + storage.bimToken + `&show=${this.state.show}`;
-
+        if(this.state.error) {
+            return <NoDataView text="加载失败"/>
+        }
+      
+        if(this.state.url == '') {
+            return <LoadingView />;
+        }
+        
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
@@ -432,9 +452,10 @@ export default class RelevantBlueprintPage extends Component {
                         javaScriptEnabled={true}
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
-                        injectedJavaScript={cmdString}
-                        onLoadEnd={() => { this.setPosition(); this.getBluePrintDots() }}
-                        source={{ uri: this.state.url, method: 'GET' }}
+                        // injectedJavaScript={cmdString}
+                        onLoadEnd={() => { this.onLoadEnd() }}
+                        // source={{ uri: this.state.url, method: 'GET' }}
+                        source={{ html: this.state.html }}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
                     {

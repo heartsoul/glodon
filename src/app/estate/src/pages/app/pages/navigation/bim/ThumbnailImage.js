@@ -36,7 +36,9 @@ export default class ThumnbnailImage extends Component {
                             url: url,
                         })
                     }
-                })
+                }).catch(error=>{
+                    
+                });
         }
     }
 

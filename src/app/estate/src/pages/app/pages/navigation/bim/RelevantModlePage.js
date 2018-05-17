@@ -1,27 +1,19 @@
-import React, { Component } from 'react';
-import {
-    AppRegistry,
-    StyleSheet,
-    Dimensions,
-    Text,
-    View,
-    Image,
-    WebView,
-    SafeAreaView,
-    StatusBar,
-    TouchableOpacity,
-} from 'react-native';
 import { Toast } from 'antd-mobile';
-import { connect } from 'react-redux';
-
-import * as AppConfig from "common-module"
-import * as PageType from "./PageTypes";
-import * as BimToken from "./BimFileTokenUtil";
-import * as AuthorityManager from "./../project/AuthorityManager";
-import * as RelevantModelAction from "./../../../actions/relevantModelAction";
-import * as API from "app-api";
 import { ActionSheet } from 'app-3rd/teaset';
+import * as API from "app-api";
+import { LoadingView, NoDataView } from 'app-components';
 import { BimFileEntry } from "app-entry";
+import * as AppConfig from "common-module";
+import React, { Component } from 'react';
+import { Dimensions, Image, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View, WebView } from 'react-native';
+import { connect } from 'react-redux';
+import * as RelevantModelAction from "./../../../actions/relevantModelAction";
+import * as AuthorityManager from "./../project/AuthorityManager";
+import * as BimToken from "./BimFileTokenUtil";
+import * as PageType from "./PageTypes";
+import { bimfileHtml } from './bimfileHtml';
+
+
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
@@ -71,6 +63,8 @@ class RelevantModelPage extends Component {
             showAddIcon: false,//显示创建按钮 pageType为 2 或者 3、6无创建权限时为false
             relevantModel: {},//选中的模型
             url: '',
+            html: '',
+            error:null
         };
         this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
     }
@@ -142,15 +136,24 @@ class RelevantModelPage extends Component {
         });
 
         this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
+       
         BimToken.getBimFileToken(relevantModel.gdocFileId, (token) => {
-            let url = `${AppConfig.BASE_URL_BLUEPRINT_TOKEN}${token}&show=false`;
-            // console.log('>>>>>>>>>>>>>>>>>>\nimfileurl:\n' + url);
-            // url = `http://192.168.43.81/bimfile/app.html?param=${token}&show=false`;
-            
+            if(!token) {
+                this.setState({
+                    url: '',
+                    html:'',
+                    error:new Error('加载失败！')
+                })
+                return;
+            }
+            let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
+            let html = bimfileHtml(cmdString,token,this.state.show);
             this.setState({
-                url: url
+                url: url,
+                html:html,
+                error:null
             });
-        });
+        })
     }
 
 
@@ -549,6 +552,15 @@ class RelevantModelPage extends Component {
 
     //渲染
     render() {
+
+        if(this.state.error) {
+            return <NoDataView text="加载失败"/>
+        }
+      
+        if(this.state.url == '') {
+            return <LoadingView />;
+        }
+
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
@@ -563,7 +575,7 @@ class RelevantModelPage extends Component {
                         onMessage={(e) => this.onMessage(e)}
                         injectedJavaScript={cmdString}
                         onLoadEnd={() => { }}
-                        source={{ uri: this.state.url, method: 'GET' }}
+                        source={{ html: this.state.html}}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
                     {
