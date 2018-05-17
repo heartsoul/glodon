@@ -23,7 +23,8 @@ export default class ChangeProjectPage extends Component{
         title: '设置',
       });
 
-    selectProjectId = null;
+    selectProjectId = null;//选中的项目的id
+    trueTenantStr = null;//当前有效的租户信息
 
     constructor(){
         super();
@@ -33,16 +34,49 @@ export default class ChangeProjectPage extends Component{
         dataList:[],
         };
 
+        //获取当前选中的项目
         storage.loadProject((retVal)=>{
             console.log('------------current  projectid------');
             console.log(retVal);
             this.selectProjectId = Number.parseInt(retVal);
+        });
+
+        storage.loadTenantInfo((retVal)=>{
+            this.trueTenantStr = retVal;
         });
         
     }
 
       //第一次render后调用
     componentDidMount(){
+        
+        //渲染当前的租户和项目列表
+        this._refreshData();
+        //增加监听，切换租户后回来调用
+        //React Navigation emits events to screen components that subscribe to them:
+        // willBlur - the screen will be unfocused
+        // willFocus - the screen will focus
+        // didFocus - the screen focused (if there was a transition, the transition completed)
+        // didBlur - the screen unfocused (if there was a transition, the transition completed)
+        this.props.navigation.addListener(
+            'didFocus',
+            payload => {
+              console.debug('didBlur', payload);
+              //获取是否刷新
+              storage.loadTenantInfoRefresh((retVal)=>{
+                    if('1' === retVal){
+                        storage.saveTenantInfoRefresh('0');//恢复设置
+                        //刷新
+                        this._refreshData();
+                    }
+              });
+              
+            }
+          );
+    }
+
+    //获取当前租户及项目
+    _refreshData(){
         storage.loadTenantInfo((retVal)=>{
             // JSON.parse(retVal)   retVal={"key":"A09","value":{"id":5200286,"admin":true,"tenantId":5200052,"tenantName":"11301919"}}
             let tenant = JSON.parse(retVal);
@@ -82,22 +116,33 @@ export default class ChangeProjectPage extends Component{
         });
     }
 
-    //第一次render前调用
-    // componentWillMount(){
-    //     console.log('+++++++++++++++++');
-    // }
-    
-
 
     //跳转至切换租户页面
       _tenantChoose = () => {
         let navigator = this.props.navigation;
         storage.projectIdVersionId = '';
-        storage.pushNext(navigator, "TenantPage")
+        storage.pushNext(navigator, "TenantPage",{ changeProject: true })
     }
 
     //返回键
     _goBack = ()=>{
+
+        console.log('back.........................');
+        let item = JSON.parse(this.trueTenantStr);
+        console.log(item);
+        storage.loadTenantInfo((retVal) =>{
+            let curTenant = JSON.parse(retVal);
+            if(item.value.id != curTenant.value.id){
+                API.setCurrentTenant(item.value.tenantId).then((responseData) => {
+                    console.log('set tenantlllllllllllllllllllllllll');
+                    storage.saveTenant(item.value.id);
+                    storage.saveLastTenant(item.value.tenantId);
+                    storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
+                    storage.saveLastTenant(retVal);//保存上一个租户信息
+                });
+            }
+        });
+        
         let navigator = this.props.navigation;
         storage.goBack(navigator,null);
     }

@@ -183,17 +183,10 @@ class GLDStorage extends BaseStorage {
     isGuide = (retFun) => {
         return this.loadItem(__KEY_guide, '0', null) == '1';
     }
+
     // 保存当前租户  保存的是id
     saveTenant = (tenant) => {
         this.setItem(__KEY_currentTenant + userId(), "" + tenant);
-    }
-    // 保存当前租户  保存的是整个租户信息
-    saveTenantInfo = (tenant) => {
-        this.setItem(__KEY_currentTenantInfo + userId(), "" + tenant);
-    }
-    // 保存当前租户
-    saveLastTenant = (tenant) => {
-        this.setItem(__KEY_lastTenant + userId(), "" + tenant);
     }
     // 获取当前租户id
     loadTenant = (retFun) => {
@@ -201,15 +194,43 @@ class GLDStorage extends BaseStorage {
         return this.loadItem(__KEY_currentTenant + userId(), '0', retFun)
     }
 
+    // 保存当前租户  保存的是整个租户信息
+    saveTenantInfo = (tenant) => {
+        this.setItem(__KEY_currentTenantInfo + userId(), "" + tenant);
+    }
     // 获取当前租户信息
     loadTenantInfo = (retFun) => {
-
         return this.loadItem(__KEY_currentTenantInfo + userId(), '0', retFun)
+    }
+
+    // 保存上一租户  保存的是整个租户信息
+    saveLastTenantInfo = (tenant) => {
+        this.setItem(__KEY_lastTenantInfo + userId(), "" + tenant);
+    }
+    // 获取上一租户信息
+    loadLastTenantInfo = (retFun) => {
+        return this.loadItem(__KEY_lastTenantInfo + userId(), '0', retFun)
+    }
+
+    // 切换租户后是否刷新
+    saveTenantInfoRefresh = (tenant) => {
+        this.setItem(__KEY_currentTenantInfoRefresh + userId(), "" + tenant);
+    }
+    // 切换租户后是否刷新
+    loadTenantInfoRefresh = (retFun) => {
+        return this.loadItem(__KEY_currentTenantInfoRefresh + userId(), '0', retFun)
+    }
+
+
+    // 保存当前租户
+    saveLastTenant = (tenant) => {
+        this.setItem(__KEY_lastTenant + userId(), "" + tenant);
     }
     // 获取上一租户
     loadLastTenant = () => {
         return this.loadItem(__KEY_lastTenant + userId(), '0', null)
     }
+
     // 保存当前项目，名称
     saveProject = (project, name) => {
         this.setItem(__KEY_currentProject + userId(), "" + project);
@@ -401,7 +422,9 @@ const __KEY_userId = "userId"; // 启动引导页面 0: 未启动 1:已经启动
 const __KEY_currentProjectName = "currentProjectName"; // 当前选择项目名
 const __KEY_currentTenant = "currentTenant"; // 当前租户id
 const __KEY_currentTenantInfo = "currentTenantInfo"; // 当前租户信息
+const __KEY_currentTenantInfoRefresh = "currentTenantInfoRefresh"; // 切换租户后是否刷新
 const __KEY_lastTenant = "lastTenant"; // 上一选择租户
+const __KEY_lastTenantInfo = "lastTenantInfo"; // 保存上一个租户的信息
 const __KEY_actionRights = "actionRights"; // 当前所有权限
 const __KEY_searchHistory = "searchHistory"; // 单据搜索历史
 const __KEY_autoDownload = "autoDownload"; // Android版本更新自动下载

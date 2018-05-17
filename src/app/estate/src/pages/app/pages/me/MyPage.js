@@ -39,6 +39,7 @@ export default class extends Component {
   _gotoTenantChoose = () => {
     let navigator = this.props.navigation;
     storage.projectIdVersionId = '';
+    // storage.pushNext(navigator, "ChangeProjectPage")
     storage.pushNext(navigator, "TenantPage",{change:true})
   }
   _gotoSetting=()=>{
