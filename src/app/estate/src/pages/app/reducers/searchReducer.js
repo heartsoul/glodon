@@ -16,9 +16,9 @@ export default (state = initialState, action) => {
         case types.SEARCH_QUALITY_START:
             return {
                 ...state,
-                qualityList: {},
+                qualityList: [],
                 totalQuality: 0,
-                equipmentList: {},
+                equipmentList: [],
                 totalEquipment: 0,
                 keywords: "",
             }

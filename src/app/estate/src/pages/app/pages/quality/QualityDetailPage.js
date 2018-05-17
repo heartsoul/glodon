@@ -16,7 +16,7 @@ import * as actions from '../../actions/qualityInfoAction'
 
 class QualityDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : '详情',
+        title: navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : '',
         gesturesEnabled: true,
         headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : <View></View>
     })

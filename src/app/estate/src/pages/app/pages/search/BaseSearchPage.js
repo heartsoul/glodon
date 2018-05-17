@@ -81,6 +81,8 @@ export default class BaseSearchPage extends React.Component {
     }
 
     renderHeaderTitle = () => {
+        let placeholder = "搜索";
+        //请输入构件名称/质检项/材设名称
         return (
             <View style={{ flex: 1, alignItems: "center" }}>
                 <View style={{ width: width - 20, alignItems: "center" }}>
@@ -155,7 +157,7 @@ export default class BaseSearchPage extends React.Component {
         if (this.props.searchHistory && this.props.searchHistory.length > 0) {
             return (
                 <ScrollView>
-                    <View style={{ width: width, height: height }}>
+                    <View>
                         {
                             this.props.searchHistory.map((item, index) => {
                                 return (

@@ -64,6 +64,12 @@ class SearchPage extends BaseSearchPage {
      * 设置给BaseSearchView的content
      */
     renderContent() {
+        let qualityLen = (this.props.qualityList) ? this.props.qualityList.length : 0;
+        let equipmentLen = (this.props.equipmentList) ? this.props.equipmentList.length : 0;
+        let total = qualityLen + equipmentLen;
+        if (total == 0 && this.state.keywords && this.state.keywords.length > 0) {
+            return this.renderEmpty();
+        }
         return (
             <ScrollView style={{ marginBottom: 20 }}>
                 <View>
@@ -76,6 +82,13 @@ class SearchPage extends BaseSearchPage {
                 </View>
             </ScrollView>
         );
+    }
+    renderEmpty() {
+        return (
+            <View style={styles.emptyContainer}>
+                <Text>很抱歉，没有找到相关的内容</Text>
+            </View>
+        )
     }
 
     //返回itemView
@@ -168,7 +181,7 @@ class SearchPage extends BaseSearchPage {
     }
 
     moreEquipment = () => {
-        this.props. navigation.navigate("EquipmentSearchPage", { keywords: this.state.keywords })
+        this.props.navigation.navigate("EquipmentSearchPage", { keywords: this.state.keywords })
     }
 
 
@@ -215,7 +228,15 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     })
 
 }
-
+const styles = StyleSheet.create({
+    emptyContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+    },
+})
 export default connect(
     mapStateToProps,
     mapDispatchToProps, mergeProps, { withRef: true }

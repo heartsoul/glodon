@@ -24,16 +24,12 @@ export default class tenantList extends Component {
             errorInfo: "",
             dataArray: [],
         }
-<<<<<<< Updated upstream
-
-=======
         //在使用过程中进行切换租户和项目
         if(undefined != this.props.navigation.state.params && undefined!=this.props.navigation.state.params.changeProject){
             this.changeProject = this.props.navigation.state.params.changeProject;
         }
         console.log(`changeProject=${this.changeProject}`);
       
->>>>>>> Stashed changes
     }
 
     //网络请求

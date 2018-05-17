@@ -122,7 +122,6 @@ class NewQualityPage extends Component {
     }
 
     submit = () => {
-        alert(this.activeTab); return;
         if (this.activePage) {
             this.activePage.submit(this.props.navigation);
         } else {
