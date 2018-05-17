@@ -71,7 +71,7 @@ class NewQualityView extends React.Component {
 
             selectedCheckPoint: editInfo.selectedCheckPoint ? editInfo.selectedCheckPoint : {},//选中的质检项目
 
-            relevantBluePrint: editInfo.relevantBlueprint ? editInfo.relevantBlueprint : {},//关联图纸
+            relevantBlueprint: editInfo.relevantBlueprint ? editInfo.relevantBlueprint : {},//关联图纸
             relevantModel: editInfo.relevantModel ? editInfo.relevantModel : {},//关联模型
 
             rectificationData: editInfo.rectificationData ? editInfo.rectificationData : {},//关联模型
@@ -174,11 +174,9 @@ class NewQualityView extends React.Component {
         callOnceInInterval(()=>{
             let requestParams = this.assembleParams();
             NewQualityAction.save(requestParams, this.refs[REF_PHOTO], (params) => {
-                this.state = {...this.state,...params}
+                this.setState(params)
                 Toast.success('保存成功', 1);
                 this.props.updateData();
-            },(params)=>{
-                this.setState(params)
             });
         })
     }
@@ -201,10 +199,10 @@ class NewQualityView extends React.Component {
         let navigator = this.props.navigation;
         storage.bimFileChooseCallback = this._bimChooserCallback;
         BimFileEntry.chooseBlueprintFromQualityNew(navigator,
-            this.state.relevantBluePrint.drawingGdocFileId,
-            this.state.relevantBluePrint.drawingName,
-            this.state.relevantBluePrint.drawingPositionX,
-            this.state.relevantBluePrint.drawingPositionY,
+            this.state.relevantBlueprint.drawingGdocFileId,
+            this.state.relevantBlueprint.drawingName,
+            this.state.relevantBlueprint.drawingPositionX,
+            this.state.relevantBlueprint.drawingPositionY,
         )
     }
 
@@ -221,9 +219,12 @@ class NewQualityView extends React.Component {
 
     //选择图纸或者模型后的回调 dataType 图纸文件{name:'', fileId:'', drawingPositionX:'', drawingPositionY:'' }、模型文件
     _bimChooserCallback = (data, dataType) => {
+        if(this.props.setTitle){
+            this.props.setTitle();
+        }
         if (dataType === '图纸文件') {
             this.setState({
-                relevantBluePrint: data,
+                relevantBlueprint: data,
             });
         } else if (dataType === '模型文件') {
             NewQualityAction.getModelElementProperty(data, (params) => {
@@ -309,7 +310,7 @@ class NewQualityView extends React.Component {
                     childView={<SelectCheckPointView ref={REF_CHECKPOINT} selectedCheckPoint={this.state.selectedCheckPoint} ></SelectCheckPointView>}
                 />
 
-                <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBluePrint ? this.state.relevantBluePrint.drawingName : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
+                <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBlueprint ? this.state.relevantBlueprint.drawingName : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
                 <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel.elementName ? this.state.relevantModel.elementName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
 
                 <WideButton text="保存" onClick={this.save} style={{ marginTop: 30 }} />

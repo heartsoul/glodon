@@ -55,7 +55,7 @@ export default class EquipmentDetailView extends Component {
         // "elementName": "常规 - 150mm",
         // "gdocFileId": "a5b812dff199438dba5bacee0b373497",
         // alert(inspectionInfo.gdocFileId);
-        // storage.pushNext(null, "RelevantModlePage", { title: inspectionInfo.elementName, fileId: inspectionInfo.gdocFileId, pageType: 1, relevantBluePrint: { "data": inspectionInfo } });
+        // storage.pushNext(null, "RelevantModlePage", { title: inspectionInfo.elementName, fileId: inspectionInfo.gdocFileId, pageType: 1, relevantBlueprint: { "data": inspectionInfo } });
 
         BimFileEntry.chooseEquipmentModelFromNew(null,
             info.gdocFileId,

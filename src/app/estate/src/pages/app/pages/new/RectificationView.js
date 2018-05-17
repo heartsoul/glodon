@@ -17,25 +17,23 @@ const now = new Date(nowTimeStamp);
 export default class RectificationView extends Component {
     constructor(props) {
         super(props);
+        let rectificationData = this.props.rectificationData;
+        let needRectification = false;
+        let date = now;
+        if (rectificationData) {
+            if (rectificationData.date) {
+                date = new Date(rectificationData.date);
+            }
+            needRectification = rectificationData.value;
+        }
         this.state = {
-            needRectification: false,//需要整改
-            date: now,
+            needRectification: needRectification,//需要整改
+            date: date,
             showStar: false,
         };
     }
 
     componentWillReceiveProps(nextProps) {
-        let rectificationData = this.props.rectificationData;
-        if (rectificationData) {
-            let date = now;
-            if (rectificationData.date) {
-                date = new Date(rectificationData.date);
-            }
-            this.setState({
-                needRectification: rectificationData.value,
-                date: date,
-            })
-        }
         this.setState({
             showStar: nextProps.showStar,
         });

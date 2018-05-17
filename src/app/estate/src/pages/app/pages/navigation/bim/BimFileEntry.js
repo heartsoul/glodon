@@ -68,7 +68,7 @@ export function chooseBlueprintFromQualityNew(navigator, drawingGdocFileId, draw
     if (blueprint.drawingName) {
         storage.pushNext(navigator, "RelevantBlueprintPage", {
             pageType: PageType.PAGE_TYPE_EDIT_QUALITY,
-            relevantBluePrint: blueprint,
+            relevantBlueprint: blueprint,
         });
     } else {
         storage.pushNext(navigator, "BimFileChooserPage", {
@@ -159,7 +159,7 @@ export function showBlueprintFromChoose(navigator, pageType, drawingGdocFileId, 
     }
     storage.pushNext(navigator, "RelevantBlueprintPage", {
         pageType: pageType,
-        relevantBluePrint: blueprint,
+        relevantBlueprint: blueprint,
     });
 }
 /**
@@ -200,7 +200,7 @@ export function showBlueprintFromDetail(navigator, drawingGdocFileId, drawingNam
     }
     storage.pushNext(navigator, "RelevantBlueprintPage", {
         pageType: PageType.PAGE_TYPE_DETAIL,
-        relevantBluePrint: blueprint,
+        relevantBlueprint: blueprint,
     });
 }
 

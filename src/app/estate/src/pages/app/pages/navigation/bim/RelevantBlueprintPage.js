@@ -141,7 +141,7 @@ export default class RelevantBlueprintPage extends Component {
         let params = this.props.navigation.state.params;
 
         let pageType = params.pageType;
-        let relevantBluePrint = params.relevantBluePrint;
+        let relevantBlueprint = params.relevantBlueprint;
 
         let showFinishView = false;
         //编辑页进入直接显示完成页面
@@ -167,10 +167,10 @@ export default class RelevantBlueprintPage extends Component {
         }
 
         this.setState({
-            drawingGdocFileId: relevantBluePrint.drawingGdocFileId,
-            drawingName: relevantBluePrint.drawingName,
-            drawingPositionX: relevantBluePrint.drawingPositionX,
-            drawingPositionY: relevantBluePrint.drawingPositionY,
+            drawingGdocFileId: relevantBlueprint.drawingGdocFileId,
+            drawingName: relevantBlueprint.drawingName,
+            drawingPositionX: relevantBlueprint.drawingPositionX,
+            drawingPositionY: relevantBlueprint.drawingPositionY,
             pageType: pageType,
             showFinishView: showFinishView,
             show: show,
@@ -187,7 +187,7 @@ export default class RelevantBlueprintPage extends Component {
         }, 4000);
 
 
-        BimToken.getBimFileToken(relevantBluePrint.drawingGdocFileId, (token) => {
+        BimToken.getBimFileToken(relevantBlueprint.drawingGdocFileId, (token) => {
             let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
             this.setState({
                 url: url

@@ -30,7 +30,7 @@ export default class SelectCheckPointView extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let selectedCheckPoint = this.props.selectedCheckPoint;
+        let selectedCheckPoint = nextProps.selectedCheckPoint;
         if (selectedCheckPoint && selectedCheckPoint.name) {
             this.setState({
                 selectedCheckPoint: selectedCheckPoint,
