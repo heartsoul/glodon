@@ -17,29 +17,28 @@ import { ListRow } from 'app-3rd/teaset';
  */
 export default class SelectCheckPointView extends Component {
 
+    inputName = "";
     constructor(props) {
         super(props);
+        let selectedCheckPoint = this.props.selectedCheckPoint;
+        let id = 0;
+        let name = "";
+        let isShowMark = false;
+        if (selectedCheckPoint && selectedCheckPoint.name) {
+            id = selectedCheckPoint.id;
+            name = selectedCheckPoint.name;
+            this.inputName = selectedCheckPoint.name;
+            isShowMark = selectedCheckPoint.id && selectedCheckPoint.id != 0;
+        }
+
         this.state = {
             selectedCheckPoint: {
-                id: 0,
-                name: '',
+                id: id,
+                name: name,
             },
-            inputName: '',
-            isShowMark: false,
+            isShowMark: isShowMark,
         };
     }
-
-    componentWillReceiveProps(nextProps) {
-        let selectedCheckPoint = nextProps.selectedCheckPoint;
-        if (selectedCheckPoint && selectedCheckPoint.name) {
-            this.setState({
-                selectedCheckPoint: selectedCheckPoint,
-                inputName: selectedCheckPoint.name,
-                isShowMark: selectedCheckPoint.id && selectedCheckPoint.id != 0,
-            })
-        }
-    }
-
 
     selectCheckPoint = () => {
         storage.pushNext(
@@ -48,11 +47,12 @@ export default class SelectCheckPointView extends Component {
             {
                 selectedCheckPoint: this.state.selectedCheckPoint,
                 callback: (checkPoint) => {
-                    this.setState({
-                        inputName: checkPoint.name,
-                        selectedCheckPoint: checkPoint,
-                        isShowMark: true,
-                    });
+                    let selectedCheckPoint = { ...checkPoint };
+                    this.inputName = checkPoint.name,
+                        this.setState({
+                            selectedCheckPoint: selectedCheckPoint,
+                            isShowMark: true,
+                        });
                 }
             }
         );
@@ -63,21 +63,21 @@ export default class SelectCheckPointView extends Component {
      */
     getSelectedCheckPoint = () => {
         let selectedCheckPoint = {
-            name: this.state.inputName,
+            name: this.inputName,
             id: 0,
         }
-        if (this.state.selectedCheckPoint.name === this.state.inputName) {
+        if (this.state.selectedCheckPoint.name === this.inputName) {
             selectedCheckPoint.id = this.state.selectedCheckPoint.id;
         }
         return selectedCheckPoint;
     }
 
     textInputChange = (text) => {
-        let isShowMark = this.state.selectedCheckPoint
-            && this.state.selectedCheckPoint.name === text
-            && this.state.selectedCheckPoint.id && this.state.selectedCheckPoint.id != 0;
+        this.inputName = text;
+        let isShowMark = this.state.selectedCheckPoint.name === text
+            && this.state.selectedCheckPoint.id
+            && this.state.selectedCheckPoint.id != 0;
         this.setState({
-            inputName: text,
             isShowMark: isShowMark,
         });
     }
@@ -91,13 +91,13 @@ export default class SelectCheckPointView extends Component {
         return (
             <View style={{ flexDirection: 'row', flex: 1, }}>
                 <TextInput
-                    style={{ flex: 1, textAlignVertical: 'top',minWidth:100, paddingLeft: 12, paddingRight: 12, paddingTop: 2, paddingBottom: 0, backgroundColor: '#ffffff' }}
+                    style={{ flex: 1, textAlignVertical: 'top', minWidth: 100, paddingLeft: 12, paddingRight: 12, paddingTop: 2, paddingBottom: 0, backgroundColor: '#ffffff' }}
                     placeholder={'请设置'}
                     multiline={false}
                     underlineColorAndroid={"transparent"}
                     textAlign="right"
                     onChangeText={(text) => { this.textInputChange(text) }}
-                    defaultValue={this.state.selectedCheckPoint.name}
+                    defaultValue={this.inputName}
                 />
                 {
                     (this.state.isShowMark) ? (
@@ -116,7 +116,7 @@ export default class SelectCheckPointView extends Component {
         return (
             <View>
                 {/* <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.getDetailName()} onPress={() => { this.selectCheckPoint() }} /> */}
-                <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.getDetailView()} onPress={() => {this.selectCheckPoint()}} />
+                <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.getDetailView()} onPress={() => { this.selectCheckPoint() }} />
             </View>
         );
     }
