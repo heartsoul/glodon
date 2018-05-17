@@ -17,6 +17,7 @@ import { connect } from 'react-redux' // 引入connect函数
 import * as API from 'app-api';
 import * as AuthorityManager from "../navigation/project/AuthorityManager";
 import {Dimensions} from 'react-native';
+import App from '../../../containers/App';
 
 //切换项目主页
 export default class ChangeProjectPage extends Component{
@@ -79,8 +80,22 @@ export default class ChangeProjectPage extends Component{
           BackHandler.addEventListener('hardwareBackPress', () => {
             this._goBack();
             return true;
-        });
+            });
+
+        // App.router.getStateForAction = (action, state) => {
+            
+        //     console.log('===========================');
+        //       if (action.type === NavigationActions.BACK) {
+        //       }
+        // }
     }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress',  () => {
+            this._goBack();
+            return true;
+        });
+     }
 
     //获取当前租户及项目
     _refreshData(){
