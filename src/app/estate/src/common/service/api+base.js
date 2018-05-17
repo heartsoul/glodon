@@ -87,6 +87,12 @@ export function requestJSON(url, options) {
     if(storage.isLogin() && storage.getLoginToken() != 'cookie_token') {
         ops.headers.Authorization = "Bearer "+storage.getLoginToken();
     }
+    if(storage.isLogin() && storage.loadLastTenant()) {
+        let t = storage.loadLastTenant();
+        if(t && t != '0') {
+            ops.headers['X-CORAL-TENANT'] = t;
+        }
+    }
     for (const i in ops) {
         if (options[i]) {
             options[i] = ops[i] = {...ops[i], ...options[i] };

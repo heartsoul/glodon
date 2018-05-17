@@ -200,44 +200,44 @@ export default class extends React.Component {
         this.prevUpdateTime = 0;
     }
 
-    keepOnline = () => {
-        console.log('》》》保持在线');
-        if(storage.isLogin() && AppState.currentState=='active') {
-            // 登录着，并且再前台运行，保持一次
-            this.fireHeartBeat(); // 更新
-        }
-    }
+    // keepOnline = () => {
+    //     console.log('》》》保持在线');
+    //     if(storage.isLogin() && AppState.currentState=='active') {
+    //         // 登录着，并且再前台运行，保持一次
+    //         this.fireHeartBeat(); // 更新
+    //     }
+    // }
 
-    //状态改变响应
-    handleAppStateChange = (appState) =>{
-        let systemDate = new Date();
-        console.log('当前状态为:' + appState+",时间："+systemDate.getTime());
-        if(appState != this.appState && appState == 'active') {
-            this.fireHeartBeat();
-        }
-        this.appState = appState;
-    }
-    //内存警告响应
-    handleAppMemoryWarning(appState) {
-        console.log("内存报警....");
-    }
-    componentWillMount = () => {
-        this.intervalId = setInterval(this.keepOnline, HEART_BEAT_TIME);
-        //监听状态改变事件
-        AppState.addEventListener('change', this.handleAppStateChange);
-        //监听内存报警事件
-        AppState.addEventListener('memoryWarning', this.handleAppMemoryWarning);
-    }
+    // //状态改变响应
+    // handleAppStateChange = (appState) =>{
+    //     let systemDate = new Date();
+    //     console.log('当前状态为:' + appState+",时间："+systemDate.getTime());
+    //     if(appState != this.appState && appState == 'active') {
+    //         this.fireHeartBeat();
+    //     }
+    //     this.appState = appState;
+    // }
+    // //内存警告响应
+    // handleAppMemoryWarning(appState) {
+    //     console.log("内存报警....");
+    // }
+    // componentWillMount = () => {
+    //     this.intervalId = setInterval(this.keepOnline, HEART_BEAT_TIME);
+    //     //监听状态改变事件
+    //     AppState.addEventListener('change', this.handleAppStateChange);
+    //     //监听内存报警事件
+    //     AppState.addEventListener('memoryWarning', this.handleAppMemoryWarning);
+    // }
 
-    componentWillUnmount = () => {
-        if(this.intervalId) {
-            clearInterval(this.intervalId);
-        }
+    // componentWillUnmount = () => {
+    //     if(this.intervalId) {
+    //         clearInterval(this.intervalId);
+    //     }
         
-        //删除状态改变事件监听
-        AppState.removeEventListener('change', this.handleAppStateChange);
-        AppState.removeEventListener('memoryWarning', this.handleAppMemoryWarning);
-    }
+    //     //删除状态改变事件监听
+    //     AppState.removeEventListener('change', this.handleAppStateChange);
+    //     AppState.removeEventListener('memoryWarning', this.handleAppMemoryWarning);
+    // }
 
     componentDidMount() {
         this.fireHeartBeat();
@@ -267,10 +267,10 @@ export default class extends React.Component {
             }
             return (<Provider store={store}><RootChooseStack /></Provider>)
         }
-        if (storage.isGuide()) {
+        // if (storage.isGuide()) {
             return (<Provider store={store}><RootLoginStack /></Provider>)
-        }
-        return (<Provider store={store}><RootGuideStack /></Provider>)
+        // }
+        // return (<Provider store={store}><RootGuideStack /></Provider>)
     }
     render() {
         return this.renderPage();
