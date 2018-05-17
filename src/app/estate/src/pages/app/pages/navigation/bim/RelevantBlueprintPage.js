@@ -180,7 +180,7 @@ export default class RelevantBlueprintPage extends Component {
         }, 4000);
 
 
-        BimToken.getBimFileToken(relevantBluePrint.drawingGdocFileId, (token) => {
+        BimToken.getBimFileToken(relevantBlueprint.drawingGdocFileId, (token) => {
             if(!token) {
                 this.setState({
                     url: '',
