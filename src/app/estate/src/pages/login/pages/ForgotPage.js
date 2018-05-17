@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   Dimensions,
   Image,
+  BackHandler,
 } from 'react-native';
 import { connect } from 'react-redux' // 引入connect函数
 import { Toast } from 'antd-mobile' // 引入connect函数
@@ -52,6 +53,9 @@ class ForgotPage extends React.Component {
     };
   }
   componentWillUnmount = () => {
+    BackHandler.removeEventListener('hardwareBackPress');
+    
+    this.props.init();
     clearTimeout();
   }
   shouldComponentUpdate(nextProps, nextState) {
@@ -70,13 +74,13 @@ class ForgotPage extends React.Component {
       let navigator = this.props.navigation;
       Toast.hide();
       Toast.success(nextProps.tip,1.5);
-      this.props.init();
+      // this.props.init();
       setTimeout(() => {
         Toast.hide();
         storage.pop(navigator,1)
       }, 2000);
       
-      return false;
+      return true;
     }
     if (nextProps.tip && nextProps.isSuccess) {
       Toast.success(nextProps.tip, 2);
@@ -124,6 +128,14 @@ class ForgotPage extends React.Component {
 
   componentDidMount = () => {
     this.props.imageCode();
+    BackHandler.addEventListener('hardwareBackPress', () => {
+          this.needBack((bRet)=>{
+            if(bRet){
+              storage.pop(this.props.navigation);
+            }
+          });
+          return true;
+        });
   }
   _onImageClick = () => {
     this.props.imageCode();
