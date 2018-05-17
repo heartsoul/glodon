@@ -60,7 +60,10 @@ class NewQualityPage extends Component {
         this.inspectionPage = null;
         this.acceptancePage = null;
         this.setActiveTab();
+        this.setTitle();
+    }
 
+    setTitle = () => {
         let headerTitle = (<View style={{ height: 44, width: 200 }}>
             <Tabs
                 tabs={tabs}
@@ -105,6 +108,7 @@ class NewQualityPage extends Component {
         } else if (index == 1) {
             this.activePage = this.acceptancePage;
         }
+        this.activeTab = index;
         this.hiddenBar.onTabClick(index);
     }
 
@@ -118,6 +122,7 @@ class NewQualityPage extends Component {
     }
 
     submit = () => {
+        alert(this.activeTab); return;
         if (this.activePage) {
             this.activePage.submit(this.props.navigation);
         } else {
@@ -193,11 +198,14 @@ class NewQualityPage extends Component {
                             setRef={(ref) => { this.setRef(ref, 0) }}
                             editParams={this.getPageParams(tabs[0].type)}
                             type={tabs[0].type}
-                            navigator={this.props.navigation} />
+                            navigator={this.props.navigation}
+                            setTitle={this.setTitle}
+                            />
                         <NewQualityView
                             setRef={(ref) => { this.setRef(ref, 1) }}
                             editParams={this.getPageParams(tabs[1].type)}
                             type={tabs[1].type}
+                            setTitle={this.setTitle}
                             navigator={this.props.navigation} />
                     </Tabs>
                 </View>

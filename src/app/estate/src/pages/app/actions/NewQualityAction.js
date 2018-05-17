@@ -58,10 +58,10 @@ function assembleParams(requestParams) {
     params.responsibleUserTitle = personData.title;
 
     //关联图纸
-    params.drawingGdocFileId = state.relevantBluePrint.drawingGdocFileId;
-    params.drawingName = state.relevantBluePrint.drawingName;
-    params.drawingPositionX = state.relevantBluePrint.drawingPositionX;
-    params.drawingPositionY = state.relevantBluePrint.drawingPositionY;
+    params.drawingGdocFileId = state.relevantBlueprint.drawingGdocFileId;
+    params.drawingName = state.relevantBlueprint.drawingName;
+    params.drawingPositionX = state.relevantBlueprint.drawingPositionX;
+    params.drawingPositionY = state.relevantBlueprint.drawingPositionY;
 
     //关联模型
     params.elementName = state.relevantModel.elementName;
@@ -75,7 +75,7 @@ function assembleParams(requestParams) {
  * 检查必填项
  * @param {*} params 
  */
-function checkMustInfo(params, callback) {
+function checkMustInfo(params,callback) {
     let info = [];
     let showStar = {
         showInspectCompanyStar: false,
@@ -286,9 +286,9 @@ function editSubmitInspection(params, navigator, updateData) {
  * state NewPage的state
  * @param {*} callback 请求完成后回调
  */
-export function save(requestParams, imageChooserEle, callback,checkMustInfoCallback) {
+export function save(requestParams, imageChooserEle, callback) {
     let params = assembleParams(requestParams);
-    if (checkMustInfo(params, checkMustInfoCallback)) {
+    if (checkMustInfo(params, callback)) {
         loadingToast();
         uploadFile(imageChooserEle, (files) => {
             if (files) {
@@ -342,6 +342,7 @@ function editSaveInspection(params, callback) {
             });
         }).catch(err => {
             Toast.hide();
+            console.log(err)
             Toast.info("保存失败", 1);
         })
 }

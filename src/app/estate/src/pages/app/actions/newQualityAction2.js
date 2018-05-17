@@ -213,7 +213,7 @@ function getDetailInfo(info) {
         projectName: projectName,
         files: info.files,//图片
         selectedCheckPoint: selectedCheckPoint,//选中的质检项目
-        relevantBluePrint: relevantBlueprint,//关联图纸
+        relevantBlueprint: relevantBlueprint,//关联图纸
         relevantModel: relevantModel,//关联模型
         rectificationData: rectificationData,
     };
