@@ -75,6 +75,11 @@ class EquipmentListView extends PureComponent {
 
     //加载失败view
     renderErrorView(error) {
+        if (this.props.qcState === "search" && this.props.keywords && this.props.keywords.length > 0) {
+            if (!this.props.dataArray || this.props.dataArray.length === 0) {
+                return this.renderEmpty()
+            }
+        }
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
@@ -127,7 +132,19 @@ class EquipmentListView extends PureComponent {
         }
 
     }
+    renderEmpty() {
+        return (
+            <View style={styles.emptyContainer}>
+                <Text>很抱歉，没有找到相关的内容</Text>
+            </View>
+        )
+    }
     renderData = () => {
+        if (this.props.qcState === "search" && this.props.keywords && this.props.keywords.length > 0) {
+            if (!this.props.dataArray || this.props.dataArray.length === 0) {
+                return this.renderEmpty()
+            }
+        }
         return (
             <SectionList
                 ref='sectionList'
@@ -171,7 +188,13 @@ const styles = StyleSheet.create({
         left: width / 2 - 30,
         position: 'absolute',
     },
-
+    emptyContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+    },
     container: {
         flex: 1,
         flexDirection: 'column',
