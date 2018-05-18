@@ -33,7 +33,7 @@ import * as API from "app-api";
 import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
 import * as NewQualityAction from "./../../actions/NewQualityAction";
 import * as UpdateDataAction from "./../../actions/updateDataAction";
-import callOnceInInterval from './callOnceInInterval';  
+import callOnceInInterval from './callOnceInInterval';
 
 
 var { width, height } = Dimensions.get("window");
@@ -50,42 +50,90 @@ class NewQualityView extends React.Component {
     contentDescription = ''
     constructor(props) {
         super(props);
-        this.hasImage = true;
-        if (props.editParams && props.editParams.noimage) {
-            this.hasImage = false;
-        }
-        let editInfo = {};
-        if (props.editParams.editInfo) {
-            editInfo = props.editParams.editInfo;
-        }
-        this.contentDescription = editInfo.contentDescription ? editInfo.contentDescription : '',
         this.state = {
-            isLoading: false,
-            inspectionInfo: editInfo.inspectionInfo ? editInfo.inspectionInfo : {},//初始草稿数据
-            editInfo: editInfo.editInfo ? editInfo.editInfo : {},//编辑的时候获取的详情
+            initial: false,
+        };
+        // this.hasImage = true;
+        // if (props.editParams && props.editParams.noimage) {
+        //     this.hasImage = false;
+        // }
+        // let editInfo = {};
+        // if (props.editParams.editInfo) {
+        //     editInfo = props.editParams.editInfo;
+        // }
+        // this.contentDescription = editInfo.contentDescription ? editInfo.contentDescription : '';
+        // this.state = {
+        //     isLoading: false,
+        //     inspectionInfo: editInfo.inspectionInfo ? editInfo.inspectionInfo : {},//初始草稿数据
+        //     editInfo: editInfo.editInfo ? editInfo.editInfo : {},//编辑的时候获取的详情
 
-            projectId: storage.loadProject(),
-            inspectId: editInfo.inspectId ? editInfo.inspectId : -1,//检查单id
-            code: editInfo.code ? editInfo.code : '',
-            contentDescription: editInfo.contentDescription ? editInfo.contentDescription : '',//内容描述
+        //     projectId: storage.loadProject(),
+        //     inspectId: editInfo.inspectId ? editInfo.inspectId : -1,//检查单id
+        //     code: editInfo.code ? editInfo.code : '',
+        //     contentDescription: editInfo.contentDescription ? editInfo.contentDescription : '',//内容描述
 
-            selectedCheckPoint: editInfo.selectedCheckPoint ? editInfo.selectedCheckPoint : {},//选中的质检项目
+        //     selectedCheckPoint: editInfo.selectedCheckPoint ? editInfo.selectedCheckPoint : {},//选中的质检项目
 
-            relevantBlueprint: editInfo.relevantBlueprint ? editInfo.relevantBlueprint : {},//关联图纸
-            relevantModel: editInfo.relevantModel ? editInfo.relevantModel : {},//关联模型
+        //     relevantBlueprint: editInfo.relevantBlueprint ? editInfo.relevantBlueprint : {},//关联图纸
+        //     relevantModel: editInfo.relevantModel ? editInfo.relevantModel : {},//关联模型
 
-            rectificationData: editInfo.rectificationData ? editInfo.rectificationData : {},//关联模型
+        //     rectificationData: editInfo.rectificationData ? editInfo.rectificationData : {},//关联模型
 
-            showInspectCompanyStar: false,
-            showCompanyStar: false,
-            showPersonStar: false,
-            showDescriptionStar: false,
-            showCheckpointStar: false,
-            showRectificationStar: false,
-            files: editInfo.files, //附件图片
+        //     showInspectCompanyStar: false,
+        //     showCompanyStar: false,
+        //     showPersonStar: false,
+        //     showDescriptionStar: false,
+        //     showCheckpointStar: false,
+        //     showRectificationStar: false,
+        //     files: editInfo.files, //附件图片
 
+        // }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log('====================================');
+        console.log(nextProps);
+        console.log('====================================');
+        if (nextProps.editParams && nextProps.editParams.editInfo) {
+            let props = nextProps;
+            this.hasImage = true;
+            if (props.editParams && props.editParams.noimage) {
+                this.hasImage = false;
+            }
+            let editInfo = {};
+            if (props.editParams.editInfo) {
+                editInfo = props.editParams.editInfo;
+            }
+            this.contentDescription = editInfo.contentDescription ? editInfo.contentDescription : '';
+            this.setState({
+                isLoading: false,
+                inspectionInfo: editInfo.inspectionInfo ? editInfo.inspectionInfo : {},//初始草稿数据
+                editInfo: editInfo.editInfo ? editInfo.editInfo : {},//编辑的时候获取的详情
+
+                projectId: storage.loadProject(),
+                inspectId: editInfo.inspectId ? editInfo.inspectId : -1,//检查单id
+                code: editInfo.code ? editInfo.code : '',
+                contentDescription: editInfo.contentDescription ? editInfo.contentDescription : '',//内容描述
+
+                selectedCheckPoint: editInfo.selectedCheckPoint ? editInfo.selectedCheckPoint : {},//选中的质检项目
+
+                relevantBlueprint: editInfo.relevantBlueprint ? editInfo.relevantBlueprint : {},//关联图纸
+                relevantModel: editInfo.relevantModel ? editInfo.relevantModel : {},//关联模型
+
+                rectificationData: editInfo.rectificationData ? editInfo.rectificationData : {},//关联模型
+
+                showInspectCompanyStar: false,
+                showCompanyStar: false,
+                showPersonStar: false,
+                showDescriptionStar: false,
+                showCheckpointStar: false,
+                showRectificationStar: false,
+                files: editInfo.files ? editInfo.files : [], //附件图片
+                initial: true,
+            });
         }
-    };
+
+    }
 
     componentDidMount = () => {
         //把当前页面引用设置给父页面
@@ -171,7 +219,7 @@ class NewQualityView extends React.Component {
     isQualitySaveLoading = false;
     //保存
     save = () => {
-        callOnceInInterval(()=>{
+        callOnceInInterval(() => {
             let requestParams = this.assembleParams();
             NewQualityAction.save(requestParams, this.refs[REF_PHOTO], (params) => {
                 this.setState(params)
@@ -219,7 +267,7 @@ class NewQualityView extends React.Component {
 
     //选择图纸或者模型后的回调 dataType 图纸文件{name:'', fileId:'', drawingPositionX:'', drawingPositionY:'' }、模型文件
     _bimChooserCallback = (data, dataType) => {
-        if(this.props.setTitle){
+        if (this.props.setTitle) {
             this.props.setTitle();
         }
         if (dataType === '图纸文件') {
@@ -262,7 +310,24 @@ class NewQualityView extends React.Component {
         );
     }
 
+    //加载等待的view
+    renderLoadingView() {
+        return (
+            <View style={styles.container}>
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                <ActivityIndicator
+                    animating={true}
+                    style={{ height: 80 }}
+                    color='#00baf3'
+                    size="large"
+                />
+            </View>
+        );
+    }
     renderData = () => {
+        if (!this.state.initial) {
+            return this.renderLoadingView()
+        }
         return (
             <View style={{ paddingBottom: 30 }}>
                 <SelectView
@@ -339,7 +404,14 @@ class NewQualityView extends React.Component {
 };
 
 var styles = StyleSheet.create({
-
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+        height: height
+    },
 });
 
 NewQualityView.propTypes = {

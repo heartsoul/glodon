@@ -74,7 +74,7 @@ class QualityDetailPage extends Component {
 
     loadTitle = () => {
         const { inspectionInfo } = this.props.qualityInfo;
-        let title = '详情';
+        let title = '';
         if (inspectionInfo.inspectionType == API.TYPE_INSPECTION[0]) {
             title = API.TYPE_INSPECTION_NAME[0]
         } else if (inspectionInfo.inspectionType == API.TYPE_INSPECTION[1]) {

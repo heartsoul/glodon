@@ -40,13 +40,14 @@ export default class BaseSearchPage extends React.Component {
         headerTitle: navigation.state.params && navigation.state.params.renderHeaderTitle ? navigation.state.params.renderHeaderTitle() : (
             (
                 <View style={{ flex: 1, alignItems: "center" }}>
-                    <View style={{ width: width - 20, alignItems: "center" }}>
+                    <View style={{ width: width - 15, alignItems: "center" }}>
                         <SearchBar
                             styles={StyleSheet.create(newStyle)}
-                            placeholder="搜索"
+                            placeholder=""
                             showCancelButton={true}
                             value={null}
                             defaultValue={searchKeywords}
+                            returnKeyType ={"search"}
                         />
                     </View>
                 </View>
@@ -55,6 +56,7 @@ export default class BaseSearchPage extends React.Component {
     });
     renderFunc = null;
     searchFunc = null;
+    placeholder = "搜索";
     constructor(props) {
         super(props);
         let showHistory = true;
@@ -68,7 +70,6 @@ export default class BaseSearchPage extends React.Component {
             showHistory: showHistory,
             showContent: !showHistory,
         };
-        this.props.navigation.setParams({ renderHeaderTitle: this.renderHeaderTitle });
         this.props.loadHistory();
     }
     componentDidMount(){
@@ -81,18 +82,18 @@ export default class BaseSearchPage extends React.Component {
     }
 
     renderHeaderTitle = () => {
-        let placeholder = "搜索";
         //请输入构件名称/质检项/材设名称
         return (
             <View style={{ flex: 1, alignItems: "center" }}>
-                <View style={{ width: width - 20, alignItems: "center" }}>
+                <View style={{ width: width - 15, alignItems: "center" }}>
                     <SearchBar
                         ref={(ref) => {
                             searchRef = ref;
                         }}
                         styles={StyleSheet.create(newStyle)}
-                        placeholder="搜索"
+                        placeholder={this.placeholder}
                         showCancelButton={true}
+                        returnKeyType ={"search"}
                         value={null}
                         defaultValue={searchKeywords}
                         onSubmit={this.onSearch}
@@ -107,9 +108,13 @@ export default class BaseSearchPage extends React.Component {
     }
 
 
-    setFunc(renderFunc, searchFunc) {
+    setFunc(renderFunc, searchFunc, placeholder) {
         this.renderFunc = renderFunc;
         this.searchFunc = searchFunc;
+        if(placeholder){
+            this.placeholder = placeholder;
+        }
+        this.props.navigation.setParams({ renderHeaderTitle: this.renderHeaderTitle });
     }
 
     onChange = (keywords) => {

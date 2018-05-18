@@ -66,7 +66,7 @@ public class PhotoEditView extends ImageView {
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        mPaint.setXfermode(getPdf());
+//        mPaint.setXfermode(getPdf());
         mPaint.setColor(Color.WHITE);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(10);

@@ -23,7 +23,7 @@ class SearchPage extends BaseSearchPage {
 
     constructor(props) {
         super(props);
-        super.setFunc(this.renderContent, this.search)
+        super.setFunc(this.renderContent, this.search, "请输入构件名称/质检项/材设名称")
         this.states = {
             keywords: "",
         }
