@@ -97,12 +97,13 @@ function loadAccount(dispatch,response,username, pwd, token = 'cookie_token') {
         storage.saveLastTenant('0');
         dispatch(loginError(false));
       });
+      return;
     }
     dispatch(loginSuccess(true, response.data, username))
     return;
   }).catch((e) => { 
-    dispatch(loginError(false));
     storage.saveLoginToken('');
+    dispatch(loginError(false));
   });
 }
 

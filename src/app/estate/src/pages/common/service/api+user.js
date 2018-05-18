@@ -71,10 +71,10 @@ export async function getProjects(page, size) {
 
 // 设置当前租户
 export async function setCurrentTenant(tenantId) {
-    return requestJSON(api_user_currentTenant, {
-        method: 'PUT',
-        body: JSON.stringify({ 'tenantId': parseInt(tenantId) }),
-    });
+    // return requestJSON(api_user_currentTenant, {
+    //     method: 'PUT',
+    //     body: JSON.stringify({ 'tenantId': parseInt(tenantId) }),
+    // });
 }
 
 // 退出

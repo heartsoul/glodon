@@ -53,6 +53,8 @@ class ProjectPage extends Component {
     }
     _itemClick = (item, index) => {
         let navigator = this.props.navigation;
+        let prevTenant = storage.loadLastTenant();
+        let newTenant = this.props.navigation.state.params.tenantId;
         AuthorityManager.loadAuthoritys("" + item.value.id, (success) => {
             if (!success) {
                 alert('获取权限失败');
@@ -62,7 +64,7 @@ class ProjectPage extends Component {
             storage.saveLastTenant(this.props.navigation.state.params.tenantId);
             storage.saveProject("" + item.value.id, "" + item.value.name);
             storage.gotoMainPage(navigator);
-        });
+        },newTenant,prevTenant);
     }
 
     _separator = () => {
@@ -167,9 +169,9 @@ export default connect(
         hasMore: state.projectList.hasMore,
     }),
     dispatch => ({
-        fetchData: (page,dataArray) => {
+        fetchData: (page,dataArray, newTenant, prevTenant) => {
             if (dispatch) {
-                dispatch(actions.fetchData(page,dataArray))
+                dispatch(actions.fetchData(page,dataArray, newTenant, prevTenant))
             }
         },
         resetData: () => {

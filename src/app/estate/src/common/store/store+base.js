@@ -186,7 +186,10 @@ class GLDStorage extends BaseStorage {
 
     // 保存当前租户  保存的是id
     saveTenant = (tenant) => {
-        this.setItem(__KEY_currentTenant + userId(), "" + tenant);
+        if(!tenant) {
+            tanant = '0';
+        }
+        this.setItem(__KEY_currentTenant + userId(),""+tenant);
     }
     // 获取当前租户id
     loadTenant = (retFun) => {
@@ -224,6 +227,9 @@ class GLDStorage extends BaseStorage {
 
     // 保存当前租户
     saveLastTenant = (tenant) => {
+        if(!tenant) {
+            tanant = '0';
+        }
         this.setItem(__KEY_lastTenant + userId(), "" + tenant);
     }
     // 获取上一租户
@@ -233,6 +239,9 @@ class GLDStorage extends BaseStorage {
 
     // 保存当前项目，名称
     saveProject = (project, name) => {
+        if(!project) {
+            project = '0';
+        }
         this.setItem(__KEY_currentProject + userId(), "" + project);
         this.setItem(__KEY_currentProjectName + userId(), "" + name);
     }

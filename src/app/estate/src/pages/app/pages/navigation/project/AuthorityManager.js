@@ -152,9 +152,18 @@ export function isEquipmentBrowser(){
 /**
  * 获取所有权限
  */
-export function loadAuthoritys(projectId,retFun) {
+export function loadAuthoritys(projectId,retFunIn,newTenant,prevTenant) {
     let count = 4;
     let error = false;
+    if(newTenant && prevTenant && newTenant != '0') {
+        storage.saveLastTenant(newTenant);
+    }
+    let retFun = function(success) {
+        if(newTenant && prevTenant && newTenant != '0') {
+            storage.saveLastTenant(prevTenant);
+        }
+        retFunIn(success);
+    };
     //质量检查记录
     getAuthority(projectId,AuthorityConfig.Quality_Check,(success)=>{
         count --

@@ -19,7 +19,7 @@ function __fetchData(page, dataArray, dispatch, newTenant, prevTenant) {
     if (page < 0) {
         page = 0;
     }
-    if(newTenant && prevTenant) {
+    if(newTenant && prevTenant && newTenant != '0') {
         storage.saveLastTenant(newTenant);
     }
     API.getProjects(page, 35).then(
@@ -60,7 +60,7 @@ function __fetchData(page, dataArray, dispatch, newTenant, prevTenant) {
             
         }
     ).catch(err => {
-        if(newTenant && prevTenant) {
+        if(newTenant && prevTenant && newTenant != '0') {
             storage.saveLastTenant(prevTenant);
         }
         Toast.hide()
