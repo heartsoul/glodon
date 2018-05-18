@@ -9,6 +9,14 @@
 #import <UIKit/UIKit.h>
 
 @interface SoulActionToolbarView : UIView
+@property (weak, nonatomic) IBOutlet UIView *bottomToolbar;
+@property (weak, nonatomic) IBOutlet UIToolbar *bottomDrawToolbar;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmEditButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelEditButton;
+@property (weak, nonatomic) IBOutlet UIToolbar *topToolbar;
+@property (weak, nonatomic) IBOutlet UITextView *textView;
+- (IBAction)editCancelAction:(id)sender;
+- (IBAction)editDoneAction:(id)sender;
 // 拍照按钮
 @property(nonatomic, weak) IBOutlet UIButton *photoButton;
 // 闪光灯按钮

@@ -1757,7 +1757,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ \"$CONFIGURATION\" = \"Debug\" ]]; then\nexit 0;\nfi\n#SKIP_BUNDLING=true\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n# RCT_DEV 调试模式，自动查找服务器 SKIP_BUNDLING 设置来跳过真机器自动打包 FORCE_BUNDLING 模拟器下也打进行打包\n";
+			shellScript = " if [[ \"$CONFIGURATION\" = \"Debug\" ]]; then\n exit 0;\n fi\n#SKIP_BUNDLING=true\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n# RCT_DEV 调试模式，自动查找服务器 SKIP_BUNDLING 设置来跳过真机器自动打包 FORCE_BUNDLING 模拟器下也打进行打包\n";
 		};
 		247E2B072043CD5300016F63 /* [AU] Set Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
