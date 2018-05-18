@@ -1,6 +1,6 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState } from 'react-native'
+import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState } from 'react-native'
 import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 
 import * as API from 'app-api'
@@ -8,6 +8,7 @@ import { LeftBarButtons } from "app-components"
 import * as GLD from '../pages'
 import BaseStorage from '../../common/store/store+base'
 import configureStore, { history } from '../store/ConfigureStore'
+import { Toast } from 'antd-mobile';
 
 const store = configureStore()
 const screens = {
@@ -99,9 +100,9 @@ const screens = {
     FeedbackPage: {
         screen: GLD.FeedbackPage
     },
-    ChangeProjectPage:{
+    ChangeProjectPage: {
         screen: GLD.ChangeProjectPage
-      },
+    },
 };
 
 const options = () => {
@@ -159,7 +160,7 @@ const RootChooseStack = StackNavigator(
         navigationOptions: options,
     }
 );
-
+let clickTime = new Date().getTime();
 function resetGetStateForAction(RootStack) {
     const defaultGetStateForAction = RootStack.router.getStateForAction;
     // console.log("defaultGetStateForAction:"+defaultGetStateForAction+"\n");
@@ -179,15 +180,27 @@ function resetGetStateForAction(RootStack) {
                 action.n = null;
             }
         }
+        if (Platform.OS === 'android' && action.type === NavigationActions.BACK && state.routes.length === 1) {
+            let systemDate = new Date().getTime();
+            if (systemDate - clickTime > 500) {
+                clickTime = systemDate
+                action.type = NavigationActions.POP;
+                action.n = 0;
+                Toast.info("再按一次退出", 1);
+            }
+
+        }
         return defaultGetStateForAction(action, state);
     };
 }
+
+
 resetGetStateForAction(RootMainStack);
 resetGetStateForAction(RootLoginStack);
 resetGetStateForAction(RootGuideStack);
 resetGetStateForAction(RootChooseStack);
-const HEART_BEAT_TIME = 30*1000; // 测试时 30s检查一次
-const HEART_BEAT_UPDATE_TIME = 5*60*1000; // 5分钟执行一次更新
+const HEART_BEAT_TIME = 30 * 1000; // 测试时 30s检查一次
+const HEART_BEAT_UPDATE_TIME = 5 * 60 * 1000; // 5分钟执行一次更新
 export default class extends React.Component {
 
     constructor() {
@@ -233,7 +246,7 @@ export default class extends React.Component {
     //     if(this.intervalId) {
     //         clearInterval(this.intervalId);
     //     }
-        
+
     //     //删除状态改变事件监听
     //     AppState.removeEventListener('change', this.handleAppStateChange);
     //     AppState.removeEventListener('memoryWarning', this.handleAppMemoryWarning);
@@ -241,17 +254,23 @@ export default class extends React.Component {
 
     componentDidMount() {
         this.fireHeartBeat();
+        clickTime = new Date().getTime();
     }
-    fireHeartBeat = () =>{
+
+    componentDidMount = () => {
+        this.fireHeartBeat();
+    }
+
+    fireHeartBeat = () => {
         let systemDate = new Date().getTime();
-        if(systemDate - this.prevUpdateTime < HEART_BEAT_UPDATE_TIME)  {
+        if (systemDate - this.prevUpdateTime < HEART_BEAT_UPDATE_TIME) {
             return; // 不需要更新
         }
         console.log('》》》更新当前信息,时间：' + systemDate);
         if (storage.hasChoose()) {
             let tenant = storage.loadLastTenant();
             API.setCurrentTenant(tenant).then((responseData) => {
-                if(this) {
+                if (this) {
                     this.prevUpdateTime = systemDate; // 更新成功更新时间
                 }
             }).catch((e) => {
@@ -259,7 +278,7 @@ export default class extends React.Component {
             });
         }
     }
-    
+
     renderPage() {
         if (storage.isLogin()) {
             if (storage.hasChoose()) {
@@ -268,7 +287,7 @@ export default class extends React.Component {
             return (<Provider store={store}><RootChooseStack /></Provider>)
         }
         // if (storage.isGuide()) {
-            return (<Provider store={store}><RootLoginStack /></Provider>)
+        return (<Provider store={store}><RootLoginStack /></Provider>)
         // }
         // return (<Provider store={store}><RootGuideStack /></Provider>)
     }

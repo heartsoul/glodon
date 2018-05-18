@@ -138,7 +138,7 @@ class ForgotPage extends React.Component {
             () => {
               this.needBack((bRet)=>{
                 if(bRet){
-                  storage.pop(this.props.navigation);
+                  storage.pop(this.props.navigation,1);
                 }
               });
               return true;

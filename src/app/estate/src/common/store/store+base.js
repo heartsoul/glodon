@@ -364,7 +364,7 @@ class GLDStorage extends BaseStorage {
         navigator.goBack(params);
     }
     // 返回到上一页面
-    pop = (navigation, params = {}) => {
+    pop = (navigation, params = 1) => {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
