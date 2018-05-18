@@ -29,11 +29,11 @@ export default class BigImageViewPage extends Component {
     }
     componentWillMount() {
         let countAll = this.state.media.length;
+        let media = this.state.media;
         this.state.media.map((item, index) => {
             if (item.objectId) {
                 API.getBimFileUrl(item.objectId, (success, data) => {
                     countAll--;
-                    let media = this.state.media;
                     if (success) {
                         media[index].url = data;
                     }
