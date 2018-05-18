@@ -11,7 +11,7 @@ var { width, height } = Dimensions.get("window");
 
 import { BimFileEntry, AuthorityManager } from "app-entry";
 
-const projectImage = require("app-images/icon_choose_project_item.png");
+const projectImage = require("app-images/icon_default_image.png");
 const projectTimeImage = require("app-images/icon_time_black.png");
 
 
