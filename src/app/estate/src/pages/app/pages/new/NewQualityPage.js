@@ -117,6 +117,9 @@ class NewQualityPage extends Component {
         //     this.goBack();
         //     return true;
         // });
+
+        this.hiddenBar.onTabClick(this.activeTab);
+
         this.props.fetchData(this.props.navigation.state.params);
 
     }
@@ -176,17 +179,14 @@ class NewQualityPage extends Component {
             </View>
         );
     }
+   
     render() {
-        if (this.props.isLoading) {
-            return this.renderLoadingView();
-        }
         return (
             <KeyboardAwareScrollView>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{ marginTop: -44 }}>
                     <Tabs
                         tabs={tabs}
-                        initialPage={this.activeTab}
                         ananimated={true}
                         swipeable={false}
                         renderTabBar={(props) => {
@@ -199,7 +199,7 @@ class NewQualityPage extends Component {
                             type={tabs[0].type}
                             navigator={this.props.navigation}
                             setTitle={this.setTitle}
-                            />
+                        />
                         <NewQualityView
                             setRef={(ref) => { this.setRef(ref, 1) }}
                             editParams={this.getPageParams(tabs[1].type)}
