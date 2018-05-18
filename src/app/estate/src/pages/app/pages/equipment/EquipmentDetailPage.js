@@ -45,7 +45,7 @@ class EquipmentDetailPage extends Component {
         if (nextProps.equipmentInfo.editType != this.props.equipmentInfo.editType) {
             this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle, gesturesEnabled: this.gesturesEnabled })
         }
-        if (nextProps.relevantEquipmentModle != this.props.relevantEquipmentModle) {
+        if (nextProps.relevantEquipmentModle && nextProps.relevantEquipmentModle.gdocFileId && nextProps.relevantEquipmentModle.elementId && nextProps.relevantEquipmentModle != this.props.relevantEquipmentModle) {
             this.props.getModelElementProperty(nextProps.relevantEquipmentModle, this.props.equipmentInfo)
         }
 
@@ -304,8 +304,10 @@ export default connect(
             }
         },
         getModelElementProperty: (relevantEquipmentModle, equipmentInfo) => {
-            if (dispatch) {
-                dispatch(actions.getModelElementProperty(relevantEquipmentModle, equipmentInfo))
+            if (relevantEquipmentModle && relevantEquipmentModle.gdocFileId && relevantEquipmentModle.elementId) {
+                if (dispatch) {
+                    dispatch(actions.getModelElementProperty(relevantEquipmentModle, equipmentInfo))
+                }
             }
         },
         resetTransformInfo: () => {
