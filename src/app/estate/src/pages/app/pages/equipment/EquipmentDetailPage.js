@@ -201,12 +201,12 @@ class EquipmentDetailPage extends Component {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
                 () => {
-                    this.needBack((needBack)=>{
-                        if(needBack) {
-                          storage.pop(this.props.navigation,1)
-                        }
-                      })
-                    return true
+                    // this.needBack((needBack)=>{
+                    //     if(needBack) {
+                    //       storage.pop(this.props.navigation,1)
+                    //     }
+                    //   })
+                    return false
                 }
             )
         }
