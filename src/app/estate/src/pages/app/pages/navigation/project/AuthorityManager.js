@@ -152,18 +152,10 @@ export function isEquipmentBrowser(){
 /**
  * 获取所有权限
  */
-export function loadAuthoritys(projectId,retFunIn,newTenant,prevTenant) {
+export function loadAuthoritys(projectId,retFun,tenantId = '0') {
     let count = 4;
     let error = false;
-    if(newTenant && prevTenant && newTenant != '0') {
-        storage.saveLastTenant(newTenant);
-    }
-    let retFun = function(success) {
-        if(newTenant && prevTenant && newTenant != '0') {
-            storage.saveLastTenant(prevTenant);
-        }
-        retFunIn(success);
-    };
+    
     //质量检查记录
     getAuthority(projectId,AuthorityConfig.Quality_Check,(success)=>{
         count --
@@ -176,7 +168,7 @@ export function loadAuthoritys(projectId,retFunIn,newTenant,prevTenant) {
         }
         if(count > 0) {return}
         retFun(true);
-    });
+    }, tenantId);
     // //质量验收记录
     // getAuthority(projectId,AuthorityConfig.Quality_Accept,(success)=>{
     //     count --
@@ -202,7 +194,7 @@ export function loadAuthoritys(projectId,retFunIn,newTenant,prevTenant) {
         }
         if(count > 0) {return}
         retFun(true);
-    });
+    }, tenantId);
     //材料设备进场验收
     getAuthority(projectId,AuthorityConfig.Quality_Facility,(success)=>{
         count --
@@ -215,7 +207,7 @@ export function loadAuthoritys(projectId,retFunIn,newTenant,prevTenant) {
         }
         if(count > 0) {return}
         retFun(true);
-    });
+    }, tenantId);
     //质量整改记录
     getAuthority(projectId,AuthorityConfig.Quality_Rectification,(success)=>{
         count --
@@ -228,11 +220,11 @@ export function loadAuthoritys(projectId,retFunIn,newTenant,prevTenant) {
         }
         if(count > 0) {return}
         retFun(true);
-    });
+    }, tenantId);
 }
 
-export function getAuthority(projectId,key,retFun){
-    API.getAppModelRights(AuthorityConfig.appCode,key,projectId).then((responseData) => {
+export function getAuthority(projectId,key,retFun, tenantId = '0'){
+    API.getAppModelRights(AuthorityConfig.appCode,key,projectId,tenantId).then((responseData) => {
         storage.setActionRights(key,responseData.data.actionRights);
         retFun(true);
     }).catch((err)=>{

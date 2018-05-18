@@ -34,10 +34,10 @@ export default class tenantList extends Component {
     //网络请求
     fetchData = () => {
         //请求数据
-        if (this.props.navigation.getParam('change') === true && storage.loadLastTenant() != '') {
+        if (this.props.navigation.getParam('change') === true && storage.loadLastTenant() != '0' && storage.loadLastTenant() != 'undefined') {
             this.props.navigation.setParams({ change: false });
             let navigator = this.props.navigation;
-            storage.pushNext(navigator, "ProjectPage")
+            storage.pushNext(navigator, "ProjectPage",{ tenantId: storage.loadLastTenant(), id: storage.loadTenant() })
         }
         let userInfo = storage.loadUserInfo();
         if (userInfo && userInfo["accountInfo"]) {
@@ -59,7 +59,7 @@ export default class tenantList extends Component {
                 i++;
 
             });
-            if (dataBlob.length == 1 && storage.loadLastTenant() == '') {
+            if (dataBlob.length == 1 && storage.loadLastTenant() == '0') {
                 this.props.navigation.setParams({ isFirst: false });
                 this._clickItem(dataBlob[0], 0)
                 return;

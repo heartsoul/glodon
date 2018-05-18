@@ -12,6 +12,8 @@ import { connect } from 'react-redux' // 引入connect函数
 import * as AuthorityManager from "./AuthorityManager";
 import * as actions from '../../../actions/projectAction'
 import { LoadingView } from "app-components";
+import * as API from "app-api";
+import {Toast} from 'antd-mobile'
 
 var { width, height } = Dimensions.get("window");
 class ProjectPage extends Component {
@@ -57,14 +59,19 @@ class ProjectPage extends Component {
         let newTenant = this.props.navigation.state.params.tenantId;
         AuthorityManager.loadAuthoritys("" + item.value.id, (success) => {
             if (!success) {
-                alert('获取权限失败');
+                Toast.info('获取权限失败',1.5);
                 return;
             }
-            storage.saveTenant(this.props.navigation.state.params.id);
-            storage.saveLastTenant(this.props.navigation.state.params.tenantId);
-            storage.saveProject("" + item.value.id, "" + item.value.name);
-            storage.gotoMainPage(navigator);
-        },newTenant,prevTenant);
+            API.setCurrentTenant(newTenant).then((responseData) => {
+                storage.saveTenant(this.props.navigation.state.params.id);
+                storage.saveLastTenant(newTenant);
+                storage.saveProject("" + item.value.id, "" + item.value.name);
+                storage.gotoMainPage(navigator);
+            }).catch(error=>{
+                Toast.info('切换失败',1.5);
+            });
+            
+        },newTenant);
     }
 
     _separator = () => {

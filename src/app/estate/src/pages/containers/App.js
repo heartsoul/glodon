@@ -250,13 +250,13 @@ export default class extends React.Component {
         console.log('》》》更新当前信息,时间：' + systemDate);
         if (storage.hasChoose()) {
             let tenant = storage.loadLastTenant();
-            // API.setCurrentTenant(tenant).then((responseData) => {
-            //     if(this) {
-            //         this.prevUpdateTime = systemDate; // 更新成功更新时间
-            //     }
-            // }).catch((e) => {
-            //     console.log(e);
-            // });
+            API.setCurrentTenant(tenant).then((responseData) => {
+                if(this) {
+                    this.prevUpdateTime = systemDate; // 更新成功更新时间
+                }
+            }).catch((e) => {
+                console.log(e);
+            });
         }
     }
     

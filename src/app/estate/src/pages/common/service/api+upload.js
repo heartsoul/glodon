@@ -89,7 +89,7 @@ function isUploadedFile(file,callback) {
  * @param {*} digest md5签名
  */
 async function getOperationCode(filePath, name, length, callback,digest=null,file) {
-
+    
     let api = "/bimpm/attachment/operationCode";
     let timestamp = new Date().getTime();
     let filter = "?containerId=" + timestamp + "&name=" + name + "&digest=" + (digest?digest:name) + "&length=" + length;
@@ -105,6 +105,10 @@ async function getOperationCode(filePath, name, length, callback,digest=null,fil
 
     if (storage.isLogin()) {
         ops.headers.Authorization = "Bearer " + storage.getLoginToken();
+        let t = storage.loadLastTenant();
+        if(t && t != '0') {
+            ops.headers['X-CORAL-TENANT'] = t;
+        }
     }
     console.log("getOperationCode:"+AppConfig.BASE_URL + api + filter);
     return fetch(AppConfig.BASE_URL + api + filter, ...ops)
@@ -138,6 +142,10 @@ export async function getBimFileUrl(objectId, callback) {
 
     if (storage.isLogin()) {
         ops.headers.Authorization = "Bearer " + storage.getLoginToken();
+        let t = storage.loadLastTenant();
+        if(t && t != '0') {
+            ops.headers['X-CORAL-TENANT'] = t;
+        }
     }
     return fetch(api, ...ops)
         .then((response) => response.text())

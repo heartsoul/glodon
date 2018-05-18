@@ -39,10 +39,15 @@ export async function getProfileModelRights(profileId, moduleCode) {
     "moduleCode": "string"
   }
  */
-export async function getAppModelRights(appCode, moduleCode, deptId) {
+export async function getAppModelRights(appCode, moduleCode, deptId, tenantId = '0') {
+    let headers = {};
+    if(tenantId && tenantId != '0') {
+        headers = {'X-CORAL-TENANT':''+tenantId};
+    }
     let api = `/admin//auths/${appCode}/moduleRights/${moduleCode}?deptId=${deptId}`;
     return requestJSON(api, {
         method: 'GET',
+        headers: headers,
     });
 }
 /**

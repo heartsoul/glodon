@@ -63,18 +63,23 @@ export async function accountInfo() {
 }
 
 // 项目信息
-export async function getProjects(page, size) {
+export async function getProjects(page, size, tenantId = '0') {
+    let headers = {};
+    if(tenantId && tenantId != '0') {
+        headers = {'X-CORAL-TENANT':''+tenantId};
+    }
     return requestJSON(api_pmbasic_projects_available + '?sort=createTime,desc&page=' + page + '&size=' + size, {
         method: 'GET',
+        headers: headers
     });
 }
 
 // 设置当前租户
 export async function setCurrentTenant(tenantId) {
-    // return requestJSON(api_user_currentTenant, {
-    //     method: 'PUT',
-    //     body: JSON.stringify({ 'tenantId': parseInt(tenantId) }),
-    // });
+    return requestJSON(api_user_currentTenant, {
+        method: 'PUT',
+        body: JSON.stringify({ 'tenantId': parseInt(tenantId) },true),
+    });
 }
 
 // 退出
