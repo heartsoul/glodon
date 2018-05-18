@@ -113,15 +113,7 @@ class NewQualityPage extends Component {
     }
 
     componentDidMount() {
-        // BackHandler.addEventListener('hardwareBackPress', () => {
-        //     this.goBack();
-        //     return true;
-        // });
-
-        this.hiddenBar.onTabClick(this.activeTab);
-
         this.props.fetchData(this.props.navigation.state.params);
-
     }
 
     submit = () => {
@@ -189,6 +181,7 @@ class NewQualityPage extends Component {
                         tabs={tabs}
                         ananimated={true}
                         swipeable={false}
+                        initialPage={this.activeTab}
                         renderTabBar={(props) => {
                             return <NewCheckListTabBar backgroundColor='#FFFFFF' ref={(ref) => { this.hiddenBar = ref; }} activeTab={this.activeTab} defaultProps={props} />
                         }}

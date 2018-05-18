@@ -130,7 +130,7 @@ async function getOperationCode(filePath, name, length, callback,digest=null,fil
  */
 export async function getBimFileUrl(objectId, callback) {
 
-    let api = `${AppConfig.BASE_URL}/bimpm/attachment/attachment/url?objectId=${objectId}&thumbnail=${false}&thumbnailSize=preview`;
+    let api = `${AppConfig.BASE_URL}/bimpm/attachment/attachment/url?objectId=${objectId}&thumbnail=${true}&thumbnailSize=preview`;
     let ops = {
         method: 'POST',
         headers: {
