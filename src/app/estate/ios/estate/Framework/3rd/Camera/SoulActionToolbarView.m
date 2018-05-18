@@ -9,6 +9,40 @@
 #import "SoulActionToolbarView.h"
 
 @implementation SoulActionToolbarView
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self.topToolbar setBackgroundImage:[UIImage imageNamed:@"tansparents"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+    [self.bottomDrawToolbar setBackgroundImage:[UIImage imageNamed:@"tansparents"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+  
+  [self.bottomDrawToolbar setItems:@[
+                          [self createButton:[UIColor blackColor]],
+                          [self createButton:[UIColor darkGrayColor]],
+                          [self createButton:[UIColor whiteColor]],
+                          [self createButton:[UIColor grayColor]],
+                          [self createButton:[UIColor redColor]],
+                          [self createButton:[UIColor greenColor]],
+                          [self createButton:[UIColor blueColor]],
+                          [self createButton:[UIColor cyanColor]],
+                          [self createButton:[UIColor yellowColor]],
+                          [self createButton:[UIColor magentaColor]],
+                          [self createButton:[UIColor orangeColor]],
+                          [self createButton:[UIColor purpleColor]],
+                          [self createButton:[UIColor brownColor]]
+                          ]];
+}
+- (void)changeColor:(UIButton*)button {
+  
+}
+
+- (UIBarButtonItem*)createButton:(UIColor *)color {
+  UIButton *button= [UIButton buttonWithType:UIButtonTypeCustom];
+  button.frame=CGRectMake(0,0,20,20);
+  [button setBackgroundColor:color];
+  button.layer.cornerRadius = 10;
+  button.layer.masksToBounds = YES;
+  [button addTarget:self action:@selector(changeColor:) forControlEvents:UIControlEventTouchUpInside];
+  return [[UIBarButtonItem alloc]initWithCustomView:button];
+}
 
 - (IBAction)onPhotoAction:(UIButton*)button {
     if (self.onPhotoBlock) {
@@ -41,9 +75,19 @@
     }
 }
 - (IBAction)onTextAction:(UIButton*)button {
-    if (self.onTextBlock) {
-        self.onTextBlock(button);
-    }
+//    if (self.onTextBlock) {
+//        self.onTextBlock(button);
+//    }
+    
+    [self beganEdit:@""];
+}
+- (void)beganEdit:(NSString*)text {
+    self.topToolbar.hidden = NO;
+    self.textView.hidden = NO;
+    self.bottomToolbar.hidden = YES;
+    [self.textView becomeFirstResponder];
+    self.textView.text = text;
+    self.textView.inputView = self.bottomToolbar;
 }
 - (IBAction)onColorAction:(UIButton*)button {
     if (self.onColorChangeBlock) {
@@ -74,4 +118,20 @@
     }
     
 } 
+- (IBAction)editCancelAction:(id)sender {
+    self.topToolbar.hidden = YES;
+    self.textView.hidden = YES;
+    self.bottomToolbar.hidden = NO;
+    [self endEditing:YES];
+}
+
+- (IBAction)editDoneAction:(id)sender {
+    [self endEditing:YES];
+    self.topToolbar.hidden = YES;
+    self.textView.hidden = YES;
+    self.bottomToolbar.hidden = NO;
+    if (self.onTextBlock) {
+        self.onTextBlock(self.textButton);
+    }
+}
 @end
