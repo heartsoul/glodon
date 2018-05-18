@@ -5,6 +5,7 @@ import * as types from "./../constants/newQualityTypes";
 let initialState = {
     isLoading: false,
     editQualityParams: {},
+    loadingError: false,
 }
 
 export default (state = initialState, action) => {
@@ -20,6 +21,13 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 editQualityParams: action.editQualityParams,
             }
+        case types.NEW_QUALITY_LOADING_ERROR:
+            return {
+                ...state,
+                isLoading: false,
+                loadingError: true,
+            }
+            break;
         case types.NEW_QUALITY_RESET:
             return initialState;
         default:

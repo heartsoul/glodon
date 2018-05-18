@@ -39,14 +39,16 @@ function getPageParams(params, dispatch) {
             editParams.inspectionCompanies = data;
             isFetchDone(params, editParams, totalRequestCount, dispatch);
         }).catch(error => {
-            isFetchDone(params, editParams, totalRequestCount, dispatch);
+            dispatch(_loadingError());
+            // isFetchDone(params, editParams, totalRequestCount, dispatch);
         });
     _getSupporters()//获取施工单位
         .then(data => {
             editParams.supporters = data;
             isFetchDone(params, editParams, totalRequestCount, dispatch);
         }).catch(error => {
-            isFetchDone(params, editParams, totalRequestCount, dispatch);
+            dispatch(_loadingError());
+            // isFetchDone(params, editParams, totalRequestCount, dispatch);
         });
     if (isEdit) {
         _getQualityInspectionDetail(params.item.value.id)//获取编辑的详情
@@ -61,7 +63,8 @@ function getPageParams(params, dispatch) {
                     isFetchDone(params, editParams, totalRequestCount, dispatch);
                 }
             }).catch(error => {
-                isFetchDone(params, editParams, totalRequestCount, dispatch);
+                dispatch(_loadingError());
+                // isFetchDone(params, editParams, totalRequestCount, dispatch);
             });
     } else if (isFromModel) {//从模型进入，获取构件名称
         _getModelElementProperty(params.relevantModel.gdocFileId, params.relevantModel.elementId)
@@ -73,7 +76,8 @@ function getPageParams(params, dispatch) {
                 editParams.editInfo.relevantModel = params.relevantModel;
                 isFetchDone(params, editParams, totalRequestCount, dispatch);
             }).catch((error) => {
-                isFetchDone(params, editParams, totalRequestCount, dispatch);
+                dispatch(_loadingError());
+                // isFetchDone(params, editParams, totalRequestCount, dispatch);
             });
     }
 
@@ -91,6 +95,7 @@ function loadFileUrls(files, finsh) {
                 finsh(files);
             }
         }).catch((err) => {
+            dispatch(_loadingError());
             countAll--;
             if (countAll < 1) {
                 finsh(files);
@@ -274,6 +279,13 @@ function _loadingDone(editParams) {
         type: types.NEW_QUALITY_LOADING_DONE,
         editQualityParams: editParams,
         isLoading: false,
+    }
+}
+
+function _loadingError(){
+    return {
+        type: types.NEW_QUALITY_LOADING_ERROR,
+        loadingError: true,
     }
 }
 

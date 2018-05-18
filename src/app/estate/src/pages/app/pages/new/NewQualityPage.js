@@ -109,7 +109,9 @@ class NewQualityPage extends Component {
             this.activePage = this.acceptancePage;
         }
         this.activeTab = index;
-        this.hiddenBar.onTabClick(index);
+        if (this.hiddenBar) {
+            this.hiddenBar.onTabClick(index);
+        }
     }
 
     componentDidMount() {
@@ -124,7 +126,6 @@ class NewQualityPage extends Component {
         if (this.activePage) {
             this.activePage.submit(this.props.navigation);
         } else {
-            alert("call error");
         }
     }
 
@@ -132,7 +133,7 @@ class NewQualityPage extends Component {
         if (this.activePage) {
             this.activePage.goBack(this.props.navigation);
         } else {
-            alert("call error");
+            this.props.navigation.goBack();
         }
     }
     setRef = (ref, index) => {
@@ -176,7 +177,22 @@ class NewQualityPage extends Component {
         );
     }
 
+    //加载失败view
+    renderErrorView(error) {
+        return (
+            <View>
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                <View>
+                    <Text style={{ alignSelf: "center", marginTop: 120 }}> 加载失败</Text>
+                </View>
+            </View>
+        );
+    }
+
     render() {
+        if (this.props.loadingError) {
+            return this.renderErrorView();
+        }
         return (
             <KeyboardAwareScrollView>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
@@ -227,6 +243,7 @@ export default connect(
     state => ({
         isLoading: state.newQuality.isLoading,
         editParams: state.newQuality.editQualityParams,
+        loadingError: state.newQuality.loadingError,
     }),
     dispatch => ({
         fetchData: (params) => {

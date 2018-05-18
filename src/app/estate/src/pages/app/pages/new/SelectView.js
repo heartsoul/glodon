@@ -206,18 +206,19 @@ class SelectView extends Component {
      * 选中的数据
      */
     getSelectedData = () => {
+        let ret = null;
         if (this.state.selectIndex == -1) {
             if (this.props.title === '责任人') {
                 this.props.value.userId = this.props.value.id;
             }
-            return this.props.value;
-        } else if(this.state.selectIndex == -2){
-            let ret = {}
-            return {};
-        }else{
-            let ret = this.state.dataList[this.state.selectIndex];
-            return ret;
+            ret = this.props.value;
+        } else if (this.state.selectIndex == -2) {
+            ret = {}
+        } else {
+            ret = this.state.dataList[this.state.selectIndex];
         }
+        ret = (ret) ? ret : {};
+        return ret;
     }
 
     /**
