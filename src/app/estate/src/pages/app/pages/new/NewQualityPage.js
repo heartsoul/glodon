@@ -123,8 +123,8 @@ class NewQualityPage extends Component {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
                 () => {
-                    this.goBack();
-                    return true
+                    // this.goBack();
+                    return false;
                 }
             )
         }
