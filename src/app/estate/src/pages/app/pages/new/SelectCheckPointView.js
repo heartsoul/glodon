@@ -94,8 +94,11 @@ export default class SelectCheckPointView extends Component {
                     style={{ flex: 1, textAlignVertical: 'top', minWidth: 100, paddingLeft: 12, paddingRight: 12, paddingTop: 2, paddingBottom: 0, backgroundColor: '#ffffff' }}
                     placeholder={'请设置'}
                     multiline={false}
+                    autoCorrect={false} 
+                    autoCapitalize='none'
                     underlineColorAndroid={"transparent"}
                     textAlign="right"
+                    
                     onChangeText={(text) => { this.textInputChange(text) }}
                     defaultValue={this.inputName}
                 />
