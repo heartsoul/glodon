@@ -5,7 +5,7 @@ import { View, StyleSheet, Text,TextInput, Image, TouchableOpacity,Dimensions} f
 const rightImage = require("app-images/icon_arrow_right_gray.png");
 var { width, height } = Dimensions.get("window");
 class TextInputWithData extends TextInput {
-    componentDidMount = () => {
+    componentWillMount = () => {
         this.value = ''+this.props.defaultValue;
     }
 } 
