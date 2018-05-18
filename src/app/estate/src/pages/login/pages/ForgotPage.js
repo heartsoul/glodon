@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react';
-import {
+import ReactNative, {
   StyleSheet,
   Text,
   View,
@@ -9,6 +9,7 @@ import {
   Dimensions,
   Image,
   BackHandler,
+  Platform,
 } from 'react-native';
 import { connect } from 'react-redux' // 引入connect函数
 import { Toast } from 'antd-mobile' // 引入connect函数
@@ -53,8 +54,7 @@ class ForgotPage extends React.Component {
     };
   }
   componentWillUnmount = () => {
-    BackHandler.removeEventListener('hardwareBackPress');
-    
+    this.removeBackListener();
     this.props.init();
     clearTimeout();
   }
@@ -128,15 +128,34 @@ class ForgotPage extends React.Component {
 
   componentDidMount = () => {
     this.props.imageCode();
-    BackHandler.addEventListener('hardwareBackPress', () => {
-          this.needBack((bRet)=>{
-            if(bRet){
-              storage.pop(this.props.navigation);
+   
+    if (Platform.OS === 'android') {
+        const BackHandler = ReactNative.BackHandler
+            ? ReactNative.BackHandler
+            : ReactNative.BackAndroid
+        this.backListener = BackHandler.addEventListener(
+            'hardwareBackPress',
+            () => {
+              this.needBack((bRet)=>{
+                if(bRet){
+                  storage.pop(this.props.navigation);
+                }
+              });
+              return true;
             }
-          });
-          return true;
-        });
-  }
+        )
+    }
+}
+
+removeBackListener() {
+    if (this.backListener) {
+        this.backListener.remove()
+        this.backListener = null
+    }
+}
+
+
+
   _onImageClick = () => {
     this.props.imageCode();
   }
