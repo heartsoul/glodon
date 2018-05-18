@@ -23,7 +23,8 @@ export default class BigImageViewPage extends Component {
         });
         this.state = {
             media: [...media],
-            bigMedia: []
+            bigMedia: [],
+            modalVisible: true,
         }
 
     }
@@ -67,13 +68,19 @@ export default class BigImageViewPage extends Component {
 
         });
     }
+    _setModalVisible(visible) {
+        this.setState({ modalVisible: visible });
+        storage.pop(this.props.navigation, 1);
+    }
+
     render() {
         //3.获取传入的图片等信息
         const { params } = this.props.navigation.state;
         const index = params.index || 0;
         if (this.state.bigMedia && this.state.bigMedia.length > 0) {
             return (
-                <Modal key={'big'} visible={true} transparent={true}>
+                <Modal
+                    key={'big'} visible={this.state.modalVisible} transparent={true} onRequestClose={() => { this._setModalVisible(false) }}>
                     <ImageViewer key={'bigImageView'} enableImageZoom={true} index={index} imageUrls={this.state.bigMedia} onClick={() => { // 图片单击事件
                         this.props.navigation.goBack();
                     }} />
