@@ -18,6 +18,7 @@ import * as SearchAction from "./../../actions/searchAction";
 import QualityListCell from "./../quality/qualityListCell";
 import EquipmentListCell from "./../equipment/equipmentListCell";
 import * as qualityListAction from '../../actions/qualityListAction'
+import * as equipmentAction from '../../actions/equipmentListAction'
 
 class SearchPage extends BaseSearchPage {
 
@@ -56,8 +57,15 @@ class SearchPage extends BaseSearchPage {
         }
     }
 
-    onEquipmentCellAction = () => {
-
+    onEquipmentCellAction = (item, index, type) => {
+        if (type == 'delete') {
+            this.props.deleteEquipmentData(item.value.id)
+            return;
+        }
+        if (type == 'submit') {
+            this.props.submitEquipmentData(item.value.id)
+            return;
+        }
     }
 
     /**
@@ -211,6 +219,16 @@ function mapDispatchToProps(dispatch) {
         submitQualityData: (qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName) => {
             if (dispatch) {
                 dispatch(qualityListAction.submitData(qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName))
+            }
+        },
+        deleteEquipmentData: (id) => {
+            if (dispatch) {
+                dispatch(equipmentAction.deleteData(id))
+            }
+        },
+        submitEquipmentData: (id) => {
+            if (dispatch) {
+                dispatch(equipmentAction.submitData(id))
             }
         },
     }
