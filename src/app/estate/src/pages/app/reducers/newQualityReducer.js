@@ -20,6 +20,8 @@ export default (state = initialState, action) => {
                 isLoading: false,
                 editQualityParams: action.editQualityParams,
             }
+        case types.NEW_QUALITY_RESET:
+            return initialState;
         default:
             return state;
     }

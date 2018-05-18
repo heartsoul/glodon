@@ -116,6 +116,10 @@ class NewQualityPage extends Component {
         this.props.fetchData(this.props.navigation.state.params);
     }
 
+    componentWillUnmount() {
+        this.props.reset();
+    }
+
     submit = () => {
         if (this.activePage) {
             this.activePage.submit(this.props.navigation);
@@ -171,7 +175,7 @@ class NewQualityPage extends Component {
             </View>
         );
     }
-   
+
     render() {
         return (
             <KeyboardAwareScrollView>
@@ -228,5 +232,8 @@ export default connect(
         fetchData: (params) => {
             dispatch(actions.fetchData(params))
         },
+        reset: () => {
+            dispatch(actions.reset())
+        }
     })
 )(NewQualityPage);

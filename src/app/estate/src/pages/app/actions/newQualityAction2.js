@@ -276,3 +276,9 @@ function _loadingDone(editParams) {
         isLoading: false,
     }
 }
+
+export function reset(){
+    return {
+        type: types.NEW_QUALITY_RESET,
+    }
+}
