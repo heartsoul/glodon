@@ -44,14 +44,24 @@ var resultArray = [];
      url: '' }
  * @param {(code:"success||fail",response)=>{}} callback 回调函数中code为success或者fail，response是错误信息，或者上传成功的数据 resultArray
  */
-export async function upLoadFiles(fileData, callback) {
+   
+export async function upLoadFiles(fileData, callbackIn) { 
     count = 0;
     len = fileData.length
     resultArray = [];
-    fileData.map((file) => {
+    let callback = (code, response) => {
+        let resultArrayRet = response;
+        if(resultArrayRet && resultArrayRet.sort) {
+            resultArrayRet = resultArrayRet.sort((a,b)=>{
+                return (a.index > b.index);
+            })
+        }
+        callbackIn(code, resultArrayRet);
+    }
+    fileData.map((file,index) => {
         let path = "file://" + file.path;
-        if(!isUploadedFile(file, callback)){
-            getOperationCode(path, file.name, file.length, callback,file.md5,file);
+        if(!isUploadedFile(file, callback,index)){
+            getOperationCode(path, file.name, file.length, callback,file.md5,file,index);
         }
     });
 }
@@ -59,7 +69,7 @@ export async function upLoadFiles(fileData, callback) {
  * 已经上传过的文件不再上传
  * @param {*} file 
  */
-function isUploadedFile(file,callback) {
+function isUploadedFile(file,callback,index) {
     if (file && file.objectId) {
         let res = {
             name: file.name,
@@ -68,6 +78,7 @@ function isUploadedFile(file,callback) {
             digest: file.digest,
             length: file.length,
             uploadTime: file.createTime,
+            index:index
         }
         resultArray.push(res);
         count++;
@@ -88,7 +99,7 @@ function isUploadedFile(file,callback) {
  * @param {*} callback 回调
  * @param {*} digest md5签名
  */
-async function getOperationCode(filePath, name, length, callback,digest=null,file) {
+async function getOperationCode(filePath, name, length, callback,digest=null,file,index) {
     
     let api = "/bimpm/attachment/operationCode";
     let timestamp = new Date().getTime();
@@ -115,7 +126,7 @@ async function getOperationCode(filePath, name, length, callback,digest=null,fil
         .then((response) => response.text())
         .then((responseData) => {
             console.log("getOperationCode result:"+responseData);
-            upLoad(filePath, name, responseData, callback,file);
+            upLoad(filePath, name, responseData, callback,file,index);
         })
         .catch((error) => {
             alert(error)
@@ -166,7 +177,7 @@ export async function getBimFileUrl(objectId, callback) {
  * @param {*} operationCode 操作码 
  * @param {*} callback 回调
  */
-async function upLoad(filePath, name, operationCode, callback,nativeFile) {
+async function upLoad(filePath, name, operationCode, callback,nativeFile,index) {
 
     let api = "/v1/insecure/objects?operationCode=" + operationCode;
     let formData = new FormData();
@@ -190,7 +201,7 @@ async function upLoad(filePath, name, operationCode, callback,nativeFile) {
                 count++;
                 let res = parseUploadData(data.data);
                 if (res && res.name) {
-                    resultArray.push({...nativeFile,...res});
+                    resultArray.push({...nativeFile,...res,index:index});
                 }
             } else {
                 callback("fail", data);
