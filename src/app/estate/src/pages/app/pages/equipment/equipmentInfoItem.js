@@ -1,14 +1,14 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { View, StyleSheet, Text,TextInput, Image, TouchableOpacity,Dimensions} from 'react-native';
+import { View, StyleSheet, Text, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native';
 const rightImage = require("app-images/icon_arrow_right_gray.png");
 var { width, height } = Dimensions.get("window");
 class TextInputWithData extends TextInput {
     componentWillMount = () => {
-        this.value = ''+this.props.defaultValue;
+        this.value = '' + this.props.defaultValue;
     }
-} 
+}
 export default class EquipmentInfoItem extends React.Component {
     onClick = (event) => {
         if (!this.props.onClick) {
@@ -18,17 +18,17 @@ export default class EquipmentInfoItem extends React.Component {
     }
 
     renderInput = () => {
-        let {content} = this.props;
-        if(content) {
-            content = ''+content;
+        let { content } = this.props;
+        if (content) {
+            content = '' + content;
         }
         if (!this.props.onClick) {
             return (
                 <View style={styles.containerView} >
-                    <View style={[styles.titleView,this.props.titleWidth?{width:this.props.titleWidth}:null]}>
-                        <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
+                    <View style={[styles.titleView, this.props.titleWidth ? { width: this.props.titleWidth } : null]}>
+                        <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                     </View>
-                    <View style={[styles.contentInputView,this.props.titleWidth?{width:width-40-this.props.titleWidth}:null]}>
+                    <View style={[styles.contentInputView, this.props.titleWidth ? { width: width - 40 - this.props.titleWidth } : null]}>
                         <TextInputWithData returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none' defaultValue={content} style={styles.textInput} onChangeText={this.props.onChangeText}></TextInputWithData>
                     </View>
                 </View>
@@ -36,15 +36,15 @@ export default class EquipmentInfoItem extends React.Component {
         }
         return (
             <View style={styles.containerView} >
-                <View style={[styles.titleView,this.props.titleWidth?{width:this.props.titleWidth}:null]}>
-                <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
+                <View style={[styles.titleView, this.props.titleWidth ? { width: this.props.titleWidth } : null]}>
+                    <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={styles.contentInputView}>
-                    <TextInputWithData defaultValue={content} style={styles.textInput} returnKeyType="next" underlineColorAndroid={"transparent"}  autoCorrect={false} autoCapitalize='none'></TextInputWithData>
+                    <TextInputWithData defaultValue={content} style={styles.textInput} returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none'></TextInputWithData>
                 </View>
                 <TouchableOpacity style={styles.rightAction} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
-                        <Image source={rightImage} style={styles.infoMark} />
-                    </TouchableOpacity>
+                    <Image source={rightImage} style={styles.infoMark} />
+                </TouchableOpacity>
             </View>
         );
     }
@@ -54,8 +54,8 @@ export default class EquipmentInfoItem extends React.Component {
             return (
                 <View style={styles.containerView} >
                     <View style={styles.titleViewHeader}>
-                    <Text style={{backgroundColor:'#00b5f2',width:2,marginRight:5,height:16,fontSize:20,fontWeight:'bold'}}>{' '}</Text>
-                    <Text style={[styles.leftTitleHeader,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
+                        <Text style={{ backgroundColor: '#00b5f2', width: 2, marginRight: 5, height: 16, fontSize: 20, fontWeight: 'bold' }}>{' '}</Text>
+                        <Text style={[styles.leftTitleHeader, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                     </View>
                     <View style={styles.contentView}>
                         <Text style={styles.content}>{this.props.content}</Text>
@@ -66,15 +66,15 @@ export default class EquipmentInfoItem extends React.Component {
         return (
             <View style={styles.containerView} >
                 <View style={styles.titleViewHeader}>
-                <Text style={{backgroundColor:'#00b5f2',width:2,marginRight:5,height:16,fontSize:20,fontWeight:'bold'}}>{' '}</Text>
-                <Text style={[styles.leftTitleHeader,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
+                    <Text style={{ backgroundColor: '#00b5f2', width: 2, marginRight: 5, height: 16, fontSize: 20, fontWeight: 'bold' }}>{' '}</Text>
+                    <Text style={[styles.leftTitleHeader, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={styles.contentView}>
                     <Text style={styles.content}>{this.props.content}</Text>
                 </View>
                 <TouchableOpacity style={styles.rightAction} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
-                        <Image source={rightImage} style={styles.infoMark} />
-                    </TouchableOpacity>
+                    <Image source={rightImage} style={styles.infoMark} />
+                </TouchableOpacity>
             </View>
         );
     }
@@ -83,7 +83,7 @@ export default class EquipmentInfoItem extends React.Component {
             return (
                 <View style={styles.containerView} >
                     <View style={styles.titleView}>
-                    <Text style={styles.leftTitle}>{this.props.leftTitle}</Text>
+                        <Text style={styles.leftTitle}>{this.props.leftTitle}</Text>
                     </View>
                     <View style={styles.contentView}>
                         <Text style={styles.content}>{this.props.content}</Text>
@@ -94,17 +94,17 @@ export default class EquipmentInfoItem extends React.Component {
         return (
             <View style={styles.containerView} >
                 <View style={styles.titleView}>
-                <Text style={[styles.leftTitle,this.props.leftTitleColor?{color:this.props.leftTitleColor}:{}]}>{this.props.leftTitle}</Text>
+                    <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={styles.contentViewAction}>
-                <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
-                    <Text style={styles.content}>{this.props.content}</Text>
+                    <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                        <Text style={styles.content}>{this.props.content}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                         <Image source={rightImage} style={styles.infoMark} />
                     </TouchableOpacity>
                 </View>
-                
+
             </View>
         );
     }
@@ -115,9 +115,17 @@ export default class EquipmentInfoItem extends React.Component {
                     <Text style={styles.leftTitle}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={styles.contentView}>
-                    <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                    <TouchableOpacity style={{flex:1}}activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                         <Text style={[styles.content, styles.link]}>{this.props.content}</Text>
                     </TouchableOpacity>
+                    {
+                        (this.props.onClick) ? (
+                            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                                <Image source={rightImage} style={styles.infoMark} />
+                            </TouchableOpacity>
+                        ) : (null)
+                    }
+
                 </View>
             </View>
         );
@@ -132,8 +140,8 @@ export default class EquipmentInfoItem extends React.Component {
         let media = [];
         images.map((item, index) => {
             media.push({
-                photo:item.url,
-                objectId:item.objectId
+                photo: item.url,
+                objectId: item.objectId
             });
         });
         storage.pushNext(null, 'BigImageViewPage', { media: media, index: index })
@@ -239,17 +247,17 @@ EquipmentInfoItem.propTypes = {
     /**
     * 图片链接
     */
-   url: PropTypes.any,
-   // images 类型需要的数据
-   /**
-   * 图片链接
-   */
-   urls: PropTypes.array,
-   /**
-     * 标题宽度
-     */
+    url: PropTypes.any,
+    // images 类型需要的数据
+    /**
+    * 图片链接
+    */
+    urls: PropTypes.array,
+    /**
+      * 标题宽度
+      */
     titleWidth: PropTypes.any,
-   
+
 
 };
 
@@ -269,12 +277,12 @@ const styles = StyleSheet.create({
         fontWeight: '100',
         marginTop: 0,
         marginBottom: 0,
-        height:40,
+        height: 40,
     },
     content: {
         fontSize: 14,
         fontWeight: '100',
-        alignContent:'center',
+        alignContent: 'center',
     },
     link: {
         color: '#00b5f2',
@@ -304,33 +312,33 @@ const styles = StyleSheet.create({
     titleView: {
         flexDirection: 'row',
         alignItems: 'center',
-        width:75,
+        width: 75,
     },
     contentView: {
         flexDirection: 'row',
         marginRight: 75,
-        height:40,
-        width:width-75-40,
+        height: 40,
+        width: width - 75 - 40,
         alignItems: 'center',
     },
     contentViewAction: {
         flexDirection: 'row',
         marginRight: 75,
-        height:40,
-        width:width-75-30,
-        alignContent:'center',
-        alignItems:'center',
-        justifyContent:'flex-end',
+        height: 40,
+        width: width - 75 - 30,
+        alignContent: 'center',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
     },
     contentInputView: {
-        width:width-75-40,
-        height:40,
+        width: width - 75 - 40,
+        height: 40,
     },
     infoMark: {
         marginRight: -1,
         width: 17,
         height: 17,
-        resizeMode:'contain'
+        resizeMode: 'contain'
     },
     rightAction: {
         right: 0,
@@ -338,8 +346,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
         position: 'absolute',
         alignItems: 'center',
-        alignContent:'flex-start',
-        justifyContent:'flex-start',
+        alignContent: 'flex-start',
+        justifyContent: 'flex-start',
     },
     lineView: {
         height: 1,
