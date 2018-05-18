@@ -3,8 +3,8 @@
  */
 'use strict';
 import React, { Component } from "react";
-import {
-    ActivityIndicator, ScrollView, StyleSheet, Text, View, StatusBar,
+import ReactNative, {
+    ActivityIndicator, ScrollView, StyleSheet, Text, View, StatusBar, Platform
 } from "react-native";
 import { connect } from 'react-redux' // 引入connect函数
 
@@ -193,12 +193,37 @@ class EquipmentDetailPage extends Component {
         }
         fetchData(null);
         this.props.getModelElementProperty(this.props.relevantEquipmentModle, this.props.equipmentInfo)
+
+        if (Platform.OS === 'android') {
+            const BackHandler = ReactNative.BackHandler
+                ? ReactNative.BackHandler
+                : ReactNative.BackAndroid
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    this.needBack((needBack)=>{
+                        if(needBack) {
+                          storage.pop(this.props.navigation,1)
+                        }
+                      })
+                    return true
+                }
+            )
+        }
     }
 
     componentWillUnmount() {
         const { resetData } = this.props;
         resetData();
         this.props.resetTransformInfo();
+        this.removeBackListener()
+    }
+
+    removeBackListener() {
+        if (this.backListener) {
+            this.backListener.remove()
+            this.backListener = null
+        }
     }
     //加载等待的view
     renderLoadingView() {

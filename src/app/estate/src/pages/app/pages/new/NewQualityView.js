@@ -91,10 +91,7 @@ class NewQualityView extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log('====================================');
-        console.log(nextProps);
-        console.log('====================================');
-        if (nextProps.editParams && nextProps.editParams.editInfo) {
+        if (nextProps.editParams && nextProps.editParams.editInfo && !this.state.initial) {
             let props = nextProps;
             this.hasImage = true;
             if (props.editParams && props.editParams.noimage) {

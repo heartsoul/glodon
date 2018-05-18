@@ -1,7 +1,7 @@
 "use strict"
 
 import React, { Component } from 'react';
-import {
+import ReactNative, {
     View,
     Text,
     StatusBar,
@@ -116,12 +116,30 @@ class NewQualityPage extends Component {
 
     componentDidMount() {
         this.props.fetchData(this.props.navigation.state.params);
+        if (Platform.OS === 'android') {
+            const BackHandler = ReactNative.BackHandler
+                ? ReactNative.BackHandler
+                : ReactNative.BackAndroid
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    this.goBack();
+                    return true
+                }
+            )
+        }
     }
 
     componentWillUnmount() {
         this.props.reset();
+        this.removeBackListener()
     }
-
+    removeBackListener() {
+        if (this.backListener) {
+            this.backListener.remove()
+            this.backListener = null
+        }
+    }
     submit = () => {
         if (this.activePage) {
             this.activePage.submit(this.props.navigation);

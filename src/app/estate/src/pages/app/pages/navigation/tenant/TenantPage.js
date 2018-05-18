@@ -3,14 +3,17 @@
  */
 'use strict';
 import React, { Component, } from "react";
-import { ActivityIndicator, Animated, FlatList, ScrollView, StyleSheet, Text, View, StatusBar, Image, TouchableOpacity } from "react-native";
-import * as USERAPI from "app-api";
+import ReactNative, { ActivityIndicator, Animated, FlatList, ScrollView, StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, Platform } from "react-native";
+import { LeftBarButtons } from "app-components";
+import * as API from "app-api";
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 export default class tenantList extends Component {
-    static navigationOptions = {
+    static navigationOptions = ({ navigation, screenProps }) => ({
         title: '租户列表',
-    }
+        gesturesEnabled: false,
+        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
+    });
     changeProject = false;
     constructor(props) {
         super(props);
@@ -25,10 +28,41 @@ export default class tenantList extends Component {
             dataArray: [],
         }
         //在使用过程中进行切换租户和项目
-        if(undefined != this.props.navigation.state.params && undefined!=this.props.navigation.state.params.changeProject){
+        if (undefined != this.props.navigation.state.params && undefined != this.props.navigation.state.params.changeProject) {
             this.changeProject = this.props.navigation.state.params.changeProject;
         }
-      
+        this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, })
+    }
+
+    needBack = (backFun) => {
+        // 这里要处理保存操作
+        if (backFun) {
+            backFun(false);
+        }
+        this.resetTenant();
+    }
+    resetTenant = () => {
+        API.setCurrentTenant(storage.loadTenant())
+            .then((responseData) => {
+                storage.pop(this.props.navigation, 1)
+            });
+    }
+    loadLeftTitle = () => {
+        return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
+    }
+    componentDidMount() {
+        this.appearAfterMount && this.appear()
+    }
+
+    componentWillUnmount() {
+        this.removeBackListener()
+    }
+
+    removeBackListener() {
+        if (this.backListener) {
+            this.backListener.remove()
+            this.backListener = null
+        }
     }
 
     //网络请求
@@ -37,7 +71,7 @@ export default class tenantList extends Component {
         if (this.props.navigation.getParam('change') === true && storage.loadLastTenant() != '0' && storage.loadLastTenant() != 'undefined') {
             this.props.navigation.setParams({ change: false });
             let navigator = this.props.navigation;
-            storage.pushNext(navigator, "ProjectPage",{ tenantId: storage.loadLastTenant(), id: storage.loadTenant() })
+            storage.pushNext(navigator, "ProjectPage", { tenantId: storage.loadLastTenant(), id: storage.loadTenant() })
         }
         let userInfo = storage.loadUserInfo();
         if (userInfo && userInfo["accountInfo"]) {
@@ -79,12 +113,21 @@ export default class tenantList extends Component {
         }
     }
 
-    componentDidMount() {
-
-    }
     componentWillMount() {
         //请求数据
         this.fetchData();
+        if (Platform.OS === 'android') {
+            const BackHandler = ReactNative.BackHandler
+                ? ReactNative.BackHandler
+                : ReactNative.BackAndroid
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    this.resetTenant();
+                    return true
+                }
+            )
+        }
     }
 
     //加载等待的view
@@ -113,29 +156,30 @@ export default class tenantList extends Component {
             </View>
         );
     }
+
     //点击列表点击每一行
     _clickItem = (item, index) => {
         //   alert(item.value.tenantId);
-        // USERAPI.setCurrentTenant(item.value.tenantId).then((responseData) => {
+        API.setCurrentTenant(item.value.tenantId).then((responseData) => {
             let navigator = this.props.navigation;
             // storage.saveTenant(item.value.id);
             // storage.saveLastTenant(item.value.tenantId);
             // storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
             // storage.pushNext(navigator, "ProjectPage")
 
-            if(!this.changeProject){
+            if (!this.changeProject) {
                 storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
                 storage.pushNext(navigator, "ProjectPage", { tenantId: item.value.tenantId, id: item.value.id })
-            }else{
+            } else {
                 storage.loadTenantInfo((retVal) => {
                     storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
                     storage.saveTenantInfoRefresh('1');//设置刷新
                     this.props.navigation.pop("ChangeProjectPage");
                 });
-                
+
             }
 
-        // });
+        });
     }
     //返回itemView
     renderItemView = ({ item, index }) => {
