@@ -21,6 +21,7 @@ export default class QualityListCell extends PureComponent {
         this.state = {
             item: props.item,
             index: props.index,
+            image:props.item.image?props.item.image:projectImage
         }
     }
     render() {
@@ -86,12 +87,26 @@ export default class QualityListCell extends PureComponent {
             </TouchableOpacity>
         );
     }
-    renderImage = (item) => {
-        let imageSource = projectImage;
-        if (item.value.files && item.value.files.length > 0 && item.value.files[0].url && item.value.files[0].url.length>1) {
-            imageSource = { uri: item.value.files[0].url };
+    componentWillMount = () => {
+        let item = this.props.item;
+        if (item &&(!item.image) && item.value.files && item.value.files.length > 0 && item.value.files[0].objectId) {
+            API.getBimFileUrlThumbnail(item.value.files[0].objectId,(success,url)=>{
+                if(success) {
+                    item.image = {uri:url};
+                    this.setState({
+                        image:{uri:url}
+                    })
+                }
+            });
         }
-        return (<Image source={imageSource} style={[styles.image]} />)
+        
+    }
+    renderImage = (item) => {
+        // let imageSource = projectImage;
+        // if (item.value.files && item.value.files.length > 0 && item.value.files[0].url && item.value.files[0].url.length>1) {
+        //     imageSource = { uri: item.value.files[0].url };
+        // }
+        return (<Image source={this.state.image} style={[styles.image]} />)
     }
     // 提交 & 删除
     renderSubmitAndDeleteAction = (item, index) => {

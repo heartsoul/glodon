@@ -137,7 +137,53 @@ async function getOperationCode(filePath, name, length, callback,digest=null,fil
 /**
  * 获取图片路径
  * @param {*} objectId 文件对象id
- * @param {*} thumbnail 是否是缩略图， 默认是大图
+ * @param {*} callback 成功回调 funciton(success,url)
+ */
+export async function getBimFileUrlThumbnail(objectId, callback, thumbnailSize = null) {
+    let api = `${AppConfig.BASE_URL}/bimpm/attachment/attachment/url?objectId=${objectId}&thumbnail=${true}`;
+    if(thumbnailSize) {
+        api = api + '&thumbnailSize='+thumbnailSize;
+    }
+    let ops = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json;charset=utf-8",
+            "X-Requested-With": "XMLHttpRequest",
+        },
+        credentials: 'include', // 带上cookie
+    };
+
+    if (storage.isLogin()) {
+        ops.headers.Authorization = "Bearer " + storage.getLoginToken();
+        let t = storage.loadLastTenant();
+        if(t && t != '0') {
+            ops.headers['X-CORAL-TENANT'] = t;
+        }
+    }
+    return fetch(api, ...ops)
+        .then((response) => {
+            if (response.status >= 200 && response.status < 300) {
+                return response.text();
+            }
+            return null;
+        } )
+        .then((responseData) => {
+            if(!responseData) {
+                callback(false,null);
+                return {};
+            } 
+            let url = responseData;
+            callback(true,url);
+           return {url};
+        })
+        .catch((error) => {
+            callback(false,error);
+        });
+}
+/**
+ * 获取图片路径
+ * @param {*} objectId 文件对象id
+ * @param {*} callback 成功回调 funciton(success,url)
  */
 export async function getBimFileUrl(objectId, callback) {
 
@@ -159,8 +205,17 @@ export async function getBimFileUrl(objectId, callback) {
         }
     }
     return fetch(api, ...ops)
-        .then((response) => response.text())
+        .then((response) => {
+            if (response.status >= 200 && response.status < 300) {
+                return response.text();
+            }
+            return null;
+        } )
         .then((responseData) => {
+            if(!responseData) {
+                callback(false,null);
+                return {};
+            } 
             let url = responseData;
             callback(true,url);
            return {url};
