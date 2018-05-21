@@ -11,7 +11,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-
+#import "SoulPhotoEditViewController.h"
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -42,6 +42,9 @@
   self.window.backgroundColor = [UIColor whiteColor];
   [UINavigationBar appearance].backIndicatorImage = [UIImage imageNamed:@"icon_fanhui"];
   [UINavigationBar appearance].backIndicatorTransitionMaskImage = [UIImage imageNamed:@"icon_fanhui"];
+  [SoulPhotoEditViewController test:rootViewController image:[UIImage imageNamed:@"icon_splash"] callback:^(NSArray *files) {
+    
+  }];
   return YES;
 }
 

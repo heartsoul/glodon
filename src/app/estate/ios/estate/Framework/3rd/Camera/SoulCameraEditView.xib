@@ -107,7 +107,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lQV-eX-kg8">
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lQV-eX-kg8" customClass="SoulDrawColorPickerToolbar">
                     <rect key="frame" x="0.0" y="282" width="375" height="103"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <subviews>
@@ -138,18 +138,39 @@
                                 <action selector="onTextAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="Vjl-rs-DAV"/>
                             </connections>
                         </button>
-                        <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ibQ-IB-ANB">
-                            <rect key="frame" x="0.0" y="51" width="375" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            <items/>
-                        </toolbar>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="zPN-0G-pMT">
+                            <rect key="frame" x="0.0" y="51" width="315" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="2IT-tL-UVb">
+                                <size key="itemSize" width="40" height="40"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                        </collectionView>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t5r-iW-Qdx">
+                            <rect key="frame" x="319" y="51" width="48" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.25342465749999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <inset key="imageEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                            <state key="normal" image="icon_color_back">
+                                <color key="titleColor" red="0.20000000000000001" green="0.80784313730000001" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="onColorBackAction:" destination="lQV-eX-kg8" eventType="touchUpInside" id="GTB-w6-b19"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" red="0.01176470588" green="0.01176470588" blue="0.01176470588" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
+                    <connections>
+                        <outlet property="backButton" destination="t5r-iW-Qdx" id="xWd-Ff-6vi"/>
+                        <outlet property="colloectionView" destination="zPN-0G-pMT" id="Ho1-a0-ceb"/>
+                    </connections>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
-                <outlet property="bottomDrawToolbar" destination="ibQ-IB-ANB" id="Cwn-Ct-aJR"/>
                 <outlet property="bottomToolbar" destination="MTH-8q-Bhg" id="gcu-KK-JVt"/>
                 <outlet property="cancelButton" destination="9d5-xP-vFI" id="vQC-Kc-Ca3"/>
                 <outlet property="cancelEditButton" destination="IQk-Vn-Awv" id="Ebl-DO-lVQ"/>
@@ -166,6 +187,7 @@
     <resources>
         <image name="icon_bottom_cancel" width="104" height="104"/>
         <image name="icon_bottom_finish" width="104" height="104"/>
+        <image name="icon_color_back" width="56" height="56"/>
         <image name="icon_draw_line_green" width="48" height="48"/>
         <image name="icon_draw_line_white" width="48" height="48"/>
         <image name="icon_draw_text" width="48" height="48"/>

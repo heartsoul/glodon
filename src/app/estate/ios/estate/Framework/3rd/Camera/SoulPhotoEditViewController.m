@@ -105,5 +105,22 @@
     // Pass the selected object to the new view controller.
 }
 */
-
++(void)test:(UIViewController*)navcDelegate image:(UIImage*)image  callback:(void(^)(NSArray * files))callback {
+  SoulPhotoEditViewController * vc1 = [[SoulPhotoEditViewController alloc] initWithNibName:nil bundle:nil];
+  vc1.inputImageBlock = ^UIImage * _Nonnull{
+    return image;
+  };
+  
+  [vc1 setDidFinishPickingBlock:^(NSString *localIdentifier) {
+    if (localIdentifier) {
+        callback(@[]);
+    } else {
+      callback(@[]);
+    }
+  }];
+  [vc1 setDidCancelBlock:^{
+    callback(@[]);
+  }];
+  [navcDelegate presentViewController:vc1 animated:NO completion:nil];
+}
 @end

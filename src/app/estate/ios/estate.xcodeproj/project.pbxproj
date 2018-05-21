@@ -29,6 +29,9 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		246079FA20B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 246079F920B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m */; };
+		24607A2220B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24607A2120B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib */; };
+		24607A2420B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24607A2320B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib */; };
 		247E2B0F204631A600016F63 /* GLDRNEventEmitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2B0C204631A600016F63 /* GLDRNEventEmitter.m */; };
 		247E2B10204631A600016F63 /* GLDRNBridgeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2B0D204631A600016F63 /* GLDRNBridgeModule.m */; };
 		247E2BD02046373300016F63 /* NSJSONSerialization+safeGenerate.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2B132046373300016F63 /* NSJSONSerialization+safeGenerate.m */; };
@@ -435,6 +438,10 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = estate/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = estate/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		246079F820B2850D00F2CA6F /* SoulDrawColorPickerToolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoulDrawColorPickerToolbar.h; sourceTree = "<group>"; };
+		246079F920B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoulDrawColorPickerToolbar.m; sourceTree = "<group>"; };
+		24607A2120B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SoulDrawColorPickerToolbar.xib; sourceTree = "<group>"; };
+		24607A2320B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SoulDrawColorPickerCollectionViewCell.xib; sourceTree = "<group>"; };
 		247E2B0B204631A600016F63 /* GLDRNBridgeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLDRNBridgeModule.h; sourceTree = "<group>"; };
 		247E2B0C204631A600016F63 /* GLDRNEventEmitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLDRNEventEmitter.m; sourceTree = "<group>"; };
 		247E2B0D204631A600016F63 /* GLDRNBridgeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLDRNBridgeModule.m; sourceTree = "<group>"; };
@@ -732,6 +739,10 @@
 				06958C492082E7220015C54F /* SoulActionToolbarView.m */,
 				06958C462082E7220015C54F /* SoulActionToolbarViews.xib */,
 				06958C402082E7220015C54F /* SoulCameraEditView.xib */,
+				246079F820B2850D00F2CA6F /* SoulDrawColorPickerToolbar.h */,
+				246079F920B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m */,
+				24607A2120B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib */,
+				24607A2320B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -1734,9 +1745,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24607A2220B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib in Resources */,
 				06958C842082E7220015C54F /* SoulActionToolbarViews.xib in Resources */,
 				247E2BFC2046373400016F63 /* XHDatePickerView.xib in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				24607A2420B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib in Resources */,
 				06958C812082E7220015C54F /* SoulCameraEditView.xib in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
@@ -1943,6 +1956,7 @@
 				247E2BF02046373400016F63 /* NetApiDelegate.m in Sources */,
 				247E2BD52046373300016F63 /* NSData+JSON.m in Sources */,
 				247E2BD22046373300016F63 /* UINavigationController+Theme.m in Sources */,
+				246079FA20B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m in Sources */,
 				247E2BE02046373300016F63 /* UIAlertAction+Soul.m in Sources */,
 				247E2BE82046373300016F63 /* UIColor+RGBA.m in Sources */,
 				247E2BEA2046373400016F63 /* UIView+MBProgressHUD.m in Sources */,

@@ -63,7 +63,7 @@ class ProjectPage extends Component {
                 return;
             }
             API.setCurrentTenant(newTenant).then((responseData) => {
-                storage.saveTenant(this.props.navigation.state.params.tenantId);
+                storage.saveTenant(this.props.navigation.state.params.id);
                 storage.saveLastTenant(newTenant);
                 storage.saveProject("" + item.value.id, "" + item.value.name);
                 storage.gotoMainPage(navigator);
