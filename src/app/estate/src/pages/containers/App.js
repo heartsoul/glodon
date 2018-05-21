@@ -182,7 +182,7 @@ function resetGetStateForAction(RootStack) {
         }
         if (Platform.OS === 'android' && action.type === NavigationActions.BACK && state.routes.length === 1) {
             let systemDate = new Date().getTime();
-            if (systemDate - clickTime > 500) {
+            if (systemDate - clickTime > 2000) {
                 clickTime = systemDate
                 action.type = NavigationActions.POP;
                 action.n = 0;
