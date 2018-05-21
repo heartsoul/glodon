@@ -126,7 +126,7 @@ class SearchPage extends BaseSearchPage {
             value: item,
         }
         return (
-            <EquipmentListCell key={item.key} onCellAction={this.onEquipmentCellAction} item={item} index={index} />
+            <EquipmentListCell key={item.key} onCellAction={this.onEquipmentCellAction} item={item} index={index} keywords={this.state.keywords}/>
         );
     }
 
