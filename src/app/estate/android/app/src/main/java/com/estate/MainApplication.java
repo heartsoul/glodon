@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 
 import com.estate.react.GLDReactPackage;
 import com.facebook.react.ReactApplication;
+import com.rnziparchive.RNZipArchivePackage;
+import com.rnfs.RNFSPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.ReactContext;
@@ -28,6 +30,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new RNZipArchivePackage(),
+            new RNFSPackage(),
               new GLDReactPackage()
       );
     }
@@ -51,7 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     // SharedPreferences mPreferences =    PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-    // mPreferences.edit().putString("debug_http_host","10.0.2.2:9999").commit();
+    // mPreferences.edit().putString("debug_http_host","10.1.92.16:9999").commit();
 
     instance = this;
     ScreenUtil.init(this);

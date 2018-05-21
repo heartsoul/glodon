@@ -25,6 +25,10 @@ target 'estate' do
   project './estate.xcodeproj'
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
+  pod 'RNZipArchive', :path => '../node_modules/react-native-zip-archive'
+
 end
 target 'CKSecurityTool' do
   project './CKSecurityTool/CKSecurityTool.xcodeproj'

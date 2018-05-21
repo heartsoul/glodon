@@ -183,6 +183,8 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
     compile 'com.google.code.gson:gson:2.8.2'
+    implementation project(':react-native-fs')
+    implementation project(':react-native-zip-archive')
 }
 
 // Run this once to be able to run the application with BUCK
