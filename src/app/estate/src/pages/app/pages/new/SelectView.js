@@ -45,10 +45,19 @@ class SelectView extends Component {
             showStar: nextProps.showStar,
         });
         if (this.props.title === '责任人') {
-            if (nextProps.extraData && this.props.extraData && nextProps.extraData.coperationId != this.props.extraData.coperationId) {
+            let oldCoperationId = this.props.extraData ? this.props.extraData.coperationId : 0;
+            let newCoperationId = nextProps.extraData ? nextProps.extraData.coperationId : 0;
+            if (newCoperationId != oldCoperationId) {
+                let selectIndex = oldCoperationId != 0 ? -2: -1
                 this.setState({
-                    selectIndex: -2,
+                    selectIndex: selectIndex,
                     dataList: []
+                }, () => {
+                    this.fetchPersons();
+                })
+            } else if (newCoperationId === 0) {
+                this.setState({
+                    showEmpty: true,
                 })
             }
         }
@@ -119,6 +128,26 @@ class SelectView extends Component {
         return index;
     }
 
+    fetchPersons = () => {
+        let extraData = this.props.extraData;//施工单位
+        if (!extraData) {
+            return;
+        }
+        let coperationId = extraData.coperationId;
+        API.getPersonList(storage.loadProject(), coperationId)
+            .then(data => {
+                if (data && data.data && data.data.length > 0) {
+                    this.state.dataList = data.data;
+                } else {
+                    this.setState({
+                        showEmpty: true,
+                    })
+                }
+            }).catch((e) => {
+                console.log(e);
+            });
+    }
+
     /**
      * 查询施工单位的责任人
      */
@@ -132,6 +161,16 @@ class SelectView extends Component {
             return;
         }
         let coperationId = extraData.coperationId;
+        if (this.state.dataList && this.state.dataList.length > 0 && this.state.dataList[0].coperationCorpId === coperationId) {
+            let selectIndex = this.getSelectPersonIndex(this.state.dataList);
+            this.setState({
+                selectIndex: selectIndex,
+                showEmpty: false,
+            }, () => {
+                this.showActionSheet();
+            });
+            return;
+        }
         API.getPersonList(storage.loadProject(), coperationId)
             .then(data => {
                 if (data && data.data && data.data.length > 0) {
@@ -165,6 +204,9 @@ class SelectView extends Component {
             }
         } else {
             selectIndex = this.getSelectedPersonIndex(persons);
+        }
+        if(this.state.selectIndex === -2 && selectIndex === -1){
+            selectIndex = -2;
         }
 
         return selectIndex;

@@ -42,7 +42,7 @@ export default class tenantList extends Component {
         this.resetTenant();
     }
     resetTenant = () => {
-        API.setCurrentTenant(storage.loadTenant())
+        API.setCurrentTenant(storage.loadLastTenant())
             .then((responseData) => {
                 storage.pop(this.props.navigation, 1)
             });
