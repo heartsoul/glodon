@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -129,6 +128,9 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B38FDF305D5760954341FCBA /* libPods-estate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B59B16D1F688C59F154384F6 /* libPods-estate.a */; };
+		5DFCF0843AEE4A24940A1C71 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0F2450388E4B94950FCA67 /* libRealmReact.a */; };
+		CF0C6AE789AA4AC19D5998AE /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D0AE1917FF754FF1B107AE1C /* libc++.tbd */; };
+		2C829E31715543F9A12A6A29 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DCB9F29F6734D14908C260D /* libz.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -638,6 +640,10 @@
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B59B16D1F688C59F154384F6 /* libPods-estate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-estate.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDD2AC708EC53F9CBB04F80C /* Pods-estate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-estate.debug.xcconfig"; path = "Pods/Target Support Files/Pods-estate/Pods-estate.debug.xcconfig"; sourceTree = "<group>"; };
+		BF96D02BC51F4FEEA6C088B0 /* RealmReact.xcodeproj */ = {isa = PBXFileReference; name = "RealmReact.xcodeproj"; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		3D0F2450388E4B94950FCA67 /* libRealmReact.a */ = {isa = PBXFileReference; name = "libRealmReact.a"; path = "libRealmReact.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		D0AE1917FF754FF1B107AE1C /* libc++.tbd */ = {isa = PBXFileReference; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		2DCB9F29F6734D14908C260D /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -660,6 +666,9 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				B38FDF305D5760954341FCBA /* libPods-estate.a in Frameworks */,
+				5DFCF0843AEE4A24940A1C71 /* libRealmReact.a in Frameworks */,
+				CF0C6AE789AA4AC19D5998AE /* libc++.tbd in Frameworks */,
+				2C829E31715543F9A12A6A29 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1254,6 +1263,8 @@
 				247E2C3A20463AC200016F63 /* CKSecurityTool.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				B59B16D1F688C59F154384F6 /* libPods-estate.a */,
+				D0AE1917FF754FF1B107AE1C /* libc++.tbd */,
+				2DCB9F29F6734D14908C260D /* libz.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1292,6 +1303,7 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				30E2D03B6DD14E379598579B /* STTVTableView.xcodeproj */,
+				BF96D02BC51F4FEEA6C088B0 /* RealmReact.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1985,6 +1997,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-largelist/ios/STTVTableView",
+					"$(SRCROOT)\..\node_modules\realm\src/**",
 				);
 				INFOPLIST_FILE = estate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1998,6 +2011,10 @@
 				PROVISIONING_PROFILE = "0774c7dd-a786-4d85-bb42-5c65ab38d911";
 				PROVISIONING_PROFILE_SPECIFIER = "dev-5BWXTQUBDE.org.soul.*";
 				VERSIONING_SYSTEM = "apple-generic";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/estate\"",
+				);
 			};
 			name = Debug;
 		};
@@ -2012,6 +2029,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-largelist/ios/STTVTableView",
+					"$(SRCROOT)\..\node_modules\realm\src/**",
 				);
 				INFOPLIST_FILE = estate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2025,6 +2043,10 @@
 				PROVISIONING_PROFILE = "0774c7dd-a786-4d85-bb42-5c65ab38d911";
 				PROVISIONING_PROFILE_SPECIFIER = "dev-5BWXTQUBDE.org.soul.*";
 				VERSIONING_SYSTEM = "apple-generic";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/estate\"",
+				);
 			};
 			name = Release;
 		};
