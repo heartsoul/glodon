@@ -62,6 +62,7 @@ export default class EquipmentListCell extends PureComponent {
         let barItem = this.renderActionBar(item, index);
         let bToolbar = barItem ? true : false;
         let renderLine = bToolbar ? (<View style={{height:1, backgroundColor:'#fafafa'}}></View>) : null
+        let hightlightData = this.searchHighlightData(this.props.keywords,item.value.facilityName);
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={() => { this._toDetail(item) }}>
                 <View style={[styles.containerView,]}>
@@ -74,7 +75,16 @@ export default class EquipmentListCell extends PureComponent {
                     <View style={[styles.contentView, !bToolbar? styles.contentView_border:{}]}>
                         <Text style={styles.content}>批号：{item.value.batchCode}</Text>
                         <Text style={styles.content}>编码：{item.value.facilityCode}</Text>
-                        <Text style={styles.content}>名称：{item.value.facilityName}</Text>
+                        <Text style={styles.content}>名称：{
+                            hightlightData.map((item, index)=>{
+                                if(item.highlight){
+                                    return <Text key={index} style={[styles.content,{color:"#00baf3"}]}>{item.text}</Text>
+                                }else{
+                                    return <Text key={index} style={styles.content}>{item.text}</Text>
+                                }
+                            })
+
+                        }</Text>
                         
                         <View style={{height:10, backgroundColor:'#ffffff'}}></View>
                     </View>
@@ -85,6 +95,27 @@ export default class EquipmentListCell extends PureComponent {
             </TouchableOpacity>
         );
     }
+
+    searchHighlightData = (keywords, content) => {
+        let data = [];
+        if( content && content.length > 0){
+            if(keywords && keywords.length > 0){
+                let len = keywords.length;
+                let index = content.indexOf(keywords);
+                while(index > -1){
+                    let str1 = content.substring(0, index);
+                    let str2 = content.substring(index,index+len);
+                    data.push({highlight:false,text:str1})
+                    data.push({highlight:true,text:str2})
+                    content = content.substring(index+len);
+                    index = content.indexOf(keywords);
+                }
+            }
+            data.push({highlight:false,text:content})
+        }
+        return data;
+    }
+
     renderImage = (item) => {
         // if(item.value.qcState != API.QC_STATE_EDIT) return;
         let imageSource = null

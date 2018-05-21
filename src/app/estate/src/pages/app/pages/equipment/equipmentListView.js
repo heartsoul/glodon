@@ -101,7 +101,7 @@ class EquipmentListView extends PureComponent {
     //返回itemView
     renderItemView = ({ item, index }) => {
         return (
-            <EquipmentListCell onCellAction={this.onCellAction} item={item} index={index} />
+            <EquipmentListCell onCellAction={this.onCellAction} item={item} index={index} keywords={this.props.keywords}/>
         );
     }
 
