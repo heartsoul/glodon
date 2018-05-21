@@ -16,6 +16,7 @@ const Realm = require('realm');
 
 class CustomButton extends Component {
     render() {
+
         return (
             <TouchableHighlight
                 style={styles.button}

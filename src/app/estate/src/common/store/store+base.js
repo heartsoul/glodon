@@ -37,7 +37,7 @@ export default class BaseStorage extends Component {
     }
     // 存储数据
     _setItem = (key, value) => {
-        // console.log("_setItem:"+value)
+         console.log("_setItem:"+value)
         this.storage.setItem(key, value, (error, result) => {
         });
     }
@@ -114,6 +114,7 @@ export default class BaseStorage extends Component {
                 if (!value || value == null) {
                     this.storageData = {};
                 }
+                console.log(this.storageData);
                 return {};
             });
     }
@@ -403,6 +404,15 @@ class GLDStorage extends BaseStorage {
         this.setItem(__KEY_autoDownload + userId(), autoDownload);
     }
 
+    //保存离线在线状态  state  true  false
+    setOfflineState = (state)=>{
+        this.setItem(__KEY_offlineState,state);
+    }
+    //获取离线在线状态
+    getOfflineState = ()=>{
+        let state = this.getItem(__KEY_offlineState);
+        return state;
+    }
     
 }
 // 全局变量
@@ -437,3 +447,4 @@ const __KEY_lastTenantInfo = "lastTenantInfo"; // 保存上一个租户的信息
 const __KEY_actionRights = "actionRights"; // 当前所有权限
 const __KEY_searchHistory = "searchHistory"; // 单据搜索历史
 const __KEY_autoDownload = "autoDownload"; // Android版本更新自动下载
+const __KEY_offlineState = "offlineState"; // Android版本更新自动下载
