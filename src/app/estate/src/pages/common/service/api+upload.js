@@ -53,7 +53,7 @@ export async function upLoadFiles(fileData, callbackIn) {
         let resultArrayRet = response;
         if(resultArrayRet && resultArrayRet.sort) {
             resultArrayRet = resultArrayRet.sort((a,b)=>{
-                return (a.index > b.index);
+                return (a.index > b.index)?1:-1;
             })
         }
         callbackIn(code, resultArrayRet);
