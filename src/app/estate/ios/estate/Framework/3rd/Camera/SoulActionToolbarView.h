@@ -7,8 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class SoulDrawColorPickerToolbar;
 @interface SoulActionToolbarView : UIView
+@property (weak, nonatomic) IBOutlet UIView *bottomToolbar;
+@property (weak, nonatomic) IBOutlet SoulDrawColorPickerToolbar *inputToolbar;
+@property (weak, nonatomic) IBOutlet SoulDrawColorPickerToolbar *bottomDrawToolbar;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmEditButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelEditButton;
+@property (weak, nonatomic) IBOutlet UIToolbar *topToolbar;
+@property (weak, nonatomic) IBOutlet UITextView *textView;
+@property (strong, nonatomic) UIColor *currentColor;
+- (IBAction)editCancelAction:(id)sender;
+- (IBAction)editDoneAction:(id)sender;
 // 拍照按钮
 @property(nonatomic, weak) IBOutlet UIButton *photoButton;
 // 闪光灯按钮
@@ -45,6 +55,9 @@
 @property(nonatomic, copy) void(^onChangeCameraBlock)(UIButton * button);
 @property(nonatomic, copy) void(^onPencilBlock)(UIButton * button);
 @property(nonatomic, copy) void(^onTextBlock)(UIButton * button);
+@property(nonatomic, copy) void(^onEndTextBlock)(NSString * text, UIColor * color);
+@property(nonatomic, copy) void(^onEndPencilBlock)(UIColor * color);
+@property(nonatomic, copy) void(^onCancelEditBlock)(void);
 
 - (IBAction)onPhotoAction:(UIButton*)button;
 - (IBAction)onFlashAction:(UIButton*)button;
@@ -55,4 +68,6 @@
 - (IBAction)onTextAction:(UIButton*)button;
 - (IBAction)onColorAction:(UIButton*)button;
 - (IBAction)onUndoAction:(UIButton*)button;
+
+- (void)updateRedo:(BOOL)bNeed;
 @end

@@ -10,11 +10,12 @@
 #import <UIKit/UIKit.h>
 
 @protocol SoulDrawDataDelegate<NSObject>
+@optional
 - (void)draw;
 - (void)doTrans;
 - (nullable UITextView*)getTextView;
 - (CGRect)getBounds;
-@optional
+
 - (void)moveBySize:(CGSize)size scale:(CGFloat)scale;
 @end
 
