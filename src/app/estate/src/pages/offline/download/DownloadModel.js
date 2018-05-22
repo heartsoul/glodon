@@ -1,14 +1,6 @@
 import React, { Component } from 'react';
 import RNFS from 'react-native-fs';
-// import {} from '../../../node_modules/app-html/app.html'
 
-import {
-    Platform,
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-  } from 'react-native';
 
   import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive';
   import {Buffer} from 'buffer';
@@ -17,18 +9,11 @@ import {
   const appSecret = 'XV2tDlHB7aBVpEzHLdgcSspABjGWjIMR';
   
   
-  export default class App extends Component {
-
-    constructor(){
-        super();
-        // this.state = {
-        //     progressNum: 0,
-        // };
-    }
+  export default class DownloadModel  {
 
     
     //获取离线下载的token
-    getToken = ()=>{
+     getToken = (fileId)=>{
         let key = appKey+':'+appSecret;
         let encodeKey = new Buffer(key).toString('base64');
         let auth = 'Basic '+encodeKey;
@@ -51,7 +36,7 @@ import {
             //     { expireTime: '2018-05-29 08:38:49',
             //     token: '6532e462-334b-48dd-a2f3-86c7b1ab2317' } }
           console.log(responseJson);
-          this.createOffline(responseJson.data.token);
+          this.createOffline(responseJson.data.token,fileId);
         })
         .catch((error) => {
           console.error(error);
@@ -59,8 +44,8 @@ import {
     }
 
     //生成离线包
-    createOffline=(token)=>{
-        let fileId = '1353300132668256';
+     createOffline=(token,fileId)=>{
+        // let fileId = '1353300132668256';
         let url = `https://api.bimface.com/files/${fileId}/offlineDatabag`;
         let auth = 'bearer '+token;
         let ops = {
@@ -90,7 +75,7 @@ import {
     }
 
     //获取离线包地址
-    getAddress = (fileId,databagVersion,token)=>{
+     getAddress = (fileId,databagVersion,token)=>{
         let url = `https://api.bimface.com/data/databag/downloadUrl?fileId=${fileId}&type=offline&databagVersion=${databagVersion}`;
         let auth = 'bearer '+token;
         let ops = {
@@ -115,7 +100,7 @@ import {
         });
     }
 
-    getName=(url)=>{
+     getName=(url)=>{
         let index = url.indexOf('?');
         let str = url.substring(0,index);
         let lastIndex = str.lastIndexOf('/');
@@ -125,7 +110,7 @@ import {
     }
 
     /*下载文件*/
-    downloadFile=(formUrl,name)=> {
+     downloadFile=(formUrl,name)=> {
         // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
 
         // 图片
@@ -232,7 +217,7 @@ import {
     }
 
     //复制app.html 到离线包目录下
-    copyAppHtml=(path)=>{
+     copyAppHtml=(path)=>{
         const src = 'app.html';
         RNFS.readFileAssets(src)
         .then((result)=>{
@@ -243,7 +228,7 @@ import {
         })
     }
 
-    writeFile=(path,content)=> {
+     writeFile=(path,content)=> {
 
         // write the file
         RNFS.writeFile(path, content, 'utf8')
@@ -256,7 +241,7 @@ import {
     }
 
     /*读取txt文件内容*/
-    readFile() {
+     readFile() {
         // create a path you want to delete
         const path = RNFS.MainBundlePath + '/test.txt';
 
@@ -291,7 +276,7 @@ import {
 
 
     /*删除文件*/
-    deleteFile() {
+     deleteFile() {
         // create a path you want to delete
         const path = RNFS.MainBundlePath + '/test.txt';
 
@@ -305,16 +290,4 @@ import {
             });
     }
 
-
-    render() {
-      return (
-        <TouchableOpacity onPress={this.getToken}>
-            <View >
-                <Text style={{marginTop:40}}>
-                    Welcome to React Native!
-                </Text>
-            </View>
-        </TouchableOpacity>
-      );
-    }
   }
