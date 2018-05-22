@@ -139,7 +139,7 @@ function __fetchData(qcState, page, dataMapIn, dispatch) {
   if (page < 0) {
     page = 0;
   }
-  API.equipmentList(storage.loadProject(), qcState, page, 35,'updateTime,desc').then(
+  API.equipmentList(storage.loadProject(), qcState, page, 20,'updateTime,desc').then(
     (responseData) => {
       let data = responseData.data.content;
       let hasMore = responseData.data.last == false;
