@@ -72,7 +72,7 @@ class EquipmentDetailPage extends Component {
         let power = AuthorityManager.isEquipmentCreate() && !this.state.committed;
         const { editType, id, preEditType } = equipmentInfo;
         if (!id) {
-            if (editType != API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
+            if (editType && editType != API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
                 power = false;
             }
         } else {
@@ -82,7 +82,6 @@ class EquipmentDetailPage extends Component {
                 power = false;
             }
         }
-
         if (power) {
             return (<Text onPress={() => this._onSubmit(equipmentInfo)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >提交</Text>)
         }
