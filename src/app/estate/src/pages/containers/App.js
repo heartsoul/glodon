@@ -129,6 +129,7 @@ const options = () => {
             )
         },
         headerRight: (<View />),
+      
     }
 }
 // LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage
@@ -278,16 +279,29 @@ export default class extends React.Component {
             });
         }
     }
-
+    _onNavigationStateChange = (prevState, newState, action)=>{
+       storage.currentRouteName = this._getCurrentRouteName(newState);
+    }
+    _getCurrentRouteName(navigationState) {
+        if (!navigationState) {
+          return null;
+        }
+        const route = navigationState.routes[navigationState.index];
+        // dive into nested navigators
+        if (route.routes) {
+          return getCurrentRouteName(route);
+        }
+        return route.routeName;
+      }
     renderPage() {
         if (storage.isLogin()) {
             if (storage.hasChoose()) {
-                return (<Provider store={store}><RootMainStack /></Provider>)
+                return (<Provider store={store}><RootMainStack onNavigationStateChange={this._onNavigationStateChange}/></Provider>)
             }
-            return (<Provider store={store}><RootChooseStack /></Provider>)
+            return (<Provider store={store}><RootChooseStack onNavigationStateChange={this._onNavigationStateChange} /></Provider>)
         }
         // if (storage.isGuide()) {
-        return (<Provider store={store}><RootLoginStack /></Provider>)
+        return (<Provider store={store}><RootLoginStack onNavigationStateChange={this._onNavigationStateChange}/></Provider>)
         // }
         // return (<Provider store={store}><RootGuideStack /></Provider>)
     }

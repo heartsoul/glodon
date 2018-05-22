@@ -180,6 +180,7 @@ class EquipmentDetailPage extends Component {
     }
 
     componentDidMount() {
+        this.registerBackhandler();
         const { fetchData } = this.props;
         const { item } = this.props.navigation.state.params;
         if (item) {
@@ -194,22 +195,7 @@ class EquipmentDetailPage extends Component {
         fetchData(null);
         this.props.getModelElementProperty(this.props.relevantEquipmentModle, this.props.equipmentInfo)
 
-        if (Platform.OS === 'android') {
-            const BackHandler = ReactNative.BackHandler
-                ? ReactNative.BackHandler
-                : ReactNative.BackAndroid
-            this.backListener = BackHandler.addEventListener(
-                'hardwareBackPress',
-                () => {
-                    // this.needBack((needBack)=>{
-                    //     if(needBack) {
-                    //       storage.pop(this.props.navigation,1)
-                    //     }
-                    //   })
-                    return false
-                }
-            )
-        }
+
     }
 
     componentWillUnmount() {
@@ -217,6 +203,28 @@ class EquipmentDetailPage extends Component {
         resetData();
         this.props.resetTransformInfo();
         this.removeBackListener()
+    }
+
+    registerBackhandler = () => {
+        if (Platform.OS === 'android') {
+            const BackHandler = ReactNative.BackHandler
+                ? ReactNative.BackHandler
+                : ReactNative.BackAndroid
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    if(storage.currentRouteName === this.props.navigation.state.routeName){
+                        this.needBack((needBack)=>{
+                            if(needBack) {
+                              storage.pop(this.props.navigation,1)
+                            }
+                          })
+                        return true;
+                    }
+                    return false;
+                }
+            )
+        }
     }
 
     removeBackListener() {

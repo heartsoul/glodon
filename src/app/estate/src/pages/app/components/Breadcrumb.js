@@ -9,6 +9,7 @@ import {
     FlatList,
     TouchableOpacity,
     Dimensions,
+    ScrollView,
 } from 'react-native';
 import PropTypes from 'prop-types';
 var { width, height } = Dimensions.get("window");
@@ -91,13 +92,15 @@ class Breadcrumb extends Component {
         return (
             <View style={[{ width: width, height: height, backgroundColor: "#00000033", position: "absolute", top: 48 }]}>
                 <View style={{ width: width, height: 192, backgroundColor: "#ffffff" }}>
-                    {
-                        (this.state.dir) ? (
-                            this.state.dir.map((item) => {
-                                return this.renderPopItem(item)
-                            })
-                        ) : (null)
-                    }
+                    <ScrollView>
+                        {
+                            (this.state.dir) ? (
+                                this.state.dir.map((item) => {
+                                    return this.renderPopItem(item)
+                                })
+                            ) : (null)
+                        }
+                    </ScrollView>
                 </View>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => {
                     this.setState({

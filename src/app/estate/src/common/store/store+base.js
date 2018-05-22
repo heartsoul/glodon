@@ -131,6 +131,7 @@ class GLDStorage extends BaseStorage {
         this.fileId = '';
         this.projectIdVersionId = '';
         this.projectId = 0;
+        this.currentRouteName = "";
     }
     setRootNavigation(navigation) {
         this.homeNavigation = navigation;
