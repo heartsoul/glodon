@@ -1,0 +1,11 @@
+先安装base64
+        npm install buffer --save
+
+        使用方法:
+
+        引入   import {Buffer} from 'buffer';
+
+        编码 var base64Str = new Buffer(rawStr).toString('base64');
+
+        解码 var b = new Buffer(base64Str , 'base64')
+        var s = b.toString();
