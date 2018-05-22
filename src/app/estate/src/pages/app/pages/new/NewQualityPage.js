@@ -123,7 +123,10 @@ class NewQualityPage extends Component {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
                 () => {
-                    // this.goBack();
+                    if(storage.currentRouteName === this.props.navigation.state.routeName){
+                        this.goBack();
+                        return true;
+                    }
                     return false;
                 }
             )
