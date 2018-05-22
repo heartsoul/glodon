@@ -13,6 +13,7 @@ import * as AuthorityManager from "./../project/AuthorityManager";
 import * as BimToken from "./BimFileTokenUtil";
 import * as PageType from "./PageTypes";
 import { bimfileHtml } from './bimfileHtml';
+import DownloadModel from '../../../../offline/download/DownloadModel'
 
 
 //获取设备的宽度和高度
@@ -561,6 +562,13 @@ class RelevantModelPage extends Component {
         // console.log(event); //打印出event中属性
     }
 
+    //下载模型离线文件
+    _downloadModel=()=>{
+        let fileId = '1353300132668256';
+        let downloadModel = new DownloadModel();
+        downloadModel.getToken(fileId);
+    }
+
     //渲染
     render() {
 
@@ -594,7 +602,14 @@ class RelevantModelPage extends Component {
                             this.createNoticeView()
                         ) : (null)
                     }
-
+                    
+                        <View style={{ alignItems: 'flex-end',position:'absolute',right:14,bottom:14}} >
+                            <TouchableOpacity onPress={this._downloadModel}>
+                                <Image source={require('app-images/icon_download.png')} style={{width:28,height:28,marginTop:5}} />
+                            </TouchableOpacity>
+                            <View style={{width:10,height:10,backgroundColor:'#FF460D',borderRadius:15,position:'absolute'}} />
+                        </View>
+                    
                 </View>
             </SafeAreaView>
         );
@@ -606,7 +621,7 @@ class RelevantModelPage extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 0
+        paddingTop: 0,
     }
 });
 
