@@ -72,6 +72,10 @@
             android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan" />
+        <!--模型离线server-->
+        <service
+            android:name="com.glodon.bim.business.offline.model.server.CoreService"
+            android:exported="false"/>
     </application>
 
 </manifest>

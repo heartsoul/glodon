@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import com.estate.react.GLDReactPackage;
 import com.facebook.react.ReactApplication;
 import io.realm.react.RealmReactPackage;
+
+import com.glodon.bim.business.offline.model.server.ServerModulePackage;
 import com.rnziparchive.RNZipArchivePackage;
 import com.rnfs.RNFSPackage;
 import com.facebook.react.ReactNativeHost;
@@ -35,7 +37,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RealmReactPackage(),
             new RNZipArchivePackage(),
             new RNFSPackage(),
-              new GLDReactPackage()
+              new GLDReactPackage(),
+              new ServerModulePackage()
       );
     }
 
