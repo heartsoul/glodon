@@ -10,7 +10,7 @@ import * as AuthorityManager from "./../project/AuthorityManager";
 import * as BimToken from "./BimFileTokenUtil";
 import * as PageType from "./PageTypes";
 import { bimfileHtml } from './bimfileHtml';
-
+import { connect } from 'react-redux';
 
 //获取设备的宽度和高度
 var {
@@ -37,7 +37,7 @@ document.addEventListener('message', function(e) {eval(e.data);});
 `;
 
 //关联图纸
-export default class RelevantBlueprintPage extends Component {
+class RelevantBlueprintPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         headerTitle: navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : null,
@@ -58,7 +58,7 @@ export default class RelevantBlueprintPage extends Component {
             showCreateButton: true,//显示创建按钮
             url: '',
             html: '',
-            error:null
+            error: null
         };
         this.props.navigation.setParams({ loadTitle: this.loadTitle, loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
 
@@ -143,10 +143,10 @@ export default class RelevantBlueprintPage extends Component {
         }
         //详情页不响应长按事件
         let show = (pageType == PageType.PAGE_TYPE_DETAIL);
-        if(pageType == PageType.PAGE_TYPE_QUALITY_MODEL && !AuthorityManager.isQualityCreate()){
+        if (pageType == PageType.PAGE_TYPE_QUALITY_MODEL && !AuthorityManager.isQualityCreate()) {
             show = true;
         }
-            
+
         let showCreateNoticeView = true;
         let showCreateButton = true;
         if (pageType == PageType.PAGE_TYPE_DETAIL) {
@@ -181,23 +181,30 @@ export default class RelevantBlueprintPage extends Component {
 
 
         BimToken.getBimFileToken(relevantBlueprint.drawingGdocFileId, (token) => {
-            if(!token) {
+            if (!token) {
                 this.setState({
                     url: '',
-                    html:'',
-                    error:new Error('加载失败！')
+                    html: '',
+                    error: new Error('加载失败！')
                 })
                 return;
             }
             let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
-            let html = bimfileHtml(cmdString,token,this.state.show);
+            let html = bimfileHtml(cmdString, token, this.state.show);
             this.setState({
                 url: url,
-                html:html,
-                error:null
+                html: html,
+                error: null
             });
         })
 
+    }
+
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.updateIndex != this.props.updateIndex) {
+            this.loadDotsData();
+        }
     }
 
     createNoticeView = () => {
@@ -424,22 +431,22 @@ export default class RelevantBlueprintPage extends Component {
         }
     }
     loadDotsData = () => {
-        this.setPosition(); 
+        this.setPosition();
         this.getBluePrintDots();
     }
-    onLoadEnd = () =>{
+    onLoadEnd = () => {
     }
     //渲染
     render() {
 
-        if(this.state.error) {
-            return <NoDataView text="加载失败"/>
+        if (this.state.error) {
+            return <NoDataView text="加载失败" />
         }
-      
-        if(this.state.url == '') {
+
+        if (this.state.url == '') {
             return <LoadingView />;
         }
-        
+
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
@@ -478,3 +485,12 @@ const styles = StyleSheet.create({
         paddingTop: 0
     }
 });
+
+export default connect(
+    state => ({
+        updateIndex: state.updateData.updateIndex,
+    }),
+    dispatch => ({
+
+    })
+)(RelevantBlueprintPage)

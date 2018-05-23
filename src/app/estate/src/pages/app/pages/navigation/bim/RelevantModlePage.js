@@ -156,7 +156,15 @@ class RelevantModelPage extends Component {
         })
     }
 
-
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.updateIndex != this.props.updateIndex) {
+            this.props.navigation.replace("RelevantModlePage",  {
+                pageType: this.state.pageType,
+                relevantModel: this.state.relevantModel,
+            });
+        }
+    }
+    
     goBack = () => {
         storage.goBack(this.props.navigation, null);
     }
@@ -309,6 +317,7 @@ class RelevantModelPage extends Component {
             .then(responseData => {
                 if (responseData && responseData.data) {
                     let len = responseData.data.length;
+                    this.mQualityPositionMap = [];
                     responseData.data.map((item) => {
                         this.getModelElementProperty(item, len, "quality");
                     })
@@ -379,6 +388,7 @@ class RelevantModelPage extends Component {
                             item.qcState = API.QC_STATE_EDIT;
                         }
                     }
+                    this.mEquipmentPositionMap = [];
                     responseData.data.map((item) => {
                         this.getModelElementProperty(item, len, "equipment");
                     })
@@ -601,6 +611,7 @@ const styles = StyleSheet.create({
 
 export default connect(
     state => ({
+        updateIndex: state.updateData.updateIndex,
     }),
     dispatch => ({
         transformInfo: (relevantModel) => {
