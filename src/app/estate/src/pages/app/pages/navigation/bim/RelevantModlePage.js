@@ -1,7 +1,7 @@
 import { Toast } from 'antd-mobile';
 import { ActionSheet } from 'app-3rd/teaset';
 import * as API from "app-api";
-import { LoadingView, NoDataView } from 'app-components';
+import { LoadingView, NoDataView, LeftBarButtons } from 'app-components';
 import { BimFileEntry } from "app-entry";
 import * as AppConfig from "common-module";
 import React, { Component } from 'react';
@@ -64,26 +64,23 @@ class RelevantModelPage extends Component {
             relevantModel: {},//选中的模型
             url: '',
             html: '',
-            error:null
+            error: null
         };
         this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
     }
 
     loadLeftTitle = () => {
         return (
-            <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                <TouchableOpacity onPress={() => { this.goBack() }}>
-                    <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 10 }} />
-                </TouchableOpacity>
-                {
-                    //编辑状态的可以切换模型
-                    (this.state.showChangeMode) ? (
-                        <TouchableOpacity onPress={() => { this.changeModel() }}>
-                            <Image source={require('app-images/icon_change_model.png')} style={{ width: 25, height: 24, marginLeft: 20 }} />
-                        </TouchableOpacity>
-                    ) : (null)
-                }
-            </View>
+            <LeftBarButtons >
+                <LeftBarButtons.LeftBarButtonsItem
+                    imageStyle={{}}
+                    navigation={this.props.navigation}
+                    onPress={(navigation) => this.goBack(navigation)}
+                    imageSource={require('app-images/icon_back_white.png')} />
+                {this.state.showChangeMode ?
+                    <LeftBarButtons.LeftBarButtonsItem imageStyle={{}} navigation={this.props.navigation} onPress={(navigation) => this.changeModel(navigation)} imageSource={require('app-images/icon_change_model.png')} />
+                    : null}
+            </LeftBarButtons>
         )
     }
 
@@ -136,22 +133,22 @@ class RelevantModelPage extends Component {
         });
 
         this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
-       
+
         BimToken.getBimFileToken(relevantModel.gdocFileId, (token) => {
-            if(!token) {
+            if (!token) {
                 this.setState({
                     url: '',
-                    html:'',
-                    error:new Error('加载失败！')
+                    html: '',
+                    error: new Error('加载失败！')
                 })
                 return;
             }
             let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
-            let html = bimfileHtml(cmdString,token,this.state.show);
+            let html = bimfileHtml(cmdString, token, this.state.show);
             this.setState({
                 url: url,
-                html:html,
-                error:null
+                html: html,
+                error: null
             });
         })
     }
@@ -563,11 +560,11 @@ class RelevantModelPage extends Component {
     //渲染
     render() {
 
-        if(this.state.error) {
-            return <NoDataView text="加载失败"/>
+        if (this.state.error) {
+            return <NoDataView text="加载失败" />
         }
-      
-        if(this.state.url == '') {
+
+        if (this.state.url == '') {
             return <LoadingView />;
         }
 
@@ -585,7 +582,7 @@ class RelevantModelPage extends Component {
                         onMessage={(e) => this.onMessage(e)}
                         injectedJavaScript={cmdString}
                         onLoadEnd={() => { }}
-                        source={{ html: this.state.html}}
+                        source={{ html: this.state.html }}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
                     {

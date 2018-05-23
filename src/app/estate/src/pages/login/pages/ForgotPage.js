@@ -69,6 +69,7 @@ class ForgotPage extends React.Component {
       if(nextProps.page == 1 && this.props.statusCode == '601') {
         this.props.imageCode();
       }
+      // Toast.fail(this.state.status,1.5);
     }
     if (nextProps.type === types.FORGOT_RESET && nextProps.isSuccess) {
       let navigator = this.props.navigation;
@@ -565,7 +566,7 @@ var styles = StyleSheet.create({
     color: '#ababab'
   },
   style_tip_phone: {
-    color: 'red'
+    color: '#ff000088'
   },
   style_login_title: {
     fontSize: 36,

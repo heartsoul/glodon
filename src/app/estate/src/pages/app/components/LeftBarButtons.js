@@ -3,7 +3,30 @@ import PropTypes from 'prop-types'
 import { StyleSheet, Button, View, Text, Image, TouchableOpacity, NativeModules, Dimensions } from 'react-native';
 import GLDDrawerPaneView from "./GLDDrawerPaneView"
 
+export class LeftBarButtonsItem extends React.Component {
+  render = () => {
+    return <TouchableOpacity style={styles.actionView} onPress={() => this.props.onPress(this.props.navigation)} >
+      <View style={styles.spliteItem} />
+      <View style={styles.spliteItem} />
+      {
+        this.props.text 
+        ? ( <Text style={[styles.barItemText]}>{this.props.text}</Text>) 
+        : ( <Image style={[styles.barItemImage,this.props.imageStyle]}  source={this.props.imageSource} />)
+      }
+      <View style={styles.spliteItem} />
+      </TouchableOpacity>
+    }
+}
+LeftBarButtonsItem.propTypes = {
+  imageStyle: PropTypes.any.isRequired,
+  navigation:PropTypes.any,
+  text:PropTypes.any,
+  imageSource:PropTypes.any, // image source
+  onPress:PropTypes.func.isRequired, // function(navigation)
+}
+
 export default class LeftBarButtons extends React.Component {
+  static LeftBarButtonsItem = LeftBarButtonsItem;
   _onBackPress = (navigation) => {
     if(this.props.needBack) {
       this.props.needBack((needBack)=>{
@@ -21,26 +44,26 @@ export default class LeftBarButtons extends React.Component {
   }
   
   render = () => {
+    if(this.props.children) {
+      return <View style={styles.barItem}>
+     {this.props.children}
+      </View>
+    } else 
     return <View style={styles.barItem}>
-      
-      <TouchableOpacity style={styles.actionView} onPress={() => this._onBackPress(this.props.navigation)} >
-      <View style={styles.spliteItem} />
-        <Image style={styles.barItemImage}  source={require('app-images/icon_back_white.png')} />
-        <View style={styles.spliteItem} />
-      </TouchableOpacity>
+      <LeftBarButtonsItem 
+      imageStyle={{}}
+      navigation={this.props.navigation} 
+      onPress={(navigation) => this._onBackPress(navigation)} 
+      imageSource={require('app-images/icon_back_white.png')} />
        {this.props.top === true ? 
-      <TouchableOpacity style={styles.actionView} onPress={() => this._onMenuPress(this.props.navigation)} >
-       <View style={styles.spliteItem} />
-        <Image style={styles.barItemImage} source={require('app-images/icon_quality_check_menu.png')} />
-        <View style={styles.spliteItem} />
-      </TouchableOpacity>
+        <LeftBarButtonsItem imageStyle={styles.barItemImageMenu} navigation={this.props.navigation} onPress={(navigation) => this._onMenuPress(navigation)} imageSource={require('app-images/icon_quality_check_menu.png')} />
       : null}
     </View>
   }
 }
 
 LeftBarButtons.propTypes = {
-  currentItem: PropTypes.string.isRequired,
+  currentItem: PropTypes.string,
   navigation:PropTypes.any,
   top:PropTypes.any,
   needBack:PropTypes.func, // 是否需要返回，不需要的话在回调函数中返回fasle
@@ -57,13 +80,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignContent: 'center',
-    width: 30,
+   // width: 30,
     height: 40,
+   
   },
   barItemImage: {
     width: 20,
     height: 20,
     resizeMode:'contain'
+  },
+  barItemImageMenu: {
+    width: 26,
+    height: 26,
+    resizeMode:'contain'
+  },
+  barItemText: {
+    color: '#ffffff', 
+    fontSize: 15, 
   },
   spliteItem: {
     width: 5,

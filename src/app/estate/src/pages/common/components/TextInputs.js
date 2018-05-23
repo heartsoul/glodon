@@ -11,7 +11,6 @@ export class TextInputNormal extends Component {
     super(props);
     this.textInput = null;
     /*用来指示是否显示Loading提示符号*/
-    this.textC=this.props.defaultValue;
     this.state = {
       disabled: false,
       textB:this.props.defaultValue
@@ -51,10 +50,11 @@ export class TextInputNormal extends Component {
           text = '';
         }
         this.props.onChangeText(text);
+        this.setState({textB:text}); 
       }
       }
-      defaultValue={this.props.defaultValue}
-      value={null}
+      // defaultValue={this.props.defaultValue}
+      value={this.state.textB}
       onBlur={this.props.onBlur}
       onFocus={this.props.onFocus}
     />
