@@ -12,7 +12,8 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  Animated,
 } from "react-native";
 
 import { connect } from 'react-redux' // 引入connect函数
@@ -38,15 +39,19 @@ class LoginPage extends React.Component {
     this.passwordTextInput = null;
     this.userNameTextInput = null;
     /*用来指示是否显示Loading提示符号*/
+    let un = props.userName;
+    if(!un) {
+      un = '';
+    }
     this.state = {
       disabled: false,
       pressed: false,
-      username: props.userName,
+      username: un,
       password: "", //props.password,
-      focusUserName: 0, // 焦点 1: 没有 0:
-      focusPassword: 0, // 焦点 1: 没有 0:
       events: "",
-      msg: ""
+      msg: "",
+      linePwdAnim: new Animated.Value(0.0),
+      lineAnim: new Animated.Value(un.length > 0 ? 0.5 : 0.0)
     };
   }
 
@@ -79,25 +84,38 @@ class LoginPage extends React.Component {
     this.setState({ username: text, disabled:!check});
   };
   _onUserNameBlur = () => {
-
-    this.setState({ focusUserName: 0, disabled:!this._checkInput()});
+    // this.startAnimation();
+    this.setState({ disabled:!this._checkInput()});
+      Animated.timing(
+        this.state.lineAnim,
+        {toValue: this.state.username.length <= 0 ? 0.0 : 0.5}
+      ).start();
   };
   _onPasswordBlur = () => {
-    this.setState({ focusPassword: 0, disabled:!this._checkInput()});
+    this.setState({ disabled:!this._checkInput()});
+    Animated.timing(
+      this.state.linePwdAnim,
+      {toValue: this.state.password.length <= 0 ? 0.0 : 0.5}
+    ).start();
   };
   _onUserNameFocus = () => {
 
-    this.setState({
-      focusUserName: 1
-      , disabled:!this._checkInput()
+    this.setState({disabled:!this._checkInput()
     });
+    Animated.timing(
+      this.state.lineAnim,
+      {toValue: 1.0}
+    ).start();
   };
   _onPasswordFocus = () => {
-    this.setState({
-      focusPassword: 1
-      , disabled:!this._checkInput()
-    });
+    this.setState({disabled:!this._checkInput()});
+    Animated.timing(
+      this.state.linePwdAnim,
+      {toValue: 1.0}
+    ).start();
+   
   };
+  
   _onPasswordChangeText = text => {
     if(text && text.indexOf('\n')>=0) {
      if(this._checkInput()) {
@@ -121,6 +139,24 @@ class LoginPage extends React.Component {
     const { login } = this.props
     login(this.state.username,this.state.password)
   }
+  startAnimation(){
+    this.state.currentAlpha = this.state.currentAlpha == 1.0?0.0:1.0;
+    Animated.timing(
+      this.state.fadeAnim,
+      {toValue: this.state.currentAlpha}
+    ).start();
+    Animated.timing(
+      this.state.lineAnim,
+      {toValue: this.state.currentAlpha}
+    ).start();
+    
+  }
+  componentWillReceiveProps(nextProps){
+    if(nextProps.status === '登录失败' && this.props.status != nextProps.status) {
+      Toast.info(""+nextProps.status,3);
+    }
+    return true;
+  }
   render() {
     return (
       <KeyboardAwareScrollView style={{backgroundColor: "#ffffff",flex: 1,
@@ -137,60 +173,94 @@ class LoginPage extends React.Component {
           style={[styles.style_login_image]}
         />
         <View style={{marginLeft:20,marginRight:20}}>
-        <Text style={[styles.style_loginText,this.props.status === '登录失败'?{color:'red'}:{},{marginTop:20,height:20,alignContent:'center',justifyContent:'center'}]}>{this.props.status}</Text>
-        <Text
-          style={[
-            styles.style_input_title,
-            this.state.focusUserName == 1 || this.state.username.length > 0
-              ? { color: "rgb(153,153,146)" }
-              : { color: "transparent" },
-            ,
-            { marginTop: 28 }
-          ]}
-        >
-          账户名
-        </Text>
+        <Animated.Text
+            style={[
+              styles.style_input_title,
+              { marginTop: 28, },
+              {
+                color: "rgb(153,153,146)",
+                fontSize: this.state.lineAnim.interpolate({
+                  inputRange: [0, 0.5, 1],
+                  outputRange: [14, 12, 12] //线性插值，0对应60，0.6对应30，1对应0
+                }),
+                transform: [//transform动画
+                  {
+                    translateY: this.state.lineAnim.interpolate({
+                      inputRange: [0, 0.5, 1],
+                      outputRange: [38, 0, 0] //线性插值，0对应60，0.6对应30，1对应0
+                    }),
+                  },
+                ],
+              }
+            ]}
+          >
+            账户名
+        </Animated.Text>
         <TextInputNormal
-          placeholder={this.state.focusUserName == 1 ? "" : "请输入账户名称"}
+          placeholder={''}
           onBlur={() => this._onUserNameBlur()}
           onFocus={() => this._onUserNameFocus()}
           onChangeText={text => this._onUserNameChangeText(text)}
-          defaultValue={this.props.userName}
+          defaultValue={this.state.username}
           ref={(ref)=>{this.userNameTextInput=ref}}
         />
-        <View
-          style={
-            this.state.focusUserName == 1
-              ? styles.style_input_line
-              : styles.style_input_line_gray
+        <View style={styles.style_input_line_gray}>
+        <Animated.View
+          style={[ styles.style_input_line,
+              {
+                width:this.state.lineAnim.interpolate({
+                    inputRange: [0,0.5,1],
+                    outputRange: ['0%', '0%', '100%'] //线性插值，0对应60，0.6对应30，1对应0
+                  })
+              }
+          ]
           }
         />
-        <Text
+        </View>
+        <Animated.Text
           style={[
             styles.style_input_title,
-            this.state.focusPassword == 1 || this.state.password.length > 0
-              ? { color: "rgb(153,153,146)" }
-              : { color: "transparent" },
-              { marginTop: 20 }
+              { marginTop: 20 },
+              {
+                color: "rgb(153,153,146)",
+                fontSize: this.state.linePwdAnim.interpolate({
+                  inputRange: [0, 0.5, 1],
+                  outputRange: [14, 12, 12] //线性插值，0对应60，0.6对应30，1对应0
+                }),
+                transform: [//transform动画
+                  {
+                    translateY: this.state.linePwdAnim.interpolate({
+                      inputRange: [0, 0.5, 1],
+                      outputRange: [38, 0, 0] //线性插值，0对应60，0.6对应30，1对应0
+                    }),
+                  },
+                ],
+              }
           ]}
         >
           密码
-        </Text>
+        </Animated.Text>
         <TextInputPassword
-          placeholder={this.state.focusPassword == 1 ? "" : "请输入用户密码"}
+          placeholder={''}
           onChangeText={text => this._onPasswordChangeText(text)}
-          // value={this.state.password}
+          value={this.state.password}
           onBlur={() => this._onPasswordBlur()}
           onFocus={() => this._onPasswordFocus()}
           ref={(ref)=>{this.passwordTextInput=ref}}
         />
-        <View
-          style={
-            this.state.focusPassword == 1
-              ? styles.style_input_line
-              : styles.style_input_line_gray
+        <View style={styles.style_input_line_gray}>
+        <Animated.View
+          style={[ styles.style_input_line,
+              {
+                width:this.state.linePwdAnim.interpolate({
+                    inputRange: [0,0.5,1],
+                    outputRange: ['0%', '0%', '100%'] //线性插值，0对应60，0.6对应30，1对应0
+                  })
+              }
+          ]
           }
         />
+        </View>
         <View>
           <ActionButton
             onPress={()=>{this.doLogin()}}
@@ -243,14 +313,17 @@ const styles = StyleSheet.create({
   style_input_line: {
     height: 2,
     backgroundColor: "#00baf3",
-    marginLeft: 20,
-    marginRight: 20
+    borderRadius:1
+    // marginLeft: 20,
+    // marginRight: 20
   },
   style_input_line_gray: {
     height: 2,
     backgroundColor: "rgb(243,242,242)",
     marginLeft: 20,
-    marginRight: 20
+    marginRight: 20,
+    borderRadius:1
+    
   },
   style_view_unlogin: {
     fontSize: 12,
