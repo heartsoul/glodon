@@ -377,7 +377,7 @@ function saveReview(inspectionId, description, status, lastRectificationDate, qu
                         status: status,
                         files: files,
                     }
-                    dispatch(_loadEditInfoSuccess(editInfo))
+                    dispatch(_loadEditInfoSuccess(resetEditInfo))
                     //"保存成功！" 
                     Toast.hide();
                     Toast.info("保存成功！", 1);
@@ -437,7 +437,7 @@ function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, 
                         description: description,
                         files: files,
                     }
-                    dispatch(_loadEditInfoSuccess(editInfo))
+                    dispatch(_loadEditInfoSuccess(resetEditInfo))
                     Toast.hide();
                     //"保存成功！" 
                     Toast.info("保存成功！", 1);
@@ -499,7 +499,7 @@ function isFileChange(oldFiles, newFiles) {
         return true;
     } else {
         for (file in newFiles) {
-            if (!file.objectId) {
+            if (!newFiles[file].objectId) {
                 return true;
             }
         }

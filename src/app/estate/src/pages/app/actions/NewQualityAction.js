@@ -58,17 +58,24 @@ function assembleParams(requestParams) {
     params.responsibleUserTitle = personData.title;
 
     //关联图纸
-    params.drawingGdocFileId = state.relevantBlueprint.drawingGdocFileId;
-    params.drawingName = state.relevantBlueprint.drawingName;
-    params.drawingPositionX = state.relevantBlueprint.drawingPositionX;
-    params.drawingPositionY = state.relevantBlueprint.drawingPositionY;
+    let relevantBlueprint = state.relevantBlueprint;
+    if(relevantBlueprint){
+        params.drawingGdocFileId = relevantBlueprint.drawingGdocFileId;
+        params.drawingName = relevantBlueprint.drawingName;
+        params.drawingPositionX = relevantBlueprint.drawingPositionX;
+        params.drawingPositionY = relevantBlueprint.drawingPositionY;
+    }
 
     //关联模型
-    params.elementName = state.relevantModel.elementName;
-    params.elementId = state.relevantModel.elementId;
-    params.buildingName = state.relevantModel.buildingName;
-    params.buildingId = state.relevantModel.buildingId;
-    params.gdocFileId = state.relevantModel.gdocFileId;
+    let relevantModel = state.relevantModel;
+    if(relevantModel){
+        params.elementName = relevantModel.elementName;
+        params.elementId = relevantModel.elementId;
+        params.buildingName = relevantModel.buildingName;
+        params.buildingId = relevantModel.buildingId;
+        params.gdocFileId = relevantModel.gdocFileId;
+    }
+
     return params;
 }
 /**
@@ -169,6 +176,9 @@ function loadingToast() {
  * @param {*} uploadCallback 
  */
 function uploadFile(imageChooserEle, uploadCallback) {
+    if(!imageChooserEle){
+        return;
+    }
     imageChooserEle._loadFile((files) => {
         if (files && files.length > 0) {
             API.upLoadFiles(files, (code, result) => {
@@ -355,6 +365,10 @@ function editSaveInspection(params, callback) {
  * @param {*} callback 
  */
 export function isEditInfoChange(requestParams, inspectionInfo, imageChooserEle, callback) {
+    if(!imageChooserEle){
+        callback(false);
+        return;
+    }
     imageChooserEle._loadFile((files) => {
         if (isFileChange(inspectionInfo.files, files)) {
             callback(true);

@@ -1,7 +1,7 @@
 "use strict"
 
 import React, { Component } from 'react';
-import {
+import ReactNative, {
     StyleSheet,
     View,
     Text,
@@ -11,6 +11,7 @@ import {
     Switch,
     ScrollView,
     Dimensions,
+    Platform,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -77,6 +78,22 @@ class NewReviewPage extends Component {
         let params = this.props.navigation.state.params;
         const { fetchData } = this.props;
         fetchData(params.qualityCheckListId, params.createType);
+
+        if (Platform.OS === 'android') {
+            const BackHandler = ReactNative.BackHandler
+                ? ReactNative.BackHandler
+                : ReactNative.BackAndroid
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    if (storage.currentRouteName === this.props.navigation.state.routeName) {
+                        this.goBack();
+                        return true;
+                    }
+                    return false;
+                }
+            )
+        }
     }
 
 
@@ -91,8 +108,14 @@ class NewReviewPage extends Component {
 
     componentWillUnmount() {
         Toast.hide();
+        this.removeBackListener()
     }
-
+    removeBackListener() {
+        if (this.backListener) {
+            this.backListener.remove()
+            this.backListener = null
+        }
+    }
     /**
      * 编辑草稿时，设置数据
      */
@@ -244,12 +267,12 @@ class NewReviewPage extends Component {
                     multiline={true}
                     underlineColorAndroid={"transparent"}
                     textAlign="left"
-                    onChangeText={(text) => { this.state.description = text}}
+                    onChangeText={(text) => { this.state.description = text }}
                     defaultValue={this.description}
                 />
 
-                <View style={{ width: '100%', height: 130, marginTop: 10,marginBottom: 0,backgroundColor:'#FFFFFF'}}>
-                <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{width: width, height: 100, marginTop: 10,marginLeft: 10,marginRight: 10, }} onChange={() => {}} />
+                <View style={{ width: '100%', height: 130, marginTop: 10, marginBottom: 0, backgroundColor: '#FFFFFF' }}>
+                    <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{ width: width, height: 100, marginTop: 10, marginLeft: 10, marginRight: 10, }} onChange={() => { }} />
                 </View>
                 {
                     this.state.showRectificationView ? (

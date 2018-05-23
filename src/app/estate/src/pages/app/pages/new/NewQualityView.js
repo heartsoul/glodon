@@ -178,14 +178,20 @@ class NewQualityView extends React.Component {
      * 整改期限{ value: true, date: '2018-04-08' }
      */
     getRectificationData = () => {
-        return this.refs[REF_RECTIFICATION].getRectificationData()
+        if(this.refs[REF_RECTIFICATION]){
+            return this.refs[REF_RECTIFICATION].getRectificationData()
+        }
+        return {};
     }
 
     /**
      * 质检项目
      */
     getSelectedCheckPoint = () => {
-        return this.refs[REF_CHECKPOINT].getSelectedCheckPoint()
+        if(this.refs[REF_CHECKPOINT]){
+            return this.refs[REF_CHECKPOINT].getSelectedCheckPoint()
+        }
+        return {};
     }
 
     /**
