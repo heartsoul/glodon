@@ -72,7 +72,7 @@ class QualityListView extends PureComponent {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <Text>Fail:</Text>
+                <Text>加载失败</Text>
             </View>
         );
     }
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#F8f8f8',
         // height:180
     },
 
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
         height: 30,
     },
     headerLine: {
-        backgroundColor: '#e6e6e6',
+        backgroundColor: '#e2e2e2',
         height: 1,
         top: 19,
         marginLeft: 20,

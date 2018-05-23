@@ -15,7 +15,7 @@ import {
 import ModelItemView from './ModelItemView'
 import * as CheckVersionManager from "./../../pages/me/checkVerson";
 
-import { NavigationPage, SegmentedBar, Label, SegmentedView, Button, Carousel } from 'app-3rd/teaset';
+import { NavigationPage, SegmentedBar, Label, SegmentedView, Button, Carousel } from 'teaset';
 import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
 var { width, height } = Dimensions.get("window");
 export default class extends Component {
@@ -139,10 +139,10 @@ export default class extends Component {
                         this.renderCarouselView(qShow, eShow)
                     }
                 </ImageBackground>
-                <SegmentedView style={{ flex: 0, height: 400, backgroundColor: '#f8f8f8' }} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
+                <SegmentedView barStyle={{left:width/2-100,width:200,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 400, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
                     {
                         qShow ?
-                            <SegmentedView.Sheet title='质量检查'>
+                            <SegmentedView.Sheet title='质量检查' activeTitleStyle={{fontSize:16,fontWeight:'bold'}} titleStyle={{color:'#333333',fontSize:16,fontWeight:'bold'}} style={{backgroundColor: '#f8f8f8'}}>
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
@@ -161,7 +161,7 @@ export default class extends Component {
                     }
                     {
                         eShow ?
-                            <SegmentedView.Sheet title='材设进场'>
+                            <SegmentedView.Sheet title='材设进场' activeTitleStyle={{fontSize:16,fontWeight:'bold'}} titleStyle={{color:'#333333',fontSize:16,fontWeight:'bold'}} style={{backgroundColor: '#f8f8f8'}}>
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
@@ -204,9 +204,9 @@ var styles = StyleSheet.create({
         justifyContent: 'flex-start',
         // flex: 1,
         marginLeft: 0,
-        marginTop: 40,
+        marginTop: 28,
         marginRight: 0,
-        marginBottom: 40,
+        marginBottom: 28,
         backgroundColor: '#f8f8f8',
     },
     container: {

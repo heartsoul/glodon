@@ -165,7 +165,7 @@ function __fetchData(qcState, page, dataMapIn, dispatch, qualityCheckpointId = 0
                 });
                 i++;
             });
-            let ts = new Date().getTime();
+            let ts = '';// new Date().getTime();
             dataMap.forEach(function (value, key, map) {
                 sectionLob.push({
                     key: key+ts,
