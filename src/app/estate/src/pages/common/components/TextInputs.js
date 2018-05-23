@@ -23,6 +23,7 @@ export class TextInputNormal extends Component {
   _onClearTextEntry = () =>{
     this.textInput.clear();
     this.props.onChangeText('');
+    this.focus();
   }
   render() {
     return (
@@ -57,7 +58,7 @@ export class TextInputNormal extends Component {
       onBlur={this.props.onBlur}
       onFocus={this.props.onFocus}
     />
-     <View style={[styles.style_input_action,this.state.textB  && this.state.textB.length ? {} : {'display':'none'}]}>
+     <View style={[styles.style_input_action]}>
     <TouchableOpacity onPress={this._onClearTextEntry}><Image style={styles.style_image_delete} source={icon_login_password_delete}/></TouchableOpacity>
     </View>
     </View>
@@ -93,6 +94,7 @@ export class TextInputPassword extends Component {
       value:'',
     });
     this.props.onChangeText('');
+    this.focus();
   }
   _onSecureTextEntry = () =>{
     if(this.state.secureTextEntry) {

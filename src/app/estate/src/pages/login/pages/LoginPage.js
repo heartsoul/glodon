@@ -14,6 +14,8 @@ import {
   SafeAreaView,
   StatusBar,
   Animated,
+  ScrollView,
+  Alert,
 } from "react-native";
 
 import { connect } from 'react-redux' // 引入connect函数
@@ -152,8 +154,8 @@ class LoginPage extends React.Component {
     
   }
   componentWillReceiveProps(nextProps){
-    if(nextProps.status === '登录失败' && this.props.status != nextProps.status) {
-      Toast.info(""+nextProps.status,3);
+    if(nextProps.isSuccess == false && nextProps.status === '登录失败' && this.props.status != nextProps.status) {
+      Alert.alert("提示",'账号或密码错误',[{text: '确定', onPress: () => {}, style: 'cancel'}]);
     }
     return true;
   }
@@ -297,7 +299,7 @@ const styles = StyleSheet.create({
   },
   style_input_title: {
     fontSize: 12,
-    height: 14,
+    height: 16,
     width: 76,
     marginTop: 5,
     marginLeft: 20
