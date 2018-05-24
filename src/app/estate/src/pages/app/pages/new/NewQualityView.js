@@ -34,7 +34,7 @@ import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
 import * as NewQualityAction from "./../../actions/NewQualityAction";
 import * as UpdateDataAction from "./../../actions/updateDataAction";
 import callOnceInInterval from './callOnceInInterval';
-
+import GLDListRow from "./GLDListRow";
 
 var { width, height } = Dimensions.get("window");
 const REF_PHOTO = 'gldPhoto';
@@ -302,7 +302,7 @@ class NewQualityView extends React.Component {
         return (
             <TextInput
                 maxLength={255}
-                style={{ textAlignVertical: 'top', paddingLeft: 12, paddingRight: 12, paddingTop: 12, paddingBottom: 0, backgroundColor: '#ffffff', minHeight: 120 }}
+                style={{ textAlignVertical: 'top', paddingLeft: 20, paddingRight: 20, paddingTop: 12, paddingBottom: 0, backgroundColor: '#ffffff', minHeight: 120 }}
                 placeholder={'现场情况描述'}
                 multiline={true}
                 underlineColorAndroid={"transparent"}
@@ -377,14 +377,17 @@ class NewQualityView extends React.Component {
                     showStar={this.state.showCheckpointStar}
                     childView={<SelectCheckPointView ref={REF_CHECKPOINT} selectedCheckPoint={this.state.selectedCheckPoint} ></SelectCheckPointView>}
                 />
-
-                <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBlueprint ? this.state.relevantBlueprint.drawingName : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }} />
-                <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel.elementName ? this.state.relevantModel.elementName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} />
+                <GLDListRow>
+                    <GLDListRow.Item title='关联图纸' bottomSeparator='indent' detail={this.state.relevantBlueprint ? this.state.relevantBlueprint.drawingName : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }}></GLDListRow.Item>
+                </GLDListRow>
+                <GLDListRow>
+                    <GLDListRow.Item title='关联模型' detail={this.state.relevantModel.elementName ? this.state.relevantModel.elementName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} ></GLDListRow.Item>
+                </GLDListRow>
 
                 <WideButton text="保存" onClick={this.save} style={{ marginTop: 30 }} />
                 {
                     (this.state.inspectId != -1) ? (
-                        <WideButton text="删除" type="gray" onClick={this.delete} style={{ marginTop: 20 }} />
+                        <WideButton text="删除" type="white" onClick={this.delete} style={{ marginTop: 20 }} />
                     ) : (null)
                 }
             </View>
@@ -398,7 +401,6 @@ class NewQualityView extends React.Component {
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 {
                     this.renderData()
-                    // this.state.isLoading ? (this.renderLoadingView()) : (this.renderData())
                 }
             </View>
 

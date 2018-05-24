@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { ListRow } from 'app-3rd/teaset';
+import GLDListRow from "./GLDListRow";
 
 /**
  * 选择质检项目
@@ -91,7 +92,7 @@ export default class SelectCheckPointView extends Component {
         return (
             <View style={{ flexDirection: 'row', flex: 1, }}>
                 <TextInput
-                    style={{ flex: 1, textAlignVertical: 'top', minWidth: 100, paddingLeft: 12, paddingRight: 12, paddingTop: 2, paddingBottom: 0, backgroundColor: '#ffffff' }}
+                    style={{ flex: 1, textAlignVertical: 'center', minWidth: 100, paddingLeft: 12, paddingRight: 12,}}
                     placeholder={'请设置'}
                     multiline={false}
                     autoCorrect={false} 
@@ -118,8 +119,9 @@ export default class SelectCheckPointView extends Component {
 
         return (
             <View>
-                {/* <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.getDetailName()} onPress={() => { this.selectCheckPoint() }} /> */}
-                <ListRow title='质检项目' accessory='indicator' bottomSeparator='indent' detail={this.getDetailView()} onPress={() => { this.selectCheckPoint() }} />
+                <GLDListRow>
+                    <GLDListRow.Item title='质检项目' bottomSeparator='indent' detail={this.getDetailView()} onPress={() => { this.selectCheckPoint() }}></GLDListRow.Item>
+                </GLDListRow>
             </View>
         );
     }
@@ -136,5 +138,6 @@ const styles = StyleSheet.create({
     markImage: {
         width: 15,
         height: 15,
+        resizeMode: 'contain',
     },
 })

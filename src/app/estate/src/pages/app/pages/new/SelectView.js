@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 
 import { ListRow, PullPicker } from 'app-3rd/teaset';
 import StarView from './StarView';
+import GLDListRow from "./GLDListRow";
 
 import * as API from "app-api";
 /**
@@ -48,7 +49,7 @@ class SelectView extends Component {
             let oldCoperationId = this.props.extraData ? this.props.extraData.coperationId : 0;
             let newCoperationId = nextProps.extraData ? nextProps.extraData.coperationId : 0;
             if (newCoperationId != oldCoperationId) {
-                let selectIndex = oldCoperationId != 0 ? -2: -1
+                let selectIndex = oldCoperationId != 0 ? -2 : -1
                 this.setState({
                     selectIndex: selectIndex,
                     dataList: []
@@ -205,7 +206,7 @@ class SelectView extends Component {
         } else {
             selectIndex = this.getSelectedPersonIndex(persons);
         }
-        if(this.state.selectIndex === -2 && selectIndex === -1){
+        if (this.state.selectIndex === -2 && selectIndex === -1) {
             selectIndex = -2;
         }
 
@@ -282,12 +283,12 @@ class SelectView extends Component {
         }
         return detail;
     }
-    // icon_create_check_list_star
-
     starItemView = () => {
         return (
             <View style={{ flex: 1 }}>
-                <ListRow title={this.props.title} accessory='indicator' bottomSeparator='indent' detail={this.getDetail()} onPress={() => { this.onPress() }} />
+                <GLDListRow>
+                    <GLDListRow.Item title={this.props.title} detail={this.getDetail()} bottomSeparator="indent" onPress={() => { this.onPress() }}/>
+                </GLDListRow>
             </View>
         );
     }
