@@ -4,14 +4,15 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 
 export default class StatusActionButton extends Component {
     render = () => {
-        const { text, onClick, color, borderColor,width,height,marginLeft,marginRight,style,backgroundColor,disabled} = this.props;
+        const { text, onClick, color, borderColor,width,height,marginLeft,marginRight,style,backgroundColor,disabled,elevationZero} = this.props;
         let styleIn = style;
         
         if(!styleIn) {
-            styleIn = [width?{width:width}:{},borderColor ? {borderColor:borderColor} : {}
+            styleIn = [width?{width:width}:{},borderColor ? {borderColor:borderColor,borderWidth:1} : {}
             , marginLeft ? { marginLeft: marginLeft } : {}, marginRight ? { marginRight: marginRight } : {}
             ,backgroundColor?{backgroundColor:backgroundColor}:{}
-            ,height?{height:height,borderRadius:height/2}:{}];
+            ,height?{height:height,borderRadius:height/2}:{}
+            ,elevationZero?{elevation:0}:{}];
         }
         if(onClick) {
         return (<TouchableOpacity ref='buttonItem'
@@ -63,8 +64,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         height: 30,
         borderRadius: 15,
-        borderColor: '#eeeeee',
-        borderWidth: 1,
+        // borderColor: '#eeeeee',
+        // borderWidth: 1,
         elevation: 2.5, // android 
         shadowColor: "#fff", // iOS
         shadowOffset: { width: 1.5, height: 5 }, // iOS
