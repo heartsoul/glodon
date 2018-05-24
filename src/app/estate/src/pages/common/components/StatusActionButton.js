@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 
 export default class StatusActionButton extends Component {
     render = () => {
-        const { text, onClick, style, disabled, color, elevationZero } = this.props;
+        const { text, onClick, style, disabled, color } = this.props;
         let styleIn = [];
         let textColor = "#fff";
         if (style) {
@@ -12,7 +12,6 @@ export default class StatusActionButton extends Component {
                 style.height ? { borderRadius: style.height / 2 } : { borderRadius: 15 },
                 style.backgroundColor ? { shadowColor: style.backgroundColor } : {},
                 style.borderColor ? { borderWidth: 1 } : {},
-                elevationZero?{elevation:0}:{},
                 style,
             ];
         }

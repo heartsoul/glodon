@@ -250,13 +250,13 @@ export default class EquipmentDetailView extends Component {
 
             if (isLink) {
                 return <View style={{ marginTop: -20 }}>
-                    <StatusActionButton  elevationZero={true} style={{height:40,marginRight:40,marginLeft:40,backgroundColor:"transparent",borderColor:"transparent"}} disabled={false} color='#00b5f2' text='跳过' onClick={() => nextAction(info)} />
+                    <StatusActionButton style={{height:40,marginRight:40,marginLeft:40,backgroundColor:"transparent",elevation:0}} disabled={false} color='#00b5f2' text='跳过' onClick={() => nextAction(info)} />
                 </View>
             }
             return <View style={{ marginTop: 0 }}>
                 <StatusActionButton 
                     ref="nextAction" 
-                    style={{height:40,marginRight:40,marginLeft:40,backgroundColor:this.state.allowNextAction ? '#00b5f2' : '#C8C8C8',borderColor:"transparent"}}
+                    style={{height:40,marginRight:40,marginLeft:40,backgroundColor:this.state.allowNextAction ? '#00b5f2' : '#C8C8C8'}}
                     disabled={false} text='下一步' color='#ffffff' onClick={() => nextAction(info)} />
             </View>
         }
