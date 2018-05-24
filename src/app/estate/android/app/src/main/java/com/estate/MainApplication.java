@@ -65,6 +65,7 @@ public class MainApplication extends Application implements ReactApplication {
 //      mPreferences.edit().putBoolean("reload_on_js_change",true).commit();
 //      mPreferences.edit().putBoolean("hot_module_replacement",true).commit();
 
+    
     instance = this;
     ScreenUtil.init(this);
     SoLoader.init(this, /* native exopackage */ false);
