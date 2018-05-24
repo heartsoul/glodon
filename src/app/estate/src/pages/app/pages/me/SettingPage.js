@@ -118,7 +118,7 @@ class SettingPage extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <ScrollView>
+               <ScrollView style={{paddingBottom:60}}>
                     <SettingItemView icon={require('app-images/icon_setting_change_password.png')} title='修改密码' onPress={() => this._password()} ></SettingItemView>
                     <View style={{ height: 10 }}></View>
                     {
@@ -163,10 +163,12 @@ class SettingPage extends Component {
                     >
                         <Text style={styles.logoutText}>退出登录 </Text>
                     </TouchableHighlight>
-                </ScrollView>
-            </SafeAreaView>
-        );
-    }
+            
+        <View style={{height:60,width:'100%'}} />
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
 
 }
 

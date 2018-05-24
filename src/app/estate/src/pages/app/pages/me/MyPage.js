@@ -15,6 +15,7 @@ import {
 import {loginOut, uaaLoginOut} from "app-api";
 import {NavigationPage} from 'app-3rd/teaset'
 import * as CONSTANTS from 'app-api';
+import { fail } from 'assert';
 var { width, height } = Dimensions.get("window");
 var name = '' ;
 
@@ -66,6 +67,7 @@ export default class extends Component {
             <Image source={require('app-images/icon_mine_wave.png')} style={styles.mineWave}/>
 
           </View>
+          <View style={{backgroundColor:'#f5f8f9'}}>
           <View style={{backgroundColor:'#ffffff'}}>
             <MineItemView icon = {require('app-images/icon_mine_permission.png')} title='我的任务' onPress={()=>this._gotoTask()}></MineItemView>
             <View style={styles.mineItemLine}></View>
@@ -79,7 +81,10 @@ export default class extends Component {
             <View style={styles.mineItemLine}></View>
             <MineItemView icon={require('app-images/icon_setting_change_project.png')} title='切换项目' onPress={() => this._gotoTenantChoose()} ></MineItemView>
           </View>
+          <View style={{height:60,width:'100%'}} />
+          </View>
         </ScrollView>
+        <View style={{height:60,width:'100%'}} />
       </SafeAreaView>
     );
   }
