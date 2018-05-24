@@ -30,18 +30,6 @@ Theme.set({
 
 import * as PAGES from '../pages'
 
-class SearchaBarItem extends React.Component {
-  render() {
-    return  <TouchableOpacity style={{marginRight:10}}  onPress={()=>this.props.navigation.navigate("SearchPage")} >  
-          <Image style={{width: 24,height: 24,resizeMode:'contain'}} source={require('app-images/icon_search_white.png')} />
-    </TouchableOpacity> 
-  }
-}
-
-// withNavigation returns a component that wraps SearchaBarItem and passes in the
-// navigation prop
-var SearchButton =  withNavigation(SearchaBarItem);
-
 export default class extends React.Component {
   static navigationOptions = ({navigation, screenProps}) =>{
     storage.homeNavigation = navigation;
@@ -101,7 +89,8 @@ export default class extends React.Component {
       return ({
         // title:title ? title : CONSTANTS.PAGE_NAME_HOME,
         headerTitle: (<BarItems.TitleBarItem text={title ? title : storage.loadCurrentProjectName()}/>),
-        headerRight:(<SearchaBarItem navigation={this.props.navigation}/>),
+        headerRight:(<BarItems.RightBarItem imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_search_white.png')} navigation={this.props.navigation}
+        onPress={(navigation) => this.props.navigation.navigate("SearchPage")} />),
         headerLeft: <View></View>,
         // header: {mode:'screen'},
       })

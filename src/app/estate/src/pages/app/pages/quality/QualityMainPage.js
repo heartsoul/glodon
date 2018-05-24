@@ -16,27 +16,15 @@ class RightBarButtons extends React.Component {
     AuthorityManager.isQualityCreate() ? BimFileEntry.newSelect(navigation) : null;
   }
   render() {
-    return <View style={{
-      alignItems: 'center',
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      justifyContent: 'flex-end',
-      width: 70,
-    }}>
-      <TouchableOpacity onPress={() => this._onSearchPress(this.props.navigation)} >
-        <Image style={styles.barItemImage} source={require('app-images/icon_search_white.png')} />
-      </TouchableOpacity>
-      <View style={styles.spliteItem} />
-      {
-        AuthorityManager.isQualityCreate() ?
-          <TouchableOpacity onPress={() => this._onNewPress(this.props.navigation)} >
-            <Image style={styles.barItemImage} source={require('app-images/icon_camera_white.png')} />
-          </TouchableOpacity> : null
-      }
-      {
-        AuthorityManager.isQualityCreate() ? <View style={styles.spliteItem} /> : null
-      }
-    </View>
+    return <BarItems navigation={this.props.navigation}>
+    <BarItems.RightBarItem  imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_search_white.png')} navigation={this.props.navigation}
+      onPress={(navigation) => this._onSearchPress(this.props.navigation)} />
+  {
+    AuthorityManager.isQualityCreate() ?
+      <BarItems.RightBarItem imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_camera_white.png')} navigation={this.props.navigation}
+        onPress={(navigation) => this._onNewPress(this.props.navigation)} /> : null
+  }
+</BarItems>
   }
 }
 export default class extends React.Component {
