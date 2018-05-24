@@ -14,8 +14,8 @@ export default class StatusActionButton extends Component {
             ,height?{height:height,borderRadius:height/2}:{}];
         }
         if(onClick) {
-        return (<TouchableOpacity
-            style={[styles.button,...styleIn]}
+        return (<TouchableOpacity ref='buttonItem'
+            style={[styles.button,...styleIn,{shadowColor:backgroundColor}]}
             activeOpacity={0.5}
             disabled={disabled?true:false}
             onPress={onClick}>
@@ -23,12 +23,15 @@ export default class StatusActionButton extends Component {
         </TouchableOpacity>
         )
     }
-        return (<TouchableOpacity
+        return (<TouchableOpacity ref='buttonItem'
             style={[styles.button,...styleIn]}
             activeOpacity={1}>
             <Text style={[styles.buttonText, { color: color }]}>{text}</Text>
         </TouchableOpacity>
         )
+    }
+    setNativeProps = (props) => {
+        this.refs.buttonItem.setNativeProps(props);
     }
 }
 
@@ -62,6 +65,11 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         borderColor: '#eeeeee',
         borderWidth: 1,
+        elevation: 2.5, // android 
+        shadowColor: "#fff", // iOS
+        shadowOffset: { width: 1.5, height: 5 }, // iOS
+        shadowOpacity: 0.15, // iOS
+        shadowRadius: 3, // iOS
     },
 });
 

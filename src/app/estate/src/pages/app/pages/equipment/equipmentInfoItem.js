@@ -3,37 +3,86 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { View, StyleSheet, Text, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native';
 const rightImage = require("app-images/icon_arrow_right_gray.png");
+const clearImage = require("app-images/login/icon_login_password_delete.png")
 var { width, height } = Dimensions.get("window");
 class TextInputWithData extends TextInput {
     componentWillMount = () => {
         this.value = '' + this.props.defaultValue;
     }
 }
-export default class EquipmentInfoItem extends React.Component {
+
+class EquipmentInfoItemTextInput extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            dValue:this.props.content,
+            focus:false,
+            key:1
+        }
+    }
+
     onClick = (event) => {
         if (!this.props.onClick) {
             return;
         }
-        this.props.onClick();
+        this.props.onClick(event);
     }
-
-    renderInput = () => {
-        let { content } = this.props;
-        if (content) {
-            content = '' + content;
+    onChangeText = (value) => {
+        value = value || '';
+        this.state.dValue = value;
+        if(this.props.onChangeText) {
+            this.props.onChangeText(value);
         }
-        if (!this.props.onClick) {
-            return (
-                <View style={styles.containerView} >
-                    <View style={[styles.titleView, this.props.titleWidth ? { width: this.props.titleWidth } : null]}>
-                        <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
-                    </View>
-                    <View style={[styles.contentInputView, this.props.titleWidth ? { width: width - 40 - this.props.titleWidth } : null]}>
-                        <TextInputWithData returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none' defaultValue={content} style={styles.textInput} onChangeText={this.props.onChangeText}></TextInputWithData>
-                    </View>
+        let dis = value.length > 0 ? 'flex' : 'none';
+        this.refs.clearButton.setNativeProps({style:{display:dis}});
+    }
+    onClear = (event) => {  
+        this.setState({
+            dValue:null,
+        });
+        this.refs.textInput.focus();
+        if(this.props.onClear) {
+            this.props.onClear(event);
+        } else {
+            if(this.props.onChangeText) {
+                this.props.onChangeText('');
+            }
+        }  
+        let dis = 'none';
+        this.refs.clearButton.setNativeProps({style:{display:dis}});
+    }
+    onBlur = (event) => {  
+        if(this.props.onBlur) {
+            this.props.onBlur(event);
+        }
+    }
+    onFocus = (event) => {
+        let value = this.props.dValue || '';
+        let dis = value.length > 0 ? 'flex' : 'none';
+        this.refs.clearButton.setNativeProps({style:{display:dis}});
+    }
+    render = () => {
+        console.log('render:'+this.state.dValue);
+        return (
+            <View style={styles.containerView} >
+                <View style={[styles.titleView, this.props.titleWidth ? { width: this.props.titleWidth } : null]}>
+                    <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                 </View>
-            );
-        }
+                <View style={[styles.contentInputView, this.props.titleWidth ? { width: width - 40 - this.props.titleWidth } : null]}>
+                    <TextInputWithData key={'key'+this.state.key} onFocus={this.onFocus} onBlur={this.onBlur} ref="textInput" returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none' 
+                    defaultValue={this.state.dValue}
+                    value={this.state.dValue} style={styles.textInput} 
+                    onChangeText={(value) => this.onChangeText(value)}/>
+                </View>
+               <TouchableOpacity ref='clearButton' style={[styles.rightAction, (this.state.dValue && this.state.dValue.length > 0) ? {display:'flex'} : {display:'none'} ]} activeOpacity={0.5} onPress={(event) => { this.onClear(event); }}>
+                    <Image source={clearImage} style={styles.inputClear} />
+                    </TouchableOpacity>
+            </View>
+        );    
+        
+    }
+    renderClickInput = (content) => {
         return (
             <View style={styles.containerView} >
                 <View style={[styles.titleView, this.props.titleWidth ? { width: this.props.titleWidth } : null]}>
@@ -42,7 +91,62 @@ export default class EquipmentInfoItem extends React.Component {
                 <View style={styles.contentInputView}>
                     <TextInputWithData defaultValue={content} style={styles.textInput} returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none'></TextInputWithData>
                 </View>
-                <TouchableOpacity style={styles.rightAction} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                <TouchableOpacity style={[styles.rightAction,{}]} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                    <Image source={rightImage} style={styles.infoMark} />
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+}
+export default class EquipmentInfoItem extends React.Component {
+    static EquipmentInfoItemTextInput = EquipmentInfoItemTextInput;
+    onClick = (event) => {
+        if (!this.props.onClick) {
+            return;
+        }
+        this.props.onClick();
+    }
+
+    renderInput = () => {
+        console.log('renderInput');
+        let { content } = this.props;
+        if (content) {
+            content = '' + content;
+        }
+        if(this.props.onClick) {
+            return this.renderClickInput(content);
+        }
+        return (
+            <View style={styles.containerView} >
+                <View style={[styles.titleView, this.props.titleWidth ? { width: this.props.titleWidth } : null]}>
+                    <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
+                </View>
+                <View style={[styles.contentInputView, this.props.titleWidth ? { width: width - 40 - this.props.titleWidth } : null]}>
+                    <TextInputWithData ref="textInput" onFocus={()=>{}} returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none' defaultValue={content} style={styles.textInput} 
+                    onChangeText={(value) => {
+                        value = value || '';
+                        this.props.onChangeText(value);
+                        // this.refs.clearButton.style.display = value.length > 0 ? 'flex' : 'none';
+                        }}/>
+                </View>
+               <TouchableOpacity ref='clearButton' style={[styles.rightAction, {display:'flex'}]} activeOpacity={0.5} onPress={(event) => { this.props.onClearClick(event);this.refs.textInput.clear();this.refs.textInput.focus(); }}>
+                    <Image source={clearImage} style={styles.inputClear} />
+                    </TouchableOpacity>
+            </View>
+        );    
+        
+    }
+    renderClickInput = (content) => {
+        return (
+            <View style={styles.containerView} >
+                <View style={[styles.titleView, this.props.titleWidth ? { width: this.props.titleWidth } : null]}>
+                    <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
+                </View>
+                <View style={styles.contentInputView}>
+                    <TextInputWithData defaultValue={content} style={styles.textInput} returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none'></TextInputWithData>
+                </View>
+                <TouchableOpacity style={[styles.rightAction,{}]} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                     <Image source={rightImage} style={styles.infoMark} />
                 </TouchableOpacity>
             </View>
@@ -273,29 +377,30 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     textInput: {
-        color: '#666666',
-        fontWeight: '100',
+        color: '#333333',
+        fontWeight: '200',
         marginTop: 0,
         marginBottom: 0,
+        marginRight:15,
         height: 40,
     },
     content: {
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: '100',
         alignContent: 'center',
     },
     link: {
         color: '#00b5f2',
         textDecorationLine: 'underline',
-        fontSize: 14,
+        fontSize: 16,
         marginRight: 75,
         fontWeight: '100',
     },
     leftTitle: {
-        fontSize: 14,
+        fontSize: 16,
         width: '100%',
-        color: '#666666',
-        fontWeight: '100',
+        color: '#333333',
+        fontWeight: '200',
         // fontFamily:"PingFangSC-Light",
     },
     leftTitleHeader: {
@@ -312,29 +417,35 @@ const styles = StyleSheet.create({
     titleView: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: 75,
+        width: 85,
     },
     contentView: {
         flexDirection: 'row',
-        marginRight: 75,
+        marginRight: 85,
         height: 40,
-        width: width - 75 - 40,
+        width: width - 85 - 40,
         alignItems: 'center',
     },
     contentViewAction: {
         flexDirection: 'row',
-        marginRight: 75,
+        marginRight: 85,
         height: 40,
-        width: width - 75 - 30,
+        width: width - 85 - 30,
         alignContent: 'center',
         alignItems: 'center',
         justifyContent: 'flex-end',
     },
     contentInputView: {
-        width: width - 75 - 40,
+        width: width - 85 - 40,
         height: 40,
     },
     infoMark: {
+        marginRight: -1,
+        width: 17,
+        height: 17,
+        resizeMode: 'contain'
+    },
+    inputClear: {
         marginRight: -1,
         width: 17,
         height: 17,
