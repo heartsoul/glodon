@@ -1,7 +1,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { View, StyleSheet, Text, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Image, TouchableOpacity, Dimensions,Platform } from 'react-native';
 const rightImage = require("app-images/icon_arrow_right_gray.png");
 const clearImage = require("app-images/login/icon_login_password_delete.png")
 var { width, height } = Dimensions.get("window");
@@ -73,7 +73,7 @@ class EquipmentInfoItemTextInput extends React.Component {
                 <View style={[styles.contentInputView, this.props.titleWidth ? { width: width - 40 - this.props.titleWidth } : null]}>
                     <TextInputWithData key={'key'+this.state.key} onFocus={this.onFocus} onBlur={this.onBlur} ref="textInput" returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none' 
                     defaultValue={this.state.dValue}
-                    value={this.state.dValue} style={styles.textInput} 
+                    value={Platform.OS === 'ios' ? this.state.dValue : null} style={styles.textInput} 
                     onChangeText={(value) => this.onChangeText(value)}/>
                 </View>
                <TouchableOpacity ref='clearButton' style={[styles.rightAction, (this.state.dValue && this.state.dValue.length > 0) ? {display:'flex'} : {display:'none'} ]} activeOpacity={0.5} onPress={(event) => { this.onClear(event); }}>
@@ -447,7 +447,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain'
     },
     inputClear: {
-        marginRight: -1,
+        marginRight: 0,
         width: 17,
         height: 17,
         resizeMode: 'contain'
