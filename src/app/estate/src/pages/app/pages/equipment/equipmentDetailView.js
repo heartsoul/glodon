@@ -213,7 +213,7 @@ export default class EquipmentDetailView extends Component {
         let power = AuthorityManager.isEquipmentModify() && !this.props.committed;
         if (!power) return null;
         return <View style={{ marginTop: 20 }}>
-            <StatusActionButton text='保存' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => this._onSaveAction(info)} />
+            <StatusActionButton style={{height:40 ,marginRight:40,marginLeft:40,backgroundColor:'#00b5f2'}} text='保存' color='#ffffff' onClick={() => this._onSaveAction(info)} />
         </View>
     }
     renderActionDeleteInfo = (info) => {
@@ -221,7 +221,7 @@ export default class EquipmentDetailView extends Component {
         if (!power || !info.id) return null;
 
         return <View style={{ marginTop: 20 }}>
-            <StatusActionButton text='删除' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => this._onDeleteAction(info)} />
+            <StatusActionButton style={{height:40 ,marginRight:40,marginLeft:40,backgroundColor:'#ffffff'}} text='删除' color='#000000' onClick={() => this._onDeleteAction(info)} />
         </View>
     }
     _onConfirmAction(info) {
@@ -244,17 +244,20 @@ export default class EquipmentDetailView extends Component {
             }
             // 是编辑
             return <View style={{ marginTop: 0 }}>
-                <StatusActionButton text='确定' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
+                <StatusActionButton text='确定' style={{height:40,marginRight:40,marginLeft:40,backgroundColor:"#00b5f2"}} color='#ffffff' onClick={() => nextAction(info)} />
             </View>
         } else {
 
             if (isLink) {
                 return <View style={{ marginTop: -20 }}>
-                    <StatusActionButton disabled={false} color='#00b5f2' elevationZero={true} borderColor='transparent' text='跳过' height={40} marginRight={20} backgroundColor={'transparent'} marginLeft={20} onClick={() => nextAction(info)} />
+                    <StatusActionButton  elevationZero={true} style={{height:40,marginRight:40,marginLeft:40,backgroundColor:"transparent",borderColor:"transparent"}} disabled={false} color='#00b5f2' text='跳过' onClick={() => nextAction(info)} />
                 </View>
             }
             return <View style={{ marginTop: 0 }}>
-                <StatusActionButton ref="nextAction" disabled={false} text='下一步' height={40} marginRight={20} backgroundColor={this.state.allowNextAction ? '#00b5f2' : '#C8C8C8'} marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
+                <StatusActionButton 
+                    ref="nextAction" 
+                    style={{height:40,marginRight:40,marginLeft:40,backgroundColor:this.state.allowNextAction ? '#00b5f2' : '#C8C8C8',borderColor:"transparent"}}
+                    disabled={false} text='下一步' color='#ffffff' onClick={() => nextAction(info)} />
             </View>
         }
 

@@ -18,7 +18,7 @@ import {
     Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { ActionModal } from 'app-components';
+import { ActionModal, StatusActionButton } from 'app-components';
 import { Modal, Toast } from 'antd-mobile';
 import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'app-3rd/teaset';
 import { ImageChooserView } from 'app-components';
@@ -178,7 +178,7 @@ class NewQualityView extends React.Component {
      * 整改期限{ value: true, date: '2018-04-08' }
      */
     getRectificationData = () => {
-        if(this.refs[REF_RECTIFICATION]){
+        if (this.refs[REF_RECTIFICATION]) {
             return this.refs[REF_RECTIFICATION].getRectificationData()
         }
         return {};
@@ -188,7 +188,7 @@ class NewQualityView extends React.Component {
      * 质检项目
      */
     getSelectedCheckPoint = () => {
-        if(this.refs[REF_CHECKPOINT]){
+        if (this.refs[REF_CHECKPOINT]) {
             return this.refs[REF_CHECKPOINT].getSelectedCheckPoint()
         }
         return {};
@@ -384,10 +384,10 @@ class NewQualityView extends React.Component {
                     <GLDListRow.Item title='关联模型' detail={this.state.relevantModel.elementName ? this.state.relevantModel.elementName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} ></GLDListRow.Item>
                 </GLDListRow>
 
-                <WideButton text="保存" onClick={this.save} style={{ marginTop: 30 }} />
+                <StatusActionButton style={{ height: 40, marginTop: 30, marginRight: 40, marginLeft: 40, backgroundColor: "#00b5f2", borderColor: "#00b5f2", }}  color='#ffffff' text='保存' onClick={() => this.save()} />
                 {
                     (this.state.inspectId != -1) ? (
-                        <WideButton text="删除" type="white" onClick={this.delete} style={{ marginTop: 20 }} />
+                        <StatusActionButton text='删除' style={{ height: 40, marginTop: 20, marginRight: 40, marginLeft: 40, backgroundColor: "#ffffff", borderColor: "#ffffff", }} color='#000000' onClick={() => this.delete()} />
                     ) : (null)
                 }
             </View>
