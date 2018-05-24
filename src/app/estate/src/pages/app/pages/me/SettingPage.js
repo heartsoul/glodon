@@ -45,8 +45,13 @@ class SettingPage extends Component {
     }
     constructor() {
         super();
+        let autoDownload = true;
+        if (storage.loadAutoDownload() === false) {
+            autoDownload = false;
+        }
         this.state = {
             pressed: false,
+            autoDownload: autoDownload,
         };
     }
     _flexDebugShow = () => {
@@ -169,10 +174,19 @@ class SettingItemView extends React.Component {
 
     constructor() {
         super();
+        this.state = {
+            switchValue: true,
+        }
     }
 
     componentDidMount() {
-
+        let switchValue = false;
+        if (this.props && this.props.switchValue) {
+            switchValue = true;
+        }
+        this.setState({
+            switchValue: switchValue,
+        });
     }
 
     render() {
