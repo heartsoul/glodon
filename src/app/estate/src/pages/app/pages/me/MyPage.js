@@ -58,7 +58,7 @@ export default class extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-        <ScrollView>
+        <ScrollView bounces={false}>
           <View style={{backgroundColor:'#00baf3'}}>
             <Image source={require('app-images/icon_mine_default_header.png')} style={styles.mineAvatar}/>
         
