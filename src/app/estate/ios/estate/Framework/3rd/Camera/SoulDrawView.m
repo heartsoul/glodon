@@ -12,19 +12,30 @@
 #import "SoulDrawData.h"
 @interface SoulImageDrawView:UIView
 @property(nonatomic,nonnull,strong) NSMutableArray<SoulDrawData*> * dataArray;
+@property(nonatomic,nonnull,strong) NSMutableArray<SoulDrawData*> * lastPoint;
+
 @property (nonatomic,strong) SoulDrawData  *currentDraw;
 @property (nonatomic,strong) SoulDrawDataSelect  *selectDraw;
-
+@property (nonatomic,assign) BOOL bCanDraw;
 @property (nonatomic, strong) UIView * inputView;
 @property (nonatomic, strong) UITextView * editTextView;
 @property (nonatomic, assign) BOOL bScale; // 是否是缩放。
 @property (nonatomic, assign) BOOL bMove; // 是否是移动。
 @property (nonatomic, assign) BOOL bDrawText;// 是否在绘制文字
+
 @property (nonatomic, assign) SoulDrawDataChangeType currentChangeType;
+
+@property(nonatomic, copy) void(^noticeDataSizeBlock)(NSInteger dataSize);
+@property(nonatomic, copy) void(^noticeDataSelectBlock)(void);
 //画笔的颜色
 @property (nonatomic,copy) UIColor *lineColor;
 - (UIImage *)captureImageFromView:(UIView *)view;
 - (void)saveImage:(void (^)(PHObject*phAsset))finisdBlock;
+- (UIImage*)storePoint;
+- (void)savePoint;
+- (BOOL)undo;
+- (void)reset;
+- (void)addTextDraw:(NSString*)drawText color:(UIColor*)color;
 @end
 @implementation SoulImageDrawView
 
@@ -53,7 +64,7 @@
 }
 
 - (void)initInner {
-    self.userInteractionEnabled = YES;
+    self.userInteractionEnabled = TRUE;
     self.backgroundColor = [UIColor blackColor];
     self.dataArray = [NSMutableArray array];
     self.contentMode = UIViewContentModeScaleAspectFit;
@@ -91,6 +102,9 @@
         }
         
     }
+  if(self.noticeDataSizeBlock) {
+    self.noticeDataSizeBlock(self.dataArray.count);
+  }
      [super drawRect:rect];
 }
 
@@ -124,6 +138,58 @@
 
 - (void)setBDrawText:(BOOL)bDrawText {
     _bDrawText = bDrawText;
+}
+
+- (void)updateLineColor:(UIColor *)lineColor {
+  if(_selectDraw) {
+    [self.selectDraw.selectDrawData setColor:lineColor];
+    if(self.editTextView) {
+      [self.editTextView setTextColor:lineColor];
+    }
+  }
+  self.lineColor = lineColor;
+  [self setNeedsDisplay];
+}
+- (void)savePoint {
+  self.lastPoint = [self.dataArray copy];
+}
+- (BOOL)undo {
+  if(self.selectDraw) {
+    [self cancelSelect];
+  }
+  if(self.currentDraw) {
+    self.currentDraw = nil;
+  }
+  if(self.dataArray.count > 0) {
+    [self.dataArray removeLastObject];
+    [self setNeedsDisplay];
+  }
+  return self.dataArray.count > 0;
+}
+- (void)reset {
+  if(self.selectDraw) {
+    [self cancelSelect];
+  }
+  if(self.currentDraw) {
+    self.currentDraw = nil;
+  }
+  if(!self.lastPoint) {
+    self.lastPoint = [NSMutableArray array];
+  }
+  self.dataArray = [NSMutableArray arrayWithArray:self.lastPoint];
+  [self setNeedsDisplay];
+}
+- (void)addTextDraw:(NSString*)drawText color:(UIColor*)color {
+  SoulDrawDataText * text = [[SoulDrawDataText alloc] init];
+  text.drawText = drawText;
+  text.font = [UIFont systemFontOfSize:26];
+  text.color = color;
+  CGSize size = [text calcSize:120];
+  text.size = CGSizeMake(size.width, MAX(26,size.height));
+  text.center = CGPointMake(40 + text.size.width / 2, 60 + text.size.height / 2);
+  [self.dataArray addObject:text];
+  [self setNeedsDisplay];
+
 }
 #pragma mark -- 手势处理
 - (void)handleSelect:(UITapGestureRecognizer *)tapGesture {
@@ -190,8 +256,9 @@
         CGPoint point = [panGesture translationInView:view.superview];
         [self.selectDraw doChangeType:self.currentChangeType size:CGSizeMake(point.x, point.y)];
         [panGesture setTranslation:CGPointZero inView:view.superview];
-        [self setNeedsDisplay];
-        
+      if (self.currentChangeType == SoulDrawDataChangeTypeNone) {
+         [self endMove:self.selectDraw.selectDrawData];
+      }
     }
     if (panGesture.state == UIGestureRecognizerStateFailed) {
         [self setNeedsDisplay];
@@ -209,6 +276,8 @@
     if (panGesture.state == UIGestureRecognizerStateBegan) {
         [panGesture setTranslation:CGPointZero inView:view.superview];
         self.bMove = YES;
+//      CGPoint point = [panGesture translationInView:view.superview];
+//      NSLog(@"\n>>>>move start:%@",NSStringFromCGPoint(point));
     }
     
     if (panGesture.state == UIGestureRecognizerStateChanged) {
@@ -220,9 +289,10 @@
     }
     if (panGesture.state == UIGestureRecognizerStateEnded) {
         CGPoint point = [panGesture translationInView:view.superview];
+//      NSLog(@"\n>>>>move end:%@",NSStringFromCGPoint(point));
         [self.selectDraw setTrans:CGSizeMake(point.x, point.y)];
         [panGesture setTranslation:CGPointZero inView:view.superview];
-        [self setNeedsDisplay];
+        [self endMove:self.selectDraw.selectDrawData];
         
     }
     if (panGesture.state == UIGestureRecognizerStateFailed) {
@@ -259,15 +329,18 @@
     if([self handleSelectDrawPanScale:panGesture]) {
         return;
     }
-    // 处理移动
-    if([self handleSelectDrawPanMove:panGesture]) {
-        return;
-    }
-   
+//    // 处理移动
+//    if([self handleSelectDrawPanMove:panGesture]) {
+//        return;
+//    }
+//   
     return;
 }
 
 - (void)handleDrawLine:(UIPanGestureRecognizer *)panGesture {
+  if(!self.bCanDraw) {
+    return;
+  }
     UIView *view = panGesture.view;
     CGPoint currentPoint = [panGesture locationInView:view];
   
@@ -390,7 +463,7 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
 //    + (UIColor *)purpleColor;     // 0.5, 0.0, 0.5 RGB
 //    + (UIColor *)brownColor;      // 0.6, 0.4, 0.2 RGB
 //    + (UIColor *)clearColor;      // 0.0 white, 0.0 alpha
-    UIToolbar * toobbarView =  [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 40)];
+    UIToolbar * toobbarView =  [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 20)];
     [toobbarView setItems:@[
                             [self createButton:[UIColor blackColor]],
                             [self createButton:[UIColor darkGrayColor]],
@@ -406,7 +479,7 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
                             [self createButton:[UIColor purpleColor]],
                             [self createButton:[UIColor brownColor]]
                             ]];
-    self.inputView = toobbarView;
+//    self.inputView = toobbarView;
 }
 /**
  * 通过第一响应者的这个方法告诉UIMenuController可以显示什么内容
@@ -415,7 +488,8 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
 {
     if (action == @selector(remove:)
 //        ||action == @selector(savePic:)
-        ||action == @selector(editContent:)) {
+//        ||action == @selector(editContent:)
+        ) {
         return YES;
     }
 //    if ( (action == @selector(delete:) && self.text) // 需要有文字才能支持复制
@@ -468,6 +542,7 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
 - (void)saveImage:(void (^)(
                             PHObject*phAsset))finisdBlock {
     self.selectDraw = nil;
+  self.currentDraw = nil;
     [self setNeedsDisplay];
     
    __block UIImage *image = [self captureImageFromView:self];
@@ -499,12 +574,31 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
     }];
 }
 
+- (UIImage*)storePoint {
+  self.selectDraw = nil;
+  self.currentDraw = nil;
+  [self setNeedsDisplay];
+   UIImage *image = [self captureImageFromView:self];
+  return image;
+}
 - (void)editContent:(UIMenuController *)menu
 {
     [self beginEdit];
 }
 
-- (void)startSelect:(SoulDrawData *)path view:(UIView*)view{
+- (void)endMove:(SoulDrawData *)path {
+  if ([path isKindOfClass:[SoulDrawDataText class]]) {
+    self.selectDraw = [[SoulDrawDataSelectText alloc] initWithFrame:[((SoulDrawDataText*)path) getBounds]];
+    self.selectDraw.selectDrawData = path;
+    [self setNeedsDisplay];
+  } else {
+    self.selectDraw = [[SoulDrawDataSelectBezierPath alloc] initWithFrame:path.bounds];
+    self.selectDraw.selectDrawData = path;
+    [self setNeedsDisplay];
+  }
+}
+
+- (void)startSelect:(SoulDrawData *)path view:(UIView*)view {
     if (self.selectDraw && self.selectDraw.selectDrawData == path) {
         return; // 点击了自己，不处理
     }
@@ -513,22 +607,26 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
         self.selectDraw = [[SoulDrawDataSelectText alloc] initWithFrame:[((SoulDrawDataText*)path) getBounds]];
         self.selectDraw.selectDrawData = path;
         [self setNeedsDisplay];
+//      UILabel * toolbar = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 120)];
+//      toolbar.text = @"移入删除";
+//      self.inputView = toolbar;
         // 让label成为第一响应者
         [self becomeFirstResponder];
-        
+     
+      
         // 获得菜单
         UIMenuController *menu = [UIMenuController sharedMenuController];
-        
+
         // 设置菜单内容，显示中文，所以要手动设置app支持中文
         menu.menuItems = @[
                            [[UIMenuItem alloc] initWithTitle:@"删除" action:@selector(remove:)],
-                           [[UIMenuItem alloc] initWithTitle:@"编辑" action:@selector(editContent:)],
+//                           [[UIMenuItem alloc] initWithTitle:@"编辑" action:@selector(editContent:)],
 //                           [[UIMenuItem alloc] initWithTitle:@"保存" action:@selector(savePic:)],
                            ];
-        
+
         // 菜单最终显示的位置
         [menu setTargetRect:[((SoulDrawDataText*)path) getBounds] inView:view];
-        
+
         // 显示菜单
         [menu setMenuVisible:YES animated:YES];
     } else {
@@ -540,16 +638,16 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
         
         // 获得菜单
         UIMenuController *menu = [UIMenuController sharedMenuController];
-        
+
         // 设置菜单内容，显示中文，所以要手动设置app支持中文
         menu.menuItems = @[
                            [[UIMenuItem alloc] initWithTitle:@"删除" action:@selector(remove:)],
-                           [[UIMenuItem alloc] initWithTitle:@"保存" action:@selector(savePic:)],
+//                           [[UIMenuItem alloc] initWithTitle:@"保存" action:@selector(savePic:)],
                            ];
-        
+
         // 菜单最终显示的位置
         [menu setTargetRect:path.bounds inView:view];
-        
+
         // 显示菜单
         [menu setMenuVisible:YES animated:YES];
     }
@@ -786,5 +884,43 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
             finisdBlock(nil);
         }
     }];
+}
+
+- (void)enableDraw:(BOOL)enable {
+//  self.userInteractionEnabled = enable;
+  self.bCanDraw = enable;
+//  self.drawView.userInteractionEnabled = enable;
+  self.drawView.bCanDraw = enable;
+}
+
+- (void)updateLineColor:(UIColor*)lineColor {
+  self.lineColor = lineColor;
+  [self.drawView updateLineColor:lineColor];
+}
+- (void)storePoint {
+  UIImage * lastImage = [self.drawView storePoint];
+  self.drawView.backgroundColor = [UIColor colorWithPatternImage:lastImage];
+}
+- (BOOL)undo {
+ return [self.drawView undo];
+}
+
+-(void)setNoticeDataSizeBlock:(void (^)(NSInteger))noticeDataSizeBlock {
+  [self.drawView setNoticeDataSizeBlock:noticeDataSizeBlock];
+}
+
+- (void)setNoticeDataSelectBlock:(void (^)(void))noticeDataSelectBlock {
+  [self.drawView setNoticeDataSelectBlock:noticeDataSelectBlock];
+}
+
+- (void)addTextDraw:(NSString*)drawText color:(UIColor*)color {
+  return [self.drawView addTextDraw:drawText color:color];
+}
+
+- (void)reset {
+  [self.drawView reset];
+}
+- (void)savePoint {
+  [self.drawView savePoint];
 }
 @end

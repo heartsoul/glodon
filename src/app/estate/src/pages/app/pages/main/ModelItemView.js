@@ -7,9 +7,8 @@ import {
   StatusBar,
   Image,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
-import { Label } from 'app-3rd/teaset';
 var { width, height } = Dimensions.get("window");
 export default class extends React.Component {
     constructor() {
@@ -21,7 +20,7 @@ export default class extends React.Component {
         <TouchableOpacity {...this.props}>
         <View style={styles.imageView}>
         <Image source={this.props.source} style={styles.image}/>
-        <Label >{this.props.title}</Label>
+        <Text >{this.props.title}</Text>
         </View>
         </TouchableOpacity>
         
@@ -36,8 +35,8 @@ export default class extends React.Component {
       },
       imageView:{
         width:(width - 70) / 4,
-        height:(width - 70) / 4 + 40,
+        // height:(width - 70) / 4 + 30,
         // justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
     },
   });

@@ -106,7 +106,7 @@ async function getOperationCode(filePath, name, length, callback,digest=null,fil
     let filter = "?containerId=" + timestamp + "&name=" + name + "&digest=" + (digest?digest:name) + "&length=" + length;
 
     let ops = {
-        method: 'POST',
+        method: 'GET',
         headers: {
             "Content-Type": "application/json;charset=utf-8",
             "X-Requested-With": "XMLHttpRequest",
@@ -122,7 +122,7 @@ async function getOperationCode(filePath, name, length, callback,digest=null,fil
         }
     }
     console.log("getOperationCode:"+AppConfig.BASE_URL + api + filter);
-    return fetch(AppConfig.BASE_URL + api + filter, ...ops)
+    return fetch(AppConfig.BASE_URL + api + filter, ops)
         .then((response) => response.text())
         .then((responseData) => {
             console.log("getOperationCode result:"+responseData);

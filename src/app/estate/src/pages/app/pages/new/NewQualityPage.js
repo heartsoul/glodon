@@ -13,7 +13,7 @@ import ReactNative, {
     Platform,
 } from 'react-native';
 import { Tabs, } from 'antd-mobile';
-import { LeftBarButtons } from "app-components"
+import { BarItems } from "app-components"
 import NewCheckListTabBar from "./NewCheckListTabBar";
 import NewQualityView from "./NewQualityView";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -90,7 +90,7 @@ class NewQualityPage extends Component {
         return;
     }
     loadLeftTitle = () => {
-        return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={''} />
+        return <BarItems top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={''} />
     }
 
     setActiveTab = () => {
@@ -123,7 +123,10 @@ class NewQualityPage extends Component {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
                 () => {
-                    // this.goBack();
+                    if(storage.currentRouteName === this.props.navigation.state.routeName){
+                        this.goBack();
+                        return true;
+                    }
                     return false;
                 }
             )

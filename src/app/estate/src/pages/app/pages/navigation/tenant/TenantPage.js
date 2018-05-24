@@ -4,7 +4,7 @@
 'use strict';
 import React, { Component, } from "react";
 import ReactNative, { ActivityIndicator, Animated, FlatList, ScrollView, StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, Platform } from "react-native";
-import { LeftBarButtons } from "app-components";
+import { BarItems } from "app-components";
 import * as API from "app-api";
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -42,13 +42,13 @@ export default class tenantList extends Component {
         this.resetTenant();
     }
     resetTenant = () => {
-        API.setCurrentTenant(storage.loadTenant())
+        API.setCurrentTenant(storage.loadLastTenant())
             .then((responseData) => {
                 storage.pop(this.props.navigation, 1)
             });
     }
     loadLeftTitle = () => {
-        return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
+        return <BarItems top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
     }
     componentDidMount() {
         this.appearAfterMount && this.appear()

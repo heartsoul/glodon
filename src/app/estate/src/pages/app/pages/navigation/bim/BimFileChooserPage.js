@@ -3,15 +3,15 @@
  */
 'use strict';
 import * as API from "app-api";
-import { LeftBarButtons, LoadingView } from "app-components";
+import { BarItems, LoadingView } from "app-components";
 import React, { Component } from "react";
-import { ActivityIndicator, Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View, DeviceEventEmitter } from "react-native";
 import Breadcrumb from "./../../../components/Breadcrumb";
 import * as BimFileEntry from "./BimFileEntry";
 import BimFileFilterView from "./BimFileFilterView";
 import * as PageType from "./PageTypes";
 import ThumbnailImage from "./ThumbnailImage";
-
+import BimFileNavigationView from "./bimFileNavigationView";
 
 var { width, height } = Dimensions.get("window");
 class RightBarButtons extends React.Component {
@@ -22,18 +22,7 @@ class RightBarButtons extends React.Component {
 
     }
     render() {
-        return <View style={{
-            alignItems: 'center',
-            flexDirection: 'row',
-            flexWrap: 'nowrap',
-            justifyContent: 'flex-end',
-            width: 70,
-        }}>
-            <TouchableOpacity onPress={() => this._onSearchPress(this.props.navigation)} >
-                <Image style={styles.barItemImage} source={require('app-images/icon_search_white.png')} />
-            </TouchableOpacity>
-            <View style={styles.spliteItem} />
-        </View>
+        return <BarItems navigation={this.props.navigation}><BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} /> </BarItems> 
     }
 }
 export default class BimFileChooser extends Component {
@@ -51,10 +40,10 @@ export default class BimFileChooser extends Component {
             currentItem = API.APP_QUALITY_MODLE;
         }
         return {
-            headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>{title}</Text>),
+            headerTitle: (<BarItems.TitleBarItem text={title ? title : ''}/>),
             headerRight: (<RightBarButtons navigation={navigation} />),
             headerLeft: (
-                <LeftBarButtons top={navigation.getParam('top')} navigation={navigation} currentItem={currentItem} />
+                <BarItems top={navigation.getParam('top')} navigation={navigation} currentItem={currentItem} />
             ),
         }
     };
@@ -63,10 +52,10 @@ export default class BimFileChooser extends Component {
         super(props);
         let params = this.props.navigation.state.params;
         let fileId = params.fileId || 0;
-        let dataType = params.dataType  || '';
+        let dataType = params.dataType || '';
 
         let navData = params.navData ? params.navData : [];
-        
+
         this.state = {
             isLoading: true,
             refreshing: false,
@@ -80,7 +69,7 @@ export default class BimFileChooser extends Component {
             latestVersion: storage.projectIdVersionId,
             fileId: fileId,
             dataType: dataType,//图纸文件 模型文件 
-            pageType: params.pageType, 
+            pageType: params.pageType,
             navData: navData,//导航条面包屑数据
         }
     }
@@ -96,11 +85,11 @@ export default class BimFileChooser extends Component {
                     latestVersion: latestVersion,
                 });
                 this.fetchDataInner(page, storage.loadProject(), latestVersion);
-            }).catch((error)=>{
+            }).catch((error) => {
                 this.setState(
                     {
-                        isLoading:false,
-                        error:true,
+                        isLoading: false,
+                        error: true,
                     }
                 );
             });
@@ -154,11 +143,11 @@ export default class BimFileChooser extends Component {
                 data = null;
                 dataBlob = null;
             }
-        ).catch((error)=>{
+        ).catch((error) => {
             this.setState(
                 {
-                    isLoading:false,
-                    error:true,
+                    isLoading: false,
+                    error: true,
                 }
             );
         });
@@ -188,22 +177,61 @@ export default class BimFileChooser extends Component {
     }
 
     componentDidMount() {
-        //上一个页面传来的参数
-
-       
-            //请求数据
-            this.fetchData(1);
-        
-
+        //请求数据
+        this.fetchData(1);
+        this.deEmitter = DeviceEventEmitter.addListener('changeDir',
+            (data) => {
+                let len = this.state.navData.length;
+                if (len - 1 === data.index) {
+                    if (this.state.fileId !== data.value.fileId) {
+                        let navData = [].concat(this.state.navData);
+                        navData[data.index] = { ...navData[data.index], ...data.value }
+                        this.setState({
+                            fileId: data.value.fileId,
+                            navData: navData,
+                            refreshing: true,
+                            page: 0,
+                        }, () => {
+                            this.fetchData(0);
+                        })
+                    }
+                }
+            });
+    }
+    componentWillUnmount() {
+        if (this.deEmitter) {
+            this.deEmitter.remove();
+        }
     }
 
+    getDirData = () => {
+        let dir = [];
+        if (this.state.dataArray) {
+            for (let index in this.state.dataArray) {
+                if (this.state.dataArray[index].value.folder) {
+                    dir.push(this.state.dataArray[index].value);
+                } else {
+                    break;
+                }
+            }
+        }
+        return dir;
+    }
+
+    getParentDir = () => {
+        let dir = []
+        if (this.state.navData && this.state.navData.length > 0) {
+            dir = this.state.navData[this.state.navData.length - 1].dir;
+        }
+        return dir;
+    }
     //加载失败view
     renderErrorView(error) {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <Text>
-                加载失败
+                    加载失败
                 </Text>
             </View>
         );
@@ -215,18 +243,19 @@ export default class BimFileChooser extends Component {
             this.state.navData.forEach((child) => {
                 navData.push(child);
             })
-            navData.push(item.value);
+            let d = { ...item.value, dir: this.getDirData() }
+            navData.push(d);
 
             global.storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType, navData: navData });
         } else {
             // API.getModelBimFileToken(this.state.projectId, this.state.latestVersion, item.value.fileId).then((responseData) => {
             //     let token = responseData.data.data;
             //     global.storage.bimToken = token;
-                if (this.state.dataType === '图纸文件') {
-                    BimFileEntry.showBlueprintFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.name);
-                } else {
-                    BimFileEntry.showModelFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.buildingId, item.value.buildingName)
-                }
+            if (this.state.dataType === '图纸文件') {
+                BimFileEntry.showBlueprintFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.name);
+            } else {
+                BimFileEntry.showModelFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.buildingId, item.value.buildingName)
+            }
             // }).catch((error)=>{
 
             //     if (this.state.dataType === '图纸文件') {
@@ -234,7 +263,7 @@ export default class BimFileChooser extends Component {
             //     } else {
             //         Toast.info('抱歉，您目前没有查看此模型的权限，请联系系统管理员。', 3);
             //     }
-                
+
             // });
 
         }
@@ -346,19 +375,25 @@ export default class BimFileChooser extends Component {
             />
         );
     }
+
     /**
      * 带导航的View
      */
     renderDataWithBreadcrumb = () => {
         return (
             <View>
-                <Breadcrumb data={this.state.navData} onItemClick={(item, index) => {
-                    let len = this.state.navData.length;
-                    this.props.navigation.pop(len - index);
-                }}></Breadcrumb>
-                {
-                    this.renderList()
-                }
+                <Breadcrumb
+                    childView={this.renderList()}
+                    data={this.state.navData}
+                    onItemClick={(item, index) => {
+                        DeviceEventEmitter.emit('changeDir', { value: item, index: index });
+                        let len = this.state.navData.length;
+                        this.props.navigation.pop(len - index - 1);
+                    }}>
+
+                </Breadcrumb>
+
+
             </View>
         );
     }
@@ -396,7 +431,7 @@ export default class BimFileChooser extends Component {
     render = () => {
         //第一次加载等待的view
         if (this.state.isLoading && !this.state.error) {
-            return (<LoadingView/>);
+            return (<LoadingView />);
         } else if (this.state.error) {
             //请求失败view
             return this.renderErrorView(this.state.errorInfo);

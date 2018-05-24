@@ -711,13 +711,15 @@
     if (self.bEdit) {
         return;
     }
-    [self setup];
+   [self setup];
+//  NSLog(@"TextMoveCurrentPoint:%@", NSStringFromCGPoint(self.currentPoint));
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSaveGState(UIGraphicsGetCurrentContext());
-    [[UIColor grayColor] setStroke];
-    self.lineWidth = 0.5f;
+    [[UIColor whiteColor] setStroke];
+    self.lineWidth = 1.0f;
     [self strokeWithBlendMode:kCGBlendModeNormal alpha:1.0];
     [self stroke];
+  
     [self doTrans];
     CGContextRestoreGState(context);
     

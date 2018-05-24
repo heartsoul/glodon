@@ -47,6 +47,8 @@ class SettingPage extends Component {
   }
   _flexDebugShow = () => {
     PM.flexDebugShow();
+    /* <SettingItemView icon={require('app-images/icon_setting_about_us.png')} title='打开FLEX' onPress={() => this._flexDebugShow()} ></SettingItemView>
+        <View style={{ height: 10 }}></View> */
   }
   _tenantChoose = () => {
     let navigator = this.props.navigation;
@@ -119,8 +121,7 @@ class SettingPage extends Component {
         <View style={styles.settingItemLine}></View>
         <SettingItemView icon={require('app-images/icon_setting_about_us.png')} title='关于我们' onPress={() => this._about()} ></SettingItemView>
         <View style={{ height: 10 }}></View>
-        <SettingItemView icon={require('app-images/icon_setting_about_us.png')} title='打开FLEX' onPress={() => this._flexDebugShow()} ></SettingItemView>
-        <View style={{ height: 10 }}></View>
+        
         <SettingItemView icon={require('app-images/icon_setting_offline.png')} title='离线设置' ></SettingItemView>
         <TouchableHighlight
           onPress={this._logout}
@@ -189,17 +190,18 @@ var styles = StyleSheet.create({
   settingItemIcon: {
     width: 24,
     height: 24,
-    marginLeft: 20
+    marginLeft: 20,
+    resizeMode:'contain',
   },
   settingItemText: {
     marginLeft: 17,
     flex: 1,
     fontSize: 14,
-    color: '#000000',
+    color: '#325771',
   },
   settingItemExtText: {
     fontSize: 14,
-    color: '#999992',
+    color: '#325771',
     marginRight: 20
   },
   settingItemArrow: {
@@ -217,8 +219,8 @@ var styles = StyleSheet.create({
     backgroundColor: "#00baf3",
     borderRadius: 20,
     marginTop: 40,
-    marginLeft: 20,
-    marginRight: 20
+    marginLeft: 40,
+    marginRight: 40
   },
 
   logoutTextViewPressed: {
@@ -227,8 +229,8 @@ var styles = StyleSheet.create({
     backgroundColor: "#33baf3",
     borderRadius: 20,
     marginTop: 40,
-    marginLeft: 20,
-    marginRight: 20
+    marginLeft: 40,
+    marginRight: 40
   },
   logoutText: {
     overflow: "hidden",

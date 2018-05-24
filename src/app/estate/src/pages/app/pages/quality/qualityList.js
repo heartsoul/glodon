@@ -4,7 +4,7 @@
 'use strict';
 import React, { Component, PureComponent } from "react";
 import {StyleSheet, View, StatusBar, Dimensions} from "react-native";
-import {SegmentedView} from 'app-3rd/teaset';
+import {SegmentedView} from 'teaset';
 
 import * as API from "app-api";
 import QualityListView from "./qualityListView";
@@ -96,6 +96,7 @@ export default class qualityList extends PureComponent {
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                <View style={{height:5,width:'100%',backgroundColor:'white'}}/>
                 <SegmentedView style={{ flex: 1 }} justifyItem={'scrollable'} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
                     {
                        API.CLASSIFY_STATUS_LIST.map((item,index)=>{
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     contentList: {
         flex: 1,
         backgroundColor: '#fafafa',
-        paddingTop:5,
+        paddingTop:0,
         //  height:120,
     },
     dataList: {
@@ -171,7 +172,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#f8f8f8',
         // height:180
     },
     containerView: {

@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -28,6 +29,9 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		246079FA20B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 246079F920B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m */; };
+		24607A2220B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24607A2120B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib */; };
+		24607A2420B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24607A2320B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib */; };
 		247E2B0F204631A600016F63 /* GLDRNEventEmitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2B0C204631A600016F63 /* GLDRNEventEmitter.m */; };
 		247E2B10204631A600016F63 /* GLDRNBridgeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2B0D204631A600016F63 /* GLDRNBridgeModule.m */; };
 		247E2BD02046373300016F63 /* NSJSONSerialization+safeGenerate.m in Sources */ = {isa = PBXBuildFile; fileRef = 247E2B132046373300016F63 /* NSJSONSerialization+safeGenerate.m */; };
@@ -124,13 +128,13 @@
 		24D9E00420637E9600CAB786 /* NSDictionary+BaseRCTComponents.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E00320637E9600CAB786 /* NSDictionary+BaseRCTComponents.m */; };
 		24D9E007206390D500CAB786 /* GLDImagePickerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E006206390D500CAB786 /* GLDImagePickerManager.m */; };
 		24D9E0742064EAAC00CAB786 /* NSDictionary+SoulPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E0732064EAAB00CAB786 /* NSDictionary+SoulPhotoModel.m */; };
+		2C829E31715543F9A12A6A29 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DCB9F29F6734D14908C260D /* libz.tbd */; };
+		5DFCF0843AEE4A24940A1C71 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0F2450388E4B94950FCA67 /* libRealmReact.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B38FDF305D5760954341FCBA /* libPods-estate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B59B16D1F688C59F154384F6 /* libPods-estate.a */; };
-		5DFCF0843AEE4A24940A1C71 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0F2450388E4B94950FCA67 /* libRealmReact.a */; };
 		CF0C6AE789AA4AC19D5998AE /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D0AE1917FF754FF1B107AE1C /* libc++.tbd */; };
-		2C829E31715543F9A12A6A29 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DCB9F29F6734D14908C260D /* libz.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -245,6 +249,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 83CBBA2E1A601D0E00E9B192;
 			remoteInfo = React;
+		};
+		24607AFF20B39FD500F2CA6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF96D02BC51F4FEEA6C088B0 /* RealmReact.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F60690131CA2766F0003FB26;
+			remoteInfo = RealmReact;
 		};
 		247E2AF62043C82F00016F63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -429,7 +440,7 @@
 		06958CD8208366880015C54F /* GLDPhotoPickerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLDPhotoPickerController.m; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* BIM协同D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "BIM协同D.app"; path = estate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* estate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = estate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = estate/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = estate/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -437,6 +448,10 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = estate/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = estate/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		246079F820B2850D00F2CA6F /* SoulDrawColorPickerToolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoulDrawColorPickerToolbar.h; sourceTree = "<group>"; };
+		246079F920B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoulDrawColorPickerToolbar.m; sourceTree = "<group>"; };
+		24607A2120B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SoulDrawColorPickerToolbar.xib; sourceTree = "<group>"; };
+		24607A2320B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SoulDrawColorPickerCollectionViewCell.xib; sourceTree = "<group>"; };
 		247E2B0B204631A600016F63 /* GLDRNBridgeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLDRNBridgeModule.h; sourceTree = "<group>"; };
 		247E2B0C204631A600016F63 /* GLDRNEventEmitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLDRNEventEmitter.m; sourceTree = "<group>"; };
 		247E2B0D204631A600016F63 /* GLDRNBridgeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLDRNBridgeModule.m; sourceTree = "<group>"; };
@@ -633,17 +648,17 @@
 		24D9E0732064EAAB00CAB786 /* NSDictionary+SoulPhotoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+SoulPhotoModel.m"; sourceTree = "<group>"; };
 		2632B319FF8E0417CC63C60C /* Pods-estate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-estate.release.xcconfig"; path = "Pods/Target Support Files/Pods-estate/Pods-estate.release.xcconfig"; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DCB9F29F6734D14908C260D /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		30E2D03B6DD14E379598579B /* STTVTableView.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = STTVTableView.xcodeproj; path = "../node_modules/react-native-largelist/ios/STTVTableView.xcodeproj"; sourceTree = "<group>"; };
+		3D0F2450388E4B94950FCA67 /* libRealmReact.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRealmReact.a; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B59B16D1F688C59F154384F6 /* libPods-estate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-estate.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF96D02BC51F4FEEA6C088B0 /* RealmReact.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RealmReact.xcodeproj; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; };
+		D0AE1917FF754FF1B107AE1C /* libc++.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		EDD2AC708EC53F9CBB04F80C /* Pods-estate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-estate.debug.xcconfig"; path = "Pods/Target Support Files/Pods-estate/Pods-estate.debug.xcconfig"; sourceTree = "<group>"; };
-		BF96D02BC51F4FEEA6C088B0 /* RealmReact.xcodeproj */ = {isa = PBXFileReference; name = "RealmReact.xcodeproj"; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		3D0F2450388E4B94950FCA67 /* libRealmReact.a */ = {isa = PBXFileReference; name = "libRealmReact.a"; path = "libRealmReact.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		D0AE1917FF754FF1B107AE1C /* libc++.tbd */ = {isa = PBXFileReference; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
-		2DCB9F29F6734D14908C260D /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -741,6 +756,10 @@
 				06958C492082E7220015C54F /* SoulActionToolbarView.m */,
 				06958C462082E7220015C54F /* SoulActionToolbarViews.xib */,
 				06958C402082E7220015C54F /* SoulCameraEditView.xib */,
+				246079F820B2850D00F2CA6F /* SoulDrawColorPickerToolbar.h */,
+				246079F920B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m */,
+				24607A2120B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib */,
+				24607A2320B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -799,6 +818,14 @@
 				06958C7D2082E7220015C54F /* libdouble-conversion.a */,
 				247E2B032043C82F00016F63 /* libprivatedata.a */,
 				06958C7F2082E7220015C54F /* libprivatedata-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		24607AFC20B39FD500F2CA6F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				24607B0020B39FD500F2CA6F /* libRealmReact.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1196,6 +1223,7 @@
 		247E2C762047CED300016F63 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
+				3D0F2450388E4B94950FCA67 /* libRealmReact.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1336,7 +1364,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* BIM协同D.app */,
+				13B07F961A680F5B00A75B9A /* estate.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1382,7 +1410,7 @@
 			);
 			name = estate;
 			productName = "Hello World";
-			productReference = 13B07F961A680F5B00A75B9A /* BIM协同D.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* estate.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1459,6 +1487,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = 24607AFC20B39FD500F2CA6F /* Products */;
+					ProjectRef = BF96D02BC51F4FEEA6C088B0 /* RealmReact.xcodeproj */;
 				},
 				{
 					ProductGroup = 24D9E0132063A2B400CAB786 /* Products */;
@@ -1583,6 +1615,13 @@
 			fileType = archive.ar;
 			path = libReact.a;
 			remoteRef = 146834031AC3E56700842450 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		24607B0020B39FD500F2CA6F /* libRealmReact.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRealmReact.a;
+			remoteRef = 24607AFF20B39FD500F2CA6F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		247E2AF72043C82F00016F63 /* libjsinspector.a */ = {
@@ -1746,9 +1785,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24607A2220B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib in Resources */,
 				06958C842082E7220015C54F /* SoulActionToolbarViews.xib in Resources */,
 				247E2BFC2046373400016F63 /* XHDatePickerView.xib in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				24607A2420B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib in Resources */,
 				06958C812082E7220015C54F /* SoulCameraEditView.xib in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
@@ -1769,7 +1810,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ \"$CONFIGURATION\" = \"Debug\" ]]; then\nexit 0;\nfi\n#SKIP_BUNDLING=true\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n# RCT_DEV 调试模式，自动查找服务器 SKIP_BUNDLING 设置来跳过真机器自动打包 FORCE_BUNDLING 模拟器下也打进行打包\n";
+			shellScript = " if [[ \"$CONFIGURATION\" = \"Debug\" ]]; then\n exit 0;\n fi\n#SKIP_BUNDLING=true\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n# RCT_DEV 调试模式，自动查找服务器 SKIP_BUNDLING 设置来跳过真机器自动打包 FORCE_BUNDLING 模拟器下也打进行打包\n";
 		};
 		247E2B072043CD5300016F63 /* [AU] Set Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1955,6 +1996,7 @@
 				247E2BF02046373400016F63 /* NetApiDelegate.m in Sources */,
 				247E2BD52046373300016F63 /* NSData+JSON.m in Sources */,
 				247E2BD22046373300016F63 /* UINavigationController+Theme.m in Sources */,
+				246079FA20B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m in Sources */,
 				247E2BE02046373300016F63 /* UIAlertAction+Soul.m in Sources */,
 				247E2BE82046373300016F63 /* UIColor+RGBA.m in Sources */,
 				247E2BEA2046373400016F63 /* UIView+MBProgressHUD.m in Sources */,
@@ -1988,6 +2030,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 5BWXTQUBDE;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -1997,10 +2040,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-largelist/ios/STTVTableView",
-					"$(SRCROOT)\..\node_modules\realm\src/**",
+					"$(SRCROOT)..\node_modules\nealmsrc/**",
 				);
 				INFOPLIST_FILE = estate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/estate\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2011,10 +2058,6 @@
 				PROVISIONING_PROFILE = "0774c7dd-a786-4d85-bb42-5c65ab38d911";
 				PROVISIONING_PROFILE_SPECIFIER = "dev-5BWXTQUBDE.org.soul.*";
 				VERSIONING_SYSTEM = "apple-generic";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/estate\"",
-				);
 			};
 			name = Debug;
 		};
@@ -2029,10 +2072,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-largelist/ios/STTVTableView",
-					"$(SRCROOT)\..\node_modules\realm\src/**",
+					"$(SRCROOT)..\node_modules\nealmsrc/**",
 				);
 				INFOPLIST_FILE = estate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/estate\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2043,10 +2090,6 @@
 				PROVISIONING_PROFILE = "0774c7dd-a786-4d85-bb42-5c65ab38d911";
 				PROVISIONING_PROFILE_SPECIFIER = "dev-5BWXTQUBDE.org.soul.*";
 				VERSIONING_SYSTEM = "apple-generic";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/estate\"",
-				);
 			};
 			name = Release;
 		};

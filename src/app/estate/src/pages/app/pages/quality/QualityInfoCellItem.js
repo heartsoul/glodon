@@ -177,7 +177,7 @@ QualityInfoCellItem.propTypes = {
     /**
     * 图片链接
     */
-    url: PropTypes.string,
+    url: PropTypes.any,
     // images 类型需要的数据
     /**
     * 图片链接

@@ -13,13 +13,20 @@ export class TextInputNormal extends Component {
     /*用来指示是否显示Loading提示符号*/
     this.state = {
       disabled: false,
+      textB:this.props.defaultValue
     };
   }
   focus = () =>{
     this.textInput.focus();
   }
+  _onClearTextEntry = () =>{
+    this.textInput.clear();
+    this.props.onChangeText('');
+    this.focus();
+  }
   render() {
     return (
+      <View  style={[styles.style_input,]}>
       <TextInput
       ref={(ref)=>{this.textInput=ref}}
       style={styles.style_user_input}
@@ -32,18 +39,29 @@ export class TextInputNormal extends Component {
       autoCorrect={false}
       autoCapitalize='none'
       placeholder={this.props.placeholder}
+      placeholderTextColor="rgb(153,153,146)"
       onSubmitEditing ={(text)=>{
         this.props.onChangeText('\n');
       }
       }
+      maxLength={32}
       onChangeText={(text)=>{
+        if(!text) {
+          text = '';
+        }
         this.props.onChangeText(text);
+        this.setState({textB:text}); 
       }
       }
-      defaultValue={this.props.defaultValue}
+      // defaultValue={this.props.defaultValue}
+      value={this.state.textB}
       onBlur={this.props.onBlur}
       onFocus={this.props.onFocus}
     />
+     <View style={[styles.style_input_action]}>
+    <TouchableOpacity onPress={this._onClearTextEntry}><Image style={styles.style_image_delete} source={icon_login_password_delete}/></TouchableOpacity>
+    </View>
+    </View>
     )
   }
 }
@@ -67,13 +85,16 @@ export class TextInputPassword extends Component {
       disabled: false,
       secureTextEntry:true,
       resetData:false,
-      value:this.props.value
+      value:this.props.value,
     };
   }
   _onClearTextEntry = () =>{
+    this.textInput.clear();
     this.setState({
       value:'',
     });
+    this.props.onChangeText('');
+    this.focus();
   }
   _onSecureTextEntry = () =>{
     if(this.state.secureTextEntry) {
@@ -101,10 +122,12 @@ export class TextInputPassword extends Component {
       underlineColorAndroid={"transparent"}
       secureTextEntry={this.state.secureTextEntry}
       enablesReturnKeyAutomatically={true}
+      placeholderTextColor="rgb(153,153,146)"
       textAlign="left"
       autoCorrect={false}
       autoCapitalize='none'
       // autoFocus={true}
+      maxLength={32}
       placeholder={this.props.placeholder}
       onSubmitEditing ={(text)=>{
         this.props.onChangeText('\n');
@@ -118,12 +141,20 @@ export class TextInputPassword extends Component {
             resetData:false
           });
         } 
-        this.props.onChangeText(text);}
+        this.setState({
+          value:text,
+        });
+        this.props.onChangeText(text);
+        }
       }
+      value = {this.state.value}
       onBlur={this.props.onBlur}
       onFocus={this.props.onFocus}
     />
-    <View  style={[styles.style_input_action,]}>
+    
+    <View  style={[styles.style_input_action,{width:80}]}>
+    <TouchableOpacity style={[this.state.value  && this.state.value.length ? {} : {'display':'none'}]} onPress={this._onClearTextEntry}><Image style={styles.style_image_delete} source={icon_login_password_delete}/></TouchableOpacity>
+    
     <TouchableOpacity onPress={this._onSecureTextEntry}><Image style={styles.style_image} source={this.state.secureTextEntry ? icon_login_password_hide : icon_login_password_show}/></TouchableOpacity>
     </View>
     </View>
@@ -207,7 +238,7 @@ TextInputImage.propTypes = {
 const styles = StyleSheet.create({
   style_input: {
     // width:'100%',
-    // backgroundColor:'red',
+    backgroundColor:'transparent',
     marginLeft: 20,
     marginRight: 20,
     marginTop:12,
@@ -221,14 +252,14 @@ const styles = StyleSheet.create({
     top:0,
     width:60,
     height:40,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignContent:"flex-end",
     alignItems: "center",
   },
   style_image: {
     width:27,
     height:27,
-    marginRight:0
+    marginRight:10
    },
    style_image_captcha: {
     width:100,
@@ -255,19 +286,20 @@ const styles = StyleSheet.create({
     color: "#fff"
   },
   style_user_input: {
-    width:'100%',
-    backgroundColor: "#fff",
-    marginTop: 12,
-    height: 40,
-    marginLeft: 20,
-    marginRight: 60,
-  },
-  style_pwd_input: {
-    backgroundColor: "#fff",
+    // width:'100%',
+    backgroundColor:'transparent',
     height: 40,
     marginTop: 0,
     marginLeft: 0,
     marginRight: 60,
-    fontSize:12,
+    fontSize:14,
+  },
+  style_pwd_input: {
+    backgroundColor:'transparent',
+    height: 40,
+    marginTop: 0,
+    marginLeft: 0,
+    marginRight: 60,
+    fontSize:14,
   },
 });

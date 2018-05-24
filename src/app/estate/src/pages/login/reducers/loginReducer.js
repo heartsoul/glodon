@@ -6,7 +6,8 @@ const initialState = {
   status: '点击登录',
   isSuccess: false,
   user: null,
-  retryTimes:3
+  retryTimes:3,
+  update:0
 }
 // 不同类别的事件使用switch对应处理过程
 
@@ -47,11 +48,9 @@ export default function loginIn(state = initialState, action) {
     case types.LOGIN_IN_ERROR:
       return {
         ...state,
-
         status: action.message,
-
-        isSuccess: true,
-
+        isSuccess: false,
+        update:state.update+1,
         user: null,
       }
 
@@ -59,22 +58,16 @@ export default function loginIn(state = initialState, action) {
     case types.LOGIN_IN_INIT:
       return {
         ...state,
-
         status: '点击重新登录',
-
         isSuccess: false,
-
         user: null,
         retryTimes:3,
       }
       case types.LOGIN_IN_RETRY:
       return {
         ...state,
-
         status: '登录失败',
-
         isSuccess: false,
-
         user: null,
         retryTimes:state.retryTimes-1,
       }

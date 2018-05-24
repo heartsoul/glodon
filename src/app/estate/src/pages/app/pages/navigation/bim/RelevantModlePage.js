@@ -1,7 +1,7 @@
 import { Toast } from 'antd-mobile';
 import { ActionSheet } from 'app-3rd/teaset';
 import * as API from "app-api";
-import { LoadingView, NoDataView } from 'app-components';
+import { LoadingView, NoDataView, BarItems } from 'app-components';
 import { BimFileEntry } from "app-entry";
 import * as AppConfig from "common-module";
 import React, { Component } from 'react';
@@ -46,8 +46,8 @@ document.addEventListener('message', function(e) {eval(e.data);});\
 class RelevantModelPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>点击选择</Text>),
-        headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
+        headerTitle: (<BarItems.TitleBarItem text="点击选择" />),
+        headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : <BarItems navigation={navigation} />,
         headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null,
     });
     mQualityPositionMap = [];
@@ -65,41 +65,39 @@ class RelevantModelPage extends Component {
             relevantModel: {},//选中的模型
             url: '',
             html: '',
-            error:null
+            error: null
         };
         this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
     }
 
     loadLeftTitle = () => {
         return (
-            <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                <TouchableOpacity onPress={() => { this.goBack() }}>
-                    <Image source={require('app-images/icon_back_white.png')} style={{ width: 9, height: 20, marginLeft: 10 }} />
-                </TouchableOpacity>
-                {
-                    //编辑状态的可以切换模型
-                    (this.state.showChangeMode) ? (
-                        <TouchableOpacity onPress={() => { this.changeModel() }}>
-                            <Image source={require('app-images/icon_change_model.png')} style={{ width: 25, height: 24, marginLeft: 20 }} />
-                        </TouchableOpacity>
-                    ) : (null)
-                }
-            </View>
+            <BarItems >
+                <BarItems.LeftBarItem
+                    imageStyle={{}}
+                    navigation={this.props.navigation}
+                    onPress={(navigation) => this.goBack(navigation)}
+                    imageSource={require('app-images/icon_back_white.png')} />
+                {this.state.showChangeMode ?
+                    <BarItems.LeftBarItem imageStyle={{}} navigation={this.props.navigation} onPress={(navigation) => this.changeModel(navigation)} imageSource={require('app-images/icon_change_model.png')} />
+                    : null}
+            </BarItems>
         )
     }
 
     loadRightTitle = () => {
         return (
-            <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                {
-                    //显示创建
                     (this.state.showAddIcon) ? (
-                        <TouchableOpacity onPress={() => { this.add() }}>
-                            <Text style={{ color: '#ffffff', fontSize: 25, marginTop: 5, alignSelf: 'flex-end', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5 }}>+</Text>
-                        </TouchableOpacity>
+                        <BarItems.RightBarItem
+            imageStyle={{}}
+            navigation={this.props.navigation}
+            onPress={(navigation) => this.add(navigation)}
+            text=" + "
+            textStyle={{fontSize:35,fontWeight:'200',paddingTop:0}}
+            //imageSource={require('app-images/icon_back_white.png')} 
+            />
                     ) : (null)
-                }
-            </View>
+                
         )
     }
 
@@ -137,27 +135,35 @@ class RelevantModelPage extends Component {
         });
 
         this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
-       
+
         BimToken.getBimFileToken(relevantModel.gdocFileId, (token) => {
-            if(!token) {
+            if (!token) {
                 this.setState({
                     url: '',
-                    html:'',
-                    error:new Error('加载失败！')
+                    html: '',
+                    error: new Error('加载失败！')
                 })
                 return;
             }
             let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
-            let html = bimfileHtml(cmdString,token,this.state.show);
+            let html = bimfileHtml(cmdString, token, this.state.show);
             this.setState({
                 url: url,
-                html:html,
-                error:null
+                html: html,
+                error: null
             });
         })
     }
 
-
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.updateIndex != this.props.updateIndex) {
+            this.props.navigation.replace("RelevantModlePage",  {
+                pageType: this.state.pageType,
+                relevantModel: this.state.relevantModel,
+            });
+        }
+    }
+    
     goBack = () => {
         storage.goBack(this.props.navigation, null);
     }
@@ -310,6 +316,7 @@ class RelevantModelPage extends Component {
             .then(responseData => {
                 if (responseData && responseData.data) {
                     let len = responseData.data.length;
+                    this.mQualityPositionMap = [];
                     responseData.data.map((item) => {
                         this.getModelElementProperty(item, len, "quality");
                     })
@@ -380,6 +387,7 @@ class RelevantModelPage extends Component {
                             item.qcState = API.QC_STATE_EDIT;
                         }
                     }
+                    this.mEquipmentPositionMap = [];
                     responseData.data.map((item) => {
                         this.getModelElementProperty(item, len, "equipment");
                     })
@@ -561,11 +569,11 @@ class RelevantModelPage extends Component {
     //渲染
     render() {
 
-        if(this.state.error) {
-            return <NoDataView text="加载失败"/>
+        if (this.state.error) {
+            return <NoDataView text="加载失败" />
         }
-      
-        if(this.state.url == '') {
+
+        if (this.state.url == '') {
             return <LoadingView />;
         }
 
@@ -583,7 +591,7 @@ class RelevantModelPage extends Component {
                         onMessage={(e) => this.onMessage(e)}
                         injectedJavaScript={cmdString}
                         onLoadEnd={() => { }}
-                        source={{ html: this.state.html}}
+                        source={{ html: this.state.html }}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
                     {
@@ -616,6 +624,7 @@ const styles = StyleSheet.create({
 
 export default connect(
     state => ({
+        updateIndex: state.updateData.updateIndex,
     }),
     dispatch => ({
         transformInfo: (relevantModel) => {

@@ -134,7 +134,7 @@ function __fetchData(qcState, page, dataMapIn, dispatch, qualityCheckpointId = 0
     if (page < 0) {
         page = 0;
     }
-    API.getQualityInspectionAll(storage.loadProject(), qcState, page, 35, qualityCheckpointId, qualityCheckpointName).then(
+    API.getQualityInspectionAll(storage.loadProject(), qcState, page, 20, qualityCheckpointId, qualityCheckpointName).then(
         (responseData) => {
             let data = responseData.data.content;
             let hasMore = responseData.data.last == false;
@@ -165,7 +165,7 @@ function __fetchData(qcState, page, dataMapIn, dispatch, qualityCheckpointId = 0
                 });
                 i++;
             });
-            let ts = new Date().getTime();
+            let ts = '';// new Date().getTime();
             dataMap.forEach(function (value, key, map) {
                 sectionLob.push({
                     key: key+ts,

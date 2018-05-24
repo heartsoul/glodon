@@ -16,7 +16,7 @@ import { Toast } from 'antd-mobile' // 引入connect函数
 import * as fogotAction from '../actions/forgotAction' // 导入action方法 
 import * as types from '../constants/forgotTypes'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { ActionButton, TextInputNormal, TextInputPassword, TextInputImage, LeftBarButtons } from 'app-components';
+import { ActionButton, TextInputNormal, TextInputPassword, TextInputImage, BarItems } from 'app-components';
 import * as API from 'app-api'
 
 var { width, height } = Dimensions.get("window");
@@ -69,6 +69,7 @@ class ForgotPage extends React.Component {
       if(nextProps.page == 1 && this.props.statusCode == '601') {
         this.props.imageCode();
       }
+      // Toast.fail(this.state.status,1.5);
     }
     if (nextProps.type === types.FORGOT_RESET && nextProps.isSuccess) {
       let navigator = this.props.navigation;
@@ -120,7 +121,7 @@ class ForgotPage extends React.Component {
     return;
   }
   loadLeftTitle = () => {
-    return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
+    return <BarItems top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
   }
   switchPage = (page) => {
     this.props.gotoPage(page);
@@ -565,7 +566,7 @@ var styles = StyleSheet.create({
     color: '#ababab'
   },
   style_tip_phone: {
-    color: 'red'
+    color: '#ff000088'
   },
   style_login_title: {
     fontSize: 36,

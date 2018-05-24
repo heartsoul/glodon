@@ -7,9 +7,56 @@
 //
 
 #import "SoulActionToolbarView.h"
-
+#import "SoulDrawColorPickerToolbar.h"
 @implementation SoulActionToolbarView
+- (void)awakeFromNib {
+    [super awakeFromNib];
+  [self.topToolbar setBackgroundImage:[UIImage imageNamed:@"tansparents"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+  [self.topToolbar setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
+//   [self.topToolbar setBackgroundColor:[UIColor colorWithWhite:1 alpha:0.1]];
+  self.topToolbar.hidden = YES;
+  self.bottomDrawToolbar.hidden = YES;
+  [self.bottomDrawToolbar setSelectedColor:[UIColor redColor]];
+  self.inputToolbar.hidden = YES;
+  self.textView.hidden = YES;
+  [self.inputToolbar setOnSelectBlock:^(UIButton *selected, UIButton *prevSelected) {
+    self.textView.textColor = selected.backgroundColor;
+  }];
+  
+  [self.bottomDrawToolbar setOnSelectBlock:^(UIButton *selected, UIButton *prevSelected) {
+    self.currentColor = selected.backgroundColor;
+    if(self.onColorChangeBlock) {
+      self.onColorChangeBlock(selected);
+    }
+  }];
+  [self.bottomDrawToolbar setOnUndoBlock:^{
+    if(self.onUndoBlock) {
+      self.onUndoBlock(nil);
+    }
+  }];
+  UIToolbar * topView = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 44)];
+  [topView setBackgroundImage:[UIImage imageNamed:@"tansparents"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+   [topView setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
+  //设置style
+  [topView setBarStyle:UIBarStyleDefault];
+//  [topView setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.25]];
+  //定义两个flexibleSpace的button，放在toolBar上，这样完成按钮就会在最右边
+  UIBarButtonItem * button1 =[[UIBarButtonItem alloc] initWithCustomView:self.inputToolbar];
 
+  //在toolBar上加上这些按钮
+  NSArray * buttonsArray = [NSArray arrayWithObjects:button1,nil];
+  [topView setItems:buttonsArray];
+  // [textView setInputView:topView];
+  [self.textView setInputAccessoryView:topView];
+  
+  
+ 
+}
+//隐藏键盘
+-(void)resignKeyboard
+{
+  [self.textView resignFirstResponder];
+}
 - (IBAction)onPhotoAction:(UIButton*)button {
     if (self.onPhotoBlock) {
         self.onPhotoBlock(button);
@@ -39,11 +86,38 @@
     if (self.onPencilBlock) {
         self.onPencilBlock(button);
     }
+  [self beganDraw];
 }
 - (IBAction)onTextAction:(UIButton*)button {
-    if (self.onTextBlock) {
-        self.onTextBlock(button);
-    }
+//    if (self.onTextBlock) {
+//        self.onTextBlock(button);
+//    }
+    
+    [self beganEdit:@""];
+}
+- (void)beganDraw {
+  self.topToolbar.hidden = NO;
+  self.bottomToolbar.hidden = YES;
+  self.bottomDrawToolbar.hidden = NO;
+//  [self.bottomDrawToolbar setSelectedColor:[UIColor redColor]];
+//  [self.inputToolbar setSelectedColor:[UIColor whiteColor]];
+  
+}
+- (void)beganEdit:(NSString*)text {
+    self.topToolbar.hidden = NO;
+    self.textView.hidden = NO;
+    self.bottomToolbar.hidden = YES;
+    self.bottomDrawToolbar.hidden = YES;
+//  [self.bottomDrawToolbar setSelectedColor:[UIColor whiteColor]];
+  [self.inputToolbar setSelectedColor:[UIColor whiteColor]];
+  self.inputToolbar.hidden = NO;
+  self.textView.text = text;
+  self.textView.textColor = [UIColor whiteColor];
+//  self.textView.inputView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 100)];
+//  self.textView.inputAccessoryView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+//  [self.textView reloadInputViews];
+    [self.textView becomeFirstResponder];
+  
 }
 - (IBAction)onColorAction:(UIButton*)button {
     if (self.onColorChangeBlock) {
@@ -74,4 +148,48 @@
     }
     
 } 
+- (IBAction)editCancelAction:(id)sender {
+   [self endEditing:YES];
+  if(self.textView.hidden == NO) {
+    // 是文本编辑
+    self.topToolbar.hidden = YES;
+    self.textView.hidden = YES;
+    self.bottomToolbar.hidden = NO;
+    self.bottomDrawToolbar.hidden = YES;
+  } else {
+    // 是涂鸦
+    self.topToolbar.hidden = YES;
+    self.bottomToolbar.hidden = NO;
+    self.bottomDrawToolbar.hidden = YES;
+  }
+  if(self.onCancelEditBlock) {
+    self.onCancelEditBlock();
+  }
+}
+
+- (IBAction)editDoneAction:(id)sender {
+   [self endEditing:YES];
+  if(self.textView.hidden == NO) {
+    // 是文本编辑
+    self.topToolbar.hidden = YES;
+    self.textView.hidden = YES;
+    self.bottomToolbar.hidden = NO;
+    self.bottomDrawToolbar.hidden = YES;
+    if (self.onEndTextBlock) {
+      self.onEndTextBlock(self.textView.text,self.textView.textColor);
+    }
+  } else {
+    // 是涂鸦
+    self.topToolbar.hidden = YES;
+    self.bottomToolbar.hidden = NO;
+    self.bottomDrawToolbar.hidden = YES;
+    if (self.onEndPencilBlock) {
+      self.onEndPencilBlock(self.currentColor);
+    }
+  }
+}
+
+- (void)updateRedo:(BOOL)bNeed {
+  self.bottomDrawToolbar.backButton.hidden = !bNeed;
+}
 @end

@@ -12,7 +12,7 @@ import { BimFileEntry, AuthorityManager } from "app-entry";
 import * as API from "app-api";
 import EquipmentDetailView from "./equipmentDetailView"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { LeftBarButtons, ActionModal } from "app-components";
+import { BarItems, ActionModal } from "app-components";
 import * as actions from '../../actions/equipmentInfoAction';
 import * as relevantModelAction from "../../actions/relevantModelAction";
 import { getModelElementProperty } from "app-api";
@@ -72,7 +72,7 @@ class EquipmentDetailPage extends Component {
         let power = AuthorityManager.isEquipmentCreate() && !this.state.committed;
         const { editType, id, preEditType } = equipmentInfo;
         if (!id) {
-            if (editType != API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
+            if (editType && editType != API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
                 power = false;
             }
         } else {
@@ -82,7 +82,6 @@ class EquipmentDetailPage extends Component {
                 power = false;
             }
         }
-
         if (power) {
             return (<Text onPress={() => this._onSubmit(equipmentInfo)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >提交</Text>)
         }
@@ -173,13 +172,14 @@ class EquipmentDetailPage extends Component {
         }
     }
     loadLeftTitle = () => {
-        return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
+        return <BarItems top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
     }
     switchPage = (info) => {
         this.props.switchPage(info);
     }
 
     componentDidMount() {
+        this.registerBackhandler();
         const { fetchData } = this.props;
         const { item } = this.props.navigation.state.params;
         if (item) {
@@ -194,22 +194,7 @@ class EquipmentDetailPage extends Component {
         fetchData(null);
         this.props.getModelElementProperty(this.props.relevantEquipmentModle, this.props.equipmentInfo)
 
-        if (Platform.OS === 'android') {
-            const BackHandler = ReactNative.BackHandler
-                ? ReactNative.BackHandler
-                : ReactNative.BackAndroid
-            this.backListener = BackHandler.addEventListener(
-                'hardwareBackPress',
-                () => {
-                    // this.needBack((needBack)=>{
-                    //     if(needBack) {
-                    //       storage.pop(this.props.navigation,1)
-                    //     }
-                    //   })
-                    return false
-                }
-            )
-        }
+
     }
 
     componentWillUnmount() {
@@ -217,6 +202,28 @@ class EquipmentDetailPage extends Component {
         resetData();
         this.props.resetTransformInfo();
         this.removeBackListener()
+    }
+
+    registerBackhandler = () => {
+        if (Platform.OS === 'android') {
+            const BackHandler = ReactNative.BackHandler
+                ? ReactNative.BackHandler
+                : ReactNative.BackAndroid
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    if(storage.currentRouteName === this.props.navigation.state.routeName){
+                        this.needBack((needBack)=>{
+                            if(needBack) {
+                              storage.pop(this.props.navigation,1)
+                            }
+                          })
+                        return true;
+                    }
+                    return false;
+                }
+            )
+        }
     }
 
     removeBackListener() {
