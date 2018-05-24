@@ -159,7 +159,7 @@ export async function getBimFileUrlThumbnail(objectId, callback, thumbnailSize =
             ops.headers['X-CORAL-TENANT'] = t;
         }
     }
-    return fetch(api, ...ops)
+    return fetch(api, ops)
         .then((response) => {
             if (response.status >= 200 && response.status < 300) {
                 return response.text();
@@ -203,7 +203,7 @@ export async function getBimFileUrl(objectId, callback) {
             ops.headers['X-CORAL-TENANT'] = t;
         }
     }
-    return fetch(api, ...ops)
+    return fetch(api, ops)
         .then((response) => {
             if (response.status >= 200 && response.status < 300) {
                 return response.text();

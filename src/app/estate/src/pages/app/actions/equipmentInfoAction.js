@@ -141,7 +141,7 @@ export function save(params) {
                     {
                         dispatch(UpdateDataAction.updateData());
                         loadDetail(dispatch, fieldId);
-                        Toast.hide();
+                        Toast.success('保存成功', 1);
                     }).catch(error => {
                         Toast.hide();
                         console.log(error);
@@ -153,7 +153,7 @@ export function save(params) {
                         params.code = responseData.data.code;
                         dispatch(UpdateDataAction.updateData());
                         loadDetail(dispatch, params.id);
-                        Toast.hide();
+                        Toast.success('保存成功', 1);
                     }).catch(error => {
                         console.log(error);
                         Toast.hide();
