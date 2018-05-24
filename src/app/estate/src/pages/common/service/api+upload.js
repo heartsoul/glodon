@@ -129,7 +129,6 @@ async function getOperationCode(filePath, name, length, callback,digest=null,fil
             upLoad(filePath, name, responseData, callback,file,index);
         })
         .catch((error) => {
-            alert(error)
             callback("fail", error)
         });
 }

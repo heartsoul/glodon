@@ -10,7 +10,7 @@ import PropTypes from 'prop-types'
 import { ListRow } from 'app-3rd/teaset';
 import { DatePicker, List } from 'antd-mobile';
 import StarView from "./StarView";
-
+import GLDListRow from "./GLDListRow";
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
 
@@ -77,7 +77,7 @@ export default class RectificationView extends Component {
                     onChange={date => this.setState({ date: date })}
                 >
                     <List.Item arrow="horizontal" >
-                        <Text style={{ fontSize: 15, color: "#000000" }}>
+                        <Text style={{ fontSize: 16, color: "#000000", marginLeft: 7, paddingTop: 8, paddingBottom: 8 }}>
                             整改期限
                                 </Text>
                     </List.Item>
@@ -90,7 +90,9 @@ export default class RectificationView extends Component {
 
         return (
             <View style={styles.container}>
-                <ListRow title='需要整改' bottomSeparator='indent' detail={this.renderSwitchView()} />
+                <GLDListRow>
+                    <GLDListRow.SwitchItem title="需要整改" bottomSeparator={this.state.needRectification ? "indent" : "none"} switchValue={this.state.needRectification} onValueChange={this.onChangeSwitch} />
+                </GLDListRow>
                 {
                     (this.state.needRectification) ? (
 
@@ -116,7 +118,7 @@ RectificationView.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 5,
-        marginBottom: 11
+        marginTop: 10,
+        marginBottom: 10
     },
 })

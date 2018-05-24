@@ -204,7 +204,7 @@ export default class tenantList extends Component {
         return (
             <ScrollView >
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <Text style={{ color: "transparent", height: 30 }}> 租户列表 </Text>
+                <Text style={{ color: "transparent", height: 25 }}> 租户列表 </Text>
                 <AnimatedFlatList
                     data={this.state.dataArray}
                     renderItem={this.renderItemView}
@@ -249,8 +249,8 @@ const styles = StyleSheet.create({
         marginTop: 5,
 
         marginBottom: 15,
-        marginLeft: 40,
-        marginRight: 40,
+        marginLeft: 20,
+        marginRight: 20,
         backgroundColor: '#FFF',
         elevation: 5, // android 
         shadowColor: "#333", // iOS
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
         left: 60,
         top: -20,
         fontSize: 15,
-        color: 'black',
+        color: '#325771',
     },
     image: {
         left: 10,
