@@ -132,14 +132,16 @@ export default class extends Component {
         }
 
         return (
-            <View style={{ backgroundColor: '#FFFFFE' }}>
+            <ScrollView style={{ backgroundColor: '#f8f8f8' }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <ImageBackground style={{ height: 203, marginTop: 44 }} resizeMode='contain' source={require('app-images/icon_main_page_top_bg.png')}>
+                <View style={{ backgroundColor: '#ffffff' }}>
+                <ImageBackground style={{ height: 203, marginTop: 44, backgroundColor: '#ffffff' }} resizeMode='contain' source={require('app-images/icon_main_page_top_bg.png')}>
                     {
                         this.renderCarouselView(qShow, eShow)
                     }
                 </ImageBackground>
-                <SegmentedView barStyle={{left:width/2-100,width:200,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 400, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
+                </View>
+                <SegmentedView barStyle={{left:width/2-100,width:200,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 300, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
                     {
                         qShow ?
                             <SegmentedView.Sheet title='质量检查' activeTitleStyle={{fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} style={{backgroundColor: '#f8f8f8'}}>
@@ -175,7 +177,7 @@ export default class extends Component {
                             : null
                     }
                 </SegmentedView>
-            </View>
+            </ScrollView>
 
         );
     }

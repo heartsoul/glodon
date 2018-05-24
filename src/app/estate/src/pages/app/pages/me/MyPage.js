@@ -7,6 +7,7 @@ import {
   StatusBar,
   Button,
   SafeAreaView,
+  ScrollView,
   Image,
   TouchableOpacity,
   Dimensions
@@ -56,7 +57,7 @@ export default class extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-        <View>
+        <ScrollView>
           <View style={{backgroundColor:'#00baf3'}}>
             <Image source={require('app-images/icon_mine_default_header.png')} style={styles.mineAvatar}/>
         
@@ -78,7 +79,7 @@ export default class extends Component {
             <View style={styles.mineItemLine}></View>
             <MineItemView icon={require('app-images/icon_setting_change_project.png')} title='切换项目' onPress={() => this._gotoTenantChoose()} ></MineItemView>
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
