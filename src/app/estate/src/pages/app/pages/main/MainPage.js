@@ -132,6 +132,7 @@ export default class extends Component {
         }
 
         return (
+            <SafeAreaView>
             <ScrollView style={{ backgroundColor: '#f8f8f8' }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{ backgroundColor: '#ffffff' }}>
@@ -178,7 +179,7 @@ export default class extends Component {
                     }
                 </SegmentedView>
             </ScrollView>
-
+</SafeAreaView>
         );
     }
 };

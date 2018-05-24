@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, View, Text, Image,TouchableOpacity } from 'react-native';
+import { Button, View, Text, Image,TouchableOpacity,SafeAreaView } from 'react-native';
 import { withNavigation,StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
 import { TabView, Theme, BasePage, NavigationPage, TeaNavigator, Overlay, Label} from 'app-3rd/teaset'
 //Theme.set(Theme.themes.black);
@@ -137,7 +137,8 @@ export default class extends React.Component {
     this.props.navigation.setParams({'options':()=>{return this.options(index)}})
   }
   render() {
-    return (<TabView ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1 ,height:'100%'}} type='projector'>
+    return (
+    <SafeAreaView style={{height:'100%',backgroundColor:"#f5f8f9"}}><TabView ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1}} type='projector'>
       <TabView.Sheet
         title={CONSTANTS.PAGE_NAME_HOME}
         icon={require('app-images/home/icon_main_main_page.png')}
@@ -173,7 +174,9 @@ export default class extends React.Component {
       >
         <PAGES.MyPage /> 
       </TabView.Sheet>
-    </TabView>);
+    </TabView>
+    </SafeAreaView>);
+
   }
 };
 
