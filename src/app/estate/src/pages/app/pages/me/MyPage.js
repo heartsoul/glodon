@@ -147,7 +147,7 @@ var styles = StyleSheet.create({
       marginLeft:17,
       flex:1,
       fontSize:14,
-      color:'#6f899b',
+      color:'#325771',
     },
     mineItemArrow:{
       width:5,

@@ -21,6 +21,7 @@ import * as loginAction from '../../../login/actions/loginAction' // 导入actio
 
 import { ListRow } from "app-3rd/teaset";
 import * as USERAPI from "app-api";
+import WideButton from "./../../components/WideButton";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
@@ -50,7 +51,6 @@ class SettingPage extends Component {
             autoDownload = false;
         }
         this.state = {
-            pressed: false,
             autoDownload: autoDownload,
         };
     }
@@ -144,31 +144,12 @@ class SettingPage extends Component {
                     <View style={{ height: 10 }}></View>
 
                     <SettingItemView icon={require('app-images/icon_setting_offline.png')} title='离线设置' ></SettingItemView>
-                    <TouchableHighlight
-                        onPress={this._logout}
-                        underlayColor="#0099f3"
-                        activeOpacity={1.0}
-
-                        style={
-                            this.state.pressed
-                                ? styles.logoutTextViewPressed
-                                : styles.logoutTextView
-                        }
-                        onHideUnderlay={() => {
-                            this.setState({ pressed: false });
-                        }}
-                        onShowUnderlay={() => {
-                            this.setState({ pressed: true });
-                        }}
-                    >
-                        <Text style={styles.logoutText}>退出登录 </Text>
-                    </TouchableHighlight>
-            
-        <View style={{height:60,width:'100%'}} />
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
+                    <WideButton text="退出登录" onClick={this._logout} style={{ marginTop: 40, width: 297, alignSelf: "center" }} />
+                    <View style={{height:60,width:'100%'}} />
+                </ScrollView>
+            </SafeAreaView>
+        );
+    }
 
 }
 
@@ -256,37 +237,6 @@ var styles = StyleSheet.create({
     settingItemLine: {
         height: 1,
         backgroundColor: '#f7f7f7',
-    },
-    logoutTextView: {
-        overflow: "hidden",
-        height: 40,
-        backgroundColor: "#00baf3",
-        borderRadius: 20,
-        marginTop: 40,
-        marginLeft: 40,
-        marginRight: 40
-    },
-
-    logoutTextViewPressed: {
-        overflow: "hidden",
-        height: 40,
-        backgroundColor: "#33baf3",
-        borderRadius: 20,
-        marginTop: 40,
-        marginLeft: 40,
-        marginRight: 40
-    },
-    logoutText: {
-        overflow: "hidden",
-        height: 20,
-        marginTop: 10,
-        marginLeft: 20,
-        marginRight: 20,
-        borderRadius: 20,
-        alignItems: "center",
-        textAlign: "center",
-        fontSize: 16,
-        color: "#fff"
     },
 
 });
