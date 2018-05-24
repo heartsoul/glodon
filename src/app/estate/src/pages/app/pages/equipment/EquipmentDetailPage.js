@@ -12,7 +12,7 @@ import { BimFileEntry, AuthorityManager } from "app-entry";
 import * as API from "app-api";
 import EquipmentDetailView from "./equipmentDetailView"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { LeftBarButtons, ActionModal } from "app-components";
+import { BarItems, ActionModal } from "app-components";
 import * as actions from '../../actions/equipmentInfoAction';
 import * as relevantModelAction from "../../actions/relevantModelAction";
 import { getModelElementProperty } from "app-api";
@@ -172,7 +172,7 @@ class EquipmentDetailPage extends Component {
         }
     }
     loadLeftTitle = () => {
-        return <LeftBarButtons top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
+        return <BarItems top={false} needBack={this.needBack} navigation={this.props.navigation} currentItem={API.APP_EQUIPMENT} />
     }
     switchPage = (info) => {
         this.props.switchPage(info);

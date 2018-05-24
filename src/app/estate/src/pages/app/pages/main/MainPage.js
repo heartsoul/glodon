@@ -126,7 +126,7 @@ export default class extends Component {
             return <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-                    <Text style={styles.text}> 敬请期待 </Text>
+                    <Text style={styles.text}> 未授权，请联系管理员获取！ </Text>
                 </View>
             </SafeAreaView>
         }
@@ -142,7 +142,7 @@ export default class extends Component {
                 <SegmentedView barStyle={{left:width/2-100,width:200,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 400, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
                     {
                         qShow ?
-                            <SegmentedView.Sheet title='质量检查' activeTitleStyle={{fontSize:16,fontWeight:'bold'}} titleStyle={{color:'#333333',fontSize:16,fontWeight:'bold'}} style={{backgroundColor: '#f8f8f8'}}>
+                            <SegmentedView.Sheet title='质量检查' activeTitleStyle={{fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} style={{backgroundColor: '#f8f8f8'}}>
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
@@ -161,7 +161,7 @@ export default class extends Component {
                     }
                     {
                         eShow ?
-                            <SegmentedView.Sheet title='材设进场' activeTitleStyle={{fontSize:16,fontWeight:'bold'}} titleStyle={{color:'#333333',fontSize:16,fontWeight:'bold'}} style={{backgroundColor: '#f8f8f8'}}>
+                            <SegmentedView.Sheet title='材设进场' activeTitleStyle={{fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} style={{backgroundColor: '#f8f8f8'}}>
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Button, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { withNavigation } from 'app-3rd/react-navigation';
 import * as API from 'app-api'
-import { LeftBarButtons } from "app-components"
+import { BarItems } from "app-components"
 import { BimFileEntry, AuthorityManager } from 'app-entry';
 
 import EquipmentList from './equipmentList'
@@ -46,7 +46,7 @@ export default class extends React.Component {
       <RightBarButtons navigation={navigation} />
     ),
     headerLeft: (
-      <LeftBarButtons top={navigation.getParam('top')} navigation={navigation} currentItem={API.APP_EQUIPMENT} />
+      <BarItems top={navigation.getParam('top')} navigation={navigation} currentItem={API.APP_EQUIPMENT} />
     ),
   });
   render() {

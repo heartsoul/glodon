@@ -4,7 +4,7 @@ import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet
 import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 
 import * as API from 'app-api'
-import { LeftBarButtons } from "app-components"
+import { BarItems } from "app-components"
 import * as GLD from '../pages'
 import BaseStorage from '../../common/store/store+base'
 import configureStore, { history } from '../store/ConfigureStore'
@@ -122,10 +122,12 @@ const options = () => {
         headerTintColor: '#fff',
         tabBarVisible: false,
         headerTitleStyle: {
+            fontSize:17,
+            fontWeight:'bold',
         },
         headerLeft: () => {
             return (
-                <LeftBarButtons top={false} currentItem={""} />
+                <BarItems top={false} currentItem={""} />
             )
         },
         headerRight: (<View />),

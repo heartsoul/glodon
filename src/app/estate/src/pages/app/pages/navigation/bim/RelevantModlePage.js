@@ -1,7 +1,7 @@
 import { Toast } from 'antd-mobile';
 import { ActionSheet } from 'app-3rd/teaset';
 import * as API from "app-api";
-import { LoadingView, NoDataView, LeftBarButtons } from 'app-components';
+import { LoadingView, NoDataView, BarItems } from 'app-components';
 import { BimFileEntry } from "app-entry";
 import * as AppConfig from "common-module";
 import React, { Component } from 'react';
@@ -46,7 +46,7 @@ class RelevantModelPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>点击选择</Text>),
-        headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
+        headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : <BarItems navigation={navigation} />,
         headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null,
     });
     mQualityPositionMap = [];
@@ -71,16 +71,16 @@ class RelevantModelPage extends Component {
 
     loadLeftTitle = () => {
         return (
-            <LeftBarButtons >
-                <LeftBarButtons.LeftBarButtonsItem
+            <BarItems >
+                <BarItems.LeftBarItem
                     imageStyle={{}}
                     navigation={this.props.navigation}
                     onPress={(navigation) => this.goBack(navigation)}
                     imageSource={require('app-images/icon_back_white.png')} />
                 {this.state.showChangeMode ?
-                    <LeftBarButtons.LeftBarButtonsItem imageStyle={{}} navigation={this.props.navigation} onPress={(navigation) => this.changeModel(navigation)} imageSource={require('app-images/icon_change_model.png')} />
+                    <BarItems.LeftBarItem imageStyle={{}} navigation={this.props.navigation} onPress={(navigation) => this.changeModel(navigation)} imageSource={require('app-images/icon_change_model.png')} />
                     : null}
-            </LeftBarButtons>
+            </BarItems>
         )
     }
 

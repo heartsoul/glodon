@@ -17,14 +17,14 @@ import * as checkPointListAction from './../../../actions/checkPointListAction';
 import * as types from '../../../constants/checkPointListTypes';
 
 import * as API from 'app-api'
-import { LeftBarButtons } from "app-components"
+import { BarItems } from "app-components"
 import { BimFileEntry } from 'app-entry';
 
 class CheckPointListPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '质检项目',
-        headerLeft: (<LeftBarButtons top={navigation.getParam('top')} navigation={navigation} currentItem={API.APP_QUALITY_CHECK_POINT} />),
+        headerLeft: (<BarItems top={navigation.getParam('top')} navigation={navigation} currentItem={API.APP_QUALITY_CHECK_POINT} />),
       });
 
     constructor(props) {

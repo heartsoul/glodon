@@ -3,7 +3,7 @@
  */
 'use strict';
 import * as API from "app-api";
-import { LeftBarButtons, LoadingView } from "app-components";
+import { BarItems, LoadingView } from "app-components";
 import React, { Component } from "react";
 import { ActivityIndicator, Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View, DeviceEventEmitter } from "react-native";
 import Breadcrumb from "./../../../components/Breadcrumb";
@@ -54,7 +54,7 @@ export default class BimFileChooser extends Component {
             headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>{title}</Text>),
             headerRight: (<RightBarButtons navigation={navigation} />),
             headerLeft: (
-                <LeftBarButtons top={navigation.getParam('top')} navigation={navigation} currentItem={currentItem} />
+                <BarItems top={navigation.getParam('top')} navigation={navigation} currentItem={currentItem} />
             ),
         }
     };

@@ -1,7 +1,7 @@
 import { Toast } from 'antd-mobile';
 import { ActionSheet } from 'app-3rd/teaset';
 import * as API from "app-api";
-import { LoadingView, NoDataView, LeftBarButtons} from 'app-components';
+import { LoadingView, NoDataView, BarItems} from 'app-components';
 import { BimFileEntry } from "app-entry";
 import * as AppConfig from "common-module";
 import React, { Component } from 'react';
@@ -41,7 +41,7 @@ class RelevantBlueprintPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         headerTitle: navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : null,
-        headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
+        headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : <BarItems navigation={navigation} />,
         headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null,
     });
 
@@ -71,30 +71,30 @@ class RelevantBlueprintPage extends Component {
     renderEditLeftTitle = () => {
         return (
 
-            <LeftBarButtons >
-                <LeftBarButtons.LeftBarButtonsItem
+            <BarItems >
+                <BarItems.LeftBarItem
                     imageStyle={{}}
                     navigation={this.props.navigation}
                     onPress={(navigation) => this.goBack(navigation)}
                     imageSource={require('app-images/icon_back_white.png')} />
                 {
                     (this.state.pageType == PageType.PAGE_TYPE_EDIT_QUALITY) ?
-                    <LeftBarButtons.LeftBarButtonsItem imageStyle={{}} navigation={this.props.navigation} 
+                    <BarItems.LeftBarItem imageStyle={{}} navigation={this.props.navigation} 
                     onPress={(navigation) => this.changeBluePrint(navigation)} 
                     imageSource={require('app-images/icon_change_blueprint.png')} />
                     : null}
-            </LeftBarButtons>
+            </BarItems>
         );
     }
 
     loadLeftTitle = () => {
-        return this.state.showFinishView ? (<LeftBarButtons >
-            <LeftBarButtons.LeftBarButtonsItem
+        return this.state.showFinishView ? (<BarItems >
+            <BarItems.LeftBarItem
                 imageStyle={{}}
                 navigation={this.props.navigation}
                 onPress={(navigation) => this.removePosition(navigation)}
                 imageSource={require('app-images/icon_back_white.png')}
-                text="取消" /></LeftBarButtons>
+                text="取消" /></BarItems>
         ) : (
                 this.renderEditLeftTitle()
             )
