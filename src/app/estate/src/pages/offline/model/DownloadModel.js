@@ -1,19 +1,27 @@
 import React, { Component } from 'react';
 import RNFS from 'react-native-fs';
-
+import { Platform,} from 'react-native';
 
   import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive';
   import {Buffer} from 'buffer';
+  import DirManager from '../manager/DirManager'
 
   const appKey = 'wAL3NLP0aplEc6GipAXyTbXm7yENchzk';
   const appSecret = 'XV2tDlHB7aBVpEzHLdgcSspABjGWjIMR';
   
-  
+  let dm = new DirManager();
   export default class DownloadModel  {
 
     
+
     //获取离线下载的token
      getToken = (fileId)=>{
+
+        // console.log(RNFS.MainBundlePath);   ios 
+        // console.log(RNFS.DocumentDirectoryPath);android  /data/user/0/com.estate/files
+        
+        dm.makeDirs();
+
         let key = appKey+':'+appSecret;
         let encodeKey = new Buffer(key).toString('base64');
         let auth = 'Basic '+encodeKey;
@@ -35,7 +43,7 @@ import RNFS from 'react-native-fs';
             //     data:
             //     { expireTime: '2018-05-29 08:38:49',
             //     token: '6532e462-334b-48dd-a2f3-86c7b1ab2317' } }
-          console.log(responseJson);
+        //   console.log(responseJson);
           this.createOffline(responseJson.data.token,fileId);
         })
         .catch((error) => {
@@ -67,7 +75,7 @@ import RNFS from 'react-native-fs';
             //     fileId: 1353300132668256,
             //     reason: null,
             //     status: 'success' } }
-            console.log(responseJson);
+            // console.log(responseJson);
             this.getAddress(responseJson.data.fileId,responseJson.data.databagVersion,token);
         }).catch((error) => {
             console.error(error);
@@ -92,8 +100,11 @@ import RNFS from 'react-native-fs';
             // { code: 'success',
             //     message: null,
             //     data: 'http://bf-prod-databag.oss-cn-beijing.aliyuncs.com/1e5345adce95ee35646148ffaa6194e1/1e5345adce95ee35646148ffaa6194e1.zip?Expires=1526971919&OSSAccessKeyId=5nGlEwOIzrwCVaDZ&Signature=z4DFk0dJDBRXL9sElfgAHQxBYWQ%3D' }
-            console.log(responseJson);
+            // console.log(responseJson);
             let name = this.getName(responseJson.data)
+            //保存模型id与离线包的名字对应关系
+            storage.setModelFileIdOfflineName(fileId,name);
+            //下载离线包
             this.downloadFile(responseJson.data,name);
         }).catch((error)=>{
             console.error(error);
@@ -120,7 +131,7 @@ import RNFS from 'react-native-fs';
         // 文件
         // const path = RNFS.DocumentDirectoryPath;
         // const path = RNFS.ExternalStorageDirectoryPath;
-        const path = '/sdcard/bimTest'
+        const path = dm.getModelPath();
         console.log('start download  path='+path);
         const downloadDest = `${path}/${name}.zip`;
         console.log('downloadDest='+downloadDest);
@@ -150,7 +161,7 @@ import RNFS from 'react-native-fs';
 
                 let pro = res.bytesWritten / res.contentLength;
 
-                console.log('progress='+pro);
+                // console.log('progress='+pro);
                 // this.setState({
                 //     progressNum: pro,
                 // });
@@ -158,45 +169,35 @@ import RNFS from 'react-native-fs';
         };
         try {
 
-            //先判断目录是否存在  不存在则创建
-            RNFS.exists(path)
-                .then((str) => {
-                    console.log('mkdir:'+path);
-                    console.log(str);
-                    if(!str){
-                        RNFS.mkdir(path)
-                        .then(()=>{})
-                    }
-                })
-                .catch((error) => {
-                    console.log('mkdir------------');
-                    console.log(error);
-                })
 
             //开始下载
             const ret = RNFS.downloadFile(options);
             ret.promise.then(res => {
-                console.log('success', res);
+                // console.log('success', res);
 
-                console.log('file://' + downloadDest)
+                // console.log('file://' + downloadDest)
 
-                RNFS.exists('file://' + downloadDest)
-                .then((str) => {
-                    console.log('++++++44444444+++');
-                    console.log(str);
-                })
-                .catch((error) => {
-                    console.log('------------');
-                    console.log(error);
-                })
+                // RNFS.exists('file://' + downloadDest)
+                // .then((str) => {
+                //     // console.log('++++++44444444+++');
+                //     console.log(str);
+                // })
+                // .catch((error) => {
+                //     // console.log('------------');
+                //     console.log(error);
+                // })
 
-                //解压缩
+                //解压
                 const sourcePath = downloadDest;
                 const targetPath = path;
 
                 unzip(sourcePath, targetPath)
                 .then((address) => {
                     console.log(`unzip completed at ${address}`)
+                    
+                    //解压成功后删除zip
+                    this.deleteFile(sourcePath);
+                    //复制app.html到解压后的目录
                     const downloadDest = `${path}/${name}/app.html`;
                     this.copyAppHtml(downloadDest);
                 })
@@ -218,14 +219,19 @@ import RNFS from 'react-native-fs';
 
     //复制app.html 到离线包目录下
      copyAppHtml=(path)=>{
-        const src = 'app.html';
-        RNFS.readFileAssets(src)
-        .then((result)=>{
-            console.log('read success result='+result);
-            this.writeFile(path,result);
-        }).catch((err)=>{
-            console.log('read error'+err.message);
-        })
+         if(Platform.OS === 'ios'){
+
+         }
+         if(Platform.OS === 'android'){
+            const src = 'app.html';
+            RNFS.readFileAssets(src)
+            .then((result)=>{
+                // console.log('read success result='+result);
+                this.writeFile(path,result);
+            }).catch((err)=>{
+                console.log('read error'+err.message);
+            })
+        }
     }
 
      writeFile=(path,content)=> {
@@ -241,23 +247,23 @@ import RNFS from 'react-native-fs';
     }
 
     /*读取txt文件内容*/
-     readFile() {
-        // create a path you want to delete
-        const path = RNFS.MainBundlePath + '/test.txt';
+    //  readFile() {
+    //     // create a path you want to delete
+    //     const path = RNFS.MainBundlePath + '/test.txt';
 
-        return RNFS.readFile(path)
-            .then((result) => {
-                console.log(result);
+    //     return RNFS.readFile(path)
+    //         .then((result) => {
+    //             console.log(result);
 
-                this.setState({
-                    readTxtResult: result,
-                })
-            })
-            .catch((err) => {
-                console.log(err.message);
+    //             this.setState({
+    //                 readTxtResult: result,
+    //             })
+    //         })
+    //         .catch((err) => {
+    //             console.log(err.message);
 
-            });
-    }
+    //         });
+    // }
 
     /*将文本写入本地 txt*/
     // writeFile() {
@@ -276,9 +282,7 @@ import RNFS from 'react-native-fs';
 
 
     /*删除文件*/
-     deleteFile() {
-        // create a path you want to delete
-        const path = RNFS.MainBundlePath + '/test.txt';
+     deleteFile(path) {
 
         return RNFS.unlink(path)
             .then(() => {

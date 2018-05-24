@@ -56,7 +56,20 @@ class ProjectPage extends Component {
             </View>
         );
     }
+
+    //获取当前项目最新版本
+    _getlatestVersion = (projectId)=>{
+        API.getModelLatestVersion(projectId).then((responseData) => {
+            let latestVersion = responseData.data.data.versionId;
+            storage.projectIdVersionId = latestVersion;
+            storage.setLatestVersionId(projectId,latestVersion);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     _itemClick = (item, index) => {
+        this._getlatestVersion(item.value.id);//获取项目最新版本
         let navigator = this.props.navigation;
         let prevTenant = storage.loadLastTenant();
         let newTenant = this.props.navigation.state.params.tenantId;

@@ -5,17 +5,13 @@
 import * as API from "app-api";
 import { BarItems, LoadingView } from "app-components";
 import React, { Component } from "react";
-import { ActivityIndicator, Dimensions, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View, DeviceEventEmitter } from "react-native";
 import Breadcrumb from "./../../../components/Breadcrumb";
 import * as BimFileEntry from "./BimFileEntry";
 import BimFileFilterView from "./BimFileFilterView";
 import * as PageType from "./PageTypes";
 import ThumbnailImage from "./ThumbnailImage";
 import BimFileNavigationView from "./bimFileNavigationView";
-import { NoDataView} from 'app-components';
-import { SERVER_TYPE } from 'common-module';
-import {DeviceEventEmitter, FlatList} from 'app-3rd/index'
-
 
 var { width, height } = Dimensions.get("window");
 class RightBarButtons extends React.Component {
@@ -26,10 +22,7 @@ class RightBarButtons extends React.Component {
 
     }
     render() {
-        return (
-            <BarItems navigation={this.props.navigation}>
-                <BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} />
-            </BarItems>)
+        return <BarItems navigation={this.props.navigation}><BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} /></BarItems> 
     }
 }
 export default class BimFileChooser extends Component {
@@ -47,7 +40,7 @@ export default class BimFileChooser extends Component {
             currentItem = API.APP_QUALITY_MODLE;
         }
         return {
-            headerTitle: (<BarItems.TitleBarItem text={title ? title : ''} />),
+            headerTitle: (<BarItems.TitleBarItem text={title ? title : ''}/>),
             headerRight: (<RightBarButtons navigation={navigation} />),
             headerLeft: (
                 <BarItems top={navigation.getParam('top')} navigation={navigation} currentItem={currentItem} />
@@ -75,7 +68,7 @@ export default class BimFileChooser extends Component {
             projectId: storage.loadProject(),
             latestVersion: storage.projectIdVersionId,
             fileId: fileId,
-            dataType: dataType,//图纸文件 模型文件 ·
+            dataType: dataType,//图纸文件 模型文件 
             pageType: params.pageType,
             navData: navData,//导航条面包屑数据
         }
@@ -97,7 +90,6 @@ export default class BimFileChooser extends Component {
                     {
                         isLoading: false,
                         error: true,
-                        errorInfo: error,
                     }
                 );
             });
@@ -156,7 +148,6 @@ export default class BimFileChooser extends Component {
                 {
                     isLoading: false,
                     error: true,
-                    errorInfo: error,
                 }
             );
         });
@@ -236,10 +227,14 @@ export default class BimFileChooser extends Component {
     }
     //加载失败view
     renderErrorView(error) {
-        if(SERVER_TYPE === "TEST") {
-            return ( <NoDataView text={"error："+error} /> );
-        }
-        return ( <NoDataView text="加载失败" /> );
+        return (
+            <View style={styles.container}>
+                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                <Text>
+                    加载失败
+                </Text>
+            </View>
+        );
     }
     _itemClick = (item, index) => {
         let navigator = this.props.navigation;
@@ -251,7 +246,7 @@ export default class BimFileChooser extends Component {
             let d = { ...item.value, dir: this.getDirData() }
             navData.push(d);
 
-            storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType, navData: navData });
+            global.storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType, navData: navData });
         } else {
             // API.getModelBimFileToken(this.state.projectId, this.state.latestVersion, item.value.fileId).then((responseData) => {
             //     let token = responseData.data.data;
@@ -289,7 +284,7 @@ export default class BimFileChooser extends Component {
 
     renderFileView = ({ item, index }) => {
         return (
-            <TouchableOpacity key={'file'+index+'_'+item.key} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
                 <View style={styles.containerFileView}>
                     <ThumbnailImage fileId={item.value.fileId} />
                     <Text style={styles.content}> {item.value.name}</Text>
@@ -300,7 +295,7 @@ export default class BimFileChooser extends Component {
 
     renderFolderView = ({ item, index }) => {
         return (
-            <TouchableOpacity key={'folder'+index+'_'+item.key} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
                 <View style={styles.containerFolderView}>
                     <Image
                         source={require("app-images/icon_blueprint_file.png")}
@@ -386,9 +381,8 @@ export default class BimFileChooser extends Component {
      */
     renderDataWithBreadcrumb = () => {
         return (
-            <View style={{height:"100%"}}>
+            <View>
                 <Breadcrumb
-                    key={'Breadcrumb_'+this.state.fileId}
                     childView={this.renderList()}
                     data={this.state.navData}
                     onItemClick={(item, index) => {
@@ -465,7 +459,7 @@ const styles = StyleSheet.create({
         height: 72,
         marginLeft: 20,
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'center'
         // backgroundColor: '#FFF',
     },
     title: {
@@ -473,10 +467,13 @@ const styles = StyleSheet.create({
         color: 'blue',
     },
     content: {
+        left: 0,
+        top: 15,
         marginLeft: 12,
         textAlign: "left",
         fontSize: 15,
         color: 'black',
+        alignSelf: 'flex-start'
     },
 
     image: {
