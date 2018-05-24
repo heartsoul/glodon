@@ -49,6 +49,17 @@ export default class ChangeProjectPage extends Component{
         
     }
 
+    //获取当前项目最新版本
+    _getlatestVersion = (projectId)=>{
+        API.getModelLatestVersion(projectId).then((responseData) => {
+            let latestVersion = responseData.data.data.versionId;
+            storage.projectIdVersionId = latestVersion;
+            storage.setLatestVersionId(projectId,latestVersion);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
       //第一次render后调用
     componentDidMount(){
         
@@ -170,6 +181,7 @@ export default class ChangeProjectPage extends Component{
 
     //item点击事件
     _itemClick = (item) => {
+        this._getlatestVersion(item.id);//获取项目最新版本
         let navigator = this.props.navigation;
         //切换项目了  需要先获取项目的权限
         AuthorityManager.loadAuthoritys("" + item.id, (success) => {
@@ -180,6 +192,7 @@ export default class ChangeProjectPage extends Component{
             storage.saveProject("" + item.id, "" + item.name);
             storage.gotoMainPage(navigator);
         });
+        
     }
     //item的view
     renderItemView = ({ item }) => {

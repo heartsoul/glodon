@@ -12,8 +12,9 @@ import * as AuthorityManager from "./../project/AuthorityManager";
 import * as BimToken from "./BimFileTokenUtil";
 import * as PageType from "./PageTypes";
 import { bimfileHtml } from './bimfileHtml';
-import DownloadModel from '../../../../offline/download/DownloadModel'
-
+import DownloadModel from '../../../../offline/model/DownloadModel';
+import DownloadView from './RelevantModelPageDownloadView';
+import ModelManager from '../../../../offline/manager/ModelManager';
 
 //获取设备的宽度和高度
 var {
@@ -65,7 +66,7 @@ class RelevantModelPage extends Component {
             relevantModel: {},//选中的模型
             url: '',
             html: '',
-            error: null
+            error: null,
         };
         this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
     }
@@ -576,7 +577,7 @@ class RelevantModelPage extends Component {
         if (this.state.url == '') {
             return <LoadingView />;
         }
-
+        let fileId = '1353300132668256';
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
@@ -594,18 +595,8 @@ class RelevantModelPage extends Component {
                         source={{ html: this.state.html }}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
-                    {
-                        this.state.showCreateNoticeView ? (
-                            this.createNoticeView()
-                        ) : (null)
-                    }
-                    
-                        <View style={{ alignItems: 'flex-end',position:'absolute',right:14,bottom:14}} >
-                            <TouchableOpacity onPress={this._downloadModel}>
-                                <Image source={require('app-images/icon_download.png')} style={{width:28,height:28,marginTop:5}} />
-                            </TouchableOpacity>
-                            <View style={{width:10,height:10,backgroundColor:'#FF460D',borderRadius:15,position:'absolute'}} />
-                        </View>
+                    <DownloadView fileId={fileId} downloadModel = {this._downloadModel}/>
+                       
                     
                 </View>
             </SafeAreaView>

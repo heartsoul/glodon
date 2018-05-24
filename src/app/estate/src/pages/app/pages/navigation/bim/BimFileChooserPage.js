@@ -22,7 +22,7 @@ class RightBarButtons extends React.Component {
 
     }
     render() {
-        return <BarItems navigation={this.props.navigation}><BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} /> </BarItems> 
+        return <BarItems navigation={this.props.navigation}><BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} /></BarItems> 
     }
 }
 export default class BimFileChooser extends Component {
