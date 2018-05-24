@@ -37,9 +37,11 @@ class EquipmentInfoItemTextInput extends React.Component {
         let dis = value.length > 0 ? 'flex' : 'none';
         this.refs.clearButton.setNativeProps({style:{display:dis}});
     }
-    onClear = (event) => {  
+    onClear = (event) => { 
+        let key = this.state.key; 
         this.setState({
-            dValue:null,
+            dValue: key % 2 ? '' : null,
+            key:key+1,
         });
         this.refs.textInput.focus();
         if(this.props.onClear) {
@@ -63,7 +65,6 @@ class EquipmentInfoItemTextInput extends React.Component {
         this.refs.clearButton.setNativeProps({style:{display:dis}});
     }
     render = () => {
-        console.log('render:'+this.state.dValue);
         return (
             <View style={styles.containerView} >
                 <View style={[styles.titleView, this.props.titleWidth ? { width: this.props.titleWidth } : null]}>
