@@ -62,6 +62,7 @@ public class MainApplication extends Application implements ReactApplication {
     //  SharedPreferences mPreferences =    PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     //  mPreferences.edit().putString("debug_http_host","10.1.92.16:9999").commit();
 
+    
     instance = this;
     ScreenUtil.init(this);
     SoLoader.init(this, /* native exopackage */ false);
