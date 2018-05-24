@@ -4,6 +4,7 @@ import { withNavigation,StackNavigator, TabNavigator, TabBarBottom } from 'app-3
 import { TabView, Theme, BasePage, NavigationPage, TeaNavigator, Overlay, Label} from 'app-3rd/teaset'
 //Theme.set(Theme.themes.black);
 import { BimFileEntry, AuthorityManager } from 'app-entry';
+import { BarItems } from "app-components";
 import * as CONSTANTS from 'app-api';
 const primaryColor = '#00baf3';
 Theme.set({
@@ -99,7 +100,7 @@ export default class extends React.Component {
     if(page == CONSTANTS.PAGE_INNDX_HOME) {
       return ({
         // title:title ? title : CONSTANTS.PAGE_NAME_HOME,
-        headerTitle: (<Text style={{ color: '#ffffff', fontWeight:'bold', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>{title ? title : storage.loadCurrentProjectName()}</Text>),
+        headerTitle: (<BarItems.TitleBarItem text={title ? title : storage.loadCurrentProjectName()}/>),
         headerRight:(<SearchaBarItem navigation={this.props.navigation}/>),
         headerLeft: <View></View>,
         // header: {mode:'screen'},

@@ -22,18 +22,7 @@ class RightBarButtons extends React.Component {
 
     }
     render() {
-        return <View style={{
-            alignItems: 'center',
-            flexDirection: 'row',
-            flexWrap: 'nowrap',
-            justifyContent: 'flex-end',
-            width: 70,
-        }}>
-            <TouchableOpacity onPress={() => this._onSearchPress(this.props.navigation)} >
-                <Image style={styles.barItemImage} source={require('app-images/icon_search_white.png')} />
-            </TouchableOpacity>
-            <View style={styles.spliteItem} />
-        </View>
+        return <BarItems navigation={this.props.navigation}><BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} /> </BarItems> 
     }
 }
 export default class BimFileChooser extends Component {
@@ -51,7 +40,7 @@ export default class BimFileChooser extends Component {
             currentItem = API.APP_QUALITY_MODLE;
         }
         return {
-            headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>{title}</Text>),
+            headerTitle: (<BarItems.TitleBarItem text={title ? title : ''}/>),
             headerRight: (<RightBarButtons navigation={navigation} />),
             headerLeft: (
                 <BarItems top={navigation.getParam('top')} navigation={navigation} currentItem={currentItem} />

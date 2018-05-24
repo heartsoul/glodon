@@ -40,7 +40,7 @@ document.addEventListener('message', function(e) {eval(e.data);});
 class RelevantBlueprintPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerTitle: navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : null,
+        headerTitle: navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : <BarItems.TitleBarItem text="" />,
         headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : <BarItems navigation={navigation} />,
         headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null,
     });
@@ -64,9 +64,7 @@ class RelevantBlueprintPage extends Component {
 
     }
     loadTitle = () => {
-        return (
-            <Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>{this.state.drawingName ? this.state.drawingName : '图纸'}</Text>
-        );
+        return (<BarItems.TitleBarItem text={this.state.drawingName ? this.state.drawingName : '图纸'} />);
     }
     renderEditLeftTitle = () => {
         return (

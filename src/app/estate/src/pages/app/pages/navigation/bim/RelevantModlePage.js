@@ -45,7 +45,7 @@ document.addEventListener('message', function(e) {eval(e.data);});\
 class RelevantModelPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>点击选择</Text>),
+        headerTitle: (<BarItems.TitleBarItem text="点击选择" />),
         headerLeft: navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : <BarItems navigation={navigation} />,
         headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null,
     });
@@ -86,16 +86,17 @@ class RelevantModelPage extends Component {
 
     loadRightTitle = () => {
         return (
-            <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                {
-                    //显示创建
                     (this.state.showAddIcon) ? (
-                        <TouchableOpacity onPress={() => { this.add() }}>
-                            <Text style={{ color: '#ffffff', fontSize: 25, marginTop: 5, alignSelf: 'flex-end', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5 }}>+</Text>
-                        </TouchableOpacity>
+                        <BarItems.RightBarItem
+            imageStyle={{}}
+            navigation={this.props.navigation}
+            onPress={(navigation) => this.add(navigation)}
+            text=" + "
+            textStyle={{fontSize:35,fontWeight:'200',paddingTop:0}}
+            //imageSource={require('app-images/icon_back_white.png')} 
+            />
                     ) : (null)
-                }
-            </View>
+                
         )
     }
 

@@ -5,7 +5,7 @@ import GLDDrawerPaneView from "./GLDDrawerPaneView"
 
 export class TitleBarItem extends React.Component {
   render = () => {
-    return <Text style={[{ color: '#ffffff', fontWeight:'bold', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" },this.props.textStyle ? this.props.textStyle : {}]}>{this.props.title ? this.props.title : ''}</Text>
+    return <Text style={[{ color: '#ffffff', fontWeight:'bold', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" },this.props.textStyle ? this.props.textStyle : {}]}>{this.props.text ? this.props.text : ''}</Text>
     }
 }
 TitleBarItem.propTypes = {
