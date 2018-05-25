@@ -121,11 +121,11 @@ export default class QualityListCell extends PureComponent {
         return (
             <View style={[styles.contentActionView]}>
                 {
-                    bSubmit ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_SUBMIT)} style={{width:80 ,marginRight:20}}
+                    bSubmit ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_SUBMIT)} style={{width:58, height:28, borderWidth:0.5,borderColor:API.toBillTypeColor(API.BILL_TYPE_ITEM_SUBMIT), marginRight:10}}
                         onClick={() => { this._onSubmitAction(item, index) }} text={API.BILL_TYPE_ITEM_SUBMIT} />) : (null)
                 }
                 {
-                    bDelete ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE)} style={{width:80 ,marginRight:20}}
+                    bDelete ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE)} style={{width:58, height:28, borderWidth:0.5,borderColor:API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE), marginRight:10}}
                         onClick={() => { this._onDeleteAction(item, index) }} text={API.BILL_TYPE_ITEM_DELETE} />) : (null)
                 }
             </View>
@@ -137,7 +137,7 @@ export default class QualityListCell extends PureComponent {
         if (AuthorityManager.isCreateRectify() && AuthorityManager.isMe(item.value.responsibleUserId)) {
             return (
                 <View style={[styles.contentActionView]}>
-                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)}  style={{width:80 ,marginRight:20}}
+                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)}  style={{width:58, height:28, borderWidth:0.5, borderColor:API.toQcStateShowColor(item.value.qcState), marginRight:10}}
                         onClick={() => { this._onRectifyAction(item, index) }} text={API.TYPE_NEW_NAME_RECTIFY} />
                 </View>
             )
@@ -149,7 +149,7 @@ export default class QualityListCell extends PureComponent {
         if (AuthorityManager.isCreateReview() && AuthorityManager.isMe(item.value.creatorId)) {
             return (
                 <View style={[styles.contentActionView]}>
-                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)} style={{width:80 ,marginRight:20}}
+                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)} style={{width:58, height:28, borderWidth:0.5,borderColor:API.toQcStateShowColor(item.value.qcState), marginRight:10}}
                         onClick={() => { this._onReviewAction(item, index) }} text={API.TYPE_NEW_NAME_REVIEW} />
                 </View>
             )
@@ -193,7 +193,6 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: 8,
         marginTop: 10,
-
         marginBottom: 10,
         marginLeft: 20,
         marginRight: 20,
@@ -205,7 +204,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3, // iOS
     },
     contentHeaderView: {
-        height: 40,
+        height: 44,
         alignItems: "center",
         alignContent: "center",
         flexDirection: 'row',
@@ -213,15 +212,14 @@ const styles = StyleSheet.create({
     content: {
         marginTop: 10,
         marginLeft: 10,
-        marginRight: 80,
-        fontSize: 15,
-        color: 'black',
+        fontSize: 14,
+        color: '#999999',
+        flex:1,
     },
     contentView: {
-        left: 0,
         backgroundColor: '#fafafa',
-        overflow: 'hidden',
-        // alignItems: "center",
+        paddingRight:20,
+        paddingBottom:10,
         alignContent: "center",
         flexDirection: 'row',
     },
@@ -231,10 +229,9 @@ const styles = StyleSheet.create({
     },
     image: {
         marginTop: 10,
-        marginBottom: 10,
         marginLeft: 10,
-        width: 60,
-        height: 60,
+        width: 68,
+        height: 68,
     },
     imageTime: {
         marginLeft: 10,
@@ -244,7 +241,7 @@ const styles = StyleSheet.create({
     contentTime: {
         marginLeft: 10,
         fontSize: 14,
-        color: 'black',
+        color: '#666666',
     },
     contentStatus: {
         right: 10,
