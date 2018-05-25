@@ -378,17 +378,18 @@ export default class EquipmentDetailView extends Component {
                 <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="批次编号：" content={info.batchCode ? info.batchCode : ''} showType="input" 
                 onChangeText={(value) => {info.batchCode = value;this._checkBasicInfo(info);}} />
                 <EquipmentInfoItem showType="line" />
+                <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate ?  API.formatUnixtimestampSimple(new Date(info.approachDate).getTime()) : API.formatUnixtimestampSimple(new Date().getTime())} showType="info" onClick={() => { this.setState({ visible: true }) }} />
                 <DatePicker
                     mode="date"
                     title=" "
+                    visible={this.state.visible}
+                    onDismiss={() => this.setState({ visible: false })}
+                    onOk={date => { info.approachDate = date.getTime(); this._checkBasicInfo(info); this.props.switchPage({ ...info }),this.setState({ visible: false }) }}
                     extra=" "
                     value={info.approachDate ? new Date(info.approachDate) : new Date()}
-                    onChange={date => { info.approachDate = date.getTime(); this._checkBasicInfo(info); this.props.switchPage({ ...info }) }}
                 >
-                    <List.Item styles={StyleSheet.create(newStyle)} style={{borderBottomWidth:0, borderBottomColor:"transparent",}}arrow="horizontal" >
-                        <Text style={{marginLeft:4, flex:1,fontSize: 16, color: "#000000",width: 85, fontWeight: '100', paddingTop: 6, paddingBottom: 6,}}>进场日期：</Text>
-                    </List.Item>
                 </DatePicker>
+                <EquipmentInfoItem showType="line" />
                 {/* <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate ? API.formatUnixtimestampSimple(info.approachDate) : null} showType="input" /> */}
                 {/* <EquipmentInfoItem showType="line" /> */}
                 <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="材设编码：" content={info.facilityCode} showType="input" onChangeText={(value) => { info.facilityCode = value; this._checkBasicInfo(info) }} />
