@@ -91,7 +91,6 @@ class RelevantBlueprintPage extends Component {
                 imageStyle={{}}
                 navigation={this.props.navigation}
                 onPress={(navigation) => this.removePosition(navigation)}
-                imageSource={require('app-images/icon_back_white.png')}
                 text="取消" /></BarItems>
         ) : (
                 this.renderEditLeftTitle()
@@ -101,15 +100,21 @@ class RelevantBlueprintPage extends Component {
     renderEditRightTitle = () => {
         if (this.state.showFinishView) {
             return (
-                <View style={{ flex: 1, alignItems: "center" }}>
-                    <TouchableOpacity onPress={() => { this.finish() }}>
-                        <Text style={{ color: '#ffffff', fontSize: 15, marginTop: 5, marginRight: 20 }}>完成</Text>
-                    </TouchableOpacity>
-                </View>
+                <BarItems >
+            <BarItems.RightBarItem
+                imageStyle={{}}
+                navigation={this.props.navigation}
+                onPress={(navigation) => this.finish(navigation)}
+                text="完成" /></BarItems>
             );
         } else if (this.state.showCreateButton) {
             return (
-                <Text style={{ color: '#ffffff', fontSize: 15, marginRight: 20, marginTop: 5, }}>长按新建</Text>
+                <BarItems >
+            <BarItems.RightBarItem
+                imageStyle={{}}
+                navigation={this.props.navigation}
+                onPress={(navigation) => {}}
+                text="长按新建" /></BarItems>
             );
         }
         return null;
