@@ -144,7 +144,7 @@ export async function getBimFileUrlThumbnail(objectId, callback, thumbnailSize =
         api = api + '&thumbnailSize='+thumbnailSize;
     }
     let ops = {
-        method: 'POST',
+        method: 'GET',
         headers: {
             "Content-Type": "application/json;charset=utf-8",
             "X-Requested-With": "XMLHttpRequest",
@@ -188,7 +188,7 @@ export async function getBimFileUrl(objectId, callback) {
 
     let api = `${AppConfig.BASE_URL}/bimpm/attachment/attachment/url?objectId=${objectId}&thumbnail=${true}&thumbnailSize=preview`;
     let ops = {
-        method: 'POST',
+        method: 'GET',
         headers: {
             "Content-Type": "application/json;charset=utf-8",
             "X-Requested-With": "XMLHttpRequest",
