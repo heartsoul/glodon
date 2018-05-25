@@ -82,6 +82,7 @@ export default class extends PureComponent {
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                <View style={{height:5,width:'100%',backgroundColor:'white'}}/>
                 <SegmentedView style={{ flex: 1 }} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
                     {
                         API.EQUIPMENT_CLASSIFY_STATUS_LIST.map((item, index) => {
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     contentList: {
         flex: 1,
         backgroundColor: '#fafafa',
-        paddingTop: 5,
+        paddingBottom: 5,
         //  height:120,
     },
     dataList: {

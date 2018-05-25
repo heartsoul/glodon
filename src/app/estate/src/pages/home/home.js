@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, View, Text, Image,TouchableOpacity } from 'react-native';
+import { Button, View, Text, Image,TouchableOpacity,SafeAreaView } from 'react-native';
 import { withNavigation,StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
 import { TabView, Theme, BasePage, NavigationPage, TeaNavigator, Overlay, Label} from 'app-3rd/teaset'
 //Theme.set(Theme.themes.black);
@@ -29,18 +29,6 @@ Theme.set({
 });
 
 import * as PAGES from '../pages'
-
-class SearchaBarItem extends React.Component {
-  render() {
-    return  <TouchableOpacity style={{marginRight:10}}  onPress={()=>this.props.navigation.navigate("SearchPage")} >  
-          <Image style={{width: 24,height: 24,resizeMode:'contain'}} source={require('app-images/icon_search_white.png')} />
-    </TouchableOpacity> 
-  }
-}
-
-// withNavigation returns a component that wraps SearchaBarItem and passes in the
-// navigation prop
-var SearchButton =  withNavigation(SearchaBarItem);
 
 export default class extends React.Component {
   static navigationOptions = ({navigation, screenProps}) =>{
@@ -101,7 +89,8 @@ export default class extends React.Component {
       return ({
         // title:title ? title : CONSTANTS.PAGE_NAME_HOME,
         headerTitle: (<BarItems.TitleBarItem text={title ? title : storage.loadCurrentProjectName()}/>),
-        headerRight:(<SearchaBarItem navigation={this.props.navigation}/>),
+        headerRight:(<BarItems.RightBarItem imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_search_white.png')} navigation={this.props.navigation}
+        onPress={(navigation) => this.props.navigation.navigate("SearchPage")} />),
         headerLeft: <View></View>,
         // header: {mode:'screen'},
       })
@@ -137,7 +126,8 @@ export default class extends React.Component {
     this.props.navigation.setParams({'options':()=>{return this.options(index)}})
   }
   render() {
-    return (<TabView ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1 ,height:'100%'}} type='projector'>
+    return (
+    <SafeAreaView style={{height:'100%',backgroundColor:"#f5f8f9"}}><TabView ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1}} type='projector'>
       <TabView.Sheet
         title={CONSTANTS.PAGE_NAME_HOME}
         icon={require('app-images/home/icon_main_main_page.png')}
@@ -173,7 +163,9 @@ export default class extends React.Component {
       >
         <PAGES.MyPage /> 
       </TabView.Sheet>
-    </TabView>);
+    </TabView>
+    </SafeAreaView>);
+
   }
 };
 

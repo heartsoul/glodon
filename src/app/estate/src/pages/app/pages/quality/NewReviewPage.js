@@ -19,7 +19,7 @@ import { ListRow } from 'app-3rd/teaset';
 import { DatePicker, List, Modal, Toast } from 'antd-mobile';
 
 import WideButton from "./../../components/WideButton";
-import { ImageChooserView, ActionModal } from 'app-components';
+import { ImageChooserView, ActionModal,BarItems } from 'app-components';
 import * as API from "app-api";
 import * as reviewRepairAction from "./../../actions/reviewRepairAction";
 import QualityDetailView from "./QualityDetailView";
@@ -36,14 +36,14 @@ class NewReviewPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         headerTitle: (<Text style={{ color: '#ffffff', fontSize: 17, marginTop: 5, alignSelf: "center", flex: 1, textAlign: "center" }}>{navigation.state.params.createType === API.CREATE_TYPE_REVIEW ? '复查单' : "整改单"}</Text>),
         headerRight: (
-            <Text onPress={() => navigation.state.params.rightNavigatePress()} style={{ marginRight: 20, color: '#FFFFFF', width: 60, textAlign: "right" }} >
-                提交
-        </Text>
+            <BarItems navigation={navigation}>
+                <BarItems.RightBarItem navigation={navigation} text="提交" onPress={(navigation) => navigation.state.params.rightNavigatePress()} />
+            </BarItems>
         ),
         headerLeft: (
-            <Text onPress={() => navigation.state.params.leftNavigatePress()} style={{ marginLeft: 20, color: '#FFFFFF', width: 60, textAlign: "left" }} >
-                取消
-        </Text>
+            <BarItems navigation={navigation}>
+                <BarItems.LeftBarItem navigation={navigation} text="取消" onPress={(navigation) => navigation.state.params.leftNavigatePress()} />
+            </BarItems>
         ),
         gesturesEnabled: false,
         // header: null

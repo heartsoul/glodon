@@ -11,6 +11,7 @@ import {
 import { Toast } from 'antd-mobile';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as API from 'app-api'
+import { BarItems } from "app-components"
 import EquipmentInfoItem from "../equipment/equipmentInfoItem"
 export default class extends React.Component {
   static navigationOptions= ({ navigation, screenProps }) => ({
@@ -61,7 +62,9 @@ export default class extends React.Component {
        
   }
   loadRightTitle = () => { 
-    return (<Text onPress={() => this._onSubmit()} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >提交</Text>)
+    return (<BarItems navigation={this.props.navigation}>
+      <BarItems.RightBarItem text="提交" navigation={this.props.navigation}  onPress={(navigation) => this._onSubmit(navigation)} />
+     </BarItems>)
     
   }
   onChangeTextName= (text) => {
@@ -80,11 +83,11 @@ export default class extends React.Component {
     return (
       <KeyboardAwareScrollView style={[styles.container, { backgroundColor: '#ffffff' }]}>
       <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-      <EquipmentInfoItem leftTitle="姓名：" titleWidth={45} showType="input" onChangeText={this.onChangeTextName} />
+      <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="姓名：" titleWidth={55} showType="input" onChangeText={this.onChangeTextName} />
       <EquipmentInfoItem showType="line" />
-      <EquipmentInfoItem leftTitle="邮箱：" titleWidth={45} showType="input" onChangeText={this.onChangeTextEmail} />
+      <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="邮箱：" titleWidth={55} showType="input" onChangeText={this.onChangeTextEmail} />
       <EquipmentInfoItem showType="line" />
-      <EquipmentInfoItem leftTitle="标题：" titleWidth={45} showType="input" onChangeText={this.onChangeTextTitle} />
+      <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="标题：" titleWidth={55} showType="input" onChangeText={this.onChangeTextTitle} />
       <EquipmentInfoItem showType="line" />
 
       <TextInput underlineColorAndroid={"transparent"} onChangeText={this.onChangeTextContent} multiline={true} style={styles.text} placeholder='留言内容...'></TextInput>

@@ -7,7 +7,7 @@ import {
     ActivityIndicator, ScrollView, StyleSheet, Text, View, StatusBar, Image,
 } from "react-native";
 import { connect } from 'react-redux' // 引入connect函数
-import { LoadingView } from "app-components";
+import { LoadingView, BarItems} from "app-components";
 import { BimFileEntry, AuthorityManager } from "app-entry";
 import * as API from "app-api";
 import QualityDetailView from "./QualityDetailView"
@@ -16,7 +16,7 @@ import * as actions from '../../actions/qualityInfoAction'
 
 class QualityDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : '',
+        headerTitle: navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : null,
         gesturesEnabled: true,
         headerRight: navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : <View></View>
     })
@@ -58,15 +58,20 @@ class QualityDetailPage extends Component {
             // 整改
             power = (AuthorityManager.isCreateRectify() && AuthorityManager.isMe(inspectionInfo.responsibleUserId))
             if (power) {
-                return (<Text onPress={() => this.newUnrectified(inspectionInfo.id)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >
-                    {API.TYPE_NEW_NAME[0]}</Text>)
+                return (
+                    <BarItems navigation={navigation}>
+                    <BarItems.RightBarItem navigation={navigation} text={API.TYPE_NEW_NAME[0]} onPress={(navigation) =>this.newUnrectified(inspectionInfo.id)} />
+                </BarItems>
+                )
             }
         } else if (inspectionInfo.qcState == API.QC_STATE_UNREVIEWED) {
             // 检查
             power = (AuthorityManager.isCreateReview() && AuthorityManager.isMe(inspectionInfo.creatorId))
             if (power) {
-                return (<Text onPress={() => this.newUnreviewed(inspectionInfo.id)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >
-                    {API.TYPE_NEW_NAME[1]}</Text>)
+                return (
+                    <BarItems navigation={navigation}>
+                    <BarItems.RightBarItem navigation={navigation} text={API.TYPE_NEW_NAME[1]} onPress={(navigation) =>this.newUnreviewed(inspectionInfo.id)} />
+                </BarItems>)
             }
         }
         return <View></View>;
@@ -80,7 +85,7 @@ class QualityDetailPage extends Component {
         } else if (inspectionInfo.inspectionType == API.TYPE_INSPECTION[1]) {
             title = API.TYPE_INSPECTION_NAME[1]
         }
-        return title;
+        return <BarItems.TitleBarItem text={title} />;
     }
 
     componentDidMount() {

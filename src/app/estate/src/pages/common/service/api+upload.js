@@ -129,7 +129,6 @@ async function getOperationCode(filePath, name, length, callback,digest=null,fil
             upLoad(filePath, name, responseData, callback,file,index);
         })
         .catch((error) => {
-            alert(error)
             callback("fail", error)
         });
 }
@@ -160,7 +159,7 @@ export async function getBimFileUrlThumbnail(objectId, callback, thumbnailSize =
             ops.headers['X-CORAL-TENANT'] = t;
         }
     }
-    return fetch(api, ...ops)
+    return fetch(api, ops)
         .then((response) => {
             if (response.status >= 200 && response.status < 300) {
                 return response.text();
@@ -204,7 +203,7 @@ export async function getBimFileUrl(objectId, callback) {
             ops.headers['X-CORAL-TENANT'] = t;
         }
     }
-    return fetch(api, ...ops)
+    return fetch(api, ops)
         .then((response) => {
             if (response.status >= 200 && response.status < 300) {
                 return response.text();

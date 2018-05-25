@@ -154,6 +154,11 @@ function checkReviewMustInfo(params) {
     let msg = "";
     let checked = true;//是否合格
     if (params.status === API.STATUS_CLOSED) {
+        checked = !isDescriptionEmpty;
+        if (isDescriptionEmpty) {
+            msg = "您还未选择现场情况描述!";
+        }
+    } else if (params.status === API.STATUS_NOT_ACCEPTED) {
         checked = (!isDescriptionEmpty && !isDateEmpty && !isDateDisable)
         if (isDescriptionEmpty && isDateEmpty) {
             msg = "您还未选择现场情况描述和整改期限!";
@@ -164,11 +169,7 @@ function checkReviewMustInfo(params) {
         } else if (isDateDisable) {
             msg = "整改期限不能早于当前日期！";
         }
-    } else if (params.status === API.STATUS_NOT_ACCEPTED) {
-        checked = !isDescriptionEmpty;
-        if (isDescriptionEmpty) {
-            msg = "您还未选择现场情况描述!";
-        }
+
     }
     let ret = { checked: checked, msg: msg }
     return ret;
@@ -510,8 +511,8 @@ function isFileChange(oldFiles, newFiles) {
 function resetFiles(oldFiles, newFiles) {
     if (newFiles) {
         newFiles.map((item) => {
-            let oldFile = relateOldFile(oldFiles,item);
-            if(oldFile){
+            let oldFile = relateOldFile(oldFiles, item);
+            if (oldFile) {
                 item.name = oldFile.name;
                 item.objectId = oldFile.objectId;
                 item.extension = oldFile.extension;
@@ -524,9 +525,9 @@ function resetFiles(oldFiles, newFiles) {
 }
 
 function relateOldFile(oldFiles, file) {
-    if(oldFiles){
+    if (oldFiles) {
         for (let index in oldFiles) {
-            if(oldFiles[index].path === file.path){
+            if (oldFiles[index].path === file.path) {
                 return oldFiles[index];
             }
         }
@@ -540,14 +541,14 @@ function isParamsChange(description, status, lastRectificationDate, editInfo, ty
             return true;
         }
     } else {
-        if(!(editInfo.description == description)) {
+        if (!(editInfo.description == description)) {
             return true;
         }
-       
+
     }
     if (type === API.CREATE_TYPE_REVIEW) {
         let perStatus = editInfo.status;
-        if(perStatus != API.STATUS_CLOSED) {
+        if (perStatus != API.STATUS_CLOSED) {
             perStatus = API.STATUS_NOT_ACCEPTED;
         }
         if (status != perStatus) {

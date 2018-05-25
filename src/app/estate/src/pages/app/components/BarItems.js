@@ -18,13 +18,13 @@ export class RightBarItem extends React.Component {
     return <TouchableOpacity style={styles.actionView} onPress={() => this.props.onPress(this.props.navigation)} >
       <View style={styles.spliteItem} />
       {
+         this.props.imageSource 
+         ? ( <Image style={[styles.barItemImage,this.props.imageStyle? this.props.imageStyle : {}]}  source={this.props.imageSource} />) : null
+      }
+      {
          this.props.text 
          ? ( <Text style={[styles.barItemText,this.props.textStyle ? this.props.textStyle : {}]}>{this.props.text ? this.props.text : '返回'}</Text>) 
          : null
-      }
-      {
-         this.props.imageSource 
-         ? ( <Image style={[styles.barItemImage,this.props.imageStyle? this.props.imageStyle : {}]}  source={this.props.imageSource} />) : null
       }
       <View style={styles.spliteItem} />
       <View style={styles.spliteItem} />
@@ -46,13 +46,13 @@ export class LeftBarItem extends React.Component {
       <View style={styles.spliteItem} />
       <View style={styles.spliteItem} />
       {
-         this.props.text 
-         ? ( <Text style={[styles.barItemText,this.props.textStyle ? this.props.textStyle : {}]}>{this.props.text ? this.props.text : '返回'}</Text>) 
-         : null
+        this.props.imageSource
+          ? (<Image style={[styles.barItemImage, this.props.imageStyle ? this.props.imageStyle : {}]} source={this.props.imageSource} />) : null
       }
       {
-         this.props.imageSource 
-         ? ( <Image style={[styles.barItemImage,this.props.imageStyle? this.props.imageStyle : {}]}  source={this.props.imageSource} />) : null
+        this.props.text
+          ? (<Text style={[styles.barItemText, this.props.textStyle ? this.props.textStyle : {}]}>{this.props.text ? this.props.text : '返回'}</Text>)
+          : null
       }
       <View style={styles.spliteItem} />
       </TouchableOpacity>

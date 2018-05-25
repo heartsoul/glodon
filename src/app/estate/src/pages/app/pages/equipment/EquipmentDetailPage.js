@@ -21,7 +21,7 @@ class EquipmentDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '材设进场记录',
         gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
-        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
+        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : <BarItems />,
         headerRight: navigation.state.params && navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null
     })
     constructor(props) {
@@ -83,7 +83,9 @@ class EquipmentDetailPage extends Component {
             }
         }
         if (power) {
-            return (<Text onPress={() => this._onSubmit(equipmentInfo)} style={{ marginRight: 10, color: '#FFFFFF', textAlign: "center" }} >提交</Text>)
+           return <BarItems navigation={this.props.navigation}>
+            <BarItems.RightBarItem text="提交" navigation={this.props.navigation}  onPress={() => this._onSubmit(equipmentInfo)} />
+           </BarItems>
         }
 
         return null;

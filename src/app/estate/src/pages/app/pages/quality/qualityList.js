@@ -74,8 +74,11 @@ export default class qualityList extends PureComponent {
 
     _onSegmentedBarChange = (index) => {
         this.setState({ activeIndex: index });
-        this.state.qualityView[index].fetchData(API.CLASSIFY_STATES[index]);
-        // this._loadInspectionSummary();
+        if(this.state.qualityView[index].fetchData) {
+            this.state.qualityView[index].fetchData(API.CLASSIFY_STATES[index]);
+            this._loadInspectionSummary();
+        }
+        
     }
     _toTop = () => {
         let index = this.state.activeIndex;
@@ -97,7 +100,7 @@ export default class qualityList extends PureComponent {
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{height:5,width:'100%',backgroundColor:'white'}}/>
-                <SegmentedView style={{ flex: 1 }} justifyItem={'scrollable'} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
+                <SegmentedView style={{ flex: 1 }} justifyItem={'scrollable'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
                     {
                        API.CLASSIFY_STATUS_LIST.map((item,index)=>{
                            return (
@@ -134,7 +137,7 @@ const styles = StyleSheet.create({
     contentList: {
         flex: 1,
         backgroundColor: '#fafafa',
-        paddingTop:0,
+        paddingBottom: 5,
         //  height:120,
     },
     dataList: {

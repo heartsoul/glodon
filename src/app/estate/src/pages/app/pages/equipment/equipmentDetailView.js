@@ -168,6 +168,7 @@ export default class EquipmentDetailView extends Component {
             <EquipmentInfoItem leftTitle="材设编码：" content={info.facilityCode} />
             <EquipmentInfoItem leftTitle="材设名称：" content={info.facilityName} />
             {this.renderImage(info)}
+            <View style={{ height: 40,width:'100%' }}/>
         </View>
     }
     renderOtherInfo = (info) => {
@@ -186,6 +187,7 @@ export default class EquipmentDetailView extends Component {
             <EquipmentInfoItem leftTitle="厂家：" content={info.manufacturer} />
             <EquipmentInfoItem leftTitle="品牌：" content={info.brand} />
             <EquipmentInfoItem leftTitle="供应商：" content={info.supplier} />
+            <View style={{ height: 40,width:'100%' }}/>
         </View>
     }
 
@@ -211,7 +213,7 @@ export default class EquipmentDetailView extends Component {
         let power = AuthorityManager.isEquipmentModify() && !this.props.committed;
         if (!power) return null;
         return <View style={{ marginTop: 20 }}>
-            <StatusActionButton text='保存' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => this._onSaveAction(info)} />
+            <StatusActionButton style={{height:40 ,marginRight:40,marginLeft:40,backgroundColor:'#00b5f2'}} text='保存' color='#ffffff' onClick={() => this._onSaveAction(info)} />
         </View>
     }
     renderActionDeleteInfo = (info) => {
@@ -219,7 +221,7 @@ export default class EquipmentDetailView extends Component {
         if (!power || !info.id) return null;
 
         return <View style={{ marginTop: 20 }}>
-            <StatusActionButton text='删除' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => this._onDeleteAction(info)} />
+            <StatusActionButton style={{height:40 ,marginRight:40,marginLeft:40,backgroundColor:'#ffffff'}} text='删除' color='#000000' onClick={() => this._onDeleteAction(info)} />
         </View>
     }
     _onConfirmAction(info) {
@@ -236,24 +238,26 @@ export default class EquipmentDetailView extends Component {
         this.props.switchPage(data);
     }
     renderActionNextInfo = (info, nextAction, isLink = false) => {
-
         if (info.preEditType && info.preEditType === API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
             if (isLink) {
                 return null;
             }
             // 是编辑
             return <View style={{ marginTop: 0 }}>
-                <StatusActionButton text='确定' height={40} marginRight={20} backgroundColor='#00b5f2' marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
+                <StatusActionButton text='确定' style={{height:40,marginRight:40,marginLeft:40,backgroundColor:"#00b5f2"}} color='#ffffff' onClick={() => nextAction(info)} />
             </View>
         } else {
 
             if (isLink) {
-                return <View style={{ marginTop: 0 }}>
-                    <StatusActionButton disabled={false} color='#00b5f2' borderColor='transparent' text='跳过' height={40} marginRight={20} backgroundColor={'transparent'} marginLeft={20} onClick={() => nextAction(info)} />
+                return <View style={{ marginTop: -20 }}>
+                    <StatusActionButton style={{height:40,marginRight:40,marginLeft:40,backgroundColor:"transparent",elevation:0}} disabled={false} color='#00b5f2' text='跳过' onClick={() => nextAction(info)} />
                 </View>
             }
             return <View style={{ marginTop: 0 }}>
-                <StatusActionButton disabled={!this.state.allowNextAction} text='下一步' height={40} marginRight={20} backgroundColor={this.state.allowNextAction ? '#00b5f2' : '#C8C8C8'} marginLeft={20} color='#ffffff' onClick={() => nextAction(info)} />
+                <StatusActionButton 
+                    ref="nextAction" 
+                    style={{height:40,marginRight:40,marginLeft:40,backgroundColor:this.state.allowNextAction ? '#00b5f2' : '#C8C8C8'}}
+                    disabled={false} text='下一步' color='#ffffff' onClick={() => nextAction(info)} />
             </View>
         }
 
@@ -269,9 +273,14 @@ export default class EquipmentDetailView extends Component {
     _checkBasicInfo = (info) => {
         let ret = this.check(info);
         if (ret != this.state.allowNextAction) {
-            this.setState({
-                allowNextAction: ret,
-            });
+            this.state.allowNextAction = ret;
+            if(this.refs.nextAction && this.refs.nextAction.setNativeProps)  {
+                this.refs.nextAction.setNativeProps(
+                    {
+                        backgroundColor:this.state.allowNextAction ? '#00b5f2' : '#C8C8C8',
+                        style:{shadowColor:this.state.allowNextAction ? '#00b5f2' : '#C8C8C8'}
+                    });
+            }
         }
         return ret;
     }
@@ -342,7 +351,8 @@ export default class EquipmentDetailView extends Component {
 
                 <EquipmentInfoItem leftTitle="验收单位：" content={info.acceptanceCompanyName} showType="info" onClick={() => { this.showActionSheet() }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="批次编号：" content={info.batchCode} showType="input" onChangeText={(value) => { info.batchCode = value; this._checkBasicInfo(info) }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="批次编号：" content={info.batchCode ? info.batchCode : ''} showType="input" 
+                onChangeText={(value) => {info.batchCode = value;this._checkBasicInfo(info);}} />
                 <EquipmentInfoItem showType="line" />
                 <DatePicker
                     mode="date"
@@ -357,37 +367,38 @@ export default class EquipmentDetailView extends Component {
                 </DatePicker>
                 {/* <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate ? API.formatUnixtimestampSimple(info.approachDate) : null} showType="input" /> */}
                 {/* <EquipmentInfoItem showType="line" /> */}
-                <EquipmentInfoItem leftTitle="材设编码：" content={info.facilityCode} showType="input" onChangeText={(value) => { info.facilityCode = value; this._checkBasicInfo(info) }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="材设编码：" content={info.facilityCode} showType="input" onChangeText={(value) => { info.facilityCode = value; this._checkBasicInfo(info) }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="材设名称：" content={info.facilityName} showType="input" onChangeText={(value) => { info.facilityName = value; this._checkBasicInfo(info) }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="材设名称：" content={info.facilityName} showType="input" onChangeText={(value) => { info.facilityName = value; this._checkBasicInfo(info) }} />
 
             </View>
             <View style={{ marginTop: 20 }}>
                 {this.renderActionNextInfo(info, this._toOtherInfoAction)}
             </View>
+            <View style={{ height: 40,width:'100%' }}/>
         </View>
     }
     renderOtherEdit = (info) => {
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
             <EquipmentInfoItem leftTitle="请根据需要选择完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ marginTop: 0, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
-                <EquipmentInfoItem leftTitle="进场数量：" content={info.quantity} showType="input" onChangeText={(value) => { info.quantity = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="进场数量：" content={info.quantity} showType="input" onChangeText={(value) => { info.quantity = value }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="单位：" content={info.unit} showType="input" onChangeText={(value) => { info.unit = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="单位：" content={info.unit} showType="input" onChangeText={(value) => { info.unit = value }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="规格：" content={info.specification} showType="input" onChangeText={(value) => { info.specification = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="规格：" content={info.specification} showType="input" onChangeText={(value) => { info.specification = value }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="型号：" content={info.modelNum} showType="input" onChangeText={(value) => { info.modelNum = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="型号：" content={info.modelNum} showType="input" onChangeText={(value) => { info.modelNum = value }} />
                 <EquipmentInfoItem showType="line" />
                 <EquipmentInfoItem leftTitle="构件位置：" showType="info" onClick={() => {
                     this.onOpenModleAction(info);
                 }} content={info.elementName} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="厂家：" content={info.manufacturer} showType="input" onChangeText={(value) => { info.manufacturer = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="厂家：" content={info.manufacturer} showType="input" onChangeText={(value) => { info.manufacturer = value }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="品牌：" content={info.brand} showType="input" onChangeText={(value) => { info.brand = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="品牌：" content={info.brand} showType="input" onChangeText={(value) => { info.brand = value }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem leftTitle="供应商：" content={info.supplier} showType="input" onChangeText={(value) => { info.supplier = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="供应商：" content={info.supplier} showType="input" onChangeText={(value) => { info.supplier = value }} />
 
             </View>
             <View style={{ marginTop: 20 }}>
@@ -396,6 +407,7 @@ export default class EquipmentDetailView extends Component {
             <View style={{ marginTop: 20 }}>
                 {this.renderActionNextInfo(info, this._toImageInfoSkipAction, true)}
             </View>
+            <View style={{ height: 40,width:'100%' }}/>
         </View>
     }
     onChangeSwitch = (value, info) => {
@@ -457,7 +469,7 @@ export default class EquipmentDetailView extends Component {
                 {this.renderImageInfo(equipmentInfo)}
                 {this.renderActionSaveInfo(equipmentInfo)}
                 {this.renderActionDeleteInfo(equipmentInfo)}
-
+                <View style={{ height: 40,width:'100%' }}/>
             </View>
         );
     }

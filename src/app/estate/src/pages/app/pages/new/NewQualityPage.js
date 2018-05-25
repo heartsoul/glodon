@@ -41,9 +41,9 @@ class NewQualityPage extends Component {
         headerTintColor: "#FFF",
         headerStyle: { backgroundColor: "#00baf3" },
         headerRight: (
-            <Text onPress={() => navigation.state.params.rightNavigatePress()} style={{ marginRight: 20, color: '#FFFFFF', width: 60, textAlign: "right" }} >
-                提交
-        </Text>
+            <BarItems navigation={navigation}>
+            <BarItems.RightBarItem text="提交" navigation={navigation}  onPress={(navigation) => navigation.state.params.rightNavigatePress()} />
+           </BarItems>
         ),
         headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
         gesturesEnabled: false,
