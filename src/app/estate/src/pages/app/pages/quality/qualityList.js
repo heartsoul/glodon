@@ -129,7 +129,7 @@ export default class qualityList extends PureComponent {
                     {
                        API.CLASSIFY_STATUS_LIST.map((item,index)=>{
                            return (
-                               <SegmentedView.Sheet key={item.name} title={<QualityListTitle key={item.name} text={item.name} badge={this.state.qualityBadge.item[index]}  select={this.state.activeIndex == index} activeTitleStyle={{color:'#00baf3',fontSize:14}} titleStyle={{color:'#666666',fontSize:14}} />}>
+                               <SegmentedView.Sheet key={item.name} title={<QualityListTitle key={item.name} text={item.name} badge={this.state.qualityBadge.item[index]}  select={this.state.activeIndex == index} activeTitleStyle={{color:'#00baf3',fontSize:14}} titleStyle={{color:'#6f899b',fontSize:14}} />}>
                                 <QualityListView 
                                 onRef={ (ref) => {this.state.qualityView[index] = ref}} 
                                 style={{flex:1}} 

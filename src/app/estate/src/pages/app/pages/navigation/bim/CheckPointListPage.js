@@ -152,6 +152,8 @@ const styles = StyleSheet.create({
 
     listItem: {
         backgroundColor: '#00baf3',
+        borderBottomWidth:1,
+        borderBottomColor:'#f7f7f7',
     },
     itemView: {
         height: 40,
