@@ -39,13 +39,20 @@ const newStyle = {
         color:"#666666",
         fontSize: 16,
         textAlign: 'left',
-        width:width-134,
+        width:width-157,
         marginLeft:8,
         flexDirection:"row",
     },
     column:{
         ...ListStyle.column,
         flex:0,
+    },
+    Arrow:{
+        ...ListStyle.Arrow,
+        width:14,
+        height:14,
+        resizeMode:"contain",
+        marginRight: 23,
     }
 }
 export default class EquipmentDetailView extends Component {
