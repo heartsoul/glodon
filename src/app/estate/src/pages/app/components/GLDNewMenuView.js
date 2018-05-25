@@ -25,7 +25,7 @@ export default class GLDNewMenuView extends Component {
             >
             <SafeAreaView>
                 <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: 'center', marginBottom: 100, marginTop: 20 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: 'center', marginBottom: 33, marginTop: 20 }}>
                     {
                         AuthorityManager.isQualityCreate() ? (
                             <TouchableOpacity onPress={() => { this.overlayView && this.overlayView.close(); GLDNewMenuView.openChoose(navigation); }} style={{ borderColor: '#8a6d3b' }}>

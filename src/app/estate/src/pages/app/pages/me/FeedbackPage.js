@@ -83,11 +83,11 @@ export default class extends React.Component {
     return (
       <KeyboardAwareScrollView style={[styles.container, { backgroundColor: '#ffffff' }]}>
       <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-      <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="姓名：" titleWidth={55} showType="input" onChangeText={this.onChangeTextName} />
+      <EquipmentInfoItem.EquipmentInfoItemTextInput key="fb1" leftTitle="姓名：" titleWidth={55} showType="input" onChangeText={this.onChangeTextName} />
       <EquipmentInfoItem showType="line" />
-      <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="邮箱：" titleWidth={55} showType="input" onChangeText={this.onChangeTextEmail} />
+      <EquipmentInfoItem.EquipmentInfoItemTextInput key="fb2" leftTitle="邮箱：" titleWidth={55} showType="input" onChangeText={this.onChangeTextEmail} />
       <EquipmentInfoItem showType="line" />
-      <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="标题：" titleWidth={55} showType="input" onChangeText={this.onChangeTextTitle} />
+      <EquipmentInfoItem.EquipmentInfoItemTextInput key="fb3" leftTitle="标题：" titleWidth={55} showType="input" onChangeText={this.onChangeTextTitle} />
       <EquipmentInfoItem showType="line" />
 
       <TextInput underlineColorAndroid={"transparent"} onChangeText={this.onChangeTextContent} multiline={true} style={styles.text} placeholder='留言内容...'></TextInput>
