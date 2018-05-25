@@ -137,7 +137,7 @@ export default class QualityListCell extends PureComponent {
         if (AuthorityManager.isCreateRectify() && AuthorityManager.isMe(item.value.responsibleUserId)) {
             return (
                 <View style={[styles.contentActionView]}>
-                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)}  style={{width:58, height:28, borderWidth:0.5, borderColor:API.toQcStateShowColor(item.value.qcState), marginRight:10}}
+                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)}  style={{width:70, height:28, borderWidth:0.5, borderColor:API.toQcStateShowColor(item.value.qcState), marginRight:10}}
                         onClick={() => { this._onRectifyAction(item, index) }} text={API.TYPE_NEW_NAME_RECTIFY} />
                 </View>
             )
@@ -149,7 +149,7 @@ export default class QualityListCell extends PureComponent {
         if (AuthorityManager.isCreateReview() && AuthorityManager.isMe(item.value.creatorId)) {
             return (
                 <View style={[styles.contentActionView]}>
-                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)} style={{width:58, height:28, borderWidth:0.5,borderColor:API.toQcStateShowColor(item.value.qcState), marginRight:10}}
+                    <StatusActionButton color={API.toQcStateShowColor(item.value.qcState)} style={{width:70, height:28, borderWidth:0.5,borderColor:API.toQcStateShowColor(item.value.qcState), marginRight:10}}
                         onClick={() => { this._onReviewAction(item, index) }} text={API.TYPE_NEW_NAME_REVIEW} />
                 </View>
             )
