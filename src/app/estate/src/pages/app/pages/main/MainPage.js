@@ -18,9 +18,23 @@ import * as CheckVersionManager from "./../../pages/me/checkVerson";
 import { NavigationPage, SegmentedBar, Label, SegmentedView, Button, Carousel } from 'teaset';
 import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
 var { width, height } = Dimensions.get("window");
+class MainTabTitle extends Component {
+    render = () => {
+        const {text,activeTitleStyle,titleStyle,select} = this.props;
+        return <View style={{alignItems:'center'}}>
+            <Text style={select ? activeTitleStyle : titleStyle} >{text}</Text>
+            <View style={{width:40,height:4,marginTop:6}}>
+               {select ? <Image style={{width:40,height:4,position:'absolute',top:6}} resizeMode='contain' source={require('app-images/icon_main_page_lab_line.png')}/> : null}
+            </View>
+        </View>
+    }
+} 
 export default class extends Component {
     constructor() {
         super();
+        this.state = {
+            activeIndex : 0
+        }
     };
 
     _loadQualityForm = () => {
@@ -71,30 +85,36 @@ export default class extends Component {
         // this.fetchData();
         // console.log("componentDidMount")
         CheckVersionManager.checkVersion("auto")
+        this.scrollToPage(0);
     }
     fetchData = () => {
         this.render()
     }
     scrollToPage = (index) => {
         console.log("index ============= " + index)
-        index = (index == 0) ? 1 : 0;//Carousel 默认显示最后一张，所以交换一下索引
-        if (!this.refs.carousel) {
-            return;
-        }
-        if (this.refs.carousel && parseInt('' + index) != parseInt('' + this.refs.carousel.activeIndex)) {
-            this.refs.carousel.scrollToPage(index);
-        }
+        
+        this.setState({
+            activeIndex:index
+        }, () => {
+            if (!this.refs.carousel) {
+                return;
+            }
+            // index = index == 0 ? 1:0;
+            if (this.refs.carousel && parseInt('' + index) != parseInt('' + this.refs.carousel.activeIndex)) {
+                this.refs.carousel.scrollToPage(index);
+            }
+        });
     }
 
     renderCarouselView = (qShow, eShow) => {
         if (qShow && eShow) {
             return (
-                <Carousel startIndex={1} ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
-                    <View style={styles.topImageView}>
-                        <Image style={[styles.topImage, { width: 121, height: 87 }]} source={require('app-images/icon_main_page_top_equipment.png')} />
-                    </View>
+                <Carousel cycle={false} startIndex={0} ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
                     <View style={styles.topImageView}>
                         <Image style={[styles.topImage, { width: 27, height: 74 }]} source={require('app-images/icon_main_page_top_quality.png')} />
+                    </View>
+                    <View style={styles.topImageView}>
+                        <Image style={[styles.topImage, { width: 121, height: 87 }]} source={require('app-images/icon_main_page_top_equipment.png')} />
                     </View>
                 </Carousel>
             );
@@ -142,10 +162,10 @@ export default class extends Component {
                     }
                 </ImageBackground>
                 </View>
-                <SegmentedView barStyle={{left:width/2-100,width:200,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 300, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
+                <SegmentedView indicatorType='none' barStyle={{left:width/2-100,width:200,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 300, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
                     {
                         qShow ?
-                            <SegmentedView.Sheet title='质量检查' activeTitleStyle={{fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} style={{backgroundColor: '#f8f8f8'}}>
+                            <SegmentedView.Sheet title={<MainTabTitle key="item0" text="质量检查" select={this.state.activeIndex == 0} activeTitleStyle={{color:'#00baf3',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />}  style={{backgroundColor: '#f8f8f8'}}>
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
@@ -164,7 +184,7 @@ export default class extends Component {
                     }
                     {
                         eShow ?
-                            <SegmentedView.Sheet title='材设进场' activeTitleStyle={{fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} style={{backgroundColor: '#f8f8f8'}}>
+                            <SegmentedView.Sheet title={<MainTabTitle key="item0" text="材设进场" select={this.state.activeIndex == 1} activeTitleStyle={{color:'#00baf3',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />} style={{backgroundColor: '#f8f8f8'}}>
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
