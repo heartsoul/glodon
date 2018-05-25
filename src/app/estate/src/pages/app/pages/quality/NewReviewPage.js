@@ -107,6 +107,7 @@ class NewReviewPage extends Component {
     }
 
     componentWillUnmount() {
+        this.props.reset();
         Toast.hide();
         this.removeBackListener()
     }
@@ -336,6 +337,9 @@ export default connect(
             if (dispatch) {
                 dispatch(reviewRepairAction.deleteForm(fileId, type, navigator))
             }
+        },
+        reset: () => {
+            dispatch(reviewRepairAction.reset())
         }
     }))(NewReviewPage);
 

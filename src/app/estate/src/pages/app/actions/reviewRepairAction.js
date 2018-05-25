@@ -592,7 +592,7 @@ function _loadError(error) {
     }
 }
 
-function reset() {
+export function reset() {
     return {
         type: types.REVIEW_REPAIR_INIT,
     }
