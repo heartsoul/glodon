@@ -56,23 +56,17 @@ export default class extends React.Component {
     if(AuthorityManager.isQualityCreate() || AuthorityManager.isEquipmentCreate()) {
     return <TabView.Sheet
         type='button'
-        title='新建'
+        title=''
         icon={
           <View style={{
-            width: 54,
-            height: 54,
-            borderRadius: 27,
-            shadowColor: '#ccc',
-            shadowOffset: { height: -1 },
-            shadowOpacity: 0.5,
-            shadowRadius: 0.5,
+            width: 100,
+            height: 70,
             alignItems: 'center',
             justifyContent: 'center',
-            // bottom:-10,
           }}>
             <Image
-              style={{ width: 50, height: 50, borderRadius: 25 }}
-              source={require('app-images/home/icon_main_create.png')}
+              style={{ width: 61, height: 61,resizeMode:'contain',position:'absolute', top:20}}
+              source={require('app-images/icon_category_create.png')}
             />
           </View>
         }

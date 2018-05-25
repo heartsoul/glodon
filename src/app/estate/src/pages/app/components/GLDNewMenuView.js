@@ -13,7 +13,7 @@ const { width, height } = Dimensions.get("window");
 const REF_PHOTO_SELECT = '___REF_PHOTO_SELECT___'
 const qualityCreateImage = require("app-images/icon_main_quality_create.png");
 const equipmentCreateImage = require("app-images/icon_main_equipment_create.png");
-const newImage = require('app-images/home/icon_main_create.png');
+const newImage = require('app-images/icon_category_create.png');
 export default class GLDNewMenuView extends Component {
     static openMenu(navigation) {
         let overlayView = (
@@ -44,15 +44,15 @@ export default class GLDNewMenuView extends Component {
                         ) : null
                     }
                 </View>
-                <View style={[{ width: 50, height: 50,marginBottom:14,flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: 'center' }]} >
+                <View style={[{ width: 61, height: 61,marginBottom:7,flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: 'center' }]} >
                     <TouchableOpacity onPress={() => {this.overlayView && this.overlayView.close();}}>
-                        <Image style={{ width: 50, height: 50, transform:[{rotate:'45deg'}]} } source={newImage} />
+                        <Image style={{ width: 61, height: 61, transform:[{rotate:'45deg'}]} } source={newImage} />
                     </TouchableOpacity>
                 </View>
                 </View>
                 </SafeAreaView>
             </Overlay.View>
-        );
+        ); 
         Overlay.show(overlayView);
     }
     static openChoose(navigation, finish) {
