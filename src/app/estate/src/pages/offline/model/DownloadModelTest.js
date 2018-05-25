@@ -10,7 +10,8 @@ import {
   import DirManager from '../manager/DirManager';
   import ModelManager from '../manager/ModelManager';
   import RNFS from 'react-native-fs';
-  
+  import { ToOfflineOverLay } from 'app-components';
+  import { ToOnlineOverLay } from 'app-components';
   export function getA(){
         return RNFS.exists('sdcard/bimcache').then((result)=>{
             console.log('------------'+result);
@@ -70,11 +71,13 @@ import {
 
     }
 
-    
+    _showOver = ()=>{
+        ToOnlineOverLay.show(this.props.navigation);
+    }
 
     render() {
       return (
-        <TouchableOpacity onPress={this.getToken}>
+        <TouchableOpacity onPress={()=>{this._showOver();}}>
             <View >
                 <Text style={{marginTop:40}}>
                     Welcome to React Native!lalalal

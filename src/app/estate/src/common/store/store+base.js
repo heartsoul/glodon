@@ -136,6 +136,11 @@ class GLDStorage extends BaseStorage {
     setRootNavigation(navigation) {
         this.homeNavigation = navigation;
     }
+
+    getRootNavigation() {
+        return this.homeNavigation;
+    }
+
     //保存用户信息
     saveUserInfo(userInfo) {
         this.setItem(__KEY_userInfo + userId(), userInfo);

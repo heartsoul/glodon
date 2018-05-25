@@ -1,6 +1,6 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState } from 'react-native'
+import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState,NetInfo, } from 'react-native'
 import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 
 import * as API from 'app-api'
@@ -9,6 +9,7 @@ import * as GLD from '../pages'
 import BaseStorage from '../../common/store/store+base'
 import configureStore, { history } from '../store/ConfigureStore'
 import { Toast } from 'antd-mobile';
+import NetWorkUtil from '../../common/utils/NetWorkUtil'
 
 const store = configureStore()
 const screens = {
@@ -258,11 +259,14 @@ export default class extends React.Component {
     componentDidMount() {
         this.fireHeartBeat();
         clickTime = new Date().getTime();
+
+        //添加网络状态监听
+        let navigation = storage.getRootNavigation();
+        // NetInfo.addEventListener('connectionChange', this.handleConnectivityChange);
+        NetWorkUtil.registNetWorkListener(navigation);
     }
 
-    componentDidMount = () => {
-        this.fireHeartBeat();
-    }
+  
 
     fireHeartBeat = () => {
         let systemDate = new Date().getTime();
