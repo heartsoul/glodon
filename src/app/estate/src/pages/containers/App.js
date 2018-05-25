@@ -1,13 +1,15 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState } from 'react-native'
-import { createStackNavigator,NavigationActions, StackActions } from 'app-3rd/react-navigation';
+import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState,NetInfo, } from 'react-native'
+import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 
 import * as API from 'app-api'
+import { BarItems } from "app-components"
 import * as GLD from '../pages'
 import BaseStorage from '../../common/store/store+base'
 import configureStore, { history } from '../store/ConfigureStore'
 import { Toast } from 'antd-mobile';
+import NetWorkUtil from '../../common/utils/NetWorkUtil'
 
 const store = configureStore()
 const screens = {
@@ -102,9 +104,6 @@ const screens = {
     ChangeProjectPage: {
         screen: GLD.ChangeProjectPage
     },
-    SharePage: {
-        screen: GLD.SharePage
-    }
 };
 
 const options = () => {
@@ -120,41 +119,45 @@ const options = () => {
             },
             elevation: 0,
         },
-        headerBackImage: <View style={{width:40,height:44,justifyContent:'center'}}><Image style={{marginLeft:10,width:20,height:20,resizeMode:'contain'}} source={require('app-images/icon_back_white.png')}/></View>,
-        headerBackTitle: null,
+
         headerTintColor: '#fff',
         tabBarVisible: false,
         headerTitleStyle: {
             fontSize:17,
             fontWeight:'bold',
         },
+        headerLeft: () => {
+            return (
+                <BarItems top={false} currentItem={""} />
+            )
+        },
         headerRight: (<View />),
       
     }
 }
 // LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage
-const RootGuideStack = createStackNavigator(
+const RootGuideStack = StackNavigator(
     screens,
     {
         initialRouteName: 'GuidePage',
         navigationOptions: options,
     }
 );
-const RootLoginStack = createStackNavigator(
+const RootLoginStack = StackNavigator(
     screens,
     {
         initialRouteName: 'LoginPage',
         navigationOptions: options,
     }
 );
-const RootMainStack = createStackNavigator(
+const RootMainStack = StackNavigator(
     screens,
     {
         initialRouteName: 'MainPage',
         navigationOptions: options,
     }
 );
-const RootChooseStack = createStackNavigator(
+const RootChooseStack = StackNavigator(
     screens,
     {
         initialRouteName: 'ChoosePage',
@@ -169,7 +172,7 @@ function resetGetStateForAction(RootStack) {
     RootStack.router.getStateForAction = (action, state) => {
         // console.log("action info -- type:"+action.type+",key:"+action.key+",params:"+action.params+",path:"+action.path+",routeName:"+action.routeName+",n:"+action.n+"\n");
         const { n } = action;
-        if (action.type === StackActions.POP && typeof n === 'string') {
+        if (action.type === NavigationActions.POP && typeof n === 'string') {
             let backRouteIndex = state.index;
             let findN = n;
             // 支持按照routeName进行回退，如果存在重名了，那么就回到
@@ -181,13 +184,13 @@ function resetGetStateForAction(RootStack) {
                 action.n = null;
             }
         }
-
         if (Platform.OS === 'android' && action.type === NavigationActions.BACK && state.routes.length === 1) {
             let systemDate = new Date().getTime();
             if (systemDate - clickTime > 2000) {
                 clickTime = systemDate
+                action.type = NavigationActions.POP;
+                action.n = 0;
                 Toast.info("再按一次退出", 1);
-                return null;
             }
 
         }
@@ -200,6 +203,8 @@ resetGetStateForAction(RootMainStack);
 resetGetStateForAction(RootLoginStack);
 resetGetStateForAction(RootGuideStack);
 resetGetStateForAction(RootChooseStack);
+const HEART_BEAT_TIME = 30 * 1000; // 测试时 30s检查一次
+const HEART_BEAT_UPDATE_TIME = 5 * 60 * 1000; // 5分钟执行一次更新
 export default class extends React.Component {
 
     constructor() {
@@ -207,45 +212,74 @@ export default class extends React.Component {
         this.state = {
             hasLoad: false,
         }
-    }
-    //状态改变响应
-    handleAppStateChange = (appState) =>{
-        let systemDate = new Date();
-        console.log('当前状态为:' + appState+",时间："+systemDate.getTime());
-        if(appState != this.appState && appState == 'active') {
-            this.fireHeartBeat();
-        }
-        this.appState = appState;
-    }
-    //内存警告响应
-    handleAppMemoryWarning = (appState) => {
-        console.log("内存报警....");
-    }
-    componentWillMount = () => {
-        //监听状态改变事件
-        AppState.addEventListener('change', this.handleAppStateChange);
-        //监听内存报警事件
-        AppState.addEventListener('memoryWarning', this.handleAppMemoryWarning);
+        this.intervalId = null;
+        this.appState = null;
+        this.prevUpdateTime = 0;
     }
 
-    componentWillUnmount = () => {
-        //删除状态改变事件监听
-        AppState.removeEventListener('change', this.handleAppStateChange);
-        AppState.removeEventListener('memoryWarning', this.handleAppMemoryWarning);
-    }
+    // keepOnline = () => {
+    //     console.log('》》》保持在线');
+    //     if(storage.isLogin() && AppState.currentState=='active') {
+    //         // 登录着，并且再前台运行，保持一次
+    //         this.fireHeartBeat(); // 更新
+    //     }
+    // }
 
-    componentDidMount = () =>{
+    // //状态改变响应
+    // handleAppStateChange = (appState) =>{
+    //     let systemDate = new Date();
+    //     console.log('当前状态为:' + appState+",时间："+systemDate.getTime());
+    //     if(appState != this.appState && appState == 'active') {
+    //         this.fireHeartBeat();
+    //     }
+    //     this.appState = appState;
+    // }
+    // //内存警告响应
+    // handleAppMemoryWarning(appState) {
+    //     console.log("内存报警....");
+    // }
+    // componentWillMount = () => {
+    //     this.intervalId = setInterval(this.keepOnline, HEART_BEAT_TIME);
+    //     //监听状态改变事件
+    //     AppState.addEventListener('change', this.handleAppStateChange);
+    //     //监听内存报警事件
+    //     AppState.addEventListener('memoryWarning', this.handleAppMemoryWarning);
+    // }
+
+    // componentWillUnmount = () => {
+    //     if(this.intervalId) {
+    //         clearInterval(this.intervalId);
+    //     }
+
+    //     //删除状态改变事件监听
+    //     AppState.removeEventListener('change', this.handleAppStateChange);
+    //     AppState.removeEventListener('memoryWarning', this.handleAppMemoryWarning);
+    // }
+
+    componentDidMount() {
         this.fireHeartBeat();
         clickTime = new Date().getTime();
+
+        //添加网络状态监听
+        let navigation = storage.getRootNavigation();
+        // NetInfo.addEventListener('connectionChange', this.handleConnectivityChange);
+        NetWorkUtil.registNetWorkListener(navigation);
     }
 
+  
+
     fireHeartBeat = () => {
+        let systemDate = new Date().getTime();
+        if (systemDate - this.prevUpdateTime < HEART_BEAT_UPDATE_TIME) {
+            return; // 不需要更新
+        }
+        // console.log('》》》更新当前信息,时间：' + systemDate);
         if (storage.hasChoose()) {
             let tenant = storage.loadLastTenant();
             API.setCurrentTenant(tenant).then((responseData) => {
-                // if (this) {
-                //     this.prevUpdateTime = systemDate; // 更新成功更新时间
-                // }
+                if (this) {
+                    this.prevUpdateTime = systemDate; // 更新成功更新时间
+                }
             }).catch((e) => {
                 console.log(e);
             });
@@ -254,7 +288,7 @@ export default class extends React.Component {
     _onNavigationStateChange = (prevState, newState, action)=>{
        storage.currentRouteName = this._getCurrentRouteName(newState);
     }
-    _getCurrentRouteName = (navigationState) =>{
+    _getCurrentRouteName(navigationState) {
         if (!navigationState) {
           return null;
         }
@@ -265,7 +299,7 @@ export default class extends React.Component {
         }
         return route.routeName;
       }
-    renderPage = () => {
+    renderPage() {
         if (storage.isLogin()) {
             if (storage.hasChoose()) {
                 return (<Provider store={store}><RootMainStack onNavigationStateChange={this._onNavigationStateChange}/></Provider>)
@@ -277,7 +311,7 @@ export default class extends React.Component {
         // }
         // return (<Provider store={store}><RootGuideStack /></Provider>)
     }
-    render = () => {
+    render() {
         return this.renderPage();
     }
 }

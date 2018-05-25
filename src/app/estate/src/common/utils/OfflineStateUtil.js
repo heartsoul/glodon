@@ -3,7 +3,7 @@
  */
 import React,{Component} from 'react';
 
-export default class NetWorkUtil{
+export default class OfflineStateUtil{
 
     //设置为在线模式
      static toOnLine(){
@@ -18,7 +18,7 @@ export default class NetWorkUtil{
     //判断是否在线模式  true在线 false 离线
      static isOnLine(){
         let state = storage.getOfflineState();
-        return state==true;
+        return state==true || state==undefined;
     }
 }
 

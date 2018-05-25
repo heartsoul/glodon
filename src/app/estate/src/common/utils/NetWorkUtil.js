@@ -4,6 +4,8 @@
 import {
     NetInfo,
 } from 'react-native';
+import { ToOfflineOverLay,ToOnlineOverLay } from 'app-components';
+import OfflineStateUtil from '../../common/utils/OfflineStateUtil';
 
 export default class NetWorkUtil {
 
@@ -40,7 +42,48 @@ export default class NetWorkUtil {
           });
     }
 
-   
+    static registNetWorkListener = (navigation)=>{
+        NetInfo.addEventListener('connectionChange', function change(status){
+            console.log('----------------------');
+            // console.log(navigation);
+            //{"type":"wifi","effectiveType":"unknown"}   wifi
+            //{"type":"cellular","effectiveType":"4g"}   4g
+            //{"type":"none","effectiveType":"unknown"}  无网
+            console.log('status change:' + (JSON.stringify(status)));
+            // NetInfo.removeEventListener('connectionChange', change);
+            //获取网络状态
+            NetInfo.isConnected.fetch().done((isConnected) => {
+
+                if(OfflineStateUtil.isOnLine()){
+                    console.log('在线模式');
+                    //在线模式下
+                    if(isConnected){
+                        //变有网
+                        ToOfflineOverLay.hide();//当从wifi-4g时   回调两次 wifi-无网  无网-4g
+                    }else{
+                        //变无网
+                        ToOfflineOverLay.show();
+                        NetInfo.removeEventListener('connectionChange', change);
+                    }
+                }else{
+                    console.log('离线模式');
+                    //离线模式下
+                    if(isConnected){
+                        //变有网
+                        ToOnlineOverLay.show();
+                        NetInfo.removeEventListener('connectionChange', change);
+                    }else{
+                        //变无网  不处理
+                    }
+                }
+                
+              });
+
+        });
+        
+    }
+
+    
 }
 
 //使用
