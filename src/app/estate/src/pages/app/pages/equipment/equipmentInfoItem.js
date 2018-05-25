@@ -202,7 +202,7 @@ export default class EquipmentInfoItem extends React.Component {
                     <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                 </View>
                 <TouchableOpacity activeOpacity={0.5} style={{ flex: 1, marginLeft: 2}} onPress={(event) => { this.onClick(event) }}>
-                    <Text style={[styles.content, { flex: 1, textAlignVertical:"center" }]}>{this.props.content}</Text>
+                    <Text style={[styles.content, { textAlignVertical:"center" }]}>{this.props.content}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                     <Image source={rightImage} style={styles.infoMark} />

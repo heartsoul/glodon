@@ -379,7 +379,7 @@ export default class EquipmentDetailView extends Component {
                     onChange={date => { info.approachDate = date.getTime(); this._checkBasicInfo(info); this.props.switchPage({ ...info }) }}
                 >
                     <List.Item styles={StyleSheet.create(newStyle)} style={{borderBottomWidth:0, borderBottomColor:"transparent",}}arrow="horizontal" >
-                        <Text style={{ paddingLeft: 4, flex:1,fontSize: 16, color: "#000000",width: 85, fontWeight: '100', paddingTop: 6, paddingBottom: 6,}}>进场日期：</Text>
+                        <Text style={{marginLeft:4, flex:1,fontSize: 16, color: "#000000",width: 85, fontWeight: '100', paddingTop: 6, paddingBottom: 6,}}>进场日期：</Text>
                     </List.Item>
                 </DatePicker>
                 {/* <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate ? API.formatUnixtimestampSimple(info.approachDate) : null} showType="input" /> */}
