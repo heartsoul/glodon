@@ -1,12 +1,13 @@
 import React from 'react';
-import { Button, View, Text, Image,TouchableOpacity,SafeAreaView } from 'react-native';
+import { Button, View, Text, Image,TouchableOpacity,SafeAreaView,Platform} from 'react-native';
 import { withNavigation,StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
-import { TabView, Theme, BasePage, NavigationPage, TeaNavigator, Overlay, Label} from 'app-3rd/teaset'
+import { TabView, Theme, BasePage, NavigationPage, TeaNavigator, Overlay, Label} from 'teaset'
 //Theme.set(Theme.themes.black);
 import { BimFileEntry, AuthorityManager } from 'app-entry';
 import { BarItems } from "app-components";
 import * as CONSTANTS from 'app-api';
 const primaryColor = '#00baf3';
+
 Theme.set({
   primaryColor: primaryColor,
   btnPrimaryColor: primaryColor,
@@ -26,6 +27,7 @@ Theme.set({
   // navTitleFontSize: 18,
   // navButtonFontSize: 15,
   navSeparatorColor: primaryColor,
+  tvBarBtnWidth:70,
 });
 
 import * as PAGES from '../pages'
@@ -59,18 +61,19 @@ export default class extends React.Component {
         title=''
         icon={
           <View style={{
-            width: 100,
+            width: 70,
             height: 70,
             alignItems: 'center',
             justifyContent: 'center',
           }}>
             <Image
-              style={{ width: 61, height: 61,resizeMode:'contain',position:'absolute', top:20}}
+              style={[{ width: 61, height: 61,resizeMode:'contain',position:'absolute'},Platform.OS ==='android' ? {top:10} : {top:20}]}
               source={require('app-images/icon_category_create.png')}
             />
           </View>
         }
-        iconContainerStyle={{ justifyContent: 'flex-end' }}
+        style={{width:70,backgroundColor:'orange',}}
+        iconContainerStyle={{ justifyContent: 'center' }}
         onPress={() => {this.onNewClick()}}
       />
     }
@@ -121,7 +124,8 @@ export default class extends React.Component {
   }
   render() {
     return (
-    <SafeAreaView style={{height:'100%',backgroundColor:"#f5f8f9"}}><TabView ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1}} type='projector'>
+    <SafeAreaView style={{height:'100%',backgroundColor:"#f5f8f9"}}>
+    <TabView ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1,overflow:'visible'}} type='projector'>
       <TabView.Sheet
         title={CONSTANTS.PAGE_NAME_HOME}
         icon={require('app-images/home/icon_main_main_page.png')}
