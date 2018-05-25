@@ -9,9 +9,20 @@ import {
   import DownloadModel from './DownloadModel';
   import DirManager from '../manager/DirManager';
   import ModelManager from '../manager/ModelManager';
+  import RNFS from 'react-native-fs';
   
+  export function getA(){
+        return RNFS.exists('sdcard/bimcache').then((result)=>{
+            console.log('------------'+result);
+            return result;
+        }).catch((error)=>{
+            console.log(error);
+        })
+        
+    }
+
   export default class App extends Component {
-    
+     
     //获取离线下载的token
     getToken = ()=>{
         // let fileId = '1353300132668256';
@@ -27,8 +38,39 @@ import {
         // }).catch((error) => {
         //     console.log(error);
         // })
+        console.log('------------');
+        RNFS.exists('sdcard/bimcache').then((result)=>{
+            console.log('------------'+result);
+        }).catch((error)=>{
+            console.log(error);
+        })
+
+        
+        function getB(a){
+            return fetch('https://www.baidu.com').then((res)=>{
+                console.log('bbbbbbbbbbbb');
+                return a+'bb';
+            });
+        }
+
+        async function f(){
+            let a = await getA();
+            let b = await getB(a);
+            let c = await b+'c';
+            return c;
+        }
+
+       
+
+        f().then((a)=>{
+            console.log(a);
+        },(e)=>{
+            console.log(e);
+        });
 
     }
+
+    
 
     render() {
       return (

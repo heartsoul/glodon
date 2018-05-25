@@ -31,7 +31,7 @@ public class CoreService extends Service {
     @Override
     public void onCreate() {
         LogUtil.e("service  oncreate");
-        File file = new File(Environment.getExternalStorageDirectory(), "bimModel");
+        File file = new File(Environment.getExternalStorageDirectory(), "bimcache");
         String websiteDirectory = file.getAbsolutePath();
 
         WebSite wesite = new StorageWebsite(websiteDirectory);

@@ -75,7 +75,7 @@ import { Platform,} from 'react-native';
             //     fileId: 1353300132668256,
             //     reason: null,
             //     status: 'success' } }
-            // console.log(responseJson);
+            console.log(responseJson);
             this.getAddress(responseJson.data.fileId,responseJson.data.databagVersion,token);
         }).catch((error) => {
             console.error(error);

@@ -1,5 +1,7 @@
 import RNFS from 'react-native-fs';
 import { Platform,} from 'react-native';
+import NativeModules from '../model/ServerModule';
+import ModelServer from '../model/ServerModule';
 /**
  * 目录处理
  */
@@ -24,6 +26,12 @@ export default class DirManager  {
     //项目目录
      getProjectPath =()=>{
         let dirPath = this.getRootPath();
+        let targetPath = dirPath+`/`+this.getProjectName();
+        return targetPath;
+    }
+
+    //获取项目文件夹名称
+    getProjectName = ()=>{
         let userInfo = storage.loadUserInfo();
         // let userObj = JSON.parse(userInfo);
         let account = userInfo.username;//手机号
@@ -33,7 +41,7 @@ export default class DirManager  {
         let tenantId = tenantObj.value.tenantId;//租户的id
 
         let projectId = storage.loadProject();//项目的id
-        let targetPath = dirPath+`/${account}_${tenantId}_${projectId}`;
+        let targetPath = `${account}_${tenantId}_${projectId}`;
         return targetPath;
     }
 
@@ -42,6 +50,17 @@ export default class DirManager  {
         let version = storage.getLatestVersionId(storage.loadProject());
         let modelPath = this.getProjectPath()+'/bimModel/'+version;
         return modelPath;
+    }
+
+    //获取模型的url地址
+    getAppUrl = (fileId)=>{
+        
+        let version = storage.getLatestVersionId(storage.loadProject());
+        let name = storage.getModelFileIdOfflineName(fileId);
+        let root = ModelServer.ROOT_URL;//http://xxxxx:8080/
+        let url = root+this.getProjectName()+'/bimModel/'+version+'/'+name+'/app.html';
+       
+        return url;
     }
 
     //获取图片根目录

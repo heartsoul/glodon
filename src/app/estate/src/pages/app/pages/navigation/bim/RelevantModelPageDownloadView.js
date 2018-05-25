@@ -24,7 +24,7 @@ export default class RelevantModelPageDownloadView extends Component{
         let mm = new ModelManager();
         //判断是否有了离线包
         mm.exist(fileId).then((result)=>{
-            console.log('--------------'+result);
+            console.log('offline zip exist?--------------'+result);
             if(!result){
                 this.setState({
                     showDownloadView:true
