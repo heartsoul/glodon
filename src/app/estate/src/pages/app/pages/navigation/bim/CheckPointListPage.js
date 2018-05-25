@@ -18,14 +18,14 @@ import * as types from '../../../constants/checkPointListTypes';
 
 import * as API from 'app-api'
 import { BarItems } from "app-components"
-import { BimFileEntry } from 'app-entry';
+import { BimFileEntry, AuthorityManager } from 'app-entry';
 
 class CheckPointListPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: '质检项目',
         headerLeft: (<BarItems top={navigation.getParam('top')} navigation={navigation} currentItem={API.APP_QUALITY_CHECK_POINT} />),
-      });
+    });
 
     constructor(props) {
         super(props);
@@ -36,21 +36,21 @@ class CheckPointListPage extends Component {
     componentDidMount() {
         this.props.getCheckPoints();
     }
-    
-    
-    toAddPage= (item) =>{
+
+
+    toAddPage = (item) => {
         let p = this.props.navigation.state.params;
-        if(!p) {
+        if (!p) {
             p = {};
         }
-        this.props.navigation.state.params = {...p, qualityCheckpointId: item.id, qualityCheckpointName: item.name };
+        this.props.navigation.state.params = { ...p, qualityCheckpointId: item.id, qualityCheckpointName: item.name };
         BimFileEntry.newSelect(this.props.navigation)
     }
-    toCheckPointInfoPage= (item) =>{
-        storage.pushNext(this.props.navigation, 'QualityStatardsPage',{ 'qualityCheckpointId': item.id, 'qualityCheckpointName': item.name }); 
+    toCheckPointInfoPage = (item) => {
+        storage.pushNext(this.props.navigation, 'QualityStatardsPage', { 'qualityCheckpointId': item.id, 'qualityCheckpointName': item.name });
     }
-    toQualityCheckList= (item) =>{
-        storage.pushNext(this.props.navigation, 'QualityMainPage',{ 'qualityCheckpointId': item.id, 'qualityCheckpointName': item.name }); 
+    toQualityCheckList = (item) => {
+        storage.pushNext(this.props.navigation, 'QualityMainPage', { 'qualityCheckpointId': item.id, 'qualityCheckpointName': item.name });
     }
 
     componentWillUnmount() {
@@ -87,9 +87,13 @@ class CheckPointListPage extends Component {
                         <Image style={styles.markImage} source={require('app-images/icon_module_standard_white.png')} />
                     </TouchableOpacity>
                     <View style={{ flex: 1 }} />
-                    <TouchableOpacity style={{ paddingLeft: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.toAddPage(item) }}>
-                        <Image style={styles.addImage} source={require('app-images/icon_module_create_white.png')} />
-                    </TouchableOpacity>
+                    {
+                        AuthorityManager.isQualityCreate() ? (
+                            <TouchableOpacity style={{ paddingLeft: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.toAddPage(item) }}>
+                                <Image style={styles.addImage} source={require('app-images/icon_module_create_white.png')} />
+                            </TouchableOpacity>) : (null)
+                    }
+
                     <Image style={styles.arrow} source={require('app-images/icon_arrow_right_white.png')} />
                 </View>
             </TouchableOpacity>
@@ -179,7 +183,7 @@ export default connect(
     state => ({
         topDirNode: state.checkPointList.topDirNode,
         topModelNode: state.checkPointList.topModelNode,
-        selectedCheckPoint:  state.checkPointList.selectedCheckPoint,
+        selectedCheckPoint: state.checkPointList.selectedCheckPoint,
     }),
     dispatch => ({
         getCheckPoints: () => {

@@ -241,6 +241,7 @@ public class PhotoEditActivity extends BaseActivity implements View.OnClickListe
 
                 //弹起输入法
                 mEditText.setFocusable(true);
+                mEditText.requestFocus();
                 InputMethodutil.ShowKeyboard(mEditText);
 
                 mTopCancel.setOnClickListener(new View.OnClickListener() {

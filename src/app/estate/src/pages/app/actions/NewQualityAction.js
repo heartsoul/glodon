@@ -455,7 +455,12 @@ function isParamsChange(requestParams, inspectionInfo) {
     if (inspectionInfo.responsibleUserId != params.responsibleUserId) {
         return true;
     }
-
+    if (inspectionInfo.drawingGdocFileId != params.drawingGdocFileId) {
+        return true;
+    }
+    if (inspectionInfo.gdocFileId != params.gdocFileId) {
+        return true;
+    }
     return false;
 }
 
