@@ -10,7 +10,7 @@ import {
     
     
     startServer = ()=>{
-        ModelServer.startServer("ss");
+        ModelServer.startServer();
     }
  
     stopServer = ()=>{

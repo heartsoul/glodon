@@ -10,7 +10,6 @@ import com.glodon.bim.basic.log.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-
 /**
  * 描述：
  * 作者：zhourf on 2018/5/23
@@ -19,8 +18,8 @@ import java.util.Map;
 
 public class ServerModule extends ReactContextBaseJavaModule {
 
-    private static final String DURATION_SHORT_KEY = "SHORT";
-    private static final String DURATION_LONG_KEY = "LONG";
+    private static final String ROOT_URL = "ROOT_URL";
+    // private static final String DURATION_LONG_KEY = "LONG";
     private ServerManager sm;
     private  Context context;
     public ServerModule(ReactApplicationContext reactContext) {
@@ -34,13 +33,13 @@ public class ServerModule extends ReactContextBaseJavaModule {
     @Override
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
-        constants.put(DURATION_SHORT_KEY, Toast.LENGTH_SHORT);
-        constants.put(DURATION_LONG_KEY, Toast.LENGTH_LONG);
+        constants.put(ROOT_URL, "http:/"+ NetUtils.getLocalIPAddress()+":8080/");
+        // constants.put(DURATION_LONG_KEY, Toast.LENGTH_LONG);
         return constants;
     }
 
     @ReactMethod
-    public void startServer(String message){
+    public void startServer(){
         LogUtil.e("Activity startServer");
         if(sm==null){
             sm =new ServerManager(context);

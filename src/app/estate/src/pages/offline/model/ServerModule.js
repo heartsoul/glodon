@@ -11,3 +11,5 @@ export default NativeModules.ModelServer;
     // public void stopServer() {
 
     // }
+
+    //ROOT_URL
