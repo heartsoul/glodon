@@ -116,7 +116,7 @@ class BimFileFilterView extends Component {
     }
 
     _separator = () => {
-        return <View style={{ height: 0.5, backgroundColor: '#CCCCCC', marginLeft: 20 }} />;
+        return <View style={{ height: 1, backgroundColor: '#f7f7f7', marginLeft: 20 }} />;
     }
     //专业item
     renderSpecialItem = ({ item, index }) => {
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         height: 44,
-        borderBottomColor: "#e6e6e6",
+        borderBottomColor: "#f7f7f7",
         borderBottomWidth: 1
     },
     touchBtn: {

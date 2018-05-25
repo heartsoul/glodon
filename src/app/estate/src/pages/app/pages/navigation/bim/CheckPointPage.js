@@ -203,7 +203,7 @@ export default class CheckPointList extends React.Component {
     render() {
 
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1,backgroundColor:"#fff" }}>
 
                 {
                     (this.state.navData && this.state.navData.length > 0) ? (
@@ -300,10 +300,10 @@ var styles = StyleSheet.create({
         marginRight: 14,
     },
     moduleItemDividerLine: {
-        height: 0.5,
+        height: 1,
         marginLeft: 19,
         flex: 1,
-        backgroundColor: '#CCCCCC'
+        backgroundColor: '#f7f7f7'
     }
 
 });
