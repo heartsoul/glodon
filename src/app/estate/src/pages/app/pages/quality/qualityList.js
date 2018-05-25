@@ -15,18 +15,23 @@ class QualityListTitle extends Component {
     render = () => {
         let {text,activeTitleStyle,titleStyle,select,badge} = this.props;
         let w = 28;
-        let right = -15;
+        let right = 0;
+        let alignItems = 'center';
         if(text.length >= 3) {
-            w = 41;
-            right = -10;
+            w = 42;
+            right = 7;
             if(badge > 9) {
-                right = -15;
+                right = 0;
             }
+            text = text + '        ';
+            alignItems = 'flex-start';
+        } else {
+            text = '     '+ text + '     ';
         }
-        text ='   ' + text + '   ';
-        return <View style={{alignItems:'center',alignContent:'center',paddingTop:3}}>
+        
+        return <View style={{alignItems:alignItems,alignContent:'center',paddingTop:3,overflow:'visible'}}>
             <Text style={select ? activeTitleStyle : titleStyle} >{text}</Text>
-            <View style={{width:w,height:2,marginTop:0}}>
+            <View style={{width:w,height:3,marginTop:0}}>
                {select ? <View style={{width:w,height:2,backgroundColor:'#00baf3',position:'absolute',top:8.5}} resizeMode='contain'/> : null}
             </View>
             <Badge count={badge} style={[{position:'absolute',top:-5,right:right},badge > 0 ? {} :{backgroundColor:'#ffffff'}]} />

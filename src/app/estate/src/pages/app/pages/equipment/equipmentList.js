@@ -15,12 +15,12 @@ class QualityListTitle extends Component {
     render = () => {
         let {text,activeTitleStyle,titleStyle,select,badge,style} = this.props;
         let w = 28;
-        let right = -15;
+        let right = -7;
         if(text.length >= 3) {
             w = 41;
-            right = -10;
+            right = 0;
         }
-        text ='   ' + text + '   ';
+        text ='      ' + text + '      ';
         return <View style={{alignItems:'center',alignContent:'center',paddingTop:3}}>
             <Text style={[{...style},select ? activeTitleStyle : titleStyle]} >{text}</Text>
             <View style={{width:w,height:3,marginTop:0,alignSelf:'center'}}>
