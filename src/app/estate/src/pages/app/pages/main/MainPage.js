@@ -23,8 +23,8 @@ class MainTabTitle extends Component {
         const {text,activeTitleStyle,titleStyle,select} = this.props;
         return <View style={{alignItems:'center'}}>
             <Text style={select ? activeTitleStyle : titleStyle} >{text}</Text>
-            <View style={{width:40,height:4,marginTop:6}}>
-               {select ? <Image style={{width:40,height:4,position:'absolute',top:6}} resizeMode='contain' source={require('app-images/icon_main_page_lab_line.png')}/> : null}
+            <View style={{width:40,height:4,marginTop:4}}>
+               {select ? <Image style={{width:40,height:4,position:'absolute',top:6.5}} resizeMode='contain' source={require('app-images/icon_main_page_lab_line.png')}/> : null}
             </View>
         </View>
     }
@@ -162,7 +162,7 @@ export default class extends Component {
                     }
                 </ImageBackground>
                 </View>
-                <SegmentedView indicatorType='none' barStyle={{left:width/2-100,width:200,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 300, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
+                <SegmentedView indicatorType='none' barStyle={{left:width/2-104,width:208,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 300, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
                     {
                         qShow ?
                             <SegmentedView.Sheet title={<MainTabTitle key="item0" text="质量检查" select={this.state.activeIndex == 0} activeTitleStyle={{color:'#00baf3',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />}  style={{backgroundColor: '#f8f8f8'}}>

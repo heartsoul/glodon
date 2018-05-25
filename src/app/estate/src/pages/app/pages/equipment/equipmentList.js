@@ -3,15 +3,33 @@
  */
 'use strict';
 import React, { Component, PureComponent } from "react";
-import { StyleSheet, View, StatusBar, Dimensions } from "react-native";
-import { SegmentedView } from 'app-3rd/teaset';
+import { StyleSheet, View, StatusBar, Dimensions, Text } from "react-native";
+import { SegmentedView,Badge } from 'app-3rd/teaset';
 
 import * as API from "app-api";
 import { AuthorityManager } from "app-entry";
 import EquipmentListView from "./equipmentListView";
 
 var { width, height } = Dimensions.get("window");
-
+class QualityListTitle extends Component {
+    render = () => {
+        let {text,activeTitleStyle,titleStyle,select,badge,style} = this.props;
+        let w = 28;
+        let right = -15;
+        if(text.length >= 3) {
+            w = 41;
+            right = -10;
+        }
+        text ='   ' + text + '   ';
+        return <View style={{alignItems:'center',alignContent:'center',paddingTop:3}}>
+            <Text style={[{...style},select ? activeTitleStyle : titleStyle]} >{text}</Text>
+            <View style={{width:w,height:3,marginTop:0,alignSelf:'center'}}>
+               {select ? <View style={{width:w,height:2,backgroundColor:'#00baf3',position:'absolute',top:8.5}} resizeMode='contain'/> : null}
+            </View>
+            <Badge count={badge} style={[{position:'absolute',top:-5,right:right},badge > 0 ? {} :{backgroundColor:'#ffffff'}]} />
+        </View>
+    }
+} 
 export default class extends PureComponent {
     static navigationOptions = {
         title: '材设清单',
@@ -67,9 +85,11 @@ export default class extends PureComponent {
     }
 
     _onSegmentedBarChange = (index) => {
+        if(this.state.activeIndex == index) return;
         this.setState({ activeIndex: index });
-        this.state.equipmentView[index].fetchData(API.EQUIPMENT_CLASSIFY_STATES[index]);
-        // this._loadInspectionSummary();
+        if(this.state.equipmentView[index].fetchData) {
+            this.state.equipmentView[index].fetchData(API.EQUIPMENT_CLASSIFY_STATES[index]);
+        }
     }
     _toTop = () => {
         let index = this.state.activeIndex;
@@ -83,11 +103,11 @@ export default class extends PureComponent {
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{height:5,width:'100%',backgroundColor:'white'}}/>
-                <SegmentedView style={{ flex: 1 }} type={'carousel'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
+                <SegmentedView  indicatorLineWidth={0}  autoScroll={false} animated={this.state.activeIndex == 0?false:true} style={{ flex: 1 }} barStyle={{paddingLeft:0,paddingRight:0}} justifyItem={'fixed'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
                     {
                         API.EQUIPMENT_CLASSIFY_STATUS_LIST.map((item, index) => {
                             return (
-                                <SegmentedView.Sheet key={item.name} title={item.name} badge={this.state.equipmentBadge.item[index]}>
+                                <SegmentedView.Sheet key={item.name} title={<QualityListTitle key={item.name} text={item.name} badge={this.state.equipmentBadge.item[index]}  select={this.state.activeIndex == index} activeTitleStyle={{color:'#00baf3',fontSize:14}} titleStyle={{color:'#666666',fontSize:14}} />}>
                                     <EquipmentListView
                                         onRef={(ref) => { this.state.equipmentView[index] = ref }}
                                         style={{ flex: 1 }}

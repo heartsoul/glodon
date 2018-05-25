@@ -3,15 +3,36 @@
  */
 'use strict';
 import React, { Component, PureComponent } from "react";
-import {StyleSheet, View, StatusBar, Dimensions} from "react-native";
-import {SegmentedView} from 'teaset';
+import {StyleSheet, View, StatusBar, Dimensions, Text} from "react-native";
+import {SegmentedView,Badge} from 'teaset';
 
 import * as API from "app-api";
 import QualityListView from "./qualityListView";
 import { AuthorityManager } from "app-entry";
 
 var { width, height } = Dimensions.get("window");
-
+class QualityListTitle extends Component {
+    render = () => {
+        let {text,activeTitleStyle,titleStyle,select,badge} = this.props;
+        let w = 28;
+        let right = -15;
+        if(text.length >= 3) {
+            w = 41;
+            right = -10;
+            if(badge > 9) {
+                right = -15;
+            }
+        }
+        text ='   ' + text + '   ';
+        return <View style={{alignItems:'center',alignContent:'center',paddingTop:3}}>
+            <Text style={select ? activeTitleStyle : titleStyle} >{text}</Text>
+            <View style={{width:w,height:2,marginTop:0}}>
+               {select ? <View style={{width:w,height:2,backgroundColor:'#00baf3',position:'absolute',top:8.5}} resizeMode='contain'/> : null}
+            </View>
+            <Badge count={badge} style={[{position:'absolute',top:-5,right:right},badge > 0 ? {} :{backgroundColor:'#ffffff'}]} />
+        </View>
+    }
+} 
 export default class qualityList extends PureComponent {
     static navigationOptions = {
         title: '质检清单',
@@ -73,10 +94,10 @@ export default class qualityList extends PureComponent {
     }
 
     _onSegmentedBarChange = (index) => {
+        if(this.state.activeIndex == index) return;
         this.setState({ activeIndex: index });
         if(this.state.qualityView[index].fetchData) {
             this.state.qualityView[index].fetchData(API.CLASSIFY_STATES[index]);
-            this._loadInspectionSummary();
         }
         
     }
@@ -99,12 +120,11 @@ export default class qualityList extends PureComponent {
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <View style={{height:5,width:'100%',backgroundColor:'white'}}/>
-                <SegmentedView style={{ flex: 1 }} justifyItem={'scrollable'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
+                <SegmentedView indicatorLineWidth={0}  autoScroll={this.state.activeIndex == 0?false:true} animated={this.state.activeIndex == 0?false:true} style={{ flex: 1 }} barStyle={{paddingLeft:0,paddingRight:0}} justifyItem={'scrollable'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)}>
                     {
                        API.CLASSIFY_STATUS_LIST.map((item,index)=>{
                            return (
-                               <SegmentedView.Sheet key={item.name} title={item.name} badge={this.state.qualityBadge.item[index]}>
+                               <SegmentedView.Sheet key={item.name} title={<QualityListTitle key={item.name} text={item.name} badge={this.state.qualityBadge.item[index]}  select={this.state.activeIndex == index} activeTitleStyle={{color:'#00baf3',fontSize:14}} titleStyle={{color:'#666666',fontSize:14}} />}>
                                 <QualityListView 
                                 onRef={ (ref) => {this.state.qualityView[index] = ref}} 
                                 style={{flex:1}} 
