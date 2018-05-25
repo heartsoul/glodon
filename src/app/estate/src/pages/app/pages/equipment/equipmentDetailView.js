@@ -375,7 +375,7 @@ export default class EquipmentDetailView extends Component {
 
                 <EquipmentInfoItem leftTitle="验收单位：" content={info.acceptanceCompanyName} showType="info" onClick={() => { this.showActionSheet() }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="批次编号：" content={info.batchCode ? info.batchCode : ''} showType="input" 
+                <EquipmentInfoItem.EquipmentInfoItemTextInput key='b1' leftTitle="批次编号：" content={info.batchCode ? info.batchCode : ''} showType="input" 
                 onChangeText={(value) => {info.batchCode = value;this._checkBasicInfo(info);}} />
                 <EquipmentInfoItem showType="line" />
                 <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate ?  API.formatUnixtimestampSimple(new Date(info.approachDate).getTime()) : API.formatUnixtimestampSimple(new Date().getTime())} showType="info" onClick={() => { this.setState({ visible: true }) }} />
@@ -392,9 +392,9 @@ export default class EquipmentDetailView extends Component {
                 <EquipmentInfoItem showType="line" />
                 {/* <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate ? API.formatUnixtimestampSimple(info.approachDate) : null} showType="input" /> */}
                 {/* <EquipmentInfoItem showType="line" /> */}
-                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="材设编码：" content={info.facilityCode} showType="input" onChangeText={(value) => { info.facilityCode = value; this._checkBasicInfo(info) }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput key='b2' leftTitle="材设编码：" content={info.facilityCode} showType="input" onChangeText={(value) => { info.facilityCode = value; this._checkBasicInfo(info) }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="材设名称：" content={info.facilityName} showType="input" onChangeText={(value) => { info.facilityName = value; this._checkBasicInfo(info) }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput key='b3' leftTitle="材设名称：" content={info.facilityName} showType="input" onChangeText={(value) => { info.facilityName = value; this._checkBasicInfo(info) }} />
 
             </View>
             <View style={{ marginTop: 20 }}>
@@ -407,23 +407,23 @@ export default class EquipmentDetailView extends Component {
         return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
             <EquipmentInfoItem leftTitle="请根据需要选择完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ marginTop: 0, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
-                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="进场数量：" content={info.quantity} showType="input" onChangeText={(value) => { info.quantity = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput key='b4' leftTitle="进场数量：" content={info.quantity} showType="input" onChangeText={(value) => { info.quantity = value }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="单位：" content={info.unit} showType="input" onChangeText={(value) => { info.unit = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput key='b5' leftTitle="单位：" content={info.unit} showType="input" onChangeText={(value) => { info.unit = value }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="规格：" content={info.specification} showType="input" onChangeText={(value) => { info.specification = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput key='b6' leftTitle="规格：" content={info.specification} showType="input" onChangeText={(value) => { info.specification = value }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="型号：" content={info.modelNum} showType="input" onChangeText={(value) => { info.modelNum = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput key='b7' leftTitle="型号：" content={info.modelNum} showType="input" onChangeText={(value) => { info.modelNum = value }} />
                 <EquipmentInfoItem showType="line" />
                 <EquipmentInfoItem leftTitle="构件位置：" showType="info" onClick={() => {
                     this.onOpenModleAction(info);
                 }} content={info.elementName} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="厂家：" content={info.manufacturer} showType="input" onChangeText={(value) => { info.manufacturer = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput key='b8' leftTitle="厂家：" content={info.manufacturer} showType="input" onChangeText={(value) => { info.manufacturer = value }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="品牌：" content={info.brand} showType="input" onChangeText={(value) => { info.brand = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput key='b9' leftTitle="品牌：" content={info.brand} showType="input" onChangeText={(value) => { info.brand = value }} />
                 <EquipmentInfoItem showType="line" />
-                <EquipmentInfoItem.EquipmentInfoItemTextInput leftTitle="供应商：" content={info.supplier} showType="input" onChangeText={(value) => { info.supplier = value }} />
+                <EquipmentInfoItem.EquipmentInfoItemTextInput key='b10' leftTitle="供应商：" content={info.supplier} showType="input" onChangeText={(value) => { info.supplier = value }} />
 
             </View>
             <View style={{ marginTop: 20 }}>

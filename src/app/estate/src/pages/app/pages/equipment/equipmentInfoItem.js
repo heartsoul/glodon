@@ -15,6 +15,11 @@ class EquipmentInfoItemTextInput extends React.Component {
 
     constructor(props) {
         super(props);
+        let key = props.key;
+        if(!key) {
+            key = 'key';
+        }
+        this.keyPrev =  key+ new Date().getTime()
         this.state = {
             dValue: this.props.content,
             focus: false,
@@ -71,7 +76,7 @@ class EquipmentInfoItemTextInput extends React.Component {
                     <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={[styles.contentInputView, this.props.titleWidth ? { width: width - 40 - this.props.titleWidth } : null]}>
-                    <TextInputWithData key={'key' + this.state.key} onFocus={this.onFocus} onBlur={this.onBlur} ref="textInput" returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none'
+                    <TextInputWithData key={this.keyPrev + this.state.key} onFocus={this.onFocus} onBlur={this.onBlur} ref="textInput" returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none'
                         defaultValue={this.state.dValue}
                         value={Platform.OS === 'ios' ? this.state.dValue : null} style={styles.textInput}
                         onChangeText={(value) => this.onChangeText(value)} />
@@ -128,12 +133,8 @@ export default class EquipmentInfoItem extends React.Component {
                         onChangeText={(value) => {
                             value = value || '';
                             this.props.onChangeText(value);
-                            // this.refs.clearButton.style.display = value.length > 0 ? 'flex' : 'none';
                         }} />
                 </View>
-                <TouchableOpacity ref='clearButton' style={[styles.rightAction, { display: 'flex' }]} activeOpacity={0.5} onPress={(event) => { this.props.onClearClick(event); this.refs.textInput.clear(); this.refs.textInput.focus(); }}>
-                    <Image source={clearImage} style={styles.inputClear} />
-                </TouchableOpacity>
             </View>
         );
 
