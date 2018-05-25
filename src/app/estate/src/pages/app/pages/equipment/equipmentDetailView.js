@@ -30,7 +30,24 @@ const notStandardImage = require("app-images/icon_not_up_to_standard.png");
 var { width, height } = Dimensions.get("window");
 const REF_PHOTO = 'gldPhoto';
 
+import ListStyle from 'antd-mobile/lib/list/style/index.native';
 
+const newStyle = {
+    ...ListStyle,
+    Extra: {
+        ...ListStyle.Extra,
+        color:"#666666",
+        fontSize: 16,
+        textAlign: 'left',
+        width:width-134,
+        marginLeft:8,
+        flexDirection:"row",
+    },
+    column:{
+        ...ListStyle.column,
+        flex:0,
+    }
+}
 export default class EquipmentDetailView extends Component {
 
     constructor(props) {
@@ -361,8 +378,8 @@ export default class EquipmentDetailView extends Component {
                     value={info.approachDate ? new Date(info.approachDate) : new Date()}
                     onChange={date => { info.approachDate = date.getTime(); this._checkBasicInfo(info); this.props.switchPage({ ...info }) }}
                 >
-                    <List.Item arrow="horizontal" >
-                        <Text style={{ paddingLeft: 4, fontSize: 14, color: "#666666", fontWeight: '100', }}>进场日期：</Text>
+                    <List.Item styles={StyleSheet.create(newStyle)} style={{borderBottomWidth:0, borderBottomColor:"transparent",}}arrow="horizontal" >
+                        <Text style={{ paddingLeft: 4, flex:1,fontSize: 16, color: "#000000",width: 85, fontWeight: '100', paddingTop: 6, paddingBottom: 6,}}>进场日期：</Text>
                     </List.Item>
                 </DatePicker>
                 {/* <EquipmentInfoItem leftTitle="进场日期：" content={info.approachDate ? API.formatUnixtimestampSimple(info.approachDate) : null} showType="input" /> */}
