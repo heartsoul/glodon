@@ -19,10 +19,11 @@ import { ListRow } from 'app-3rd/teaset';
 import { DatePicker, List, Modal, Toast } from 'antd-mobile';
 
 import WideButton from "./../../components/WideButton";
-import { ImageChooserView, ActionModal,BarItems } from 'app-components';
+import { ImageChooserView, ActionModal, BarItems } from 'app-components';
 import * as API from "app-api";
 import * as reviewRepairAction from "./../../actions/reviewRepairAction";
 import QualityDetailView from "./QualityDetailView";
+import GLDDatePicker from "./../../components/GLDDatePicker";
 
 const REF_PHOTO = 'gldPhoto';
 const nowTimeStamp = Date.now();
@@ -230,20 +231,10 @@ class NewReviewPage extends Component {
 
     renderReviewDate = () => {
         return (
-            <DatePicker
-                mode="date"
-                title=" "
-                extra=" "
-                value={this.state.lastRectificationDate}
-                onChange={date => this.setState({ lastRectificationDate: date })}
-            >
-                <List.Item arrow="horizontal" >
-                    <Text style={{ fontSize: 15, color: "#000000" }}>
-                        整改期限
-                                </Text>
-                </List.Item>
-            </DatePicker>
-        );
+            <GLDDatePicker title={"整改期限"} date={this.state.lastRectificationDate} onDateChange={(date) => {
+                this.setState({ lastRectificationDate: date })
+            }}></GLDDatePicker>
+        )
     }
     //质检单展开闭合箭头
     renderAccessory = () => {
@@ -277,19 +268,23 @@ class NewReviewPage extends Component {
                 </View>
                 {
                     this.state.showRectificationView ? (
-                        <View style={styles.container}>
-                            <ListRow title='复查合格' bottomSeparator='full' detail={this.renderSwitchView()} />
+                        <View style={{ backgroundColor: "#ffffff" }}>
+                            <View style={{ paddingLeft: 8 }}>
+                                <ListRow title='复查合格' bottomSeparator='full' detail={this.renderSwitchView()} />
+                            </View>
                             {
                                 (this.state.switchValue) ? (null) : (this.renderReviewDate())
                             }
                         </View>
                     ) : (null)
                 }
+                <View style={{ backgroundColor: "#ffffff", paddingLeft: 8, marginTop: 20 }}>
+                    <ListRow title='检查单' bottomSeparator='full'
+                        accessory={this.renderAccessory()}
+                        onPress={() => { this.setState({ expand: !this.state.expand, }) }}
+                    />
+                </View>
 
-                <ListRow title='检查单' bottomSeparator='full' style={{ marginTop: 20 }}
-                    accessory={this.renderAccessory()}
-                    onPress={() => { this.setState({ expand: !this.state.expand, }) }}
-                />
 
                 <View style={this.state.expand ? {} : { display: "none" }}>
                     {
