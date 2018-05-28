@@ -95,15 +95,19 @@ export default class extends React.Component {
     
     if(page == CONSTANTS.PAGE_INNDX_SUBSCRIBE) {
       return ({
+        headerLeft: <View></View>,
         title:title ? title : CONSTANTS.PAGE_NAME_SUBSCRIBE,
         // header: {mode:'screen'},
+        headerRight: <View></View>,
       })
     }
 
     if(page == CONSTANTS.PAGE_INNDX_MESSAGE) {
       return ({
+        headerLeft: <View></View>,
         title:title ? title : CONSTANTS.PAGE_NAME_MESSAGE,
         // header: {mode:'screen'},
+        headerRight: <View></View>,
       })
     }
 
@@ -137,7 +141,6 @@ export default class extends React.Component {
         title={CONSTANTS.PAGE_NAME_SUBSCRIBE}
         icon={require('app-images/home/icon_main_subscribe.png')}
         activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
-        badge={1}
       >
         <PAGES.SubscribePage />
       </TabView.Sheet>
@@ -149,7 +152,6 @@ export default class extends React.Component {
         title={CONSTANTS.PAGE_NAME_MESSAGE}
         icon={require('app-images/home/icon_main_message.png')}
         activeIcon={require('app-images/home/icon_main_message_selected.png')}
-        badge={9}
       >
         <PAGES.MessagePage />
       </TabView.Sheet>
