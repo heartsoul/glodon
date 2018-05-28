@@ -368,6 +368,7 @@
   UIImage * data = self.selectedPhotos[indexPath.row];
   if ([data isKindOfClass:[UIImage class]]) {
     cell.imageThumbnail.image = data;
+    cell.imageThumbnail.contentMode = UIViewContentModeScaleAspectFill;
   } else {
     NSDictionary * data = self.selectedPhotos[indexPath.row];
     if([data isKindOfClass:[NSDictionary class]]) {

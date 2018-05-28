@@ -1,5 +1,5 @@
 
-import { requestHTML, requestJSON, BASE_URL} from "common-module"
+import { requestHTML, requestJSON, BASE_URL, SERVER_TYPE} from "common-module"
 // import {NativeModules} from 'react-native'
 // import {FileReaderModule} from NativeModules
 // 用户登录
@@ -76,10 +76,21 @@ export async function getProjects(page, size, tenantId = '0') {
 
 // 设置当前租户
 export async function setCurrentTenant(tenantId) {
-    return requestJSON(api_user_currentTenant, {
-        method: 'PUT',
-        body: JSON.stringify({ 'tenantId': parseInt(tenantId) },true),
-    });
+    if(SERVER_TYPE == 'TEST') {
+        return new Promise(function (resolve, reject) {
+            if (tenantId) {
+                resolve({});
+            } else {
+                reject("Invalid param");
+            }
+        });
+    } else {
+        return requestJSON(api_user_currentTenant, {
+            method: 'PUT',
+            body: JSON.stringify({ 'tenantId': parseInt(tenantId) },true),
+        });
+    }
+    
 }
 
 // 退出
