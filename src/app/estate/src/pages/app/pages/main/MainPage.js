@@ -17,10 +17,17 @@ import * as CheckVersionManager from "./../../pages/me/checkVerson";
 
 import { NavigationPage, SegmentedBar, Label, SegmentedView, Button, Carousel } from 'teaset';
 import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
+
+import {ToOnlineDialog} from 'app-components';
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
+
 var { width, height } = Dimensions.get("window");
 export default class extends Component {
     constructor() {
         super();
+        this.state={
+            isShowOfflineHint:true,
+        }
     };
 
     _loadQualityForm = () => {
@@ -119,6 +126,39 @@ export default class extends Component {
 
     }
 
+    //关闭离线标记
+    closeOfflineHintView =()=>{
+        this.setState((pre)=>{
+            return {isShowOfflineHint:false}
+        })
+    }
+
+    //离线标记
+    offlineHintView =()=>{
+        //如果是离线模式 需要显示离线标记
+        let isOnline = OfflineStateUtil.isOnLine();
+        if(isOnline){
+            return null;
+        }
+        if(!this.state.isShowOfflineHint){
+            return null;
+        }
+        return (
+                <View style={{ width:347,height:26,flexDirection:'row',alignItems:'center',alignSelf:'center'}}>
+                    <Image source={require('app-images/icon_offline_main_page_blue.png')} style={{width:12,height:10,marginLeft:10}}/>
+                    <TouchableHighlight onPress={()=>{ToOnlineDialog.show(this.props.navigation);}}>
+                        <Text style={{color:'#666666',fontSize:12,marginLeft:6}} >当前网络不畅，已进入</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight style={{flex:1}} onPress={()=>{ToOnlineDialog.show(this.props.navigation);}}>
+                        <Text style={{color:'#00baf3',fontSize:12}} >离线模式</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={()=>{this.closeOfflineHintView();}}>
+                        <Image source={require('app-images/icon_category_item_close.png')} style={{width:7,height:7,marginRight:10,marginLeft:5}}/>
+                    </TouchableHighlight>
+                </View>
+        );
+    }
+
     render() {
         let qShow = AuthorityManager.isQualityBrowser()
         let eShow = AuthorityManager.isEquipmentBrowser()
@@ -136,6 +176,9 @@ export default class extends Component {
             <ScrollView style={{ backgroundColor: '#f8f8f8' }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{ backgroundColor: '#ffffff' }}>
+                {
+                    this.offlineHintView()
+                }
                 <ImageBackground style={{ height: 203, marginTop: 44, backgroundColor: '#ffffff' }} resizeMode='contain' source={require('app-images/icon_main_page_top_bg.png')}>
                     {
                         this.renderCarouselView(qShow, eShow)
