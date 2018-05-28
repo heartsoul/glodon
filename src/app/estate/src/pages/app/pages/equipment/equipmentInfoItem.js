@@ -15,7 +15,8 @@ class EquipmentInfoItemTextInput extends React.Component {
 
     constructor(props) {
         super(props);
-        let key = props.key;
+        
+        let key = 'key'+Math.random();
         if(!key) {
             key = 'key';
         }
@@ -65,8 +66,9 @@ class EquipmentInfoItemTextInput extends React.Component {
         }
     }
     onFocus = (event) => {
-        let value = this.props.dValue || '';
+        let value = this.state.dValue || '';
         let dis = value.length > 0 ? 'flex' : 'none';
+        console.log('value:'+value+',dis:'+dis);
         this.refs.clearButton.setNativeProps({ style: { display: dis } });
     }
     render = () => {
