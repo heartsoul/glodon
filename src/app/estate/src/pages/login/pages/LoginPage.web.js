@@ -131,7 +131,6 @@ class LoginPage extends React.Component {
           numberOfLines={1}
           autoFocus={true}
           underlineColorAndroid={"transparent"}
-          textAlign="left"
           onBlur={() => this._onUserNameBlur()}
           onFocus={() => this._onUserNameFocus()}
           onChangeText={text => this._onUserNameChangeText(text)}
@@ -160,7 +159,6 @@ class LoginPage extends React.Component {
           numberOfLines={1}
           underlineColorAndroid={"transparent"}
           secureTextEntry={true}
-          textAlign="left"
           onChangeText={text => this._onPasswordChangeText(text)}
           value={this.state.password}
           onBlur={() => this._onPasswordBlur()}

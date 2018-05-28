@@ -5,8 +5,8 @@
 import { Component } from 'react'
 import { AsyncStorage } from 'react-native';
 
-// import { NavigationActions } from 'app-3rd/react-navigation'
-
+import { NavigationActions } from 'app-3rd/react-navigation'
+import { BASE_URL } from '../constant/server-config'
 /**
  *  权限操作对象
  */
@@ -33,10 +33,11 @@ export default class BaseStorage extends Component {
         super();
         this.storage = AsyncStorage; // 数据存储核心对象
         this.storageData = {};  // 内存数据对象
-        this._loadStorageData(); // 首次加载数据到内存
+        // this._loadStorageData(); // 首次加载数据到内存
     }
     // 存储数据
     _setItem = (key, value) => {
+         console.log("_setItem:"+value)
         this.storage.setItem(key, value, (error, result) => {
         });
     }
@@ -107,27 +108,17 @@ export default class BaseStorage extends Component {
 
     // 加载所有数据
     _loadStorageData() {
-        AsyncStorage.getItem(__KEY_storageData)
+        return AsyncStorage.getItem(__KEY_storageData)
             .then((value) => {
                 this.storageData = JSON.parse(value);
                 if (!value || value == null) {
                     this.storageData = {};
                 }
-            }).catch((err) => {
-                console.log(err)
+                console.log(this.storageData);
+                return {};
             });
     }
 }
-
-// 相关数据key
-const __KEY_storageData = "storageData"; // 所有数据
-const __KEY_userInfo = "userInfo"; // 用户数据
-const __KEY_loginToken = "loginToken"; // token
-const __KEY_currentProject = "currentProject"; // 当前项目
-const __KEY_guide = "guide"; // 启动引导页面 0: 未启动 1:已经启动过了
-const __KEY_currentProjectName = "currentProjectName"; // 当前选择项目名
-const __KEY_currentTenant = "currentTenant"; // 当前租户
-const __KEY_actionRights = "actionRights"; // 当前所有权限
 
 class GLDStorage extends BaseStorage {
     constructor() {
@@ -140,19 +131,36 @@ class GLDStorage extends BaseStorage {
         this.fileId = '';
         this.projectIdVersionId = '';
         this.projectId = 0;
+        this.currentRouteName = "";
     }
-
+    setRootNavigation(navigation) {
+        this.homeNavigation = navigation;
+    }
     //保存用户信息
     saveUserInfo(userInfo) {
-        this.setItem(__KEY_userInfo, userInfo);
+        this.setItem(__KEY_userInfo + userId(), userInfo);
     }
     //加载用户信息
     loadUserInfo(retFun) {
-        return this.loadItem(__KEY_userInfo, {}, retFun);
+        return this.loadItem(__KEY_userInfo + userId(), {}, retFun);
+    }
+    // 获取用户id
+    getUserId = () => {
+        return this.loadItem(__KEY_userId, '0', null);
     }
     // 保存登录token
-    saveLoginToken = (token) => {
+    saveLoginToken = (token, userId = '0', userName = '') => {
+        // console.log('response.data.access_token1:'+token);
+        this.setItem(__KEY_guide, '1');
+        this.setItem(__KEY_userId, userId);
         this.setItem(__KEY_loginToken, token);
+    }
+    saveLoginUserName = (userName = '') => {
+        this.setItem(__KEY_loginUserName, userName);
+    }
+    // 获取登录的用户名
+    getLoginUserName = () => {
+        return this.loadItem(__KEY_loginUserName, '', null);
     }
     // 获取登录的token
     getLoginToken = () => {
@@ -164,40 +172,92 @@ class GLDStorage extends BaseStorage {
     }
     // 退出登录时清空所有缓存数据
     logout = () => {
+        this.saveLoginToken('', '0');
+    }
+    resetData = () => {
         this.resetStorageData();
     }
     // 保存引导状态为引导过了
     saveGuide = () => {
-        this.setItem(__KEY_guide, '1');
+        // this.setItem(__KEY_guide, '1');
     }
     // 是否已经引导过了 true：引导过了
     isGuide = (retFun) => {
         return this.loadItem(__KEY_guide, '0', null) == '1';
     }
-    // 保存当前租户
+
+    // 保存当前租户  保存的是id
     saveTenant = (tenant) => {
-        this.setItem(__KEY_currentTenant, "" + tenant);
+        if(!tenant) {
+            tanant = '0';
+        }
+        this.setItem(__KEY_currentTenant + userId(),""+tenant);
     }
-    // 获取当前租户
+    // 获取当前租户id
     loadTenant = (retFun) => {
-        return this.loadItem(__KEY_currentTenant, '0', retFun)
+
+        return this.loadItem(__KEY_currentTenant + userId(), '0', retFun)
     }
+
+    // 保存当前租户  保存的是整个租户信息
+    saveTenantInfo = (tenant) => {
+        this.setItem(__KEY_currentTenantInfo + userId(), "" + tenant);
+    }
+    // 获取当前租户信息
+    loadTenantInfo = (retFun) => {
+        return this.loadItem(__KEY_currentTenantInfo + userId(), '0', retFun)
+    }
+
+    // 保存上一租户  保存的是整个租户信息
+    saveLastTenantInfo = (tenant) => {
+        this.setItem(__KEY_lastTenantInfo + userId(), "" + tenant);
+    }
+    // 获取上一租户信息
+    loadLastTenantInfo = (retFun) => {
+        return this.loadItem(__KEY_lastTenantInfo + userId(), '0', retFun)
+    }
+
+    // 切换租户后是否刷新
+    saveTenantInfoRefresh = (tenant) => {
+        this.setItem(__KEY_currentTenantInfoRefresh + userId(), "" + tenant);
+    }
+    // 切换租户后是否刷新
+    loadTenantInfoRefresh = (retFun) => {
+        return this.loadItem(__KEY_currentTenantInfoRefresh + userId(), '0', retFun)
+    }
+
+
+    // 保存当前租户
+    saveLastTenant = (tenant) => {
+        if(!tenant) {
+            tanant = '0';
+        }
+        this.setItem(__KEY_lastTenant + userId(), "" + tenant);
+    }
+    // 获取上一租户
+    loadLastTenant = () => {
+        return this.loadItem(__KEY_lastTenant + userId(), '0', null)
+    }
+
     // 保存当前项目，名称
     saveProject = (project, name) => {
-        this.setItem(__KEY_currentProject, "" + project);
-        this.setItem(__KEY_currentProjectName, "" + name);
+        if(!project) {
+            project = '0';
+        }
+        this.setItem(__KEY_currentProject + userId(), "" + project);
+        this.setItem(__KEY_currentProjectName + userId(), "" + name);
     }
     // 获取当前选择项目
     loadProject = (retFun) => {
-        return this.loadItem(__KEY_currentProject, '0', retFun);
+        return this.loadItem(__KEY_currentProject + userId(), '0', retFun);
     }
     // 获取当前选择项目名
     loadCurrentProjectName = (retFun) => {
-        return this.loadItem(__KEY_currentProjectName, '首页', retFun);
+        return this.loadItem(__KEY_currentProjectName + userId(), '首页', retFun);
     }
     // 获取权限项
     loadAuthority = (key) => {
-        let actionRights = this.loadItem(__KEY_actionRights, {}, null);
+        let actionRights = this.loadItem(__KEY_actionRights + userId(), {}, null);
         if (actionRights[key]) {
             let rights = new ActionRightsObject();
             rights.items = actionRights[key];
@@ -211,9 +271,9 @@ class GLDStorage extends BaseStorage {
         if (!value) {
             return;
         }
-        let actionRights = this.loadItem(__KEY_actionRights, {}, null);
+        let actionRights = this.loadItem(__KEY_actionRights + userId(), {}, null);
         actionRights[key] = value;
-        this.setItem(__KEY_actionRights, actionRights);
+        this.setItem(__KEY_actionRights + userId(), actionRights);
     }
 
     // 到登录页面
@@ -221,10 +281,13 @@ class GLDStorage extends BaseStorage {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
+            this.homeNavigation = null
         }
         if (!navigator) {
             return;
         }
+        // this.logout();
+        this.saveLoginToken('', '0');
         let resetAction = NavigationActions.reset({
             index: 0,
             actions: [
@@ -251,17 +314,15 @@ class GLDStorage extends BaseStorage {
         navigator.dispatch(resetAction);
     }
     // 是否选择了租户和项目
-    hasChoose = (retFun) => {
+    hasChoose = () => {
         let t = this.loadTenant();
         let p = this.loadProject();
+        // console.log(`hasChoose:(${t},${p})`);
         let retValue = (t && p && t != '0' && p != '0');
-        if (retFun) {
-            retFun(retValue);
-        }
         return retValue;
     }
     // 转到页面，会替换
-    gotoMain = (navigation = null, name = "MainPage") => {
+    gotoMain = (navigation = null, name = "MainPage", params = {}) => {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
@@ -269,14 +330,18 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
-        this.hasChoose((ret) => {
-            if (ret) {
-
-                navigator.replace(name);
-            } else {
-                navigator.replace("ChoosePage");
-            }
-        })
+        this.hasChoose() ? navigator.replace(name, params = {}) : navigator.replace("ChoosePage", params = {});
+    }
+    // 转到页面，replace模式
+    replaceNext = (navigation, name = "MainPage", params = {}) => {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
+        navigator.replace(name, params);
     }
     // 转到页面，push模式
     pushNext = (navigation, name = "MainPage", params = {}) => {
@@ -298,7 +363,18 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
-        navigator.goBack();
+        navigator.goBack(params);
+    }
+    // 返回到上一页面
+    pop = (navigation, params = 1) => {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
+        navigator.pop(params);
     }
 
     //质量管理相关state
@@ -309,8 +385,67 @@ class GLDStorage extends BaseStorage {
         bimChooserKey: '',//选择图纸模型的时候记录目录页面的初始navigation key，goBack from this page.
         bimChooserCallback: () => { },//选择图纸模型后的回调
     };
+
+    // 获取单据搜索历史
+    loadSearchHistory = () => {
+        let history = this.getItem(__KEY_searchHistory + userId());
+        return history;
+    }
+    // 保存单据搜索历史
+    setSearchHistory = (history) => {
+        this.setItem(__KEY_searchHistory + userId(), history);
+    }
+    // wlan下自动下载
+    loadAutoDownload = () => {
+        let autoDownload = this.getItem(__KEY_autoDownload + userId());
+        return autoDownload;
+    }
+    // wlan下自动下载
+    setAutoDownload = (autoDownload) => {
+        this.setItem(__KEY_autoDownload + userId(), autoDownload);
+    }
+
+    //保存离线在线状态  state  true  false
+    setOfflineState = (state)=>{
+        this.setItem(__KEY_offlineState,state);
+    }
+    //获取离线在线状态
+    getOfflineState = ()=>{
+        let state = this.getItem(__KEY_offlineState);
+        return state;
+    }
+    
 }
 // 全局变量
 if (!global.storage) {
     global.storage = new GLDStorage();
 }
+
+export function loadStorageData() {
+    return storage._loadStorageData()
+}
+
+function userId() {
+    let uid = storage.getUserId();
+    if (uid) return "_" + uid + "_";
+    return "_0_";
+}
+
+// 相关数据key
+const __KEY_storageData = "__storageData_" + BASE_URL; // 所有数据
+const __KEY_userInfo = "userInfo"; // 用户数据
+const __KEY_loginToken = "loginToken"; // token
+const __KEY_loginUserName = "loginUserName"; // userName
+const __KEY_currentProject = "currentProject"; // 当前项目
+const __KEY_guide = "guide"; // 启动引导页面 0: 未启动 1:已经启动过了
+const __KEY_userId = "userId"; // 启动引导页面 0: 未启动 1:已经启动过了
+const __KEY_currentProjectName = "currentProjectName"; // 当前选择项目名
+const __KEY_currentTenant = "currentTenant"; // 当前租户id
+const __KEY_currentTenantInfo = "currentTenantInfo"; // 当前租户信息
+const __KEY_currentTenantInfoRefresh = "currentTenantInfoRefresh"; // 切换租户后是否刷新
+const __KEY_lastTenant = "lastTenant"; // 上一选择租户
+const __KEY_lastTenantInfo = "lastTenantInfo"; // 保存上一个租户的信息
+const __KEY_actionRights = "actionRights"; // 当前所有权限
+const __KEY_searchHistory = "searchHistory"; // 单据搜索历史
+const __KEY_autoDownload = "autoDownload"; // Android版本更新自动下载
+const __KEY_offlineState = "offlineState"; // Android版本更新自动下载
