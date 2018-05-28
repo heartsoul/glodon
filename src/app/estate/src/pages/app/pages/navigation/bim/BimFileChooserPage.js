@@ -12,6 +12,9 @@ import BimFileFilterView from "./BimFileFilterView";
 import * as PageType from "./PageTypes";
 import ThumbnailImage from "./ThumbnailImage";
 import BimFileNavigationView from "./bimFileNavigationView";
+import { NoDataView} from 'app-components';
+import { SERVER_TYPE } from 'common-module';
+
 
 var { width, height } = Dimensions.get("window");
 class RightBarButtons extends React.Component {
@@ -71,7 +74,7 @@ export default class BimFileChooser extends Component {
             projectId: storage.loadProject(),
             latestVersion: storage.projectIdVersionId,
             fileId: fileId,
-            dataType: dataType,//图纸文件 模型文件 
+            dataType: dataType,//图纸文件 模型文件 ·
             pageType: params.pageType,
             navData: navData,//导航条面包屑数据
         }
@@ -93,6 +96,7 @@ export default class BimFileChooser extends Component {
                     {
                         isLoading: false,
                         error: true,
+                        errorInfo: error,
                     }
                 );
             });
@@ -151,6 +155,7 @@ export default class BimFileChooser extends Component {
                 {
                     isLoading: false,
                     error: true,
+                    errorInfo: error,
                 }
             );
         });
@@ -230,14 +235,10 @@ export default class BimFileChooser extends Component {
     }
     //加载失败view
     renderErrorView(error) {
-        return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <Text>
-                    加载失败
-                </Text>
-            </View>
-        );
+        if(SERVER_TYPE === "TEST") {
+            return ( <NoDataView text={"error："+error} /> );
+        }
+        return ( <NoDataView text="加载失败" /> );
     }
     _itemClick = (item, index) => {
         let navigator = this.props.navigation;
