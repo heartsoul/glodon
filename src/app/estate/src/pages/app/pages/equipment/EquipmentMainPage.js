@@ -17,11 +17,11 @@ class RightBarButtons extends React.Component {
   }
   render() {
    return <BarItems navigation={this.props.navigation}>
-        <BarItems.RightBarItem imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_search_white.png')} navigation={this.props.navigation}
+        <BarItems.RightBarItem  navigation={this.props.navigation} imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_search_white.png')} navigation={this.props.navigation}
           onPress={(navigation) => this._onSearchPress(this.props.navigation)} />
       {
         AuthorityManager.isEquipmentCreate() ?
-          <BarItems.RightBarItem imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_camera_white.png')} navigation={this.props.navigation}
+          <BarItems.RightBarItem  navigation={this.props.navigation} imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_camera_white.png')} navigation={this.props.navigation}
             onPress={(navigation) => this._onNewPress(this.props.navigation)} /> : null
       }
     </BarItems>

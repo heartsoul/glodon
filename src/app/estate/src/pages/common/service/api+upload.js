@@ -162,6 +162,7 @@ export async function getBimFileUrlThumbnail(objectId, callback, thumbnailSize =
     return fetch(api, ops)
         .then((response) => {
             if (response.status >= 200 && response.status < 300) {
+               
                 return response.text();
             }
             return null;
@@ -171,7 +172,10 @@ export async function getBimFileUrlThumbnail(objectId, callback, thumbnailSize =
                 callback(false,null);
                 return {};
             } 
-            let url = responseData;
+            let url = responseData || '';
+            if(url) {
+                url = url.replace(/"/g, "");
+            }
             callback(true,url);
            return {url};
         })
@@ -215,7 +219,10 @@ export async function getBimFileUrl(objectId, callback) {
                 callback(false,null);
                 return {};
             } 
-            let url = responseData;
+            let url = responseData || '';
+            if(url) {
+                url = url.replace(/"/g, "");
+            }
             callback(true,url);
            return {url};
         })
