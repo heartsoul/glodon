@@ -23,6 +23,14 @@ export function bimfileHtml(cmdString,token,show) { return `
         .bf-toolbar[title='ModelTree'] {
             display: none;
         }
+        * {
+        -webkit-touch-callout:none;
+        -webkit-user-select:none;
+        -khtml-user-select:none;
+        -moz-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
+      }
     </style>
 </head>
 
@@ -324,7 +332,7 @@ export function bimfileHtml(cmdString,token,show) { return `
                             cameraControl.touchEndHandler(event);
                             return;
                         }
-                        event.preventDefault();
+                        // event.preventDefault();
 
                         var userId = intersect.userId;
 

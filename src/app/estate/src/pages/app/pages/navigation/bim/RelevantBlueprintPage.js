@@ -455,7 +455,7 @@ class RelevantBlueprintPage extends Component {
                         javaScriptEnabled={true}
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
-                        // injectedJavaScript={cmdString}
+                        injectedJavaScript={cmdString}
                         onLoadEnd={() => { this.onLoadEnd() }}
                         // source={{ uri: this.state.url, method: 'GET' }}
                         source={{ html: this.state.html }}
