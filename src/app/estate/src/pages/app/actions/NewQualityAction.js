@@ -253,6 +253,7 @@ export function submitFromList(inspectId, callback) {
  * @param {*} params 
  */
 function createSubmitInspection(params, navigator, updateData) {
+    delete params.inspectId;
     let requestParams = JSON.stringify(params);
     API.createSubmitInspection(storage.loadProject(), params.inspectionType, requestParams)
         .then(data => {
@@ -272,8 +273,10 @@ function createSubmitInspection(params, navigator, updateData) {
  * 检查单 编辑   提交
  */
 function editSubmitInspection(params, navigator, updateData) {
+    let inspectId = params.inspectId;
+    delete params.inspectId;
     let requestParams = JSON.stringify(params);
-    API.editSubmitInspection(storage.loadProject(), params.inspectId, params.inspectionType, requestParams)
+    API.editSubmitInspection(storage.loadProject(),inspectId, params.inspectionType, requestParams)
         .then(data => {
             if (updateData) {
                 updateData();
@@ -319,6 +322,7 @@ export function save(requestParams, imageChooserEle, callback) {
  * @param {*} params 
  */
 function createSaveInspection(params, callback) {
+    delete params.inspectId;
     let requestParams = JSON.stringify(params);
     API.createSaveInspection(storage.loadProject(), params.inspectionType, requestParams)
         .then(data => {
@@ -342,8 +346,10 @@ function createSaveInspection(params, callback) {
  * @param {*} params 
  */
 function editSaveInspection(params, callback) {
+    let inspectId = params.inspectId;
+    delete params.inspectId;
     let requestParams = JSON.stringify(params);
-    API.editSaveInspection(storage.loadProject(), params.inspectId, params.inspectionType, requestParams)
+    API.editSaveInspection(storage.loadProject(), inspectId, params.inspectionType, requestParams)
         .then(data => {
             console.log(data)
             Toast.hide();

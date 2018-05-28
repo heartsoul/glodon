@@ -86,17 +86,23 @@ function isParamsChange(info, oldInfo) {
  * @param {*} params 
  */
 export function submit(params, navigator) {
-    params.projectId = storage.loadProject();
-    params.projectName = storage.loadCurrentProjectName();
+    let requestParams = {...params}
+    delete requestParams.editType,
+    delete requestParams.preEditType,
+    delete requestParams.skip,
+
+    requestParams.projectId = storage.loadProject();
+    requestParams.projectName = storage.loadCurrentProjectName();
     let fieldId = params.id;//根据单据id区分编辑和新增
     loadingToast();
     return dispatch => {
         uploadFile(params.files, (files) => {
             if (files) {
+                requestParams.files = files;
                 params.files = files;
             }
             if (fieldId && fieldId != 0) {
-                API.equipmentEditSubmit(storage.loadProject(), fieldId, JSON.stringify(params))
+                API.equipmentEditSubmit(storage.loadProject(), fieldId, JSON.stringify(requestParams))
                     .then((responseData) => {
                         Toast.hide();
                         dispatch(UpdateDataAction.updateData());
@@ -106,7 +112,7 @@ export function submit(params, navigator) {
                         console.log(error);
                     })
             } else {
-                API.equipmentCreateSubmit(storage.loadProject(), JSON.stringify(params))
+                API.equipmentCreateSubmit(storage.loadProject(), JSON.stringify(requestParams))
                     .then((responseData) => {
                         Toast.hide();
                         dispatch(UpdateDataAction.updateData());
@@ -126,17 +132,22 @@ export function submit(params, navigator) {
  * @param {*} params 
  */
 export function save(params) {
-    params.projectId = storage.loadProject();
-    params.projectName = storage.loadCurrentProjectName();
-    let fieldId = params.id;//根据单据id区分编辑和新增
+    let requestParams = {...params}
+    delete requestParams.editType,
+    delete requestParams.preEditType,
+    delete requestParams.skip,
+    requestParams.projectId = storage.loadProject();
+    requestParams.projectName = storage.loadCurrentProjectName();
+    let fieldId = requestParams.id;//根据单据id区分编辑和新增
     loadingToast();
     return dispatch => {
-        uploadFile(params.files, (files) => {
+        uploadFile(requestParams.files, (files) => {
             if (files) {
+                requestParams.files = files;
                 params.files = files;
             }
             if (fieldId && fieldId != 0) {
-                API.equipmentEditSave(storage.loadProject(), fieldId, JSON.stringify(params))
+                API.equipmentEditSave(storage.loadProject(), fieldId, JSON.stringify(requestParams))
                     .then((responseData) => 
                     {
                         dispatch(UpdateDataAction.updateData());
@@ -147,7 +158,7 @@ export function save(params) {
                         console.log(error);
                     })
             } else {
-                API.equipmentCreateSave(storage.loadProject(), JSON.stringify(params))
+                API.equipmentCreateSave(storage.loadProject(), JSON.stringify(requestParams))
                     .then((responseData) => {
                         params.id = responseData.data.id;
                         params.code = responseData.data.code;
