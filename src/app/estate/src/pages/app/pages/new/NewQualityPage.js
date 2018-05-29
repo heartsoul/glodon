@@ -16,7 +16,7 @@ import { Tabs, } from 'antd-mobile';
 import { BarItems } from "app-components"
 import NewCheckListTabBar from "./NewCheckListTabBar";
 import NewQualityView from "./NewQualityView";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'app-3rd/index';
 import { connect } from 'react-redux';
 import * as actions from "./../../actions/newQualityAction2";
 

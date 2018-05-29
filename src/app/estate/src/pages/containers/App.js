@@ -257,6 +257,8 @@ export default class extends React.Component {
 
     componentDidMount = () => {
         this.fireHeartBeat();
+
+   alert(2);
     }
 
     fireHeartBeat = () => {
@@ -303,6 +305,7 @@ export default class extends React.Component {
         // return (<Provider store={store}><RootGuideStack /></Provider>)
     }
     render() {
+        alert(4)
         return this.renderPage();
     }
 }

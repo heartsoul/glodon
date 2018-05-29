@@ -7,7 +7,6 @@ import {
     View,
     StatusBar,
     Switch,
-    requireNativeComponent,
     TextInput,
     ScrollView,
     Button,

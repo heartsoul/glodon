@@ -15,7 +15,8 @@ import {
 import ModelItemView from './ModelItemView'
 import * as CheckVersionManager from "./../../pages/me/checkVerson";
 
-import { NavigationPage, SegmentedBar, Label, SegmentedView, Button, Carousel } from 'teaset';
+import { NavigationPage, SegmentedBar, Label, SegmentedView, Button, Carousel } from 'app-3rd/teaset';
+
 import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
 var { width, height } = Dimensions.get("window");
 class MainTabTitle extends Component {

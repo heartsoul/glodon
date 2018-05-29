@@ -5,10 +5,11 @@ import {
     Dimensions,
     Text,
     View,
-    WebView,
     SafeAreaView,
     StatusBar
 } from 'react-native';
+
+import { WebView } from 'app-3rd/index';
 import * as API from "app-api"
 import { BarItems, LoadingView } from "app-components";
 //获取设备的宽度和高度

@@ -12,6 +12,9 @@ const babelLoaderConfiguration = {
   include: [
     path.resolve(appDirectory, 'index.web.js'),
     path.resolve(appDirectory, 'src'),
+    // path.resolve(appDirectory, 'node_modules/react-navigation'),
+    path.resolve(appDirectory, 'node_modules/antd-mobile'),
+    // path.resolve(appDirectory, 'node_modules/react-native-image-zoom-viewer')
   ],
   use: {
     loader: 'babel-loader',

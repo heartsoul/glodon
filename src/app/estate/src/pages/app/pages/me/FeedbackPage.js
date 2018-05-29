@@ -9,7 +9,7 @@ import {
   SafeAreaView
 } from 'react-native';
 import { Toast } from 'antd-mobile';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'app-3rd/index';
 import * as API from 'app-api'
 import { BarItems } from "app-components"
 import EquipmentInfoItem from "../equipment/equipmentInfoItem"

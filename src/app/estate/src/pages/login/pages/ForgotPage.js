@@ -15,7 +15,7 @@ import { connect } from 'react-redux' // 引入connect函数
 import { Toast } from 'antd-mobile' // 引入connect函数
 import * as fogotAction from '../actions/forgotAction' // 导入action方法 
 import * as types from '../constants/forgotTypes'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'app-3rd/index';
 import { ActionButton, TextInputNormal, TextInputPassword, TextInputImage, BarItems } from 'app-components';
 import * as API from 'app-api'
 

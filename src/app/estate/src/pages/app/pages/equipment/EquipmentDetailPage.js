@@ -11,7 +11,8 @@ import { connect } from 'react-redux' // 引入connect函数
 import { BimFileEntry, AuthorityManager } from "app-entry";
 import * as API from "app-api";
 import EquipmentDetailView from "./equipmentDetailView"
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import { KeyboardAwareScrollView } from 'app-3rd/index';
 import { BarItems, ActionModal } from "app-components";
 import * as actions from '../../actions/equipmentInfoAction';
 import * as relevantModelAction from "../../actions/relevantModelAction";

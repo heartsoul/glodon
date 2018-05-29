@@ -2,7 +2,6 @@ import React from 'react'
 import { NoMatch, Switch, Route } from 'react-router'
 import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'
-
 import configureStore, { history } from '../store/ConfigureStore'
 import * as GLD from '../pages'
 

@@ -4,7 +4,7 @@
 'use strict';
 import React, { Component, PureComponent } from "react";
 import {StyleSheet, View, StatusBar, Dimensions, Text} from "react-native";
-import {SegmentedView,Badge} from 'teaset';
+import {SegmentedView,Badge} from 'app-3rd/teaset';
 
 import * as API from "app-api";
 import QualityListView from "./qualityListView";

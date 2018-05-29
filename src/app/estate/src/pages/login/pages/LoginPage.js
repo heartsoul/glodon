@@ -59,7 +59,8 @@ static navigationOptions = {
       lineAnim: new Animated.Value(un.length > 0 ? 0.5 : 0.0)
     };
   }
-
+ componentDidMount = () => {
+ }
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.status === '重试' && nextProps.retryTimes > 0) {
       this.props.login(this.state.username,this.state.password);
