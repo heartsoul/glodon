@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
    // width: 30,
-    height: 40,
+    height: 44,
    
   },
   barItemImage: {
