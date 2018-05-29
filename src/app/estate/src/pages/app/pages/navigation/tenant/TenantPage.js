@@ -10,10 +10,12 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 export default class tenantList extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: '租户列表',
+        headerTitle: <BarItems.TitleBarItem text='租户列表'/>,
         gesturesEnabled: false,
         headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
-    });
+        headerRight:<View/>,   
+     });
+
     changeProject = false;
     constructor(props) {
         super(props);
@@ -131,8 +133,11 @@ export default class tenantList extends Component {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
                 () => {
-                    this.resetTenant();
-                    return true
+                 if(storage.currentRouteName === this.props.navigation.state.routeName){
+                        this.resetTenant();
+                        return true
+                    }
+                 return false;
                 }
             )
         }

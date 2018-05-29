@@ -29,7 +29,7 @@ class RightBarButtons extends React.Component {
 }
 export default class extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
-    title: '质检清单',
+    headerTitle: <BarItems.TitleBarItem text='质检清单'/>,
     // gesturesEnabled:false,
     headerRight: (
       <RightBarButtons navigation={navigation} />

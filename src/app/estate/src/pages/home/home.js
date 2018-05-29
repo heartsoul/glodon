@@ -103,7 +103,7 @@ export default class extends React.Component {
     if(page == CONSTANTS.PAGE_INNDX_SUBSCRIBE) {
       return ({
         headerLeft: <View></View>,
-        title:title ? title : CONSTANTS.PAGE_NAME_SUBSCRIBE,
+        headerTitle: <BarItems.TitleBarItem text={title ? title : CONSTANTS.PAGE_NAME_SUBSCRIBE}/>,
         // header: {mode:'screen'},
         headerRight: <View></View>,
       })
@@ -112,7 +112,7 @@ export default class extends React.Component {
     if(page == CONSTANTS.PAGE_INNDX_MESSAGE) {
       return ({
         headerLeft: <View></View>,
-        title:title ? title : CONSTANTS.PAGE_NAME_MESSAGE,
+        headerTitle: <BarItems.TitleBarItem text={title ? title : CONSTANTS.PAGE_NAME_MESSAGE}/>,
         // header: {mode:'screen'},
         headerRight: <View></View>,
       })

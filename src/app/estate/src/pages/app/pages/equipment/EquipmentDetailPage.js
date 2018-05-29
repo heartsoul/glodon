@@ -19,10 +19,10 @@ import { getModelElementProperty } from "app-api";
 
 class EquipmentDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: '材设进场记录',
+        headerTitle: <BarItems.TitleBarItem text='材设进场记录'/>,
         gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
         headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : <BarItems />,
-        headerRight: navigation.state.params && navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null
+        headerRight: navigation.state.params && navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : <View/>
     })
     constructor(props) {
         super(props);
@@ -88,7 +88,7 @@ class EquipmentDetailPage extends Component {
            </BarItems>
         }
 
-        return null;
+        return  <View/>;
     }
     check = (info) => {
         const { editType, preEditType } = info;

@@ -15,7 +15,7 @@ import { BarItems } from "app-components"
 import EquipmentInfoItem from "../equipment/equipmentInfoItem"
 export default class extends React.Component {
   static navigationOptions= ({ navigation, screenProps }) => ({
-    title: '意见反馈',
+    headerTitle: <BarItems.TitleBarItem text='意见反馈'/>,
     headerRight:(navigation.state.params &&navigation.state.params.loadRightTitle) ? navigation.state.params.loadRightTitle() : null
   });
   textInputValue = {

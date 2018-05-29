@@ -10,6 +10,7 @@ import {
     StatusBar
 } from 'react-native';
 import * as API from "app-api"
+import { BarItems, LoadingView } from "app-components";
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
@@ -22,8 +23,9 @@ const imageMinus = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAA
 //默认应用的容器组件
 export default class QualityStatardsPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: navigation.state.params ? navigation.state.params.title : '',
         // head:null
+        headerTitle: <BarItems.TitleBarItem text={navigation.state.params ? navigation.state.params.title : ''}/>,
+        headerRight:<View/>,
     });
     constructor(props) {
         super(props);
