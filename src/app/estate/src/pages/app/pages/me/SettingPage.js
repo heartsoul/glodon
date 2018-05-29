@@ -13,7 +13,7 @@ import {
     Dimensions,
     NativeModules,
     Platform,
-    Switch,
+    // Switch,
 } from "react-native";
 var PM = NativeModules.GLDPhotoManager;
 import { connect } from 'react-redux' // 引入connect函数
@@ -25,6 +25,8 @@ import WideButton from "./../../components/WideButton";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
+// import Switch from '../../components/BimSwitch';
+import {BimSwitch as Switch} from 'app-components';
 
 var { width, height } = Dimensions.get("window");
 
@@ -120,21 +122,16 @@ class SettingPage extends Component {
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                <ScrollView style={{paddingBottom:60}}>
                     <SettingItemView icon={require('app-images/icon_setting_change_password.png')} title='修改密码' onPress={() => this._password()} ></SettingItemView>
-                    <View style={{ height: 10 }}></View>
+                    <View style={styles.settingItemLine}></View>
                     {
                         Platform.OS === 'android' ? (
                             <View>
-                                <SettingItemView icon={require('app-images/icon_setting_version.png')} title='WLAN下自动升级' hideArrow={true} switchValue={this.state.autoDownload} showSwitch={true} onSwitchChange={(value) => {
-                                    storage.setAutoDownload(value)
-                                }}></SettingItemView>
-                                <View style={styles.settingItemLine}></View>
                                 <SettingItemView icon={require('app-images/icon_setting_version.png')} title='检查更新' hideArrow={true} showExtText={'当前版本 V1.1.0'} onPress={() => { CheckVersion.checkVersion("setting") }} ></SettingItemView>
                             </View>
                         ) : (
                                 <SettingItemView icon={require('app-images/icon_setting_version.png')} title='版本信息' hideArrow={true} showExtText={'版本号V1.1.0'} ></SettingItemView>
                             )
                     }
-
                     <View style={styles.settingItemLine}></View>
                     <SettingItemView icon={require('app-images/icon_setting_feedback.png')} title='意见反馈' onPress={() => this._feedback()} ></SettingItemView>
                     <View style={styles.settingItemLine}></View>
@@ -143,7 +140,22 @@ class SettingPage extends Component {
                     <SettingItemView icon={require('app-images/icon_setting_about_us.png')} title='关于我们' onPress={() => this._about()} ></SettingItemView>
                     <View style={{ height: 10 }}></View>
 
-                    <SettingItemView icon={require('app-images/icon_setting_offline.png')} title='离线设置' ></SettingItemView>
+                    <TouchableOpacity onPress={()=>{}} >
+                        <View style={{backgroundColor:'#ffffff',height:50,flexDirection:'row',alignItems:'center'}}>
+                            <Text style={{color:'#6f899b',fontSize:14,marginLeft:11,flex:1}}>清除本地缓存</Text>
+                            <Text style={{color:'#7594a9',fontSize:14,marginRight:18}}>425M</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <View style={styles.settingItemLine}></View>
+                    {
+                        Platform.OS === 'android' ? (
+                            <View>
+                                <SettingItemView title='WLAN下自动升级' hideArrow={true} switchValue={this.state.autoDownload} showSwitch={true} onSwitchChange={(value) => {
+                                    storage.setAutoDownload(value)
+                                }}></SettingItemView>
+                            </View>
+                        ) : null
+                    }
                     <WideButton text="退出登录" onClick={this._logout} style={{ marginTop: 40, width: 297, alignSelf: "center" }} />
                     <View style={{height:60,width:'100%'}} />
                 </ScrollView>
@@ -182,7 +194,7 @@ class SettingItemView extends React.Component {
                     <Text style={styles.settingItemText}>{this.props.title} </Text>
                     {extText}
                     {
-                        this.props.showSwitch ? <Switch style={{ marginRight: 20 }} value={this.state.switchValue} onValueChange={(value) => {
+                        this.props.showSwitch ? <Switch style={{ marginRight: 20, }} value={this.state.switchValue} onValueChange={(value) => {
                             this.setState({
                                 switchValue: value
                             }, () => {
@@ -198,6 +210,9 @@ class SettingItemView extends React.Component {
         );
     }
 }
+
+
+
 
 var styles = StyleSheet.create({
     container: {
@@ -215,18 +230,18 @@ var styles = StyleSheet.create({
     settingItemIcon: {
         width: 24,
         height: 24,
-        marginLeft: 20,
+        marginLeft: 10,
         resizeMode: 'contain',
     },
     settingItemText: {
-        marginLeft: 17,
+        marginLeft: 11,
         flex: 1,
         fontSize: 14,
-        color: '#325771',
+        color: '#6f899b',
     },
     settingItemExtText: {
         fontSize: 14,
-        color: '#325771',
+        color: '#7594a9',
         marginRight: 20
     },
     settingItemArrow: {

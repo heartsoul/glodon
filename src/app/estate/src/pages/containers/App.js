@@ -104,6 +104,9 @@ const screens = {
     ChangeProjectPage: {
         screen: GLD.ChangeProjectPage
     },
+    OfflineManagePage:{
+        screen:GLD.OfflineMangePage
+    },
 };
 
 const options = () => {
