@@ -90,7 +90,9 @@
   _numberTitleLabel.font = [UIFont systemFontOfSize:17];
   _numberTitleLabel.textColor = [UIColor whiteColor];
   _numberTitleLabel.textAlignment = NSTextAlignmentCenter;
-  _numberTitleLabel.text = [NSString stringWithFormat:@"%zd/%zd",_currentIndex+1,self.models.count];
+  NSInteger n1 = (NSInteger)_currentIndex+1;
+  NSInteger c1 = (NSInteger)self.models.count;
+  _numberTitleLabel.text = [NSString stringWithFormat:@"%@/%@",@(n1),@(c1)];
   _backButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 44, 44)];
   [_backButton setImage:[UIImage imageNamedFromMyBundle:@"navi_back.png"] forState:UIControlStateNormal];
   [_backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

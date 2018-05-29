@@ -46,6 +46,13 @@ export default class extends React.Component {
   constructor(props) {
     super(props)
     storage.homeNavigation = this.props.navigation;
+    let activeIndex = 0;
+    if(props.navigation.getParam('activeIndex')) {
+      activeIndex = props.navigation.getParam('activeIndex') || 0;
+    }
+    this.state = {
+      activeIndex:activeIndex
+    };
     props.navigation.setParams({'options':()=>{return this.options(CONSTANTS.PAGE_INNDX_HOME)}})
   }
   componentDidMount = () => {
@@ -124,12 +131,14 @@ export default class extends React.Component {
   }
 
   onChange = (index) =>{
+    this.state.activeIndex = index;
+    storage.currentTab = index;
     this.props.navigation.setParams({'options':()=>{return this.options(index)}})
   }
   render() {
     return (
     <SafeAreaView style={{height:'100%',backgroundColor:"#f5f8f9"}}>
-    <TabView ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1,overflow:'visible'}} type='projector'>
+    <TabView activeIndex={this.state.activeIndex} ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1,overflow:'visible'}} type='projector'>
       <TabView.Sheet
         title={CONSTANTS.PAGE_NAME_HOME}
         icon={require('app-images/home/icon_main_main_page.png')}

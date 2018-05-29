@@ -62,7 +62,8 @@ class SettingPage extends Component {
     _tenantChoose = () => {
         let navigator = this.props.navigation;
         storage.projectIdVersionId = '';
-        storage.pushNext(navigator, "TenantPage")
+        // storage.pushNext(navigator, "TenantPage")
+        storage.gotoSwitchProject(navigator);
     }
     _about = () => {
         let navigator = this.props.navigation;

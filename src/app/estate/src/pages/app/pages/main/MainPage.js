@@ -91,7 +91,7 @@ export default class extends Component {
         this.render()
     }
     scrollToPage = (index) => {
-        console.log("index ============= " + index)
+        // console.log("index ============= " + index)
         
         this.setState({
             activeIndex:index

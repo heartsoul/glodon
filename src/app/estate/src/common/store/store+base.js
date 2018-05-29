@@ -5,7 +5,7 @@
 import { Component } from 'react'
 import { AsyncStorage } from 'react-native';
 
-import { NavigationActions } from 'app-3rd/react-navigation'
+import { StackActions,NavigationActions } from 'app-3rd/react-navigation'
 import { BASE_URL } from '../constant/server-config'
 /**
  *  权限操作对象
@@ -288,7 +288,7 @@ class GLDStorage extends BaseStorage {
         }
         // this.logout();
         this.saveLoginToken('', '0');
-        let resetAction = NavigationActions.reset({
+        let resetAction = StackActions.reset({
             index: 0,
             actions: [
                 NavigationActions.navigate({ routeName: 'LoginPage' })//要跳转到的页面名字
@@ -297,7 +297,7 @@ class GLDStorage extends BaseStorage {
         navigator.dispatch(resetAction);
     }
     // 到home页面
-    gotoMainPage = (navigation) => {
+    gotoMainPage = (navigation,params) => {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
@@ -305,10 +305,28 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
-        let resetAction = NavigationActions.reset({
+        params = params || {};
+        let resetAction = StackActions.reset({
             index: 0,
             actions: [
-                NavigationActions.navigate({ routeName: 'MainPage' })//要跳转到的页面名字
+                NavigationActions.navigate({ routeName: 'MainPage',params})//要跳转到的页面名字
+            ]
+        });
+        navigator.dispatch(resetAction);
+    }
+    gotoSwitchProject = (navigation) => {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
+        let resetAction = StackActions.reset({
+            index: 1,
+            actions: [
+                NavigationActions.navigate({ routeName: 'TenantPage' ,params:{change:false}}),//要跳转到的页面名字
+                NavigationActions.navigate({ routeName: 'ProjectPage', params:{ tenantId: storage.loadLastTenant(), id: storage.loadTenant() } })//要跳转到的页面名字
             ]
         });
         navigator.dispatch(resetAction);
@@ -352,7 +370,11 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
-        navigator.navigate(name, params);
+       let action =  StackActions.push({
+            routeName:name,
+            params:params||{}
+        });
+        navigator.dispatch(action);
     }
     // 返回到上一页面
     goBack = (navigation, params = {}) => {

@@ -581,7 +581,7 @@ class RelevantModelPage extends Component {
                         javaScriptEnabled={true}
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
-                        injectedJavaScript={cmdString}
+                        // injectedJavaScript={cmdString}
                         onLoadEnd={() => { }}
                         source={{ html: this.state.html }}
                         style={{ width: deviceWidth, height: deviceHeight }}>

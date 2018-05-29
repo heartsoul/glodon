@@ -39,12 +39,20 @@ export default class tenantList extends Component {
         if (backFun) {
             backFun(false);
         }
+        if(storage.loadLastTenant() == '0') {
+            if (backFun) {
+                backFun(true);
+            } else {
+                storage.gotoLogin(this.props.navigation)
+            }
+            return;
+        }
         this.resetTenant();
     }
     resetTenant = () => {
         API.setCurrentTenant(storage.loadLastTenant())
             .then((responseData) => {
-                storage.pop(this.props.navigation, 1)
+                storage.gotoMainPage(this.props.navigation,{activeIndex:storage.currentTab})
             });
     }
     loadLeftTitle = () => {
@@ -94,7 +102,7 @@ export default class tenantList extends Component {
 
             });
             if (dataBlob.length == 1 && storage.loadLastTenant() == '0') {
-                this.props.navigation.setParams({ isFirst: false });
+               this.props.navigation.setParams({ isFirst: false });
                 this._clickItem(dataBlob[0], 0)
                 return;
             }
