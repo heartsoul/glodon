@@ -14,6 +14,7 @@ import ThumbnailImage from "./ThumbnailImage";
 import BimFileNavigationView from "./bimFileNavigationView";
 import { NoDataView} from 'app-components';
 import { SERVER_TYPE } from 'common-module';
+import {DeviceEventEmitter} from 'app-3rd/index'
 
 
 var { width, height } = Dimensions.get("window");
