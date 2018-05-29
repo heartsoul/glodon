@@ -25,8 +25,7 @@ import WideButton from "./../../components/WideButton";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
-// import Switch from '../../components/BimSwitch';
-import {BimSwitch as Switch} from 'app-components';
+import {BimSwitch as Switch,ToCleanDialog} from 'app-components';
 
 var { width, height } = Dimensions.get("window");
 
@@ -116,6 +115,7 @@ class SettingPage extends Component {
         }, 10000);
     }
 
+   
     render() {
         return (
             <SafeAreaView style={styles.container}>
@@ -140,12 +140,7 @@ class SettingPage extends Component {
                     <SettingItemView icon={require('app-images/icon_setting_about_us.png')} title='关于我们' onPress={() => this._about()} ></SettingItemView>
                     <View style={{ height: 10 }}></View>
 
-                    <TouchableOpacity onPress={()=>{}} >
-                        <View style={{backgroundColor:'#ffffff',height:50,flexDirection:'row',alignItems:'center'}}>
-                            <Text style={{color:'#6f899b',fontSize:14,marginLeft:11,flex:1}}>清除本地缓存</Text>
-                            <Text style={{color:'#7594a9',fontSize:14,marginRight:18}}>425M</Text>
-                        </View>
-                    </TouchableOpacity>
+                    <CleanItemView />
                     <View style={styles.settingItemLine}></View>
                     {
                         Platform.OS === 'android' ? (
@@ -163,6 +158,34 @@ class SettingPage extends Component {
         );
     }
 
+}
+
+class CleanItemView extends React.Component{
+    constructor(){
+        super();
+        this.state ={
+            text:'232M'
+        }
+    }
+    //清除缓存的回调方法
+    _cleanCallBack = ()=>{
+        console.log('ret');
+        this.setState(()=>{
+            return {
+                text:''
+            };
+        })
+    }
+    render(){
+        return (
+            <TouchableOpacity onPress={()=>{ToCleanDialog.show(this._cleanCallBack);}} >
+                <View style={{backgroundColor:'#ffffff',height:50,flexDirection:'row',alignItems:'center'}}>
+                    <Text style={{color:'#6f899b',fontSize:14,marginLeft:11,flex:1}}>清除本地缓存</Text>
+                    <Text style={{color:'#7594a9',fontSize:14,marginRight:18}}>{this.state.text}</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    }
 }
 
 class SettingItemView extends React.Component {
