@@ -32,7 +32,7 @@ export default class extends Component {
 //进入离线数据下载
   _gotoDownloadPage = () => {
     let navigator = this.props.navigation;
-    storage.pushNext(navigator, "ChangeProjectPage")
+    storage.pushNext(navigator, "OfflineDownloadPage")
     // storage.pushNext(navigator, "TenantPage",{change:true})
     // ToOnlineDialog.show(this.props.navigation);
   }

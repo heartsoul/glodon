@@ -107,6 +107,9 @@ const screens = {
     OfflineManagePage:{
         screen:GLD.OfflineMangePage
     },
+    OfflineDownloadPage:{
+        screen:GLD.OfflineDownloadPage
+    },
 };
 
 const options = () => {
