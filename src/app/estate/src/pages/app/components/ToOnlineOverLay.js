@@ -21,7 +21,8 @@ click = (overlayView)=>{
         //登录过程中   切换在线离线状态  不做切换
     }else{
         //登录，并选择项目后   再次切换在线离线状态，则跳转到主页面
-        storage.pushNext(navigation, "MainPage");
+        // storage.pushNext(navigation, "MainPage");
+        storage.gotoMainPage(navigation);
     }
 }
 let currentview = null;

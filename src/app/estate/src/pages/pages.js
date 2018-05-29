@@ -31,10 +31,11 @@ import QualitySearchPage from './app/pages/search/QualitySearchPage'
 import EquipmentSearchPage from './app/pages/search/EquipmentSearchPage'
 import BimSearchPage from './app/pages/search/BimSearchPage'
 import AboutPage from './app/pages/me/AboutPage'
-import SharePage from './app/pages/me/SharePage'
 import FeedbackPage from './app/pages/me/FeedbackPage'
 import ForgotPage from './login/pages/ForgotPage'
 import ChangeProjectPage from './app/pages/me/ChangeProjectPage'
+import OfflineMangePage from './app/pages/me/OfflineMangePage'
+
 
 export {
     LoginPage,
@@ -70,5 +71,5 @@ export {
     ForgotPage,
     FeedbackPage,
     ChangeProjectPage,
-    SharePage,
+    OfflineMangePage,
 }

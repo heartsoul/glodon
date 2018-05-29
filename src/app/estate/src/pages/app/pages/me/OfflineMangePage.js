@@ -5,81 +5,66 @@ import {
   Text,
   View,
   StatusBar,
-  Button,
   SafeAreaView,
   ScrollView,
   Image,
   TouchableOpacity,
   Dimensions
 } from 'react-native';
-import {ToOnlineDialog} from 'app-components';
 import WideButton from "../../../app/components/WideButton";
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
 
 var { width, height } = Dimensions.get("window");
-var name = '' ;
-
+var name = '离线管理支持您在没有网络状态下完成查阅单据、浏览模型、图纸，编辑业务单据等基本业务操作。为了便于您更好的离线体验，请选择下列必备的数据预先下载至您的手机上。' ;
+//离线管理
 export default class extends Component {
   
   static navigationOptions = {
-    title: '',
-    header: null
+    title: '离线管理',
+
   };
 
   constructor() {
       super();
-      if(storage.loadUserInfo().accountInfo){
-        name = storage.loadUserInfo().accountInfo.name;
-    }
+      
   };
   
-//切换项目
-  _gotoTenantChoose = () => {
+//进入离线数据下载
+  _gotoDownloadPage = () => {
     let navigator = this.props.navigation;
-    storage.projectIdVersionId = '';
     storage.pushNext(navigator, "ChangeProjectPage")
     // storage.pushNext(navigator, "TenantPage",{change:true})
     // ToOnlineDialog.show(this.props.navigation);
   }
-  //到离线管理
+  //离线进程跟踪
   _gotoOfflineManage=()=>{
-    let navigator = this.props.navigation;
-    storage.pushNext(navigator,'OfflineManagePage');
+    // let navigator = this.props.navigation;
+    // storage.pushNext(navigator,'SettingPage');
   }
-  //到我的任务
-  _gotoTask=()=>{
-      
+  //进入离线模式
+  _gotoOfflineMode=()=>{
+    OfflineStateUtil.toOffLine();
+    storage.gotoMainPage(this.props.navigation);
   }
-  //到我的计划
-  _gotoPlan=()=>{
-
-  }
-  //到我的订阅
-  _gotoSubscribe=()=>{
-
-  }
+ 
 
   render() {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-        <ScrollView bounces={false}>
-          <View style={{backgroundColor:'#00baf3',marginBottom:20}}>
-            <Image source={require('app-images/icon_mine_default_header.png')} style={styles.mineAvatar}/>
+        <ScrollView bounces={false} >
+          <View style={{backgroundColor:'#ffffff'}} >
+            <Image source={require('app-images/icon_offline_manage_bg.png')} style={styles.mineAvatar}/>
             <Text style={styles.mineName}>{name}</Text>
-            <Image source={require('app-images/icon_mine_wave.png')} style={styles.mineWave}/>
           </View>
-          <MineItemView icon = {require('app-images/icon_my_offline_manage.png')} title='离线管理' onPress={()=>this._gotoOfflineManage()}></MineItemView>
+          <View style={{backgroundColor:'#F9F9F9',height:10,flex:1}} />
+          <MineItemView icon = {require('app-images/icon_offline_manage_download.png')} title='离线数据下载' onPress={()=>this._gotoDownloadPage()}></MineItemView>
           <View style={styles.mineItemLine}></View>
-          <MineItemView icon = {require('app-images/icon_my_missions.png')} title='我的任务' onPress={()=>this._gotoTask()}></MineItemView>
+          <MineItemView icon = {require('app-images/icon_offline_manage_trace.png')} title='离线进程跟踪' onPress={()=>this._gotoOfflineManage()}></MineItemView>
           <View style={styles.mineItemLine}></View>
-          <MineItemView icon = {require('app-images/icon_my_plans.png')} title='我的计划' onPress={()=>this._gotoPlan()}></MineItemView>
-          <View style={styles.mineItemLine}></View>
-          <MineItemView icon = {require('app-images/icon_my_subscribe.png')} title='我的订阅' onPress={()=>this._gotoSubscribe()}></MineItemView>
-          <View style={styles.mineItemLine}></View>
-            
-          <WideButton text="切换项目" onClick={()=>{this._gotoTenantChoose();}} style={{ marginTop: 50, width: 297,height:40, alignSelf: "center" }} />
-            
-          <View style={{height:35,width:'100%'}} />
+          
+           <WideButton text="进入离线模式" onClick={()=>{this._gotoOfflineMode();}} style={{ marginTop: 50, width: 297,height:40, alignSelf: "center" }} />
+          
         </ScrollView>
       </SafeAreaView>
     );
@@ -105,21 +90,24 @@ class MineItemView extends Component{
 
 var styles = StyleSheet.create({
     container:{
-      backgroundColor:'#ffffff',
+      backgroundColor:'#F9F9F9',
       width:width,
       height:height
     },
     mineAvatar:{
-      width:90,
-      height:90,
+      width:308,
+      height:115,
       alignSelf:'center',
-      marginTop:7
+      marginTop:32
     },
     mineName:{
-      marginTop:7,
+      marginTop:13,
       alignSelf:'center',
-      fontSize:22,
-      color:'#ffffff'
+      fontSize:13,
+      color:'#597385',
+      marginLeft:46,
+      marginRight:46,
+      marginBottom:20
     },
     mineWave:{
       width:width,
@@ -135,12 +123,12 @@ var styles = StyleSheet.create({
       backgroundColor:'#ffffff'
     },
     mineItemIcon:{
-      width:24,
-      height:24,
-      marginLeft:22
+      width:30,
+      height:30,
+      marginLeft:10
     },
     mineItemText:{
-      marginLeft:17,
+      marginLeft:10,
       flex:1,
       fontSize:14,
       color:'#6f899b',

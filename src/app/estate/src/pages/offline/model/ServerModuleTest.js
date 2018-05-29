@@ -4,19 +4,23 @@ import {
     View,
     TouchableOpacity,
   } from 'react-native';
-  import ModelServer from './ServerModule';
+//   import ModelServer from './ServerModule';
+import BimSwitch from '../../app/components/BimSwitch'
   
   export default class App extends Component {
     
     
     startServer = ()=>{
-        ModelServer.startServer();
+        // ModelServer.startServer();
     }
  
     stopServer = ()=>{
-        ModelServer.stopServer();
+        // ModelServer.stopServer();
     }
 
+    onValueChange = (value)=>{
+        console.log(value);
+    }
     render() {
       return (
           <View>
@@ -34,6 +38,8 @@ import {
                     </Text>
                 </View>
             </TouchableOpacity>
+
+            <BimSwitch value={true} onValueChange={this.onValueChange} />
         </View>
       );
     }
