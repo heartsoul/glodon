@@ -9,6 +9,7 @@ import { SegmentedView,Badge } from 'app-3rd/teaset';
 import * as API from "app-api";
 import { AuthorityManager } from "app-entry";
 import EquipmentListView from "./equipmentListView";
+import { BarItems, LoadingView } from "app-components";
 
 var { width, height } = Dimensions.get("window");
 class QualityListTitle extends Component {
@@ -31,11 +32,12 @@ class QualityListTitle extends Component {
     }
 } 
 export default class extends PureComponent {
-    static navigationOptions = {
-        title: '材设清单',
-        gesturesEnabled: true,
-    };
 
+    static navigationOptions = {
+        headerTitle: <BarItems.TitleBarItem text='材设清单'/>,
+        headerRight:<View/>,
+        gesturesEnabled: true,
+      };
     constructor(props) {
         super(props);
 

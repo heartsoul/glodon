@@ -11,15 +11,17 @@ import { connect } from 'react-redux' // 引入connect函数
 
 import * as AuthorityManager from "./AuthorityManager";
 import * as actions from '../../../actions/projectAction'
-import { LoadingView } from "app-components";
+import { BarItems, LoadingView } from "app-components";
 import * as API from "app-api";
 import { Toast } from 'antd-mobile'
 
 var { width, height } = Dimensions.get("window");
 class ProjectPage extends Component {
+
     static navigationOptions = {
-        title: '项目列表',
-    }
+        headerTitle: <BarItems.TitleBarItem text='项目列表' />,
+        headerRight: <View />,
+    };
 
     constructor(props) {
         super(props);
@@ -81,7 +83,7 @@ class ProjectPage extends Component {
     renderItemView = ({ item, index }) => {
         return (
             <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
-                <View style={[styles.containerView,item.value.id == storage.loadProject() ? styles.selectContainer : null]}>
+                <View style={[styles.containerView, item.value.id == storage.loadProject() ? styles.selectContainer : null]}>
                     <Text style={[styles.content, item.value.id == storage.loadProject() ? { color: '#00baf3', fontWeight: "bold" } : null]}> {item.value.name}</Text>
                 </View>
             </TouchableOpacity>
@@ -222,7 +224,7 @@ const styles = StyleSheet.create({
         paddingLeft: 40,
         paddingRight: 40,
     },
-    selectContainer:{
+    selectContainer: {
         backgroundColor: '#F2FcFf',
     },
     title: {

@@ -25,14 +25,16 @@ import WideButton from "./../../components/WideButton";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
+import { BarItems, LoadingView } from "app-components";
 
 var { width, height } = Dimensions.get("window");
 
 class SettingPage extends Component {
 
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: '设置',
-    });
+    static navigationOptions = {
+        headerTitle: <BarItems.TitleBarItem text='设置'/>,
+        headerRight:<View/>,
+      };
     componentDidMount = () => {
         // console.log(this.props.navigation.state.params);
         //请求数据

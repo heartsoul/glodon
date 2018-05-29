@@ -30,11 +30,7 @@ const REF_INSPECTION = 'REF_INSPECTION';//
 const REF_ACCEPTANCE = 'REF_ACCEPTANCE';//
 
 class NewQualityPage extends Component {
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
-        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
-        title: navigation.state.params && navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : ""
-    })
+   
     static navigationOptions = ({ navigation, screenProps }) => ({
         // title: '新建',
         headerTitle: (navigation.state.params.headerTitle),
@@ -64,7 +60,7 @@ class NewQualityPage extends Component {
     }
 
     setTitle = () => {
-        let headerTitle = (<View style={{ height: 44, width: 200 }}>
+        let headerTitle = (<View style={{ height: 44, alignSelf: "center", flex: 1, }}>
             <Tabs
                 tabs={tabs}
                 initialPage={this.activeTab}

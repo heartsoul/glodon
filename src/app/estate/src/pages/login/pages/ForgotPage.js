@@ -24,7 +24,8 @@ class ForgotPage extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
     gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
     headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
-    title: navigation.state.params && navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : "密码管理"
+    headerTitle: <BarItems.TitleBarItem text={navigation.state.params && navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : "密码管理"}/>,
+    headerRight:<View/>,
   })
 
   constructor(props) {
