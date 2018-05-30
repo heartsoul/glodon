@@ -33,7 +33,6 @@ var { width, height } = Dimensions.get("window");
 const REF_PHOTO = 'gldPhoto';
 
 import ListStyle from 'antd-mobile/lib/list/style/index.native';
-import { KeyboardAwareScrollView } from "app-3rd/index";
 
 const newStyle = {
     ...ListStyle,
@@ -375,7 +374,7 @@ export default class EquipmentDetailView extends Component {
     }
 
     renderBaseEdit = (info) => {
-        return <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={Platform.OS ==='ios'? 'on-drag':'none'} style={{ paddingTop: 10, paddingBottom: 10 }}>
+        return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
 
             <EquipmentInfoItem leftTitle="请依次完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ marginTop: 0, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
@@ -402,10 +401,10 @@ export default class EquipmentDetailView extends Component {
                 {this.renderActionNextInfo(info, this._toOtherInfoAction)}
             </View>
             <View style={{ height: 40, width: '100%' }} />
-        </KeyboardAwareScrollView>
+        </View>
     }
     renderOtherEdit = (info) => {
-        return <KeyboardAwareScrollView style={{ paddingTop: 10, paddingBottom: 10 }}>
+        return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
             <EquipmentInfoItem leftTitle="请根据需要选择完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ marginTop: 0, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
                 <EquipmentInfoItem.EquipmentInfoItemTextInput key='b4' leftTitle="进场数量：" content={info.quantity} showType="input" onChangeText={(value) => { info.quantity = value }} />
@@ -434,7 +433,7 @@ export default class EquipmentDetailView extends Component {
                 {this.renderActionNextInfo(info, this._toImageInfoSkipAction, true)}
             </View>
             <View style={{ height: 40, width: '100%' }} />
-        </KeyboardAwareScrollView>
+        </View>
     }
     onChangeSwitch = (value, info) => {
         let data = { ...info, qualified: (value == true ? true : false) };
