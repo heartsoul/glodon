@@ -153,6 +153,16 @@ class ProjectPage extends Component {
     }
 
     render = () => {
+        
+        if(this.props.dataArray && this.props.dataArray.length == 1) {
+            // 只有一个项目
+            let prj = storage.loadProject();
+            if(prj && prj == '0') {
+                // 直接进入
+                this._itemClick(this.props.dataArray[0],0);
+                return <LoadingView />;
+            }
+        }
         //第一次加载等待的view
         if (this.props.isLoading && !this.props.error) {
             return (<LoadingView />);
