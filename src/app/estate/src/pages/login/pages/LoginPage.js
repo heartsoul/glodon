@@ -1,7 +1,7 @@
 "use strict";
 import React, { Component } from "react";
 
-import {
+import ReactNative, {
   AppRegistry,
   StyleSheet,
   Button,
@@ -15,13 +15,14 @@ import {
   StatusBar,
   Animated,
   ScrollView,
-  Alert,
+  Platform,
+  // Alert,
 } from "react-native";
 
 import { connect } from 'react-redux' // 引入connect函数
 import { Toast } from 'antd-mobile' // 引入connect函数
 import * as loginAction from '../actions/loginAction' // 导入action方法 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'app-3rd/index';
 // import {ScrollView as KeyboardAwareScrollView } from 'react-native';
 
 import { ActionButton,TextInputNormal,TextInputPassword } from 'app-components';
@@ -34,6 +35,7 @@ class LoginPage extends React.Component {
 static navigationOptions = {
     headerTitle: <BarItems.TitleBarItem text='用户登录'/>,
     headerRight:<View/>,
+    header:null
   };
 
   constructor(props) {
@@ -56,7 +58,9 @@ static navigationOptions = {
       events: "",
       msg: "",
       linePwdAnim: new Animated.Value(0.0),
-      lineAnim: new Animated.Value(un.length > 0 ? 0.5 : 0.0)
+      lineAnim: new Animated.Value(un.length > 0 ? 0.5 : 0.0),
+      namePwdAnim: new Animated.Value(0.0),
+      nameAnim: new Animated.Value(un.length > 0 ? 0.5 : 0.0)
     };
   }
  componentDidMount = () => {
@@ -90,10 +94,13 @@ static navigationOptions = {
     this.setState({ username: text, disabled:!check});
   };
   _onUserNameBlur = () => {
-    // this.startAnimation();
     this.setState({ disabled:!this._checkInput()});
       Animated.timing(
         this.state.lineAnim,
+        {toValue: this.state.username.length <= 0 ? 0.0 : 0.5,duration:0.0}
+      ).start();
+      Animated.timing(
+        this.state.nameAnim,
         {toValue: this.state.username.length <= 0 ? 0.0 : 0.5}
       ).start();
   };
@@ -101,6 +108,10 @@ static navigationOptions = {
     this.setState({ disabled:!this._checkInput()});
     Animated.timing(
       this.state.linePwdAnim,
+      {toValue: this.state.password.length <= 0 ? 0.0 : 0.5,duration:0.0}
+    ).start();
+    Animated.timing(
+      this.state.namePwdAnim,
       {toValue: this.state.password.length <= 0 ? 0.0 : 0.5}
     ).start();
   };
@@ -112,6 +123,11 @@ static navigationOptions = {
       this.state.lineAnim,
       {toValue: 1.0}
     ).start();
+    
+    Animated.timing(
+      this.state.nameAnim,
+      {toValue: 1.0}
+    ).start();
   };
   _onPasswordFocus = () => {
     this.setState({disabled:!this._checkInput()});
@@ -119,7 +135,11 @@ static navigationOptions = {
       this.state.linePwdAnim,
       {toValue: 1.0}
     ).start();
-   
+  
+    Animated.timing(
+      this.state.namePwdAnim,
+      {toValue: 1.0}
+    ).start();
   };
   
   _onPasswordChangeText = text => {
@@ -145,29 +165,22 @@ static navigationOptions = {
     const { login } = this.props
     login(this.state.username,this.state.password)
   }
-  startAnimation(){
-    this.state.currentAlpha = this.state.currentAlpha == 1.0?0.0:1.0;
-    Animated.timing(
-      this.state.fadeAnim,
-      {toValue: this.state.currentAlpha}
-    ).start();
-    Animated.timing(
-      this.state.lineAnim,
-      {toValue: this.state.currentAlpha}
-    ).start();
-    
-  }
   componentWillReceiveProps(nextProps){
     if(nextProps.isSuccess == false && nextProps.status === '登录失败' && this.props.status != nextProps.status) {
-      Alert.alert("提示",'账号或密码错误',[{text: '确定', onPress: () => {}, style: 'cancel'}]);
+      if(Platform.OS === 'web') {
+        alert('账号或密码错误',3);
+      } else {
+        ReactNative.Alert.alert("提示",'账号或密码错误',[{text: '确定', onPress: () => {}, style: 'cancel'}]);
+      }
     }
     return true;
   }
   render() {
     return (
-      <KeyboardAwareScrollView style={{backgroundColor: "#ffffff",flex: 1,
+      <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={'on-drag'} 
+      style={{backgroundColor: "#ffffff",flex: 1,
       marginLeft: 0,
-      marginRight: 0}}>
+      marginRight: 0,width:'100%',height:'100%'}}>
      
         <StatusBar
           barStyle="light-content"
@@ -185,13 +198,13 @@ static navigationOptions = {
               { marginTop: 28, },
               {
                 color: "rgb(153,153,146)",
-                fontSize: this.state.lineAnim.interpolate({
+                fontSize: this.state.nameAnim.interpolate({
                   inputRange: [0, 0.5, 1],
                   outputRange: [14, 12, 12] //线性插值，0对应60，0.6对应30，1对应0
                 }),
                 transform: [//transform动画
                   {
-                    translateY: this.state.lineAnim.interpolate({
+                    translateY: this.state.nameAnim.interpolate({
                       inputRange: [0, 0.5, 1],
                       outputRange: [38, 0, 0] //线性插值，0对应60，0.6对应30，1对应0
                     }),
@@ -204,6 +217,7 @@ static navigationOptions = {
         </Animated.Text>
         <TextInputNormal
           placeholder={''}
+          inputStyle={{fontSize:18}}
           onBlur={() => this._onUserNameBlur()}
           onFocus={() => this._onUserNameFocus()}
           onChangeText={text => this._onUserNameChangeText(text)}
@@ -229,13 +243,13 @@ static navigationOptions = {
               { marginTop: 20 },
               {
                 color: "rgb(153,153,146)",
-                fontSize: this.state.linePwdAnim.interpolate({
+                fontSize: this.state.namePwdAnim.interpolate({
                   inputRange: [0, 0.5, 1],
                   outputRange: [14, 12, 12] //线性插值，0对应60，0.6对应30，1对应0
                 }),
                 transform: [//transform动画
                   {
-                    translateY: this.state.linePwdAnim.interpolate({
+                    translateY: this.state.namePwdAnim.interpolate({
                       inputRange: [0, 0.5, 1],
                       outputRange: [38, 0, 0] //线性插值，0对应60，0.6对应30，1对应0
                     }),
@@ -248,6 +262,7 @@ static navigationOptions = {
         </Animated.Text>
         <TextInputPassword
           placeholder={''}
+          inputStyle={{fontSize:18}}
           onChangeText={text => this._onPasswordChangeText(text)}
           value={this.state.password}
           onBlur={() => this._onPasswordBlur()}

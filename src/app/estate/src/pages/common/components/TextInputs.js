@@ -13,7 +13,8 @@ export class TextInputNormal extends Component {
     /*用来指示是否显示Loading提示符号*/
     this.state = {
       disabled: false,
-      textB:this.props.defaultValue
+      textB:this.props.defaultValue,
+      focus:true
     };
   }
   focus = () =>{
@@ -21,15 +22,17 @@ export class TextInputNormal extends Component {
   }
   _onClearTextEntry = () =>{
     this.textInput.clear();
+    this.state.textB = '';
     this.props.onChangeText('');
     this.focus();
   }
   render() {
+    const {inputStyle} = this.props;
     return (
       <View  style={[styles.style_input,]}>
       <TextInput
       ref={(ref)=>{this.textInput=ref}}
-      style={styles.style_user_input}
+      style={[styles.style_user_input,inputStyle?inputStyle:{}]}
       numberOfLines={1}
       autoFocus={true}
       returnKeyType = "next"
@@ -53,11 +56,13 @@ export class TextInputNormal extends Component {
       }
       }
       value={this.state.textB}
-      onBlur={this.props.onBlur}
-      onFocus={this.props.onFocus}
+      onBlur={(event)=>{this.props.onBlur(event),this.setState({focus:false})}}
+      onFocus={(event)=>{this.state.focus = true;this.props.onFocus(event)}}
     />
      <View style={[styles.style_input_action]}>
-    <TouchableOpacity onPress={this._onClearTextEntry}><Image style={styles.style_image_delete} source={icon_login_password_delete}/></TouchableOpacity>
+     <TouchableOpacity style={[this.state.textB && this.state.textB.length && this.state.focus ? {} : {'display':'none'}]} onPress={this._onClearTextEntry}>
+     <Image style={styles.style_image_delete} source={icon_login_password_delete}/>
+     </TouchableOpacity>
     </View>
     </View>
     )
@@ -70,6 +75,7 @@ TextInputNormal.propTypes = {
   onBlur: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,
   onChangeText: PropTypes.func.isRequired,
+  inputStyle:PropTypes.any,
 }
 
 export class TextInputPassword extends Component {
@@ -84,6 +90,7 @@ export class TextInputPassword extends Component {
       secureTextEntry:true,
       resetData:false,
       value:this.props.value,
+      focus:false,
     };
   }
   _onClearTextEntry = () =>{
@@ -111,10 +118,11 @@ export class TextInputPassword extends Component {
     this.textInput.focus();
   }
   render() {
+    const {inputStyle} = this.props;
     return (
       <View  style={[styles.style_input,]}>
       <TextInput ref={(ref)=>{this.textInput=ref}}
-      style={[styles.style_pwd_input]}
+      style={[styles.style_pwd_input,inputStyle?inputStyle:{}]}
       numberOfLines={1}
       returnKeyType = "done"
       underlineColorAndroid={"transparent"}
@@ -144,12 +152,12 @@ export class TextInputPassword extends Component {
         }
       }
       value = {this.state.value}
-      onBlur={this.props.onBlur}
-      onFocus={this.props.onFocus}
+      onBlur={(event)=>{this.props.onBlur(event)}}
+      onFocus={(event)=>{this.state.focus = true; this.props.onFocus(event)}}
     />
     
     <View  style={[styles.style_input_action,{width:80}]}>
-    <TouchableOpacity style={[this.state.value  && this.state.value.length ? {} : {'display':'none'}]} onPress={this._onClearTextEntry}><Image style={styles.style_image_delete} source={icon_login_password_delete}/></TouchableOpacity>
+    <TouchableOpacity style={[this.state.value  && this.state.value.length && this.state.focus? {} : {'display':'none'}]} onPress={this._onClearTextEntry}><Image style={styles.style_image_delete} source={icon_login_password_delete}/></TouchableOpacity>
     
     <TouchableOpacity onPress={this._onSecureTextEntry}><Image style={styles.style_image} source={this.state.secureTextEntry ? icon_login_password_hide : icon_login_password_show}/></TouchableOpacity>
     </View>
@@ -163,6 +171,7 @@ TextInputPassword.propTypes = {
   onBlur: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,
   onChangeText: PropTypes.func.isRequired,
+  inputStyle:PropTypes.any,
 }
 
 export class TextInputImage extends Component {
@@ -261,8 +270,8 @@ const styles = StyleSheet.create({
    },
    
    style_image_delete: {
-    width:20,
-    height:20,
+    width:18,
+    height:18,
     marginRight:10,
    },
   style_input_submit: {
@@ -282,7 +291,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginLeft: 0,
     marginRight: 60,
-    fontSize:14,
+    fontSize:16,
   },
   style_pwd_input: {
     backgroundColor:'transparent',
@@ -290,6 +299,6 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginLeft: 0,
     marginRight: 60,
-    fontSize:14,
+    fontSize:16,
   },
 });

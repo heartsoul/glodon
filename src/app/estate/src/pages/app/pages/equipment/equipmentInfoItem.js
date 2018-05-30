@@ -61,15 +61,21 @@ class EquipmentInfoItemTextInput extends React.Component {
         this.refs.clearButton.setNativeProps({ style: { display: dis } });
     }
     onBlur = (event) => {
+        this.state.focus = false;
+        this.refs.clearButton.setNativeProps({ style: { display: 'none' } });
         if (this.props.onBlur) {
             this.props.onBlur(event);
         }
     }
     onFocus = (event) => {
         let value = this.state.dValue || '';
-        let dis = value.length > 0 ? 'flex' : 'none';
+        this.state.focus = true;
+        let dis = (value.length > 0 && this.state.focus) ? 'flex' : 'none';
         console.log('value:'+value+',dis:'+dis);
         this.refs.clearButton.setNativeProps({ style: { display: dis } });
+        if (this.props.onFocus) {
+            this.props.onFocus(event);
+        }
     }
     render = () => {
         return (
@@ -83,7 +89,7 @@ class EquipmentInfoItemTextInput extends React.Component {
                         value={Platform.OS === 'ios' ? this.state.dValue : null} style={styles.textInput}
                         onChangeText={(value) => this.onChangeText(value)} />
                 </View>
-                <TouchableOpacity ref='clearButton' style={[styles.rightAction, (this.state.dValue && this.state.dValue.length > 0) ? { display: 'flex' } : { display: 'none' }]} activeOpacity={0.5} onPress={(event) => { this.onClear(event); }}>
+                <TouchableOpacity ref='clearButton' style={[styles.rightAction, (this.state.dValue && this.state.dValue.length > 0 && this.state.focus) ? { display: 'flex' } : { display: 'none' }]} activeOpacity={0.5} onPress={(event) => { this.onClear(event); }}>
                     <Image source={clearImage} style={styles.inputClear} />
                 </TouchableOpacity>
             </View>

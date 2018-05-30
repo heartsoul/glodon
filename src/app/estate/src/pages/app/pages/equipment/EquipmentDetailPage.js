@@ -269,7 +269,7 @@ class EquipmentDetailPage extends Component {
     renderData = () => {
         const equipmentInfo = this.props.equipmentInfo;
         return (
-            <KeyboardAwareScrollView style={{ backgroundColor: '#FAFAFA' }}>
+            <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={'on-drag'} style={{ backgroundColor: '#FAFAFA' }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <EquipmentDetailView
                     committed={this.state.committed}

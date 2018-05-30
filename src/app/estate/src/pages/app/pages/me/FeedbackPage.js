@@ -81,7 +81,7 @@ export default class extends React.Component {
   }
   render() {
     return (
-      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: '#ffffff' }]}>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={'on-drag'} style={[styles.container, { backgroundColor: '#ffffff' }]}>
       <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
       <EquipmentInfoItem.EquipmentInfoItemTextInput key="fb1" leftTitle="姓名：" titleWidth={55} showType="input" onChangeText={this.onChangeTextName} />
       <EquipmentInfoItem showType="line" />

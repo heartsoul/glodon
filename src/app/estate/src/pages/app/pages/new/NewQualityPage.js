@@ -211,7 +211,7 @@ class NewQualityPage extends Component {
             return this.renderErrorView();
         }
         return (
-            <KeyboardAwareScrollView>
+            <KeyboardAwareScrollView  keyboardShouldPersistTaps={"always"} keyboardDismissMode={'on-drag'}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{ marginTop: -44 }}>
                     <Tabs

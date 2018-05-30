@@ -28,6 +28,7 @@ Theme.set({
   // navButtonFontSize: 15,
   navSeparatorColor: primaryColor,
   tvBarBtnWidth:70,
+  asCancelItemTitleColor:'#f56323',
 });
 
 import * as PAGES from '../pages'
