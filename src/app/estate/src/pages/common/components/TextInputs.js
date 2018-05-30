@@ -35,7 +35,6 @@ export class TextInputNormal extends Component {
       returnKeyType = "next"
       enablesReturnKeyAutomatically={true}
       underlineColorAndroid={"transparent"}
-      textAlign="left"
       autoCorrect={false}
       autoCapitalize='none'
       placeholder={this.props.placeholder}
@@ -53,7 +52,6 @@ export class TextInputNormal extends Component {
         this.setState({textB:text}); 
       }
       }
-      // defaultValue={this.props.defaultValue}
       value={this.state.textB}
       onBlur={this.props.onBlur}
       onFocus={this.props.onFocus}
@@ -123,10 +121,8 @@ export class TextInputPassword extends Component {
       secureTextEntry={this.state.secureTextEntry}
       enablesReturnKeyAutomatically={true}
       placeholderTextColor="rgb(153,153,146)"
-      textAlign="left"
       autoCorrect={false}
       autoCapitalize='none'
-      // autoFocus={true}
       maxLength={32}
       placeholder={this.props.placeholder}
       onSubmitEditing ={(text)=>{
@@ -200,8 +196,6 @@ export class TextInputImage extends Component {
       returnKeyType = "done"
       underlineColorAndroid={"transparent"}
       enablesReturnKeyAutomatically={true}
-      textAlign="left"
-      // autoFocus={true}
       placeholder={this.props.placeholder}
       autoCorrect={false}
       autoCapitalize='none'
@@ -237,7 +231,6 @@ TextInputImage.propTypes = {
 
 const styles = StyleSheet.create({
   style_input: {
-    // width:'100%',
     backgroundColor:'transparent',
     marginLeft: 20,
     marginRight: 20,
@@ -246,7 +239,6 @@ const styles = StyleSheet.create({
   },
   style_input_action: {
     flexDirection:"row",
-    // backgroundColor:'blue',
     position:'absolute',
     right:0,
     top:0,
@@ -272,7 +264,6 @@ const styles = StyleSheet.create({
     width:20,
     height:20,
     marginRight:10,
-    // display:'none',
    },
   style_input_submit: {
     marginTop: 15,
@@ -286,7 +277,6 @@ const styles = StyleSheet.create({
     color: "#fff"
   },
   style_user_input: {
-    // width:'100%',
     backgroundColor:'transparent',
     height: 40,
     marginTop: 0,

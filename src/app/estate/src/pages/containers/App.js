@@ -237,11 +237,6 @@ export default class extends React.Component {
     }
 
     fireHeartBeat = () => {
-        let systemDate = new Date().getTime();
-        if (systemDate - this.prevUpdateTime < HEART_BEAT_UPDATE_TIME) {
-            return; // 不需要更新
-        }
-        // console.log('》》》更新当前信息,时间：' + systemDate);
         if (storage.hasChoose()) {
             let tenant = storage.loadLastTenant();
             API.setCurrentTenant(tenant).then((responseData) => {

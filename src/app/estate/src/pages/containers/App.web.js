@@ -1,28 +1,9 @@
 import React from 'react'
-import { NoMatch, Switch, Route } from 'react-router'
 import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'
 import configureStore, { history } from '../store/ConfigureStore'
 import * as GLD from '../pages'
-function createStackNavigator(screens, configure) {
-  let initScreen = null;
-  if (configure.initialRouteName) {
-    let initScreenData = screens[configure.initialRouteName];
-    initScreen = <Route path={'/'} exact component={initScreenData.screen} />
-  }
-  let arrayData = [];
-  for (var key in screens) {
-    arrayData.push({key:key,item:screens[key]});
-  }
-  return (<Switch>
-    {initScreen}
-    {
-      arrayData.map((item, index) => {
-      return <Route key ={item+'-'+index} path={'/' + item.key} exact component={item.item.screen} />
-    })}
-    <Route component={NoMatch} />
-  </Switch>)
-}
+import { createStackNavigator,NavigationActions, StackActions } from 'app-3rd/react-navigation';
 const store = configureStore()
 const screens = {
   GuidePage: {
@@ -185,11 +166,6 @@ export default class extends React.Component {
   }
 
   fireHeartBeat = () => {
-    let systemDate = new Date().getTime();
-    if (systemDate - this.prevUpdateTime < HEART_BEAT_UPDATE_TIME) {
-      return; // 不需要更新
-    }
-    // console.log('》》》更新当前信息,时间：' + systemDate);
     if (storage.hasChoose()) {
       let tenant = storage.loadLastTenant();
       API.setCurrentTenant(tenant).then((responseData) => {
@@ -225,34 +201,9 @@ export default class extends React.Component {
     // if (storage.isGuide()) {
     return (<Provider store={store}><ConnectedRouter history={history}><RootLoginStack onNavigationStateChange={this._onNavigationStateChange} /></ConnectedRouter></Provider>)
     // }
-    // return (<Provider store={store}><RootGuideStack /></ConnectedRouter></Provider>)
+    // return (<Provider store={store}><ConnectedRouter history={history}><RootGuideStack /></ConnectedRouter></Provider>)
   }
   render = () => {
     return this.renderPage();
-  }
-
-  render1() {
-    return (
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <Switch>
-            <Route path="/" exact component={GLD.LoginPage} />
-            <Route path="/GuidePage" exact component={GLD.GuidePage} />
-            <Route path="/LoginPage" exact component={GLD.LoginPage} />
-            {/* <Route path="/ChoosePage" exact component={GLD.TenantPage} /> */}
-            <Route path="/MainPage" exact component={GLD.HomePage} />
-            {/* <Route path="/ProjectPage" exact component={GLD.ProjectPage} />
-            <Route path="/TenantPage" exact component={TenantPage} />
-            <Route path="/QualityMainPage" exact component={GLD.QualityMainPage} />
-            <Route path="/WebPage" exact component={WebPage} />
-            <Route path="/BimFileChooserPage" exact component={GLD.BimFileChooserPage} />*/}
-            <Route path="/NewPage" exact component={GLD.NewPage} />
-            <Route path="/SettingPage" exact component={GLD.SettingPage} />
-            {/* <Route path="/CheckPointPage" exact component={GLD.CheckPointPage} /> */}
-            <Route component={NoMatch} />
-          </Switch>
-        </ConnectedRouter>
-      </Provider>
-    )
   }
 }
