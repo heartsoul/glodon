@@ -23,6 +23,14 @@ export function bimfileHtml(cmdString,token,show) { return `
         .bf-toolbar[title='ModelTree'] {
             display: none;
         }
+        * {
+        -webkit-touch-callout:none;
+        -webkit-user-select:none;
+        -khtml-user-select:none;
+        -moz-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
+      }
     </style>
 </head>
 
@@ -257,16 +265,13 @@ export function bimfileHtml(cmdString,token,show) { return `
 
                 }
             }
-            // if(!CLOUD.PickEditor.prototype.processTouchend) {
-            CLOUD.PickEditor.prototype.processTouchend = extendProcessTouchend;
-            // }
-
+             CLOUD$1.PickEditor.prototype.processTouchend = extendProcessTouchend;
         }
 
 
         function extendProcessTouchend(event) {
 
-
+           
             if (this.timeId) {
                 clearTimeout(this.timeId);
             }
@@ -275,15 +280,13 @@ export function bimfileHtml(cmdString,token,show) { return `
                 this.longTapFlag = false;
                 event.preventDefault();
             }
-            console.log(" CLOUD.NormalEditor.prototype.processTouchend");
             var cameraControl = this.cameraControl;
 
             function dispatchPickEvent(intersect, selectable) {
                 var modelManager = cameraControl.viewer.modelManager;
-                console.log("CLOUD.PickHelper handleMousePick dispatchPickEvent");
                 // 外部需要获得event的一些状态，需要得到canvas坐标，屏幕坐标没用处
                 modelManager.dispatchEvent({
-                    type: CLOUD.EVENTS.ON_CLICK_PICK,
+                    type: CLOUD$1.EVENTS.ON_CLICK_PICK,
                     event: event, // add
                     doubleClick: false, // add
                     canvasPos: {
@@ -320,17 +323,17 @@ export function bimfileHtml(cmdString,token,show) { return `
                         var intersect = cameraControl.intersector.pick(intersectContext, null);
 
 
-                        if (!intersect || !(intersect.objectType === CLOUD.PICKABLETYPE.Marker3d)) {
+                        if (!intersect || !(intersect.objectType === CLOUD$1.PICKABLETYPE.Marker3d)) {
                             cameraControl.touchEndHandler(event);
                             return;
                         }
-                        event.preventDefault();
+                        // event.preventDefault();
 
                         var userId = intersect.userId;
 
                         scope.lastPickedUserId = userId;
 
-                        if (CLOUD.Utils.isMobileDevice()) {
+                        if (CLOUD$1.Utils.isMobileDevice()) {
                             cameraControl.pivot = intersect.point;
                         }
 
@@ -353,7 +356,7 @@ export function bimfileHtml(cmdString,token,show) { return `
                     break;
 
                 case 1:
-                    if (CLOUD.EditorConfig.NoRotate) return;
+                    if (CLOUD$1.EditorConfig.NoRotate) return;
 
                     this._rotateStart.set(event.touches[0].clientX, event.touches[0].clientY);
                     this.state = this.StateType.ROTATE;

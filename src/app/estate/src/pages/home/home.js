@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, View, Text, Image,TouchableOpacity,SafeAreaView } from 'react-native';
+import { Button, View, Text, Image,TouchableOpacity,SafeAreaView,Platform} from 'react-native';
 import { withNavigation,StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
 import { TabView, Theme, BasePage, NavigationPage, TeaNavigator, Overlay, Label} from 'app-3rd/teaset'
 //Theme.set(Theme.themes.black);
@@ -7,6 +7,7 @@ import { BimFileEntry, AuthorityManager } from 'app-entry';
 import { BarItems } from "app-components";
 import * as CONSTANTS from 'app-api';
 const primaryColor = '#00baf3';
+
 Theme.set({
   primaryColor: primaryColor,
   btnPrimaryColor: primaryColor,
@@ -26,6 +27,7 @@ Theme.set({
   // navTitleFontSize: 18,
   // navButtonFontSize: 15,
   navSeparatorColor: primaryColor,
+  tvBarBtnWidth:70,
 });
 
 import * as PAGES from '../pages'
@@ -44,6 +46,13 @@ export default class extends React.Component {
   constructor(props) {
     super(props)
     storage.homeNavigation = this.props.navigation;
+    let activeIndex = 0;
+    if(props.navigation.getParam('activeIndex')) {
+      activeIndex = props.navigation.getParam('activeIndex') || 0;
+    }
+    this.state = {
+      activeIndex:activeIndex
+    };
     props.navigation.setParams({'options':()=>{return this.options(CONSTANTS.PAGE_INNDX_HOME)}})
   }
   componentDidMount = () => {
@@ -56,27 +65,22 @@ export default class extends React.Component {
     if(AuthorityManager.isQualityCreate() || AuthorityManager.isEquipmentCreate()) {
     return <TabView.Sheet
         type='button'
-        title='新建'
+        title=''
         icon={
           <View style={{
-            width: 54,
-            height: 54,
-            borderRadius: 27,
-            shadowColor: '#ccc',
-            shadowOffset: { height: -1 },
-            shadowOpacity: 0.5,
-            shadowRadius: 0.5,
+            width: 70,
+            height: 70,
             alignItems: 'center',
             justifyContent: 'center',
-            // bottom:-10,
           }}>
             <Image
-              style={{ width: 50, height: 50, borderRadius: 25 }}
-              source={require('app-images/home/icon_main_create.png')}
+              style={[{ width: 61, height: 61,resizeMode:'contain',position:'absolute'},Platform.OS ==='android' ? {top:10} : {top:20}]}
+              source={require('app-images/icon_category_create.png')}
             />
           </View>
         }
-        iconContainerStyle={{ justifyContent: 'flex-end' }}
+        style={{width:70,backgroundColor:'orange',}}
+        iconContainerStyle={{ justifyContent: 'center' }}
         onPress={() => {this.onNewClick()}}
       />
     }
@@ -98,15 +102,19 @@ export default class extends React.Component {
     
     if(page == CONSTANTS.PAGE_INNDX_SUBSCRIBE) {
       return ({
-        title:title ? title : CONSTANTS.PAGE_NAME_SUBSCRIBE,
+        headerLeft: <View></View>,
+        headerTitle: <BarItems.TitleBarItem text={title ? title : CONSTANTS.PAGE_NAME_SUBSCRIBE}/>,
         // header: {mode:'screen'},
+        headerRight: <View></View>,
       })
     }
 
     if(page == CONSTANTS.PAGE_INNDX_MESSAGE) {
       return ({
-        title:title ? title : CONSTANTS.PAGE_NAME_MESSAGE,
+        headerLeft: <View></View>,
+        headerTitle: <BarItems.TitleBarItem text={title ? title : CONSTANTS.PAGE_NAME_MESSAGE}/>,
         // header: {mode:'screen'},
+        headerRight: <View></View>,
       })
     }
 
@@ -126,11 +134,14 @@ export default class extends React.Component {
   }
 
   onChange = (index) =>{
+    this.state.activeIndex = index;
+    storage.currentTab = index;
     this.props.navigation.setParams({'options':()=>{return this.options(index)}})
   }
   render() {
     return (
-    <SafeAreaView style={{height:'100%',backgroundColor:"#f5f8f9"}}><TabView ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1}} type='projector'>
+    <SafeAreaView style={{height:'100%',backgroundColor:"#f5f8f9"}}>
+    <TabView activeIndex={this.state.activeIndex} ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1,overflow:'visible'}} type='projector'>
       <TabView.Sheet
         title={CONSTANTS.PAGE_NAME_HOME}
         icon={require('app-images/home/icon_main_main_page.png')}
@@ -142,7 +153,6 @@ export default class extends React.Component {
         title={CONSTANTS.PAGE_NAME_SUBSCRIBE}
         icon={require('app-images/home/icon_main_subscribe.png')}
         activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
-        badge={1}
       >
         <PAGES.SubscribePage />
       </TabView.Sheet>
@@ -154,7 +164,6 @@ export default class extends React.Component {
         title={CONSTANTS.PAGE_NAME_MESSAGE}
         icon={require('app-images/home/icon_main_message.png')}
         activeIcon={require('app-images/home/icon_main_message_selected.png')}
-        badge={9}
       >
         <PAGES.MessagePage />
       </TabView.Sheet>

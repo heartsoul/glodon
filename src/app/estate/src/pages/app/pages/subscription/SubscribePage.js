@@ -7,9 +7,14 @@ import {
   StatusBar,
   SafeAreaView
 } from 'react-native';
+import { BarItems, LoadingView } from "app-components";
+
 export default class extends React.Component {
+
+  
   static navigationOptions = {
-    title: '订阅',
+    headerTitle: <BarItems.TitleBarItem text='订阅'/>,
+    headerRight:<View/>,
   };
   constructor() {
     super();

@@ -5,7 +5,8 @@ import { LoadingView, NoDataView, BarItems } from 'app-components';
 import { BimFileEntry } from "app-entry";
 import * as AppConfig from "common-module";
 import React, { Component } from 'react';
-import { Dimensions, Image, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View, WebView } from 'react-native';
+import { Dimensions, Image, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {WebView} from 'app-3rd/index'
 import { connect } from 'react-redux';
 import * as RelevantModelAction from "./../../../actions/relevantModelAction";
 import * as AuthorityManager from "./../project/AuthorityManager";
@@ -632,7 +633,7 @@ class RelevantModelPage extends Component {
                         javaScriptEnabled={true}
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
-                        injectedJavaScript={cmdString}
+                        // injectedJavaScript={cmdString}
                         onLoadEnd={() => { }}
                         // source={{ uri: 'http://10.11.241.143:8080/15001340978_5200001_5200153/bimModel/cb5328e7a9ac4f67b4f9c9eb63c02be4/1e5345adce95ee35646148ffaa6194e1/app.html' }}
                         // source={{ html: this.state.html }}

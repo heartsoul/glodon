@@ -26,14 +26,16 @@ import WideButton from "./../../components/WideButton";
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
 import {BimSwitch as Switch,ToCleanDialog} from 'app-components';
+import { BarItems, LoadingView } from "app-components";
 
 var { width, height } = Dimensions.get("window");
 
 class SettingPage extends Component {
 
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: '设置',
-    });
+    static navigationOptions = {
+        headerTitle: <BarItems.TitleBarItem text='设置'/>,
+        headerRight:<View/>,
+      };
     componentDidMount = () => {
         // console.log(this.props.navigation.state.params);
         //请求数据
@@ -63,7 +65,8 @@ class SettingPage extends Component {
     _tenantChoose = () => {
         let navigator = this.props.navigation;
         storage.projectIdVersionId = '';
-        storage.pushNext(navigator, "TenantPage")
+        // storage.pushNext(navigator, "TenantPage")
+        storage.gotoSwitchProject(navigator);
     }
     _about = () => {
         let navigator = this.props.navigation;

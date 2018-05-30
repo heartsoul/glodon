@@ -16,7 +16,7 @@ import { Tabs, } from 'antd-mobile';
 import { BarItems } from "app-components"
 import NewCheckListTabBar from "./NewCheckListTabBar";
 import NewQualityView from "./NewQualityView";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'app-3rd/index';
 import { connect } from 'react-redux';
 import * as actions from "./../../actions/newQualityAction2";
 
@@ -30,11 +30,7 @@ const REF_INSPECTION = 'REF_INSPECTION';//
 const REF_ACCEPTANCE = 'REF_ACCEPTANCE';//
 
 class NewQualityPage extends Component {
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
-        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
-        title: navigation.state.params && navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : ""
-    })
+   
     static navigationOptions = ({ navigation, screenProps }) => ({
         // title: '新建',
         headerTitle: (navigation.state.params.headerTitle),
@@ -64,7 +60,7 @@ class NewQualityPage extends Component {
     }
 
     setTitle = () => {
-        let headerTitle = (<View style={{ height: 44, width: 200 }}>
+        let headerTitle = (<View style={{ height: 44, alignSelf: "center", flex: 1, }}>
             <Tabs
                 tabs={tabs}
                 initialPage={this.activeTab}

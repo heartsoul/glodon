@@ -23,6 +23,7 @@ import {
     Label,
 } from 'app-3rd/teaset';
 import * as QUALITYAPI from "app-api";
+import { BarItems, LoadingView } from "app-components";
 
 export default class CheckPointList extends React.Component {
 
@@ -64,10 +65,11 @@ export default class CheckPointList extends React.Component {
             });
     }
 
-    static navigationOptions = {
-        title: '质检项目',
-       }
 
+    static navigationOptions = {
+        headerTitle: <BarItems.TitleBarItem text='质检项目' />,
+        headerRight: <View />,
+    };
     _getListByParentId = (parentId) => {
         let data = [];
         this.state.checkPoints.map((item) => {
@@ -156,7 +158,7 @@ export default class CheckPointList extends React.Component {
             <TouchableOpacity activeOpacity={0.5} onPress={() => { this._moduleItemClick(item, index) }} >
                 <View style={styles.moduleItemContainer}>
                     <Text style={styles.moduleChildItemName}> {item.name}</Text>
-                    <TouchableOpacity onPress={() => { this.toCheckPointInfo(item)}}>
+                    <TouchableOpacity onPress={() => { this.toCheckPointInfo(item) }}>
                         <Image source={require('app-images/icon_benchmark.png')} style={styles.moduleChildMark} />
                     </TouchableOpacity>
                     <View style={{ flex: 1 }} />
@@ -203,7 +205,7 @@ export default class CheckPointList extends React.Component {
     render() {
 
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: "#fff" }}>
 
                 {
                     (this.state.navData && this.state.navData.length > 0) ? (
@@ -300,10 +302,10 @@ var styles = StyleSheet.create({
         marginRight: 14,
     },
     moduleItemDividerLine: {
-        height: 0.5,
+        height: 1,
         marginLeft: 19,
         flex: 1,
-        backgroundColor: '#CCCCCC'
+        backgroundColor: '#f7f7f7'
     }
 
 });

@@ -144,7 +144,7 @@ export async function getBimFileUrlThumbnail(objectId, callback, thumbnailSize =
         api = api + '&thumbnailSize='+thumbnailSize;
     }
     let ops = {
-        method: 'POST',
+        method: 'GET',
         headers: {
             "Content-Type": "application/json;charset=utf-8",
             "X-Requested-With": "XMLHttpRequest",
@@ -162,6 +162,7 @@ export async function getBimFileUrlThumbnail(objectId, callback, thumbnailSize =
     return fetch(api, ops)
         .then((response) => {
             if (response.status >= 200 && response.status < 300) {
+               
                 return response.text();
             }
             return null;
@@ -171,7 +172,10 @@ export async function getBimFileUrlThumbnail(objectId, callback, thumbnailSize =
                 callback(false,null);
                 return {};
             } 
-            let url = responseData;
+            let url = responseData || '';
+            if(url) {
+                url = url.replace(/"/g, "");
+            }
             callback(true,url);
            return {url};
         })
@@ -188,7 +192,7 @@ export async function getBimFileUrl(objectId, callback) {
 
     let api = `${AppConfig.BASE_URL}/bimpm/attachment/attachment/url?objectId=${objectId}&thumbnail=${true}&thumbnailSize=preview`;
     let ops = {
-        method: 'POST',
+        method: 'GET',
         headers: {
             "Content-Type": "application/json;charset=utf-8",
             "X-Requested-With": "XMLHttpRequest",
@@ -215,7 +219,10 @@ export async function getBimFileUrl(objectId, callback) {
                 callback(false,null);
                 return {};
             } 
-            let url = responseData;
+            let url = responseData || '';
+            if(url) {
+                url = url.replace(/"/g, "");
+            }
             callback(true,url);
            return {url};
         })

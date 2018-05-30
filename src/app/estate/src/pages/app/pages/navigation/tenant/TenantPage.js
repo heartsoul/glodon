@@ -10,10 +10,12 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 export default class tenantList extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: '租户列表',
+        headerTitle: <BarItems.TitleBarItem text='租户列表'/>,
         gesturesEnabled: false,
         headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
-    });
+        headerRight:<View/>,   
+     });
+
     changeProject = false;
     constructor(props) {
         super(props);
@@ -39,12 +41,20 @@ export default class tenantList extends Component {
         if (backFun) {
             backFun(false);
         }
+        if(storage.loadLastTenant() == '0') {
+            if (backFun) {
+                backFun(true);
+            } else {
+                storage.gotoLogin(this.props.navigation)
+            }
+            return;
+        }
         this.resetTenant();
     }
     resetTenant = () => {
         API.setCurrentTenant(storage.loadLastTenant())
             .then((responseData) => {
-                storage.pop(this.props.navigation, 1)
+                storage.gotoMainPage(this.props.navigation,{activeIndex:storage.currentTab})
             });
     }
     loadLeftTitle = () => {
@@ -94,7 +104,7 @@ export default class tenantList extends Component {
 
             });
             if (dataBlob.length == 1 && storage.loadLastTenant() == '0') {
-                this.props.navigation.setParams({ isFirst: false });
+               this.props.navigation.setParams({ isFirst: false });
                 this._clickItem(dataBlob[0], 0)
                 return;
             }
@@ -123,8 +133,11 @@ export default class tenantList extends Component {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
                 () => {
-                    this.resetTenant();
-                    return true
+                 if(storage.currentRouteName === this.props.navigation.state.routeName){
+                        this.resetTenant();
+                        return true
+                    }
+                 return false;
                 }
             )
         }

@@ -10,15 +10,18 @@ import {
   View,
   Dimensions,
   TextInput,
-  TouchableHighlight,
+  TouchableOpacity,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  Animated,
+  ScrollView,
+  ScrollView as KeyboardAwareScrollView 
 } from "react-native";
 
 import { connect } from 'react-redux' // 引入connect函数
+import { Toast } from 'antd-mobile' // 引入connect函数
 import * as loginAction from '../actions/loginAction' // 导入action方法 
-
-import { ActionButton } from 'app-components';
+import { ActionButton,TextInputNormal,TextInputPassword } from 'app-components';
 
 var { width, height } = Dimensions.get("window");
 
@@ -26,84 +29,139 @@ class LoginPage extends React.Component {
   static navigationOptions = {
     title: '用户登录',
     header:null,
-  }
+}
   constructor(props) {
     super(props);
+    if(!storage.homeNavigation) {
+      storage.homeNavigation = this.props.navigation;
+    }
+    this.passwordTextInput = null;
+    this.userNameTextInput = null;
     /*用来指示是否显示Loading提示符号*/
+    let un = props.userName;
+    if(!un) {
+      un = '';
+    }
     this.state = {
       disabled: false,
       pressed: false,
-      username: "15822320523", // props.userName,
-      password: "123qwe", //props.password,
-      focusUserName: 1, // 焦点 0: 没有 1:
-      focusPassword: 0, // 焦点 0: 没有 1:
+      username: un,
+      password: "", //props.password,
       events: "",
-      msg: ""
+      msg: "",
+      linePwdAnim: new Animated.Value(0.0),
+      lineAnim: new Animated.Value(un.length > 0 ? 0.5 : 0.0)
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    
+    if (nextProps.status === '重试' && nextProps.retryTimes > 0) {
+      this.props.login(this.state.username,this.state.password);
+      return false;
+    }
     // 登录完成,切成功登录
-    if (nextProps.status === '登陆成功' && nextProps.isSuccess) {
-      console.log("\n>>>>>>nextProps.status:"+nextProps.status)
+    if (nextProps.status === '登录成功' && nextProps.isSuccess && storage.isLogin()) {
       let navigator = this.props.navigation;
-      if(nextProps.hasChoose) {
-        this.props.history.replace('MainPage');
-        // storage.gotoMain(this.props.history);
-      } else {
-        // storage.gotoMain(this.props.history);
-        this.props.history.replace('MainPage');
-      }   
+      Toast.hide();
+      storage.gotoMain(navigator);  
       return false
     }
+    Toast.hide();
     return true
   }
 
+  _checkInput() {
+    return (this.state.username.length > 1 && this.state.password.length > 5);
+  }
   _onUserNameChangeText = text => {
-    console.log("_onUserNameChangeText" + text);
-    this.setState({ username: text });
+    if(text.indexOf('\n')>=0) {
+      this.passwordTextInput.focus();
+      // this.passwordTextInput.setSelectionRange(0, this.passwordTextInput.value.length);
+      return;
+    }
+    let check = text.length > 1 && this.state.password.length > 5;
+    this.setState({ username: text, disabled:!check});
   };
   _onUserNameBlur = () => {
-    this.setState({ focusUserName: 0 });
+    // this.startAnimation();
+    this.setState({ disabled:!this._checkInput()});
+      Animated.timing(
+        this.state.lineAnim,
+        {toValue: this.state.username.length <= 0 ? 0.0 : 0.5}
+      ).start();
   };
   _onPasswordBlur = () => {
-    this.setState({ focusPassword: 0 });
+    this.setState({ disabled:!this._checkInput()});
+    Animated.timing(
+      this.state.linePwdAnim,
+      {toValue: this.state.password.length <= 0 ? 0.0 : 0.5}
+    ).start();
   };
   _onUserNameFocus = () => {
-    this.setState({
-      focusUserName: 1
+
+    this.setState({disabled:!this._checkInput()
     });
+    Animated.timing(
+      this.state.lineAnim,
+      {toValue: 1.0}
+    ).start();
   };
   _onPasswordFocus = () => {
-    this.setState({
-      focusPassword: 1
-    });
-  };
-  _onPasswordChangeText = text => {
-    console.log("_onPasswordChangeText" + text);
-    this.setState({ password: text });
-  };
-  _fogotAction = () => {
+    this.setState({disabled:!this._checkInput()});
+    Animated.timing(
+      this.state.linePwdAnim,
+      {toValue: 1.0}
+    ).start();
    
   };
   
-  render() {
+  _onPasswordChangeText = text => {
+    if(text && text.indexOf('\n')>=0) {
+     if(this._checkInput()) {
+       this.doLogin();
+     }
+      return;
+    }
+    if(!text) {
+      text = '';
+    } 
+    // console.log("_onPasswordChangeText" + text);
+    let check = text.length > 5 && this.state.username.length > 1;
+    this.setState({ password: text, disabled:!check});
+  };
+  _fogotAction = () => {
+    let navigator = this.props.navigation;
+    storage.pushNext(navigator, "ForgotPage",{title:'找回密码'})
+  };
+  doLogin=()=>{
+    Toast.loading('正在登录...', 0, null, true);
     const { login } = this.props
+    login(this.state.username,this.state.password)
+  }
+  startAnimation(){
+    this.state.currentAlpha = this.state.currentAlpha == 1.0?0.0:1.0;
+    Animated.timing(
+      this.state.fadeAnim,
+      {toValue: this.state.currentAlpha}
+    ).start();
+    Animated.timing(
+      this.state.lineAnim,
+      {toValue: this.state.currentAlpha}
+    ).start();
+    
+  }
+  componentWillReceiveProps(nextProps){
+    if(nextProps.isSuccess == false && nextProps.status === '登录失败' && this.props.status != nextProps.status) {
+      alert('账号或密码错误');
+    }
+    return true;
+  }
+  render() {
     return (
-      <SafeAreaView style={{
-        backgroundColor: "#ffffff",
-          height:'100%',
-      }}> 
-      <View
-        style={{
-          backgroundColor: "#ffffff",
-          flex: 1,
-          height:'100%',
-          marginLeft: 0,
-          marginRight: 0
-        }}
-      >
+      <KeyboardAwareScrollView style={{backgroundColor: "#ffffff",flex: 1,
+      marginLeft: 0,
+      marginRight: 0,height:'100%',width:'100%'}}>
+     
         <StatusBar
           barStyle="light-content"
           backgroundColor="#00baf3"
@@ -113,77 +171,110 @@ class LoginPage extends React.Component {
           source={require("app-images/login/icon_login_top_bg.png")}
           style={[styles.style_login_image]}
         />
-        <Text
-          style={[
-            styles.style_input_title,
-            this.state.focusUserName == 1 || this.state.username.length > 0
-              ? { color: "rgb(153,153,146)" }
-              : { color: "transparent" },
-            ,
-            { marginTop: 68 }
-          ]}
-        >
-          账户名
-        </Text>
-        <TextInput
-          style={styles.style_user_input}
-          placeholder={this.state.focusUserName == 1 ? "" : "请输入账户名称"}
-          numberOfLines={1}
-          autoFocus={true}
-          underlineColorAndroid={"transparent"}
-          textAlign="left"
+        <View style={{marginLeft:20,marginRight:20}}>
+        <Animated.Text
+            style={[
+              styles.style_input_title,
+              { marginTop: 28, },
+              {
+                color: "rgb(153,153,146)",
+                fontSize: this.state.lineAnim.interpolate({
+                  inputRange: [0, 0.5, 1],
+                  outputRange: [14, 12, 12] //线性插值，0对应60，0.6对应30，1对应0
+                }),
+                transform: [//transform动画
+                  {
+                    translateY: this.state.lineAnim.interpolate({
+                      inputRange: [0, 0.5, 1],
+                      outputRange: [38, 0, 0] //线性插值，0对应60，0.6对应30，1对应0
+                    }),
+                  },
+                ],
+              }
+            ]}
+          >
+            账户名
+        </Animated.Text>
+        <TextInputNormal
+          placeholder={''}
           onBlur={() => this._onUserNameBlur()}
           onFocus={() => this._onUserNameFocus()}
           onChangeText={text => this._onUserNameChangeText(text)}
-          value={this.state.username}
+          defaultValue={this.state.username}
+          ref={(ref)=>{this.userNameTextInput=ref}}
         />
-        <View
-          style={
-            this.state.focusUserName == 1
-              ? styles.style_input_line
-              : styles.style_input_line_gray
+        <View style={styles.style_input_line_gray}>
+        <Animated.View
+          style={[ styles.style_input_line,
+              {
+                width:this.state.lineAnim.interpolate({
+                    inputRange: [0,0.5,1],
+                    outputRange: ['0%', '0%', '100%'] //线性插值，0对应60，0.6对应30，1对应0
+                  })
+              }
+          ]
           }
         />
-        <Text
+        </View>
+        <Animated.Text
           style={[
             styles.style_input_title,
-            this.state.focusPassword == 1 || this.state.password.length > 0
-              ? { color: "rgb(153,153,146)" }
-              : { color: "transparent" }
+              { marginTop: 20 },
+              {
+                color: "rgb(153,153,146)",
+                fontSize: this.state.linePwdAnim.interpolate({
+                  inputRange: [0, 0.5, 1],
+                  outputRange: [14, 12, 12] //线性插值，0对应60，0.6对应30，1对应0
+                }),
+                transform: [//transform动画
+                  {
+                    translateY: this.state.linePwdAnim.interpolate({
+                      inputRange: [0, 0.5, 1],
+                      outputRange: [38, 0, 0] //线性插值，0对应60，0.6对应30，1对应0
+                    }),
+                  },
+                ],
+              }
           ]}
         >
           密码
-        </Text>
-        <TextInput
-          style={styles.style_pwd_input}
-          placeholder={this.state.focusPassword == 1 ? "" : "请输入用户密码"}
-          numberOfLines={1}
-          underlineColorAndroid={"transparent"}
-          secureTextEntry={true}
-          textAlign="left"
+        </Animated.Text>
+        <TextInputPassword
+          placeholder={''}
           onChangeText={text => this._onPasswordChangeText(text)}
           value={this.state.password}
           onBlur={() => this._onPasswordBlur()}
           onFocus={() => this._onPasswordFocus()}
+          ref={(ref)=>{this.passwordTextInput=ref}}
         />
-        <View
-          style={
-            this.state.focusPassword == 1
-              ? styles.style_input_line
-              : styles.style_input_line_gray
+        <View style={styles.style_input_line_gray}>
+        <Animated.View
+          style={[ styles.style_input_line,
+              {
+                width:this.state.linePwdAnim.interpolate({
+                    inputRange: [0,0.5,1],
+                    outputRange: ['0%', '0%', '100%'] //线性插值，0对应60，0.6对应30，1对应0
+                  })
+              }
+          ]
           }
         />
+        </View>
         <View>
           <ActionButton
-            onPress={()=>login(this.state.username,this.state.password)}
+            onPress={()=>{this.doLogin()}}
             isDisabled={()=>{return this.state.disabled}}
             text="登 录"
           >
           </ActionButton> 
-          <Text style={styles.style_loginText}>{this.props.status}</Text>
         </View>
-      </View>
-      </SafeAreaView>
+        <View style={styles.style_fogotTextView}>
+        <TouchableOpacity onPressOut={this._fogotAction}>
+        <Text style={[styles.style_fogotText]}>忘记密码</Text>
+        </TouchableOpacity>
+        </View>
+        </View>
+      </KeyboardAwareScrollView>
     );
   }
 }
@@ -205,7 +296,7 @@ const styles = StyleSheet.create({
   },
   style_input_title: {
     fontSize: 12,
-    height: 14,
+    height: 16,
     width: 76,
     marginTop: 5,
     marginLeft: 20
@@ -217,42 +308,21 @@ const styles = StyleSheet.create({
     marginTop: 440,
     alignSelf: "center"
   },
-  style_user_input: {
-    backgroundColor: "#fff",
-    marginTop: 12,
-    height: 40,
-    marginLeft: 20,
-    marginRight: 60
-  },
-  style_pwd_input: {
-    backgroundColor: "#fff",
-    height: 40,
-    marginTop: 12,
-    marginLeft: 20,
-    marginRight: 60
-  },
+ 
   style_input_line: {
     height: 2,
     backgroundColor: "#00baf3",
-    marginLeft: 20,
-    marginRight: 20
+    borderRadius:1
+    // marginLeft: 20,
+    // marginRight: 20
   },
   style_input_line_gray: {
     height: 2,
     backgroundColor: "rgb(243,242,242)",
     marginLeft: 20,
-    marginRight: 20
-  },
-  style_input_submit: {
-    marginTop: 15,
-    marginLeft: 20,
     marginRight: 20,
-    backgroundColor: "#333",
-    height: 60,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    color: "#fff"
+    borderRadius:1
+    
   },
   style_view_unlogin: {
     fontSize: 12,
@@ -270,7 +340,6 @@ const styles = StyleSheet.create({
   },
 
   style_fogotText: {
-    overflow: "hidden",
     height: 20,
     marginTop: 10,
     marginLeft: 20,
@@ -278,7 +347,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     fontSize: 14,
-    color: "#000"
+    color: "rgb(153,153,146)",
+    alignSelf:'center'
   },
 
   style_loginText: {
@@ -294,12 +364,13 @@ const styles = StyleSheet.create({
     color: "#fff"
   },
   style_fogotTextView: {
-    overflow: "hidden",
+    alignItems: "center",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent:"center",
+    alignContent:"center",
     height: 40,
-    // backgroundColor: '#0FF',
     marginTop: 10,
-    width: 100,
-    marginLeft: width / 2 - 50
   },
 });
 
@@ -307,12 +378,11 @@ export default connect(
   state => ({
     status: state.loginIn.status,
     isSuccess: state.loginIn.isSuccess,
-    user: state.loginIn.user,
-    hasChoose: state.loginIn.hasChoose,
+    userName: storage.getLoginUserName(),
+    retryTimes:state.loginIn.retryTimes,
   }),
   dispatch => ({
     login: (userName,password) =>{
-      console.log("dispatch(loginAction.login(userName,password)):"+dispatch)
       if(dispatch) {
         dispatch(loginAction.login(userName,password))
       }

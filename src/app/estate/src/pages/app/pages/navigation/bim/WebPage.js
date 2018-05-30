@@ -5,10 +5,10 @@ import {
   Dimensions,
   Text,
   View,
-  WebView,
   SafeAreaView,
   StatusBar
 } from 'react-native';
+import {WebView} from 'app-3rd/index'
 import * as AppConfig from "common-module"
 //获取设备的宽度和高度
 var {

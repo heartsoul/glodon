@@ -23,8 +23,9 @@ import { BimFileEntry, AuthorityManager } from 'app-entry';
 class CheckPointListPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: '质检项目',
+        headerTitle: <BarItems.TitleBarItem text='质检项目'/>,
         headerLeft: (<BarItems top={navigation.getParam('top')} navigation={navigation} currentItem={API.APP_QUALITY_CHECK_POINT} />),
+        headerRight:<View/>,
     });
 
     constructor(props) {
@@ -152,6 +153,8 @@ const styles = StyleSheet.create({
 
     listItem: {
         backgroundColor: '#00baf3',
+        borderBottomWidth:1,
+        borderBottomColor:'#f7f7f7',
     },
     itemView: {
         height: 40,

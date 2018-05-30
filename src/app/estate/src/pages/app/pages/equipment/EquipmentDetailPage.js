@@ -11,7 +11,8 @@ import { connect } from 'react-redux' // 引入connect函数
 import { BimFileEntry, AuthorityManager } from "app-entry";
 import * as API from "app-api";
 import EquipmentDetailView from "./equipmentDetailView"
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import { KeyboardAwareScrollView } from 'app-3rd/index';
 import { BarItems, ActionModal } from "app-components";
 import * as actions from '../../actions/equipmentInfoAction';
 import * as relevantModelAction from "../../actions/relevantModelAction";
@@ -19,10 +20,10 @@ import { getModelElementProperty } from "app-api";
 
 class EquipmentDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: '材设进场记录',
+        headerTitle: <BarItems.TitleBarItem text='材设进场记录'/>,
         gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
         headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : <BarItems />,
-        headerRight: navigation.state.params && navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : null
+        headerRight: navigation.state.params && navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : <View/>
     })
     constructor(props) {
         super(props);
@@ -88,7 +89,7 @@ class EquipmentDetailPage extends Component {
            </BarItems>
         }
 
-        return null;
+        return  <View/>;
     }
     check = (info) => {
         const { editType, preEditType } = info;

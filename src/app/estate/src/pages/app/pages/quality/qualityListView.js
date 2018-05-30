@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
         height: 20,
         textAlign: 'center',
         textAlignVertical: 'center',
-        color: '#999',
+        color: '#B0B0B0',
         fontSize: 14,
         width: 100,
         top: 10,

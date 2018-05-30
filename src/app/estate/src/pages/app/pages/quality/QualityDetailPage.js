@@ -59,8 +59,8 @@ class QualityDetailPage extends Component {
             power = (AuthorityManager.isCreateRectify() && AuthorityManager.isMe(inspectionInfo.responsibleUserId))
             if (power) {
                 return (
-                    <BarItems navigation={navigation}>
-                    <BarItems.RightBarItem navigation={navigation} text={API.TYPE_NEW_NAME[0]} onPress={(navigation) =>this.newUnrectified(inspectionInfo.id)} />
+                    <BarItems navigation={this.props.navigation}>
+                    <BarItems.RightBarItem navigation={this.props.navigation} text={API.TYPE_NEW_NAME[0]} onPress={(navigation) =>this.newUnrectified(inspectionInfo.id)} />
                 </BarItems>
                 )
             }
@@ -69,8 +69,8 @@ class QualityDetailPage extends Component {
             power = (AuthorityManager.isCreateReview() && AuthorityManager.isMe(inspectionInfo.creatorId))
             if (power) {
                 return (
-                    <BarItems navigation={navigation}>
-                    <BarItems.RightBarItem navigation={navigation} text={API.TYPE_NEW_NAME[1]} onPress={(navigation) =>this.newUnreviewed(inspectionInfo.id)} />
+                    <BarItems navigation={this.props.navigation}>
+                    <BarItems.RightBarItem navigation={this.props.navigation} text={API.TYPE_NEW_NAME[1]} onPress={(navigation) =>this.newUnreviewed(inspectionInfo.id)} />
                 </BarItems>)
             }
         }

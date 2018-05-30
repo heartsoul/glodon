@@ -25,14 +25,17 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 // import {ScrollView as KeyboardAwareScrollView } from 'react-native';
 
 import { ActionButton,TextInputNormal,TextInputPassword } from 'app-components';
+import { BarItems, LoadingView } from "app-components";
 
 var { width, height } = Dimensions.get("window");
 
 class LoginPage extends React.Component {
-  static navigationOptions = {
-    title: '用户登录',
-    header:null,
-}
+
+static navigationOptions = {
+    headerTitle: <BarItems.TitleBarItem text='用户登录'/>,
+    headerRight:<View/>,
+  };
+
   constructor(props) {
     super(props);
     if(!storage.homeNavigation) {
@@ -56,7 +59,8 @@ class LoginPage extends React.Component {
       lineAnim: new Animated.Value(un.length > 0 ? 0.5 : 0.0)
     };
   }
-
+ componentDidMount = () => {
+ }
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.status === '重试' && nextProps.retryTimes > 0) {
       this.props.login(this.state.username,this.state.password);

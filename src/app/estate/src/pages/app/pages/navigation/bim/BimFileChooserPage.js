@@ -5,13 +5,17 @@
 import * as API from "app-api";
 import { BarItems, LoadingView } from "app-components";
 import React, { Component } from "react";
-import { ActivityIndicator, Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View, DeviceEventEmitter } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Breadcrumb from "./../../../components/Breadcrumb";
 import * as BimFileEntry from "./BimFileEntry";
 import BimFileFilterView from "./BimFileFilterView";
 import * as PageType from "./PageTypes";
 import ThumbnailImage from "./ThumbnailImage";
 import BimFileNavigationView from "./bimFileNavigationView";
+import { NoDataView} from 'app-components';
+import { SERVER_TYPE } from 'common-module';
+import {DeviceEventEmitter} from 'app-3rd/index'
+
 
 var { width, height } = Dimensions.get("window");
 class RightBarButtons extends React.Component {
@@ -71,7 +75,7 @@ export default class BimFileChooser extends Component {
             projectId: storage.loadProject(),
             latestVersion: storage.projectIdVersionId,
             fileId: fileId,
-            dataType: dataType,//图纸文件 模型文件 
+            dataType: dataType,//图纸文件 模型文件 ·
             pageType: params.pageType,
             navData: navData,//导航条面包屑数据
         }
@@ -93,6 +97,7 @@ export default class BimFileChooser extends Component {
                     {
                         isLoading: false,
                         error: true,
+                        errorInfo: error,
                     }
                 );
             });
@@ -151,6 +156,7 @@ export default class BimFileChooser extends Component {
                 {
                     isLoading: false,
                     error: true,
+                    errorInfo: error,
                 }
             );
         });
@@ -230,14 +236,10 @@ export default class BimFileChooser extends Component {
     }
     //加载失败view
     renderErrorView(error) {
-        return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <Text>
-                    加载失败
-                </Text>
-            </View>
-        );
+        if(SERVER_TYPE === "TEST") {
+            return ( <NoDataView text={"error："+error} /> );
+        }
+        return ( <NoDataView text="加载失败" /> );
     }
     _itemClick = (item, index) => {
         let navigator = this.props.navigation;
@@ -249,7 +251,7 @@ export default class BimFileChooser extends Component {
             let d = { ...item.value, dir: this.getDirData() }
             navData.push(d);
 
-            global.storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType, navData: navData });
+            storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType, navData: navData });
         } else {
             // API.getModelBimFileToken(this.state.projectId, this.state.latestVersion, item.value.fileId).then((responseData) => {
             //     let token = responseData.data.data;

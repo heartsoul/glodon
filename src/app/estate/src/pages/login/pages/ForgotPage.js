@@ -15,7 +15,7 @@ import { connect } from 'react-redux' // 引入connect函数
 import { Toast } from 'antd-mobile' // 引入connect函数
 import * as fogotAction from '../actions/forgotAction' // 导入action方法 
 import * as types from '../constants/forgotTypes'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'app-3rd/index';
 import { ActionButton, TextInputNormal, TextInputPassword, TextInputImage, BarItems } from 'app-components';
 import * as API from 'app-api'
 
@@ -24,7 +24,8 @@ class ForgotPage extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
     gesturesEnabled: navigation.state.params && navigation.state.params.gesturesEnabled ? navigation.state.params.gesturesEnabled() : false,
     headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
-    title: navigation.state.params && navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : "密码管理"
+    headerTitle: <BarItems.TitleBarItem text={navigation.state.params && navigation.state.params.loadTitle ? navigation.state.params.loadTitle() : "密码管理"}/>,
+    headerRight:<View/>,
   })
 
   constructor(props) {

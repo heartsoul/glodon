@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 var { width, height } = Dimensions.get("window");
 import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'app-3rd/teaset';
-import ImageChooserView from './ImageChooserView';
+// import ImageChooserView from './ImageChooserView';
 
 import * as API from "app-api";
 const UPLOADAPI = API
@@ -499,7 +499,7 @@ export default class extends React.Component {
               onChangeText={(text)=>{this.setState({contentDescription:text})}}
           />
   
-          <ImageChooserView style={{ top:0,left:0,width:width,height:100,marginTop:20 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
+          {/* <ImageChooserView style={{ top:0,left:0,width:width,height:100,marginTop:20 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} /> */}
           <View style={{marginTop:20,marginBottom:11}}>
               <ListRow title='需要整改'  bottomSeparator='indent'  detail={<Switch value={this.state.switchValue} onValueChange ={(value)=>{this._onChangeSwitch(value)}}/>}/>
               {
@@ -513,7 +513,7 @@ export default class extends React.Component {
           <ListRow title='关联图纸' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantBlueprint?this.state.relevantBlueprint.name:''} onPress={()=>{ this._bimFileChooser('图纸文件') }} />
           <ListRow title='关联模型' accessory='indicator' bottomSeparator='indent' detail={this.state.relevantModel?this.state.relevantModel.name:''} onPress={()=>{ this._bimFileChooser('模型文件') }} />
   
-          <ImageChooserView ref ={ REF_PHOTO } style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} />
+          {/* <ImageChooserView ref ={ REF_PHOTO } style={{ top:0,left:0,width:width,height:100 }} backgroundColor="#00baf3" onChange={()=>alert('收到!')} /> */}
           <View style={{marginBottom:30}}>
               <TouchableHighlight
                   underlayColor="#0099f3"

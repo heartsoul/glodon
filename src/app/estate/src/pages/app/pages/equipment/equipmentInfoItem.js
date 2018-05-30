@@ -1,7 +1,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { View, StyleSheet, Text, TextInput, Image, TouchableOpacity, Dimensions,Platform } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Image, TouchableOpacity, Dimensions, Platform } from 'react-native';
 const rightImage = require("app-images/icon_arrow_right_gray.png");
 const clearImage = require("app-images/login/icon_login_password_delete.png")
 var { width, height } = Dimensions.get("window");
@@ -13,12 +13,18 @@ class TextInputWithData extends TextInput {
 
 class EquipmentInfoItemTextInput extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
+        
+        let key = 'key'+Math.random();
+        if(!key) {
+            key = 'key';
+        }
+        this.keyPrev =  key+ new Date().getTime()
         this.state = {
-            dValue:this.props.content,
-            focus:false,
-            key:1
+            dValue: this.props.content,
+            focus: false,
+            key: 1
         }
     }
 
@@ -31,38 +37,39 @@ class EquipmentInfoItemTextInput extends React.Component {
     onChangeText = (value) => {
         value = value || '';
         this.state.dValue = value;
-        if(this.props.onChangeText) {
+        if (this.props.onChangeText) {
             this.props.onChangeText(value);
         }
         let dis = value.length > 0 ? 'flex' : 'none';
-        this.refs.clearButton.setNativeProps({style:{display:dis}});
+        this.refs.clearButton.setNativeProps({ style: { display: dis } });
     }
-    onClear = (event) => { 
-        let key = this.state.key; 
+    onClear = (event) => {
+        let key = this.state.key;
         this.setState({
             dValue: key % 2 ? '' : null,
-            key:key+1,
+            key: key + 1,
         });
         this.refs.textInput.focus();
-        if(this.props.onClear) {
+        if (this.props.onClear) {
             this.props.onClear(event);
         } else {
-            if(this.props.onChangeText) {
+            if (this.props.onChangeText) {
                 this.props.onChangeText('');
             }
-        }  
+        }
         let dis = 'none';
-        this.refs.clearButton.setNativeProps({style:{display:dis}});
+        this.refs.clearButton.setNativeProps({ style: { display: dis } });
     }
-    onBlur = (event) => {  
-        if(this.props.onBlur) {
+    onBlur = (event) => {
+        if (this.props.onBlur) {
             this.props.onBlur(event);
         }
     }
     onFocus = (event) => {
-        let value = this.props.dValue || '';
+        let value = this.state.dValue || '';
         let dis = value.length > 0 ? 'flex' : 'none';
-        this.refs.clearButton.setNativeProps({style:{display:dis}});
+        console.log('value:'+value+',dis:'+dis);
+        this.refs.clearButton.setNativeProps({ style: { display: dis } });
     }
     render = () => {
         return (
@@ -71,17 +78,17 @@ class EquipmentInfoItemTextInput extends React.Component {
                     <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={[styles.contentInputView, this.props.titleWidth ? { width: width - 40 - this.props.titleWidth } : null]}>
-                    <TextInputWithData key={'key'+this.state.key} onFocus={this.onFocus} onBlur={this.onBlur} ref="textInput" returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none' 
-                    defaultValue={this.state.dValue}
-                    value={Platform.OS === 'ios' ? this.state.dValue : null} style={styles.textInput} 
-                    onChangeText={(value) => this.onChangeText(value)}/>
+                    <TextInputWithData key={this.keyPrev + this.state.key} onFocus={this.onFocus} onBlur={this.onBlur} ref="textInput" returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none'
+                        defaultValue={this.state.dValue}
+                        value={Platform.OS === 'ios' ? this.state.dValue : null} style={styles.textInput}
+                        onChangeText={(value) => this.onChangeText(value)} />
                 </View>
-               <TouchableOpacity ref='clearButton' style={[styles.rightAction, (this.state.dValue && this.state.dValue.length > 0) ? {display:'flex'} : {display:'none'} ]} activeOpacity={0.5} onPress={(event) => { this.onClear(event); }}>
+                <TouchableOpacity ref='clearButton' style={[styles.rightAction, (this.state.dValue && this.state.dValue.length > 0) ? { display: 'flex' } : { display: 'none' }]} activeOpacity={0.5} onPress={(event) => { this.onClear(event); }}>
                     <Image source={clearImage} style={styles.inputClear} />
-                    </TouchableOpacity>
+                </TouchableOpacity>
             </View>
-        );    
-        
+        );
+
     }
     renderClickInput = (content) => {
         return (
@@ -92,7 +99,7 @@ class EquipmentInfoItemTextInput extends React.Component {
                 <View style={styles.contentInputView}>
                     <TextInputWithData defaultValue={content} style={styles.textInput} returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none'></TextInputWithData>
                 </View>
-                <TouchableOpacity style={[styles.rightAction,{}]} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                <TouchableOpacity style={[styles.rightAction, {}]} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                     <Image source={rightImage} style={styles.infoMark} />
                 </TouchableOpacity>
             </View>
@@ -115,7 +122,7 @@ export default class EquipmentInfoItem extends React.Component {
         if (content) {
             content = '' + content;
         }
-        if(this.props.onClick) {
+        if (this.props.onClick) {
             return this.renderClickInput(content);
         }
         return (
@@ -124,19 +131,15 @@ export default class EquipmentInfoItem extends React.Component {
                     <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={[styles.contentInputView, this.props.titleWidth ? { width: width - 40 - this.props.titleWidth } : null]}>
-                    <TextInputWithData ref="textInput" onFocus={()=>{}} returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none' defaultValue={content} style={styles.textInput} 
-                    onChangeText={(value) => {
-                        value = value || '';
-                        this.props.onChangeText(value);
-                        // this.refs.clearButton.style.display = value.length > 0 ? 'flex' : 'none';
-                        }}/>
+                    <TextInputWithData ref="textInput" onFocus={() => { }} returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none' defaultValue={content} style={styles.textInput}
+                        onChangeText={(value) => {
+                            value = value || '';
+                            this.props.onChangeText(value);
+                        }} />
                 </View>
-               <TouchableOpacity ref='clearButton' style={[styles.rightAction, {display:'flex'}]} activeOpacity={0.5} onPress={(event) => { this.props.onClearClick(event);this.refs.textInput.clear();this.refs.textInput.focus(); }}>
-                    <Image source={clearImage} style={styles.inputClear} />
-                    </TouchableOpacity>
             </View>
-        );    
-        
+        );
+
     }
     renderClickInput = (content) => {
         return (
@@ -147,7 +150,7 @@ export default class EquipmentInfoItem extends React.Component {
                 <View style={styles.contentInputView}>
                     <TextInputWithData defaultValue={content} style={styles.textInput} returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none'></TextInputWithData>
                 </View>
-                <TouchableOpacity style={[styles.rightAction,{}]} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                <TouchableOpacity style={[styles.rightAction, {}]} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                     <Image source={rightImage} style={styles.infoMark} />
                 </TouchableOpacity>
             </View>
@@ -186,7 +189,7 @@ export default class EquipmentInfoItem extends React.Component {
     renderInfo = () => {
         if (!this.props.onClick) {
             return (
-                <View style={styles.containerView} >
+                <View style={[styles.containerView, { height: 40 }]} >
                     <View style={styles.titleView}>
                         <Text style={styles.leftTitle}>{this.props.leftTitle}</Text>
                     </View>
@@ -197,18 +200,16 @@ export default class EquipmentInfoItem extends React.Component {
             );
         }
         return (
-            <View style={styles.containerView} >
+            <View style={[styles.containerView, { height: 40 }]} >
                 <View style={styles.titleView}>
                     <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                 </View>
-                <View style={styles.contentViewAction}>
-                    <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
-                        <Text style={styles.content}>{this.props.content}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
-                        <Image source={rightImage} style={styles.infoMark} />
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity activeOpacity={0.5} style={{ flex: 1, marginLeft: 2}} onPress={(event) => { this.onClick(event) }}>
+                    <Text style={[styles.content, { textAlignVertical:"center" }]}>{this.props.content}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                    <Image source={rightImage} style={styles.infoMark} />
+                </TouchableOpacity>
 
             </View>
         );
@@ -220,7 +221,7 @@ export default class EquipmentInfoItem extends React.Component {
                     <Text style={styles.leftTitle}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={styles.contentView}>
-                    <TouchableOpacity style={{flex:1}}activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                    <TouchableOpacity style={{ flex: 1 }} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
                         <Text style={[styles.content, styles.link]}>{this.props.content}</Text>
                     </TouchableOpacity>
                     {
@@ -378,17 +379,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     textInput: {
-        color: '#333333',
+        color: '#666666',
+        fontSize: 16,
         fontWeight: '200',
         marginTop: 0,
         marginBottom: 0,
-        marginRight:15,
+        marginRight: 15,
         height: 40,
     },
     content: {
         fontSize: 16,
         fontWeight: '100',
         alignContent: 'center',
+        color: "#666666"
     },
     link: {
         color: '#00b5f2',
@@ -400,7 +403,7 @@ const styles = StyleSheet.create({
     leftTitle: {
         fontSize: 16,
         width: '100%',
-        color: '#333333',
+        color: '#000000',
         fontWeight: '200',
         // fontFamily:"PingFangSC-Light",
     },
@@ -429,9 +432,8 @@ const styles = StyleSheet.create({
     },
     contentViewAction: {
         flexDirection: 'row',
-        marginRight: 85,
         height: 40,
-        width: width - 85 - 30,
+        flex: 1,
         alignContent: 'center',
         alignItems: 'center',
         justifyContent: 'flex-end',

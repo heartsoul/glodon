@@ -1,10 +1,9 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState,NetInfo, } from 'react-native'
-import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
+import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState } from 'react-native'
+import { createStackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 
 import * as API from 'app-api'
-import { BarItems } from "app-components"
 import * as GLD from '../pages'
 import BaseStorage from '../../common/store/store+base'
 import configureStore, { history } from '../store/ConfigureStore'
@@ -125,45 +124,41 @@ const options = () => {
             },
             elevation: 0,
         },
-
+        headerBackImage: <View style={{width:40,height:44,justifyContent:'center'}}><Image style={{marginLeft:10,width:20,height:20,resizeMode:'contain'}} source={require('app-images/icon_back_white.png')}/></View>,
+        headerBackTitle: null,
         headerTintColor: '#fff',
         tabBarVisible: false,
         headerTitleStyle: {
             fontSize:17,
             fontWeight:'bold',
         },
-        headerLeft: () => {
-            return (
-                <BarItems top={false} currentItem={""} />
-            )
-        },
         headerRight: (<View />),
       
     }
 }
 // LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage
-const RootGuideStack = StackNavigator(
+const RootGuideStack = createStackNavigator(
     screens,
     {
         initialRouteName: 'GuidePage',
         navigationOptions: options,
     }
 );
-const RootLoginStack = StackNavigator(
+const RootLoginStack = createStackNavigator(
     screens,
     {
         initialRouteName: 'LoginPage',
         navigationOptions: options,
     }
 );
-const RootMainStack = StackNavigator(
+const RootMainStack = createStackNavigator(
     screens,
     {
         initialRouteName: 'MainPage',
         navigationOptions: options,
     }
 );
-const RootChooseStack = StackNavigator(
+const RootChooseStack = createStackNavigator(
     screens,
     {
         initialRouteName: 'ChoosePage',

@@ -19,6 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _editView = [[SoulDrawView alloc] initWithFrame:self.view.bounds];
+  [_editView setBackgroundColor:[UIColor blackColor]];
     [self.view addSubview:_editView];
   [_editView enableDraw:NO];
  

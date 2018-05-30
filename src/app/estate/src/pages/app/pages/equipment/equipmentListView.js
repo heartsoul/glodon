@@ -45,9 +45,9 @@ class EquipmentListView extends PureComponent {
     }
 
     componentDidMount() {
-        if (this.props.loadData === true) {
+        // if (this.props.loadData === true) {
             this.fetchData(this.props.qcState);
-        }
+        // }
     }
 
     componentWillReceiveProps = (nextProps) => {
