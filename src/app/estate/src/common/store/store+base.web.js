@@ -2,7 +2,7 @@
  * 数据存储类
  */
 import Storage from './storage';
-
+import { StackActions,NavigationActions } from 'app-3rd/react-navigation'
 class WebStorage extends Storage {
     constructor() {
         super();

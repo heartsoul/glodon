@@ -51,7 +51,7 @@ const urlLoaderConfiguration = {
 }
 module.exports = {
   entry: path.resolve(appDirectory, 'index.web.js'),
-
+  devtool: 'eval-source-map',
   output: {
     filename: 'bundle.web.js',
     path: path.resolve(appDirectory, './dist'),

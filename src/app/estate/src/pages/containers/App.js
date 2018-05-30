@@ -197,8 +197,6 @@ resetGetStateForAction(RootMainStack);
 resetGetStateForAction(RootLoginStack);
 resetGetStateForAction(RootGuideStack);
 resetGetStateForAction(RootChooseStack);
-const HEART_BEAT_TIME = 30 * 1000; // 测试时 30s检查一次
-const HEART_BEAT_UPDATE_TIME = 5 * 60 * 1000; // 5分钟执行一次更新
 export default class extends React.Component {
 
     constructor() {
@@ -206,57 +204,36 @@ export default class extends React.Component {
         this.state = {
             hasLoad: false,
         }
-        this.intervalId = null;
-        this.appState = null;
-        this.prevUpdateTime = 0;
+    }
+    //状态改变响应
+    handleAppStateChange = (appState) =>{
+        let systemDate = new Date();
+        console.log('当前状态为:' + appState+",时间："+systemDate.getTime());
+        if(appState != this.appState && appState == 'active') {
+            this.fireHeartBeat();
+        }
+        this.appState = appState;
+    }
+    //内存警告响应
+    handleAppMemoryWarning = (appState) => {
+        console.log("内存报警....");
+    }
+    componentWillMount = () => {
+        //监听状态改变事件
+        AppState.addEventListener('change', this.handleAppStateChange);
+        //监听内存报警事件
+        AppState.addEventListener('memoryWarning', this.handleAppMemoryWarning);
     }
 
-    // keepOnline = () => {
-    //     console.log('》》》保持在线');
-    //     if(storage.isLogin() && AppState.currentState=='active') {
-    //         // 登录着，并且再前台运行，保持一次
-    //         this.fireHeartBeat(); // 更新
-    //     }
-    // }
+    componentWillUnmount = () => {
+        //删除状态改变事件监听
+        AppState.removeEventListener('change', this.handleAppStateChange);
+        AppState.removeEventListener('memoryWarning', this.handleAppMemoryWarning);
+    }
 
-    // //状态改变响应
-    // handleAppStateChange = (appState) =>{
-    //     let systemDate = new Date();
-    //     console.log('当前状态为:' + appState+",时间："+systemDate.getTime());
-    //     if(appState != this.appState && appState == 'active') {
-    //         this.fireHeartBeat();
-    //     }
-    //     this.appState = appState;
-    // }
-    // //内存警告响应
-    // handleAppMemoryWarning(appState) {
-    //     console.log("内存报警....");
-    // }
-    // componentWillMount = () => {
-    //     this.intervalId = setInterval(this.keepOnline, HEART_BEAT_TIME);
-    //     //监听状态改变事件
-    //     AppState.addEventListener('change', this.handleAppStateChange);
-    //     //监听内存报警事件
-    //     AppState.addEventListener('memoryWarning', this.handleAppMemoryWarning);
-    // }
-
-    // componentWillUnmount = () => {
-    //     if(this.intervalId) {
-    //         clearInterval(this.intervalId);
-    //     }
-
-    //     //删除状态改变事件监听
-    //     AppState.removeEventListener('change', this.handleAppStateChange);
-    //     AppState.removeEventListener('memoryWarning', this.handleAppMemoryWarning);
-    // }
-
-    componentDidMount() {
+    componentDidMount = () =>{
         this.fireHeartBeat();
         clickTime = new Date().getTime();
-    }
-
-    componentDidMount = () => {
-        this.fireHeartBeat();
     }
 
     fireHeartBeat = () => {
@@ -279,7 +256,7 @@ export default class extends React.Component {
     _onNavigationStateChange = (prevState, newState, action)=>{
        storage.currentRouteName = this._getCurrentRouteName(newState);
     }
-    _getCurrentRouteName(navigationState) {
+    _getCurrentRouteName = (navigationState) =>{
         if (!navigationState) {
           return null;
         }
@@ -290,7 +267,7 @@ export default class extends React.Component {
         }
         return route.routeName;
       }
-    renderPage() {
+    renderPage = () => {
         if (storage.isLogin()) {
             if (storage.hasChoose()) {
                 return (<Provider store={store}><RootMainStack onNavigationStateChange={this._onNavigationStateChange}/></Provider>)
@@ -302,7 +279,7 @@ export default class extends React.Component {
         // }
         // return (<Provider store={store}><RootGuideStack /></Provider>)
     }
-    render() {
+    render = () => {
         return this.renderPage();
     }
 }
