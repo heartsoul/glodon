@@ -152,7 +152,7 @@ export class TextInputPassword extends Component {
         }
       }
       value = {this.state.value}
-      onBlur={(event)=>{this.props.onBlur(event)}}
+      onBlur={(event)=>{this.state.focus = false;this.props.onBlur(event)}}
       onFocus={(event)=>{this.state.focus = true; this.props.onFocus(event)}}
     />
     

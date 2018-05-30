@@ -6,7 +6,8 @@ import {
   TextInput,
   View,
   StatusBar,
-  SafeAreaView
+  SafeAreaView,
+  Platform
 } from 'react-native';
 import { Toast } from 'antd-mobile';
 import { KeyboardAwareScrollView } from 'app-3rd/index';
@@ -81,7 +82,7 @@ export default class extends React.Component {
   }
   render() {
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={'on-drag'} style={[styles.container, { backgroundColor: '#ffffff' }]}>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={Platform.OS ==='ios'? 'on-drag':'none'} style={[styles.container, { backgroundColor: '#ffffff' }]}>
       <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
       <EquipmentInfoItem.EquipmentInfoItemTextInput key="fb1" leftTitle="姓名：" titleWidth={55} showType="input" onChangeText={this.onChangeTextName} />
       <EquipmentInfoItem showType="line" />

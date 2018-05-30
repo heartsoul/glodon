@@ -11,6 +11,8 @@ import {
     StyleSheet,
     Switch,
     Dimensions,
+    Platform,
+    ScrollView
 } from "react-native";
 import PropTypes from 'prop-types'
 
@@ -31,6 +33,7 @@ var { width, height } = Dimensions.get("window");
 const REF_PHOTO = 'gldPhoto';
 
 import ListStyle from 'antd-mobile/lib/list/style/index.native';
+import { KeyboardAwareScrollView } from "app-3rd/index";
 
 const newStyle = {
     ...ListStyle,
@@ -152,6 +155,8 @@ export default class EquipmentDetailView extends Component {
     }
 
     showActionSheet = () => {
+        var dismissKeyboard = require('dismissKeyboard');
+        dismissKeyboard();
         PullPicker.show(
             `选择验收单位`,
             this.props.acceptanceCompanies,
@@ -206,6 +211,8 @@ export default class EquipmentDetailView extends Component {
             <EquipmentInfoItem leftTitle="规格：" content={info.specification} />
             <EquipmentInfoItem leftTitle="型号：" content={info.modelNum} />
             <EquipmentInfoItem leftTitle="构件位置：" showType="link" onClick={() => {
+                var dismissKeyboard = require('dismissKeyboard');
+                dismissKeyboard();
                 this.onOpenModleAction(info);
             }} content={info.elementName} />
             <EquipmentInfoItem leftTitle="厂家：" content={info.manufacturer} />
@@ -368,7 +375,7 @@ export default class EquipmentDetailView extends Component {
     }
 
     renderBaseEdit = (info) => {
-        return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
+        return <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={Platform.OS ==='ios'? 'on-drag':'none'} style={{ paddingTop: 10, paddingBottom: 10 }}>
 
             <EquipmentInfoItem leftTitle="请依次完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ marginTop: 0, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
@@ -395,10 +402,10 @@ export default class EquipmentDetailView extends Component {
                 {this.renderActionNextInfo(info, this._toOtherInfoAction)}
             </View>
             <View style={{ height: 40, width: '100%' }} />
-        </View>
+        </KeyboardAwareScrollView>
     }
     renderOtherEdit = (info) => {
-        return <View style={{ paddingTop: 10, paddingBottom: 10 }}>
+        return <KeyboardAwareScrollView style={{ paddingTop: 10, paddingBottom: 10 }}>
             <EquipmentInfoItem leftTitle="请根据需要选择完成下列内容输入" leftTitleColor='#00b5f2' showType="headerInfo" />
             <View style={{ marginTop: 0, paddingTop: 10, paddingBottom: 10, backgroundColor: '#ffffff' }}>
                 <EquipmentInfoItem.EquipmentInfoItemTextInput key='b4' leftTitle="进场数量：" content={info.quantity} showType="input" onChangeText={(value) => { info.quantity = value }} />
@@ -427,7 +434,7 @@ export default class EquipmentDetailView extends Component {
                 {this.renderActionNextInfo(info, this._toImageInfoSkipAction, true)}
             </View>
             <View style={{ height: 40, width: '100%' }} />
-        </View>
+        </KeyboardAwareScrollView>
     }
     onChangeSwitch = (value, info) => {
         let data = { ...info, qualified: (value == true ? true : false) };

@@ -67,12 +67,22 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       marginTop: 40,
       marginLeft: 20,
-      marginRight: 20
+      marginRight: 20,
     },
     style_action_pressed: {
       backgroundColor: "#33baf3",
+      elevation: 2.5, // android 
+        shadowColor: "#00baf3", // iOS
+        shadowOffset: { width: 1.5, height: 5 }, // iOS
+        shadowOpacity: 0.15, // iOS
+        shadowRadius: 3, // iOS
     },
     style_action_disabled: {
       backgroundColor: "#C8C8C8",
+      elevation: 2.5, // android 
+        shadowColor: "#00baf3", // iOS
+        shadowOffset: { width: 1.5, height: 5 }, // iOS
+        shadowOpacity: 0.85, // iOS
+        shadowRadius: 3, // iOS
     }
   });

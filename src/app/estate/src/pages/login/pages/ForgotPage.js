@@ -530,7 +530,7 @@ removeBackListener() {
   }
   render() {
     return (
-      <KeyboardAwareScrollView  keyboardShouldPersistTaps={"always"} keyboardDismissMode={'on-drag'} style={{ backgroundColor: "#ffffff", flex: 1, marginLeft: 0, marginRight: 0 }}>
+      <KeyboardAwareScrollView  keyboardShouldPersistTaps={"always"} keyboardDismissMode={Platform.OS ==='ios'? 'on-drag':'none'} style={{ backgroundColor: "#ffffff", flex: 1, marginLeft: 0, marginRight: 0 }}>
         <StatusBar
           barStyle="light-content"
           backgroundColor="#00baf3"

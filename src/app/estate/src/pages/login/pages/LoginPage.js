@@ -177,7 +177,7 @@ static navigationOptions = {
   }
   render() {
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={'on-drag'} 
+      <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={Platform.OS ==='ios'? 'on-drag':'none'} 
       style={{backgroundColor: "#ffffff",flex: 1,
       marginLeft: 0,
       marginRight: 0,width:'100%',height:'100%'}}>
