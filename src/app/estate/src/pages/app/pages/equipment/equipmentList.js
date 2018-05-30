@@ -4,7 +4,7 @@
 'use strict';
 import React, { Component, PureComponent } from "react";
 import { StyleSheet, View, StatusBar, Dimensions, Text } from "react-native";
-import { SegmentedView,Badge } from 'app-3rd/teaset';
+import { SegmentedView,Badge } from 'teaset';
 
 import * as API from "app-api";
 import { AuthorityManager } from "app-entry";
@@ -16,18 +16,21 @@ class QualityListTitle extends Component {
     render = () => {
         let {text,activeTitleStyle,titleStyle,select,badge,style} = this.props;
         let w = 28;
-        let right = -27;
+        let right = 0;
         if(text.length >= 3) {
             w = 41;
-            right = -20;
+            right = 0;
         }
         text = text;
-        return <View style={{alignItems:'center',alignContent:'center',paddingTop:3}}>
-            <Text style={[{...style,mergeLeft:20,mergeRight:20},select ? activeTitleStyle : titleStyle]} >{text}</Text>
+        return <View style={{paddingTop:3,
+        overflow: 'visible',
+        alignItems: 'center', paddingRight:20,
+        justifyContent: 'center'}}>
+            <Text style={[{...style},select ? activeTitleStyle : titleStyle]} >{text}</Text>
             <View style={{width:w,height:3,marginTop:0,alignSelf:'center'}}>
                {select ? <View style={{width:w,height:2,backgroundColor:'#00baf3',position:'absolute',top:8.5}} resizeMode='contain'/> : null}
             </View>
-            <Badge count={badge} style={[{position:'absolute',top:-5,right:right},badge > 0 ? {} :{backgroundColor:'#ffffff'}]} />
+            <Badge count={badge} style={[{position:'absolute',top:-5, right:right},badge > 0 ? {} :{backgroundColor:'#ffffff'}]} />
         </View>
     }
 } 
