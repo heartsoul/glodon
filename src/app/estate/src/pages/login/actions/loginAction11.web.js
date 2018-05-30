@@ -3,7 +3,7 @@ import {authToken,setCurrentTenant,accountInfo,login as userLogin} from 'app-api
 import * as types from '../constants/loginTypes'
 
 export function login(username, pwd) {
-  return loginOld(username, pwd);
+  return loginNew(username, pwd);
   // return loginNew(username, pwd);
 }
 // 访问登录接口 根据返回结果来划分action属于哪个type,然后返回对象,给reducer处理

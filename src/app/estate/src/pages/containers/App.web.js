@@ -194,12 +194,12 @@ export default class extends React.Component {
   renderPage = () => {
     if (storage.isLogin()) {
       if (storage.hasChoose()) {
-        return (<Provider store={store}><ConnectedRouter history={history}><RootMainStack onNavigationStateChange={this._onNavigationStateChange} /></ConnectedRouter></Provider>)
+        return (<Provider store={store}><ConnectedRouter history={history}><RootMainStack  history={history} onNavigationStateChange={this._onNavigationStateChange} /></ConnectedRouter></Provider>)
       }
-      return (<Provider store={store}><ConnectedRouter history={history}><RootChooseStack onNavigationStateChange={this._onNavigationStateChange} /></ConnectedRouter></Provider>)
+      return (<Provider store={store}><ConnectedRouter history={history}><RootChooseStack  history={history} onNavigationStateChange={this._onNavigationStateChange} /></ConnectedRouter></Provider>)
     }
     // if (storage.isGuide()) {
-    return (<Provider store={store}><ConnectedRouter history={history}><RootLoginStack onNavigationStateChange={this._onNavigationStateChange} /></ConnectedRouter></Provider>)
+    return (<Provider store={store}><ConnectedRouter history={history}><RootLoginStack  history={history} onNavigationStateChange={this._onNavigationStateChange} /></ConnectedRouter></Provider>)
     // }
     // return (<Provider store={store}><ConnectedRouter history={history}><RootGuideStack /></ConnectedRouter></Provider>)
   }

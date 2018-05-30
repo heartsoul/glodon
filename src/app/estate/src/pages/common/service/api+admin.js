@@ -39,7 +39,7 @@ export async function getProfileModelRights(profileId, moduleCode) {
     "moduleCode": "string"
   }
  */
-export async function getAppModelRights(appCode, moduleCode, deptId, tenantId = '0') {
+export function getAppModelRights(appCode, moduleCode, deptId, tenantId = '0') {
     let headers = {};
     if(tenantId && tenantId != '0') {
         headers = {'X-CORAL-TENANT':''+tenantId};
