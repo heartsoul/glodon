@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState } from 'react-native'
-import { createStackNavigator, NavigationActions } from 'app-3rd/react-navigation';
+import { createStackNavigator,NavigationActions, StackActions } from 'app-3rd/react-navigation';
 
 import * as API from 'app-api'
 import * as GLD from '../pages'
@@ -166,7 +166,7 @@ function resetGetStateForAction(RootStack) {
     RootStack.router.getStateForAction = (action, state) => {
         // console.log("action info -- type:"+action.type+",key:"+action.key+",params:"+action.params+",path:"+action.path+",routeName:"+action.routeName+",n:"+action.n+"\n");
         const { n } = action;
-        if (action.type === NavigationActions.POP && typeof n === 'string') {
+        if (action.type === StackActions.POP && typeof n === 'string') {
             let backRouteIndex = state.index;
             let findN = n;
             // 支持按照routeName进行回退，如果存在重名了，那么就回到
@@ -178,11 +178,11 @@ function resetGetStateForAction(RootStack) {
                 action.n = null;
             }
         }
-        if (Platform.OS === 'android' && action.type === NavigationActions.BACK && state.routes.length === 1) {
+        if (Platform.OS === 'android' && action.type === StackActions.BACK && state.routes.length === 1) {
             let systemDate = new Date().getTime();
             if (systemDate - clickTime > 2000) {
                 clickTime = systemDate
-                action.type = NavigationActions.POP;
+                action.type = StackActions.POP;
                 action.n = 0;
                 Toast.info("再按一次退出", 1);
             }
