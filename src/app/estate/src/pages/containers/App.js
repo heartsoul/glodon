@@ -178,13 +178,13 @@ function resetGetStateForAction(RootStack) {
                 action.n = null;
             }
         }
-        if (Platform.OS === 'android' && action.type === StackActions.BACK && state.routes.length === 1) {
+
+        if (Platform.OS === 'android' && action.type === NavigationActions.BACK && state.routes.length === 1) {
             let systemDate = new Date().getTime();
             if (systemDate - clickTime > 2000) {
                 clickTime = systemDate
-                action.type = StackActions.POP;
-                action.n = 0;
                 Toast.info("再按一次退出", 1);
+                return null;
             }
 
         }
