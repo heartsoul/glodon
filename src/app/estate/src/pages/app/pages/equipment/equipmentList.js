@@ -23,7 +23,7 @@ class QualityListTitle extends Component {
         }
         text = text;
         return <View style={{alignItems:'center',alignContent:'center',paddingTop:3}}>
-            <Text style={[{...style},select ? activeTitleStyle : titleStyle]} >{text}</Text>
+            <Text style={[{...style,mergeLeft:20,mergeRight:20},select ? activeTitleStyle : titleStyle]} >{text}</Text>
             <View style={{width:w,height:3,marginTop:0,alignSelf:'center'}}>
                {select ? <View style={{width:w,height:2,backgroundColor:'#00baf3',position:'absolute',top:8.5}} resizeMode='contain'/> : null}
             </View>
