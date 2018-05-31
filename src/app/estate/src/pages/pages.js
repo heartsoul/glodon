@@ -34,8 +34,8 @@ import AboutPage from './app/pages/me/AboutPage'
 import FeedbackPage from './app/pages/me/FeedbackPage'
 import ForgotPage from './login/pages/ForgotPage'
 import ChangeProjectPage from './app/pages/me/ChangeProjectPage'
-import OfflineMangePage from './app/pages/me/OfflineMangePage'
-import OfflineDownloadPage from './app/pages/me/OfflineDownloadPage'
+import OfflineMangePage from './app/pages/offline/OfflineMangePage'
+import OfflineDownloadPage from './app/pages/offline/OfflineDownloadPage'
 
 
 export {
