@@ -219,7 +219,7 @@ export class TextInputImage extends Component {
       onBlur={this.props.onBlur}
       onFocus={this.props.onFocus}
     />
-    <View  style={[styles.style_input_action,{}]}>
+    <View  style={[styles.style_input_action,{width:120}]}>
     <TouchableOpacity onPress={this.props.onImageClick}>
     <Image style={styles.style_image_captcha} source={this.props.imageUrl ? {uri:this.props.imageUrl} : icon_login_password_delete}/></TouchableOpacity>
     </View>
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
    style_image_captcha: {
     width:100,
     height:25,
-    marginRight:40,
+    marginRight:0,
     resizeMode:'contain',
    },
    

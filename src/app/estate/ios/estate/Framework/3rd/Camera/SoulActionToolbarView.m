@@ -47,7 +47,8 @@
   NSArray * buttonsArray = [NSArray arrayWithObjects:button1,nil];
   [topView setItems:buttonsArray];
   // [textView setInputView:topView];
-  [self.textView setInputAccessoryView:topView];
+  _textToolbar = topView;
+  [self.textView setInputAccessoryView:_textToolbar];
   
   
  
@@ -104,20 +105,17 @@
   
 }
 - (void)beganEdit:(NSString*)text {
-    self.topToolbar.hidden = NO;
-    self.textView.hidden = NO;
-    self.bottomToolbar.hidden = YES;
-    self.bottomDrawToolbar.hidden = YES;
-//  [self.bottomDrawToolbar setSelectedColor:[UIColor whiteColor]];
+  self.topToolbar.hidden = NO;
+  self.textView.hidden = NO;
+  self.bottomToolbar.hidden = YES;
+  self.bottomDrawToolbar.hidden = YES;
   [self.inputToolbar setSelectedColor:[UIColor whiteColor]];
   self.inputToolbar.hidden = NO;
   self.textView.text = text;
   self.textView.textColor = [UIColor whiteColor];
-//  self.textView.inputView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 100)];
-//  self.textView.inputAccessoryView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
-//  [self.textView reloadInputViews];
-    [self.textView becomeFirstResponder];
-  
+  [self.textView setInputAccessoryView:_textToolbar];
+  [self.textView becomeFirstResponder];
+  [self.textView reloadInputViews];
 }
 - (IBAction)onColorAction:(UIButton*)button {
     if (self.onColorChangeBlock) {

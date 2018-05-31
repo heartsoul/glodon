@@ -182,11 +182,11 @@
 - (void)addTextDraw:(NSString*)drawText color:(UIColor*)color {
   SoulDrawDataText * text = [[SoulDrawDataText alloc] init];
   text.drawText = drawText;
-  text.font = [UIFont systemFontOfSize:26];
+  text.font = [UIFont systemFontOfSize:20];
   text.color = color;
-  CGSize size = [text calcSize:120];
+  CGSize size = [text calcSize:self.frame.size.width - 80];
   text.size = CGSizeMake(size.width, MAX(26,size.height));
-  text.center = CGPointMake(40 + text.size.width / 2, 60 + text.size.height / 2);
+  text.center = CGPointMake(20 + text.size.width / 2, self.frame.size.height / 2 - 60 + text.size.height / 2);
   [self.dataArray addObject:text];
   [self setNeedsDisplay];
   

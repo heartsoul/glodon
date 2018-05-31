@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelEditButton;
 @property (weak, nonatomic) IBOutlet UIToolbar *topToolbar;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
+@property (strong, nonatomic) UIToolbar *textToolbar;
 @property (strong, nonatomic) UIColor *currentColor;
 - (IBAction)editCancelAction:(id)sender;
 - (IBAction)editDoneAction:(id)sender;
