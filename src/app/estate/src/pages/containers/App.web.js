@@ -2,9 +2,11 @@ import React from 'react'
 import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'
 import configureStore, { history } from '../store/ConfigureStore'
-import * as GLD from '../pages'
+import * as GLD from './pages.web'
+
 import { createStackNavigator,NavigationActions, StackActions } from 'app-3rd/react-navigation';
 const store = configureStore()
+
 const screens = {
   GuidePage: {
     screen: GLD.GuidePage,
