@@ -79,10 +79,5 @@ const styles = StyleSheet.create({
     },
     style_action_disabled: {
       backgroundColor: "#C8C8C8",
-      elevation: 2.5, // android 
-        shadowColor: "#00baf3", // iOS
-        shadowOffset: { width: 1.5, height: 5 }, // iOS
-        shadowOpacity: 0.85, // iOS
-        shadowRadius: 3, // iOS
     }
   });

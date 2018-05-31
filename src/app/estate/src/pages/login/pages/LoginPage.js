@@ -148,9 +148,14 @@ static navigationOptions = {
     const { login } = this.props
     login(this.state.username,this.state.password)
   }
+  
   componentWillReceiveProps(nextProps){
     if(nextProps.isSuccess == false && nextProps.status === '登录失败' && this.props.status != nextProps.status) {
+      if(ReactNative.Platform.OS === 'web') {
+        alert('账号或密码错误');
+      } else {
         ActionModal.alertTip("提示", '账号或密码错误',{});
+      }
     }
     return true;
   }
