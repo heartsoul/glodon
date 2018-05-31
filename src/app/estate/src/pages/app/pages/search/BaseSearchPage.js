@@ -23,8 +23,10 @@ const newStyle = {
     ...SearchBarStyle,
     wrapper: {
         ...SearchBarStyle.wrapper,
-        backgroundColor: "#00baf3"
+        backgroundColor: "#00baf3",
+        elevation:0
     },
+    
     cancelText: {
         ...SearchBarStyle.cancelText,
         color: "#ffffff",
@@ -34,9 +36,8 @@ const searchRef = null;
 const searchKeywords = null;
 export default class BaseSearchPage extends React.Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerStyle: { marginLeft: -100, marginRight: -100, backgroundColor: "#00baf3" },
-        headerLeft: <View ></View>,
-        headerRight: <View></View>,
+        headerLeft: null,
+        headerRight: null,
         headerTitle: navigation.state.params && navigation.state.params.renderHeaderTitle ? navigation.state.params.renderHeaderTitle() : (
             (
                 <View style={{ flex: 1, alignItems: "center" }}>

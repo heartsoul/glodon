@@ -94,7 +94,7 @@ export default class extends React.Component {
       return ({
         // title:title ? title : CONSTANTS.PAGE_NAME_HOME,
         headerTitle: (<BarItems.TitleBarItem text={title ? title : storage.loadCurrentProjectName()}/>),
-        headerRight:(<BarItems.RightBarItem imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_search_white.png')} navigation={this.props.navigation}
+        headerRight:(<BarItems.RightBarItem imageSource={require('app-images/icon_search_white.png')} navigation={this.props.navigation}
         onPress={(navigation) => this.props.navigation.navigate("SearchPage")} />),
         headerLeft: <View></View>,
         // header: {mode:'screen'},

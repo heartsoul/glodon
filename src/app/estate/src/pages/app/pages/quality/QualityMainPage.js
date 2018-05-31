@@ -17,7 +17,7 @@ class RightBarButtons extends React.Component {
   }
   render() {
     return <BarItems navigation={this.props.navigation}>
-    <BarItems.RightBarItem navigation={this.props.navigation} imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_search_white.png')} navigation={this.props.navigation}
+    <BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} navigation={this.props.navigation}
       onPress={(navigation) => this._onSearchPress(this.props.navigation)} />
   {
     AuthorityManager.isQualityCreate() ?
