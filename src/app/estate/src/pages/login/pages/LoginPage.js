@@ -1,32 +1,14 @@
 "use strict";
-import React, { Component } from "react";
-
-import ReactNative, {
-  AppRegistry,
-  StyleSheet,
-  Button,
-  Text,
-  Image,
-  View,
-  Dimensions,
-  TextInput,
-  TouchableOpacity,
-  SafeAreaView,
-  StatusBar,
-  Animated,
-  ScrollView,
-  Platform,
-  // Alert,
-} from "react-native";
-
-import { connect } from 'react-redux' // 引入connect函数
-import { Toast } from 'antd-mobile' // 引入connect函数
-import * as loginAction from '../actions/loginAction' // 导入action方法 
+import { Toast } from 'antd-mobile'; // 引入connect函数
 import { KeyboardAwareScrollView } from 'app-3rd/index';
-// import {ScrollView as KeyboardAwareScrollView } from 'react-native';
+import { ActionButton, BarItems, TextInputNormal, TextInputPassword, ActionModal } from 'app-components';
+import React from "react";
+import ReactNative, { Animated, Dimensions, Image, Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View, Keyboard} from "react-native";
+import { connect } from 'react-redux'; // 引入connect函数
+import * as loginAction from '../actions/loginAction'; // 导入action方法 
 
-import { ActionButton,TextInputNormal,TextInputPassword } from 'app-components';
-import { BarItems, LoadingView } from "app-components";
+
+
 
 var { width, height } = Dimensions.get("window");
 
@@ -161,17 +143,14 @@ static navigationOptions = {
     storage.pushNext(navigator, "ForgotPage",{title:'找回密码'})
   };
   doLogin=()=>{
+    Keyboard.dismiss();
     Toast.loading('正在登录...', 0, null, true);
     const { login } = this.props
     login(this.state.username,this.state.password)
   }
   componentWillReceiveProps(nextProps){
     if(nextProps.isSuccess == false && nextProps.status === '登录失败' && this.props.status != nextProps.status) {
-      if(Platform.OS === 'web') {
-        alert('账号或密码错误',3);
-      } else {
-        ReactNative.Alert.alert("提示",'账号或密码错误',[{text: '确定', onPress: () => {}, style: 'cancel'}]);
-      }
+        ActionModal.alertTip("提示", '账号或密码错误',{});
     }
     return true;
   }

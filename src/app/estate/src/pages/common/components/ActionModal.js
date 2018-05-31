@@ -5,6 +5,12 @@ import {Modal} from "antd-mobile"
 
 export default class ActionModal extends Component {
     static alertConfirm = (title, message, cancel, confirm) => {
+        if(!cancel) {
+            cancel = {};
+        }
+        if(!confirm) {
+            confirm = {};
+        }
         if(!cancel.style) {
             cancel.style = styles.style_cancel
         }
@@ -23,6 +29,9 @@ export default class ActionModal extends Component {
             ,{ text: confirm.text, style: [styles.style_confirm,confirm.style], onPress:confirm.onPress ? confirm.onPress:null}]);
     };
     static alertTip = (title, message, confirm) => {
+        if(!confirm) {
+            confirm = {};
+        }
         if(!confirm.style) {
             confirm.style = styles.style_confirm
         }
@@ -31,7 +40,10 @@ export default class ActionModal extends Component {
         }
         let titleElement = (<Text style={styles.style_title}>{title}</Text>);
         let messageElement = (<Text style={styles.style_message}>{message}</Text>);
-        Modal.alert(titleElement, messageElement, [{ text: confirm.text, style: [styles.style_confirm,confirm.style], onPress:confirm.onPress ? confirm.onPress:null}]);
+        setTimeout(() => {
+            Modal.alert(titleElement, messageElement, [{ text: confirm.text, style: [styles.style_confirm,confirm.style], onPress:confirm.onPress ? confirm.onPress:null}]);
+        }, 100);
+        
     };
     static alert = (title, message, actions) => {
         let titleElement = (<Text style={styles.style_title}>{title}</Text>);
@@ -43,10 +55,10 @@ export default class ActionModal extends Component {
 
 const styles = StyleSheet.create({
     style_title: {
-        color: '#000000'
+        color: '#000000',
     },
     style_message: {
-        color: '#000000'
+        color: '#000000',
     },
     style_cancel: {
         color: '#000000'
