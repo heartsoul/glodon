@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     Dimensions,
+    Keyboard,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { DatePicker } from 'antd-mobile';
@@ -28,8 +29,7 @@ class GLDDatePicker extends Component {
         return (
             <View>
                 <TouchableOpacity activeOpacity={0.5} onPress={(event) => { 
-                    var dismissKeyboard = require('dismissKeyboard');
-                    dismissKeyboard();
+                    Keyboard.dismiss();
                     this.setState({ visible: true }) }}>
                     <View style={[styles.containerView, this.props.style]}>
                         <View style={styles.titleView}>

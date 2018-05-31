@@ -12,7 +12,8 @@ import {
     Switch,
     Dimensions,
     Platform,
-    ScrollView
+    ScrollView,
+    Keyboard,
 } from "react-native";
 import PropTypes from 'prop-types'
 
@@ -154,8 +155,7 @@ export default class EquipmentDetailView extends Component {
     }
 
     showActionSheet = () => {
-        var dismissKeyboard = require('dismissKeyboard');
-        dismissKeyboard();
+        Keyboard.dismiss();
         PullPicker.show(
             `选择验收单位`,
             this.props.acceptanceCompanies,
@@ -210,8 +210,7 @@ export default class EquipmentDetailView extends Component {
             <EquipmentInfoItem leftTitle="规格：" content={info.specification} />
             <EquipmentInfoItem leftTitle="型号：" content={info.modelNum} />
             <EquipmentInfoItem leftTitle="构件位置：" showType="link" onClick={() => {
-                var dismissKeyboard = require('dismissKeyboard');
-                dismissKeyboard();
+                Keyboard.dismiss();
                 this.onOpenModleAction(info);
             }} content={info.elementName} />
             <EquipmentInfoItem leftTitle="厂家：" content={info.manufacturer} />
