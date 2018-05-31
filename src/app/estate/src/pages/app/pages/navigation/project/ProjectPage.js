@@ -87,6 +87,7 @@ class ProjectPage extends Component {
             });
 
         }, newTenant);
+
     }
 
     _separator = () => {
@@ -147,6 +148,7 @@ class ProjectPage extends Component {
                             refreshing={this.props.isLoading}
                         />
                     }
+                    keyExtractor={(item, index) => index+''}
                 />
             </View>
         );
@@ -160,6 +162,7 @@ class ProjectPage extends Component {
                 <FlatList style={{ width: width }}
                     data={this.props.dataArray}
                     renderItem={this.renderItemSimpleView}
+                    keyExtractor={(item, index) => index+''}
                 />
             </View>
         );

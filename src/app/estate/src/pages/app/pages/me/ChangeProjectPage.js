@@ -19,7 +19,9 @@ import * as AuthorityManager from "../navigation/project/AuthorityManager";
 import { Dimensions } from 'react-native';
 import App from '../../../containers/App';
 import { BarItems, LoadingView } from "app-components";
+import UserInfoManager from '../../../offline/manager/UserInfoManager'
 
+let userInfoManager = null;
 //切换项目主页
 export default class ChangeProjectPage extends Component {
 
@@ -40,8 +42,6 @@ export default class ChangeProjectPage extends Component {
 
         //获取当前选中的项目
         storage.loadProject((retVal) => {
-            console.log('------------current  projectid------');
-            console.log(retVal);
             this.selectProjectId = Number.parseInt(retVal);
         });
 
@@ -49,7 +49,10 @@ export default class ChangeProjectPage extends Component {
             this.trueTenantStr = retVal;
         });
 
+        userInfoManager = new UserInfoManager();
     }
+
+   
 
     //获取当前项目最新版本
     _getlatestVersion = (projectId)=>{
@@ -95,15 +98,10 @@ export default class ChangeProjectPage extends Component {
             return true;
         });
 
-        // App.router.getStateForAction = (action, state) => {
-
-        //     console.log('===========================');
-        //       if (action.type === NavigationActions.BACK) {
-        //       }
-        // }
     }
 
     componentWillUnmount() {
+        userInfoManager.close();
         BackHandler.removeEventListener('hardwareBackPress', () => {
             this._goBack();
             return true;
@@ -125,30 +123,36 @@ export default class ChangeProjectPage extends Component {
 
     //获取当前租户的所有项目列表
     _getProjects() {
-        API.getProjects(0, 1).then(
-            (responseData) => {
-                let last = responseData.last;
-                if (last) {
-                    this.setState(preState => {
-                        return { ...preState, dataList: responseData.data.content }
-                    });
-                } else {
-                    API.getProjects(0, responseData.data.totalElements).then(
-                        (responseData) => {
-                            this.setState(preState => {
-                                return { ...preState, dataList: responseData.data.content }
-                            });
+        // API.getProjects(0, 1).then(
+        //     (responseData) => {
+        //         let last = responseData.last;
+        //         if (last) {
+        //             this.setState(preState => {
+        //                 return { ...preState, dataList: responseData.data.content }
+        //             });
+        //         } else {
+        //             API.getProjects(0, responseData.data.totalElements).then(
+        //                 (responseData) => {
+        //                     this.setState(preState => {
+        //                         return { ...preState, dataList: responseData.data.content }
+        //                     });
 
-                        }
-                    ).catch(err => {
-                        console.log(err);
-                    });
-                }
+        //                 }
+        //             ).catch(err => {
+        //                 console.log(err);
+        //             });
+        //         }
 
-            }
-        ).catch(err => {
-            console.log(err);
-        });
+        //     }
+        // ).catch(err => {
+        //     console.log(err);
+        // });
+
+        userInfoManager.getProjectList().then((list)=>{
+            this.setState(preState => {
+                return { ...preState, dataList:list }
+            });
+        })
     }
 
 
@@ -162,14 +166,12 @@ export default class ChangeProjectPage extends Component {
     //返回键
     _goBack = () => {
 
-        console.log('back.........................');
         let item = JSON.parse(this.trueTenantStr);
         console.log(item);
         storage.loadTenantInfo((retVal) => {
             let curTenant = JSON.parse(retVal);
             if (item.value.id != curTenant.value.id) {
                 API.setCurrentTenant(item.value.tenantId).then((responseData) => {
-                    console.log('set tenantlllllllllllllllllllllllll');
                     storage.saveTenant(item.value.id);
                     storage.saveLastTenant(item.value.tenantId);
                     storage.saveTenantInfo(this.trueTenantStr);//保存当前的租户item信息
@@ -201,7 +203,7 @@ export default class ChangeProjectPage extends Component {
         let width = Dimensions.get('window').width - 22;
         if (this.selectProjectId != item.id) {
             return (
-                <TouchableOpacity activeOpacity={0.5} onPress={() => this._itemClick(item)}>
+                <TouchableOpacity  activeOpacity={0.5} onPress={() => this._itemClick(item)}>
                     <View style={styles.containerView}>
                         <Text style={styles.content}> {item.name}</Text>
                         <View style={{ marginLeft: 22, height: 1, width: width, backgroundColor: '#F7F7F7' }} />
@@ -239,6 +241,7 @@ export default class ChangeProjectPage extends Component {
                 <FlatList style={{ marginTop: 10, backgroundColor: '#FFFFFF' }}
                     data={dataList}
                     renderItem={this.renderItemView}
+                    keyExtractor={(item, index) => index+''}
                 />
 
                 <TouchableHighlight
