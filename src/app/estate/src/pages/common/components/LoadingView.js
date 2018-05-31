@@ -8,9 +8,10 @@ export default class LoadingView extends React.Component {
                 <ActivityIndicator
                     animating={true}
                     style={[{ height: 80 }]}
-                    color='#00baf3'
+                    color='#999999'
                     size="large"
                 />
+                <View style={{height:280,width:'100%'}} />
             </View>
         )
     }

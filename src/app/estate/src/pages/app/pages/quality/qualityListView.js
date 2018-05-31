@@ -8,7 +8,7 @@ import {
     RefreshControl, Dimensions
 } from "react-native";
 import * as API from "app-api";
-import { LoadingView } from "app-components";
+import { LoadingView, NoDataView } from "app-components";
 import { connect } from 'react-redux' // 引入connect函数
 import * as actions from '../../actions/qualityListAction'
 import QualityListCell from "./qualityListCell";
@@ -72,7 +72,7 @@ class QualityListView extends PureComponent {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <Text>加载失败</Text>
+                <NoDataView text="加载失败" image={NoDataView.NoDataImage} />
             </View>
         );
     }
@@ -113,7 +113,7 @@ class QualityListView extends PureComponent {
     }
 
     _emptyView = () => {
-        return (<View style={{ alignItems: 'center', justifyContent: 'center', height: height - 44 - 20 - 49 }}><Text style={{ color: 'gray' }}>暂无数据</Text></View>);
+        return (<View style={{ alignItems: 'center', justifyContent: 'center',width:width, height: height - 44 - 20 - 49 }}><NoDataView text="暂无数据" image={NoDataView.NoDataImage} /></View>);
     }
     scrollToOffset = () => {
         if (this.refs.sectionList.scrollTo) {
@@ -148,7 +148,7 @@ class QualityListView extends PureComponent {
     renderEmpty() {
         return (
             <View style={styles.emptyContainer}>
-                <Text>很抱歉，没有找到相关的内容</Text>
+            <NoDataView text="很抱歉，没有找到相关的内容" image={NoDataView.NoDataImage} />
             </View>
         )
     }

@@ -7,7 +7,7 @@ import {
   StatusBar,
   SafeAreaView
 } from 'react-native';
-import { BarItems, LoadingView } from "app-components";
+import { BarItems, LoadingView, NoDataView } from "app-components";
 
 export default class extends React.Component {
 
@@ -23,9 +23,7 @@ render() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
     <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-    <View style={{flex:1,alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
-    <Text style={styles.text}> 敬请期待 </Text>
-    </View>
+    <NoDataView text="暂无数据" image={NoDataView.NoDataImage} />
     </SafeAreaView>
     
   );

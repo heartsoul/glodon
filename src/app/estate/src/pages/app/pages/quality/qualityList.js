@@ -125,6 +125,7 @@ export default class qualityList extends PureComponent {
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+                <View style={{height:3,width:'100%',backgroundColor:'white'}}/>
                 <SegmentedView indicatorLineWidth={0}  autoScroll={this.state.activeIndex == 0?false:true} animated={this.state.activeIndex == 0?false:true} style={{ flex: 1 }} barStyle={{paddingLeft:0,paddingRight:0}} justifyItem={'scrollable'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)}>
                     {
                        API.CLASSIFY_STATUS_LIST.map((item,index)=>{
@@ -144,6 +145,7 @@ export default class qualityList extends PureComponent {
                        })
                    }
                 </SegmentedView>
+                <View style={{position:'absolute',top:41,left:0,height:1,width:'100%',backgroundColor:'#e9e9e999'}} />
                 {/* <TouchableOpacity style={styles.topBtn} onPress={()=>this._toTop()}>
             <Text style={styles.topBtnText}>置顶</Text>
       </TouchableOpacity> */}
