@@ -30,8 +30,8 @@ export default class DirManager  {
         return targetPath;
     }
 
-    //获取项目文件夹名称
-    getProjectName = ()=>{
+     //获取项目文件夹名称
+     getProjectName = ()=>{
         let userInfo = storage.loadUserInfo();
         // let userObj = JSON.parse(userInfo);
         let account = userInfo.username;//手机号
@@ -44,6 +44,8 @@ export default class DirManager  {
         let targetPath = `${account}_${tenantId}_${projectId}`;
         return targetPath;
     }
+
+
 
     //获取模型根目录
     getModelPath = ()=>{

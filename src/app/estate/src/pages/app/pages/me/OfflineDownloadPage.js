@@ -13,8 +13,10 @@ import {
 } from 'react-native';
 
 import {CircleProgressBar} from 'app-components'
-
+import BasicInfoManager from '../../../offline/manager/BasicInfoManager'
+// import UserInfoManager from '../../../offline/manager/UserInfoManager'
 var { width, height } = Dimensions.get("window");
+let bm;
 //离线数据下载
 export default class extends Component {
   
@@ -25,6 +27,7 @@ export default class extends Component {
 
   constructor() {
       super();
+       bm = new BasicInfoManager();
       this.state ={
         showAll:true,
         showLoaded:false,
@@ -32,6 +35,10 @@ export default class extends Component {
       }
   };
   
+  componentWillUnmount=()=>{
+    bm.close();
+  }
+
 //进入离线数据下载
   _gotoDownloadPage = () => {
     let navigator = this.props.navigation;
@@ -74,31 +81,16 @@ export default class extends Component {
     })
   }
 
-  //全部 的view
-  allView = null;
-  //已下载的view
-  loadedView = null;
-  //下载中的view
-  loadingView = null;
   _getContentView=()=>{
     if(this.state.showAll){
-      if(this.allView==null){
-        this.allView = (<AllView />);
-      }
-      return this.allView;
+      return  (<AllView />);
     }
     if(this.state.showLoaded){
-      if(this.loadedView==null){
-        this.loadedView = (<LoadedView />);
-      }
-      return this.loadedView;
+      return (<LoadedView />);
     }
 
     if(this.state.showLoading){
-      if(this.loadingView==null){
-        this.loadingView=(<LoadingView />);
-      }
-      return this.loadingView;
+      return (<LoadingView />);
     }
     return null;
   }
@@ -142,8 +134,6 @@ class AllView extends Component{
 
   }
 
- 
-
   render(){
     return (
       <View style={{backgroundColor:'#f9f9f9'}} >
@@ -184,10 +174,11 @@ class LoadedView extends Component{
 
  //基础数据包是否已下载
  _showBasicView=()=>{
-   let isShow = true;
-   if(isShow){
+   let finishTime = bm.getDownloadedTime();
+   let isShow = finishTime!=null;
+   if(isShow){ 
      return (
-      <BasicDataItemView icon = {require('app-images/icon_offline_download_basic.png')} title='基础数据包' totalNum={55} progress={5} ></BasicDataItemView>
+      <BasicDataItemView icon = {require('app-images/icon_offline_download_basic.png')} title='基础数据包' totalNum={100} progress={100} finishText={finishTime} ></BasicDataItemView>
      );
    }
    return null;
@@ -292,8 +283,6 @@ class TopItemView extends Component{
 
 //内容横条   质检清单   材设进场  模型   图纸
 class MineItemView extends Component{
-  // <MineItemView icon = {require('app-images/icon_offline_manage_download.png')} title='离线数据下载' onPress={()=>this._gotoDownloadPage()}></MineItemView>
-  // <View style={styles.mineItemLine}></View>
     render(){
       return(
         <TouchableOpacity onPress={()=>{ this.props.onPress()}}>
@@ -310,21 +299,52 @@ class MineItemView extends Component{
 
 //基础数据包item
 class BasicDataItemView extends Component{
-  // <MineItemView icon = {require('app-images/icon_offline_manage_download.png')} title='离线数据下载' onPress={()=>this._gotoDownloadPage()}></MineItemView>
-  // <View style={styles.mineItemLine}></View>
+  
+  constructor(){
+    super();
+    this.state={
+      progress:0,
+      totalNum:100,
+      finishText:''
+    }
+  }
   _startDownload =()=>{
-    console.log('startDownload')
+    
+    bm.downloadBasicInfo((progress,total)=>{
+      
+      this.setState((pre)=>{
+        return {
+          ...pre,
+          progress:progress,
+          totalNum:total,
+          
+        }
+      })
+    });
   }
   _stopDownload =()=>{
-    console.log('_stopDownload')
+    console.log('_stopDownload');
   }
+
+  componentDidMount=()=>{
+    const {progress,totalNum,finishText} = this.props;
+    this.setState((pre)=>{
+      return {
+        ...pre,
+        progress:progress,
+        totalNum:totalNum,
+        finishText:finishText,
+      }
+    })
+  }
+
     render(){
       return(
         <TouchableOpacity onPress={()=>{ this.props.onPress()}}>
           <View style={styles.mineItemContainer}>
             <Image source={this.props.icon} style={styles.mineItemIcon}/>
             <Text style={styles.mineItemText}>{this.props.title} </Text>
-            <CircleProgressBar startDownload={this._startDownload} stopDownload={this._stopDownload} progress={this.props.progress} totalNum={this.props.totalNum}/>
+            <CircleProgressBar startDownload={this._startDownload} stopDownload={this._stopDownload} progress={this.state.progress} totalNum={this.state.totalNum} finishText={this.state.finishText}/>
           </View>
         </TouchableOpacity>
 

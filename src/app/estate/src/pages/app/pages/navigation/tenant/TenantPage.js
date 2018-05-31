@@ -7,6 +7,9 @@ import ReactNative, { ActivityIndicator, Animated, ScrollView, StyleSheet, Text,
 import { BarItems } from "app-components";
 import { FlatList } from "app-3rd"
 import * as API from "app-api";
+import UserInfoManager from '../../../../offline/manager/UserInfoManager'
+
+let userInfoManager= null;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 export default class tenantList extends Component {
@@ -35,6 +38,8 @@ export default class tenantList extends Component {
             this.changeProject = this.props.navigation.state.params.changeProject;
         }
         this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, })
+        //获取所有项目信息
+        userInfoManager = new UserInfoManager();
     }
 
     needBack = (backFun) => {
@@ -175,23 +180,24 @@ export default class tenantList extends Component {
     _clickItem = (item, index) => {
         //   alert(item.value.tenantId);
         API.setCurrentTenant(item.value.tenantId).then((responseData) => {
+            
             let navigator = this.props.navigation;
             // storage.saveTenant(item.value.id);
             // storage.saveLastTenant(item.value.tenantId);
             // storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
             // storage.pushNext(navigator, "ProjectPage")
-
             if (!this.changeProject) {
                 storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
+                userInfoManager.downloadProjectInfo(item.value.tenantId+'');//切换租户后，获取租户下所有项目信息  保存到本地数据库
                 storage.pushNext(navigator, "ProjectPage", { tenantId: item.value.tenantId, id: item.value.id })
             } else {
-                storage.loadTenantInfo((retVal) => {
-                    storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
-                    storage.saveTenantInfoRefresh('1');//设置刷新
-                    this.props.navigation.pop("ChangeProjectPage");
-                });
+                storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
+                storage.saveTenantInfoRefresh('1');//设置刷新
+                userInfoManager.downloadProjectInfo(item.value.tenantId+'');//切换租户后，获取租户下所有项目信息  保存到本地数据库
+                navigator.pop(1);//返回上一级
 
             }
+           
 
         });
     }
