@@ -78,7 +78,7 @@ export function searchData(keywords, page, qcState, dataMapIn) {
                         data: value,
                     });
                 });
-                dispatch(_loadSuccess(sectionLob, {...dataMap}, qcState, page, hasMore));
+                dispatch(_loadSuccess(sectionLob, dataMap, qcState, page, hasMore));
                 data = null;
                 dataBlob = null;
                 sectionLob = null;

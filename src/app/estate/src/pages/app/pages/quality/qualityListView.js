@@ -25,7 +25,7 @@ class QualityListView extends PureComponent {
     _sectionData = (index) => {
         return this.state.sectionArray;
     }
-    _keyExtractor = (item, index) => index;
+    _keyExtractor = (item, index) => item.value.id+"";
     //网络请求
     fetchData = (qcState) => {
         // if(this.props.page > 0) {
@@ -90,13 +90,13 @@ class QualityListView extends PureComponent {
     //返回itemView
     renderItemView = ({ item, index }) => {
         return (
-            <QualityListCell onCellAction={this.onCellAction} item={item} index={index} />
+            <QualityListCell key={item.value.id} onCellAction={this.onCellAction} item={item} index={index} />
         );
     }
 
     _sectionComp = (info) => {
         var txt = info.section.key;
-        return <View style={styles.groupHeaderView}>
+        return <View style={styles.groupHeaderView}  key={txt}>
             <View style={styles.headerLine}></View>
             <Text
                 style={styles.groupTitle}>{txt}</Text>
@@ -132,7 +132,7 @@ class QualityListView extends PureComponent {
                 ref='sectionList'
                 sections={this.props.dataArray}
                 renderItem={this.renderItemView}
-                // keyExtractor={this._keyExtractor}
+                keyExtractor={this._keyExtractor}
                 renderSectionHeader={this._sectionComp}
                 // ItemSeparatorComponent={this._separator}
                 stickySectionHeadersEnabled={false}
