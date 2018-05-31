@@ -166,7 +166,7 @@ export default class extends Component {
                 <SegmentedView indicatorType='none' barStyle={{left:width/2-104,width:208,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 300, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
                     {
                         qShow ?
-                            <SegmentedView.Sheet title={<MainTabTitle key="item0" text="质量检查" select={this.state.activeIndex == 0} activeTitleStyle={{color:'#00baf3',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />}  style={{backgroundColor: '#f8f8f8'}}>
+                            <SegmentedView.Sheet title={<MainTabTitle key="item0" text="质量检查" select={this.state.activeIndex == 0} activeTitleStyle={{color:'#00baf3',fontWeight:'bold',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />}  style={{backgroundColor: '#f8f8f8'}}>
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
@@ -185,7 +185,7 @@ export default class extends Component {
                     }
                     {
                         eShow ?
-                            <SegmentedView.Sheet title={<MainTabTitle key="item0" text="材设进场" select={this.state.activeIndex == 1} activeTitleStyle={{color:'#00baf3',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />} style={{backgroundColor: '#f8f8f8'}}>
+                            <SegmentedView.Sheet title={<MainTabTitle key="item0" text="材设进场" select={this.state.activeIndex == 1} activeTitleStyle={{color:'#00baf3',fontWeight:'bold',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />} style={{backgroundColor: '#f8f8f8'}}>
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />

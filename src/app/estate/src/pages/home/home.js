@@ -76,7 +76,7 @@ export default class extends React.Component {
           }}>
             <Image
               style={[{ width: 61, height: 61,resizeMode:'contain',position:'absolute'},Platform.OS ==='android' ? {top:10} : {top:20}]}
-              source={require('app-images/icon_category_create.png')}
+              source={require('app-images/home/icon_main_create.png')}
             />
           </View>
         }

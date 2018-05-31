@@ -152,6 +152,6 @@ const styles = StyleSheet.create({
         marginTop:20,
         marginLeft:10,
         width:'100%',
-        backgroundColor:'#cccccc'
+        backgroundColor:'#e9e9e9'
     },
 });
