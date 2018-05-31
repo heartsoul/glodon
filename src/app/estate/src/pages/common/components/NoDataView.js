@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, View, Text, Image, StatusBar } from 'react-native';
+import { StyleSheet, View, Text, Image, StatusBar, Platform } from 'react-native';
 export const defaultImage = require('app-images/icon_no_data.png')
 export default class NoDataView extends React.Component {
     static NoDataImage = defaultImage;
@@ -11,7 +11,7 @@ export default class NoDataView extends React.Component {
                 {image ? <Image style={{width:188,height:183}} source={image}/> : null}
                 <View style={{height:40,width:'100%'}} />
                 <Text style={[{fontSize:17,color:'#999999' }]} >{text}</Text>
-                <View style={{height:280,width:'100%'}} />
+                <View style={[{width:'100%'},Platform.OS === 'ios' ? {height:280} : {height:200}]} />
             </View>
         )
     }
