@@ -36,6 +36,10 @@ import ForgotPage from './login/pages/ForgotPage'
 import ChangeProjectPage from './app/pages/me/ChangeProjectPage'
 import OfflineMangePage from './app/pages/offline/OfflineMangePage'
 import OfflineDownloadPage from './app/pages/offline/OfflineDownloadPage'
+import EquipmentConditionPage from './app/pages/offline/EquipmentConditionPage'
+import EquipmentRecordPage from './app/pages/offline/EquipmentRecordPage'
+import QualityConditionPage from './app/pages/offline/QualityConditionPage'
+import QualityRecordPage from './app/pages/offline/QualityRecordPage'
 
 
 export {
@@ -74,4 +78,8 @@ export {
     ChangeProjectPage,
     OfflineMangePage,
     OfflineDownloadPage,
+    EquipmentConditionPage,
+    EquipmentRecordPage,
+    QualityConditionPage,
+    QualityRecordPage
 }

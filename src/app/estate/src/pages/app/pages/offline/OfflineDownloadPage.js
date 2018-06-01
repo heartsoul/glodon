@@ -119,11 +119,13 @@ class AllView extends Component{
 
   //点击质检清单
   _clickQuality=()=>{
-
+    let navigator = this.props.navigation;
+    storage.pushNext(navigator, "QualityConditionPage")
   }
   //点击材设
   _clickEquipment=()=>{
-
+    let navigator = this.props.navigation;
+    storage.pushNext(navigator, "EquipmentConditionPage")
   }
   //点击模型
   _clickModel=()=>{
@@ -157,11 +159,13 @@ class LoadedView extends Component{
 
   //点击质检清单
   _clickQuality=()=>{
-
+    let navigator = this.props.navigation;
+    storage.pushNext(navigator, "QualityRecordPage")
   }
   //点击材设
   _clickEquipment=()=>{
-
+    let navigator = this.props.navigation;
+    storage.pushNext(navigator, "EquipmentRecordPage")
   }
   //点击模型
   _clickModel=()=>{

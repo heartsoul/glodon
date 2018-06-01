@@ -109,6 +109,18 @@ const screens = {
     OfflineDownloadPage:{
         screen:GLD.OfflineDownloadPage
     },
+    EquipmentConditionPage:{
+        screen:GLD.EquipmentConditionPage
+    },
+    EquipmentRecordPage:{
+        screen:GLD.EquipmentRecordPage
+    },
+    QualityConditionPage:{
+        screen:GLD.QualityConditionPage
+    },
+    QualityRecordPage:{
+        screen:GLD.QualityRecordPage
+    },
 };
 
 const options = () => {
