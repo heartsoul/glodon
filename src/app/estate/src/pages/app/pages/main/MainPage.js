@@ -153,7 +153,7 @@ export default class extends Component {
         }
 
         return (
-            <SafeAreaView>
+            <SafeAreaView style={{width:'100%',height:'100%'}}>
             <ScrollView style={{ backgroundColor: '#f8f8f8' }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{ backgroundColor: '#ffffff' }}>

@@ -1,4 +1,14 @@
 {
-  "plugins": [["import", { "libraryName": "antd-mobile" }]],
-  "presets": ["react-native"]
+  "plugins": [["import", { "libraryName": "antd-mobile" }],[
+    "transform-runtime",
+    {
+      "helpers": false,
+      "polyfill": false,
+      "regenerator": true,
+      "moduleName": "babel-runtime"
+    }
+  ]],
+  "presets": [["react-native"],["env",{
+    "modules": false
+  }]]
 }

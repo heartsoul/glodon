@@ -10,18 +10,27 @@ const appDirectory = path.resolve(__dirname, '../')
 const babelLoaderConfiguration = {
     test: /(\.jsx|\.js)$/,
     include: [
-        path.resolve(appDirectory, 'index.web.js'),
-        path.resolve(appDirectory, 'src'),
-        // path.resolve(appDirectory, 'node_modules/react-navigation'),
+        path.resolve(appDirectory, 'node_modules/react-native-safe-area-view'),
+        path.resolve(appDirectory, 'node_modules/react-navigation'),
         path.resolve(appDirectory, 'node_modules/antd-mobile'),
         // path.resolve(appDirectory, 'node_modules/react-native-image-zoom-viewer')
+        path.resolve(appDirectory, 'src'),
+        path.resolve(appDirectory, 'index.web.js'),
     ],
     use: {
         loader: 'babel-loader',
         options: {
             cacheDirectory: false,
             plugins: [
-                // ["transform-runtime"],
+                [
+                    "transform-runtime",
+                    {
+                      "helpers": false,
+                      "polyfill": false,
+                      "regenerator": true,
+                      "moduleName": "babel-runtime"
+                    }
+                ],
                 'react-native-web',
                 ['import', { style: 'css', libraryName: 'antd-mobile' }],
             ],
@@ -49,6 +58,7 @@ const urlLoaderConfiguration = {
         mimetype: 'image/png',
     },
 }
+const ___SERVER = 'http://10.1.83.30';
 module.exports = {
     entry: path.resolve(appDirectory, 'index.web.js'),
     devtool: 'eval-source-map',
@@ -65,15 +75,45 @@ module.exports = {
         progress: true,
         proxy: {
             '/uaa/*': {
-                target: 'http://10.1.83.30',
+                target: ___SERVER,
                 changeOrigin: true,
                 secure: false
             },
             '/pmbasic/*': {
-                target: 'http://10.1.83.30',
+                target: ___SERVER,
                 changeOrigin: true,
                 secure: false
-            }
+            },
+            '/quality/*': {
+                target: ___SERVER,
+                changeOrigin: true,
+                secure: false
+            },
+            '/admin/*': {
+                target: ___SERVER,
+                changeOrigin: true,
+                secure: false
+            },
+            '/backend/*': {
+                target: ___SERVER,
+                changeOrigin: true,
+                secure: false
+            },
+            '/user/*': {
+                target: ___SERVER,
+                changeOrigin: true,
+                secure: false
+            },
+            '/model/*': {
+                target: ___SERVER,
+                changeOrigin: true,
+                secure: false
+            },
+            '/bimpm/*': {
+                target: ___SERVER,
+                changeOrigin: true,
+                secure: false
+            },
         }
     },
 

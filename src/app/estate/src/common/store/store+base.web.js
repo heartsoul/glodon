@@ -2,7 +2,9 @@
  * 数据存储类
  */
 import Storage from './storage';
-import { StackActions,NavigationActions } from 'app-3rd/react-navigation'
+import StackActions from './../../node_modules/app-3rd/lib/react-navigation/src/routers/StackActions'
+import NavigationActions from './../../node_modules/app-3rd/lib/react-navigation/src/NavigationActions'
+
 class WebStorage extends Storage {
     constructor() {
         super();
@@ -94,11 +96,9 @@ class WebStorage extends Storage {
         if (!navigator) {
             return;
         }
-       let action =  StackActions.push({
-            routeName:name,
-            params:params||{}
-        });
-        navigator.dispatch(action);
+        console.log(StackActions)
+       
+        navigator.push(name, params||{});
     }
     // 返回到上一页面
     goBack = (navigation, params = {}) => {
