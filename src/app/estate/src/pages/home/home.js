@@ -75,7 +75,7 @@ export default class extends React.Component {
             justifyContent: 'center',
           }}>
             <Image
-              style={[{ width: 61, height: 61,resizeMode:'contain',position:'absolute'},Platform.OS ==='android' ? {top:10} : {top:20}]}
+              style={[{ width: 61, height: 61,resizeMode:'contain',position:'absolute'},Platform.OS ==='ios' ? {top:20} : {top:10}]}
               source={require('app-images/home/icon_main_create.png')}
             />
           </View>

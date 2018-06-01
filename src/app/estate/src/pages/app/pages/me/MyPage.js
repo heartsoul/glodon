@@ -10,7 +10,8 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Platform
 } from 'react-native';
 import {loginOut, uaaLoginOut} from "app-api";
 import {NavigationPage} from 'app-3rd/teaset'
@@ -111,8 +112,8 @@ class MineItemView extends Component{
 var styles = StyleSheet.create({
     container:{
       backgroundColor:'#f5f8f9',
-      width:width,
-      height:height
+      marginTop:Platform.OS === 'web' ? 56 : 0,
+      flex:1
     },
     mineAvatar:{
       width:90,
