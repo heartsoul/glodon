@@ -3,18 +3,19 @@
  */
 'use strict';
 import React, { Component, } from "react";
-import ReactNative, { ActivityIndicator, Animated, FlatList, ScrollView, StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, Platform } from "react-native";
+import ReactNative, { ActivityIndicator, Animated, ScrollView, StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, Platform } from "react-native";
 import { BarItems } from "app-components";
+import { FlatList } from "app-3rd"
 import * as API from "app-api";
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 export default class tenantList extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerTitle: <BarItems.TitleBarItem text='租户列表'/>,
+        headerTitle: <BarItems.TitleBarItem text='租户列表' />,
         gesturesEnabled: false,
         headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
-        headerRight:<View/>,   
-     });
+        headerRight: <View />,
+    });
 
     changeProject = false;
     constructor(props) {
@@ -41,7 +42,7 @@ export default class tenantList extends Component {
         if (backFun) {
             backFun(false);
         }
-        if(storage.loadLastTenant() == '0') {
+        if (storage.loadLastTenant() == '0') {
             if (backFun) {
                 backFun(true);
             } else {
@@ -54,7 +55,7 @@ export default class tenantList extends Component {
     resetTenant = () => {
         API.setCurrentTenant(storage.loadLastTenant())
             .then((responseData) => {
-                storage.gotoMainPage(this.props.navigation,{activeIndex:storage.currentTab})
+                storage.gotoMainPage(this.props.navigation, { activeIndex: storage.currentTab })
             });
     }
     loadLeftTitle = () => {
@@ -104,7 +105,7 @@ export default class tenantList extends Component {
 
             });
             if (dataBlob.length == 1 && storage.loadLastTenant() == '0') {
-               this.props.navigation.setParams({ isFirst: false });
+                this.props.navigation.setParams({ isFirst: false });
                 this._clickItem(dataBlob[0], 0)
                 return;
             }
@@ -133,11 +134,11 @@ export default class tenantList extends Component {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
                 () => {
-                 if(storage.currentRouteName === this.props.navigation.state.routeName){
+                    if (storage.currentRouteName === this.props.navigation.state.routeName) {
                         this.resetTenant();
                         return true
                     }
-                 return false;
+                    return false;
                 }
             )
         }
@@ -217,8 +218,8 @@ export default class tenantList extends Component {
         return (
             <ScrollView >
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <Text style={{ color: "transparent", height: 25 }}> 租户列表 </Text>
                 <AnimatedFlatList
+                    style={{marginTop:25}}
                     data={this.state.dataArray}
                     renderItem={this.renderItemView}
                     ListEmptyComponent={this.createEmptyView}
@@ -270,21 +271,20 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 3, height: 7 }, // iOS
         shadowOpacity: 0.15, // iOS
         shadowRadius: 3, // iOS
-
+        flexDirection: "row",
+        alignItems: "center"
     },
     title: {
         fontSize: 15,
         color: 'blue',
     },
     content: {
-        left: 60,
-        top: -20,
+        marginLeft: 10,
         fontSize: 15,
         color: '#325771',
     },
     image: {
-        left: 10,
-        top: 10,
+        marginLeft: 10,
         width: 40,
         height: 40,
     }
