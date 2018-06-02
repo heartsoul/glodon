@@ -4,10 +4,11 @@
 'use strict';
 import React, { Component, } from "react";
 import {
-    ActivityIndicator, FlatList, StyleSheet, Dimensions,
+    ActivityIndicator, StyleSheet, Dimensions,
     Text, View, StatusBar, Image, TouchableOpacity, RefreshControl
 } from "react-native";
 import { connect } from 'react-redux' // 引入connect函数
+import { FlatList } from "app-3rd"
 
 import * as AuthorityManager from "./AuthorityManager";
 import * as actions from '../../../actions/projectAction'

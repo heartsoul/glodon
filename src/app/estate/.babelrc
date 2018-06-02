@@ -7,7 +7,7 @@
       "regenerator": true,
       "moduleName": "babel-runtime"
     }
-  ]],
+  ],["transform-class-properties"]],
   "presets": [["react-native"],["env",{
     "modules": false
   }]]
