@@ -101,8 +101,17 @@ def gitSha() {
     return 'git rev-parse --short HEAD'.execute().text.trim()
 }
 
+
 def gitCount() {
     return 'git rev-list --count HEAD'.execute().text.trim()
+}
+/**
+ * 获取本机的ip
+ * @return
+ */
+def getIP() {
+    def ip = "${projectDir}/ip.bat".execute().text.trim()
+    return "\"${ip}\""
 }
 
 android {
@@ -115,6 +124,9 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.1.0"
+
+        buildConfigField("String", "LOCAL_IP", getIP())
+
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }

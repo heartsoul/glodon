@@ -1,8 +1,14 @@
+def getIP() {
+    return "${projectDir}/ip.bat".execute().text.trim()
+}
+
 gradle.projectsEvaluated {
+
     def currentBundleTask = tasks.create(
-            name: "ss",
+            name: "name",
             type: Exec) {
-        println "sssb"
+
+        println "local ip ${ getIP()}"
     }
 
     currentBundleTask.dependsOn("assembleRelease")

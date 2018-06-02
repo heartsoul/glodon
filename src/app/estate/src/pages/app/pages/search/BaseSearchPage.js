@@ -32,8 +32,8 @@ const newStyle = {
         color: "#ffffff",
     }
 }
-const searchRef = null;
-const searchKeywords = null;
+var searchRef = null;
+var searchKeywords = null;
 export default class BaseSearchPage extends React.Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         headerLeft: null,
