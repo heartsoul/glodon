@@ -20,7 +20,8 @@ import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择�
 
 import {ToOnlineDialog} from 'app-components';
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
-
+import BasiInfoManager from '../../../offline/manager/BasicInfoManager'
+import * as API from "app-api";
 var { width, height } = Dimensions.get("window");
 export default class extends Component {
     constructor() {
@@ -74,9 +75,19 @@ export default class extends Component {
 
 
     componentDidMount() {
+        //每次进来都刷新一遍基础数据
+        let bm = new BasiInfoManager();
+        bm.downloadBasicInfo((p,t)=>{
+            if(t==p){
+                setTimeout(()=>{
+                    bm.close();
+                }, 1000)
+                
+            }
+        });
         //请求数据
         // this.fetchData();
-        // console.log("componentDidMount")
+        // console.log("----------------------------componentDidMount")
         CheckVersionManager.checkVersion("auto")
     }
     fetchData = () => {
@@ -133,11 +144,24 @@ export default class extends Component {
         })
     }
 
+    //获取当前项目最新版本
+    _getlatestVersion = (projectId)=>{
+        API.getModelLatestVersion(projectId).then((responseData) => {
+            let latestVersion = responseData.data.data.versionId;
+            storage.projectIdVersionId = latestVersion;
+            storage.setLatestVersionId(projectId,latestVersion);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+    
     //离线标记
     offlineHintView =()=>{
         //如果是离线模式 需要显示离线标记
         let isOnline = OfflineStateUtil.isOnLine();
         if(isOnline){
+            //在线情况  刷一遍最新版本信息
+            this._getlatestVersion(storage.loadProject())
             return null;
         }
         if(!this.state.isShowOfflineHint){
