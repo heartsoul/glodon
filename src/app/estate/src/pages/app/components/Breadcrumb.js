@@ -6,12 +6,12 @@ import {
     StyleSheet,
     Text,
     Image,
-    FlatList,
     TouchableOpacity,
     Dimensions,
     ScrollView,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { FlatList } from "app-3rd";
 var { width, height } = Dimensions.get("window");
 
 /**
@@ -113,15 +113,18 @@ class Breadcrumb extends Component {
 
     render() {
         return (
-            <View>
-                <View style={this.props.data && this.props.data.length > 0 ? { height: 48, paddingLeft: 15, backgroundColor: "#f9f9f9" } : { height: 0 }}>
-                    <FlatList
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        data={this.props.data}
-                        renderItem={this.renderNavItemView}
-                        keyExtractor={(item, index) => index + "key"}
-                    />
+
+            <View style={{ height: "100%" }}>
+                <View style={this.props.data && this.props.data.length > 0 ? { width: "100%", height: 48, paddingLeft: 15, backgroundColor: "#f9f9f9" } : { height: 0 }} >
+                    <ScrollView horizontal={true}>
+                        {
+                            this.props.data ? (
+                                this.props.data.map((item, index) => {
+                                    return this.renderNavItemView({ item, index })
+                                })
+                            ) : null
+                        }
+                    </ScrollView>
                 </View>
                 {
                     (this.props.childView) ? (this.props.childView) : (null)
@@ -156,7 +159,7 @@ const styles = StyleSheet.create({
     navContainer: {
         flexDirection: 'row',
         height: 48,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     navName: {
         fontSize: 14,
