@@ -5,7 +5,7 @@
 import * as API from "app-api";
 import { BarItems, LoadingView } from "app-components";
 import React, { Component } from "react";
-import { ActivityIndicator, Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Breadcrumb from "./../../../components/Breadcrumb";
 import * as BimFileEntry from "./BimFileEntry";
 import BimFileFilterView from "./BimFileFilterView";
@@ -14,7 +14,7 @@ import ThumbnailImage from "./ThumbnailImage";
 import BimFileNavigationView from "./bimFileNavigationView";
 import { NoDataView} from 'app-components';
 import { SERVER_TYPE } from 'common-module';
-import {DeviceEventEmitter} from 'app-3rd/index'
+import {DeviceEventEmitter, FlatList} from 'app-3rd/index'
 
 
 var { width, height } = Dimensions.get("window");
@@ -386,7 +386,7 @@ export default class BimFileChooser extends Component {
      */
     renderDataWithBreadcrumb = () => {
         return (
-            <View>
+            <View style={{height:"100%"}}>
                 <Breadcrumb
                     childView={this.renderList()}
                     data={this.state.navData}
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
         height: 72,
         marginLeft: 20,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
         // backgroundColor: '#FFF',
     },
     title: {
@@ -472,13 +472,10 @@ const styles = StyleSheet.create({
         color: 'blue',
     },
     content: {
-        left: 0,
-        top: 15,
         marginLeft: 12,
         textAlign: "left",
         fontSize: 15,
         color: 'black',
-        alignSelf: 'flex-start'
     },
 
     image: {
