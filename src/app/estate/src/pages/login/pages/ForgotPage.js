@@ -530,7 +530,8 @@ removeBackListener() {
   }
   render() {
     return (
-      <KeyboardAwareScrollView  keyboardShouldPersistTaps={"always"} keyboardDismissMode={Platform.OS ==='ios'? 'on-drag':'none'} style={{ backgroundColor: "#ffffff", flex: 1, marginLeft: 0, marginRight: 0 }}>
+      <KeyboardAwareScrollView  keyboardShouldPersistTaps={"always"} keyboardDismissMode={Platform.OS ==='ios'? 'on-drag':'none'} 
+      style={[{ backgroundColor: "#ffffff", flex: 1, marginLeft: 0, marginRight: 0 },Platform.OS === 'web'?{marginTop:56,width:'100%',height:'100%'}:{}]}>
         <StatusBar
           barStyle="light-content"
           backgroundColor="#00baf3"

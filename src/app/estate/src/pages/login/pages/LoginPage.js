@@ -162,9 +162,9 @@ static navigationOptions = {
   render() {
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={Platform.OS ==='ios'? 'on-drag':'none'} 
-      style={{backgroundColor: "#ffffff",flex: 1,
+      style={[{backgroundColor: "#ffffff",flex: 1,
       marginLeft: 0,
-      marginRight: 0,width:'100%',height:'100%'}}>
+      marginRight: 0,width:'100%',height:'100%'},Platform.OS === 'web'?{marginTop:56}:{}]}>
      
         <StatusBar
           barStyle="light-content"
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
 
   style_fogotText: {
     height: 20,
-    marginTop: 10,
+    marginTop: Platform.OS === 'web' ? 20:10,
     marginLeft: 20,
     marginRight: 20,
     alignItems: "center",
