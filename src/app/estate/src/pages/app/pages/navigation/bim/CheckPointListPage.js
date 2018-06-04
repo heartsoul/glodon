@@ -69,10 +69,10 @@ class CheckPointListPage extends Component {
 
     renderList = (list) => {
         return (
-            <List style={styles.list}>
+            <List>
                 {
                     list.map((child) => {
-                        return (<List.Item key={child.id} style={styles.listItem}>{this.renderItem(child)}</List.Item>);
+                        return (<List.Item key={child.id} style={{ backgroundColor: '#00baf3', borderBottomWidth:1, borderBottomColor:'#f7f7f7', }}>{this.renderItem(child)}</List.Item>);
                     })
                 }
             </List>
@@ -114,10 +114,10 @@ class CheckPointListPage extends Component {
     render() {
 
         return (
-            <View>
+            <View style={{height:"100%",width:"100%"}}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <ScrollView>
-                    <Accordion style={styles.container}>
+                    <Accordion style={{backgroundColor: '#ffffff', padding: 0}}>
                         {
                             this.props.topDirNode.map((item) => {
                                 return (this.renderPanel(item));
