@@ -3,7 +3,7 @@ import BaseHandler from './BaseHandler';
 
 const Realm = require('realm');
 
-//用户信息，租户列表   项目列表     项目权限
+//项目列表 
 
 let name = null;
 let realm = null;

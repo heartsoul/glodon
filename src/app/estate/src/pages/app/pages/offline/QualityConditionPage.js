@@ -13,9 +13,11 @@ import {
 } from 'react-native';
 import WideButton from "../../../app/components/WideButton";
 import { DatePicker } from 'antd-mobile';
+import QualityConditionManager from '../../../offline/manager/QualityConditionManager'
 
 let timeStart=0
 let timeEnd = 0
+let qualityConditionManager = null;
 var { width, height } = Dimensions.get("window");
 //质检清单下载条件选择
 export default class extends Component {
@@ -27,6 +29,7 @@ export default class extends Component {
 
   constructor() {
       super();
+      
       this.state={
         top1:true,
         top2:false,
@@ -42,9 +45,12 @@ export default class extends Component {
         clickLeft:false,
         startText:'起始日期',
         endText:'终止日期',
+        timeText:'近3天',
       }
   };
   
+
+
   _clickTop1=()=>{
     this.setState((pre)=>{
       return {
@@ -54,6 +60,7 @@ export default class extends Component {
         top3:false,
         top4:false,
         top5:false,
+        timeText:'近3天',
       }
     })
   }
@@ -67,6 +74,7 @@ export default class extends Component {
         top3:false,
         top4:false,
         top5:false,
+        timeText:'近1周',
       }
     })
   }
@@ -79,6 +87,7 @@ export default class extends Component {
         top3:true,
         top4:false,
         top5:false,
+        timeText:'近1月',
       }
     })
   }
@@ -198,27 +207,66 @@ export default class extends Component {
   //点击下载
   _download=()=>{
     let date = new Date();
-    let startTime = date.getTime;
-    let endTime = date.getTime;
-    this.state.top1?(startTime=date.getTime-3*24*60*60*1000,endTime=date.getTime):'';
-    this.state.top2?(startTime=date.getTime-7*24*60*60*1000,endTime=date.getTime):'';
-    this.state.top3?(startTime=date.getTime-31*24*60*60*1000,endTime=date.getTime):'';
-    this.state.top4?(startTime=timeStart):'';
-    this.state.top5?(endTime=timeEnd):'';
-    startTime<endTime?'':([startTime,endTime]=[endTime,startTime])
+    let startTime = date.getTime();
+    let endTime = date.getTime();
 
+    let day = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+    let st= this.state.startText=='起始日期'?day:this.state.startText;;
+    let et = this.state.endText=='终止日期'?day:this.state.endText;
+
+    console.log('startTime='+startTime+' endTime='+endTime);
+    console.log(st+' '+et)
+    this.state.top1?(startTime=date.getTime()-3*24*60*60*1000,endTime=date.getTime()):'';
+    this.state.top2?(startTime=date.getTime()-7*24*60*60*1000,endTime=date.getTime()):'';
+    this.state.top3?(startTime=date.getTime()-31*24*60*60*1000,endTime=date.getTime()):'';
+    this.state.top4?(startTime=timeStart>0?timeStart:date.getTime()):'';
+    this.state.top5?(endTime=timeEnd>0?timeEnd:date.getTime()):'';
+    console.log('startTime='+startTime+' endTime='+endTime);
+    console.log(st+' '+et)
+    if (this.state.top4 || this.state.top5){
+      startTime<endTime?'':([st,et]=[et,st]);
+    }
+    startTime<endTime?'':([startTime,endTime]=[endTime,startTime])
+    
+    console.log('startTime='+startTime+' endTime='+endTime);
+    console.log(st+' '+et)
 
     let qcState=[];
-    this.state.bottom1?qcState=['bottom1']:'';
-    this.state.bottom2?qcState=[...qcState,'bottom2']:''
-    this.state.bottom3?qcState=[...qcState,'bottom3']:''
-    this.state.bottom4?qcState=[...qcState,'bottom4']:''
-    this.state.bottom5?qcState=[...qcState,'bottom5']:''
+    this.state.bottom1?qcState=['全部']:'';
+    this.state.bottom2?qcState=[...qcState,'待提交']:''
+    this.state.bottom3?qcState=[...qcState,'待整改']:''
+    this.state.bottom4?qcState=[...qcState,'待复查']:''
+    this.state.bottom5?qcState=[...qcState,'已延迟']:''
 
+    let timeText = '近3天'
+    if(this.state.top4){
+      timeText=st+' - '+et;
+    }else{
+      timeText = this.state.timeText;
+    }
     //下载单据
+    let record = {
+      startTime:startTime,//选择的时间范围的开始时间    时间戳
+      endTime:endTime,//选择的时间范围的结束时间    时间戳
+      qcState:qcState,//选择的分类   全部  待提交  待整改。。。
 
+      timeText:timeText,//在下载记录中 显示的时间   近3天。。。
+      downloadTime:date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+(date.getMinutes()<10?'0'+date.getMinutes():date.getMinutes()),//下载时间
+      size:111,//下载的单据的条数
+    }
+
+    if(qualityConditionManager==null){
+      qualityConditionManager = new QualityConditionManager();
+    }
+    qualityConditionManager.saveRecord(date.getTime()+'',JSON.stringify(record));
   }
- 
+
+  componentWillUnmount=()=>{
+    if(qualityConditionManager!=null){
+      qualityConditionManager.close();
+    }
+    
+  }
 
   render() {
     return (
@@ -250,7 +298,7 @@ export default class extends Component {
                           {
                             this.state.top2?
                             <View style={{width:60,height:28,alignItems:'center',justifyContent:'center',backgroundColor:'#00baf3',marginLeft:12,borderRadius:2}}>
-                              <Text style={{color:'#ffffff',fontSize:12}}>近7天</Text>
+                              <Text style={{color:'#ffffff',fontSize:12}}>近1周</Text>
                             </View>
                             :
                             <View style={{width:60,height:28,alignItems:'center',justifyContent:'center',backgroundColor:'#f6f6f6',marginLeft:12,borderRadius:2}}>

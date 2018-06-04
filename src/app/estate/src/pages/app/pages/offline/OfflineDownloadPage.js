@@ -14,7 +14,6 @@ import {
 
 import {CircleProgressBar} from 'app-components'
 import BasicInfoManager from '../../../offline/manager/BasicInfoManager'
-// import UserInfoManager from '../../../offline/manager/UserInfoManager'
 var { width, height } = Dimensions.get("window");
 let bm;
 //离线数据下载
@@ -27,7 +26,7 @@ export default class extends Component {
 
   constructor() {
       super();
-       bm = new BasicInfoManager();
+       
       this.state ={
         showAll:true,
         showLoaded:false,
@@ -35,8 +34,51 @@ export default class extends Component {
       }
   };
   
+  componentDidMount=()=>{
+    //增加监听，切换租户后回来调用
+    //React Navigation emits events to screen components that subscribe to them:
+    // willBlur - the screen will be unfocused
+    // willFocus - the screen will focus
+    // didFocus - the screen focused (if there was a transition, the transition completed)
+    // didBlur - the screen unfocused (if there was a transition, the transition completed)
+    this.props.navigation.addListener(
+      'didFocus',
+      payload => {
+        //获取焦点后创建
+        bm = new BasicInfoManager();
+      }
+    );
+    this.props.navigation.addListener(
+      'didBlur',
+      payload => {
+        //页面失去焦点后 关闭
+        if(bm!=null){
+          bm.close();
+        }
+      }
+    );
+    // this.props.navigation.addListener(
+    //   'willFocus',
+    //   payload => {
+    //     //获取焦点后创建
+    //     bm = new BasicInfoManager();
+    //     console.log('willFocus')
+    //   }
+    // );
+    // this.props.navigation.addListener(
+    //   'willBlur',
+    //   payload => {
+    //     //页面失去焦点后 关闭
+    //     if(bm!=null){
+    //       bm.close();
+    //     }
+    //     console.log('willBlur')
+    //   }
+    // );
+  }
+
   componentWillUnmount=()=>{
-    bm.close();
+    // bm.close();
   }
 
 //进入离线数据下载
@@ -331,6 +373,8 @@ class BasicDataItemView extends Component{
   }
 
   componentDidMount=()=>{
+     
+
     const {progress,totalNum,finishText} = this.props;
     this.setState((pre)=>{
       return {
