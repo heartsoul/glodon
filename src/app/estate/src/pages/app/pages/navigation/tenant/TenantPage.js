@@ -216,10 +216,11 @@ export default class tenantList extends Component {
     _keyExtractor = (item, index) => index;
     renderData() {
         return (
-            <ScrollView >
+            <ScrollView style={{backgroundColor:"#fff",height:"100%"}}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <AnimatedFlatList
-                    style={{marginTop:25}}
+                    style={{backgroundColor:"#fff"}}
+                    ListHeaderComponent={<View style={{height:25}}/>}
                     data={this.state.dataArray}
                     renderItem={this.renderItemView}
                     ListEmptyComponent={this.createEmptyView}

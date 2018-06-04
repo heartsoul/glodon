@@ -234,6 +234,7 @@ const styles = StyleSheet.create({
         height: 50,
         paddingLeft: 40,
         paddingRight: 40,
+        justifyContent:"center"
     },
     selectContainer: {
         backgroundColor: '#F2FcFf',
@@ -243,8 +244,6 @@ const styles = StyleSheet.create({
         color: 'blue',
     },
     content: {
-        left: 0,
-        top: 15,
         alignItems: "center",
         textAlign: "left",
         fontSize: 15,
