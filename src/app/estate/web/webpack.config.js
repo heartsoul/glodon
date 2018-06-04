@@ -3,6 +3,9 @@ const path = require('path')
 
 const appDirectory = path.resolve(__dirname, '../')
 
+var utils = require('./utils');
+var PORT = 8099;
+var HOST = utils.getIP();
 // This is needed for webpack to compile JavaScript.
 // Many OSS React Native packages are not compiled to ES5 before being
 // published. If you depend on uncompiled packages they may cause webpack build
@@ -59,7 +62,7 @@ const urlLoaderConfiguration = {
     },
 }
 const ___SERVER = 'http://10.1.83.30';
-module.exports = {
+var config = {
     entry: path.resolve(appDirectory, 'index.web.js'),
     devtool: 'eval-source-map',
     output: {
@@ -73,6 +76,7 @@ module.exports = {
         inline: true,
         hot: true,
         progress: true,
+        host:HOST,
         proxy: {
             '/uaa/*': {
                 target: ___SERVER,
@@ -140,3 +144,4 @@ module.exports = {
         extensions: ['.web.js', '.js'],
     },
 }
+module.exports = config;
