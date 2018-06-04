@@ -144,6 +144,7 @@ class EquipmentListView extends PureComponent {
         return (
             <SectionList
                 ref='sectionList'
+                style={{height:500,width:375,backgroundColor:'green'}}
                 sections={this.props.dataArray}
                 renderItem={this.renderItemView}
                 // keyExtractor={this._keyExtractor}

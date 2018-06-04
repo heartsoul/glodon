@@ -107,15 +107,15 @@ export default class extends PureComponent {
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <View style={{height:5,width:'100%',backgroundColor:'white'}}/>
-                <SegmentedView  indicatorLineWidth={0}  autoScroll={false} animated={this.state.activeIndex == 0?false:true} style={{ flex: 1 }} barStyle={{paddingLeft:0,paddingRight:0}} justifyItem={'fixed'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
+                <View style={{height:61,width:'100%',backgroundColor:'white'}}/>
+                <SegmentedView  indicatorLineWidth={0}  autoScroll={false} animated={this.state.activeIndex == 0?false:true} style={{ flex: 1,height:667,width:375 }} justifyItem={'fixed'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
                     {
                         API.EQUIPMENT_CLASSIFY_STATUS_LIST.map((item, index) => {
                             return (
                                 <SegmentedView.Sheet key={item.name} title={<QualityListTitle key={item.name} text={item.name} badge={this.state.equipmentBadge.item[index]}  select={this.state.activeIndex == index} activeTitleStyle={{color:'#00baf3',fontSize:14}} titleStyle={{color:'#6f899b',fontSize:14}} />}>
                                     <EquipmentListView
                                         onRef={(ref) => { this.state.equipmentView[index] = ref }}
-                                        style={{ flex: 1 }}
+                                        style={{ flex: 1 ,height:667,width:375}}
                                         qcState={'' + item.state}
                                         updateNumber={() => { this._loadInspectionSummary() }}
                                         selected = {this.state.activeIndex == index}
@@ -143,8 +143,10 @@ export default class extends PureComponent {
 const styles = StyleSheet.create({
     contentList: {
         flex: 1,
-        backgroundColor: '#fafafa',
+        backgroundColor: '#00fafa',
         paddingBottom: 5,
+        width:375,
+        height:667,
         //  height:120,
     },
     dataList: {
