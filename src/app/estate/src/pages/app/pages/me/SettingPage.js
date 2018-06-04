@@ -25,7 +25,7 @@ import WideButton from "./../../components/WideButton";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
-import { BarItems, LoadingView } from "app-components";
+import { BarItems, LoadingView, ActionButton } from "app-components";
 
 var { width, height } = Dimensions.get("window");
 
@@ -147,7 +147,13 @@ class SettingPage extends Component {
                     <View style={{ height: 10 }}></View>
 
                     <SettingItemView icon={require('app-images/icon_setting_offline.png')} title='离线设置' ></SettingItemView>
-                    <WideButton text="退出登录" onClick={this._logout} style={{ marginTop: 40, width: 297, alignSelf: "center" }} />
+                    <View style={{marginTop:40,marginLeft:20,marginRight:20}}><ActionButton
+            onPress={()=>{this._logout()}}
+            isDisabled={()=>{return false}}
+            text="退出登录"
+          >
+          </ActionButton> 
+          </View>
                     <View style={{height:60,width:'100%'}} />
                 </ScrollView>
             </SafeAreaView>

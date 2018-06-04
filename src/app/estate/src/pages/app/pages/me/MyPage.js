@@ -112,7 +112,6 @@ class MineItemView extends Component{
 var styles = StyleSheet.create({
     container:{
       backgroundColor:'#f5f8f9',
-      marginTop:Platform.OS === 'web' ? 56 : 0,
       flex:1
     },
     mineAvatar:{
