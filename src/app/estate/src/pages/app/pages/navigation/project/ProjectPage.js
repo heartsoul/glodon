@@ -94,16 +94,14 @@ class ProjectPage extends Component {
     //返回itemView
     renderItemSimpleView = ({ item, index }) => {
         return (
-            <View style={styles.containerSimpleView}>
-                <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
-                    <View>
-                        <Image
-                            source={require("app-images/icon_choose_project_item.png")}
-                            style={styles.image} />
-                        <Text style={[styles.contentSimple, item.value.id == storage.loadProject() ? { color: '#00baf3' } : null]}> {item.value.name}</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
+                <View style={styles.containerSimpleView}>
+                    <Image
+                        source={require("app-images/icon_choose_project_item.png")}
+                        style={styles.image} />
+                    <Text style={[styles.contentSimple, item.value.id == storage.loadProject() ? { color: '#00baf3' } : null]}> {item.value.name}</Text>
+                </View>
+            </TouchableOpacity>
         );
     }
     _onEndReached = () => {
@@ -154,13 +152,13 @@ class ProjectPage extends Component {
     }
 
     render = () => {
-        
-        if(this.props.dataArray && this.props.dataArray.length == 1) {
+
+        if (this.props.dataArray && this.props.dataArray.length == 1) {
             // 只有一个项目
             let prj = storage.loadProject();
-            if(prj && prj == '0') {
+            if (prj && prj == '0') {
                 // 直接进入
-                this._itemClick(this.props.dataArray[0],0);
+                this._itemClick(this.props.dataArray[0], 0);
                 return <LoadingView />;
             }
         }
@@ -222,6 +220,8 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         backgroundColor: '#FFF',
+        alignItems:"center",
+        flexDirection:"row"
         // elevation: 2.5, // android 
         // shadowColor: "#00baf3", // iOS
         // shadowOffset: { width: 3, height: 7 }, // iOS
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
         height: 50,
         paddingLeft: 40,
         paddingRight: 40,
-        justifyContent:"center"
+        justifyContent: "center"
     },
     selectContainer: {
         backgroundColor: '#F2FcFf',
@@ -250,15 +250,13 @@ const styles = StyleSheet.create({
         color: '#325771',
     },
     contentSimple: {
-        left: 60,
-        top: -20,
+        marginLeft:10,
         fontSize: 15,
         color: '#325771',
     },
     image: {
-        left: 10,
-        top: 10,
         width: 40,
         height: 40,
+        marginLeft:10,
     }
 });
