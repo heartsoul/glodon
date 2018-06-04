@@ -130,6 +130,7 @@ class QualityListView extends PureComponent {
         return (
             <SectionList
                 ref='sectionList'
+                style={{height:'100%',width:'100%'}}
                 sections={this.props.dataArray}
                 renderItem={this.renderItemView}
                 keyExtractor={this._keyExtractor}

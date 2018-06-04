@@ -126,7 +126,8 @@ export default class qualityList extends PureComponent {
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{height:3,width:'100%',backgroundColor:'white'}}/>
-                <SegmentedView indicatorLineWidth={0}  autoScroll={this.state.activeIndex == 0?false:true} animated={this.state.activeIndex == 0?false:true} style={{ flex: 1 }} barStyle={{paddingLeft:0,paddingRight:0}} justifyItem={'scrollable'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)}>
+                <SegmentedView indicatorLineWidth={0} barStyle={{width:'100%',height:44}} autoScroll={this.state.activeIndex == 0?false:true} animated={this.state.activeIndex == 0?false:true} 
+                style={{ flex:1 }} justifyItem={'scrollable'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)}>
                     {
                        API.CLASSIFY_STATUS_LIST.map((item,index)=>{
                            return (
@@ -165,7 +166,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fafafa',
         paddingBottom: 5,
-        //  height:120,
+         height:667,
+         width:375,
     },
     dataList: {
         // flex: 1,

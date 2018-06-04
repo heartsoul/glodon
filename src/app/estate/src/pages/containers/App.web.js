@@ -30,9 +30,6 @@ const screens = {
   QualityMainPage: {
     screen: GLD.QualityMainPage
   },
-  QualityMainPage: {
-    screen: GLD.QualityMainPage
-  },
   WebPage: {
     screen: GLD.WebPage
   },
