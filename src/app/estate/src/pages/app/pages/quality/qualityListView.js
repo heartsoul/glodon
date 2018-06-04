@@ -4,11 +4,12 @@
 'use strict';
 import React, { Component, PureComponent } from "react";
 import {
-    ActivityIndicator, SectionList, StyleSheet, Text, View, StatusBar, Image,
+    ActivityIndicator, StyleSheet, Text, View, StatusBar, Image,
     RefreshControl, Dimensions
 } from "react-native";
 import * as API from "app-api";
 import { LoadingView, NoDataView } from "app-components";
+import { SectionList } from "app-3rd"
 import { connect } from 'react-redux' // 引入connect函数
 import * as actions from '../../actions/qualityListAction'
 import QualityListCell from "./qualityListCell";
@@ -198,23 +199,24 @@ const styles = StyleSheet.create({
     groupHeaderView: {
         backgroundColor: '#fafafa',
         height: 30,
+        justifyContent:"center",
+        alignItems:"center",
     },
     headerLine: {
         backgroundColor: '#e2e2e2',
         height: 1,
-        top: 19,
+        width:"100%",
         marginLeft: 20,
         marginRight: 20,
     },
     groupTitle: {
+        position:"absolute",
         height: 20,
         textAlign: 'center',
         textAlignVertical: 'center',
         color: '#B0B0B0',
         fontSize: 14,
         width: 100,
-        top: 10,
-        left: width / 2 - 50,
         backgroundColor: '#fafafa',
     }
 });

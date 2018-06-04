@@ -143,7 +143,7 @@ export default class extends PureComponent {
 const styles = StyleSheet.create({
     contentList: {
         flex: 1,
-        backgroundColor: '#00fafa',
+        backgroundColor: '#fafafa',
         paddingBottom: 5,
     },
     dataList: {

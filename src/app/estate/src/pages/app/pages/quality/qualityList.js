@@ -166,8 +166,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fafafa',
         paddingBottom: 5,
-         height:667,
-         width:375,
     },
     dataList: {
         // flex: 1,
