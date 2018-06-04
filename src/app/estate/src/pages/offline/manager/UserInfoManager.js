@@ -91,7 +91,6 @@ export default class UserInfoManager {
         let tenantInfo = storage.loadTenantInfo();
         let tenantObj = JSON.parse(tenantInfo);
         let tenantId = tenantObj.value.tenantId;//租户的id
-        console.log('=====================getlist  '+tenantId)
         return  this._getFromDb(tenantId+'');
     }
    
