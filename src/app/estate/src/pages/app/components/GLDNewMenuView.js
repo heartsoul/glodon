@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, SafeAreaView, Animated, View, ScrollView, Image, TouchableOpacity, Dimensions, NativeModules } from 'react-native'
+import { StyleSheet, SafeAreaView, Animated, View, ScrollView, Image, TouchableOpacity, Dimensions, NativeModules,Platform} from 'react-native'
 
 import { Overlay, Label, Button, ActionSheet } from 'app-3rd/teaset';
+
+import { Modal } from 'antd-mobile';
 
 import * as API from 'app-api'
 
@@ -15,7 +17,8 @@ const qualityCreateImage = require("app-images/icon_main_quality_create.png");
 const equipmentCreateImage = require("app-images/icon_main_equipment_create.png");
 const newImageLight = require('app-images/icon_category_create.png');
 const newImage = require('app-images/home/icon_main_create.png');
-export default class GLDNewMenuView extends Component {
+export default class GLDNewMenuView extends Component { 
+    
     static openMenu(navigation) {
         let anim = new Animated.Value(0.0);
         let overlayView = (
@@ -26,7 +29,7 @@ export default class GLDNewMenuView extends Component {
                 ref={v => this.overlayView = v}
             >
                 <SafeAreaView>
-                    <View style={[{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', alignContent: 'center' }]}>
+                    <View style={[{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', alignContent: 'center' }]}>
                         <Animated.View style={[{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: 'center', marginBottom: 33, marginTop: 20 }, {
                             transform: [//transform动画
                                 {
