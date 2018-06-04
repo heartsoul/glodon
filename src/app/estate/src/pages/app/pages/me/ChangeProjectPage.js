@@ -19,9 +19,9 @@ import * as AuthorityManager from "../navigation/project/AuthorityManager";
 import { Dimensions } from 'react-native';
 import App from '../../../containers/App';
 import { BarItems, LoadingView } from "app-components";
-import UserInfoManager from '../../../offline/manager/UserInfoManager'
+// import UserInfoManager from '../../../offline/manager/UserInfoManager'
 
-let userInfoManager = null;
+// let userInfoManager = null;
 //切换项目主页
 export default class ChangeProjectPage extends Component {
 
@@ -49,7 +49,7 @@ export default class ChangeProjectPage extends Component {
             this.trueTenantStr = retVal;
         });
 
-        userInfoManager = new UserInfoManager();
+        // userInfoManager = new UserInfoManager();
     }
 
    
@@ -101,7 +101,7 @@ export default class ChangeProjectPage extends Component {
     }
 
     componentWillUnmount() {
-        userInfoManager.close();
+        // userInfoManager.close();
         BackHandler.removeEventListener('hardwareBackPress', () => {
             this._goBack();
             return true;
@@ -123,36 +123,36 @@ export default class ChangeProjectPage extends Component {
 
     //获取当前租户的所有项目列表
     _getProjects() {
-        // API.getProjects(0, 1).then(
-        //     (responseData) => {
-        //         let last = responseData.last;
-        //         if (last) {
-        //             this.setState(preState => {
-        //                 return { ...preState, dataList: responseData.data.content }
-        //             });
-        //         } else {
-        //             API.getProjects(0, responseData.data.totalElements).then(
-        //                 (responseData) => {
-        //                     this.setState(preState => {
-        //                         return { ...preState, dataList: responseData.data.content }
-        //                     });
+        API.getProjects(0, 1).then(
+            (responseData) => {
+                let last = responseData.last;
+                if (last) {
+                    this.setState(preState => {
+                        return { ...preState, dataList: responseData.data.content }
+                    });
+                } else {
+                    API.getProjects(0, responseData.data.totalElements).then(
+                        (responseData) => {
+                            this.setState(preState => {
+                                return { ...preState, dataList: responseData.data.content }
+                            });
 
-        //                 }
-        //             ).catch(err => {
-        //                 console.log(err);
-        //             });
-        //         }
+                        }
+                    ).catch(err => {
+                        console.log(err);
+                    });
+                }
 
-        //     }
-        // ).catch(err => {
-        //     console.log(err);
-        // });
+            }
+        ).catch(err => {
+            console.log(err);
+        });
 
-        userInfoManager.getProjectList().then((list)=>{
-            this.setState(preState => {
-                return { ...preState, dataList:list }
-            });
-        })
+        // userInfoManager.getProjectList().then((list)=>{
+        //     this.setState(preState => {
+        //         return { ...preState, dataList:list }
+        //     });
+        // })
     }
 
 

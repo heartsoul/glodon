@@ -40,8 +40,22 @@ class BimFileFilterView extends Component {
         //专业
         API.getPmbasicSpecialty(false).then(responseData => {
             if (responseData) {
+                let all = {
+                    code:null,
+                    name:'全部',
+                    keywords: null,
+                    parentId: null,
+                    id: 0,
+                    treePath: '0/',
+                    orderNum: 0 
+                }
+                let list =[all];
+                let dataList = responseData.data;
+                let data = [...list,...dataList];
+                console.log('专业--------------------------------')
+                console.log(data)
                 this.setState({
-                    specialty: responseData.data
+                    specialty: data
                 });
             }
         }).catch((err) => {
@@ -49,8 +63,21 @@ class BimFileFilterView extends Component {
         //单体
         API.getPmbasicBuildings(storage.loadProject()).then(responseData => {
             if (responseData) {
+                let all = {
+                    name: '全部',
+                    code: '0',
+                    structureType: '123123',
+                    area: 124311113000,
+                    projectId: 5213135,
+                    id: 0
+                }
+                let list =[all];
+                let dataList = responseData.data;
+                let data = [...list,...dataList];
+                console.log('单体--------------------------------')
+                console.log(data)
                 this.setState({
-                    buildings: responseData.data
+                    buildings: data
                 });
             }
         }).catch((err) => {
@@ -118,6 +145,7 @@ class BimFileFilterView extends Component {
     _separator = () => {
         return <View style={{ height: 1, backgroundColor: '#f7f7f7', marginLeft: 20 }} />;
     }
+    
     //专业item
     renderSpecialItem = ({ item, index }) => {
         return (

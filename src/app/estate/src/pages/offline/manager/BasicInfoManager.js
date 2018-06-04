@@ -71,7 +71,13 @@ export default class BasicInfoManager {
 
     //获取所有模型列表
     getModelList=()=>{
-        let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bimFiles";
+        let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children/model";
+        return  this._getFromDb(key_getModelList);
+    }
+
+    //获取所有图纸列表
+    getBlueprintList=()=>{
+        let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children/model/blueprint";
         return  this._getFromDb(key_getModelList);
     }
 
@@ -89,6 +95,8 @@ export default class BasicInfoManager {
 
     //下载基础信息
     downloadBasicInfo = (callback) => {
+        this.downloadModel();
+        this.downloadBluePrint();
         //保存到数据库
         _saveToDb=(key,value)=>{
             basicHandler.update(key,value);
@@ -97,7 +105,10 @@ export default class BasicInfoManager {
         //记录进度
         _saveProgress=(callback,progress,totalNum)=>{
             //回调页面
-            callback(progress,totalNum);
+            if(callback!=null && callback!=undefined){
+                callback(progress,totalNum);
+            }
+            
             if(progress==totalNum){
                 //记录终极状态
                 let date = new Date();
@@ -219,35 +230,7 @@ export default class BasicInfoManager {
                         console.log(err);
                     });
         }
-        //模型列表
-        
-        function _getModelList(buildingId, specialtyCode ){
-            return API.getModelBimFiles(storage.loadProject(), projectVersionId, buildingId, specialtyCode)
-            .then(responseData => {
-                console.log('模型返回值：'+JSON.stringify(responseData));//{"data":{"code":"0","message":"success","data":[]}}
-                if (responseData) {
-                    let list = responseData.data.data;
-                    // console.log(JSON.stringify(list)); //
-                    // console.log(list.length); //
-                    if (list.length > 0) {
-                        for(item of list){
-                            item.buildingId=buildingId;
-                            item.specialtyCode=specialtyCode;
-                        }
-                        // console.log('模型列表 start--------------'+buildingId+' '+specialtyCode);
-                        // console.log(JSON.stringify(list)); //
-                        // console.log('模型列表 end--------------');
-                            
-                        return list;
-                    }
-                }
-
-
-            }).catch(err => {
-                console.log(err);
-            });
-        }
-        //图纸目录
+       
 
         //材设  验收单位
         let key_equipmentAcceptanceCompanies = `/quality/${projectId}/facilityAcceptance/acceptanceCompanys`;
@@ -299,32 +282,12 @@ export default class BasicInfoManager {
             _saveProgress(callback,progress++,totalNum);
             let singleListStr = await _getSingleList();
             _saveProgress(callback,progress++,totalNum);
-
-            let specialList = JSON.parse(specialListStr);
-            let singleList = JSON.parse(singleListStr);
-            if(specialList && specialList.length>0 && singleList && singleList.length>0){
-                let list = [];
-                for(special of specialList){
-                    for(single of singleList){
-                        let result = await _getModelList(single.id,special.code);
-                        // console.log('result='+JSON.stringify(result));
-                        if(result!=null && result!=undefined){
-                            if(list.length==0){
-                                list=[...result];
-                            }else{
-                                list = [...list,...result]
-                            }
-                            
-                        }
-                    }
-                }
-                let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bimFiles";
-                // console.log('list='+JSON.stringify(list));/
-                _saveToDb(key_getModelList,JSON.stringify(list));
-            }
+            _saveProgress(callback,progress++,totalNum);
+           
+            
             _saveProgress(callback,progress++,totalNum);
             let equipmentCompanyList = await _equipmentAcceptanceCompanies();
-            _saveProgress(callback,totalNum,totalNum);
+            
             return true;
         }
         
@@ -337,6 +300,151 @@ export default class BasicInfoManager {
             // this.getModelList().then(res=>{console.log(res)})
             // this.equipmentAcceptanceCompanies().then(res=>{console.log(res)})
             // console.log(this.getDownloadedTime())
+            _saveProgress(callback,100,100);
+
+        },(e)=>{
+            console.log(e);
+        });
+    }
+
+
+    //下载模型文件
+    downloadModel(){
+        this._downloadModelAndBlueprint('模型文件');
+    }
+
+    //下载图纸文件
+    downloadBluePrint(){
+        this._downloadModelAndBlueprint('图纸文件');
+    }
+
+    _downloadModelAndBlueprint(name){
+        //保存到数据库
+        _saveToDb=(key,value)=>{
+            basicHandler.update(key,value);
+        }
+
+        function _getModelList(fileId=0){
+            return API.getModelBimFileChildren(projectId, projectVersionId, 0, fileId).then(
+                (responseData) => {
+                    // console.log('模型列表 start----------------')
+                    // console.log(responseData)
+                    // console.log('模型列表 end----------------')
+                    let list = responseData.data.data.items;
+                    return list;
+                }
+            ).catch((error) => {
+                // console.log('模型列表 err  start----------------')
+                console.log(error)
+                // console.log('模型列表 err  end----------------')
+            });
+        }
+
+        async function getData(){
+            let modellist = await _getModelList();
+            // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxx');
+            // console.log(modellist);
+            if(modellist && modellist.length>0){
+                // console.log('aaaaaaaaa')
+                let data = [];
+                for(let item of modellist){
+                    // console.log('bbbbbbbbbbbbbbbbb')
+                    // console.log(item)
+                    if(item.name==name){
+                        // console.log('ccccccccccccccccc')
+                        data = [...data,item];
+                         let list = await _getModelList(item.fileId);
+                         data = [...data,...list]
+                         for(let item of list){
+                             if(item.folder){
+                                let list = await _getModelList(item.fileId);
+                                data = [...data,...list]
+                                for(let item of list){
+                                    if(item.folder){
+                                        let list = await _getModelList(item.fileId);
+                                        data = [...data,...list]
+                                        for(let item of list){
+                                            if(item.folder){
+                                                let list = await _getModelList(item.fileId);
+                                                data = [...data,...list]
+                                                for(let item of list){
+                                                    if(item.folder){
+                                                        let list = await _getModelList(item.fileId);
+                                                        data = [...data,...list]
+                                                        for(let item of list){
+                                                            if(item.folder){
+                                                                let list = await _getModelList(item.fileId);
+                                                                data = [...data,...list]
+                                                                for(let item of list){
+                                                                    if(item.folder){
+                                                                        let list = await _getModelList(item.fileId);
+                                                                        data = [...data,...list]
+                                                                        for(let item of list){
+                                                                            if(item.folder){
+                                                                                let list = await _getModelList(item.fileId);
+                                                                                data = [...data,...list]
+                                                                                for(let item of list){
+                                                                                    if(item.folder){
+                                                                                        let list = await _getModelList(item.fileId);
+                                                                                        data = [...data,...list]
+                                                                                        for(let item of list){
+                                                                                            if(item.folder){
+                                                                                                let list = await _getModelList(item.fileId);
+                                                                                                data = [...data,...list]
+                                                                                                for(let item of list){
+                                                                                                    if(item.folder){
+                                                                                                        let list = await _getModelList(item.fileId);
+                                                                                                        data = [...data,...list]
+                                                                                                        for(let item of list){
+                                                                                                            if(item.folder){
+                                                                                                                let list = await _getModelList(item.fileId);
+                                                                                                                data = [...data,...list]
+                                                                                                                for(let item of list){
+                                                                                                                    if(item.folder){
+                                                                                       
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                             }
+                         }
+                         let endText = name=='模型文件'?'/model':'/blueprint'
+                        let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children"+endText;
+                        console.log('999999999999999999999999999999999999--'+endText)
+                        console.log('list='+JSON.stringify(data));
+                        _saveToDb(key_getModelList,JSON.stringify(data));
+                        break;
+                    }
+                }
+            }
+        }
+        getData().then((a)=>{
+            // this.getInspectionCompany().then(res=>{console.log(res)})
+            // this.getSupporters().then(res=>{console.log(res)})
+            // this.getSpecialList().then(res=>{console.log(res)})
+            // this.getSingleList().then(res=>{console.log(res)})
+            // this.getModelList().then(res=>{console.log(res)})
+            // this.equipmentAcceptanceCompanies().then(res=>{console.log(res)})
+            // console.log(this.getDownloadedTime())
+
         },(e)=>{
             console.log(e);
         });
