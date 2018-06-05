@@ -12,7 +12,8 @@
     "precommit": "yarn format",
     "webStart": "webpack --config ./web/webpack.config.js",
     "webServer": "webpack-dev-server --open --config ./web/webpack.config.js --port 8099 ",
-    "webBuild": "NODE_ENV=production webpack --config ./web/webpack.config.js --progress"
+    "webBuild": "NODE_ENV=production webpack --config ./web/webpack.config.js --progress",
+    "apk": "sudo ./android/gradlew assembleRelease"
   },
   "dependencies": {
     "ajv": "^5.0.1",

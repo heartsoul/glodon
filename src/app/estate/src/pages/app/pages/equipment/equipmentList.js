@@ -3,7 +3,7 @@
  */
 'use strict';
 import React, { Component, PureComponent } from "react";
-import { StyleSheet, View, StatusBar, Dimensions, Text } from "react-native";
+import { StyleSheet, View, StatusBar, Dimensions, Text, Platform } from "react-native";
 import { SegmentedView,Badge } from 'app-3rd/teaset';
 
 import * as API from "app-api";
@@ -18,17 +18,17 @@ class QualityListTitle extends Component {
         let w = 28;
         let right = 0;
         if(text.length >= 3) {
-            w = 41;
+            w = 42;
             right = 0;
         }
         text = text;
-        return <View style={{paddingTop:3,
+        return <View style={{paddingTop:4,
         overflow: 'visible',
         alignItems: 'center', paddingRight:20,
         justifyContent: 'center'}}>
             <Text style={[{...style},select ? activeTitleStyle : titleStyle]} >{text}</Text>
-            <View style={{width:w,height:3,marginTop:0,alignSelf:'center'}}>
-               {select ? <View style={{width:w,height:2,backgroundColor:'#00baf3',position:'absolute',top:8.5}} resizeMode='contain'/> : null}
+            <View style={{width:w,height:3,marginTop:0,alignSelf:'center',overflow: 'visible',}}>
+               {select ? <View style={[{width:w,height:2,backgroundColor:'#00baf3',position:'absolute'},Platform.OS === 'ios' ? {top:12.5} : {top:8.5}]} resizeMode='contain'/> : null}
             </View>
             <Badge count={badge} style={[{position:'absolute',top:-5, right:right},badge > 0 ? {} :{backgroundColor:'#ffffff'}]} />
         </View>
@@ -107,8 +107,8 @@ export default class extends PureComponent {
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <View style={{height:5,width:'100%',backgroundColor:'white'}}/>
-                <SegmentedView  barStyle={{width:'100%',height:44}} indicatorLineWidth={0}  autoScroll={false} animated={this.state.activeIndex == 0?false:true} style={{ flex: 1}} justifyItem={'fixed'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
+                <SegmentedView  barStyle={{width:'100%',height:44,borderBottomColor:'#e9e9e999',
+        borderBottomWidth:1,}} indicatorLineWidth={0}  autoScroll={false} animated={this.state.activeIndex == 0?false:true} style={{ flex: 1}} justifyItem={'fixed'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
                     {
                         API.EQUIPMENT_CLASSIFY_STATUS_LIST.map((item, index) => {
                             return (
@@ -125,7 +125,6 @@ export default class extends PureComponent {
                         })
                     }
                 </SegmentedView>
-                <View style={{position:'absolute',top:44,left:0,height:1,width:'100%',backgroundColor:'#e9e9e999'}} />
                 {/* <TouchableOpacity style={styles.topBtn} onPress={()=>this._toTop()}>
             <Text style={styles.topBtnText}>置顶</Text>
       </TouchableOpacity> */}
@@ -141,6 +140,7 @@ export default class extends PureComponent {
 }
 
 const styles = StyleSheet.create({
+   
     contentList: {
         flex: 1,
         backgroundColor: '#fafafa',

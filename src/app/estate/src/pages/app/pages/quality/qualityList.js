@@ -29,10 +29,10 @@ class QualityListTitle extends Component {
             text = '     '+ text + '     ';
         }
         
-        return <View style={{alignItems:alignItems,alignContent:'center',paddingTop:3,overflow:'visible'}}>
+        return <View style={{alignItems:alignItems,alignContent:'center',paddingTop:4,overflow:'visible'}}>
             <Text style={select ? activeTitleStyle : titleStyle} >{text}</Text>
             <View style={{width:w,height:3,marginTop:0}}>
-               {select ? <View style={{width:w,height:2,backgroundColor:'#00baf3',position:'absolute',top:8.5}} resizeMode='contain'/> : null}
+               {select ? <View style={[{width:w,height:2,backgroundColor:'#00baf3',position:'absolute'},Platform.OS === 'ios' ? {top:12} : {top:8}]} resizeMode='contain'/> : null}
             </View>
             <Badge count={badge} style={[{position:'absolute',top:-5,right:right},badge > 0 ? {} :{backgroundColor:'#ffffff'}]} />
         </View>
@@ -125,8 +125,8 @@ export default class qualityList extends PureComponent {
         return (
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <View style={{height:3,width:'100%',backgroundColor:'white'}}/>
-                <SegmentedView indicatorLineWidth={0} barStyle={{width:'100%',height:44}} autoScroll={this.state.activeIndex == 0?false:true} animated={this.state.activeIndex == 0?false:true} 
+                <SegmentedView indicatorLineWidth={0} barStyle={{width:'100%',height:44,borderBottomColor:'#e9e9e999',
+        borderBottomWidth:1,}} autoScroll={this.state.activeIndex == 0?false:true} animated={this.state.activeIndex == 0?false:true} 
                 style={{ flex:1 }} justifyItem={'scrollable'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)}>
                     {
                        API.CLASSIFY_STATUS_LIST.map((item,index)=>{
@@ -146,7 +146,6 @@ export default class qualityList extends PureComponent {
                        })
                    }
                 </SegmentedView>
-                <View style={{position:'absolute',top:44,left:0,height:1,width:'100%',backgroundColor:'#e9e9e999'}} />
                 {/* <TouchableOpacity style={styles.topBtn} onPress={()=>this._toTop()}>
             <Text style={styles.topBtnText}>置顶</Text>
       </TouchableOpacity> */}
@@ -162,6 +161,7 @@ export default class qualityList extends PureComponent {
 }
 
 const styles = StyleSheet.create({
+    
     contentList: {
         flex: 1,
         backgroundColor: '#fafafa',

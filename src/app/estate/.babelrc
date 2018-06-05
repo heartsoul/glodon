@@ -1,14 +1,4 @@
 {
-  "plugins": [["import", { "libraryName": "antd-mobile" }],[
-    "transform-runtime",
-    {
-      "helpers": false,
-      "polyfill": false,
-      "regenerator": true,
-      "moduleName": "babel-runtime"
-    }
-  ],["transform-class-properties"]],
-  "presets": [["react-native"],["env",{
-    "modules": false
-  }]]
+  "plugins": [["import", { "libraryName": "antd-mobile" }]],
+  "presets": ["react-native"]
 }
