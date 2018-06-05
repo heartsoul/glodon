@@ -331,8 +331,8 @@ class NewQualityView extends React.Component {
             return this.renderLoadingView()
         }
         return (
-            <View style={{ paddingBottom: 0 }}>
-                <SelectView
+            <View style={{ width:'100%',flex:1}}>
+                <SelectView style={{height:61,backgroundColor:'white'}}
                     ref={REF_INSPECT_COMPANY}
                     title={(this.props.type === "acceptance") ? ("验收单位") : ("检查单位")}
                     value={this.state.editInfo ? ({
@@ -342,7 +342,7 @@ class NewQualityView extends React.Component {
                     dataList={this.props.editParams.inspectionCompanies}
                     showStar={this.state.showInspectCompanyStar}
                 />
-                <SelectView ref={REF_COMPANY} title='施工单位'
+                <SelectView  style={{height:60,backgroundColor:'white'}} ref={REF_COMPANY} title='施工单位'
                     value={this.state.editInfo ? ({
                         id: this.state.editInfo.constructionCompanyId,
                         name: this.state.editInfo.constructionCompanyName,
@@ -355,7 +355,7 @@ class NewQualityView extends React.Component {
                     }}
                     showStar={this.state.showCompanyStar}
                 />
-                <SelectView ref={REF_PERSON} title='责任人'
+                <SelectView  style={{height:60,backgroundColor:'white'}} ref={REF_PERSON} title='责任人'
                     value={this.state.editInfo ? ({
                         id: this.state.editInfo.responsibleUserId,
                         name: this.state.editInfo.responsibleUserName,
@@ -364,22 +364,22 @@ class NewQualityView extends React.Component {
                     extraData={this.state.selectCompany}
                     showStar={this.state.showPersonStar}
                 />
-                <StarView
+                <StarView  style={{height:120,backgroundColor:'white'}}
                     showStar={this.state.showDescriptionStar}
                     childView={this.renderDescriptionView()}
                 ></StarView>
                 <View style={[{ width: '100%', height: 130, marginTop: 10, marginBottom: 0, backgroundColor: '#FFFFFF' }, this.hasImage ? {} : { display: 'none' }]}>
                     <ImageChooserView ref={REF_PHOTO} files={this.state.files} style={{ width: width, height: 100, marginTop: 10, marginLeft: 10, marginRight: 10, }} onChange={() => { }} />
                 </View>
-                <RectificationView ref={REF_RECTIFICATION} rectificationData={this.state.rectificationData} showStar={this.state.showRectificationStar}></RectificationView>
-                <StarView
+                <RectificationView  style={{height:60,backgroundColor:'white'}} ref={REF_RECTIFICATION} rectificationData={this.state.rectificationData} showStar={this.state.showRectificationStar}></RectificationView>
+                <StarView  style={{height:60,backgroundColor:'white'}}
                     showStar={this.state.showCheckpointStar}
                     childView={<SelectCheckPointView ref={REF_CHECKPOINT} selectedCheckPoint={this.state.selectedCheckPoint} ></SelectCheckPointView>}
                 />
-                <GLDListRow>
+                <GLDListRow  style={{height:60,backgroundColor:'white'}}> 
                     <GLDListRow.Item title='关联图纸' bottomSeparator='indent' detail={this.state.relevantBlueprint ? this.state.relevantBlueprint.drawingName : ''} onPress={() => { this._bimFileChooserBluePrint('图纸文件') }}></GLDListRow.Item>
                 </GLDListRow>
-                <GLDListRow>
+                <GLDListRow  style={{height:60,backgroundColor:'white'}}>
                     <GLDListRow.Item title='关联模型' detail={this.state.relevantModel.elementName ? this.state.relevantModel.elementName : ''} onPress={() => { this._bimFileChooserModel('模型文件') }} ></GLDListRow.Item>
                 </GLDListRow>
 
@@ -397,7 +397,7 @@ class NewQualityView extends React.Component {
     render() {
 
         return (
-            <View>
+            <View style={{width:'100%',backgroundColor:'red' }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 {
                     this.renderData()
