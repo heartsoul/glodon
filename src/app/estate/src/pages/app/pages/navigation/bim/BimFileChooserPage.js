@@ -5,15 +5,21 @@
 import * as API from "app-api";
 import { BarItems, LoadingView } from "app-components";
 import React, { Component } from "react";
-import { ActivityIndicator, Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View, DeviceEventEmitter } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Breadcrumb from "./../../../components/Breadcrumb";
 import * as BimFileEntry from "./BimFileEntry";
 import BimFileFilterView from "./BimFileFilterView";
 import * as PageType from "./PageTypes";
 import ThumbnailImage from "./ThumbnailImage";
 import BimFileNavigationView from "./bimFileNavigationView";
+import { NoDataView} from 'app-components';
+import { SERVER_TYPE } from 'common-module';
+import {DeviceEventEmitter} from 'app-3rd/index';
+import BasicInfoManager from '../../../../offline/manager/BasicInfoManager';
 
 var { width, height } = Dimensions.get("window");
+let modelList= null;//模型列表
+let blueprintList = null;//图纸列表
 class RightBarButtons extends React.Component {
     _onSearchPress = (navigation) => {
         // console.log(navigation);
@@ -22,7 +28,10 @@ class RightBarButtons extends React.Component {
 
     }
     render() {
-        return <BarItems navigation={this.props.navigation}><BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} /></BarItems> 
+        return (
+            <BarItems navigation={this.props.navigation}>
+                <BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} />
+            </BarItems>)
     }
 }
 export default class BimFileChooser extends Component {
@@ -40,7 +49,7 @@ export default class BimFileChooser extends Component {
             currentItem = API.APP_QUALITY_MODLE;
         }
         return {
-            headerTitle: (<BarItems.TitleBarItem text={title ? title : ''}/>),
+            headerTitle: (<BarItems.TitleBarItem text={title ? title : ''} />),
             headerRight: (<RightBarButtons navigation={navigation} />),
             headerLeft: (
                 <BarItems top={navigation.getParam('top')} navigation={navigation} currentItem={currentItem} />
@@ -68,10 +77,50 @@ export default class BimFileChooser extends Component {
             projectId: storage.loadProject(),
             latestVersion: storage.projectIdVersionId,
             fileId: fileId,
-            dataType: dataType,//图纸文件 模型文件 
+            dataType: dataType,//图纸文件 模型文件 ·
             pageType: params.pageType,
             navData: navData,//导航条面包屑数据
         }
+
+        //本地数据库获取所有的模型和图纸列表
+        let bm = new BasicInfoManager();
+        modelList = bm.getModelList();
+        console.log('-----------modellist--------------')
+        console.log(modelList);
+        blueprintList = bm.getBlueprintList();
+        console.log('------------blueprintlist-------------')
+        console.log(blueprintList);
+        bm.close();
+
+    }
+
+    //根据父id查询数据
+    _filterByFileId=(id,list)=>{
+        let parentId = id==0?'0':id;
+        let data = list.filter((item) => {
+            return item.parentId === parentId;
+        });
+        return data;
+    }
+    //根据专业查询数据
+    _filterBySpecial=(specialtyCode,list)=>{
+        if(specialtyCode=='all'){
+            return list;
+        }
+        let data = list.filter((item) => {
+            return item.specialtyCode === specialtyCode;
+        });
+        return data;
+    }
+    //根据单体查询数据
+    _filterByBuilding=(buildingId,list)=>{
+        if(buildingId==0){
+            return list;
+        }
+        let data = list.filter((item) => {
+            return item.buildingId === buildingId;
+        });
+        return data;
     }
 
     _keyExtractor = (item, index) => index;
@@ -81,6 +130,7 @@ export default class BimFileChooser extends Component {
             API.getModelLatestVersion(storage.loadProject()).then((responseData) => {
                 let latestVersion = responseData.data.data.versionId;
                 storage.projectIdVersionId = latestVersion;
+                storage.setLatestVersionId(projectId,latestVersion);
                 this.setState({
                     latestVersion: latestVersion,
                 });
@@ -90,6 +140,7 @@ export default class BimFileChooser extends Component {
                     {
                         isLoading: false,
                         error: true,
+                        errorInfo: error,
                     }
                 );
             });
@@ -100,12 +151,39 @@ export default class BimFileChooser extends Component {
     }
     //网络请求
     fetchDataInner = (page, projectId, latestVersion) => {
+        
         // 这个是js的访问网络的方法
-        API.getModelBimFileChildren(projectId, latestVersion, page, this.state.fileId).then(
-            (responseData) => {
-                // console.log(responseData)
-                let data = responseData.data.data.items;
-                data = this.filterData(data);
+        // API.getModelBimFileChildren(projectId, latestVersion, page, this.state.fileId).then(
+        //     (responseData) => {
+        //         let data = responseData.data.data.items;
+                
+        //     }
+        // ).catch((error) => {
+        //     this.setState(
+        //         {
+        //             isLoading: false,
+        //             error: true,
+        //             errorInfo: error,
+        //         }
+        //     );
+        // });
+        // if ((!this.state.fileId || this.state.fileId == 0) && data.length > 0 && this.state.dataType) {
+        //     //根据dataType过滤 图纸和模型
+        //     let filterData = data.filter((item) => {
+        //         return item.name === this.state.dataType;
+        //     });
+        //     return filterData;
+        // }
+
+        let list = this.state.dataType=='图纸文件'?blueprintList:modelList;
+        let dataList = this._filterByFileId(this.state.fileId,list);
+        console.log('-------------datalist---------------')
+        console.log(dataList)
+        this._handleData(dataList,page);
+    }
+
+    _handleData=(data,page)=>{
+        // data = this.filterData(data);
 
                 let last = false;
 
@@ -140,18 +218,10 @@ export default class BimFileChooser extends Component {
                     });
                 }
 
-                data = null;
+                // data = null;
                 dataBlob = null;
-            }
-        ).catch((error) => {
-            this.setState(
-                {
-                    isLoading: false,
-                    error: true,
-                }
-            );
-        });
     }
+
     //过滤模型和图纸
     filterData = (data) => {
         if ((!this.state.fileId || this.state.fileId == 0) && data.length > 0 && this.state.dataType) {
@@ -177,6 +247,7 @@ export default class BimFileChooser extends Component {
     }
 
     componentDidMount() {
+        
         //请求数据
         this.fetchData(1);
         this.deEmitter = DeviceEventEmitter.addListener('changeDir',
@@ -227,14 +298,10 @@ export default class BimFileChooser extends Component {
     }
     //加载失败view
     renderErrorView(error) {
-        return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <Text>
-                    加载失败
-                </Text>
-            </View>
-        );
+        if(SERVER_TYPE === "TEST") {
+            return ( <NoDataView text={"error："+error} /> );
+        }
+        return ( <NoDataView text="加载失败" /> );
     }
     _itemClick = (item, index) => {
         let navigator = this.props.navigation;
@@ -246,25 +313,13 @@ export default class BimFileChooser extends Component {
             let d = { ...item.value, dir: this.getDirData() }
             navData.push(d);
 
-            global.storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType, navData: navData });
+            storage.pushNext(navigator, "BimFileChooserPage", { fileId: item.value.fileId, dataType: this.state.dataType, pageType: this.state.pageType, navData: navData });
         } else {
-            // API.getModelBimFileToken(this.state.projectId, this.state.latestVersion, item.value.fileId).then((responseData) => {
-            //     let token = responseData.data.data;
-            //     global.storage.bimToken = token;
             if (this.state.dataType === '图纸文件') {
                 BimFileEntry.showBlueprintFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.name);
             } else {
                 BimFileEntry.showModelFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.buildingId, item.value.buildingName)
             }
-            // }).catch((error)=>{
-
-            //     if (this.state.dataType === '图纸文件') {
-            //         Toast.info('抱歉，您目前没有查看此图纸的权限，请联系系统管理员。', 3);
-            //     } else {
-            //         Toast.info('抱歉，您目前没有查看此模型的权限，请联系系统管理员。', 3);
-            //     }
-
-            // });
 
         }
     }
@@ -294,6 +349,8 @@ export default class BimFileChooser extends Component {
     }
 
     renderFolderView = ({ item, index }) => {
+        console.log('-------------renderFolder-----------')
+        console.log(item)
         return (
             <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
                 <View style={styles.containerFolderView}>
@@ -327,32 +384,53 @@ export default class BimFileChooser extends Component {
     onFilterChange = (specialty, building) => {
         let specialtyCode = specialty ? specialty.code : "";
         let buildingId = building ? building.id : 0;
+        let datalist = this.state.dataType=='图纸文件'?blueprintList:modelList;
+        let fileList = this._filterByFileId(this.state.fileId,datalist);
+        let speList = this._filterBySpecial(specialtyCode,fileList);
+        let list = this._filterByBuilding(buildingId,speList);
 
-        API.getModelBimFiles(storage.loadProject(), storage.projectIdVersionId, buildingId, specialtyCode)
-            .then(responseData => {
-                let dataBlob = [];
-                if (responseData) {
-                    let list = responseData.data.data;
-                    if (list.length > 0) {
-                        list.forEach(item => {
-                            item.name = item.fileName;
-                            dataBlob.push({
-                                key: "P0" + item.fileId,
-                                value: item
-                            });
-                        })
-                    }
-                }
-                this.setState({
-                    dataArray: dataBlob,
+        console.log('-------------filter---------------')
+        console.log(specialtyCode+' '+buildingId)
+        console.log(list)
+
+        let dataBlob = [];
+        if (list.length > 0) {
+            list.forEach(item => {
+                // item.name = item.fileName;
+                dataBlob.push({
+                    key: "P0" + item.fileId,
+                    value: item
                 });
+            })
+        }
+        this.setState({
+            dataArray: dataBlob,
+        });
+        // API.getModelBimFiles(storage.loadProject(), storage.projectIdVersionId, buildingId, specialtyCode)
+        //     .then(responseData => {
+        //         let dataBlob = [];
+        //         if (responseData) {
+        //             let list = responseData.data.data;
+        //             if (list.length > 0) {
+        //                 list.forEach(item => {
+        //                     item.name = item.fileName;
+        //                     dataBlob.push({
+        //                         key: "P0" + item.fileId,
+        //                         value: item
+        //                     });
+        //                 })
+        //             }
+        //         }
+        //         this.setState({
+        //             dataArray: dataBlob,
+        //         });
 
 
-            }).catch(err => {
-                this.setState({
-                    dataArray: [],
-                });
-            });
+        //     }).catch(err => {
+        //         this.setState({
+        //             dataArray: [],
+        //         });
+        //     });
     }
     /**
      * 模型图纸列表
@@ -376,53 +454,30 @@ export default class BimFileChooser extends Component {
         );
     }
 
-    /**
-     * 带导航的View
-     */
-    renderDataWithBreadcrumb = () => {
-        return (
-            <View>
-                <Breadcrumb
-                    childView={this.renderList()}
-                    data={this.state.navData}
-                    onItemClick={(item, index) => {
-                        DeviceEventEmitter.emit('changeDir', { value: item, index: index });
-                        let len = this.state.navData.length;
-                        this.props.navigation.pop(len - index - 1);
-                    }}>
-
-                </Breadcrumb>
-
-
-            </View>
-        );
-    }
-    /**
-     * 模型筛选的
-     */
-    renderDataWithFilter = () => {
-        return (
-            <BimFileFilterView
-                onFilterChange={(specialty, building) => { this.onFilterChange(specialty, building) }}
-            >
-                {
-                    this.renderList()
-                }
-            </BimFileFilterView>
-        );
-    }
+   
 
     renderData = () => {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                {
-                    (this.state.dataType === '模型文件' && this.state.fileId === 0) ? (
-                        this.renderDataWithFilter()
-                    ) : (
-                            this.renderDataWithBreadcrumb()
-                        )
-                }
+                <View>
+                    <BimFileFilterView onFilterChange={(specialty, building) => { this.onFilterChange(specialty, building) }} 
+                    
+                    children={
+                        <Breadcrumb
+                            childView={this.renderList()}
+                            data={this.state.navData}
+                            onItemClick={(item, index) => {
+                                DeviceEventEmitter.emit('changeDir', { value: item, index: index });
+                                let len = this.state.navData.length;
+                                this.props.navigation.pop(len - index - 1);
+                            }}>
+
+                        </Breadcrumb>
+                    }
+                    />
+                    
+                 </View>
 
             </View>
         );

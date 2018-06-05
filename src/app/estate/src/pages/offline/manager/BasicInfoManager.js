@@ -26,6 +26,12 @@ export default class BasicInfoManager {
             // reject('bbb');
         });
      }
+
+     //从数据库获取
+     _getFromDbJson=(key)=>{
+        let info = basicHandler.query(key);
+        return JSON.parse(info);
+    }
     
 
     //获取检查单位信息
@@ -72,13 +78,13 @@ export default class BasicInfoManager {
     //获取所有模型列表
     getModelList=()=>{
         let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children/model";
-        return  this._getFromDb(key_getModelList);
+        return  this._getFromDbJson(key_getModelList);
     }
 
     //获取所有图纸列表
     getBlueprintList=()=>{
-        let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children/model/blueprint";
-        return  this._getFromDb(key_getModelList);
+        let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children/blueprint";
+        return  this._getFromDbJson(key_getModelList);
     }
 
 
@@ -352,6 +358,7 @@ export default class BasicInfoManager {
                     // console.log(item)
                     if(item.name==name){
                         // console.log('ccccccccccccccccc')
+                        item.parentId = '0';
                         data = [...data,item];
                          let list = await _getModelList(item.fileId);
                          data = [...data,...list]
@@ -428,8 +435,8 @@ export default class BasicInfoManager {
                          }
                          let endText = name=='模型文件'?'/model':'/blueprint'
                         let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children"+endText;
-                        console.log('999999999999999999999999999999999999--'+endText)
-                        console.log('list='+JSON.stringify(data));
+                        // console.log('999999999999999999999999999999999999--'+endText)
+                        // console.log('list='+JSON.stringify(data));
                         _saveToDb(key_getModelList,JSON.stringify(data));
                         break;
                     }

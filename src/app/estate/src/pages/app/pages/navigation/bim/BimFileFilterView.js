@@ -41,7 +41,7 @@ class BimFileFilterView extends Component {
         API.getPmbasicSpecialty(false).then(responseData => {
             if (responseData) {
                 let all = {
-                    code:null,
+                    code:'all',
                     name:'全部',
                     keywords: null,
                     parentId: null,
@@ -52,8 +52,6 @@ class BimFileFilterView extends Component {
                 let list =[all];
                 let dataList = responseData.data;
                 let data = [...list,...dataList];
-                console.log('专业--------------------------------')
-                console.log(data)
                 this.setState({
                     specialty: data
                 });
@@ -74,8 +72,6 @@ class BimFileFilterView extends Component {
                 let list =[all];
                 let dataList = responseData.data;
                 let data = [...list,...dataList];
-                console.log('单体--------------------------------')
-                console.log(data)
                 this.setState({
                     buildings: data
                 });
@@ -173,14 +169,14 @@ class BimFileFilterView extends Component {
     renderFilterView = () => {
         return (
             <View style={{ width: width, height: 192, backgroundColor: "#ffffff" }}>
-                <FlatList style={[{ width: width }, this.state.filterType === FILTER_TYPE_SPECIAL ? { display: "flex" } : { display: "none" }]}
+                <FlatList style={[{ width: width,backgroundColor:'#ffffff' }, this.state.filterType === FILTER_TYPE_SPECIAL ? { display: "flex" } : { display: "none" }]}
                     data={this.state.specialty}
                     renderItem={({ item, index }) => { return this.renderSpecialItem({ item, index }) }}
                     ItemSeparatorComponent={this._separator}
                     keyExtractor={(item) => item.id+""}
                 />
 
-                <FlatList style={[{ width: width }, this.state.filterType === FILTER_TYPE_BUILDING ? { display: "flex" } : { display: "none" }]}
+                <FlatList style={[{ width: width,backgroundColor:'#ffffff' }, this.state.filterType === FILTER_TYPE_BUILDING ? { display: "flex" } : { display: "none" }]}
                     data={this.state.buildings}
                     renderItem={({ item, index }) => { return this.renderBuildingItem({ item, index }) }}
                     numColumns={3}
@@ -246,7 +242,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         height: 44,
         borderBottomColor: "#f7f7f7",
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
     },
     touchBtn: {
         flex: 1
@@ -281,7 +277,8 @@ const styles = StyleSheet.create({
     specialItem: {
         flexDirection: "row",
         height: 48,
-        alignItems: "center"
+        alignItems: "center",
+        backgroundColor:'#ffffff'
     },
     specialItemText: {
         flex: 1,
@@ -311,7 +308,8 @@ const styles = StyleSheet.create({
         width: width / 3,
         alignItems: "center",
         paddingTop: 15,
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor:'#ffffff'
     },
     buildingItemBox: {
         width: 86,
