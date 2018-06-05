@@ -108,7 +108,7 @@ export default class extends PureComponent {
             <View style={[styles.contentList]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{height:5,width:'100%',backgroundColor:'white'}}/>
-                <SegmentedView  indicatorLineWidth={0}  autoScroll={false} animated={this.state.activeIndex == 0?false:true} style={{ flex: 1}} justifyItem={'fixed'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
+                <SegmentedView  barStyle={{width:'100%',height:44}} indicatorLineWidth={0}  autoScroll={false} animated={this.state.activeIndex == 0?false:true} style={{ flex: 1}} justifyItem={'fixed'} type={'projector'} onChange={(index) => this._onSegmentedBarChange(index)} activeIndex={this.state.activeIndex}>
                     {
                         API.EQUIPMENT_CLASSIFY_STATUS_LIST.map((item, index) => {
                             return (

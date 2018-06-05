@@ -148,7 +148,7 @@ export async function forgotCaptchaUrl(retFunc) {
        return readBlobAsUrlData(blobData);
     }).then((uri)=>{
     
-         console.log("\n\n\ndata:"+uri+"\n\n");
+        //  console.log("\n\n\ndata:"+uri+"\n\n");
          // let data = response.body();
          
          return {uri: uri,signupKey:signupKey}

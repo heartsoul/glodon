@@ -3,7 +3,7 @@
  */
 'use strict';
 import React, { Component, PureComponent } from "react";
-import {StyleSheet, View, StatusBar, Dimensions, Text} from "react-native";
+import {StyleSheet, View, StatusBar, Dimensions, Text,Platform} from "react-native";
 import {SegmentedView,Badge} from 'app-3rd/teaset';
 
 import * as API from "app-api";
@@ -146,7 +146,7 @@ export default class qualityList extends PureComponent {
                        })
                    }
                 </SegmentedView>
-                <View style={{position:'absolute',top:41,left:0,height:1,width:'100%',backgroundColor:'#e9e9e999'}} />
+                <View style={{position:'absolute',top:44,left:0,height:1,width:'100%',backgroundColor:'#e9e9e999'}} />
                 {/* <TouchableOpacity style={styles.topBtn} onPress={()=>this._toTop()}>
             <Text style={styles.topBtnText}>置顶</Text>
       </TouchableOpacity> */}
