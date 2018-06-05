@@ -96,31 +96,40 @@ export default class BimFileChooser extends Component {
 
     //根据父id查询数据
     _filterByFileId=(id,list)=>{
-        let parentId = id==0?'0':id;
-        let data = list.filter((item) => {
-            return item.parentId === parentId;
-        });
-        return data;
+        if(list && list.length>0){
+            let parentId = id==0?'0':id;
+            let data = list.filter((item) => {
+                return item.parentId === parentId;
+            });
+            return data;
+        }
+        return [];
     }
     //根据专业查询数据
     _filterBySpecial=(specialtyCode,list)=>{
         if(specialtyCode=='all'){
             return list;
         }
-        let data = list.filter((item) => {
-            return item.specialtyCode === specialtyCode;
-        });
-        return data;
+        if(list && list.length>0){
+            let data = list.filter((item) => {
+                return item.specialtyCode === specialtyCode;
+            });
+            return data;
+        }
+        return [];
     }
     //根据单体查询数据
     _filterByBuilding=(buildingId,list)=>{
         if(buildingId==0){
             return list;
         }
-        let data = list.filter((item) => {
-            return item.buildingId === buildingId;
-        });
-        return data;
+        if(list && list.length>0){
+            let data = list.filter((item) => {
+                return item.buildingId === buildingId;
+            });
+            return data;
+        }
+        return [];
     }
 
     _keyExtractor = (item, index) => index;
