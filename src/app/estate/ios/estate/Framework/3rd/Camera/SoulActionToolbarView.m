@@ -17,7 +17,7 @@
   self.topToolbar.hidden = YES;
   self.bottomDrawToolbar.hidden = YES;
   [self.bottomDrawToolbar setSelectedColor:[UIColor redColor]];
-  self.inputToolbar.hidden = YES;
+  
   self.textView.hidden = YES;
   [self.inputToolbar setOnSelectBlock:^(UIButton *selected, UIButton *prevSelected) {
     self.textView.textColor = selected.backgroundColor;
@@ -49,7 +49,7 @@
   // [textView setInputView:topView];
   _textToolbar = topView;
   [self.textView setInputAccessoryView:_textToolbar];
-  
+  self.inputToolbar.hidden = YES;
   
  
 }
