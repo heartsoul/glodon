@@ -289,7 +289,7 @@ export default class BimFileChooser extends Component {
 
     renderFileView = ({ item, index }) => {
         return (
-            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
+            <TouchableOpacity key={'file'+index+'_'+item.key} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
                 <View style={styles.containerFileView}>
                     <ThumbnailImage fileId={item.value.fileId} />
                     <Text style={styles.content}> {item.value.name}</Text>
@@ -300,7 +300,7 @@ export default class BimFileChooser extends Component {
 
     renderFolderView = ({ item, index }) => {
         return (
-            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
+            <TouchableOpacity key={'folder'+index+'_'+item.key} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
                 <View style={styles.containerFolderView}>
                     <Image
                         source={require("app-images/icon_blueprint_file.png")}
@@ -388,6 +388,7 @@ export default class BimFileChooser extends Component {
         return (
             <View style={{height:"100%"}}>
                 <Breadcrumb
+                    key={'Breadcrumb_'+this.state.fileId}
                     childView={this.renderList()}
                     data={this.state.navData}
                     onItemClick={(item, index) => {

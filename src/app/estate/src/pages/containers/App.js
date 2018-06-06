@@ -240,9 +240,9 @@ export default class extends React.Component {
         if (storage.hasChoose()) {
             let tenant = storage.loadLastTenant();
             API.setCurrentTenant(tenant).then((responseData) => {
-                if (this) {
-                    this.prevUpdateTime = systemDate; // 更新成功更新时间
-                }
+                // if (this) {
+                //     this.prevUpdateTime = systemDate; // 更新成功更新时间
+                // }
             }).catch((e) => {
                 console.log(e);
             });
