@@ -80,7 +80,7 @@ class SearchPage extends BaseSearchPage {
         }
         return (
             <ScrollView style={{ marginBottom: 20 }}>
-                <View>
+                <View style={{height:"100%"}}>
                     {
                         this.renderQualityContent()
                     }
@@ -133,7 +133,7 @@ class SearchPage extends BaseSearchPage {
     renderQualityContent = () => {
         if (this.props.qualityList && this.props.qualityList.length > 0) {
             return (
-                <View style={{ flex: 1 }}>
+                <View >
                     <Text style={{ color: "#5e5e5e", fontSize: 14, marginLeft: 20, marginTop: 5 }}>质检清单</Text>
                     {
                         this.props.qualityList.map((item, index) => {
