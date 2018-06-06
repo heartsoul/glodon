@@ -30,6 +30,7 @@ class BimSearchPage extends BaseSearchPage {
     };
 
     componentDidMount() {
+        super.componentDidMount();
         const { params } = this.props.navigation.state;
         this.setState({
             pageType: params.pageType,
