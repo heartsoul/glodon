@@ -135,28 +135,26 @@ class RelevantModelPage extends Component {
         });
 
         this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
-        this.setState({
-            // url:'http://10.1.83.30/app.html?param=01402b8b962b4b71ae2edd86034bdf0a&show=false'
-            url:'./bimEntryHtml.html?param=01402b8b962b4b71ae2edd86034bdf0a&show=false'
+       
+        BimToken.getBimFileToken(relevantModel.gdocFileId, (token) => {
+            if (!token) {
+                this.setState({
+                    url: '',
+                    html: '',
+                    error: new Error('加载失败！')
+                })
+                return;
+            }
+            // let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
+            let url = `./bimEntryHtml.html?param=` + token + `&show=${this.state.show}`;
+            let html = bimfileHtml(cmdString, token, this.state.show);
+            console.log(url);
+            this.setState({
+                url: url,
+                html: html,
+                error: null
+            });
         })
-        // BimToken.getBimFileToken(relevantModel.gdocFileId, (token) => {
-        //     if (!token) {
-        //         this.setState({
-        //             url: '',
-        //             html: '',
-        //             error: new Error('加载失败！')
-        //         })
-        //         return;
-        //     }
-        //     let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
-        //     let html = bimfileHtml(cmdString, token, this.state.show);
-        //     console.log(html);
-        //     this.setState({
-        //         url: url,
-        //         html: html,
-        //         error: null
-        //     });
-        // })
     }
 
     componentWillReceiveProps(nextProps) {

@@ -186,8 +186,10 @@ class RelevantBlueprintPage extends Component {
                 })
                 return;
             }
-            let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
+            // let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
+            let url = `./bimEntryHtml.html?param=` + token + `&show=${this.state.show}`;
             // let html = bimfileHtml(cmdString, token, this.state.show);
+            console.log(url);
             this.setState({
                 url: url,
                 html: html,
