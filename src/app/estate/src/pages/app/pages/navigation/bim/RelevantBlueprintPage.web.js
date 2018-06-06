@@ -458,10 +458,8 @@ class RelevantBlueprintPage extends Component {
                         javaScriptEnabled={true}
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
-                        // injectedJavaScript={cmdString}
-                    
-                        onLoadEnd={() => { this.onLoadEnd() }}
-                        url={this.state.url}
+                        injectedJavaScript={cmdString}
+                        source = {{html:this.state.html}}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
                     {

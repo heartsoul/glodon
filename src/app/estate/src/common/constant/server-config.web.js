@@ -24,3 +24,24 @@ export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的u
 // export const BASE_URL = "http://bimcop.glodon.com"; // 应用服务
 // export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址
 
+
+// 本机调试使用
+
+
+// 测试服务器
+// export const SERVER_TYPE = "TEST"
+// export const BASE_UPLOAD_URL =  "http://nss.glodon.com";//图片服务
+// export const BASE_URL = "http://test.glodon.com"; //应用服务 通过webpack代理配置
+// export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址
+
+// 预生产服务器
+// export const SERVER_TYPE = "PRERELEASE"
+// export const BASE_UPLOAD_URL =  "https://api.glodon.com/nss";//图片服务
+// export const BASE_URL = "http://pr.glodon.com"; // 应用服务
+// export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址
+
+// 生产服务器
+// export const SERVER_TYPE = "PRODUCT"
+// export const BASE_UPLOAD_URL =  "https://api.glodon.com/nss/";//图片服务
+// export const BASE_URL = "http://bimcop.glodon.com"; // 应用服务
+// export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址

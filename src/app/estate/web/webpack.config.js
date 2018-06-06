@@ -2,7 +2,8 @@ const webpack = require('webpack')
 const path = require('path')
 
 const appDirectory = path.resolve(__dirname, '../')
-
+const {BASE_URL_PROXY} = require('./../src/common/constant/server-config.proxy.web')
+var ___SERVER = BASE_URL_PROXY;
 var utils = require('./utils');
 var PORT = 8099;
 var HOST = utils.getIP();
@@ -61,7 +62,6 @@ const urlLoaderConfiguration = {
         mimetype: 'image/png',
     },
 }
-const ___SERVER = 'http://10.1.83.30';
 var config = {
     entry: path.resolve(appDirectory, 'index.web.js'),
     devtool: 'eval-source-map',

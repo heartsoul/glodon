@@ -20,25 +20,24 @@ var {
     height: deviceHeight,
     width: deviceWidth
 } = Dimensions.get('window');
-const cmdString = "\
-function callMessage(action, data, callbackName) { \
-  let actionIn = 'unknown'; let dataIn = {}; let callbackNameIn = 'defaultReturn';\
-  if(action) { actionIn = action;} else {alert('无效调用');return;}\
-  if(data) { dataIn = data;}\
-  if(callbackName) { callbackNameIn = callbackName; } \
-  let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});\
-  window.postMessage(cmd);\
-}\
-window.modelEvent = {\
-  defaultReturn : function(data) {console.log('执行命令成功:'+data);},\
-  invalidateToken : function() { callMessage('invalidateToken');},\
-  loadDotsData : function() { callMessage('loadDotsData');},\
-  cancelPosition : function() { callMessage('cancelPosition');},\
-  getPosition : function(jsonData) { callMessage('getPosition', jsonData);},\
-  getPositionInfo : function(jsonData) { callMessage('getPositionInfo', jsonData);},\
-};\
-document.addEventListener('message', function(e) {eval(e.data);});\
-";
+const cmdString = `
+function callMessage(action, data, callbackName) { 
+    let actionIn = 'unknown'; let dataIn = {}; let callbackNameIn = 'defaultReturn';
+    if(action) { actionIn = action;} else {alert('无效调用');return;}
+    if(data) { dataIn = data;}
+    if(callbackName) { callbackNameIn = callbackName; } 
+     let cmd = JSON.stringify({action:actionIn,data:dataIn,callback:callbackNameIn});
+    window.parent.window.onMessage({nativeEvent:{data:cmd}});
+  }
+  window.modelEvent = {
+    defaultReturn : function(data) {console.log('执行命令成功:'+data);},
+    invalidateToken : function() { callMessage('invalidateToken');},
+    loadDotsData : function() { callMessage('loadDotsData');},
+    cancelPosition : function() { callMessage('cancelPosition');},
+    getPosition : function(jsonData) { callMessage('getPosition', jsonData);},
+    getPositionInfo : function(jsonData) { callMessage('getPositionInfo', jsonData);},
+  };
+`;
 
 /**
  * 关联模型
@@ -582,11 +581,11 @@ class RelevantModelPage extends Component {
                         javaScriptEnabled={true}
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
-                        // injectedJavaScript={cmdString}
-                    
-                        onLoadEnd={() => { this.onLoadEnd() }}
-                        url={this.state.url}
-                        style={{ width: deviceWidth, height: deviceHeight }}>
+                        injectedJavaScript={cmdString}
+                        // source = {{uri:this.state.url}}
+                        source = {{html:this.state.html}}
+                        // url={this.state.url}
+                        >
                     </WebView>
                     {
                         this.state.showCreateNoticeView ? (

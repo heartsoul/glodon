@@ -1,6 +1,6 @@
 import * as API from 'app-api';
 import { SERVER_TYPE } from 'common-module';
-import { NativeModules } from 'react-native';
+import { NativeModules,Platform } from 'react-native';
 import * as types from '../constants/loginTypes';
 
 var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
@@ -23,6 +23,14 @@ export function logout() {
 function loginOld(username, pwd) {
   return dispatch => {
     dispatch(isLogining(username))
+    if(Platform.OS === 'web') {
+      API.login(username, pwd).then((response) => {
+        loadAccount(dispatch,response,username, pwd);
+      }).catch((e) => {
+        dispatch(loginError(false));
+      });
+      return;
+    }
     RNBridgeModule.RNInvokeOCCallBack(
       {
         caller: "soulrn",

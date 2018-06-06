@@ -34,4 +34,5 @@ exports.getIP = function() {
         });
     }
     return IPv4;
+    // return 'zjb.glodon.com';
 }
