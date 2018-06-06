@@ -73,7 +73,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.js"
+        entryFile: "index.js"
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -105,12 +105,19 @@ def gitSha() {
 def gitCount() {
     return 'git rev-list --count HEAD'.execute().text.trim()
 }
+
+def isWindows() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
 /**
  * 获取本机的ip
  * @return
  */
 def getIP() {
-    def ip = "${projectDir}/ip.bat".execute().text.trim()
+    def ip = "127.0.0.1";
+    if (isWindows()) {
+        ip = "${projectDir}/ip.bat".execute().text.trim()
+    }
     return "\"${ip}\""
 }
 
@@ -162,7 +169,7 @@ android {
             def versionName = defaultConfig.versionName
             if (outputFile != null && outputFile.name.endsWith('release.apk')) {
                 def fileName = "rn_bim_${gitSha()}_${versionName}_${releaseTime()}.apk"
-                outputFileName  = fileName
+                outputFileName = fileName
             }
         }
     }
