@@ -13,7 +13,8 @@ import {
 } from 'react-native';
 import WideButton from "../../../app/components/WideButton";
 import { DatePicker } from 'antd-mobile';
-import QualityConditionManager from '../../../offline/manager/QualityConditionManager'
+import QualityConditionManager from '../../../offline/manager/QualityConditionManager';
+
 
 let timeStart=0
 let timeEnd = 0
