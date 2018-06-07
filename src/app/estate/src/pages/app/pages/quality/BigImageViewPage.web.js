@@ -106,7 +106,6 @@ export default class BigImageViewPage extends Component {
                     key={'big'} visible={this.state.modalVisible} transparent={true} onRequestClose={() => { this._setModalVisible(false) }}>
                     <ImageViewer key={'bigImageView'} index={index} urls={this.state.bigMedia} onClose={() => { // 图片单击事件
                         this.props.navigation.goBack();
-                        alert('close');
                     }} />
                 </Modal>
             );

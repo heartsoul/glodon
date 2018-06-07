@@ -306,8 +306,7 @@ export default class EquipmentDetailView extends Component {
             if (this.refs.nextAction && this.refs.nextAction.setNativeProps) {
                 this.refs.nextAction.setNativeProps(
                     {
-                        backgroundColor: this.state.allowNextAction ? '#00b5f2' : '#C8C8C8',
-                        style: { shadowColor: this.state.allowNextAction ? '#00b5f2' : '#C8C8C8' }
+                        style: { backgroundColor: this.state.allowNextAction ? '#00b5f2' : '#C8C8C8',shadowColor: this.state.allowNextAction ? '#00b5f2' : '#C8C8C8' }
                     });
             }
         }
@@ -469,6 +468,8 @@ export default class EquipmentDetailView extends Component {
     render = () => {
         const equipmentInfo = this.props.equipmentInfo;
         let { editType } = equipmentInfo;
+        //测试代码
+        // editType = API.EQUIPMENT_EDIT_TYPE_IMAGE;
         if (!editType) {
             if (!equipmentInfo.id) {
                 equipmentInfo.editType = API.EQUIPMENT_EDIT_TYPE_BASE;

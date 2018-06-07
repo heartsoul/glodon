@@ -59,10 +59,17 @@ export async function upLoadFiles(fileData, callbackIn) {
         callbackIn(code, resultArrayRet);
     }
     fileData.map((file,index) => {
-        let path = "file://" + file.path;
-        if(!isUploadedFile(file, callback,index)){
-            getOperationCode(path, file.name, file.length, callback,file.md5,file,index);
+        let path;
+        if(file.file) {
+            path = file.url;
+            getOperationCode(path, file.name, file.length, callback,null,file,index);
+        } else {
+            path = "file://" + file.path;
+            if(!isUploadedFile(file, callback,index)){
+                getOperationCode(path, file.name, file.length, callback,file.md5,file,index);
+            }
         }
+        
     });
 }
 /**
@@ -230,7 +237,24 @@ export async function getBimFileUrl(objectId, callback) {
             callback(false,error);
         });
 }
-
+/**  
+ * 将以base64的图片url数据转换为Blob  
+ * @param urlData  
+ *            用url方式表示的base64图片数据  
+ */  
+function convertBase64UrlToBlob(urlData){  
+      
+    var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte  
+      
+    //处理异常,将ascii码小于0的转换为大于0  
+    var ab = new ArrayBuffer(bytes.length);  
+    var ia = new Uint8Array(ab);  
+    for (var i = 0; i < bytes.length; i++) {  
+        ia[i] = bytes.charCodeAt(i);  
+    }  
+  
+    return new Blob( [ab] , {type : 'image/png'});  
+}  
 /**
  * 上传文件
  * @param {*} filePath 文件路径
@@ -242,8 +266,14 @@ async function upLoad(filePath, name, operationCode, callback,nativeFile,index) 
 
     let api = "/v1/insecure/objects?operationCode=" + operationCode;
     let formData = new FormData();
-    let file = { uri: filePath, type: 'application/octet-stream', name: 'i'+name };
-    formData.append("uploaded_file", file);   //这里的uploaded_file就是后台需',要的key  
+    if(nativeFile.file) {
+        // let file = { uri: filePath, type: 'image/png', name: 'i'+name };
+        formData.append("uploaded_file",convertBase64UrlToBlob(filePath),'hi'+name);
+    } else {
+        let file = { uri: filePath, type: 'application/octet-stream', name: 'i'+name };
+        formData.append("uploaded_file", file);   //这里的uploaded_file就是后台需',要的key  
+    }
+   
     let ops = {
         method: 'POST',
         headers: {
@@ -252,8 +282,8 @@ async function upLoad(filePath, name, operationCode, callback,nativeFile,index) 
         body: formData,
     };
 
-    console.log("upload2:"+BASE_UPLOAD_URL + api);
-    console.log("upload filePath:"+filePath);
+    // console.log("upload2:"+BASE_UPLOAD_URL + api);
+    // console.log("upload filePath:"+filePath);
     return fetch(BASE_UPLOAD_URL + api, ops)
         .then((response) => response.json())
         .then((data) => {
