@@ -225,8 +225,7 @@ class NewQualityView extends React.Component {
             let requestParams = this.assembleParams();
             NewQualityAction.save(requestParams, this.refs[REF_PHOTO], (params) => {
                 this.setState(params)
-                Toast.success('保存成功', 1);
-                this.props.updateData();
+                this.props.updateData(); 
             });
         })
     }

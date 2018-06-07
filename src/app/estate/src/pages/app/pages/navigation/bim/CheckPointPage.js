@@ -11,7 +11,6 @@ import {
     View,
     Image,
     TouchableOpacity,
-    FlatList,
     StatusBar,
     Modal,
     Button,
@@ -22,6 +21,7 @@ import {
     Theme,
     Label,
 } from 'app-3rd/teaset';
+import { FlatList } from "app-3rd"
 import * as QUALITYAPI from "app-api";
 import { BarItems, LoadingView } from "app-components";
 

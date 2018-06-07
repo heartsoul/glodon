@@ -22,13 +22,13 @@ export default class ActionModal extends Component {
             confirm.style = styles.style_confirm
         }
         if(!confirm.text) {
-            confirm.text = "确定"
+            confirm.text = "确定" 
         }
         // let titleElement = (<Text style={styles.style_title}>{title}</Text>);
         // let messageElement = (<Text style={styles.style_message}>{message}</Text>);
         // Modal.alert(titleElement, messageElement, [{ text: cancel.text,style: [styles.style_cancel, cancel.style]}
             // ,{ text: confirm.text, style: [styles.style_confirm,confirm.style], onPress:confirm.onPress ? confirm.onPress:null}]);
-            ActionModal.showView(ActionModal.buildAlertView(title,message,[cancel,confirm,cancel,confirm,cancel,confirm,]));
+            ActionModal.showView(ActionModal.buildAlertView(title,message,[cancel,confirm]));
         };
     static alertTip = (title, message, confirm) => {
         if(!confirm) {

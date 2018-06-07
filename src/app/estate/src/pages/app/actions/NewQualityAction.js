@@ -335,6 +335,7 @@ function createSaveInspection(params, callback) {
                     code: data.data.code,
                     inspectionInfo: params,
                 });
+                Toast.success('保存成功', 1);
             }
         }).catch(err => {
             Toast.hide();
@@ -356,6 +357,7 @@ function editSaveInspection(params, callback) {
             callback({
                 inspectionInfo: params,
             });
+            Toast.success('保存成功', 1);
         }).catch(err => {
             Toast.hide();
             console.log(err)

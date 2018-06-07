@@ -18,9 +18,11 @@ class Item extends Component {
         detail: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
         onPress: PropTypes.func,
         bottomSeparator: PropTypes.oneOfType([PropTypes.element, PropTypes.oneOf(['none', 'full', 'indent'])]),
+        detailTouchable: PropTypes.bool,
     };
     static defaultProps = {
         bottomSeparator: 'none',
+        detailTouchable: true,
     }
     constructor(props) {
         super(props);
@@ -35,19 +37,41 @@ class Item extends Component {
     }
 
     render() {
-        return (
-            <TouchableOpacity onPress={this.props.onPress} style={{display:"block"}}>
-                <View style={styles.itemContainer}>
-                    <Text style={styles.itemTitle}>{this.props.title}</Text>
-                    {
-                        this.getDetailView(this.props.detail)
-                    }
-                    <Image source={rightImage} style={styles.rightArrow} />
-                </View>
-                {getBottomSeparator(this.props.bottomSeparator)}
-            </TouchableOpacity>
+        if (this.props.detailTouchable) {
+            return (
+                <TouchableOpacity onPress={this.props.onPress} style={{ display: "block" }}>
+                    <View style={styles.itemContainer}>
+                        <Text style={styles.itemTitle}>{this.props.title}</Text>
+                        {
+                            this.getDetailView(this.props.detail)
+                        }
+                        <Image source={rightImage} style={styles.rightArrow} />
+                    </View>
+                    {getBottomSeparator(this.props.bottomSeparator)}
+                </TouchableOpacity>
 
-        );
+            );
+        } else {
+            return (
+                <View onPress={this.props.onPress} style={{ display: "block" }}>
+                    <View style={styles.itemContainer}>
+                        <TouchableOpacity onPress={this.props.onPress}>
+                            <Text style={styles.itemTitle}>{this.props.title}</Text>
+                        </TouchableOpacity>
+                        {
+                            this.getDetailView(this.props.detail)
+                        }
+                        <TouchableOpacity onPress={this.props.onPress}>
+                            <Image source={rightImage} style={styles.rightArrow} />
+
+                        </TouchableOpacity>
+                    </View>
+                    {getBottomSeparator(this.props.bottomSeparator)}
+                </View>
+
+            );
+        }
+
     }
 }
 
@@ -67,7 +91,7 @@ class SwitchItem extends Component {
     }
     render() {
         return (
-            <View style={{display:"block"}}>
+            <View style={{ display: "block" }}>
                 <View style={styles.itemContainer}>
                     <Text style={styles.itemTitle}>{this.props.title}</Text>
                     <Switch value={this.props.switchValue} onValueChange={(value) => { this.props.onValueChange(value) }} />
@@ -118,7 +142,7 @@ export default class GLDListRow extends Component {
 
 const styles = StyleSheet.create({
     listRowContainer: {
-        
+
     },
     itemContainer: {
         height: 57,
@@ -146,7 +170,7 @@ const styles = StyleSheet.create({
     },
     separatorStyle: {
         backgroundColor: "#f7f7f7",
-        width:"100%",
+        width: "100%",
         height: 1,
     },
     indentViewStyle: {
