@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 
 import { View, Modal, ActivityIndicator, StatusBar } from 'react-native';
-// import ImageViewer from 'react-native-image-zoom-viewer';
-class ImageViewer extends Component {
-    render() {
-        return <View />
-    }
-}
+import ImageViewer from 'react-wx-images-viewer';
+
 import * as API from 'app-api';
 
 export default class BigImageViewPage extends Component {
@@ -19,13 +15,24 @@ export default class BigImageViewPage extends Component {
     constructor(props) {
         super(props)
         //3.获取传入的图片等信息
-        const { params } = this.props.navigation.state;
-        const media = params.media
+        const { params = {media:[],index:0} } = this.props.navigation.state;
+        
+        const media = params.media || [];
         const index = params.index || 0;
         media.map((item, index) => {
             item.url = item.photo;
             delete item.photo;
         });
+        // media.push({url:"http://img.zcool.cn/community/01c60259ac0f91a801211d25904e1f.jpg@1280w_1l_2o_100sh.jpg"});
+        // media.push({url:"http://img.zcool.cn/community/01c53f5567f0930000016756edc878.jpg@1280w_1l_2o_100sh.png"});
+        // media.push({url:"http://img.zcool.cn/community/01080755c1edaf32f87528a18e9840.jpg@900w_1l_2o_100sh.jpg"});
+        // media.push({url:"http://img.zcool.cn/community/01c60259ac0f91a801211d25904e1f.jpg@1280w_1l_2o_100sh.jpg"});
+        // media.push({url:"http://img.zcool.cn/community/01c53f5567f0930000016756edc878.jpg@1280w_1l_2o_100sh.png"});
+        // media.push({url:"http://img.zcool.cn/community/01080755c1edaf32f87528a18e9840.jpg@900w_1l_2o_100sh.jpg"});
+        // media.push({url:"http://img.zcool.cn/community/01c60259ac0f91a801211d25904e1f.jpg@1280w_1l_2o_100sh.jpg"});
+        // media.push({url:"http://img.zcool.cn/community/01c53f5567f0930000016756edc878.jpg@1280w_1l_2o_100sh.png"});
+        // media.push({url:"http://img.zcool.cn/community/01080755c1edaf32f87528a18e9840.jpg@900w_1l_2o_100sh.jpg"});
+       
         this.state = {
             media: [...media],
             bigMedia: [],
@@ -33,7 +40,18 @@ export default class BigImageViewPage extends Component {
         }
 
     }
-    componentWillMount() {
+    toUrls = (media) =>{
+        let ret = [];
+        media.map((item,index)=>{
+            if(item.url){
+                ret.push(item.url);
+            }
+        }
+        );
+
+        return ret;
+    }
+    componentWillMount = () => {
         let countAll = this.state.media.length;
         let media = this.state.media;
         this.state.media.map((item, index) => {
@@ -46,7 +64,7 @@ export default class BigImageViewPage extends Component {
                     if (countAll < 1) {
                         this.setState(
                             {
-                                bigMedia: [...media]
+                                bigMedia: this.toUrls(media)
                             }
                         );
                     }
@@ -55,7 +73,7 @@ export default class BigImageViewPage extends Component {
                     if (countAll < 1) {
                         this.setState(
                             {
-                                bigMedia: [...media]
+                                bigMedia: this.toUrls(media)
                             }
                         );
                     }
@@ -65,7 +83,7 @@ export default class BigImageViewPage extends Component {
                 if (countAll < 1) {
                     this.setState(
                         {
-                            bigMedia: [...media]
+                            bigMedia: this.toUrls(media)
                         }
                     );
                 }
@@ -80,14 +98,15 @@ export default class BigImageViewPage extends Component {
 
     render() {
         //3.获取传入的图片等信息
-        const { params } = this.props.navigation.state;
+        const { params = {index:0} } = this.props.navigation.state;
         const index = params.index || 0;
         if (this.state.bigMedia && this.state.bigMedia.length > 0) {
             return (
                 <Modal
                     key={'big'} visible={this.state.modalVisible} transparent={true} onRequestClose={() => { this._setModalVisible(false) }}>
-                    <ImageViewer key={'bigImageView'} enableImageZoom={true} index={index} imageUrls={this.state.bigMedia} onClick={() => { // 图片单击事件
+                    <ImageViewer key={'bigImageView'} index={index} urls={this.state.bigMedia} onClose={() => { // 图片单击事件
                         this.props.navigation.goBack();
+                        alert('close');
                     }} />
                 </Modal>
             );
