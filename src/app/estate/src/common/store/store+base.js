@@ -3,6 +3,7 @@
  */
 
 import { StackActions,NavigationActions } from 'app-3rd/react-navigation'
+import { Platform } from 'react-native';
 import Storage from './storage';
 class NativeStorage extends Storage {
     constructor() {
@@ -20,6 +21,10 @@ class NativeStorage extends Storage {
         }
         // this.logout();
         this.saveLoginToken('', '0');
+        if(Platform.OS === 'ios') {
+            navigator.replace('LoginPage');
+            return; 
+        }
         let resetAction = StackActions.reset({
             index: 0,
             actions: [

@@ -82,7 +82,7 @@ class SettingPage extends Component {
 
     _logout = () => {
         storage.logout();
-        Toast.loading('退出中...', 0, null, true);
+        Toast.loading('退出中...', 10);
         let overTime = false;
         USERAPI.loginOut().then(() => {
 
@@ -95,6 +95,7 @@ class SettingPage extends Component {
                 return;
             }
             overTime = true;
+            Toast.hide();
             let navigator = this.props.navigation;
             storage.gotoLogin(navigator);
         }).catch((error) => {
