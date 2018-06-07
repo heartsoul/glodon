@@ -56,7 +56,7 @@ export default class GLDNewMenuView extends Component {
                                 ) : null
                             }
                         </Animated.View >
-                        <Animated.View style={[{ width: 61, height: 61, marginBottom: 6, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: 'center' }, {
+                        <Animated.View style={[Platform.OS ==='web' ? { marginLeft: -2,marginBottom: 1.5} : {width: 61, height: 61,marginBottom:6}, { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: 'center' }, {
                             transform: [//transform动画
                                 {
                                     rotate: anim.interpolate({
