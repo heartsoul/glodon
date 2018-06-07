@@ -184,7 +184,7 @@ export default class EquipmentInfoItem extends React.Component {
             );
         }
         return (
-            <View style={styles.containerView} >
+            <View style={[styles.containerView,{ height: 40 }]} >
                 <View style={styles.titleViewHeader}>
                     <Text style={{ backgroundColor: '#00b5f2', width: 2, marginRight: 5, height: 16, fontSize: 20, fontWeight: 'bold' }}>{' '}</Text>
                     <Text style={[styles.leftTitleHeader, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignContent: 'flex-start',
         justifyContent: 'flex-start',
-        display:'none',
+        display:'flex',
     },
     lineView: {
         height: 1,
