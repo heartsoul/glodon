@@ -85,11 +85,11 @@ export default class BimFileChooser extends Component {
         //本地数据库获取所有的模型和图纸列表
         let bm = new BasicInfoManager();
         modelList = bm.getModelList();
-        console.log('-----------modellist--------------')
-        console.log(modelList);
+        // console.log('-----------modellist--------------')
+        // console.log(modelList);
         blueprintList = bm.getBlueprintList();
-        console.log('------------blueprintlist-------------')
-        console.log(blueprintList);
+        // console.log('------------blueprintlist-------------')
+        // console.log(blueprintList);
         bm.close();
 
     }
@@ -139,7 +139,7 @@ export default class BimFileChooser extends Component {
             API.getModelLatestVersion(storage.loadProject()).then((responseData) => {
                 let latestVersion = responseData.data.data.versionId;
                 storage.projectIdVersionId = latestVersion;
-                storage.setLatestVersionId(projectId,latestVersion);
+                storage.setLatestVersionId(storage.loadProject(),latestVersion);
                 this.setState({
                     latestVersion: latestVersion,
                 });
@@ -186,8 +186,8 @@ export default class BimFileChooser extends Component {
 
         let list = this.state.dataType=='图纸文件'?blueprintList:modelList;
         let dataList = this._filterByFileId(this.state.fileId,list);
-        console.log('-------------datalist---------------')
-        console.log(dataList)
+        // console.log('-------------datalist---------------')
+        // console.log(dataList)
         this._handleData(dataList,page);
     }
 
@@ -358,8 +358,8 @@ export default class BimFileChooser extends Component {
     }
 
     renderFolderView = ({ item, index }) => {
-        console.log('-------------renderFolder-----------')
-        console.log(item)
+        // console.log('-------------renderFolder-----------')
+        // console.log(item)
         return (
             <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
                 <View style={styles.containerFolderView}>

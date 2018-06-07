@@ -2,6 +2,8 @@
 
 import * as types from '../constants/newQualityTypes';
 import * as API from "app-api";
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
+import BasicInfoManager from '../../offline/manager/BasicInfoManager'
 let responseCount = 0;//请求完成的次数
 
 export function fetchData(params) {
@@ -242,7 +244,8 @@ function _getModelElementProperty(gdocFileId, elementId) {
   * 获取项目下检查单位列表
   */
 function _getInspectionCompanies() {
-    return API.getInspectionCompanies(storage.loadProject())
+    if(OfflineStateUtil.isOnLine()){
+        return API.getInspectionCompanies(storage.loadProject())
         .then(data => {
             let inspectionCompanies = [];
             if (data && data.data) {
@@ -250,20 +253,30 @@ function _getInspectionCompanies() {
             }
             return inspectionCompanies;
         });
+    }else{
+        let bm = new BasicInfoManager();
+        return bm.getInspectionCompany();
+    }
+    
 }
 
 /**
  * 获取施工单位列表
  */
 function _getSupporters() {
-    return API.getCompaniesList(storage.loadProject(), 'SGDW')
-        .then(data => {
-            let supporters = [];
-            if (data && data.data) {
-                supporters = data.data;
-            }
-            return supporters;
-        });
+    if(OfflineStateUtil.isOnLine()){
+        return API.getCompaniesList(storage.loadProject(), 'SGDW')
+            .then(data => {
+                let supporters = [];
+                if (data && data.data) {
+                    supporters = data.data;
+                }
+                return supporters;
+            });
+    }else{
+        let bm = new BasicInfoManager();
+        return bm.getSupporters();
+    }
 }
 
 

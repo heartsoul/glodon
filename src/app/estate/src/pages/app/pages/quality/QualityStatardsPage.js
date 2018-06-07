@@ -12,6 +12,8 @@ import {
 import { WebView } from 'app-3rd/index';
 import * as API from "app-api"
 import { BarItems, LoadingView } from "app-components";
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
+import BasicInfoManager from '../../../offline/manager/BasicInfoManager'
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
@@ -195,22 +197,42 @@ export default class QualityStatardsPage extends Component {
         // "qualityCheckpointName": "墙面",
         this.props.navigation.setParams({ title: this.props.navigation.state.params.qualityCheckpointName })
         let templateId = this.props.navigation.state.params.qualityCheckpointId;
-        API.getStandardsItems(templateId).then((responseData) => {
-            let html = this.proccessData(responseData.data);
-            this.setState({
-                isLoading: false,
-                error: false,
-                errorInfo: "",
-                html: html,
+        if(OfflineStateUtil.isOnLine()){
+            API.getStandardsItems(templateId).then((responseData) => {
+                let html = this.proccessData(responseData.data);
+                this.setState({
+                    isLoading: false,
+                    error: false,
+                    errorInfo: "",
+                    html: html,
+                });
+            }).catch(err => {
+                this.setState = {
+                    isLoading: false,
+                    error: err,
+                    errorInfo: err,
+                    html: '',
+                };
             });
-        }).catch(err => {
-            this.setState = {
-                isLoading: false,
-                error: err,
-                errorInfo: err,
-                html: '',
-            };
-        });
+        }else{
+            let bm = new BasicInfoManager();
+            bm.getStandards(templateId).then(data =>{
+                let html = this.proccessData(data);
+                this.setState({
+                    isLoading: false,
+                    error: false,
+                    errorInfo: "",
+                    html: html,
+                });
+            }).catch(err => {
+                this.setState = {
+                    isLoading: false,
+                    error: err,
+                    errorInfo: err,
+                    html: '',
+                };
+            });
+        }
     }
     componentDidMount = () => {
         this.fetchData();
@@ -233,7 +255,7 @@ export default class QualityStatardsPage extends Component {
                         // onMessage={(e) => this.onMessage(e)}
                         // injectedJavaScript={cmdString}
                         //  onLoadEnd ={()=>this.refs.webview.postMessage('javascript:window.modelEvent.loadDotsData();')}
-                        source={{ html: this.state.html }}
+                        source={{ html: this.state.html ,baseUrl:''}}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
                 </View>
