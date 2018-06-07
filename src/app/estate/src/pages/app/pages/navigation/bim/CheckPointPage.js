@@ -24,7 +24,8 @@ import {
 import { FlatList } from "app-3rd"
 import * as QUALITYAPI from "app-api";
 import { BarItems, LoadingView } from "app-components";
-
+import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil'
+import BasicInfoManager from '../../../../offline/manager/BasicInfoManager'
 export default class CheckPointList extends React.Component {
 
     constructor() {
@@ -54,6 +55,7 @@ export default class CheckPointList extends React.Component {
      * 获取质检项目列表
      */
     _getCheckPoints = () => {
+        if(OfflineStateUtil.isOnLine()){
         QUALITYAPI.getCheckPoints(storage.loadProject())
             .then(data => {
                 this.setState({
@@ -63,6 +65,18 @@ export default class CheckPointList extends React.Component {
                     listData: this._getListByParentId(null),
                 });
             });
+        }else{
+            let bm = new BasicInfoManager();
+            bm.getCheckPoints()
+            .then(data => {
+                this.setState({
+                    checkPoints: data,
+                });
+                this.setState({
+                    listData: this._getListByParentId(null),
+                });
+            })
+        }
     }
 
 

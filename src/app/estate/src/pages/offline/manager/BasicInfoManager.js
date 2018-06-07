@@ -24,6 +24,9 @@ export default class BasicInfoManager {
             let infos = JSON.parse(info);
             resolve(infos);
             // reject('bbb');
+            if(basicHandler!=null){
+                this.close();
+            }
         });
      }
 
@@ -162,8 +165,12 @@ export default class BasicInfoManager {
         //责任人
         function _fetchPersons(coperationId){
             let key_fetchPersons = `/pmbasic/projects/${projectId}/coperationCorps/${coperationId}/coperationRoles`;
+            // console.log('----------------------168')
+            // console.log(projectId+"  "+coperationId)
             return API.getPersonList(projectId, coperationId)
                 .then(data => {
+                    // console.log('责任人 data--------------');
+                    // console.log(data)
                     if (data && data.data && data.data.length > 0) {
                         let retValue = JSON.stringify(data.data);
                         // console.log('责任人 start--------------');
@@ -195,7 +202,7 @@ export default class BasicInfoManager {
             let key_getStandards = `/quality/acceptanceStandard/templates/${templateId}/standards/items`;
             return API.getStandardsItems(templateId).then((responseData) => {
                 let html = JSON.stringify(responseData.data);
-                // console.log('质检项目标准 start--------------');
+                // console.log('质检项目标准 start--------------templateId='+templateId);
                 // console.log(html); //
                 // console.log('质检项目标准 end--------------');
                 _saveToDb(key_getStandards,html);
@@ -267,9 +274,10 @@ export default class BasicInfoManager {
             
             _saveProgress(callback,progress++,totalNum);
             let companyList = JSON.parse(supperters);
+            // console.log(companyList.length)
             if(companyList && companyList.length>0){
                 for(item of companyList){
-                    let person = await _fetchPersons(item.id);
+                    let person = await _fetchPersons(item.coperationId);
                 }
             }
             

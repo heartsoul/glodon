@@ -17,7 +17,6 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.glodon.bim.basic.utils.ScreenUtil;
-import com.umeng.commonsdk.UMConfigure;
 
 import java.util.Arrays;
 import java.util.List;
@@ -60,16 +59,16 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-      SharedPreferences mPreferences =    PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//      mPreferences.edit().putString("debug_http_host",BuildConfig.LOCAL_IP+":9999").commit();
-//      mPreferences.edit().putBoolean("reload_on_js_change",true).commit();
-//      mPreferences.edit().putBoolean("hot_module_replacement",true).commit();
+     SharedPreferences mPreferences =    PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+     mPreferences.edit().putString("debug_http_host","10.1.92.38:9999").commit();
+
+    //  mPreferences.edit().putString("debug_http_host",BuildConfig.LOCAL_IP+":9999").commit();
+      mPreferences.edit().putBoolean("reload_on_js_change",true).commit();
+      mPreferences.edit().putBoolean("hot_module_replacement",true).commit();
 
     
     instance = this;
     ScreenUtil.init(this);
     SoLoader.init(this, /* native exopackage */ false);
-//    UMConfigure.init(this,"58edcfeb310c93091c000be2"
-//            ,"umeng", UMConfigure.DEVICE_TYPE_PHONE,"");//58edcfeb310c93091c000be2 5965ee00734be40b580001a0
   }
 }
