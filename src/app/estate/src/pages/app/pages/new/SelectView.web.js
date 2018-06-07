@@ -285,7 +285,7 @@ class SelectView extends Component {
     }
     starItemView = () => {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ }}>
                 <GLDListRow>
                     <GLDListRow.Item title={this.props.title} detail={this.getDetail()} bottomSeparator="indent" onPress={() => { this.onPress() }}/>
                 </GLDListRow>

@@ -36,7 +36,7 @@ class Item extends Component {
 
     render() {
         return (
-            <TouchableOpacity onPress={this.props.onPress}>
+            <TouchableOpacity onPress={this.props.onPress} style={{display:"block"}}>
                 <View style={styles.itemContainer}>
                     <Text style={styles.itemTitle}>{this.props.title}</Text>
                     {
@@ -67,13 +67,13 @@ class SwitchItem extends Component {
     }
     render() {
         return (
-            <TouchableOpacity >
+            <View style={{display:"block"}}>
                 <View style={styles.itemContainer}>
                     <Text style={styles.itemTitle}>{this.props.title}</Text>
                     <Switch value={this.props.switchValue} onValueChange={(value) => { this.props.onValueChange(value) }} />
                 </View>
                 {getBottomSeparator(this.props.bottomSeparator)}
-            </TouchableOpacity>
+            </View>
 
         );
     }
@@ -118,7 +118,7 @@ export default class GLDListRow extends Component {
 
 const styles = StyleSheet.create({
     listRowContainer: {
-        flex: 1,
+        
     },
     itemContainer: {
         height: 57,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     },
     separatorStyle: {
         backgroundColor: "#f7f7f7",
-        flex: 1,
+        width:"100%",
         height: 1,
     },
     indentViewStyle: {
