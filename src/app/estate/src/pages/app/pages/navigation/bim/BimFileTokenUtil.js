@@ -13,7 +13,7 @@ function getLastetVersion(fileId, callback) {
         getToken(fileId, callback);
     }).catch((error)=>{
         callback(null)
-        Toast.info('抱歉，您目前没有查看此模型的权限，请联系系统管理员。', 3);
+        Toast.info('非常抱歉，您目前没有查看此模型的权限，请联系系统管理员。', 3);
     });
 
 }

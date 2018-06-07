@@ -1,7 +1,11 @@
-export function bimfileHtml(cmdString,token,show) { return `
-           <!DOCTYPE html>
-<html lang="en">
-
+export function bimfileHtml(cmdString,token,show,hasHtmlTag = true) { 
+    let htmlS = hasHtmlTag ? `<!DOCTYPE html>
+    <html lang="en">
+    
+    ` : '';
+    let htmlE = hasHtmlTag ? `
+    </html>` : '';
+    return `${htmlS}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -606,6 +610,5 @@ export function bimfileHtml(cmdString,token,show) { return `
         };
     </script>
 </body>
-
-</html>`;
+${htmlE}`;
 }

@@ -25,9 +25,9 @@ export default class ImageChooserView extends React.Component {
      * @param {*} _onLoadFile 拿到文件信息后的回调方法
      */
     _loadFile(_onLoadFile){
-        PM.loadFile({handleId:this.getViewHandle()},(param)=>{
-            _onLoadFile(param)
-        });
+        // PM.loadFile({handleId:this.getViewHandle()},(param)=>{
+            _onLoadFile([])
+        // });
     }
     /**
    * Returns the native `WebView` node.

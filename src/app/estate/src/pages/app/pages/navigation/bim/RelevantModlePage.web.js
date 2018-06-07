@@ -64,7 +64,8 @@ class RelevantModelPage extends Component {
             relevantModel: {},//选中的模型
             url: '',
             html: '',
-            error: null
+            error: null,
+            show: false
         };
         this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
     }
@@ -146,11 +147,11 @@ class RelevantModelPage extends Component {
             }
             // let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
             let url = `./bimEntryHtml.html?param=` + token + `&show=${this.state.show}`;
-            let html = bimfileHtml(cmdString, token, this.state.show);
-            console.log(url);
+            // let html = bimfileHtml(cmdString, token, this.state.show, false);
+            // console.log(url);
             this.setState({
                 url: url,
-                html: html,
+                // html: html,
                 error: null
             });
         })
@@ -582,9 +583,8 @@ class RelevantModelPage extends Component {
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
                         injectedJavaScript={cmdString}
-                        // source = {{uri:this.state.url}}
-                        source = {{html:this.state.html}}
-                        // url={this.state.url}
+                        source = {{uri:this.state.url}}
+                        // source = {{html:this.state.html}}
                         >
                     </WebView>
                     {

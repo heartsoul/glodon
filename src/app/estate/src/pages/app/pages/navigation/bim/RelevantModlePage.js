@@ -65,7 +65,8 @@ class RelevantModelPage extends Component {
             relevantModel: {},//选中的模型
             url: '',
             html: '',
-            error: null
+            error: null,
+            show: false
         };
         this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
     }
@@ -146,11 +147,11 @@ class RelevantModelPage extends Component {
                 return;
             }
             let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
-            let html = bimfileHtml(cmdString, token, this.state.show);
-            console.log(html);
+            // let html = bimfileHtml(cmdString, token, this.state.show);
+            // console.log(html);
             this.setState({
                 url: url,
-                html: html,
+                // html: html,
                 error: null
             });
         })

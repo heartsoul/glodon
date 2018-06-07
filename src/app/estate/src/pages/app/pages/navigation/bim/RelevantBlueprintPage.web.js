@@ -189,10 +189,10 @@ class RelevantBlueprintPage extends Component {
             // let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
             let url = `./bimEntryHtml.html?param=` + token + `&show=${this.state.show}`;
             // let html = bimfileHtml(cmdString, token, this.state.show);
-            console.log(url);
+            // console.log(url);
             this.setState({
                 url: url,
-                html: html,
+                // html: html,
                 error: null
             });
         })
@@ -459,7 +459,7 @@ class RelevantBlueprintPage extends Component {
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
                         injectedJavaScript={cmdString}
-                        source = {{html:this.state.html}}
+                        source = {{uri:this.state.url}}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
                     {

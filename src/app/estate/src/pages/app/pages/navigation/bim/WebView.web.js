@@ -5,7 +5,6 @@ export default class WebView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      url:null,
       html:null,
     };
   }
@@ -37,7 +36,8 @@ export default class WebView extends React.Component {
             // alert("xx"+this.refs.webFrame.contentWindow.window.modelEvent);
           }
           if(this.props.source.html) {
-            this.refs.webFrame.contentWindow.window.document.body.outerHTML = this.props.source.html;
+            let htmlNode = this.refs.webFrame.contentWindow.document.getElementById('loadingNode');
+            htmlNode.innerHTML = this.props.source.html;
           }
       // alert("Local iframe is now loaded.2"); 
       }; 
@@ -75,11 +75,11 @@ export default class WebView extends React.Component {
     );
       }
   render = () => {
-    const {url,html} = this.props.source;
+    const {uri,html} = this.props.source;
     if(html) {
       return this.renderHtml('./loading.html',html);
     }
-    return this.renderUrl(url);
+    return this.renderUrl(uri);
   }
   
 }
