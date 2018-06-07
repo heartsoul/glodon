@@ -235,7 +235,7 @@ export default class QualityStatardsPage extends Component {
                         // onMessage={(e) => this.onMessage(e)}
                         // injectedJavaScript={cmdString}
                         //  onLoadEnd ={()=>this.refs.webview.postMessage('javascript:window.modelEvent.loadDotsData();')}
-                        source={{ html: this.state.html }}
+                        source={{ html: this.state.html, baseUrl:''}}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
                 </View>

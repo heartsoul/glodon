@@ -34,7 +34,7 @@ export class TextInputNormal extends Component {
       ref={(ref)=>{this.textInput=ref}}
       style={[styles.style_user_input,inputStyle?inputStyle:{}]}
       numberOfLines={1}
-      autoFocus={true}
+      // autoFocus={true}
       returnKeyType = "next"
       enablesReturnKeyAutomatically={true}
       underlineColorAndroid={"transparent"}

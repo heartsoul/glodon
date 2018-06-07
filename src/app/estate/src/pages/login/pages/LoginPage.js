@@ -9,7 +9,6 @@ import * as loginAction from '../actions/loginAction'; // 导入action方法
 
 
 
-
 var { width, height } = Dimensions.get("window");
 
 class LoginPage extends React.Component {
@@ -151,11 +150,8 @@ static navigationOptions = {
   
   componentWillReceiveProps(nextProps){
     if(nextProps.isSuccess == false && nextProps.status === '登录失败' && this.props.status != nextProps.status) {
-      if(ReactNative.Platform.OS === 'web') {
-        alert('账号或密码错误');
-      } else {
-        ActionModal.alertTip("提示", '账号或密码错误',{});
-      }
+        ActionModal.alertTip('提示','账号或密码错误',{text:'知道了', style: { color: '#00baf3' }});
+        Keyboard.dismiss();
     }
     return true;
   }
@@ -347,7 +343,7 @@ const styles = StyleSheet.create({
 
   style_fogotText: {
     height: 20,
-    marginTop: Platform.OS === 'web' ? 20:10,
+    marginTop: Platform.OS === 'web' ? 30:10,
     marginLeft: 20,
     marginRight: 20,
     alignItems: "center",

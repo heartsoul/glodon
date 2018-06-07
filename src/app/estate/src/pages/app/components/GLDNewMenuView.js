@@ -3,9 +3,7 @@ import PropTypes from 'prop-types'
 import { StyleSheet, SafeAreaView, Animated, View, ScrollView, Image, TouchableOpacity, Dimensions, NativeModules,Platform} from 'react-native'
 
 import { Overlay, Label, Button, ActionSheet } from 'app-3rd/teaset';
-
-import { Modal } from 'antd-mobile';
-
+import { ActionModal } from "app-components"
 import * as API from 'app-api'
 
 import { AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
