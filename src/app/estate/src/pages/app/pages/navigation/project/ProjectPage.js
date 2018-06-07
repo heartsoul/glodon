@@ -83,7 +83,7 @@ class ProjectPage extends Component {
     //返回itemView
     renderItemView = ({ item, index }) => {
         return (
-            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)} style={{}}>
                 <View style={[styles.containerView, item.value.id == storage.loadProject() ? styles.selectContainer : null]}>
                     <Text style={[styles.content, item.value.id == storage.loadProject() ? { color: '#00baf3', fontWeight: "bold" } : null]}> {item.value.name}</Text>
                 </View>
@@ -230,7 +230,6 @@ const styles = StyleSheet.create({
 
     },
     containerView: {
-        flex: 1,
         height: 50,
         paddingLeft: 40,
         paddingRight: 40,
