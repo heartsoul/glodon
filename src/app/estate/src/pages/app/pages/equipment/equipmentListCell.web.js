@@ -24,7 +24,10 @@ export default class EquipmentListCell extends PureComponent {
         }
     }
     render() {
-        return this.renderItem(this.state.item, this.state.index);
+        return( 
+            <View style={{display:"block"}}>
+                {this.renderItem(this.state.item, this.state.index)}
+            </View>)
     }
 
     // 提交

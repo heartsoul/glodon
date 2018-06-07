@@ -213,7 +213,7 @@ class NewQualityPage extends Component {
         return (
             <KeyboardAwareScrollView>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <View style={[{ marginTop: -44, width:'100%',height:'100%',}]}>
+                <View style={[{ marginTop: -44, width:'100%',height:height,}]}>
                     <Tabs
                         tabs={tabs}
                         ananimated={true}
