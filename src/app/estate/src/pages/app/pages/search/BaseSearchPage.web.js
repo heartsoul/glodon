@@ -72,13 +72,14 @@ export default class BaseSearchPage extends React.Component {
         this.state = {
             showHistory: showHistory,
             showContent: !showHistory,
+            inputValue:searchKeywords,
         };
         this.props.loadHistory();
     }
     componentDidMount() {
         this.onSearch(searchKeywords)
         let eles = document.getElementsByClassName("am-search-cancel");
-        for(let ele of eles){
+        for (let ele of eles) {
             ele.style.color = "#ffffff"
         }
     }
@@ -97,6 +98,7 @@ export default class BaseSearchPage extends React.Component {
                         ref={(ref) => {
                             searchRef = ref;
                         }}
+                        value={this.state.inputValue}
                         styles={StyleSheet.create(newStyle)}
                         style={{ backgroundColor: "#00baf3" }}
                         placeholder={this.placeholder}
@@ -130,6 +132,11 @@ export default class BaseSearchPage extends React.Component {
         } else {
             searchKeywords = keywords;
         }
+        this.setState({
+            inputValue: keywords
+        },()=>{
+            this.props.navigation.setParams({ renderHeaderTitle: this.renderHeaderTitle });
+        })
     }
 
     onSearch = () => {
@@ -158,7 +165,6 @@ export default class BaseSearchPage extends React.Component {
 
     searchHistory = (item) => {
         this.onChange(item);
-        this.props.navigation.setParams({ renderHeaderTitle: this.renderHeaderTitle });
         if (searchRef && searchRef.inputRef) {
             searchRef.inputRef.blur();
         }
