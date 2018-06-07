@@ -87,9 +87,9 @@ getTableName = ()=>{
     
     queryAll = ()=>{
         let infos = realm.objects(name);
-        console.log('--------------------------------')
-        console.log(infos.length)
-        console.log(infos)
+        // console.log('--------------------------------')
+        // console.log(infos.length)
+        // console.log(infos)
         let ret = [];
         for( let i=0;i<infos.length;i++){
             ret[i] = JSON.parse(infos[i].value);
