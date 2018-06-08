@@ -216,7 +216,7 @@ export default class tenantList extends Component {
     _keyExtractor = (item, index) => index;
     renderData() {
         return (
-            <ScrollView style={{backgroundColor:"#fff",height:"100%"}}>
+            <View style={{backgroundColor:"#fff",height:"100%",flex:1}}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <AnimatedFlatList
                     style={{backgroundColor:"#fff"}}
@@ -228,7 +228,7 @@ export default class tenantList extends Component {
                         length: 60, offset: (44 + 1) * index, index
                     })}
                 />
-            </ScrollView>
+            </View>
         );
     }
 

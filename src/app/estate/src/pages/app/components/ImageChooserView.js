@@ -13,8 +13,14 @@ const icon_login_password_delete = require('app-images/login/icon_login_password
 export default class ImageChooserView extends React.Component {
     constructor(props) {
         super(props);
+        let files = [];
+        if(this.props.files){
+            this.props.files.map((item)=>{
+                files.push(item)
+            })
+        }
         this.state = {
-            files:this.props.files || []
+            files:files
         }
     }
     _onChange = (event) => {
