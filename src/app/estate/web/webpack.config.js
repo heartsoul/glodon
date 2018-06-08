@@ -48,6 +48,7 @@ const imageLoaderConfiguration = {
         loader: 'url-loader',
         options: {
             name: '[name].[ext]',
+            limit:1,
         },
     },
 }
