@@ -1,4 +1,6 @@
 
+import { ActionModal } from 'app-components'
+
 function compressImg(imgData, maxHeight, onCompress) {
 
     if (!imgData) return;
@@ -37,9 +39,13 @@ function compressImg(imgData, maxHeight, onCompress) {
  * multiple 是否多选 PS：如果设置了这个属性为true，那么capture属性就无效了，等同于选择所有文件/相册/拍照 
  * capture camera,audio,video
  */
+let input = document.createElement('input');
 export function chooseImages(retFun,retFiles = [],maxLength = 3,multiple=false,capture='camera') {
     // ActionModal.alertTip('敬请期待',null,{text:'知道了'});
-    let input = document.createElement('input');
+    // let input = document.createElement('input');
+    if(!input){
+        input = document.createElement('input');
+    }
     input.hidden = true;
     input.type = 'file';
     input.multiple = multiple;
