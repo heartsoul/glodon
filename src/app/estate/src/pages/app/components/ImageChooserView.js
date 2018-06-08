@@ -7,7 +7,6 @@ import { ActionModal } from 'app-components';
 import { ImagePicker } from 'antd-mobile';
 import { chooseImages } from './ImageManager';
 
-const REF_PHOTO = 'gldPhoto';
 const icon_add_picture = require('app-images/icon_add_picture.png')
 const icon_login_password_delete = require('app-images/login/icon_login_password_delete.png')
 
@@ -131,10 +130,10 @@ export default class ImageChooserView extends React.Component {
         )
     }
     render = () =>{
+        console.log('render1');
         return (
             <View
                 {...this.props}
-                ref ={REF_PHOTO}
                 style={[{flexDirection:'row',width:'100%',height:100,backgroundColor:this.props.backgroudColor},{...this.props.style}]}
             >
             {this.renderImage()}

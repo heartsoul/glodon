@@ -155,7 +155,7 @@ export default class EquipmentDetailView extends Component {
             }
             this.props.equipmentInfo.acceptanceCompanyName = item.name;
             this.props.equipmentInfo.acceptanceCompanyId = item.id;
-            // this.setState({ updateIndex: this.updateIndex++ });
+            this.setState({ updateIndex: this.updateIndex++ });
         }
     }
 

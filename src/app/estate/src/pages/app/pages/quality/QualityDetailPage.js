@@ -101,10 +101,6 @@ class QualityDetailPage extends Component {
     
     //加载失败view
     renderErrorView(error) {
-        this.setState({
-            refreshing: false,
-            isLoading: false,
-        });
         return (
             <View>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
