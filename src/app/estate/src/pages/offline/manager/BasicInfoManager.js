@@ -1,6 +1,7 @@
 
 import * as API from 'app-api';
 import BasicInfoHandler from '../handler/BasicInfoHandler';
+import DownloadImg from '../model/DownloadImg';
 
 let basicHandler = null;
 let projectId ;
@@ -95,6 +96,24 @@ export default class BasicInfoManager {
     equipmentAcceptanceCompanies=()=>{
         let key_equipmentAcceptanceCompanies = `/quality/${projectId}/facilityAcceptance/acceptanceCompanys`;
         return  this._getFromDb(key_equipmentAcceptanceCompanies);
+    }
+
+    //获取质量模型历史
+    getQualityModelHistory=(fileId)=>{
+        let key = `/quality/${projectId}/qualityInspection/all/model/${fileId}/elements`;
+        return  this._getFromDb(key);
+    }
+
+    //获取材设模型历史
+    getEquipmentModelHistory=(fileId)=>{
+        let key = "/quality/" + projectId + "/facilityAcceptance/model/" + fileId + "/elements";
+        return  this._getFromDb(key);
+    }
+
+    //获取质量图纸点的数据
+    getBlueprintDots=(fileId)=>{
+        let key = `/quality/${projectId}/qualityInspection/all/drawings/${fileId}/drawingPositions`;
+        return  this._getFromDb(key);
     }
 
     //获取上次基础包的下载时间
@@ -306,7 +325,7 @@ export default class BasicInfoManager {
         }
         
          download().then((a)=>{
-            console.log("basicinfo  download over-----------------------------------------");
+            // console.log("basicinfo  download over-----------------------------------------");
             // this.getInspectionCompany().then(res=>{console.log(res)})
             // this.getSupporters().then(res=>{console.log(res)})
             // this.getSpecialList().then(res=>{console.log(res)})
@@ -315,6 +334,179 @@ export default class BasicInfoManager {
             // this.equipmentAcceptanceCompanies().then(res=>{console.log(res)})
             // console.log(this.getDownloadedTime())
             _saveProgress(callback,100,100);
+
+        },(e)=>{
+            console.log(e);
+        });
+
+    }
+
+    //下载模型和图纸的缩略图
+    downloadModelImgs(){
+        let list = this.getModelList();
+        this._downloadImg(list);
+    }
+    //下载模型和图纸的缩略图
+    downloadBlueprintImgs(){
+        let list = this.getBlueprintList();
+        this._downloadImg(list);
+    }
+    //下载缩略图
+    _downloadImg(modelList){
+        // console.log('nnnnnnnnnnnnnnnnnnnnnnnnnnn')
+        
+        // for(item of modelList){
+        //     console.log(item.fileId);
+        // }
+        _getThumbnailUrl =(fileId)=>{
+            // console.log('fileId='+item.fileId)
+            return API.getBluePrintThumbnail(projectId, projectVersionId, fileId)
+            .then(responseData => {
+                // console.log('getBluePrintThumbnail ')
+                // console.log(responseData)
+                if (responseData) {
+                    let url = responseData.data.data.thumbnailUrl;
+                    return url;
+                }
+                return null;
+            }).catch(error=>{
+                return null
+            });
+        }
+        
+        async function download(){
+            if(modelList && modelList.length>0){
+                let arr = [];
+                for( item of modelList){
+                    if(!item.folder){
+                        let fileId = item.fileId;
+                        let url = await _getThumbnailUrl(fileId);
+                        // console.log('fileId='+fileId +'   url='+url)
+                        if(url!=null){
+                            // await dli.downloadImg(url,item.fileId);
+                            arr = [...arr,{fileId:fileId,url:url}]
+                        }
+                    }
+                }
+                // console.log(arr)
+                if(arr && arr.length>0){
+                    let dli = new DownloadImg();
+                    await dli.download(arr);
+                }
+            }
+        }
+
+        download().then((a)=>{
+            console.log("imags  download over-----------------------------------------");
+
+        },(e)=>{
+            console.log(e);
+        });
+    }
+
+    //下载模型 单据历史
+    downloadModelHistory(){
+        //保存到数据库
+        _saveToDb=(key,value)=>{
+            basicHandler.update(key,value);
+        }
+        let modelList = this.getModelList();
+
+        _getQualityHistories=(fileId)=>{
+            return API.getElements(projectId,fileId)
+            .then(responseData => {
+                // console.log('质量 模型  单据历史 start-------------------')
+                // console.log(responseData);
+                // console.log('质量 模型  单据历史 end-------------------')
+                if (responseData && responseData.data) {
+                    // let len = responseData.data.length;
+                    // this.mQualityPositionMap = [];
+                    // responseData.data.map((item) => {
+                    //     this.getModelElementProperty(item, len, "quality");
+                    // })
+                    let key = `/quality/${projectId}/qualityInspection/all/model/${fileId}/elements`;
+                    _saveToDb(key,JSON.stringify(responseData.data));
+                    return responseData.data
+                }
+                return null;
+            }).catch(error => { 
+                console.log(error);
+            })
+        }
+
+        _getEquipmentHistories=(fileId)=>{
+            return API.getQualityFacilityAcceptanceElements(projectId,fileId)
+            .then(responseData => {
+                // console.log('材设 模型  单据历史 start-------------------')
+                // console.log(responseData);
+                // console.log('材设 模型  单据历史 end-------------------')
+                if (responseData && responseData.data) {
+                    let key = "/quality/" + projectId + "/facilityAcceptance/model/" + fileId + "/elements";
+                    _saveToDb(key,JSON.stringify(responseData.data));
+                    return responseData.data
+                }
+                return null;
+            }).catch(error => { })
+        }
+
+        async function download(){
+            if(modelList && modelList.length>0){
+                for( item of modelList){
+                    if(!item.folder){
+                        await _getQualityHistories(item.fileId);
+                        await _getEquipmentHistories(item.fileId);
+                    }
+                }
+            }
+        }
+
+        download().then((a)=>{
+            // console.log("histories  download over-----------------------------------------");
+
+        },(e)=>{
+            console.log(e);
+        });
+    }
+
+   
+
+     //下载质量-图纸  点的数据
+     downloadQualityBlueprintHistory(){
+         //保存到数据库
+        _saveToDb=(key,value)=>{
+            basicHandler.update(key,value);
+        }
+        let list = this.getBlueprintList();
+
+        _getDots=(fileId)=>{
+            return API.getBluePrintDots(projectId,fileId)
+            .then(responseData => {
+                // console.log('图纸  单据历史 start-------------------')
+                // console.log(responseData);
+                // console.log('图纸  单据历史 end-------------------')
+                if (responseData && responseData.data) {
+                    let key = `/quality/${projectId}/qualityInspection/all/drawings/${fileId}/drawingPositions`;
+                    _saveToDb(key,JSON.stringify(responseData.data));
+                    return responseData.data
+                }
+                return null;
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+
+        async function download(){
+            if(list && list.length>0){
+                for( item of list){
+                    if(!item.folder){
+                        await _getDots(item.fileId);
+                    }
+                }
+            }
+        }
+
+        download().then((a)=>{
+            // console.log("图纸  点的数据  download over-----------------------------------------");
 
         },(e)=>{
             console.log(e);
@@ -452,14 +644,8 @@ export default class BasicInfoManager {
             }
         }
         getData().then((a)=>{
-            // this.getInspectionCompany().then(res=>{console.log(res)})
-            // this.getSupporters().then(res=>{console.log(res)})
-            // this.getSpecialList().then(res=>{console.log(res)})
-            // this.getSingleList().then(res=>{console.log(res)})
-            // this.getModelList().then(res=>{console.log(res)})
-            // this.equipmentAcceptanceCompanies().then(res=>{console.log(res)})
-            // console.log(this.getDownloadedTime())
-
+            name=='模型文件'? this.downloadModelHistory():this.downloadQualityBlueprintHistory();
+            name=='模型文件'? this.downloadModelImgs():this.downloadBlueprintImgs();
         },(e)=>{
             console.log(e);
         });

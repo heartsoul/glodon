@@ -9,7 +9,9 @@ import {
 } from 'react-native';
 
 import * as API from 'app-api';
-
+import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil';
+import DirManager  from '../../../../offline/manager/DirManager';
+import RNFS from 'react-native-fs';
 /**
  * 缩略图
  */
@@ -26,7 +28,8 @@ export default class ThumnbnailImage extends Component {
     componentDidMount() {
         if (this.props.fileId) {
             // console.log(this.props.fileId)
-            API.getBluePrintThumbnail(storage.loadProject(), global.storage.projectIdVersionId, this.props.fileId)
+            if(OfflineStateUtil.isOnLine()){
+                API.getBluePrintThumbnail(storage.loadProject(), global.storage.projectIdVersionId, this.props.fileId)
                 .then(responseData => {
                     // console.log('getBluePrintThumbnail ')
                     // console.log(responseData)
@@ -39,6 +42,24 @@ export default class ThumnbnailImage extends Component {
                 }).catch(error=>{
                     
                 });
+            }else{
+                let dm = new DirManager();
+                let nail = dm.getImagePathById(this.props.fileId);
+                RNFS.exists(nail)
+                .then((res) => {
+                    if(res){
+                        // console.log('nail='+nail);
+                        //存在
+                        this.setState({
+                            url: 'file://'+nail,
+                        })
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+            }
+            
         }
     }
 
