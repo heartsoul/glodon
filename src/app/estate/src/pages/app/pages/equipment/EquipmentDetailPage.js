@@ -36,19 +36,19 @@ class EquipmentDetailPage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.updateIndex != this.props.updateIndex) {
-            const { fetchData } = this.props;
-            const { item } = this.props.navigation.state.params;
-            if (item && item.value && item.id) {
-                fetchData(item.value.id);
-            }
-        }
+        // if (nextProps.updateIndex != this.props.updateIndex) {
+        //     const { fetchData } = this.props;
+        //     const { item } = this.props.navigation.state.params;
+        //     if (item && item.value && item.id) {
+        //         fetchData(item.value.id);
+        //     }
+        // }
         if (nextProps.equipmentInfo.editType != this.props.equipmentInfo.editType) {
             this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle, gesturesEnabled: this.gesturesEnabled })
         }
-        if (nextProps.relevantEquipmentModle && nextProps.relevantEquipmentModle.gdocFileId && nextProps.relevantEquipmentModle.elementId && nextProps.relevantEquipmentModle != this.props.relevantEquipmentModle) {
-            this.props.getModelElementProperty(nextProps.relevantEquipmentModle, this.props.equipmentInfo)
-        }
+        // if (nextProps.relevantEquipmentModle && nextProps.relevantEquipmentModle.gdocFileId && nextProps.relevantEquipmentModle.elementId && nextProps.relevantEquipmentModle != this.props.relevantEquipmentModle) {
+        //     this.props.getModelElementProperty(nextProps.relevantEquipmentModle, this.props.equipmentInfo)
+        // }
 
     }
 
