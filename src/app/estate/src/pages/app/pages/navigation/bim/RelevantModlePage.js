@@ -18,6 +18,8 @@ import DownloadView from './RelevantModelPageDownloadView';
 import ModelManager from '../../../../offline/manager/ModelManager';
 import DirManager from '../../../../offline/manager/DirManager';
 import ModelServer from '../../../../offline/model/ServerModule';
+import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil';
+import BasicInfoManager from '../../../../offline/manager/BasicInfoManager';
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
@@ -354,7 +356,8 @@ class RelevantModelPage extends Component {
      * 显示质检单模型历史选择信息
      */
     getElements = () => {
-        API.getElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
+        if(OfflineStateUtil.isOnLine()){
+            API.getElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
             .then(responseData => {
                 if (responseData && responseData.data) {
                     let len = responseData.data.length;
@@ -364,6 +367,23 @@ class RelevantModelPage extends Component {
                     })
                 }
             }).catch(error => { })
+        }else{
+                let bm = new BasicInfoManager();
+                bm.getQualityModelHistory(this.state.relevantModel.gdocFileId).then((data)=>{
+                    console.log('获取质量模型历史-------------------------------------')
+                console.log(data)
+                    if(data ){
+                        let len = data.length;
+                    this.mQualityPositionMap = [];
+                    data.map((item) => {
+                        this.getModelElementProperty(item, len, "quality");
+                    })
+                    }
+                }).catch(error =>{
+                    console.log(error)
+                })
+            }
+        
     }
 
     getModelElementProperty = (item, len, type) => {
@@ -417,7 +437,8 @@ class RelevantModelPage extends Component {
      * 显示材设单模型历史选择信息
      */
     getEquipmentList = () => {
-        API.getQualityFacilityAcceptanceElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
+        if(OfflineStateUtil.isOnLine()){
+            API.getQualityFacilityAcceptanceElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
             .then(responseData => {
                 if (responseData && responseData.data) {
                     let len = responseData.data.length;
@@ -435,6 +456,31 @@ class RelevantModelPage extends Component {
                     })
                 }
             }).catch(error => { })
+        }else{
+            let bm = new BasicInfoManager();
+            bm.getEquipmentModelHistory(this.state.relevantModel.gdocFileId).then((data)=>{
+                console.log('获取材设模型历史-------------------------------------')
+                console.log(data)
+                if(data ){
+                    let len = data.length;
+                    for (let i = 0; i < len; i++) {
+                        let item = data[i];
+                        if (item.committed) {
+                            item.qcState = item.qualified ? API.QC_STATE_STANDARD : API.QC_STATE_NOT_STANDARD;
+                        } else {
+                            item.qcState = API.QC_STATE_EDIT;
+                        }
+                    }
+                    this.mEquipmentPositionMap = [];
+                    data.map((item) => {
+                        this.getModelElementProperty(item, len, "equipment");
+                    })
+                }
+            }).catch(error =>{
+                console.log(error)
+            })
+        }
+        
     }
 
     cancelPosition = () => {

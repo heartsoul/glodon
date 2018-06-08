@@ -71,6 +71,12 @@ export default class DirManager  {
         return imgPath;
     }
 
+    //获取图片存储路径
+    getImagePathById = (id)=>{
+        const path = this.getImagePath();
+        const downloadDest = `${path}/${id}.png`;
+        return downloadDest;
+    }
      _createDir = (path)=>{
          //先判断目录是否存在  不存在则创建
          RNFS.exists(path)

@@ -259,25 +259,6 @@ export default class QualityManager {
         
          download().then((a)=>{
             console.log("basicinfo  download over-----------------------------------------");
-    // I/ReactNativeJS(28092): 0 5200092 1514194679000 5200016 unreviewed
-    // I/ReactNativeJS(28092): 1 5200090 1514190266000 5200009 unreviewed
-    // I/ReactNativeJS(28092): 2 5200317 1528357153000 5200016 unrectified
-    // I/ReactNativeJS(28092): 3 5200316 1528357111000 5200039 staged
-    // I/ReactNativeJS(28092): 4 5200303 1526526006000 5200005 delayed
-    // I/ReactNativeJS(28092): 5 5200174 1516243703000 5200013 delayed
-    // I/ReactNativeJS(28092): 6 5200173 1516243660000 5200013 delayed
-    // I/ReactNativeJS(28092): 7 5200172 1516243546000 5200013 delayed
-    // I/ReactNativeJS(28092): 8 5200171 1516243344000 5200013 delayed
-    // I/ReactNativeJS(28092): 9 5200132 1514888706000 5200006 staged
-    // I/ReactNativeJS(28092): 10 5200131 1514879660000 5200005 inspected
-    // I/ReactNativeJS(28092): 11 5200126 1514873488000 5200016 staged
-    // I/ReactNativeJS(28092): 12 5200123 1514873113000 null staged
-    // I/ReactNativeJS(28092): 13 5200120 1514872116000 5200016 delayed
-    // I/ReactNativeJS(28092): 14 5200113 1514430775000 5200016 staged
-    // I/ReactNativeJS(28092): 15 5200112 1514430656000 5200016 staged
-    // I/ReactNativeJS(28092): 16 5200101 1514430265000 5200016 staged
-            handler.queryList('',0,5,'5200016');
-            // handler.queryAll()
 
         },(e)=>{
             console.log(e);
