@@ -12,12 +12,13 @@
     "precommit": "yarn format",
     "webStart": "webpack --config ./web/webpack.config.js",
     "webServer": "webpack-dev-server --open --config ./web/webpack.config.js --port 8099 ",
-    "webBuild": "NODE_ENV=production webpack --config ./web/webpack.config.js --progress",
+    "webBuild": "webpack --config ./web/webpack.production.config.js --progress",
     "apk": "sudo ./android/gradlew assembleRelease"
   },
   "dependencies": {
     "ajv": "^5.0.1",
     "antd-mobile": "^2.1.6",
+    "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "connected-react-router": "^4.3.0",
     "mpm": "^0.0.1",
