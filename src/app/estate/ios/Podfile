@@ -23,12 +23,24 @@ target 'estate' do
   # Your 'node_modules' directory is probably in the root of your project,
   # but if not, adjust the `:path` accordingly
   project './estate.xcodeproj'
-  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+#  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
-  pod 'RNFS', :path => '../node_modules/react-native-fs'
+#  pod 'RNFS', :path => '../node_modules/react-native-fs'
 
-  pod 'RNZipArchive', :path => '../node_modules/react-native-zip-archive'
-
+#  pod 'RNZipArchive', :path => '../node_modules/react-native-zip-archive'
+  pod 'UMCCommon'
+#  pod 'UMCSecurityPlugins'
+  pod 'UMCShare/UI'
+  # 集成微信(精简版0.2M)
+  pod 'UMCShare/Social/ReducedWeChat'
+  # 集成新浪微博(精简版1M)
+  pod 'UMCShare/Social/ReducedSina'
+  # 集成QQ/QZone/TIM(精简版0.5M)
+  pod 'UMCShare/Social/ReducedQQ'
+  # 集成邮件
+  pod 'UMCShare/Social/Email'
+  # 集成短信
+  pod 'UMCShare/Social/SMS'
 end
 target 'CKSecurityTool' do
   project './CKSecurityTool/CKSecurityTool.xcodeproj'

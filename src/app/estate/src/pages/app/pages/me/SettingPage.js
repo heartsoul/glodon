@@ -9,7 +9,6 @@ import {
     SafeAreaView,
     ScrollView,
     StyleSheet,
-    TouchableHighlight,
     Dimensions,
     NativeModules,
     Platform,
@@ -19,13 +18,11 @@ var PM = NativeModules.GLDPhotoManager;
 import { connect } from 'react-redux' // 引入connect函数
 import * as loginAction from '../../../login/actions/loginAction' // 导入action方法 
 
-import { ListRow } from "app-3rd/teaset";
 import * as USERAPI from "app-api";
-import WideButton from "./../../components/WideButton";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
-import { BarItems, LoadingView, ActionButton } from "app-components";
+import { BarItems, ActionButton, ImageChooserView } from "app-components";
 
 var { width, height } = Dimensions.get("window");
 
@@ -70,6 +67,11 @@ class SettingPage extends Component {
     _about = () => {
         let navigator = this.props.navigation;
         storage.pushNext(navigator, "AboutPage")
+    }
+    _share = () => {
+        // let navigator = this.props.navigation;
+        // storage.pushNext(navigator, "SharePage")
+        ImageChooserView.shareApp();
     }
     _feedback = () => {
         let navigator = this.props.navigation;
@@ -145,6 +147,8 @@ class SettingPage extends Component {
                     <SettingItemView icon={require('app-images/icon_setting_contact_us.png')} title='联系我们' hideArrow={true} ></SettingItemView>
                     <View style={styles.settingItemLine}></View>
                     <SettingItemView icon={require('app-images/icon_setting_about_us.png')} title='关于我们' onPress={() => this._about()} ></SettingItemView>
+                    <View style={{ height: 10 }}></View>
+                    <SettingItemView icon={require('app-images/icon_setting_share.png')} title='分享' onPress={() => this._share()} ></SettingItemView>
                     <View style={{ height: 10 }}></View>
 
                     <SettingItemView icon={require('app-images/icon_setting_offline.png')} title='离线设置' ></SettingItemView>

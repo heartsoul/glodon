@@ -129,6 +129,28 @@ RCT_EXPORT_METHOD (takePhoto:(RCTResponseSenderBlock)callback) {
   return;
 }
 
+RCT_EXPORT_METHOD (shareAppAction:(NSDictionary*)dataDic callback:(RCTResponseSenderBlock)callback) {
+  UIViewController *root = RCTPresentedViewController();
+  UIActivityViewController * activityVC = [[UIActivityViewController alloc] initWithActivityItems:@[[NSURL URLWithString:[dataDic valueForKey:@"url"]], [UIImage imageNamed:@"icon_logo"], [dataDic valueForKey:@"text"]] applicationActivities:nil];
+  
+  //设置不出现的项目
+//  activityVC.excludedActivityTypes = @[UIActivityTypeAssignToContact];
+  [root presentViewController:activityVC animated:YES completion:^{
+    //分享回调
+//    callback(@[files,files.count?@(YES):@(NO)]);
+  }];
+  
+  //view可否滑动
+  
+  [RNTImagesView takePhoto:root callback:^(NSArray *files) {
+    if(!files) {
+      files = @[];
+    }
+    callback(@[files,files.count?@(YES):@(NO)]);
+  }];
+  return;
+}
+
 RCT_EXPORT_METHOD (pickerImages:(RCTResponseSenderBlock)callbackRet) {
   
   UIViewController *root = RCTPresentedViewController();

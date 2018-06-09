@@ -132,7 +132,7 @@ android {
         versionCode 1
         versionName "1.1.0"
 
-        buildConfigField("String", "LOCAL_IP", getIP())
+//        buildConfigField("String", "LOCAL_IP", getIP())
 
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -202,6 +202,11 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
     compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.umeng.sdk:common:1.5.3'
+    compile 'com.umeng.sdk:utdid:1.1.5.3'
+    compile 'com.umeng.sdk:share-core:6.9.2'
+    //    compile 'com.umeng.sdk:share-tool:6.9.2'
+    compile 'com.umeng.sdk:shareboard-widget:6.9.2'
     implementation project(':react-native-fs')
     implementation project(':react-native-zip-archive')
     implementation project(':realm')

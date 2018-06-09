@@ -29,6 +29,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		2426A08920CB902700AFB93C /* RNUMConfigure.m in Sources */ = {isa = PBXBuildFile; fileRef = 2426A04520CB902700AFB93C /* RNUMConfigure.m */; };
+		2426A08A20CB902700AFB93C /* UMShareModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2426A04A20CB902700AFB93C /* UMShareModule.m */; };
 		246079FA20B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 246079F920B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m */; };
 		24607A2220B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24607A2120B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib */; };
 		24607A2420B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24607A2320B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib */; };
@@ -448,6 +450,10 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = estate/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = estate/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		2426A04520CB902700AFB93C /* RNUMConfigure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNUMConfigure.m; sourceTree = "<group>"; };
+		2426A04620CB902700AFB93C /* RNUMConfigure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNUMConfigure.h; sourceTree = "<group>"; };
+		2426A04A20CB902700AFB93C /* UMShareModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UMShareModule.m; sourceTree = "<group>"; };
+		2426A04B20CB902700AFB93C /* UMShareModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMShareModule.h; sourceTree = "<group>"; };
 		246079F820B2850D00F2CA6F /* SoulDrawColorPickerToolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoulDrawColorPickerToolbar.h; sourceTree = "<group>"; };
 		246079F920B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoulDrawColorPickerToolbar.m; sourceTree = "<group>"; };
 		24607A2120B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SoulDrawColorPickerToolbar.xib; sourceTree = "<group>"; };
@@ -821,6 +827,73 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2426A03C20CB902700AFB93C /* UMeng */ = {
+			isa = PBXGroup;
+			children = (
+				2426A04120CB902700AFB93C /* ReactNative */,
+			);
+			path = UMeng;
+			sourceTree = "<group>";
+		};
+		2426A04120CB902700AFB93C /* ReactNative */ = {
+			isa = PBXGroup;
+			children = (
+				2426A04220CB902700AFB93C /* common */,
+				2426A04720CB902700AFB93C /* share */,
+			);
+			path = ReactNative;
+			sourceTree = "<group>";
+		};
+		2426A04220CB902700AFB93C /* common */ = {
+			isa = PBXGroup;
+			children = (
+				2426A04320CB902700AFB93C /* common_reactnative_1.0.0 */,
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
+		2426A04320CB902700AFB93C /* common_reactnative_1.0.0 */ = {
+			isa = PBXGroup;
+			children = (
+				2426A04420CB902700AFB93C /* common_ios */,
+			);
+			path = common_reactnative_1.0.0;
+			sourceTree = "<group>";
+		};
+		2426A04420CB902700AFB93C /* common_ios */ = {
+			isa = PBXGroup;
+			children = (
+				2426A04520CB902700AFB93C /* RNUMConfigure.m */,
+				2426A04620CB902700AFB93C /* RNUMConfigure.h */,
+			);
+			path = common_ios;
+			sourceTree = "<group>";
+		};
+		2426A04720CB902700AFB93C /* share */ = {
+			isa = PBXGroup;
+			children = (
+				2426A04820CB902700AFB93C /* share_reactnative_1.0.0 */,
+			);
+			path = share;
+			sourceTree = "<group>";
+		};
+		2426A04820CB902700AFB93C /* share_reactnative_1.0.0 */ = {
+			isa = PBXGroup;
+			children = (
+				2426A04920CB902700AFB93C /* share_ios */,
+			);
+			path = share_reactnative_1.0.0;
+			sourceTree = "<group>";
+		};
+		2426A04920CB902700AFB93C /* share_ios */ = {
+			isa = PBXGroup;
+			children = (
+				2426A04A20CB902700AFB93C /* UMShareModule.m */,
+				2426A04B20CB902700AFB93C /* UMShareModule.h */,
+			);
+			path = share_ios;
+			sourceTree = "<group>";
+		};
 		24607AFC20B39FD500F2CA6F /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -981,6 +1054,7 @@
 		247E2B6F2046373300016F63 /* 3rd */ = {
 			isa = PBXGroup;
 			children = (
+				2426A03C20CB902700AFB93C /* UMeng */,
 				06958C3D2082E7220015C54F /* Camera */,
 				247E2B702046373300016F63 /* XHDatePicker */,
 				247E2B762046373300016F63 /* PasswordTextField */,
@@ -1848,6 +1922,8 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-estate/Pods-estate-resources.sh",
 				"${PODS_ROOT}/LPDQuoteImagesView/LPDQuoteImagesView/Assets/LPDImagePickerController.bundle",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_ROOT}/UMCShare/UMShare/UMSocialSDKPlugin/UMSocialSDKPromptResources.bundle",
+				"${PODS_ROOT}/UMCShare/UMShare/UMSocialUI/UMSocialSDKResources.bundle",
 				"${PODS_ROOT}/WebViewJavascriptBridge/WebViewJavascriptBridge/WebViewJavascriptBridge.js.txt",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -1961,6 +2037,7 @@
 				247E2BE72046373300016F63 /* NSDateFormatter+cache.m in Sources */,
 				247E2BFF2046373400016F63 /* DKCircleButton.m in Sources */,
 				24D9E0742064EAAC00CAB786 /* NSDictionary+SoulPhotoModel.m in Sources */,
+				2426A08920CB902700AFB93C /* RNUMConfigure.m in Sources */,
 				247E2C022046373400016F63 /* UIAlterUtil.m in Sources */,
 				247E2C1C2046373400016F63 /* MNLUUID.m in Sources */,
 				247E2BD72046373300016F63 /* UIImage+Bundle.m in Sources */,
@@ -1985,6 +2062,7 @@
 				247E2C092046373400016F63 /* UIShowModalView.m in Sources */,
 				247E2C142046373400016F63 /* SBJsonStreamWriter.m in Sources */,
 				247E2BF72046373400016F63 /* NetCacheTool.m in Sources */,
+				2426A08A20CB902700AFB93C /* UMShareModule.m in Sources */,
 				247E2BF22046373400016F63 /* DataModel.m in Sources */,
 				247E2BDF2046373300016F63 /* NSString+Unicode.m in Sources */,
 				06958CD6208356F40015C54F /* GlodonPhotoPreviewCollectionViewCell.m in Sources */,
@@ -2031,6 +2109,12 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 5BWXTQUBDE;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/common/common_ios_1.5.1/normal",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/UMSocialUI",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
@@ -2046,6 +2130,11 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/estate\"",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/SMS",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/WeChat",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/Sina",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/Email",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/QQ",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -2068,6 +2157,12 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5BWXTQUBDE;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/common/common_ios_1.5.1/normal",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/UMSocialUI",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-largelist/ios/STTVTableView",
@@ -2078,6 +2173,11 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/estate\"",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/SMS",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/WeChat",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/Sina",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/Email",
+					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/QQ",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",

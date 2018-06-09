@@ -1,11 +1,10 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { processColor, NativeModules, TouchableOpacity, UIManager, View, Image } from 'react-native';
+import { TouchableOpacity, View, Image } from 'react-native';
 import { ActionSheet } from 'app-3rd/teaset';
 import { ActionModal } from 'app-components';
-import { ImagePicker } from 'antd-mobile';
-import { chooseImages } from './ImageManager';
+import { chooseImages,shareApp } from './ImageManager';
 
 const icon_add_picture = require('app-images/icon_add_picture.png')
 const icon_login_password_delete = require('app-images/login/icon_login_password_delete.png')
@@ -14,8 +13,8 @@ export default class ImageChooserView extends React.Component {
     constructor(props) {
         super(props);
         let files = [];
-        if(this.props.files){
-            this.props.files.map((item)=>{
+        if(props.files){
+            props.files.map((item)=>{
                 files.push(item)
             })
         }
@@ -44,6 +43,9 @@ export default class ImageChooserView extends React.Component {
         });
         storage.pushNext(null, 'BigImageViewPage', { media: media, index: index })
 
+    }
+    static shareApp = () => {
+        shareApp();
     }
      /**
      * 启动拍照

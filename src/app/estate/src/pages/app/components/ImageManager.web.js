@@ -1,6 +1,10 @@
 
 import { ActionModal } from 'app-components'
-
+export function shareApp(text,url) {
+    text = text || 'BIM协同，真的来了';
+    url = url || 'http://bim.glodon.com';
+    
+}
 function compressImg(imgData, maxHeight, onCompress) {
 
     if (!imgData) return;

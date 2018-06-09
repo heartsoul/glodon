@@ -8,7 +8,7 @@ gradle.projectsEvaluated {
             name: "name",
             type: Exec) {
 
-        println "local ip ${ getIP()}"
+//        println "local ip ${ getIP()}"
     }
 
     currentBundleTask.dependsOn("assembleRelease")

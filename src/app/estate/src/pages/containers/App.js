@@ -102,6 +102,9 @@ const screens = {
     ChangeProjectPage: {
         screen: GLD.ChangeProjectPage
     },
+    SharePage: {
+        screen: GLD.SharePage
+    }
 };
 
 const options = () => {

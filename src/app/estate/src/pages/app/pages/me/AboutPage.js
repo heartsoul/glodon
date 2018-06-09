@@ -5,10 +5,15 @@ import {
   Text,
   View,
   StatusBar,
-  SafeAreaView
+  SafeAreaView,
+  Dimensions
 } from 'react-native';
 import { BarItems, LoadingView } from "app-components";
-
+import { WebView } from "app-3rd";
+var {
+  height: deviceHeight,
+  width: deviceWidth
+} = Dimensions.get('window');
 export default class extends React.Component {
 
   static navigationOptions = {
@@ -23,7 +28,17 @@ export default class extends React.Component {
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
       <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
       <View style={{flex:1,alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
-      <Text style={styles.text}> 敬请期待 </Text>
+      {/* <Text style={styles.text}> 敬请期待 </Text> */}
+      <WebView bounces={false}
+                        ref="webview"
+                        onNavigationStateChange={() => this.onNavigationStateChange}
+                        scalesPageToFit={true}
+                        javaScriptEnabled={true}
+                        domStorageEnabled={false}
+                        onLoadEnd={() => { }}
+                        source={{ uri: 'http://10.1.71.84/' }}
+                        style={{ width: deviceWidth, height: deviceHeight }}>
+                    </WebView>
       </View>
       </SafeAreaView>
       
