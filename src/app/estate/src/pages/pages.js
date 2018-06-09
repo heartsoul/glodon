@@ -40,7 +40,7 @@ import EquipmentConditionPage from './app/pages/offline/EquipmentConditionPage'
 import EquipmentRecordPage from './app/pages/offline/EquipmentRecordPage'
 import QualityConditionPage from './app/pages/offline/QualityConditionPage'
 import QualityRecordPage from './app/pages/offline/QualityRecordPage'
-
+import SharePage from './app/pages/me/SharePage'
 
 export {
     LoginPage,
@@ -81,5 +81,6 @@ export {
     EquipmentConditionPage,
     EquipmentRecordPage,
     QualityConditionPage,
-    QualityRecordPage
+    QualityRecordPage,
+    SharePage,
 }

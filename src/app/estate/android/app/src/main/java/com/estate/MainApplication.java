@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 
 import com.estate.react.GLDReactPackage;
 import com.facebook.react.ReactApplication;
+import com.rnziparchive.RNZipArchivePackage;
+import com.rnfs.RNFSPackage;
 import io.realm.react.RealmReactPackage;
 
 import com.glodon.bim.business.offline.model.server.ServerModulePackage;
@@ -33,6 +35,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new RNZipArchivePackage(),
+            new RNFSPackage(),
             new RealmReactPackage(),
             new RNZipArchivePackage(),
             new RNFSPackage(),
