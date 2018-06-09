@@ -12,6 +12,8 @@ import {
 import { WebView } from 'app-3rd/index';
 import * as API from "app-api"
 import { BarItems, LoadingView } from "app-components";
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
+import BasicInfoManager from '../../../offline/manager/BasicInfoManager'
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
@@ -171,11 +173,9 @@ export default class QualityStatardsPage extends Component {
         const imagePlus = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAAAXNSR0IArs4c6QAAAjJJREFUWAntmUFOwkAUhp2GuOICegITD+CeeALXxI1WYMPKRBMTURITTVyxAYxsjHsvYFjrAYgXMNEDsGJB/f9mpmkII0P7oDV2kvIebzozX//XKfBQG7oFQaB6vd6xUuoI/i7CZdO3ZjsGwwgMg3q9/gg/4PqKL/1+f2s6nT7DrfB9jtrQ87xqrVb78qhkTiGpV4VsZFTdbtdH4IFRyDyBuYR94lUwtu7G7ALsEOu2YTf1+ie8L98Q2GMAgOe4L+50Z6YGXGfgutVc70w9N07YqKTxs7ZxFjJ6AIp2d1bpnifKDEuZoH+iiYMiTYqH9NWLgmLH7mATfPKgLwkrCgqwAxzb+qAv1kRB8XA2z72NuC9BKwoqAWSbowC1KZM0XiiaVDnbuEJRmzJJ44WiSZWzjSvZOuJx/Aq4wffDU3zZiD554v0Wv4VxLUtfGMacE8x532g0Ln47j32uqW8uCblo3bBfz9l0OdkVtMOrd5lwmXP0nB2XMU6p16lZmB6k+gqLmnRfYxzfizRXRUUWSzNJAZpGvXljC0XnqZIm9j8VReUtetbG/TRKmrGiigLuBRN/89C+WSe1dXrgu67i+/4HPhb5c5kFt7AA6zp20XmioKsANBcgmnoz6SosQcdmYhZRjZ+1nWEZe7iXRgYK9xcrvblocRYylhAYgCysOMO2UeDiRshFadwoRsawRAi4VwQrpiNndohy/T5TH+CZVwXcMGeAxAn/viFjVHCFvLn+Q+wH19fSqWHjCcYAAAAASUVORK5CYII=';
         const imageMinus = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAAAXNSR0IArs4c6QAAAbNJREFUWAntmUFKxDAUhk0YXM0FPIMHcF88hrjRse1mVoKC4GJAUHA1m7bibMRjSNd6gDmDF+hqFo3/XxIZBqFxeEwjJou+zGv68vV/KWRe1J5txhhVluW5UuoM/UO4x+7ejm0DhiUYFlmWPaNvOL/ipaqqg7ZtX9FN+DugVmutT9I0/dRUMlBI6pWQjYyqKIoJHE/0QuYVzC3sC9+Cvl03Zhdgp5h3Brtv57/gunyH44gOAF5jXTzYm4MacF2B695yfTD1/HC6RiVdf2i7zkJGDaDvr3uodP8kygbLmKB/okVQ6TRFRaOi0gpIx4trNCoqrYB0vLhG/62iI583x7+AO+wPL7EvdDtun8d6xyDmCjEf8zy/6Rvsu0an0pAEszGnfZC87ws659v7BPzNGBtz7vOMV+ptanrT4zPhtmN8Fd02vthzEVRMShsoKhoVlVZAOl5co1FRaQWk43GNNi4oi6iuP7TdYGk0djBLB4VtFyu9QbR1FjKO4FiArKs4w85Q6WXlOYjSuFOMjAoXlsff4EzcjcBsjXL9MVNveEQCuDowQOJ0xzdk7M6Z6LHKBnsg9gUjHKh1fPU0mwAAAABJRU5ErkJggg==';
         function onImageClick(img, divId) {
-            alert(divId)
             var open = img.open ? false : true;
             var divSub = document.getElementById(divId);
             divSub.style.display = open ? '' : 'none';
-            
             img.open = open;
             img.src = open ? imageMinus : imagePlus;
         }
@@ -197,22 +197,42 @@ export default class QualityStatardsPage extends Component {
         // "qualityCheckpointName": "墙面",
         this.props.navigation.setParams({ title: this.props.navigation.state.params.qualityCheckpointName })
         let templateId = this.props.navigation.state.params.qualityCheckpointId;
-        API.getStandardsItems(templateId).then((responseData) => {
-            let html = this.proccessData(responseData.data);
-            this.setState({
-                isLoading: false,
-                error: false,
-                errorInfo: "",
-                html: html,
+        if(OfflineStateUtil.isOnLine()){
+            API.getStandardsItems(templateId).then((responseData) => {
+                let html = this.proccessData(responseData.data);
+                this.setState({
+                    isLoading: false,
+                    error: false,
+                    errorInfo: "",
+                    html: html,
+                });
+            }).catch(err => {
+                this.setState = {
+                    isLoading: false,
+                    error: err,
+                    errorInfo: err,
+                    html: '',
+                };
             });
-        }).catch(err => {
-            this.setState = {
-                isLoading: false,
-                error: err,
-                errorInfo: err,
-                html: '',
-            };
-        });
+        }else{
+            let bm = new BasicInfoManager();
+            bm.getStandards(templateId).then(data =>{
+                let html = this.proccessData(data);
+                this.setState({
+                    isLoading: false,
+                    error: false,
+                    errorInfo: "",
+                    html: html,
+                });
+            }).catch(err => {
+                this.setState = {
+                    isLoading: false,
+                    error: err,
+                    errorInfo: err,
+                    html: '',
+                };
+            });
+        }
     }
     componentDidMount = () => {
         this.fetchData();
@@ -235,7 +255,7 @@ export default class QualityStatardsPage extends Component {
                         // onMessage={(e) => this.onMessage(e)}
                         // injectedJavaScript={cmdString}
                         //  onLoadEnd ={()=>this.refs.webview.postMessage('javascript:window.modelEvent.loadDotsData();')}
-                        source={{ html: this.state.html, baseUrl:''}}
+                        source={{ html: this.state.html ,baseUrl:''}}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
                 </View>

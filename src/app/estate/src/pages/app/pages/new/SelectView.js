@@ -10,6 +10,8 @@ import StarView from './StarView';
 import GLDListRow from "./GLDListRow";
 
 import * as API from "app-api";
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
+import BasicInfoManager from '../../../offline/manager/BasicInfoManager'
 /**
  * 检查单位、施工单位、责任人选择
  */
@@ -135,7 +137,8 @@ class SelectView extends Component {
             return;
         }
         let coperationId = extraData.coperationId;
-        API.getPersonList(storage.loadProject(), coperationId)
+        if(OfflineStateUtil.isOnLine()){
+            API.getPersonList(storage.loadProject(), coperationId)
             .then(data => {
                 if (data && data.data && data.data.length > 0) {
                     this.state.dataList = data.data;
@@ -147,6 +150,21 @@ class SelectView extends Component {
             }).catch((e) => {
                 console.log(e);
             });
+        }else{
+            let bm = new BasicInfoManager();
+            bm.fetchPersons(coperationId).then(data =>{
+                if(data&& data.length>0){
+                    this.state.dataList = data;
+                } else {
+                    this.setState({
+                        showEmpty: true,
+                    })
+                }
+            }).catch((e) => {
+                console.log(e);
+            });
+        }
+        
     }
 
     /**
@@ -172,17 +190,39 @@ class SelectView extends Component {
             });
             return;
         }
-        API.getPersonList(storage.loadProject(), coperationId)
-            .then(data => {
-                if (data && data.data && data.data.length > 0) {
-                    let selectIndex = this.getSelectPersonIndex(data.data);
-                    this.setState({
-                        dataList: data.data,
-                        selectIndex: selectIndex,
-                        showEmpty: false,
-                    }, () => {
-                        this.showActionSheet();
-                    });
+        if(OfflineStateUtil.isOnLine()){
+            API.getPersonList(storage.loadProject(), coperationId)
+                .then(data => {
+                    
+                    if (data && data.data && data.data.length > 0) {
+                        let selectIndex = this.getSelectPersonIndex(data.data);
+                        this.setState({
+                            dataList: data.data,
+                            selectIndex: selectIndex,
+                            showEmpty: false,
+                        }, () => {
+                            this.showActionSheet();
+                        });
+                    } else {
+                        this.setState({
+                            showEmpty: true,
+                        })
+                    }
+                }).catch((e) => {
+                    console.log(e);
+                });
+        }else{
+            let bm = new BasicInfoManager();
+            bm.fetchPersons(coperationId).then(data =>{
+                if(data&& data.length>0){
+                    let selectIndex = this.getSelectPersonIndex(data);
+                        this.setState({
+                            dataList: data,
+                            selectIndex: selectIndex,
+                            showEmpty: false,
+                        }, () => {
+                            this.showActionSheet();
+                        });
                 } else {
                     this.setState({
                         showEmpty: true,
@@ -191,6 +231,7 @@ class SelectView extends Component {
             }).catch((e) => {
                 console.log(e);
             });
+        }
     }
     /**
      * 重新设置选中的责任人，切换施工单位时候，index会改变

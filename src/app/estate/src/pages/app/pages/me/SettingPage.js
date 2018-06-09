@@ -9,29 +9,31 @@ import {
     SafeAreaView,
     ScrollView,
     StyleSheet,
+    TouchableHighlight,
     Dimensions,
     NativeModules,
     Platform,
-    Switch,
+    // Switch,
 } from "react-native";
 var PM = NativeModules.GLDPhotoManager;
 import { connect } from 'react-redux' // 引入connect函数
 import * as loginAction from '../../../login/actions/loginAction' // 导入action方法 
 
+import { ListRow } from "app-3rd/teaset";
 import * as USERAPI from "app-api";
+import WideButton from "./../../components/WideButton";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
-import { BarItems, ActionButton, ImageChooserView } from "app-components";
+import {BimSwitch as Switch,ToCleanDialog} from 'app-components';
 
 var { width, height } = Dimensions.get("window");
 
 class SettingPage extends Component {
 
-    static navigationOptions = {
-        headerTitle: <BarItems.TitleBarItem text='设置'/>,
-        headerRight:<View/>,
-      };
+    static navigationOptions = ({ navigation, screenProps }) => ({
+        title: '设置',
+    });
     componentDidMount = () => {
         // console.log(this.props.navigation.state.params);
         //请求数据
@@ -61,17 +63,11 @@ class SettingPage extends Component {
     _tenantChoose = () => {
         let navigator = this.props.navigation;
         storage.projectIdVersionId = '';
-        // storage.pushNext(navigator, "TenantPage")
-        storage.gotoSwitchProject(navigator);
+        storage.pushNext(navigator, "TenantPage")
     }
     _about = () => {
         let navigator = this.props.navigation;
         storage.pushNext(navigator, "AboutPage")
-    }
-    _share = () => {
-        // let navigator = this.props.navigation;
-        // storage.pushNext(navigator, "SharePage")
-        ImageChooserView.shareApp();
     }
     _feedback = () => {
         let navigator = this.props.navigation;
@@ -84,7 +80,7 @@ class SettingPage extends Component {
 
     _logout = () => {
         storage.logout();
-        Toast.loading('退出中...', 10);
+        Toast.loading('退出中...', 0, null, true);
         let overTime = false;
         USERAPI.loginOut().then(() => {
 
@@ -97,7 +93,6 @@ class SettingPage extends Component {
                 return;
             }
             overTime = true;
-            Toast.hide();
             let navigator = this.props.navigation;
             storage.gotoLogin(navigator);
         }).catch((error) => {
@@ -120,27 +115,23 @@ class SettingPage extends Component {
         }, 10000);
     }
 
+   
     render() {
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                <ScrollView style={{paddingBottom:60}}>
                     <SettingItemView icon={require('app-images/icon_setting_change_password.png')} title='修改密码' onPress={() => this._password()} ></SettingItemView>
-                    <View style={{ height: 10 }}></View>
+                    <View style={styles.settingItemLine}></View>
                     {
                         Platform.OS === 'android' ? (
                             <View>
-                                <SettingItemView icon={require('app-images/icon_setting_version.png')} title='WLAN下自动升级' hideArrow={true} switchValue={this.state.autoDownload} showSwitch={true} onSwitchChange={(value) => {
-                                    storage.setAutoDownload(value)
-                                }}></SettingItemView>
-                                <View style={styles.settingItemLine}></View>
                                 <SettingItemView icon={require('app-images/icon_setting_version.png')} title='检查更新' hideArrow={true} showExtText={'当前版本 V1.1.0'} onPress={() => { CheckVersion.checkVersion("setting") }} ></SettingItemView>
                             </View>
                         ) : (
                                 <SettingItemView icon={require('app-images/icon_setting_version.png')} title='版本信息' hideArrow={true} showExtText={'版本号V1.1.0'} ></SettingItemView>
                             )
                     }
-
                     <View style={styles.settingItemLine}></View>
                     <SettingItemView icon={require('app-images/icon_setting_feedback.png')} title='意见反馈' onPress={() => this._feedback()} ></SettingItemView>
                     <View style={styles.settingItemLine}></View>
@@ -148,23 +139,53 @@ class SettingPage extends Component {
                     <View style={styles.settingItemLine}></View>
                     <SettingItemView icon={require('app-images/icon_setting_about_us.png')} title='关于我们' onPress={() => this._about()} ></SettingItemView>
                     <View style={{ height: 10 }}></View>
-                    <SettingItemView icon={require('app-images/icon_setting_share.png')} title='分享' onPress={() => this._share()} ></SettingItemView>
-                    <View style={{ height: 10 }}></View>
 
-                    <SettingItemView icon={require('app-images/icon_setting_offline.png')} title='离线设置' ></SettingItemView>
-                    <View style={{marginTop:40,marginLeft:20,marginRight:20}}><ActionButton
-            onPress={()=>{this._logout()}}
-            isDisabled={()=>{return false}}
-            text="退出登录"
-          >
-          </ActionButton> 
-          </View>
+                    <CleanItemView />
+                    <View style={styles.settingItemLine}></View>
+                    {
+                        Platform.OS === 'android' ? (
+                            <View>
+                                <SettingItemView title='WLAN下自动升级' hideArrow={true} switchValue={this.state.autoDownload} showSwitch={true} onSwitchChange={(value) => {
+                                    storage.setAutoDownload(value)
+                                }}></SettingItemView>
+                            </View>
+                        ) : null
+                    }
+                    <WideButton text="退出登录" onClick={this._logout} style={{ marginTop: 40, width: 297, alignSelf: "center" }} />
                     <View style={{height:60,width:'100%'}} />
                 </ScrollView>
             </SafeAreaView>
         );
     }
 
+}
+
+class CleanItemView extends React.Component{
+    constructor(){
+        super();
+        this.state ={
+            text:'232M'
+        }
+    }
+    //清除缓存的回调方法
+    _cleanCallBack = ()=>{
+        console.log('ret');
+        this.setState(()=>{
+            return {
+                text:''
+            };
+        })
+    }
+    render(){
+        return (
+            <TouchableOpacity onPress={()=>{ToCleanDialog.show(this._cleanCallBack);}} >
+                <View style={{backgroundColor:'#ffffff',height:50,flexDirection:'row',alignItems:'center'}}>
+                    <Text style={{color:'#6f899b',fontSize:14,marginLeft:11,flex:1}}>清除本地缓存</Text>
+                    <Text style={{color:'#7594a9',fontSize:14,marginRight:18}}>{this.state.text}</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    }
 }
 
 class SettingItemView extends React.Component {
@@ -196,7 +217,7 @@ class SettingItemView extends React.Component {
                     <Text style={styles.settingItemText}>{this.props.title} </Text>
                     {extText}
                     {
-                        this.props.showSwitch ? <Switch style={{ marginRight: 20 }} value={this.state.switchValue} onValueChange={(value) => {
+                        this.props.showSwitch ? <Switch style={{ marginRight: 20, }} value={this.state.switchValue} onValueChange={(value) => {
                             this.setState({
                                 switchValue: value
                             }, () => {
@@ -212,6 +233,9 @@ class SettingItemView extends React.Component {
         );
     }
 }
+
+
+
 
 var styles = StyleSheet.create({
     container: {
@@ -229,18 +253,18 @@ var styles = StyleSheet.create({
     settingItemIcon: {
         width: 24,
         height: 24,
-        marginLeft: 20,
+        marginLeft: 10,
         resizeMode: 'contain',
     },
     settingItemText: {
-        marginLeft: 17,
+        marginLeft: 11,
         flex: 1,
         fontSize: 14,
-        color: '#325771',
+        color: '#6f899b',
     },
     settingItemExtText: {
         fontSize: 14,
-        color: '#325771',
+        color: '#7594a9',
         marginRight: 20
     },
     settingItemArrow: {

@@ -12,6 +12,9 @@ import {
 import PropTypes from 'prop-types';
 
 import * as API from "app-api";
+import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil'
+import BasicInfoManager from '../../../../offline/manager/BasicInfoManager'
+
 var { width, height } = Dimensions.get("window");
 
 const FILTER_TYPE_SPECIAL = "special";//专业
@@ -37,24 +40,92 @@ class BimFileFilterView extends Component {
     }
 
     componentDidMount() {
-        //专业
-        API.getPmbasicSpecialty(false).then(responseData => {
-            if (responseData) {
+        if(OfflineStateUtil.isOnLine()){
+            //专业
+            API.getPmbasicSpecialty(false).then(responseData => {
+                if (responseData) {
+                    let all = {
+                        code:'all',
+                        name:'全部',
+                        keywords: null,
+                        parentId: null,
+                        id: 0,
+                        treePath: '0/',
+                        orderNum: 0 
+                    }
+                    let list =[all];
+                    let dataList = responseData.data;
+                    let data = [...list,...dataList];
+                    this.setState({
+                        specialty: data
+                    });
+                }
+            }).catch((err) => {
+            });
+        }else{
+            let bm = new BasicInfoManager();
+            bm.getSpecialList().then(res =>{
+                let all = {
+                    code:'all',
+                    name:'全部',
+                    keywords: null,
+                    parentId: null,
+                    id: 0,
+                    treePath: '0/',
+                    orderNum: 0 
+                }
+                let list =[all];
+                let dataList = res;
+                let data = [...list,...dataList];
                 this.setState({
-                    specialty: responseData.data
+                    specialty: data
                 });
-            }
-        }).catch((err) => {
-        });
-        //单体
-        API.getPmbasicBuildings(storage.loadProject()).then(responseData => {
-            if (responseData) {
+            }).catch(err => {
+                console.log(err)
+            });
+        }
+        if(OfflineStateUtil.isOnLine()){
+            //单体
+            API.getPmbasicBuildings(storage.loadProject()).then(responseData => {
+                if (responseData) {
+                    let all = {
+                        name: '全部',
+                        code: '0',
+                        structureType: '123123',
+                        area: 124311113000,
+                        projectId: 5213135,
+                        id: 0
+                    }
+                    let list =[all];
+                    let dataList = responseData.data;
+                    let data = [...list,...dataList];
+                    this.setState({
+                        buildings: data
+                    });
+                }
+            }).catch((err) => {
+            });                                                     
+         }else{
+            let bm = new BasicInfoManager();
+            bm.getSingleList().then(res =>{
+                let all = {
+                    name: '全部',
+                    code: '0',
+                    structureType: '123123',
+                    area: 124311113000,
+                    projectId: 5213135,
+                    id: 0
+                }
+                let list =[all];
+                let dataList = res;
+                let data = [...list,...dataList];
                 this.setState({
-                    buildings: responseData.data
+                    buildings: data
                 });
-            }
-        }).catch((err) => {
-        });
+            }).catch(err => {
+                console.log(err)
+            });
+        }
 
     }
 
@@ -118,6 +189,7 @@ class BimFileFilterView extends Component {
     _separator = () => {
         return <View style={{ height: 1, backgroundColor: '#f7f7f7', marginLeft: 20 }} />;
     }
+    
     //专业item
     renderSpecialItem = ({ item, index }) => {
         return (
@@ -145,14 +217,14 @@ class BimFileFilterView extends Component {
     renderFilterView = () => {
         return (
             <View style={{ width: width, height: 192, backgroundColor: "#ffffff" }}>
-                <FlatList style={[{ width: width }, this.state.filterType === FILTER_TYPE_SPECIAL ? { display: "flex" } : { display: "none" }]}
+                <FlatList style={[{ width: width,backgroundColor:'#ffffff' }, this.state.filterType === FILTER_TYPE_SPECIAL ? { display: "flex" } : { display: "none" }]}
                     data={this.state.specialty}
                     renderItem={({ item, index }) => { return this.renderSpecialItem({ item, index }) }}
                     ItemSeparatorComponent={this._separator}
                     keyExtractor={(item) => item.id+""}
                 />
 
-                <FlatList style={[{ width: width }, this.state.filterType === FILTER_TYPE_BUILDING ? { display: "flex" } : { display: "none" }]}
+                <FlatList style={[{ width: width,backgroundColor:'#ffffff' }, this.state.filterType === FILTER_TYPE_BUILDING ? { display: "flex" } : { display: "none" }]}
                     data={this.state.buildings}
                     renderItem={({ item, index }) => { return this.renderBuildingItem({ item, index }) }}
                     numColumns={3}
@@ -218,7 +290,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         height: 44,
         borderBottomColor: "#f7f7f7",
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
     },
     touchBtn: {
         flex: 1
@@ -253,7 +325,8 @@ const styles = StyleSheet.create({
     specialItem: {
         flexDirection: "row",
         height: 48,
-        alignItems: "center"
+        alignItems: "center",
+        backgroundColor:'#ffffff'
     },
     specialItemText: {
         flex: 1,
@@ -283,7 +356,8 @@ const styles = StyleSheet.create({
         width: width / 3,
         alignItems: "center",
         paddingTop: 15,
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor:'#ffffff'
     },
     buildingItemBox: {
         width: 86,

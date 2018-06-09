@@ -10,13 +10,11 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  Dimensions,
-  Platform
+  Dimensions
 } from 'react-native';
-import {loginOut, uaaLoginOut} from "app-api";
-import {NavigationPage} from 'app-3rd/teaset'
-import * as CONSTANTS from 'app-api';
-import { fail } from 'assert';
+import {ToOnlineDialog} from 'app-components';
+import WideButton from "../../../app/components/WideButton";
+
 var { width, height } = Dimensions.get("window");
 var name = '' ;
 
@@ -34,59 +32,55 @@ export default class extends Component {
     }
   };
   
-  componentDidMount = () => {
-    // console.log("componentDidMount");
-    
-  };
-
+//切换项目
   _gotoTenantChoose = () => {
     let navigator = this.props.navigation;
     storage.projectIdVersionId = '';
-    // storage.pushNext(navigator, "ChangeProjectPage")
+    storage.pushNext(navigator, "ChangeProjectPage")
     // storage.pushNext(navigator, "TenantPage",{change:true})
-    storage.gotoSwitchProject(navigator);
+    // ToOnlineDialog.show(this.props.navigation);
   }
-  _gotoSetting=()=>{
+  //到离线管理
+  _gotoOfflineManage=()=>{
     let navigator = this.props.navigation;
-    storage.pushNext(navigator,'SettingPage');
+    storage.pushNext(navigator,'OfflineManagePage');
   }
+  //到我的任务
   _gotoTask=()=>{
       
   }
+  //到我的计划
   _gotoPlan=()=>{
 
   }
+  //到我的订阅
+  _gotoSubscribe=()=>{
+
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         <ScrollView bounces={false}>
-          <View style={{backgroundColor:'#00baf3'}}>
+          <View style={{backgroundColor:'#00baf3',marginBottom:20}}>
             <Image source={require('app-images/icon_mine_default_header.png')} style={styles.mineAvatar}/>
-        
             <Text style={styles.mineName}>{name}</Text>
-
             <Image source={require('app-images/icon_mine_wave.png')} style={styles.mineWave}/>
-
           </View>
-          <View style={{backgroundColor:'#f5f8f9'}}>
-          <View style={{backgroundColor:'#ffffff'}}>
-            <MineItemView icon = {require('app-images/icon_mine_permission.png')} title='我的任务' onPress={()=>this._gotoTask()}></MineItemView>
-            <View style={styles.mineItemLine}></View>
-          
-            <MineItemView icon = {require('app-images/icon_mine_plan.png')} title='我的计划' onPress={()=>this._gotoPlan()}></MineItemView>
-            <View style={styles.mineItemLine}></View>
-            <MineItemView icon = {require('app-images/icon_mine_setting.png')} title='设置' onPress={()=>this._gotoSetting()}></MineItemView>
-          </View>
-          <View style={{ height: 20 }}></View>
-          <View style={{backgroundColor:'#ffffff'}}>
-            <View style={styles.mineItemLine}></View>
-            <MineItemView icon={require('app-images/icon_setting_change_project.png')} title='切换项目' onPress={() => this._gotoTenantChoose()} ></MineItemView>
-          </View>
-          <View style={{height:60,width:'100%'}} />
-          </View>
+          <MineItemView icon = {require('app-images/icon_my_offline_manage.png')} title='离线管理' onPress={()=>this._gotoOfflineManage()}></MineItemView>
+          <View style={styles.mineItemLine}></View>
+          <MineItemView icon = {require('app-images/icon_my_missions.png')} title='我的任务' onPress={()=>this._gotoTask()}></MineItemView>
+          <View style={styles.mineItemLine}></View>
+          <MineItemView icon = {require('app-images/icon_my_plans.png')} title='我的计划' onPress={()=>this._gotoPlan()}></MineItemView>
+          <View style={styles.mineItemLine}></View>
+          <MineItemView icon = {require('app-images/icon_my_subscribe.png')} title='我的订阅' onPress={()=>this._gotoSubscribe()}></MineItemView>
+          <View style={styles.mineItemLine}></View>
+            
+          <WideButton text="切换项目" onClick={()=>{this._gotoTenantChoose();}} style={{ marginTop: 50, width: 297,height:40, alignSelf: "center" }} />
+            
+          <View style={{height:35,width:'100%'}} />
         </ScrollView>
-        <View style={{height:60,width:'100%'}} />
       </SafeAreaView>
     );
   }
@@ -111,8 +105,9 @@ class MineItemView extends Component{
 
 var styles = StyleSheet.create({
     container:{
-      backgroundColor:'#f5f8f9',
-      flex:1
+      backgroundColor:'#ffffff',
+      width:width,
+      height:height
     },
     mineAvatar:{
       width:90,
@@ -148,7 +143,7 @@ var styles = StyleSheet.create({
       marginLeft:17,
       flex:1,
       fontSize:14,
-      color:'#325771',
+      color:'#6f899b',
     },
     mineItemArrow:{
       width:5,

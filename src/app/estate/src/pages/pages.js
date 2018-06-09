@@ -31,10 +31,16 @@ import QualitySearchPage from './app/pages/search/QualitySearchPage'
 import EquipmentSearchPage from './app/pages/search/EquipmentSearchPage'
 import BimSearchPage from './app/pages/search/BimSearchPage'
 import AboutPage from './app/pages/me/AboutPage'
-import SharePage from './app/pages/me/SharePage'
 import FeedbackPage from './app/pages/me/FeedbackPage'
 import ForgotPage from './login/pages/ForgotPage'
 import ChangeProjectPage from './app/pages/me/ChangeProjectPage'
+import OfflineMangePage from './app/pages/offline/OfflineMangePage'
+import OfflineDownloadPage from './app/pages/offline/OfflineDownloadPage'
+import EquipmentConditionPage from './app/pages/offline/EquipmentConditionPage'
+import EquipmentRecordPage from './app/pages/offline/EquipmentRecordPage'
+import QualityConditionPage from './app/pages/offline/QualityConditionPage'
+import QualityRecordPage from './app/pages/offline/QualityRecordPage'
+import SharePage from './app/pages/me/SharePage'
 
 export {
     LoginPage,
@@ -70,5 +76,11 @@ export {
     ForgotPage,
     FeedbackPage,
     ChangeProjectPage,
+    OfflineMangePage,
+    OfflineDownloadPage,
+    EquipmentConditionPage,
+    EquipmentRecordPage,
+    QualityConditionPage,
+    QualityRecordPage,
     SharePage,
 }

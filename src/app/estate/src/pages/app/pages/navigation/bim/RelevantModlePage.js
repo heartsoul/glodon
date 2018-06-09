@@ -5,16 +5,20 @@ import { LoadingView, NoDataView, BarItems } from 'app-components';
 import { BimFileEntry } from "app-entry";
 import * as AppConfig from "common-module";
 import React, { Component } from 'react';
-import { Dimensions, Image, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {WebView} from 'app-3rd/index'
+import { Dimensions, Image, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View, WebView } from 'react-native';
 import { connect } from 'react-redux';
 import * as RelevantModelAction from "./../../../actions/relevantModelAction";
 import * as AuthorityManager from "./../project/AuthorityManager";
 import * as BimToken from "./BimFileTokenUtil";
 import * as PageType from "./PageTypes";
 import { bimfileHtml } from './bimfileHtml';
-
-
+import DownloadModel from '../../../../offline/model/DownloadModel';
+import DownloadView from './RelevantModelPageDownloadView';
+import ModelManager from '../../../../offline/manager/ModelManager';
+import DirManager from '../../../../offline/manager/DirManager';
+import ModelServer from '../../../../offline/model/ServerModule';
+import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil';
+import BasicInfoManager from '../../../../offline/manager/BasicInfoManager';
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
@@ -66,7 +70,7 @@ class RelevantModelPage extends Component {
             url: '',
             html: '',
             error: null,
-            show: false
+            uriObj:{},//模型的url或html  
         };
         this.props.navigation.setParams({ loadLeftTitle: this.loadLeftTitle, loadRightTitle: this.loadRightTitle })
     }
@@ -102,12 +106,22 @@ class RelevantModelPage extends Component {
         )
     }
 
+    componentWillMount =()=>{
+        //启动server
+        ModelServer.startServer();
+    }
+
+    componentWillUnmount = ()=>{
+        //关掉server
+        ModelServer.stopServer();
+    }
+
     componentDidMount = () => {
         // console.log(this.props.navigation.state.params);
         let params = this.props.navigation.state.params;
         let pageType = params.pageType;
-        let relevantModel = params.relevantModel;
-
+        let relevantModel = params.relevantModel;//{"gdocFileId":"1bee3ddc99c241e88f2e3a8512f1500d","buildingId":5210119,"buildingName":"新增单体2"}
+        
         let showChangeMode = false;
         if (pageType === PageType.PAGE_TYPE_EDIT_QUALITY || pageType === PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
             showChangeMode = true;
@@ -137,23 +151,50 @@ class RelevantModelPage extends Component {
 
         this.props.navigation.setParams({ title: params.title, rightNavigatePress: this._rightAction })
 
-        BimToken.getBimFileToken(relevantModel.gdocFileId, (token) => {
-            if (!token) {
+
+        // let fileId = '1353300132668256';
+        let fileId = this.state.relevantModel.gdocFileId;
+        
+        //判断是否存在本地离线包
+        let mm = new ModelManager();
+        mm.exist(fileId).then((result)=>{
+            console.log('offline zip exist?--------------'+result);
+            if(!result){
+                //不存在本地离线包
+                //在线情况
+                    BimToken.getBimFileToken(relevantModel.gdocFileId, (token) => {
+                        if (!token) {
+                            this.setState({
+                                url: '',
+                                html: '',
+                                uriObj:{},
+                                error: new Error('加载失败！')
+                            })
+                            return;
+                        }
+                        let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
+                        let html = bimfileHtml(cmdString, token, this.state.show);
+                        this.setState({
+                            url: url,
+                            html: html,
+                            uriObj:{html:html},
+                            error: null
+                        });
+                    })
+            }else{
+                //存在本地离线包
+                let dm = new DirManager();
+                let appUrl = dm.getAppUrl(fileId);
+                console.log('url==========:'+appUrl);
                 this.setState({
-                    url: '',
+                    url: appUrl,
                     html: '',
-                    error: new Error('加载失败！')
-                })
-                return;
+                    uriObj:{uri:appUrl},
+                    error: null
+                });
             }
-            let url = AppConfig.BASE_URL_BLUEPRINT_TOKEN + token + `&show=${this.state.show}`;
-            // let html = bimfileHtml(cmdString, token, this.state.show);
-            // console.log(html);
-            this.setState({
-                url: url,
-                // html: html,
-                error: null
-            });
+        }).catch((error)=>{
+            console.log(error);
         })
     }
 
@@ -314,7 +355,8 @@ class RelevantModelPage extends Component {
      * 显示质检单模型历史选择信息
      */
     getElements = () => {
-        API.getElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
+        if(OfflineStateUtil.isOnLine()){
+            API.getElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
             .then(responseData => {
                 if (responseData && responseData.data) {
                     let len = responseData.data.length;
@@ -324,6 +366,23 @@ class RelevantModelPage extends Component {
                     })
                 }
             }).catch(error => { })
+        }else{
+                let bm = new BasicInfoManager();
+                bm.getQualityModelHistory(this.state.relevantModel.gdocFileId).then((data)=>{
+                    console.log('获取质量模型历史-------------------------------------')
+                console.log(data)
+                    if(data ){
+                        let len = data.length;
+                    this.mQualityPositionMap = [];
+                    data.map((item) => {
+                        this.getModelElementProperty(item, len, "quality");
+                    })
+                    }
+                }).catch(error =>{
+                    console.log(error)
+                })
+            }
+        
     }
 
     getModelElementProperty = (item, len, type) => {
@@ -377,7 +436,8 @@ class RelevantModelPage extends Component {
      * 显示材设单模型历史选择信息
      */
     getEquipmentList = () => {
-        API.getQualityFacilityAcceptanceElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
+        if(OfflineStateUtil.isOnLine()){
+            API.getQualityFacilityAcceptanceElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
             .then(responseData => {
                 if (responseData && responseData.data) {
                     let len = responseData.data.length;
@@ -395,6 +455,31 @@ class RelevantModelPage extends Component {
                     })
                 }
             }).catch(error => { })
+        }else{
+            let bm = new BasicInfoManager();
+            bm.getEquipmentModelHistory(this.state.relevantModel.gdocFileId).then((data)=>{
+                console.log('获取材设模型历史-------------------------------------')
+                console.log(data)
+                if(data ){
+                    let len = data.length;
+                    for (let i = 0; i < len; i++) {
+                        let item = data[i];
+                        if (item.committed) {
+                            item.qcState = item.qualified ? API.QC_STATE_STANDARD : API.QC_STATE_NOT_STANDARD;
+                        } else {
+                            item.qcState = API.QC_STATE_EDIT;
+                        }
+                    }
+                    this.mEquipmentPositionMap = [];
+                    data.map((item) => {
+                        this.getModelElementProperty(item, len, "equipment");
+                    })
+                }
+            }).catch(error =>{
+                console.log(error)
+            })
+        }
+        
     }
 
     cancelPosition = () => {
@@ -561,9 +646,18 @@ class RelevantModelPage extends Component {
         // console.log(event); //打印出event中属性
     }
 
+    //下载模型离线文件
+    _downloadModel=()=>{
+        // let fileId = '1353300132668256'; relevantModel.gdocFileId
+        let fileId = this.state.relevantModel.gdocFileId; 
+        let downloadModel = new DownloadModel();
+        downloadModel.getToken(fileId);
+    }
+
     //渲染
     render() {
-
+        console.log('render');
+        console.log(this.state.uriObj);
         if (this.state.error) {
             return <NoDataView text="加载失败" />
         }
@@ -571,7 +665,7 @@ class RelevantModelPage extends Component {
         if (this.state.url == '') {
             return <LoadingView />;
         }
-
+        let fileId = this.state.relevantModel.gdocFileId;
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
@@ -584,17 +678,16 @@ class RelevantModelPage extends Component {
                         javaScriptEnabled={true}
                         domStorageEnabled={false}
                         onMessage={(e) => this.onMessage(e)}
-                        // injectedJavaScript={cmdString}
+                        injectedJavaScript={cmdString}
                         onLoadEnd={() => { }}
-                        source={{ html: this.state.html }}
+                        // source={{ uri: 'http://10.11.241.143:8080/15001340978_5200001_5200153/bimModel/cb5328e7a9ac4f67b4f9c9eb63c02be4/1e5345adce95ee35646148ffaa6194e1/app.html' }}
+                        // source={{ html: this.state.html }}
+                        source={this.state.uriObj}
                         style={{ width: deviceWidth, height: deviceHeight }}>
                     </WebView>
-                    {
-                        this.state.showCreateNoticeView ? (
-                            this.createNoticeView()
-                        ) : (null)
-                    }
-
+                    <DownloadView fileId={fileId} downloadModel = {this._downloadModel}/>
+                       
+                    
                 </View>
             </SafeAreaView>
         );
@@ -606,7 +699,7 @@ class RelevantModelPage extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 0
+        paddingTop: 0,
     }
 });
 

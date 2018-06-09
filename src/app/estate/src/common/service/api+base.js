@@ -32,7 +32,7 @@ function parseHTML(response) {
 }
 
 function checkStatus(response) {
-    console.log(">>>返回数据："+JSON.stringify(response));
+    // console.log(">>>返回数据："+JSON.stringify(response));
     if (response.status >= 200 && response.status < 300) {
         return response;
     } else if (response.status === 403) {
@@ -102,7 +102,7 @@ export function requestJSON(url, options) {
     if (ops.isSpecial) {
         return fetch(BASE_URL + url, ops);
     }
-    console.log(">>>请求信息："+BASE_URL + url);
+    // console.log(">>>请求信息："+BASE_URL + url);
     return fetch(BASE_URL + url, ops)
         .then(checkStatus)
         .then(parseJSON)

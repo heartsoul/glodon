@@ -2,6 +2,8 @@ import * as API from 'app-api'
 import * as types from '../constants/equipmentInfoTypes'
 import { Toast } from 'antd-mobile';
 import * as UpdateDataAction from "./updateDataAction";
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
+import BasicInfoManager from '../../offline/manager/BasicInfoManager'
 
 /**
  * 是否有过修改
@@ -291,10 +293,19 @@ function loadingToast() {
 }
 
 function equipmentAcceptanceCompanies(dispatch) {
-    API.equipmentAcceptanceCompanies(storage.loadProject())
-        .then(responseData => {
-            dispatch(_loadingAcceptanceCompaniesSuccess(responseData.data));
-        }).catch(error => { })
+    if(OfflineStateUtil.isOnLine()){
+        API.equipmentAcceptanceCompanies(storage.loadProject())
+            .then(responseData => {
+                dispatch(_loadingAcceptanceCompaniesSuccess(responseData.data));
+            }).catch(error => { })
+    }else{
+        let bm = new BasicInfoManager();
+        bm.equipmentAcceptanceCompanies().then(data =>{
+            dispatch(_loadingAcceptanceCompaniesSuccess(data));
+        }).catch(err => {
+            console.log(err)
+        });
+    }
 }
 
 

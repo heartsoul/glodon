@@ -122,7 +122,10 @@ export default class extends React.Component {
     if(page == CONSTANTS.PAGE_INNDX_MINE) {
       return ({
         title:'',
-        // header: null,
+        headerRight:(<BarItems.RightBarItem imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_my_message_white.png')} navigation={this.props.navigation}
+        onPress={(navigation) => {}} />),
+        headerLeft:(<BarItems.LeftBarItem imageStyle={{width:22,height:22}} imageSource={require('app-images/icon_drawer_setting.png')} navigation={this.props.navigation}
+        onPress={(navigation) => this.props.navigation.navigate("SettingPage")} />),
       })
     }
     return ({

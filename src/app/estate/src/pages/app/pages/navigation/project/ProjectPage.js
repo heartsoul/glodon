@@ -56,7 +56,20 @@ class ProjectPage extends Component {
             </View>
         );
     }
+
+    //获取当前项目最新版本
+    _getlatestVersion = (projectId)=>{
+        API.getModelLatestVersion(projectId).then((responseData) => {
+            let latestVersion = responseData.data.data.versionId;
+            storage.projectIdVersionId = latestVersion;
+            storage.setLatestVersionId(projectId,latestVersion);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     _itemClick = (item, index) => {
+        this._getlatestVersion(item.value.id);//获取项目最新版本
         let navigator = this.props.navigation;
         let prevTenant = storage.loadLastTenant();
         let newTenant = this.props.navigation.state.params.tenantId;
@@ -75,6 +88,7 @@ class ProjectPage extends Component {
             });
 
         }, newTenant);
+
     }
 
     _separator = () => {
@@ -133,6 +147,7 @@ class ProjectPage extends Component {
                             refreshing={this.props.isLoading}
                         />
                     }
+                    keyExtractor={(item, index) => index+''}
                 />
             </View>
         );
@@ -146,6 +161,7 @@ class ProjectPage extends Component {
                 <FlatList style={{ width: width }}
                     data={this.props.dataArray}
                     renderItem={this.renderItemSimpleView}
+                    keyExtractor={(item, index) => index+''}
                 />
             </View>
         );

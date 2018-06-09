@@ -15,26 +15,19 @@ import {
 import ModelItemView from './ModelItemView'
 import * as CheckVersionManager from "./../../pages/me/checkVerson";
 
-import { NavigationPage, SegmentedBar, Label, SegmentedView, Button, Carousel } from 'app-3rd/teaset';
-
+import { NavigationPage, SegmentedBar, Label, SegmentedView, Button, Carousel } from 'teaset';
 import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
+
+import {ToOnlineDialog} from 'app-components';
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
+import BasiInfoManager from '../../../offline/manager/BasicInfoManager'
+import * as API from "app-api";
 var { width, height } = Dimensions.get("window");
-class MainTabTitle extends Component {
-    render = () => {
-        const {text,activeTitleStyle,titleStyle,select} = this.props;
-        return <View style={{alignItems:'center'}}>
-            <Text style={select ? activeTitleStyle : titleStyle} >{text}</Text>
-            <View style={{width:40,height:4,marginTop:4}}>
-               {select ? <Image style={{width:40,height:4,position:'absolute',top:6.5}} resizeMode='contain' source={require('app-images/icon_main_page_lab_line.png')}/> : null}
-            </View>
-        </View>
-    }
-} 
 export default class extends Component {
     constructor() {
         super();
-        this.state = {
-            activeIndex : 0
+        this.state={
+            isShowOfflineHint:true,
         }
     };
 
@@ -82,40 +75,44 @@ export default class extends Component {
 
 
     componentDidMount() {
+        //每次进来都刷新一遍基础数据
+        let bm = new BasiInfoManager();
+        bm.downloadBasicInfo((p,t)=>{
+            if(t==p){
+                setTimeout(()=>{
+                    bm.close();
+                }, 1000)
+                
+            }
+        });
         //请求数据
         // this.fetchData();
-        // console.log("componentDidMount")
+        // console.log("----------------------------componentDidMount")
         CheckVersionManager.checkVersion("auto")
-        this.scrollToPage(0);
     }
     fetchData = () => {
         this.render()
     }
     scrollToPage = (index) => {
-        // console.log("index ============= " + index)
-        
-        this.setState({
-            activeIndex:index
-        }, () => {
-            if (!this.refs.carousel) {
-                return;
-            }
-            // index = index == 0 ? 1:0;
-            if (this.refs.carousel && parseInt('' + index) != parseInt('' + this.refs.carousel.activeIndex)) {
-                this.refs.carousel.scrollToPage(index);
-            }
-        });
+        console.log("index ============= " + index)
+        index = (index == 0) ? 1 : 0;//Carousel 默认显示最后一张，所以交换一下索引
+        if (!this.refs.carousel) {
+            return;
+        }
+        if (this.refs.carousel && parseInt('' + index) != parseInt('' + this.refs.carousel.activeIndex)) {
+            this.refs.carousel.scrollToPage(index);
+        }
     }
 
     renderCarouselView = (qShow, eShow) => {
         if (qShow && eShow) {
             return (
-                <Carousel cycle={false} startIndex={0} ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
-                    <View style={styles.topImageView}>
-                        <Image style={[styles.topImage, { width: 27, height: 74 }]} source={require('app-images/icon_main_page_top_quality.png')} />
-                    </View>
+                <Carousel startIndex={1} ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
                     <View style={styles.topImageView}>
                         <Image style={[styles.topImage, { width: 121, height: 87 }]} source={require('app-images/icon_main_page_top_equipment.png')} />
+                    </View>
+                    <View style={styles.topImageView}>
+                        <Image style={[styles.topImage, { width: 27, height: 74 }]} source={require('app-images/icon_main_page_top_quality.png')} />
                     </View>
                 </Carousel>
             );
@@ -140,6 +137,52 @@ export default class extends Component {
 
     }
 
+    //关闭离线标记
+    closeOfflineHintView =()=>{
+        this.setState((pre)=>{
+            return {isShowOfflineHint:false}
+        })
+    }
+
+    //获取当前项目最新版本
+    _getlatestVersion = (projectId)=>{
+        API.getModelLatestVersion(projectId).then((responseData) => {
+            let latestVersion = responseData.data.data.versionId;
+            storage.projectIdVersionId = latestVersion;
+            storage.setLatestVersionId(projectId,latestVersion);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+    
+    //离线标记
+    offlineHintView =()=>{
+        //如果是离线模式 需要显示离线标记
+        let isOnline = OfflineStateUtil.isOnLine();
+        if(isOnline){
+            //在线情况  刷一遍最新版本信息
+            this._getlatestVersion(storage.loadProject())
+            return null;
+        }
+        if(!this.state.isShowOfflineHint){
+            return null;
+        }
+        return (
+                <View style={{ width:347,height:26,flexDirection:'row',alignItems:'center',alignSelf:'center'}}>
+                    <Image source={require('app-images/icon_offline_main_page_blue.png')} style={{width:12,height:10,marginLeft:10}}/>
+                    <TouchableHighlight onPress={()=>{ToOnlineDialog.show(this.props.navigation);}}>
+                        <Text style={{color:'#666666',fontSize:12,marginLeft:6}} >当前网络不畅，已进入</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight style={{flex:1}} onPress={()=>{ToOnlineDialog.show(this.props.navigation);}}>
+                        <Text style={{color:'#00baf3',fontSize:12}} >离线模式</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={()=>{this.closeOfflineHintView();}}>
+                        <Image source={require('app-images/icon_category_item_close.png')} style={{width:7,height:7,marginRight:10,marginLeft:5}}/>
+                    </TouchableHighlight>
+                </View>
+        );
+    }
+
     render() {
         let qShow = AuthorityManager.isQualityBrowser()
         let eShow = AuthorityManager.isEquipmentBrowser()
@@ -153,20 +196,23 @@ export default class extends Component {
         }
 
         return (
-            <SafeAreaView style={{width:'100%',height:'100%'}}>
+            <SafeAreaView>
             <ScrollView style={{ backgroundColor: '#f8f8f8' }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{ backgroundColor: '#ffffff' }}>
+                {
+                    this.offlineHintView()
+                }
                 <ImageBackground style={{ height: 203, marginTop: 44, backgroundColor: '#ffffff' }} resizeMode='contain' source={require('app-images/icon_main_page_top_bg.png')}>
                     {
                         this.renderCarouselView(qShow, eShow)
                     }
                 </ImageBackground>
                 </View>
-                <SegmentedView indicatorType='none' barStyle={{left:width/2-104,width:208,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 300, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
+                <SegmentedView barStyle={{left:width/2-100,width:200,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 300, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
                     {
                         qShow ?
-                            <SegmentedView.Sheet title={<MainTabTitle key="item0" text="质量检查" select={this.state.activeIndex == 0} activeTitleStyle={{color:'#00baf3',fontWeight:'bold',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />}  style={{backgroundColor: '#f8f8f8'}}>
+                            <SegmentedView.Sheet title='质量检查' activeTitleStyle={{fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} style={{backgroundColor: '#f8f8f8'}}>
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
@@ -185,7 +231,7 @@ export default class extends Component {
                     }
                     {
                         eShow ?
-                            <SegmentedView.Sheet title={<MainTabTitle key="item0" text="材设进场" select={this.state.activeIndex == 1} activeTitleStyle={{color:'#00baf3',fontWeight:'bold',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />} style={{backgroundColor: '#f8f8f8'}}>
+                            <SegmentedView.Sheet title='材设进场' activeTitleStyle={{fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} style={{backgroundColor: '#f8f8f8'}}>
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
