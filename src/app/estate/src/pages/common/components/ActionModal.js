@@ -59,7 +59,7 @@ export default class ActionModal extends Component {
         let titleView = null;
         let messageView = null;
         let actionsView = null;
-        let lineView = null;
+        let bCenter = false;
         
         if(message) {
             messageView = (
@@ -76,6 +76,7 @@ export default class ActionModal extends Component {
                 titleView = (
                     <Text style={styles.style_title_center}>{title}</Text>
                 );
+                bCenter = true;
             }
            
         }
@@ -97,7 +98,7 @@ export default class ActionModal extends Component {
                 }
                 </View>);
         
-        return (<View style={styles.style_alertView}>
+        return (<View style={bCenter?styles.style_alertView_center:styles.style_alertView}>
             {titleView}
             {messageView}
             {actionsView}
@@ -141,13 +142,26 @@ const styles = StyleSheet.create({
         marginLeft: 40,
         marginRight: 40,
     },
+    style_alertView_center: {
+        minHeight:60,
+        minWidth:180,
+        backgroundColor:'white',
+        borderRadius: 6,
+        marginTop: 40,
+        marginBottom: 40,
+        marginLeft: 40,
+        marginRight: 40,
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        alignContent: 'center',
+    },
     style_actionsView: {
         minHeight:44,
         width:'100%',
         marginTop: 22,
         borderTopColor:'#e7e7e7',
         borderTopWidth:0.5,
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     style_actionView: {
         minHeight:44,
@@ -181,8 +195,7 @@ const styles = StyleSheet.create({
         color: '#000000',
         fontSize:16,
         marginTop: 10,
-        width:'100%',
-        textAlign:'center'
+        lineHeight:20,
     },
     style_message: {
         paddingLeft:20,
@@ -191,6 +204,7 @@ const styles = StyleSheet.create({
         fontSize:14,
         marginTop: 6,
         marginBottom: 10,
+        lineHeight:18,
     },
     style_cancel: {
         color: '#000000',

@@ -15,10 +15,10 @@ import {
 import ModelItemView from './ModelItemView'
 import * as CheckVersionManager from "./../../pages/me/checkVerson";
 
-import { NavigationPage, SegmentedBar, Label, SegmentedView, Button, Carousel } from 'teaset';
+import { SegmentedView, Carousel } from 'app-3rd/teaset';
 import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
 
-import {ToOnlineDialog} from 'app-components';
+import {ActionModal} from 'app-components';
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 import BasiInfoManager from '../../../offline/manager/BasicInfoManager'
 import * as API from "app-api";
@@ -170,10 +170,20 @@ export default class extends Component {
         return (
                 <View style={{ width:347,height:26,flexDirection:'row',alignItems:'center',alignSelf:'center'}}>
                     <Image source={require('app-images/icon_offline_main_page_blue.png')} style={{width:12,height:10,marginLeft:10}}/>
-                    <TouchableHighlight onPress={()=>{ToOnlineDialog.show(this.props.navigation);}}>
+                    <TouchableHighlight onPress={()=>{
+                        ActionModal.alertConfirm('当前操作环境为网络模式，网络不畅，要进入离线模式吗？',null,{},{text:'离线模式',onPress:()=>{
+                            OfflineStateUtil.toOffLine();
+                            this.forceUpdate();
+                        }})
+                    }}>
                         <Text style={{color:'#666666',fontSize:12,marginLeft:6}} >当前网络不畅，已进入</Text>
                     </TouchableHighlight>
-                    <TouchableHighlight style={{flex:1}} onPress={()=>{ToOnlineDialog.show(this.props.navigation);}}>
+                    <TouchableHighlight style={{flex:1}} onPress={()=>{
+                        ActionModal.alertConfirm('当前操作环境为离',null,{},{text:'网络模式',onPress:()=>{
+                            OfflineStateUtil.toOnLine();
+                            this.forceUpdate();
+                        }})
+                    }}>
                         <Text style={{color:'#00baf3',fontSize:12}} >离线模式</Text>
                     </TouchableHighlight>
                     <TouchableHighlight onPress={()=>{this.closeOfflineHintView();}}>
