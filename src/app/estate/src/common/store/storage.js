@@ -273,6 +273,10 @@ export default class GLDStorage extends BaseStorage {
         actionRights[key] = value;
         this.setItem(__KEY_actionRights + userId(), actionRights);
     }
+    // 获取根控制器
+    getRootNavigation() {
+        return this.homeNavigation;
+    }
 
     // 到登录页面
     gotoLogin = (navigation) => {
@@ -397,6 +401,7 @@ export default class GLDStorage extends BaseStorage {
         navigator.pop(params);
     }
 
+    
     //质量管理相关state
     //模型图纸选择后新建页面回调
     bimFileChooseCallback = (bimFile) => { }
@@ -434,6 +439,26 @@ export default class GLDStorage extends BaseStorage {
         let state = this.getItem(__KEY_offlineState);
         return state;
     }
+
+    //保存当前项目的最新版本id
+    setLatestVersionId = (projectId,versionId) =>{
+        this.setItem(__KEY_latestVersionId + userId()+projectId,versionId);
+    }
+    //获取当前项目的最新版本id
+    getLatestVersionId = (projectId)=>{
+        let versionId = this.getItem(__KEY_latestVersionId + userId()+projectId);
+        return versionId;
+    }
+
+    //保存模型id与离线包名对应关系
+    setModelFileIdOfflineName = (fileId,offlineName) =>{
+        this.setItem(__KEY_modelFileIdOfflineName + userId()+fileId,offlineName);
+    }
+    //获取模型id与离线包名对应关系
+    getModelFileIdOfflineName = (fileId)=>{
+        let versionId = this.getItem(__KEY_modelFileIdOfflineName + userId()+fileId);
+        return versionId;
+    }
     
 }
 
@@ -461,3 +486,5 @@ const __KEY_actionRights = "actionRights"; // 当前所有权限
 const __KEY_searchHistory = "searchHistory"; // 单据搜索历史
 const __KEY_autoDownload = "autoDownload"; // Android版本更新自动下载
 const __KEY_offlineState = "offlineState"; // Android版本更新自动下载
+const __KEY_latestVersionId = "latestVersionId"; // 当前项目最新版本
+const __KEY_modelFileIdOfflineName = "modelFileIdOfflineName"; // 模型id与离线包名的对应关系存储

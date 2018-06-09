@@ -122,6 +122,9 @@ const screens = {
     QualityRecordPage:{
         screen:GLD.QualityRecordPage
     },
+    SharePage:{
+        screen:GLD.SharePage
+    },
 };
 
 const options = () => {
