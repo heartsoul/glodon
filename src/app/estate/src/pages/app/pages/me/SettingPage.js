@@ -22,7 +22,7 @@ import * as USERAPI from "app-api";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
-import {BimSwitch as Switch, ToCleanDialog, ActionButton} from 'app-components';
+import { BimSwitch as Switch, ToCleanDialog, ActionButton, ImageChooserView } from 'app-components';
 
 var { width, height } = Dimensions.get("window");
 
@@ -70,6 +70,16 @@ class SettingPage extends Component {
         let navigator = this.props.navigation;
         storage.pushNext(navigator, "FeedbackPage")
     }
+    _share = () => {
+        // let navigator = this.props.navigation;
+        // storage.pushNext(navigator, "SharePage")
+        if(Platform.OS === 'web') {
+            Toast.info('敬请期待', 3);
+            return;
+        }
+        ImageChooserView.shareApp();
+    }
+
     _password = () => {
         let navigator = this.props.navigation;
         storage.pushNext(navigator, "ForgotPage", { title: '重置密码' })
@@ -113,12 +123,12 @@ class SettingPage extends Component {
         }, 10000);
     }
 
-   
+
     render() {
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-               <ScrollView style={{paddingBottom:60}}>
+                <ScrollView style={{ paddingBottom: 60 }}>
                     <SettingItemView icon={require('app-images/icon_setting_change_password.png')} title='修改密码' onPress={() => this._password()} ></SettingItemView>
                     <View style={styles.settingItemLine}></View>
                     {
@@ -137,6 +147,8 @@ class SettingPage extends Component {
                     <View style={styles.settingItemLine}></View>
                     <SettingItemView icon={require('app-images/icon_setting_about_us.png')} title='关于我们' onPress={() => this._about()} ></SettingItemView>
                     <View style={{ height: 10 }}></View>
+                    <SettingItemView icon={require('app-images/icon_setting_share.png')} title='分享应用' onPress={() => this._share()} ></SettingItemView>
+                    <View style={{ height: 10 }}></View>
 
                     <CleanItemView />
                     <View style={styles.settingItemLine}></View>
@@ -150,15 +162,15 @@ class SettingPage extends Component {
                         ) : null
                     }
 
-                                        <View style={{marginTop:40,marginLeft:20,marginRight:20}}><ActionButton
-            onPress={()=>{this._logout()}}
-            isDisabled={()=>{return false}}
-            text="退出登录"
-          >
-          </ActionButton> 
-          </View>
+                    <View style={{ marginTop: 40, marginLeft: 20, marginRight: 20 }}><ActionButton
+                        onPress={() => { this._logout() }}
+                        isDisabled={() => { return false }}
+                        text="退出登录"
+                    >
+                    </ActionButton>
+                    </View>
 
-                    <View style={{height:60,width:'100%'}} />
+                    <View style={{ height: 60, width: '100%' }} />
                 </ScrollView>
             </SafeAreaView>
         );
@@ -166,28 +178,28 @@ class SettingPage extends Component {
 
 }
 
-class CleanItemView extends React.Component{
-    constructor(){
+class CleanItemView extends React.Component {
+    constructor() {
         super();
-        this.state ={
-            text:'232M'
+        this.state = {
+            text: '232M'
         }
     }
     //清除缓存的回调方法
-    _cleanCallBack = ()=>{
+    _cleanCallBack = () => {
         console.log('ret');
-        this.setState(()=>{
+        this.setState(() => {
             return {
-                text:''
+                text: ''
             };
         })
     }
-    render(){
+    render() {
         return (
-            <TouchableOpacity onPress={()=>{ToCleanDialog.show(this._cleanCallBack);}} >
-                <View style={{backgroundColor:'#ffffff',height:50,flexDirection:'row',alignItems:'center'}}>
-                    <Text style={{color:'#6f899b',fontSize:14,marginLeft:11,flex:1}}>清除本地缓存</Text>
-                    <Text style={{color:'#7594a9',fontSize:14,marginRight:18}}>{this.state.text}</Text>
+            <TouchableOpacity onPress={() => { ToCleanDialog.show(this._cleanCallBack); }} >
+                <View style={{ backgroundColor: '#ffffff', height: 50, flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ color: '#6f899b', fontSize: 14, marginLeft: 11, flex: 1 }}>清除本地缓存</Text>
+                    <Text style={{ color: '#7594a9', fontSize: 14, marginRight: 18 }}>{this.state.text}</Text>
                 </View>
             </TouchableOpacity>
         );

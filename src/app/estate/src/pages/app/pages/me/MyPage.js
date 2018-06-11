@@ -82,14 +82,13 @@ export default class extends Component {
           <View style={styles.mineItemLine}></View>
           <MineItemView icon={require('app-images/icon_my_subscribe.png')} title='我的订阅' onPress={() => this._gotoSubscribe()}></MineItemView>
           <View style={styles.mineItemLine}></View>
-
-
-          <View style={{ marginTop: 40, marginLeft: 20, marginRight: 20 }}><ActionButton
-            onPress={(event) => { this._gotoTenantChoose() }}
-            isDisabled={() => { return false }}
-            text="切换项目"
-          >
-          </ActionButton>
+        
+          <View style={{ marginTop: 40, marginLeft: 20, marginRight: 20 }}>
+            <ActionButton
+              onPress={(event) => { this._gotoTenantChoose() }}
+              isDisabled={() => { return false }}
+              text="切换项目"
+            />
           </View>
 
           <View style={{ height: 35, width: '100%' }} />
@@ -103,7 +102,7 @@ class MineItemView extends Component {
 
   render() {
     return (
-      <TouchableOpacity onPress={() => { this.props.onPress() }}>
+      <TouchableOpacity onPress={(event) => { event.preventDefault(); this.props.onPress() }}>
         <View style={styles.mineItemContainer}>
           <Image source={this.props.icon} style={styles.mineItemIcon} />
           <Text style={styles.mineItemText}>{this.props.title} </Text>

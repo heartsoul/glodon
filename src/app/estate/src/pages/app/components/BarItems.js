@@ -46,7 +46,7 @@ export class LeftBarItem extends React.Component {
       event.preventDefault();
       this.props.onPress(this.props.navigation)
     } ;
-    return <TouchableOpacity delayPressIn={false} style={styles.actionView} onPress={onPress} >
+    return <TouchableOpacity style={styles.actionView} onPress={onPress} >
       <View style={styles.spliteItem} />
       <View style={styles.spliteItem} />
       {

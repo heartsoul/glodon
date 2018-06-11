@@ -1,4 +1,4 @@
-import RNFS from 'react-native-fs';
+import RNFS from 'app-3rd/react-native-fs';
 import { Platform,} from 'react-native';
 import ModelServer from '../model/ServerModule';
 /**
@@ -20,6 +20,7 @@ export default class DirManager  {
     //根目录
      getRootPath =()=>{
         try {
+            if(!RNFS) return '/bimcache';
             let dirPath=((Platform.OS === 'ios') ? RNFS.MainBundlePath+'/bimcache' : '/sdcard/bimcache');
             return dirPath;
         } catch (error) {
