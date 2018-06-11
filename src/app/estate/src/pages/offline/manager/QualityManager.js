@@ -1,6 +1,7 @@
 
 import * as API from 'app-api';
 import QualityHandler from '../handler/QualityHandler';
+import DownloadImg from '../model/DownloadImg';
 
 let handler = null;
 let projectId ;
@@ -99,7 +100,7 @@ export default class QualityManager {
 
     
 
-    //下载基础信息
+    //下载单据信息
     download = (startTime=0,endTime=0,qcState='') => {
         //保存到数据库
         _saveToDb=(key,value,qcState,qualityCheckpointId,updateTime,submitState,errorMsg)=>{
@@ -124,7 +125,7 @@ export default class QualityManager {
         // {"全部","待提交",  "待整改",      "待复查",    "已检查",    "已复查",  "已延迟",  "已验收"};
         // {"",   "staged",  "unrectified","","inspected","reviewed","delayed","accepted"};
         function _getQualityList(){
-            return API.getQualityInspectionAll(projectId, '', 0,15).then(
+            return API.getQualityInspectionAll(projectId, '', 0,30).then(
                 (responseData) => {
                     // console.log('质检单下载列表 start--------------');
                     // console.log(responseData); //
@@ -144,8 +145,8 @@ export default class QualityManager {
                 // console.log('质检单详情 start--------------');
                 // console.log(responseData); //
                 // console.log('质检单详情 end--------------');
-                if(responseData && responseData.data && responseData.data.inspectionInfo){
-                    return responseData.data.inspectionInfo;
+                if(responseData && responseData.data ){
+                    return responseData.data;
                 }
                 return null;
             }).catch(err => {
@@ -196,10 +197,9 @@ export default class QualityManager {
             });
         }
 
-
+        let detailArr = []//保存详情
         async function download(){
             let qualityList = await _getQualityList();
-            console.log('-----------------------size='+qualityList.length)
             if(qualityList && qualityList.length>0){
                 // {"全部","待提交",  "待整改",      "待复查",    "已检查",    "已复查",  "已延迟",  "已验收"};
                 // {"",   "staged",  "unrectified","unreviewed","inspected","reviewed","delayed","accepted"};
@@ -221,6 +221,7 @@ export default class QualityManager {
 
                     //全部   都有详情
                     let detail = await _getQualityDetail(item.id);
+                    detailArr = [...detailArr,detail]
                     //待提交   编辑信息
                     let editInfo = null;
                     if(item.qcState =='staged'){
@@ -258,7 +259,34 @@ export default class QualityManager {
         }
         
          download().then((a)=>{
-            console.log("basicinfo  download over-----------------------------------------");
+             //缓存图片
+            if(detailArr && detailArr.length>0){
+                let arr = [];
+                for (item of detailArr){
+                    // console.log('===================================')
+                    // console.log(item.inspectionInfo.files)
+                    let files = item.inspectionInfo.files;
+                    if(files && files.length>0){
+                        for (f of files){
+                            arr = [...arr,{fileId:f.objectId,url:f.url}]
+                        }
+                        
+                    }
+                    if(item.progressInfos && item.progressInfos.length>0){
+                        for(p of item.progressInfos){
+                            let files = p.files;
+                            if(files && files.length>0){
+                                for (f of files){
+                                    arr = [...arr,{fileId:f.objectId,url:f.url}]
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                let dli = new DownloadImg();
+                dli.download(arr);
+            }
 
         },(e)=>{
             console.log(e);

@@ -10,6 +10,8 @@ import { StatusActionButton, ActionModal } from "app-components"
 var { width, height } = Dimensions.get("window");
 
 import { BimFileEntry, AuthorityManager } from "app-entry";
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
+import DirManager from '../../../offline/manager/DirManager';
 
 const projectImage = require("app-images/icon_default_image.png");
 const projectTimeImage = require("app-images/icon_time_black.png");
@@ -90,14 +92,24 @@ export default class QualityListCell extends PureComponent {
     componentWillMount = () => {
         let item = this.props.item;
         if (item &&(!item.image) && item.value.files && item.value.files.length > 0 && item.value.files[0].objectId) {
-            API.getBimFileUrlThumbnail(item.value.files[0].objectId,(success,url)=>{
-                if(success) {
-                    item.image = {uri:url};
-                    this.setState({
-                        image:{uri:url}
-                    })
-                }
-            });
+            if(!OfflineStateUtil.isOnLine()){
+                let dm = new DirManager();
+                let path  = 'file://'+dm.getImagePathById(item.value.files[0].objectId);
+                item.image = {uri:path};
+                        this.setState({
+                            image:{uri:path}
+                        })
+            }else{
+                API.getBimFileUrlThumbnail(item.value.files[0].objectId,(success,url)=>{
+                    if(success) {
+                        item.image = {uri:url};
+                        this.setState({
+                            image:{uri:url}
+                        })
+                    }
+                });
+            }
+            
         }
         
     }
@@ -106,6 +118,7 @@ export default class QualityListCell extends PureComponent {
         // if (item.value.files && item.value.files.length > 0 && item.value.files[0].url && item.value.files[0].url.length>1) {
         //     imageSource = { uri: item.value.files[0].url };
         // }
+        // console.log(JSON.stringify(this.state.image))
         return (<Image source={this.state.image} style={[styles.image]} />)
     }
     // 提交 & 删除
