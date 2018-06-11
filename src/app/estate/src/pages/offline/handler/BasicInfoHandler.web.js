@@ -1,24 +1,36 @@
-
 import BaseHandler from './BaseHandler';
 
-import Realm from 'realm'
+//基础信息包
 
-//项目列表 
+import Realm from 'app-3rd/realm'
 
 let name = null;
 let realm = null;
-export default class UserInfoHandler extends BaseHandler{
+export default class BasicInfoHandler extends BaseHandler{
 
-//获取数据库表后缀名称
-getTableName = ()=>{
-    let userInfo = storage.loadUserInfo();
-    let account = userInfo.username;//手机号
-    return account;
-}
+   
+    //获取数据库表后缀名称
+    getTableName = ()=>{
+        let userInfo = storage.loadUserInfo();
+        // let userObj = JSON.parse(userInfo);
+        let account = userInfo.username;//手机号
+
+        let tenantInfo = storage.loadTenantInfo();
+        let tenantObj = JSON.parse(tenantInfo);
+        let tenantId = tenantObj.value.tenantId;//租户的id
+
+        let projectId = storage.loadProject();//项目的id
+        let targetPath = `${account}${tenantId}${projectId}`;
+        return targetPath;
+    }
+
+    close=()=>{
+        realm.close();
+    }
 
     constructor(){
         super();
-        name = 'user'+this.getTableName();
+        name = 'basic'+this.getTableName();
         console.log('name='+name)
         const basicSchema = {
             name:name,
@@ -31,9 +43,6 @@ getTableName = ()=>{
         realm = new Realm({schema:[basicSchema]});
     }
 
-    close=()=>{
-        realm.close();
-    }
     
     insert=(key,value)=>{
         if(!this.isEmpty(value)){

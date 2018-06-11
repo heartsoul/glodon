@@ -1,8 +1,7 @@
 import BaseHandler from './BaseHandler';
 
 //基础信息包
-
-const Realm = require('realm');
+import Realm from 'realm'
 
 let name = null;
 let realm = null;

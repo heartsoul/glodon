@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import RNFS from 'react-native-fs';
+import RNFS from 'app-3rd/react-native-fs';
 import { Platform,} from 'react-native';
 
   import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive';

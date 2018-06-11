@@ -1,13 +1,13 @@
 
 import BaseHandler from './BaseHandler';
 
-import Realm from 'realm'
+import Realm from 'app-3rd/realm'
 
-//材设清单下载条件
+//质检清单下载条件
 
 let name = null;
 let realm = null;
-export default class EquipmentConditionHandler extends BaseHandler{
+export default class QualityConditionHandler extends BaseHandler{
 
 //获取数据库表后缀名称
 getTableName = ()=>{
@@ -26,7 +26,7 @@ getTableName = ()=>{
 
     constructor(){
         super();
-        name = 'equipmentcondition'+this.getTableName();
+        name = 'qualitycondition'+this.getTableName();
         console.log('name='+name)
         const basicSchema = {
             name:name,

@@ -2,7 +2,7 @@ import BaseHandler from './BaseHandler';
 
 //质量  列表 详情 编辑信息表
 
-import Realm from 'realm'
+import Realm from 'app-3rd/realm'
 
 let name = null;
 let realm = null;

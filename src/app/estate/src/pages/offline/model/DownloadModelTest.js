@@ -6,11 +6,7 @@ import {
     View,
     TouchableOpacity,
   } from 'react-native';
-  import DownloadModel from './DownloadModel';
-  import DirManager from '../manager/DirManager';
-  import ModelManager from '../manager/ModelManager';
-  import RNFS from 'react-native-fs';
-  import { ToOfflineOverLay } from 'app-components';
+  import RNFS from 'app-3rd/react-native-fs';import RNFS from 'app-3rd/react-native-fs';
   import { ToOnlineOverLay } from 'app-components';
   export function getA(){
         return RNFS.exists('sdcard/bimcache').then((result)=>{

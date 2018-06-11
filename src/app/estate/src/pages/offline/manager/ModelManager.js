@@ -1,5 +1,4 @@
-import RNFS from 'react-native-fs';
-import { Platform,} from 'react-native';
+import RNFS from 'app-3rd/react-native-fs';
 import DirManager from '../manager/DirManager';
 /**
  * 模型相关处理

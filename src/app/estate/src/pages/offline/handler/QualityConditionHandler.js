@@ -1,7 +1,7 @@
 
 import BaseHandler from './BaseHandler';
 
-const Realm = require('realm');
+import Realm from 'realm'
 
 //质检清单下载条件
 

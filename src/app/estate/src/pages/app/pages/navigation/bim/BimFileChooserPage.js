@@ -5,13 +5,11 @@
 import * as API from "app-api";
 import { BarItems, LoadingView } from "app-components";
 import React, { Component } from "react";
-import { ActivityIndicator, Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Breadcrumb from "./../../../components/Breadcrumb";
 import * as BimFileEntry from "./BimFileEntry";
 import BimFileFilterView from "./BimFileFilterView";
-import * as PageType from "./PageTypes";
 import ThumbnailImage from "./ThumbnailImage";
-import BimFileNavigationView from "./bimFileNavigationView";
 import { NoDataView} from 'app-components';
 import { SERVER_TYPE } from 'common-module';
 import {DeviceEventEmitter} from 'app-3rd/index';

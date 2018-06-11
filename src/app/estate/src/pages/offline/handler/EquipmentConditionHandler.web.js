@@ -1,7 +1,7 @@
 
 import BaseHandler from './BaseHandler';
 
-import Realm from 'realm'
+import Realm from 'app-3rd/realm'
 
 //材设清单下载条件
 

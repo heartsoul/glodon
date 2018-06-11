@@ -1,6 +1,5 @@
-import RNFS from 'react-native-fs';
+import RNFS from 'app-3rd/react-native-fs';
 import { Platform,} from 'react-native';
-import NativeModules from '../model/ServerModule';
 import ModelServer from '../model/ServerModule';
 /**
  * 目录处理

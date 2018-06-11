@@ -11,6 +11,7 @@ import {
     ImageBackground,
     Dimensions,
     SafeAreaView,
+    Platform,
 } from 'react-native';
 import ModelItemView from './ModelItemView'
 import * as CheckVersionManager from "./../../pages/me/checkVerson";
@@ -75,6 +76,10 @@ export default class extends Component {
 
 
     componentDidMount() {
+        CheckVersionManager.checkVersion("auto")
+        if(Platform.OS === 'web') {
+            return;
+        }
         //每次进来都刷新一遍基础数据
         let bm = new BasiInfoManager();
         bm.downloadBasicInfo((p,t)=>{
@@ -85,10 +90,7 @@ export default class extends Component {
                 
             }
         });
-        //请求数据
-        // this.fetchData();
-        // console.log("----------------------------componentDidMount")
-        CheckVersionManager.checkVersion("auto")
+
     }
     fetchData = () => {
         this.render()
