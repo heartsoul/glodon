@@ -30,15 +30,23 @@ export default class extends Component {
         this.state={
             isShowOfflineHint:true,
         }
+        this.bPress = false;
     };
 
-    _loadQualityForm = () => {
+    _loadQualityForm = (event) => {
+        if(this.bPress) {
+            return;
+        }
+        this.bPress = true;
         let navigator = this.props.navigation;
         storage.projectIdVersionId = '';
         storage.fileId = '';
         storage.bimToken = {};
 
         storage.pushNext(navigator, "QualityMainPage", { top: true })
+        setTimeout(() => {
+            this.bPress = false;
+          }, 2000);
 
     }
     _loadEquipmentForm = () => {
@@ -73,7 +81,6 @@ export default class extends Component {
         let navigator = this.props.navigation;
         BimFileEntry.chooseQualityModelFromHome(navigator);
     }
-
 
     componentDidMount() {
         CheckVersionManager.checkVersion("auto")
@@ -208,7 +215,7 @@ export default class extends Component {
         }
 
         return (
-            <SafeAreaView>
+            <SafeAreaView style={{width:'100%',height:'100%'}}>
             <ScrollView style={{ backgroundColor: '#f8f8f8' }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{ backgroundColor: '#ffffff' }}>
@@ -228,7 +235,7 @@ export default class extends Component {
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={() => this._loadQualityForm()} title="质检清单" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => this._loadQualityForm(event)} title="质检清单" />
                                     <View style={styles.spliteItem} />
                                     <ModelItemView source={require('app-images/icon_main_pager_blueprint.png')} onPress={() => this._fileChoose()} title="图纸" />
                                     <View style={styles.spliteItem} />

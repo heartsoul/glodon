@@ -6,7 +6,6 @@ import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 import * as API from 'app-api'
 import { BarItems } from "app-components"
 import * as GLD from '../pages'
-import BaseStorage from '../../common/store/store+base'
 import configureStore, { history } from '../store/ConfigureStore'
 import { Toast } from 'antd-mobile';
 import NetWorkUtil from '../../common/utils/NetWorkUtil'
