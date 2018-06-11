@@ -9,7 +9,6 @@ import {
     SafeAreaView,
     ScrollView,
     StyleSheet,
-    TouchableHighlight,
     Dimensions,
     NativeModules,
     Platform,
@@ -19,13 +18,11 @@ var PM = NativeModules.GLDPhotoManager;
 import { connect } from 'react-redux' // 引入connect函数
 import * as loginAction from '../../../login/actions/loginAction' // 导入action方法 
 
-import { ListRow } from "app-3rd/teaset";
 import * as USERAPI from "app-api";
-import WideButton from "./../../components/WideButton";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
-import {BimSwitch as Switch,ToCleanDialog} from 'app-components';
+import {BimSwitch as Switch, ToCleanDialog, ActionButton} from 'app-components';
 
 var { width, height } = Dimensions.get("window");
 
@@ -80,7 +77,7 @@ class SettingPage extends Component {
 
     _logout = () => {
         storage.logout();
-        Toast.loading('退出中...', 0, null, true);
+        Toast.loading('退出中...', 10);
         let overTime = false;
         USERAPI.loginOut().then(() => {
 
@@ -92,6 +89,7 @@ class SettingPage extends Component {
             if (overTime) {
                 return;
             }
+            Toast.hide();
             overTime = true;
             let navigator = this.props.navigation;
             storage.gotoLogin(navigator);
@@ -151,7 +149,15 @@ class SettingPage extends Component {
                             </View>
                         ) : null
                     }
-                    <WideButton text="退出登录" onClick={this._logout} style={{ marginTop: 40, width: 297, alignSelf: "center" }} />
+
+                                        <View style={{marginTop:40,marginLeft:20,marginRight:20}}><ActionButton
+            onPress={()=>{this._logout()}}
+            isDisabled={()=>{return false}}
+            text="退出登录"
+          >
+          </ActionButton> 
+          </View>
+
                     <View style={{height:60,width:'100%'}} />
                 </ScrollView>
             </SafeAreaView>

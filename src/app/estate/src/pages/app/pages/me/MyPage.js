@@ -5,15 +5,13 @@ import {
   Text,
   View,
   StatusBar,
-  Button,
   SafeAreaView,
   ScrollView,
   Image,
   TouchableOpacity,
   Dimensions
 } from 'react-native';
-import {ToOnlineDialog} from 'app-components';
-import WideButton from "../../../app/components/WideButton";
+import {ActionButton} from 'app-components';
 
 var { width, height } = Dimensions.get("window");
 var name = '' ;
@@ -30,13 +28,21 @@ export default class extends Component {
       if(storage.loadUserInfo().accountInfo){
         name = storage.loadUserInfo().accountInfo.name;
     }
+    this.bPress = false;
   };
   
 //切换项目
   _gotoTenantChoose = () => {
+    if(this.bPress) {
+      return;
+    }
+    this.bPress = true;
     let navigator = this.props.navigation;
     storage.projectIdVersionId = '';
-    storage.pushNext(navigator, "ChangeProjectPage")
+    storage.pushNext(navigator, "ChangeProjectPage");
+    setTimeout(() => {
+      this.bPress = false;
+    }, 2000);
     // storage.pushNext(navigator, "TenantPage",{change:true})
     // ToOnlineDialog.show(this.props.navigation);
   }
@@ -77,7 +83,14 @@ export default class extends Component {
           <MineItemView icon = {require('app-images/icon_my_subscribe.png')} title='我的订阅' onPress={()=>this._gotoSubscribe()}></MineItemView>
           <View style={styles.mineItemLine}></View>
             
-          <WideButton text="切换项目" onClick={()=>{this._gotoTenantChoose();}} style={{ marginTop: 50, width: 297,height:40, alignSelf: "center" }} />
+
+<View style={{marginTop:40,marginLeft:20,marginRight:20}}><ActionButton
+            onPress={(event)=>{this._gotoTenantChoose()}}
+            isDisabled={()=>{return false}}
+            text="切换项目"
+          >
+          </ActionButton> 
+</View>
             
           <View style={{height:35,width:'100%'}} />
         </ScrollView>

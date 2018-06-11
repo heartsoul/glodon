@@ -6,22 +6,17 @@ import {
     ScrollView,
     Text,
     Image,
-    FlatList,
     StyleSheet,
     TouchableHighlight,
     TouchableOpacity,
     BackHandler,
 } from 'react-native';
 
-import { connect } from 'react-redux' // 引入connect函数
 import * as API from 'app-api';
 import * as AuthorityManager from "../navigation/project/AuthorityManager";
 import { Dimensions } from 'react-native';
-import App from '../../../containers/App';
-import { BarItems, LoadingView } from "app-components";
-// import UserInfoManager from '../../../offline/manager/UserInfoManager'
-
-// let userInfoManager = null;
+import { BarItems } from "app-components";
+import { FlatList } from "app-3rd"
 //切换项目主页
 export default class ChangeProjectPage extends Component {
 
@@ -39,17 +34,9 @@ export default class ChangeProjectPage extends Component {
             tenantName: '',
             dataList: [],
         };
-
-        //获取当前选中的项目
-        storage.loadProject((retVal) => {
-            this.selectProjectId = Number.parseInt(retVal);
-        });
-
-        storage.loadTenantInfo((retVal) => {
-            this.trueTenantStr = retVal;
-        });
-
-        // userInfoManager = new UserInfoManager();
+        let projectId = storage.loadProject();
+        this.selectProjectId = Number.parseInt(projectId);
+        this.trueTenantStr = storage.loadTenantInfo();
     }
 
    
@@ -110,49 +97,24 @@ export default class ChangeProjectPage extends Component {
 
     //获取当前租户及项目
     _refreshData() {
-        storage.loadTenantInfo((retVal) => {
-            // JSON.parse(retVal)   retVal={"key":"A09","value":{"id":5200286,"admin":true,"tenantId":5200052,"tenantName":"11301919"}}
-            let tenant = JSON.parse(retVal);
-            this.setState(preState => {
-                return { ...preState, tenantName: tenant.value.tenantName };
-            });
-
-        })
-        this._getProjects();
+        let retVal = storage.loadTenantInfo();
+       // JSON.parse(retVal)   retVal={"key":"A09","value":{"id":5200286,"admin":true,"tenantId":5200052,"tenantName":"11301919"}}
+       let tenant = JSON.parse(retVal);
+       this.setState({tenantName: tenant.value.tenantName});
+       this._getProjects(tenant.value.tenantId);
     }
 
     //获取当前租户的所有项目列表
-    _getProjects() {
-        API.getProjects(0, 1).then(
+    _getProjects(tenantId) {
+        API.getProjects(0, 10000000,tenantId).then(
             (responseData) => {
-                let last = responseData.last;
-                if (last) {
-                    this.setState(preState => {
-                        return { ...preState, dataList: responseData.data.content }
-                    });
-                } else {
-                    API.getProjects(0, responseData.data.totalElements).then(
-                        (responseData) => {
-                            this.setState(preState => {
-                                return { ...preState, dataList: responseData.data.content }
-                            });
-
-                        }
-                    ).catch(err => {
-                        console.log(err);
-                    });
-                }
-
+                this.setState(preState => {
+                    return { ...preState, dataList: responseData.data.content }
+                });
             }
         ).catch(err => {
             console.log(err);
         });
-
-        // userInfoManager.getProjectList().then((list)=>{
-        //     this.setState(preState => {
-        //         return { ...preState, dataList:list }
-        //     });
-        // })
     }
 
 

@@ -184,14 +184,14 @@ export default class GLDStorage extends BaseStorage {
         return this.loadItem(__KEY_guide, '0', null) == '1';
     }
 
-    // 保存当前租户  保存的是id
+    // 保存当前租户  保存的是id, 不是tenantId
     saveTenant = (tenant) => {
         if(!tenant) {
             tanant = '0';
         }
         this.setItem(__KEY_currentTenant + userId(),""+tenant);
     }
-    // 获取当前租户id
+    // 获取当前租户id， 不是tenantId
     loadTenant = (retFun) => {
 
         return this.loadItem(__KEY_currentTenant + userId(), '0', retFun)
@@ -205,7 +205,6 @@ export default class GLDStorage extends BaseStorage {
     loadTenantInfo = (retFun) => {
         return this.loadItem(__KEY_currentTenantInfo + userId(), '0', retFun)
     }
-
     // 保存上一租户  保存的是整个租户信息
     saveLastTenantInfo = (tenant) => {
         this.setItem(__KEY_lastTenantInfo + userId(), "" + tenant);
@@ -225,14 +224,14 @@ export default class GLDStorage extends BaseStorage {
     }
 
 
-    // 保存当前租户
+    // 保存当前租户 是tenantId，不是id
     saveLastTenant = (tenant) => {
         if(!tenant) {
             tanant = '0';
         }
         this.setItem(__KEY_lastTenant + userId(), "" + tenant);
     }
-    // 获取上一租户
+    // 获取上一租户 是tenantId，不是id
     loadLastTenant = () => {
         return this.loadItem(__KEY_lastTenant + userId(), '0', null)
     }

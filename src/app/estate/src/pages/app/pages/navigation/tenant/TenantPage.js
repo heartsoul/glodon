@@ -192,6 +192,8 @@ export default class tenantList extends Component {
                 userInfoManager.downloadProjectInfo(item.value.tenantId+'');//切换租户后，获取租户下所有项目信息  保存到本地数据库
                 storage.pushNext(navigator, "ProjectPage", { tenantId: item.value.tenantId, id: item.value.id })
             } else {
+                storage.saveTenant(item.value.id);
+                storage.saveLastTenant(item.value.tenantId);
                 storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
                 storage.saveTenantInfoRefresh('1');//设置刷新
                 userInfoManager.downloadProjectInfo(item.value.tenantId+'');//切换租户后，获取租户下所有项目信息  保存到本地数据库
