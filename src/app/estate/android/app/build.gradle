@@ -114,11 +114,23 @@ def isWindows() {
  * @return
  */
 def getIP() {
-    def ip = "127.0.0.1";
+    def ip = "";
     if (isWindows()) {
         ip = "${projectDir}/ip.bat".execute().text.trim()
     }
-    return "\"${ip}\""
+    return ip
+}
+/**
+ * 获取RN调试host
+ * @return
+ */
+def getDebugHost() {
+    def ip = getIP();
+    def host = "";
+    if (ip.length() > 0) {
+        host = "\"${ip}:9999\""
+    }
+    return host;
 }
 
 android {
@@ -126,13 +138,12 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
-        applicationId "com.estate"
+        applicationId "com.glodon.bim"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
         versionName "1.1.0"
-
-//        buildConfigField("String", "LOCAL_IP", getIP())
+        buildConfigField("String", "DEBUG_HOST", getDebugHost())
 
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -147,15 +158,27 @@ android {
         }
     }
     signingConfigs {
-        release {
+        debug {
             storeFile file('keystoretest.jks')
             storePassword "11111111a#"
             keyAlias "keystoretest"
             keyPassword "11111111a#"
         }
+        release {
+            storeFile file('release.jks')
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -204,9 +227,9 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
     compile 'com.google.code.gson:gson:2.8.2'
-    compile 'com.umeng.sdk:common:1.5.3'
+    compile 'com.umeng.sdk:common:1.5.1'
     compile 'com.umeng.sdk:utdid:1.1.5.3'
-    compile 'com.umeng.sdk:share-core:6.9.2'
+    compile 'com.umeng.sdk:share-core:6.9.1'
     //    compile 'com.umeng.sdk:share-tool:6.9.2'
     compile 'com.umeng.sdk:shareboard-widget:6.9.2'
     implementation project(':react-native-fs')

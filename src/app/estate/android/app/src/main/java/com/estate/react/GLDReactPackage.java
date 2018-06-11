@@ -5,6 +5,7 @@ import com.estate.react.component.imageChoose.ImageChooserViewManager;
 import com.estate.react.module.CheckVersionModule;
 import com.estate.react.module.GLDPhotoManager;
 import com.estate.react.module.GLDRNBridgeModule;
+import com.estate.react.module.ShareModule;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -28,6 +29,7 @@ public class GLDReactPackage implements ReactPackage {
         modules.add(new GLDRNBridgeModule(reactContext));
         modules.add(new GLDPhotoManager(reactContext));
         modules.add(new CheckVersionModule(reactContext));
+        modules.add(new ShareModule(reactContext));
 
         return modules;
     }

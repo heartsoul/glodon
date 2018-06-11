@@ -28,10 +28,10 @@ export function share(text = '', icon='', link='', title='', platform=0, complet
     NativeModules.UMShareModule.share(text,icon,link,title,platform,completion);
 }
 export function shareboard(text = '', icon='', link='', title='', platforms=[0,1,2,3,4,5,6,9], completion=(a,b)=>{}) {
-    alert(NativeModules.UMShareModule)
-    alert(NativeModules.UMShareModule.shareboard)
-    alert(NativeModules.UMShareModule.share)
+    // alert(NativeModules.UMShareModule)
+    // alert(NativeModules.UMShareModule.shareboard)
+    // alert(NativeModules.UMShareModule.share)
     
-    // NativeModules.UMShareModule.shareboard(text,icon,link,title,platforms,completion);
+    NativeModules.UMShareModule.shareboard(text,icon,link,title,platforms,completion);
 }
 

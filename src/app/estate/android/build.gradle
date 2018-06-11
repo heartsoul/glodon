@@ -3,6 +3,7 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         google()
     }
     dependencies {
@@ -22,5 +23,16 @@ allprojects {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
         }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     }
+}
+
+ext {
+
+    ANDROID_SUPPORT_LIBRARY_VERSION = "26.0.2"
+
+    debug = [
+            DEBUG_PORT: "\"9999\"",
+
+    ]
 }
