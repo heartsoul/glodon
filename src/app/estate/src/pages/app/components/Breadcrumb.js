@@ -50,7 +50,7 @@ class Breadcrumb extends Component {
 
     renderNavItemView = ({ item, index }) => {
         return (
-            <TouchableOpacity activeOpacity={0.5} onPress={() => this._navItemClick(item, index)} >
+            <TouchableOpacity key={'Breadcrumb_'+index+'_'+item.fileId} activeOpacity={0.5} onPress={(event) =>{event.preventDefault(); this._navItemClick(item, index)}} >
                 <View style={styles.navContainer}>
                     <Text style={(index == this.props.data.length - 1) ? styles.lastNavName : styles.navName}> {item.name}</Text>
                     {
