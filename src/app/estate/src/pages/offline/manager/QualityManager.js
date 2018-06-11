@@ -36,18 +36,18 @@ export default class QualityManager {
     
 
     //获取质量列表 根据状态  页数   质检项目查询
-    getQualityList=(qcState,page,size,checkpointId='')=>{
-        let list = handler.queryList(qcState,page,size,checkpointId);
+    getQualityList=(qcState,page,size,checkpointId=0)=>{
+        let result = handler.queryList(qcState,page,size,checkpointId);
         return new Promise((resolve,reject)=>{
-            resolve(list);
+            resolve(result);
             
         });
     }
 
         
-    //获取质量详情，获取检查单编辑状态信息
+    //获取质量详情
     getQualityDetail=(id)=>{
-        let info = handler.query(key);
+        let info = handler.query(id);
         let obj = JSON.parse(info);
         return new Promise((resolve,reject)=>{
             resolve(obj.detail);
@@ -57,7 +57,7 @@ export default class QualityManager {
 
     //获取检查单编辑状态信息
     getQualityEdit=(id)=>{
-        let info = handler.query(key);
+        let info = handler.query(id);
         let obj = JSON.parse(info);
         return new Promise((resolve,reject)=>{
             resolve(obj.editInfo);
@@ -66,7 +66,7 @@ export default class QualityManager {
 
     //获取整改单编辑信息
     getRepairEditInfo=(id)=>{
-        let info = handler.query(key);
+        let info = handler.query(id);
         let obj = JSON.parse(info);
         return new Promise((resolve,reject)=>{
             resolve(obj.repairInfo);
@@ -76,7 +76,7 @@ export default class QualityManager {
 
     //获取复查单编辑信息
     getReviewEditInfo=(id)=>{
-        let info = handler.query(key);
+        let info = handler.query(id);
         let obj = JSON.parse(info);
         return new Promise((resolve,reject)=>{
             resolve(obj.reviewInfo);
@@ -111,7 +111,6 @@ export default class QualityManager {
         //          {"全部", "待提交",  "待整改",       "待复查",      "已检查",      "已复查",    "已延迟",  "已验收"};
         //          {"",     "staged", "unrectified",  "unreviewed",  "inspected",  "reviewed",  "delayed","accepted"};
         function _getQualityList(page,size){
-            console.log('projectId='+projectId)
             return API.getQualityInspectionAllByDate(projectId, qcState,page,size,startTime,endTime).then(
                 (responseData) => {
                 // { data:
@@ -130,11 +129,11 @@ export default class QualityManager {
                 //       numberOfElements: 0,
                 //       size: 30,
                 //       number: 0 } }
-                    console.log('质检单下载列表 start--------------');
-                    console.log(responseData); //
-                    console.log('质检单下载列表 end--------------');
+                    // console.log('质检单下载列表 start--------------');
+                    // console.log(responseData); //
+                    // console.log('质检单下载列表 end--------------');
                     if(responseData && responseData.data && responseData.data.content && responseData.data.content.length>0){
-                        return {list:responseData.data.content,totalPages:totalPages};
+                        return {list:responseData.data.content,totalPages:responseData.data.totalPages};
                     }
                     return null;
                 }
@@ -178,7 +177,7 @@ export default class QualityManager {
                 // console.log(responseData); //
                 // console.log('整改单编辑信息 end--------------');
                 if(responseData && responseData.data){
-                    return responseData.data;
+                    return responseData;
                 }
                 return null;
             }).catch(err => {
@@ -192,7 +191,7 @@ export default class QualityManager {
                 // console.log(responseData); //
                 // console.log('复查单编辑信息 end--------------');
                 if(responseData && responseData.data){
-                    return responseData.data;
+                    return responseData;
                 }
                 return null;
             }).catch(err => {
@@ -206,7 +205,7 @@ export default class QualityManager {
             let size = 30;
             let data = await _getQualityList(page,size);
             let qualityList = [];
-            if(data && data.content && data.content.length>0){
+            if(data && data.list && data.list.length>0){
                 qualityList = [...qualityList,...data.list];
                 totalPages = data.totalPages;
                 page++;
@@ -279,6 +278,7 @@ export default class QualityManager {
         }
         
          download().then((a)=>{
+             console.log('==============downloadOver=====================')
              //缓存图片
             if(detailArr && detailArr.length>0){
                 let arr = [];

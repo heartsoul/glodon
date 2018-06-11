@@ -9,6 +9,7 @@ import {SegmentedView,Badge} from 'app-3rd/teaset';
 import * as API from "app-api";
 import QualityListView from "./qualityListView";
 import { AuthorityManager } from "app-entry";
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 
 var { width, height } = Dimensions.get("window");
 class QualityListTitle extends Component {
@@ -62,32 +63,34 @@ export default class qualityList extends PureComponent {
     }
     _keyExtractor = (item, index) => index;
     _loadInspectionSummary = () =>{
-        let qShow = AuthorityManager.isQualityBrowser()
-        if (!qShow) {
-            return;
-        }
-        let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
-        let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointName');
-        API.getQualityInspectionSummary(storage.loadProject(),qualityCheckpointId,qualityCheckpointName).then(
-            (responseData) => {
-                // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
-                let items = responseData.data;
-                let qualityBadgeItem = [0,0,0,0,0,0,0,0,0,0];
-                items.map((item, index) => {
-                    let find = API.CLASSIFY_STATES_SUMMARY.indexOf(item.qcState);
-                    if (find > 0) {
-                        qualityBadgeItem[find] = item.count;
-                    }
-                });
-                console.log(JSON.stringify(qualityBadgeItem));
-                 this.setState({
-                        qualityBadge:{item:qualityBadgeItem},
-                    })
-                // 获取数量数据
+        if(OfflineStateUtil.isOnLine()){
+            let qShow = AuthorityManager.isQualityBrowser()
+            if (!qShow) {
+                return;
             }
-        ).catch(err=>{
+            let qualityCheckpointId = this.props.navigation.getParam('qualityCheckpointId');
+            let qualityCheckpointName = this.props.navigation.getParam('qualityCheckpointName');
+            API.getQualityInspectionSummary(storage.loadProject(),qualityCheckpointId,qualityCheckpointName).then(
+                (responseData) => {
+                    // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
+                    let items = responseData.data;
+                    let qualityBadgeItem = [0,0,0,0,0,0,0,0,0,0];
+                    items.map((item, index) => {
+                        let find = API.CLASSIFY_STATES_SUMMARY.indexOf(item.qcState);
+                        if (find > 0) {
+                            qualityBadgeItem[find] = item.count;
+                        }
+                    });
+                    console.log(JSON.stringify(qualityBadgeItem));
+                    this.setState({
+                            qualityBadge:{item:qualityBadgeItem},
+                        })
+                    // 获取数量数据
+                }
+            ).catch(err=>{
 
-        });
+            });
+        }
     }
     componentDidMount = () => {
         //请求数据

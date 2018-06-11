@@ -78,28 +78,21 @@ export default class BasicInfoHandler extends BaseHandler{
             qcStateList = infos;
         }
         let checkList = null;
-        if(qualityCheckpointId){
+        if(qualityCheckpointId!='0'){
             checkList = qcStateList.filtered(`qualityCheckpointId="${qualityCheckpointId}"`)
         }else{
             checkList = qcStateList;
         }
         let objList = checkList.slice(page*size,(page+1)*size);
-        let list = null;
+        let list = [];
         if(objList && objList.length>0){
             list = Array.from(objList, (item) => {
                 obj = JSON.parse(item.value)
                 return obj.item
             })
         }
-        // console.log('----------------------all-----------------------')
-        // console.log(list.length)
-        // let ret = [];
-        // for( let i=0;i<list.length;i++){
-        //     // ret[i] = JSON.parse(list[i].value);
-        //     // console.log(i+' '+list[i].key+' '+list[i].updateTime+' '+list[i].qualityCheckpointId+' '+list[i].qcState)
-        //     console.log(list[i])
-        // }
-        return list;
+        // 返回当前page的list  和总数
+        return {list:list,total:checkList.length};
     }
     
 }

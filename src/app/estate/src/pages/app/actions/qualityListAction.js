@@ -5,6 +5,8 @@ import * as searchTypes from "./../constants/searchTypes";
 
 import * as updateAction from './updateDataAction'
 import { BimFileEntry, AuthorityManager } from "app-entry";
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil';
+import OfflineManager from '../../offline/manager/OfflineManager';
 
 // 删除草稿
 export function deleteData(qcState, inspectId, inspectionType, qualityCheckpointId = 0, qualityCheckpointName = '') {
@@ -134,10 +136,74 @@ function __fetchData(qcState, page, dataMapIn, dispatch, qualityCheckpointId = 0
     if (page < 0) {
         page = 0;
     }
-    API.getQualityInspectionAll(storage.loadProject(), qcState, page, 20, qualityCheckpointId, qualityCheckpointName).then(
-        (responseData) => {
-            let data = responseData.data.content;
-            let hasMore = responseData.data.last == false;
+    let size = 20;
+    if(OfflineStateUtil.isOnLine()){
+        API.getQualityInspectionAll(storage.loadProject(), qcState, page, size, qualityCheckpointId, qualityCheckpointName).then(
+            (responseData) => {
+                let data = responseData.data.content;
+                let hasMore = responseData.data.last == false;
+                let dataBlob = [];
+                let dataMap = new Map();
+                let i = 0, j = 0;
+                let sectionLob = [];
+                if (page > 0 && dataMapIn) {
+                    dataMap = dataMapIn;
+                }
+                data.forEach(item => {
+                    item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
+                    item.index = i;
+                    item.qcStateShow = "" + API.toQcStateShow(item.qcState);
+                    if (item.files && item.files.size > 0) {
+                        item.url = item.files[0].url;
+                        // console.log(item.url);
+                    }
+                    let groupTime = item.showTime.substring(0, 10);
+                    let dataBlob = dataMap.get(groupTime);
+                    if (dataBlob == undefined) {
+                        dataBlob = [];
+                        dataMap.set(groupTime, dataBlob);
+                    }
+                    dataBlob.push({
+                        key: "" + item.id,
+                        value: item,
+                    });
+                    i++;
+                });
+                let ts = '';// new Date().getTime();
+                dataMap.forEach(function (value, key, map) {
+                    sectionLob.push({
+                        key: key+ts,
+                        data: value,
+                    });
+                });
+                dispatch(_loadSuccess(sectionLob, dataMap, qcState, page, hasMore, qualityCheckpointId, qualityCheckpointName));
+                data = null;
+                dataBlob = null;
+                sectionLob = null;
+                dataMap = null;
+            }
+        ).catch(error => {
+            dispatch(_loadError(error, qcState, page, qualityCheckpointId, qualityCheckpointName));
+        });
+    }else{
+        let qualityManager = OfflineManager.getQualityManager();
+        // console.log('qcState = '+qcState)
+        // console.log('page = '+page)
+        // console.log('size = '+size)
+        // console.log('qualityCheckpointId = '+qualityCheckpointId)
+        qualityManager.getQualityList(qcState,page,size,qualityCheckpointId).then((result)=>{
+            let total = result.total;
+            let data = result.list;
+            let hasMore = true;
+            if(data.length<size){
+                hasMore = false;
+            }else{
+                if(page*size+size==total){
+                    hasMore = false;
+                }else{
+                    hasMore = true;
+                }
+            }
             let dataBlob = [];
             let dataMap = new Map();
             let i = 0, j = 0;
@@ -177,10 +243,12 @@ function __fetchData(qcState, page, dataMapIn, dispatch, qualityCheckpointId = 0
             dataBlob = null;
             sectionLob = null;
             dataMap = null;
-        }
-    ).catch(error => {
-        dispatch(_loadError(error, qcState, page, qualityCheckpointId, qualityCheckpointName));
-    });
+            
+        }).catch(error => {
+            dispatch(_loadError(error, qcState, page, qualityCheckpointId, qualityCheckpointName));
+        });
+    }
+    
 
 }
 export function reset(qcState, qualityCheckpointId = 0, qualityCheckpointName = '') {
