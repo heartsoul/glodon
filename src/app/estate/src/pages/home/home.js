@@ -1,7 +1,6 @@
 import React from 'react';
-import { Button, View, Text, Image,TouchableOpacity,SafeAreaView,Platform} from 'react-native';
-import { withNavigation,StackNavigator, TabNavigator, TabBarBottom } from 'app-3rd/react-navigation'; // 1.0.0-beta.27
-import { TabView, Theme, BasePage, NavigationPage, TeaNavigator, TopView, Overlay, Label} from 'app-3rd/teaset'
+import {View, Image,SafeAreaView,Platform} from 'react-native';
+import { TabView, Theme} from 'app-3rd/teaset'
 //Theme.set(Theme.themes.black);
 import { BimFileEntry, AuthorityManager } from 'app-entry';
 import { BarItems } from "app-components";

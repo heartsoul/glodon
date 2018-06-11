@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, Button, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
-import { withNavigation } from 'app-3rd/react-navigation';
+import { StyleSheet } from 'react-native';
 import * as API from 'app-api'
 import { BarItems } from "app-components"
 import { BimFileEntry, AuthorityManager } from 'app-entry';

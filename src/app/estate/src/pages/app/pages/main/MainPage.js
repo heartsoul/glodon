@@ -235,13 +235,13 @@ export default class extends Component {
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => this._loadQualityForm(event)} title="质检清单" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => {event.preventDefault();this._loadQualityForm(event)}} title="质检清单" />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_blueprint.png')} onPress={() => this._fileChoose()} title="图纸" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_blueprint.png')} onPress={() => {event.preventDefault();this._fileChoose()}} title="图纸" />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_model.png')} onPress={() => this._projectChoose()} title="模型" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_model.png')} onPress={() => {event.preventDefault();this._projectChoose()}} title="模型" />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_module.png')} onPress={() => this._checkPointChoose()} title="质检项目" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_module.png')} onPress={() => {event.preventDefault();this._checkPointChoose()}} title="质检项目" />
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
                                 </View>
@@ -254,9 +254,9 @@ export default class extends Component {
                                 <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_csjc.png')} onPress={() => this._loadEquipmentForm()} title="材设清单" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_csjc.png')} onPress={() => {event.preventDefault();this._loadEquipmentForm()}} title="材设清单" />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_equipment_model.png')} onPress={() => this._moduleChoose()} title="模型预览" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_equipment_model.png')} onPress={() =>{event.preventDefault(); this._moduleChoose()}} title="模型预览" />
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
                                 </View>

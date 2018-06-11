@@ -67,7 +67,7 @@ export default class EquipmentListCell extends PureComponent {
         let renderLine = bToolbar ? (<View style={{height:1, backgroundColor:'#fafafa'}}></View>) : null
         let hightlightData = this.searchHighlightData(this.props.keywords,item.value.facilityName);
         return (
-            <TouchableOpacity style={[styles.containerView,]} activeOpacity={0.5} onPress={() => { this._toDetail(item) }}>
+            <TouchableOpacity style={[styles.containerView,]} activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this._toDetail(item) }}>
                 <View style={[styles.contentHeaderView]}>
                     <Image source={projectTimeImage} style={styles.imageTime} />
                     <Text style={styles.contentTime}>进场日期：{API.formatUnixtimestampSimple(item.value.approachDate)}</Text>

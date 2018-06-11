@@ -90,10 +90,10 @@ class EquipmentInfoItemTextInput extends React.Component {
                 </View>
 
             {
-                Platform.OS === 'ios' ?(<TouchableOpacity ref='clearButton' style={[styles.rightAction,(this.state.dValue && this.state.dValue.length > 0 && this.state.focus) ? {} : {'display':'none'}]} activeOpacity={0.5} onPress={(event) => { this.onClear(event); }}>
+                Platform.OS === 'ios' ?(<TouchableOpacity ref='clearButton' style={[styles.rightAction,(this.state.dValue && this.state.dValue.length > 0 && this.state.focus) ? {} : {'display':'none'}]} activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this.onClear(event); }}>
                 <Image source={clearImage} style={styles.inputClear} />
                 </TouchableOpacity> ) : (<View style={styles.rightAction}>
-                <TouchableOpacity ref='clearButton' style={[(this.state.dValue && this.state.dValue.length > 0 && this.state.focus) ? {} : {'display':'none'}]} activeOpacity={0.5} onPress={(event) => { this.onClear(event); }}>
+                <TouchableOpacity ref='clearButton' style={[(this.state.dValue && this.state.dValue.length > 0 && this.state.focus) ? {} : {'display':'none'}]} activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this.onClear(event); }}>
                     <Image source={clearImage} style={styles.inputClear} />
                 </TouchableOpacity>
                </View>)
@@ -111,7 +111,7 @@ class EquipmentInfoItemTextInput extends React.Component {
                 <View style={styles.contentInputView}>
                     <TextInputWithData defaultValue={content} style={styles.textInput} returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none'></TextInputWithData>
                 </View>
-                <TouchableOpacity style={[styles.rightAction, {}]} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                <TouchableOpacity style={[styles.rightAction, {}]} activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this.onClick(event) }}>
                     <Image source={rightImage} style={styles.infoMark} />
                 </TouchableOpacity>
             </View>
@@ -162,7 +162,7 @@ export default class EquipmentInfoItem extends React.Component {
                 <View style={styles.contentInputView}>
                     <TextInputWithData defaultValue={content} style={styles.textInput} returnKeyType="next" underlineColorAndroid={"transparent"} autoCorrect={false} autoCapitalize='none'></TextInputWithData>
                 </View>
-                <TouchableOpacity style={[styles.rightAction, {}]} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                <TouchableOpacity style={[styles.rightAction, {}]} activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this.onClick(event) }}>
                     <Image source={rightImage} style={styles.infoMark} />
                 </TouchableOpacity>
             </View>
@@ -192,7 +192,7 @@ export default class EquipmentInfoItem extends React.Component {
                 <View style={styles.contentView}>
                     <Text style={styles.content}>{this.props.content}</Text>
                 </View>
-                <TouchableOpacity style={styles.rightAction} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                <TouchableOpacity style={styles.rightAction} activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this.onClick(event) }}>
                     <Image source={rightImage} style={styles.infoMark} />
                 </TouchableOpacity>
             </View>
@@ -216,10 +216,10 @@ export default class EquipmentInfoItem extends React.Component {
                 <View style={styles.titleView}>
                     <Text style={[styles.leftTitle, this.props.leftTitleColor ? { color: this.props.leftTitleColor } : {}]}>{this.props.leftTitle}</Text>
                 </View>
-                <TouchableOpacity activeOpacity={0.5} style={{ flex: 1, marginLeft: 2}} onPress={(event) => { this.onClick(event) }}>
+                <TouchableOpacity activeOpacity={0.5} style={{ flex: 1, marginLeft: 2}} onPress={(event) => {event.preventDefault(); this.onClick(event) }}>
                     <Text style={[styles.content, { textAlignVertical:"center" }]}>{this.props.content}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                <TouchableOpacity activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this.onClick(event) }}>
                     <Image source={rightImage} style={styles.infoMark} />
                 </TouchableOpacity>
 
@@ -233,12 +233,12 @@ export default class EquipmentInfoItem extends React.Component {
                     <Text style={styles.leftTitle}>{this.props.leftTitle}</Text>
                 </View>
                 <View style={styles.contentView}>
-                    <TouchableOpacity style={{ flex: 1 }} activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                    <TouchableOpacity style={{ flex: 1 }} activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this.onClick(event) }}>
                         <Text style={[styles.content, styles.link]}>{this.props.content}</Text>
                     </TouchableOpacity>
                     {
                         (this.props.onClick) ? (
-                            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+                            <TouchableOpacity activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this.onClick(event) }}>
                                 <Image source={rightImage} style={styles.infoMark} />
                             </TouchableOpacity>
                         ) : (null)
@@ -269,7 +269,7 @@ export default class EquipmentInfoItem extends React.Component {
         const { url } = this.props;
         return (
             <View style={styles.containerView} >
-                <TouchableOpacity activeOpacity={0.5} onPress={(event) => {
+                <TouchableOpacity activeOpacity={0.5} onPress={(event) => {event.preventDefault();
                     this.bigImage([url], 0);
                 }}>
                     <Image source={{ uri: url.url }} style={styles.imageMax} />
@@ -283,7 +283,7 @@ export default class EquipmentInfoItem extends React.Component {
                 {
                     this.props.urls.map((url, index) => {
                         return (
-                            <TouchableOpacity key={'xxx' + index} activeOpacity={0.5} onPress={(event) => { this.bigImage(this.props.urls, index); }}>
+                            <TouchableOpacity key={'xxx' + index} activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this.bigImage(this.props.urls, index); }}>
                                 <Image source={{ uri: url.url }} style={styles.imageNarmal} />
                             </TouchableOpacity>
                         );

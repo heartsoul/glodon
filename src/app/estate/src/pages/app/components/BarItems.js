@@ -42,7 +42,11 @@ RightBarItem.propTypes = {
 
 export class LeftBarItem extends React.Component {
   render = () => {
-    return <TouchableOpacity style={styles.actionView} onPress={() => this.props.onPress(this.props.navigation)} >
+    let onPress = (event) =>{
+      event.preventDefault();
+      this.props.onPress(this.props.navigation)
+    } ;
+    return <TouchableOpacity delayPressIn={false} style={styles.actionView} onPress={onPress} >
       <View style={styles.spliteItem} />
       <View style={styles.spliteItem} />
       {
@@ -99,7 +103,7 @@ export default class BarItems extends React.Component {
       onPress={(navigation) => this._onBackPress(navigation)} 
       imageSource={require('app-images/icon_back_white.png')} />
        {this.props.top === true ? 
-        <LeftBarItem imageStyle={styles.barItemImageMenu} navigation={this.props.navigation} onPress={(navigation) => this._onMenuPress(navigation)} imageSource={require('app-images/icon_quality_check_menu.png')} />
+        <LeftBarItem imageStyle={styles.barItemImageMenu} navigation={this.props.navigation} onPress={this._onMenuPress} imageSource={require('app-images/icon_quality_check_menu.png')} />
       : null}
     </View>
   }

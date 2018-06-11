@@ -165,7 +165,7 @@ export default class ChangeProjectPage extends Component {
         let width = Dimensions.get('window').width - 22;
         if (this.selectProjectId != item.id) {
             return (
-                <TouchableOpacity  activeOpacity={0.5} onPress={() => this._itemClick(item)}>
+                <TouchableOpacity  activeOpacity={0.5} onPress={(event) =>{event.preventDefault(); this._itemClick(item)}}>
                     <View style={styles.containerView}>
                         <Text style={styles.content}> {item.name}</Text>
                         <View style={{ marginLeft: 22, height: 1, width: width, backgroundColor: '#F7F7F7' }} />
@@ -174,7 +174,7 @@ export default class ChangeProjectPage extends Component {
             );
         } else {
             return (
-                <TouchableOpacity activeOpacity={0.5} onPress={() => this._itemClick(item)}>
+                <TouchableOpacity activeOpacity={0.5} onPress={(event) =>{event.preventDefault(); this._itemClick(item)}}>
                     <View style={styles.containerView}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                             <Text style={styles.contentSelected}> {item.name}</Text>
@@ -193,7 +193,7 @@ export default class ChangeProjectPage extends Component {
         let dataList = this.state.dataList;
         return (
             <ScrollView style={{ backgroundColor: '#F7F7F7' }} >
-                <TouchableOpacity onPress={this._tenantChoose}>
+                <TouchableOpacity onPress={(event)=>{event.preventDefault();this._tenantChoose}}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', height: 51 }}>
                         <Image source={require('app-images/icon_choose_project_item.png')} style={{ width: 30, height: 30, marginLeft: 20 }} />
                         <Text style={{ fontSize: 16, color: '#6F899B', marginLeft: 12, flex: 1 }} >{tenantName}</Text>
