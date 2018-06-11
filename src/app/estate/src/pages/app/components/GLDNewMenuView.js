@@ -1,16 +1,11 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { StyleSheet, SafeAreaView, Animated, View, ScrollView, Image, TouchableOpacity, Dimensions, NativeModules,Platform} from 'react-native'
+import {SafeAreaView, Animated, View, Image, TouchableOpacity, Platform} from 'react-native'
 
-import { Overlay, Label, Button, ActionSheet } from 'app-3rd/teaset';
-import { ActionModal } from "app-components"
-import * as API from 'app-api'
+import { Overlay, Label, ActionSheet } from 'app-3rd/teaset';
 
 import { AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
 import { ImageChooserView } from 'app-components';
-import PaneViewItem from './PaneViewItem'
-const { width, height } = Dimensions.get("window");
-const REF_PHOTO_SELECT = '___REF_PHOTO_SELECT___'
+
 const qualityCreateImage = require("app-images/icon_main_quality_create.png");
 const equipmentCreateImage = require("app-images/icon_main_equipment_create.png");
 const newImageLight = require('app-images/icon_category_create.png');
@@ -40,7 +35,7 @@ export default class GLDNewMenuView extends Component {
                         }]}>
                             {
                                 AuthorityManager.isQualityCreate() ? (
-                                    <TouchableOpacity onPress={() => { this.overlayView && this.overlayView.close(); GLDNewMenuView.openChoose(navigation); }} style={{ borderColor: '#8a6d3b' }}>
+                                    <TouchableOpacity onPress={(event) => {event.preventDefault();  this.overlayView && this.overlayView.close(); GLDNewMenuView.openChoose(navigation); }} style={{ borderColor: '#8a6d3b' }}>
                                         <Image style={{ width: 70, height: 70 }} source={qualityCreateImage} />
                                         <Label style={{ color: '#ffffff', fontSize: 14, marginTop: 10 }} text='新建质检单' />
                                     </TouchableOpacity>
@@ -49,7 +44,7 @@ export default class GLDNewMenuView extends Component {
                             <View style={[{ width: 55, height: 70 }, (AuthorityManager.isQualityCreate() && AuthorityManager.isEquipmentCreate()) ? {} : { display: 'none' }]} />
                             {
                                 AuthorityManager.isEquipmentCreate() ? (
-                                    <TouchableOpacity onPress={() => { this.overlayView && this.overlayView.close(); storage.pushNext(navigation, "EquipmentDetailPage"); }} style={{ borderColor: '#8a6d3b' }}>
+                                    <TouchableOpacity onPress={(event) => {event.preventDefault(); this.overlayView && this.overlayView.close(); storage.pushNext(navigation, "EquipmentDetailPage"); }} style={{ borderColor: '#8a6d3b' }}>
                                         <Image style={{ width: 70, height: 70 }} source={equipmentCreateImage} />
                                         <Label style={{ color: '#ffffff', fontSize: 14, marginTop: 10 }} text='新建材设单' />
                                     </TouchableOpacity>
@@ -66,7 +61,7 @@ export default class GLDNewMenuView extends Component {
                                 },
                             ],
                         }]} >
-                            <TouchableOpacity onPress={() => {
+                            <TouchableOpacity onPress={(event) => { event.preventDefault(); 
                                 Animated.timing(anim, { toValue: 0.0 }).start();
                                 setTimeout(() => {
                                     this.overlayView && this.overlayView.close();
@@ -95,7 +90,8 @@ export default class GLDNewMenuView extends Component {
         }
         let items = [
             {
-                title: '拍照', onPress: () => {
+                title: '拍照', onPress: (event) => {
+                    event && event.preventDefault(); 
                     ImageChooserView.takePhoto((files, success) => {
                         if (!success || files.length < 1) {
                             return;
@@ -116,8 +112,8 @@ export default class GLDNewMenuView extends Component {
                 }
             },
             {
-                title: '从手机相册选择', onPress: () => {
-
+                title: '从手机相册选择', onPress: (event) => {
+                    event && event.preventDefault(); 
                     ImageChooserView.pickerImages((files, success) => {
                         if (!success || files.length < 1) {
                             return;
@@ -138,7 +134,8 @@ export default class GLDNewMenuView extends Component {
                 }
             },
             {
-                title: '无需图片,直接新建', disabled: false, onPress: () => {
+                title: '无需图片,直接新建', disabled: false, onPress: (event) => {
+                    event && event.preventDefault(); 
                     if (finish) {
                         finish([]);
                         return;
