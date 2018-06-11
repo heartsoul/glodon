@@ -28,8 +28,8 @@ export default class extends React.Component {
       <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
       <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
       <View style={{flex:1,alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
-      {/* <Text style={styles.text}> 敬请期待 </Text> */}
-      <WebView bounces={false}
+      <Text style={styles.text}> BIM协同 v1.0 </Text>
+      {/* <WebView bounces={false}
                         ref="webview"
                         onNavigationStateChange={() => this.onNavigationStateChange}
                         scalesPageToFit={true}
@@ -38,7 +38,7 @@ export default class extends React.Component {
                         onLoadEnd={() => { }}
                         source={{ uri: 'http://10.1.71.84/' }}
                         style={{ width: deviceWidth, height: deviceHeight }}>
-                    </WebView>
+                    </WebView> */}
       </View>
       </SafeAreaView>
       
