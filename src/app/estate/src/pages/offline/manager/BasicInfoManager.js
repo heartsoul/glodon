@@ -11,8 +11,8 @@ let projectVersionId ;
  */
 export default class BasicInfoManager {
     
-    constructor(){
-        basicHandler = new BasicInfoHandler();
+    constructor(name,realm){
+        basicHandler = new BasicInfoHandler(name,realm);
         projectId = storage.loadProject();
         projectVersionId = storage.getLatestVersionId(projectId);
         // projectVersionId = storage.projectIdVersionId;
@@ -24,10 +24,7 @@ export default class BasicInfoManager {
          return new Promise((resolve,reject)=>{
             let infos = JSON.parse(info);
             resolve(infos);
-            // reject('bbb');
-            if(basicHandler!=null){
-                this.close();
-            }
+            
         });
      }
 
@@ -651,7 +648,4 @@ export default class BasicInfoManager {
         });
     }
 
-    close =()=>{
-        basicHandler.close();
-    }
 }

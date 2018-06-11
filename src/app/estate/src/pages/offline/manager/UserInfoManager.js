@@ -12,9 +12,6 @@ export default class UserInfoManager {
         userHandler = new UserInfoHandler();
     }
  
-    close =()=>{
-        userHandler.close();
-    }
      //从数据库获取
      _getFromDb=(key)=>{
          let info = userHandler.query(key);
@@ -52,7 +49,7 @@ export default class UserInfoManager {
                                     let tenantInfo = storage.loadTenantInfo();
                                     let tenantObj = JSON.parse(tenantInfo);
                                     let tenantId = tenantObj.value.tenantId;//租户的id
-                                    console.log('=====================setlist  '+tenantId)
+                                    // console.log('=====================setlist  '+tenantId)
                                     _saveToDb(tenantId+'',JSON.stringify(list))
                                     return list;
                                 }

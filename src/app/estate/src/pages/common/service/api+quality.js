@@ -104,6 +104,23 @@ export async function getQualityInspectionAll(projectId, qcState, page, size, qu
         method: 'GET',
     });
 }
+/**
+ * 获取质量列表  根据两个时间点截取
+ */
+export async function getQualityInspectionAllByDate(projectId, qcState, page, size, startDate, endDate) {
+    // return demoData(100);
+    let api = "/quality/" + projectId + "/qualityInspection/all";
+    // let filter = '';
+    // if (!(qualityCheckpointId === 0)) {
+    //     filter += '&qualityCheckpointId=' + qualityCheckpointId;
+    // }
+    // if (!(qualityCheckpointName === '')) {
+    //     filter += '&qualityCheckpointName=' + qualityCheckpointName;
+    // }
+    return requestJSON(api + '?sort=updateTime,desc&page=' + page + '&size=' + size + "&qcState=" + qcState + '&startDate=' + startDate + "&endDate=" + endDate, {
+        method: 'GET',
+    });
+}
 
 /**
  * 根据id查询检查历史详情

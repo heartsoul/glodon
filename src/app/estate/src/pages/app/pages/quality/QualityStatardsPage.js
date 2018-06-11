@@ -13,7 +13,7 @@ import { WebView } from 'app-3rd/index';
 import * as API from "app-api"
 import { BarItems, LoadingView } from "app-components";
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
-import BasicInfoManager from '../../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../../offline/manager/OfflineManager'
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
@@ -215,7 +215,7 @@ export default class QualityStatardsPage extends Component {
                 };
             });
         }else{
-            let bm = new BasicInfoManager();
+            let bm = OfflineManager.getBasicInfoManager();
             bm.getStandards(templateId).then(data =>{
                 let html = this.proccessData(data);
                 this.setState({

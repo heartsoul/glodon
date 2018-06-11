@@ -11,7 +11,7 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-import QualityConditionManager from '../../../offline/manager/QualityConditionManager'
+import OfflineManager from '../../../offline/manager/OfflineManager'
 let qualityConditionManager = null;
 var { width, height } = Dimensions.get("window");
 let clearFun=null;
@@ -20,6 +20,7 @@ export default class extends Component {
   
   constructor() {
     super();
+    qualityConditionManager = OfflineManager.getQualityConditionManager();
     this.state={
       datalist:[]
     }
@@ -35,7 +36,6 @@ export default class extends Component {
   static navigationOptions = {
     title: '质检清单',
     headerRight:<TouchableOpacity onPress={()=>{
-      qualityConditionManager = new QualityConditionManager();
       qualityConditionManager.deleteAll();
       qualityConditionManager.close();
       clearFun();
@@ -59,21 +59,38 @@ export default class extends Component {
       //   size:111,//下载的单据的条数
       // }
     setTimeout (()=>{
-      qualityConditionManager = new QualityConditionManager();
       let result = qualityConditionManager.getAllRecords();
       this.setState((pre)=>{
         return {
           datalist:result,
         }
       })
-      if(qualityConditionManager!=null){
-        qualityConditionManager.close();
-      }
     }, 500);
     
   }
 
-  
+  _getQcstateText(item){
+        // {"全部", "待提交",  "待整改",       "待复查",      "已检查",      "已复查",    "已延迟",  "已验收"};
+        // {"",     "staged", "unrectified",  "unreviewed",  "inspected",  "reviewed",  "delayed","accepted"};
+    switch(item){
+      case '':
+      return '全部';
+      case 'staged':
+      return '待提交';
+      case 'unrectified':
+      return '待整改';
+      case 'unreviewed':
+      return '待复查';
+      case 'inspected':
+      return '已检查';
+      case 'reviewed':
+      return '已复查';
+      case 'delayed':
+      return '已延迟';
+      case 'accepted':
+      return '已验收';
+    }
+  }
 
   _renderItem=(item)=>{
     return (
@@ -95,7 +112,7 @@ export default class extends Component {
               renderItem={({item})=>{
                     return (
                               <View style={{width:60,height:28,alignItems:'center',justifyContent:'center',marginLeft:19,borderRadius:2,backgroundColor:'#00baf3'}}>
-                                    <Text style={{color:'#ffffff',fontSize:12}}>{item}</Text>
+                                    <Text style={{color:'#ffffff',fontSize:12}}>{this._getQcstateText(item)}</Text>
                               </View>
                           );
                   }

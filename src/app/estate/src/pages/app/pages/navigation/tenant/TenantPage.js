@@ -71,7 +71,6 @@ export default class tenantList extends Component {
 
     componentWillUnmount() {
         this.removeBackListener()
-        userInfoManager.close();
     }
 
     removeBackListener() {

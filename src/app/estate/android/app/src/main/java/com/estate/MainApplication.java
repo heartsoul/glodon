@@ -60,7 +60,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
      SharedPreferences mPreferences =    PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-     mPreferences.edit().putString("debug_http_host","10.1.92.38:9999").commit();
+     mPreferences.edit().putString("debug_http_host","10.1.92.10:9999").commit();
 
     //  mPreferences.edit().putString("debug_http_host",BuildConfig.LOCAL_IP+":9999").commit();
       mPreferences.edit().putBoolean("reload_on_js_change",true).commit();

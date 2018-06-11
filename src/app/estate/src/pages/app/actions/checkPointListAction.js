@@ -3,7 +3,7 @@
 import * as types from '../constants/checkPointListTypes';
 import * as API from 'app-api'
 import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
-import BasicInfoManager from '../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../offline/manager/OfflineManager'
 
 export function getCheckPoints() {
     return dispatch => {
@@ -24,7 +24,7 @@ export function getCheckPoints() {
                     dispatch(loadSuccess(topDirNode, topModelNode));
                 })
         }else{
-            let bm = new BasicInfoManager();
+            let bm = OfflineManager.getBasicInfoManager();
             bm.getCheckPoints()
             .then(data => {
                 let topNode = getListByParentId(data, null);

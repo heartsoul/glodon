@@ -21,7 +21,7 @@ import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择�
 
 import {ToOnlineDialog} from 'app-components';
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
-import BasiInfoManager from '../../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../../offline/manager/OfflineManager'
 import * as API from "app-api";
 var { width, height } = Dimensions.get("window");
 class MainTabTitle extends Component {
@@ -86,15 +86,19 @@ export default class extends Component {
         BimFileEntry.chooseQualityModelFromHome(navigator);
     }
 
+    componentWillUnmount(){
+        OfflineManager.close();
+    }
 
     componentDidMount() {
         //每次进来都刷新一遍基础数据
-        let bm = new BasiInfoManager();
+        OfflineManager.init();
+        let bm = OfflineManager.getBasicInfoManager();
         bm.downloadBasicInfo((p,t)=>{
             if(t==p){
-                setTimeout(()=>{
-                    bm.close();
-                }, 1000)
+                // setTimeout(()=>{
+                //     bm.close();
+                // }, 1000)
                 
             }
         });

@@ -3,7 +3,7 @@ import * as types from '../constants/equipmentInfoTypes'
 import { Toast } from 'antd-mobile';
 import * as UpdateDataAction from "./updateDataAction";
 import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
-import BasicInfoManager from '../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../offline/manager/OfflineManager'
 
 /**
  * 是否有过修改
@@ -299,7 +299,7 @@ function equipmentAcceptanceCompanies(dispatch) {
                 dispatch(_loadingAcceptanceCompaniesSuccess(responseData.data));
             }).catch(error => { })
     }else{
-        let bm = new BasicInfoManager();
+        let bm = OfflineManager.getBasicInfoManager();
         bm.equipmentAcceptanceCompanies().then(data =>{
             dispatch(_loadingAcceptanceCompaniesSuccess(data));
         }).catch(err => {

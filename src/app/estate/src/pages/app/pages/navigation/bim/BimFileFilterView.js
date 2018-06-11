@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 
 import * as API from "app-api";
 import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil'
-import BasicInfoManager from '../../../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../../../offline/manager/OfflineManager'
 
 var { width, height } = Dimensions.get("window");
 
@@ -63,7 +63,7 @@ class BimFileFilterView extends Component {
             }).catch((err) => {
             });
         }else{
-            let bm = new BasicInfoManager();
+            let bm = OfflineManager.getBasicInfoManager();
             bm.getSpecialList().then(res =>{
                 let all = {
                     code:'all',
@@ -106,7 +106,7 @@ class BimFileFilterView extends Component {
             }).catch((err) => {
             });                                                     
          }else{
-            let bm = new BasicInfoManager();
+            let bm = OfflineManager.getBasicInfoManager();
             bm.getSingleList().then(res =>{
                 let all = {
                     name: '全部',

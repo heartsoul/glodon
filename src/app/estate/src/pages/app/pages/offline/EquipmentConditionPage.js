@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import WideButton from "../../../app/components/WideButton";
 import { DatePicker } from 'antd-mobile';
-import QualityConditionManager from '../../../offline/manager/EquipmentConditionManager'
+import OfflineManager from '../../../offline/manager/OfflineManager'
 
 let timeStart=0
 let timeEnd = 0
@@ -29,7 +29,7 @@ export default class extends Component {
 
   constructor() {
       super();
-      
+      qualityConditionManager = OfflineManager.getEquipmentConditionManager();
       this.state={
         top1:true,
         top2:false,
@@ -221,18 +221,10 @@ export default class extends Component {
       size:111,//下载的单据的条数
     }
 
-    if(qualityConditionManager==null){
-      qualityConditionManager = new QualityConditionManager();
-    }
     qualityConditionManager.saveRecord(date.getTime()+'',JSON.stringify(record));
   }
 
-  componentWillUnmount=()=>{
-    if(qualityConditionManager!=null){
-      qualityConditionManager.close();
-    }
-    
-  }
+  
 
   render() {
     return (

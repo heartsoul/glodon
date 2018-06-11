@@ -8,8 +8,8 @@ let handler = null;
  */
 export default class QualityConditionManager {
     
-    constructor(){
-        handler = new QualityConditionHandler();
+    constructor(name,realm){
+        handler = new QualityConditionHandler(name,realm);
     }
  
     //获取所有质检下载记录
@@ -28,7 +28,4 @@ export default class QualityConditionManager {
         handler.deleteAll();
     }
 
-    close =()=>{
-        handler.close();
-    }
 }

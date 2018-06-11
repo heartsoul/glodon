@@ -11,7 +11,7 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-import QualityConditionManager from '../../../offline/manager/EquipmentConditionManager'
+import OfflineManager from '../../../offline/manager/OfflineManager'
 let qualityConditionManager = null;
 var { width, height } = Dimensions.get("window");
 let clearFun=null;
@@ -20,6 +20,7 @@ export default class extends Component {
   
   constructor() {
     super();
+    qualityConditionManager = OfflineManager.getEquipmentConditionManager();
     this.state={
       datalist:[]
     }
@@ -35,7 +36,6 @@ export default class extends Component {
   static navigationOptions = {
     title: '材设清单',
     headerRight:<TouchableOpacity onPress={()=>{
-      qualityConditionManager = new QualityConditionManager();
       qualityConditionManager.deleteAll();
       qualityConditionManager.close();
       clearFun();
@@ -59,16 +59,12 @@ export default class extends Component {
       //   size:111,//下载的单据的条数
       // }
     setTimeout (()=>{
-      qualityConditionManager = new QualityConditionManager();
       let result = qualityConditionManager.getAllRecords();
       this.setState((pre)=>{
         return {
           datalist:result,
         }
       })
-      if(qualityConditionManager!=null){
-        qualityConditionManager.close();
-      }
     }, 500);
     
   }

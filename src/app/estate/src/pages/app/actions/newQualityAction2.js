@@ -3,7 +3,7 @@
 import * as types from '../constants/newQualityTypes';
 import * as API from "app-api";
 import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
-import BasicInfoManager from '../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../offline/manager/OfflineManager'
 let responseCount = 0;//请求完成的次数
 
 export function fetchData(params) {
@@ -254,7 +254,7 @@ function _getInspectionCompanies() {
             return inspectionCompanies;
         });
     }else{
-        let bm = new BasicInfoManager();
+        let bm = OfflineManager.getBasicInfoManager();
         return bm.getInspectionCompany();
     }
     
@@ -274,7 +274,7 @@ function _getSupporters() {
                 return supporters;
             });
     }else{
-        let bm = new BasicInfoManager();
+        let bm = OfflineManager.getBasicInfoManager();
         return bm.getSupporters();
     }
 }

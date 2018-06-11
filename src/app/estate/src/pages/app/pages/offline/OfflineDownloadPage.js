@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 import {CircleProgressBar} from 'app-components'
-import BasicInfoManager from '../../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../../offline/manager/OfflineManager'
 var { width, height } = Dimensions.get("window");
 let bm;
 //离线数据下载
@@ -41,44 +41,27 @@ export default class extends Component {
     // willFocus - the screen will focus
     // didFocus - the screen focused (if there was a transition, the transition completed)
     // didBlur - the screen unfocused (if there was a transition, the transition completed)
-    this.props.navigation.addListener(
-      'didFocus',
-      payload => {
-        //获取焦点后创建
-        bm = new BasicInfoManager();
-      }
-    );
-    this.props.navigation.addListener(
-      'didBlur',
-      payload => {
-        //页面失去焦点后 关闭
-        if(bm!=null){
-          bm.close();
-        }
-      }
-    );
     // this.props.navigation.addListener(
-    //   'willFocus',
+    //   'didFocus',
     //   payload => {
     //     //获取焦点后创建
     //     bm = new BasicInfoManager();
-    //     console.log('willFocus')
     //   }
     // );
     // this.props.navigation.addListener(
-    //   'willBlur',
+    //   'didBlur',
     //   payload => {
     //     //页面失去焦点后 关闭
     //     if(bm!=null){
     //       bm.close();
     //     }
-    //     console.log('willBlur')
     //   }
     // );
+    bm = OfflineManager.getBasicInfoManager();
   }
 
   componentWillUnmount=()=>{
-    // bm.close();
+    
   }
 
 //进入离线数据下载

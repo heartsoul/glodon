@@ -11,8 +11,8 @@ let projectVersionId ;
  */
 export default class QualityManager {
     
-    constructor(){
-        handler = new QualityHandler();
+    constructor(name,realm){
+        handler = new QualityHandler(name,realm);
         projectId = storage.loadProject();
         projectVersionId = storage.getLatestVersionId(projectId);
         // projectVersionId = storage.projectIdVersionId;
@@ -24,10 +24,7 @@ export default class QualityManager {
          return new Promise((resolve,reject)=>{
             let infos = JSON.parse(info);
             resolve(infos);
-            // reject('bbb');
-            if(handler!=null){
-                this.close();
-            }
+            
         });
      }
 
@@ -43,9 +40,7 @@ export default class QualityManager {
         let list = handler.queryList(qcState,page,size,checkpointId);
         return new Promise((resolve,reject)=>{
             resolve(list);
-            if(handler!=null){
-                this.close();
-            }
+            
         });
     }
 
@@ -56,9 +51,7 @@ export default class QualityManager {
         let obj = JSON.parse(info);
         return new Promise((resolve,reject)=>{
             resolve(obj.detail);
-            if(handler!=null){
-                this.close();
-            }
+            
         });
     }
 
@@ -68,9 +61,6 @@ export default class QualityManager {
         let obj = JSON.parse(info);
         return new Promise((resolve,reject)=>{
             resolve(obj.editInfo);
-            if(handler!=null){
-                this.close();
-            }
         });
     }
 
@@ -80,9 +70,7 @@ export default class QualityManager {
         let obj = JSON.parse(info);
         return new Promise((resolve,reject)=>{
             resolve(obj.repairInfo);
-            if(handler!=null){
-                this.close();
-            }
+            
         });
     }
 
@@ -92,9 +80,7 @@ export default class QualityManager {
         let obj = JSON.parse(info);
         return new Promise((resolve,reject)=>{
             resolve(obj.reviewInfo);
-            if(handler!=null){
-                this.close();
-            }
+            
         });
     }
 
@@ -122,16 +108,33 @@ export default class QualityManager {
             }
         }
         //质检单下载列表
-        // {"全部","待提交",  "待整改",      "待复查",    "已检查",    "已复查",  "已延迟",  "已验收"};
-        // {"",   "staged",  "unrectified","","inspected","reviewed","delayed","accepted"};
-        function _getQualityList(){
-            return API.getQualityInspectionAll(projectId, '', 0,30).then(
+        //          {"全部", "待提交",  "待整改",       "待复查",      "已检查",      "已复查",    "已延迟",  "已验收"};
+        //          {"",     "staged", "unrectified",  "unreviewed",  "inspected",  "reviewed",  "delayed","accepted"};
+        function _getQualityList(page,size){
+            console.log('projectId='+projectId)
+            return API.getQualityInspectionAllByDate(projectId, qcState,page,size,startTime,endTime).then(
                 (responseData) => {
-                    // console.log('质检单下载列表 start--------------');
-                    // console.log(responseData); //
-                    // console.log('质检单下载列表 end--------------');
+                // { data:
+                //    { content: [],
+                //       last: true,
+                //       totalPages: 0,
+                //       totalElements: 0,
+                //       sort:
+                //        [ { direction: 'DESC',
+                //            property: 'updateTime',
+                //            ignoreCase: false,
+                //            nullHandling: 'NATIVE',
+                //            ascending: false,
+                //            descending: true } ],
+                //       first: true,
+                //       numberOfElements: 0,
+                //       size: 30,
+                //       number: 0 } }
+                    console.log('质检单下载列表 start--------------');
+                    console.log(responseData); //
+                    console.log('质检单下载列表 end--------------');
                     if(responseData && responseData.data && responseData.data.content && responseData.data.content.length>0){
-                        return responseData.data.content;
+                        return {list:responseData.data.content,totalPages:totalPages};
                     }
                     return null;
                 }
@@ -199,7 +202,24 @@ export default class QualityManager {
 
         let detailArr = []//保存详情
         async function download(){
-            let qualityList = await _getQualityList();
+            let page = 0;
+            let size = 30;
+            let data = await _getQualityList(page,size);
+            let qualityList = [];
+            if(data && data.content && data.content.length>0){
+                qualityList = [...qualityList,...data.list];
+                totalPages = data.totalPages;
+                page++;
+                //循环取数据
+                while(page<totalPages){
+                    let d = await _getQualityList(page,size);
+                    qualityList = [...qualityList,...d.list];
+                    page++;
+                }
+            }
+
+
+
             if(qualityList && qualityList.length>0){
                 // {"全部","待提交",  "待整改",      "待复查",    "已检查",    "已复查",  "已延迟",  "已验收"};
                 // {"",   "staged",  "unrectified","unreviewed","inspected","reviewed","delayed","accepted"};
@@ -294,9 +314,4 @@ export default class QualityManager {
     }
 
 
-    
-
-    close =()=>{
-        handler.close();
-    }
 }
