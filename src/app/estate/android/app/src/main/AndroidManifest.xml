@@ -75,8 +75,17 @@
         <service
             android:name="com.glodon.bim.business.offline.model.server.CoreService"
             android:exported="false"/>
+
+        <!--友盟微信分享-->
+        <!--<activity-->
+            <!--android:name="com.glodon.bim.wxapi.WXEntryActivity"-->
+            <!--android:configChanges="keyboardHidden|orientation|screenSize"-->
+            <!--android:exported="true"-->
+            <!--android:theme="@android:style/Theme.Translucent.NoTitleBar" />-->
+
+        <!--友盟微信分享测试-->
         <activity
-            android:name="com.glodon.bim.wxapi.WXEntryActivity"
+            android:name="com.umeng.soexample.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
