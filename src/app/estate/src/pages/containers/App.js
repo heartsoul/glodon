@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
+import { createStackNavigator,NavigationActions, StackActions } from 'app-3rd/react-navigation';
 import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState,NetInfo, } from 'react-native'
-import { StackNavigator, NavigationActions } from 'app-3rd/react-navigation';
 
 import * as API from 'app-api'
 import { BarItems } from "app-components"
@@ -20,7 +20,7 @@ const screens = {
     },
     ChoosePage: {
         screen: GLD.TenantPage,
-    },
+    },  
     MainPage: {
         screen: GLD.HomePage
     },
@@ -156,28 +156,28 @@ const options = () => {
     }
 }
 // LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage
-const RootGuideStack = StackNavigator(
+const RootGuideStack = createStackNavigator(
     screens,
     {
         initialRouteName: 'GuidePage',
         navigationOptions: options,
     }
 );
-const RootLoginStack = StackNavigator(
+const RootLoginStack = createStackNavigator(
     screens,
     {
         initialRouteName: 'LoginPage',
         navigationOptions: options,
     }
 );
-const RootMainStack = StackNavigator(
+const RootMainStack = createStackNavigator(
     screens,
     {
         initialRouteName: 'MainPage',
         navigationOptions: options,
     }
 );
-const RootChooseStack = StackNavigator(
+const RootChooseStack = createStackNavigator(
     screens,
     {
         initialRouteName: 'ChoosePage',
@@ -192,7 +192,7 @@ function resetGetStateForAction(RootStack) {
     RootStack.router.getStateForAction = (action, state) => {
         // console.log("action info -- type:"+action.type+",key:"+action.key+",params:"+action.params+",path:"+action.path+",routeName:"+action.routeName+",n:"+action.n+"\n");
         const { n } = action;
-        if (action.type === NavigationActions.POP && typeof n === 'string') {
+        if (action.type === StackActions.POP && typeof n === 'string') {
             let backRouteIndex = state.index;
             let findN = n;
             // 支持按照routeName进行回退，如果存在重名了，那么就回到
@@ -208,9 +208,8 @@ function resetGetStateForAction(RootStack) {
             let systemDate = new Date().getTime();
             if (systemDate - clickTime > 2000) {
                 clickTime = systemDate
-                action.type = NavigationActions.POP;
-                action.n = 0;
                 Toast.info("再按一次退出", 1);
+                return null;
             }
 
         }

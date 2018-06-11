@@ -11,7 +11,8 @@ import {
 import * as API from 'app-api';
 import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil';
 import DirManager  from '../../../../offline/manager/DirManager';
-import RNFS from 'app-3rd/react-native-fs';
+import { RNFS} from 'app-3rd';
+
 /**
  * 缩略图
  */

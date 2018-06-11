@@ -1,4 +1,4 @@
-import RNFS from 'react-native-fs';
+import { RNFS} from 'app-3rd';
 import { Platform,} from 'react-native';
 import ModelServer from '../model/ServerModule';
 /**
