@@ -3,6 +3,7 @@ import BasicInfoManager from './BasicInfoManager';
 import EquipmentConditionManager from './EquipmentConditionManager';
 import QualityConditionManager from './QualityConditionManager';
 import QualityManager from './QualityManager';
+import EquipmentManager from './EquipmentManager';
 
 const Realm = require('realm');
 
@@ -12,6 +13,7 @@ let basicInfoManager = null;
 let equipmentConditionManager = null;
 let qualityConditionManager = null;
 let qualityManager = null;
+let equipmentManager = null;
 
 export default class OfflineManager{
     //获取数据库表后缀名称
@@ -35,6 +37,7 @@ export default class OfflineManager{
         let equipmentConditionName = 'equipmentcondition'+this.getTableName();
         let qualityConditionName = 'qualitycondition'+this.getTableName();
         let qualityName = 'quality'+this.getTableName();
+        let equipmentName = 'equipment'+this.getTableName();
 
         //基础数据包
         const basicSchema = {
@@ -77,12 +80,27 @@ export default class OfflineManager{
                 errorMsg:'string',//同步失败原因
             }
         }
-        realm = new Realm({schema:[basicSchema,equipmentConditionSchema,qualityconditionSchema,qualitySchema]});
+        //材设单据
+        const equipmentSchema = {
+            name:equipmentName,
+            primaryKey:'key',
+            properties:{
+                key:'string',//单据的id
+                value:'string',//单据内容
+                committed:'string',//false  待提交   true 已提交
+                qualified:'string',//是否合格
+                updateTime:'string',
+                submitState:'string',//待同步
+                errorMsg:'string',//同步失败原因
+            }
+        }
+        realm = new Realm({schema:[basicSchema,equipmentConditionSchema,qualityconditionSchema,qualitySchema,equipmentSchema]});
 
         basicInfoManager = new BasicInfoManager(basicInfoName,realm);
-        equipmentConditionManager = new EquipmentConditionManager(equipmentConditionName,realm)
+        equipmentConditionManager = new EquipmentConditionManager(equipmentConditionName,realm);
         qualityConditionManager = new QualityConditionManager(qualityConditionName,realm);
-        qualityManager = new QualityManager(qualityName,realm)
+        qualityManager = new QualityManager(qualityName,realm);
+        equipmentManager = new EquipmentManager(equipmentName,realm);
     }
 
     static getBasicInfoManager(){
@@ -99,6 +117,10 @@ export default class OfflineManager{
 
     static getQualityManager(){
         return qualityManager;
+    }
+
+    static getEquipmentManager(){
+        return equipmentManager;
     }
 
     static close(){

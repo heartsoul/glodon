@@ -1282,6 +1282,35 @@ export async function equipmentList(projectId, qcState, page, size, sort) {
 }
 
 /**
+ * 材设列表 全部 根据两个时间点筛选
+ */
+export async function equipmentListByDate(projectId, qcState, page, size,startDate,endDate) {
+    let sort = 'updateTime,desc';
+    // return demoDataEquipment(100);
+    if (qcState == CONSTANT.QC_STATE_EDIT) {
+        return equipmentListCommittedByDate(projectId, page, size,false,startDate,endDate)
+    }
+    let filter = `?page=${page}&size=${size}&sort=${sort}&startDate=${startDate}&endDate=${endDate}`;
+    let api = `/quality/${projectId}/facilityAcceptance${filter}`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+
+
+/**
+ * 材设列表 待提交  根据两个时间点筛选
+ * @param {boolean} committed committed
+ */
+function equipmentListCommittedByDate(projectId, page, size,committed,startDate,endDate) {
+    let sort = 'updateTime,desc';
+    let filter = `?page=${page}&size=${size}&sort=${sort}&committed=${committed}&startDate=${startDate}&endDate=${endDate}`;
+    let api = `/quality/${projectId}/facilityAcceptance${filter}`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+/**
  * 材设列表 待提交
  * @param {boolean} committed committed
  */

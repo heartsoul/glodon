@@ -211,19 +211,37 @@ export function fetchData(fieldId) {
 }
 
 function loadDetail(dispatch,fieldId) {
-    API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
-        if (responseData.data.files && responseData.data.files.length > 0) {
-            loadFileUrls(responseData.data.files, (files) => {
-                responseData.data.files = files;
+    if(OfflineStateUtil.isOnLine()){
+        API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
+            if (responseData.data.files && responseData.data.files.length > 0) {
+                loadFileUrls(responseData.data.files, (files) => {
+                    responseData.data.files = files;
+                    dispatch(_loadSuccess(responseData.data));
+                });
+            }
+            else {
                 dispatch(_loadSuccess(responseData.data));
-            });
-        }
-        else {
-            dispatch(_loadSuccess(responseData.data));
-        }
-    }).catch(error => {
-        dispatch(_loadError(error));
-    });
+            }
+        }).catch(error => {
+            dispatch(_loadError(error));
+        });
+    }else{
+        let equimentManager = OfflineManager.getEquipmentManager();
+        equimentManager.getQualityDetail(fieldId).then((responseData) => {
+            if (responseData.data.files && responseData.data.files.length > 0) {
+                loadFileUrls(responseData.data.files, (files) => {
+                    responseData.data.files = files;
+                    dispatch(_loadSuccess(responseData.data));
+                });
+            }
+            else {
+                dispatch(_loadSuccess(responseData.data));
+            }
+        }).catch(error => {
+            dispatch(_loadError(error));
+        });
+    }
+    
 }
 
 function loadFileUrls(files, finsh) {

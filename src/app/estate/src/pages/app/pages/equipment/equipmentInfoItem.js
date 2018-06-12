@@ -2,6 +2,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { View, StyleSheet, Text, TextInput, Image, TouchableOpacity, Dimensions, Platform } from 'react-native';
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
+import DirManager from '../../../offline/manager/DirManager';
 const rightImage = require("app-images/icon_arrow_right_gray.png");
 const clearImage = require("app-images/login/icon_login_password_delete.png")
 var { width, height } = Dimensions.get("window");
@@ -245,8 +247,15 @@ export default class EquipmentInfoItem extends React.Component {
     bigImage = (images, index) => {
         let media = [];
         images.map((item, index) => {
+            let path = item.url;
+            if(!OfflineStateUtil.isOnLine()){
+                if(item){
+                    let dm = new DirManager();
+                     path  = 'file://'+dm.getImagePathById(item.objectId);
+                }
+            }
             media.push({
-                photo: item.url,
+                photo: path,
                 objectId: item.objectId
             });
         });
@@ -255,6 +264,13 @@ export default class EquipmentInfoItem extends React.Component {
     }
     renderImage = () => {
         const { url } = this.props;
+        if(!OfflineStateUtil.isOnLine()){
+            if(url){
+                let dm = new DirManager();
+                let path  = 'file://'+dm.getImagePathById(url.objectId);
+                url.url = path;
+            }
+        }
         return (
             <View style={styles.containerView} >
                 <TouchableOpacity activeOpacity={0.5} onPress={(event) => {
@@ -270,6 +286,14 @@ export default class EquipmentInfoItem extends React.Component {
             <View style={styles.containerView} >
                 {
                     this.props.urls.map((url, index) => {
+                        if(!OfflineStateUtil.isOnLine()){
+                            if(url){
+                                let dm = new DirManager();
+                                let path  = 'file://'+dm.getImagePathById(url.objectId);
+                                url.url = path;
+                                // console.log('exist================'+url.url)
+                            }
+                        }
                         return (
                             <TouchableOpacity key={'xxx' + index} activeOpacity={0.5} onPress={(event) => { this.bigImage(this.props.urls, index); }}>
                                 <Image source={{ uri: url.url }} style={styles.imageNarmal} />

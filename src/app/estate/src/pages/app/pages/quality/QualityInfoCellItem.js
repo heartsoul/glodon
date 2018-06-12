@@ -81,9 +81,9 @@ export default class QualityInfoCellItem extends React.Component {
         images.map((item, index) => {
             let path = item.url;
             if(!OfflineStateUtil.isOnLine()){
-                if(url){
+                if(item){
                     let dm = new DirManager();
-                     path  = 'file://'+dm.getImagePathById(url.objectId);
+                     path  = 'file://'+dm.getImagePathById(item.objectId);
                 }
             }
             media.push({

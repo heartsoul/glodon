@@ -4,6 +4,8 @@ import * as types from '../constants/equipmentListTypes'
 import * as searchTypes from "./../constants/searchTypes";
 
 import * as UpdateDataAction from "./updateDataAction";
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
+import OfflineManager from '../../offline/manager/OfflineManager'
 
 // 删除草稿
 export function deleteData(id) {
@@ -19,17 +21,32 @@ export function deleteData(id) {
 
 export function submitData(id) {
   return dispatch => {
-    API.equipmentDetail(storage.loadProject(), id).then((responseData) => {
-        let params = responseData.data;
-        API.equipmentEditSubmit(storage.loadProject(), id, JSON.stringify(params))
-        .then((responseData) => {
-            dispatch(UpdateDataAction.updateData());
+    if(OfflineStateUtil.isOnLine()){
+        API.equipmentDetail(storage.loadProject(), id).then((responseData) => {
+            let params = responseData.data;
+            API.equipmentEditSubmit(storage.loadProject(), id, JSON.stringify(params))
+            .then((responseData) => {
+                dispatch(UpdateDataAction.updateData());
+            }).catch(error => {
+                console.log(error);
+            })
         }).catch(error => {
-            console.log(error);
-        })
-    }).catch(error => {
-        console.log(error)
-    });
+            console.log(error)
+        });
+    }else{
+        let equimentManager = OfflineManager.getEquipmentManager();
+        equimentManager.getQualityDetail(id).then((responseData) => {
+            let params = responseData.data;
+            API.equipmentEditSubmit(storage.loadProject(), id, JSON.stringify(params))
+            .then((responseData) => {
+                dispatch(UpdateDataAction.updateData());
+            }).catch(error => {
+                console.log(error);
+            })
+        }).catch(error => {
+            console.log(error)
+        });
+    }
    
   }
 }
@@ -139,51 +156,122 @@ function __fetchData(qcState, page, dataMapIn, dispatch) {
   if (page < 0) {
     page = 0;
   }
-  API.equipmentList(storage.loadProject(), qcState, page, 20,'updateTime,desc').then(
-    (responseData) => {
-      let data = responseData.data.content;
-      let hasMore = responseData.data.last == false;
-      let dataBlob = [];
-      let dataMap = new Map();
-      let i = 0, j = 0;
-      let sectionLob = [];
-      if (page > 0 && dataMapIn) {
-        dataMap = dataMapIn;
-      }
-      data.forEach(item => {
-        item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
-        item.index = i;
-        item.qcStateShow =  item.committed == true ? "" : "" + API.toQcStateShow(API.QC_STATE_STAGED);
-        item.qcStateColor =  item.committed == true ? "#FFFFFF" : "" + API.toQcStateShowColor(API.QC_STATE_STAGED);
-        let groupTime = item.showTime.substring(0, 10);
-        let dataBlob = dataMap.get(groupTime);
-        if (dataBlob == undefined) {
-          dataBlob = [];
-          dataMap.set(groupTime, dataBlob);
+  let size = 20;
+  if(OfflineStateUtil.isOnLine()){
+    API.equipmentList(storage.loadProject(), qcState, page, size,'updateTime,desc').then(
+        (responseData) => {
+          let data = responseData.data.content;
+          let hasMore = responseData.data.last == false;
+          let dataBlob = [];
+          let dataMap = new Map();
+          let i = 0, j = 0;
+          let sectionLob = [];
+          if (page > 0 && dataMapIn) {
+            dataMap = dataMapIn;
+          }
+          data.forEach(item => {
+            item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
+            item.index = i;
+            item.qcStateShow =  item.committed == true ? "" : "" + API.toQcStateShow(API.QC_STATE_STAGED);
+            item.qcStateColor =  item.committed == true ? "#FFFFFF" : "" + API.toQcStateShowColor(API.QC_STATE_STAGED);
+            let groupTime = item.showTime.substring(0, 10);
+            let dataBlob = dataMap.get(groupTime);
+            if (dataBlob == undefined) {
+              dataBlob = [];
+              dataMap.set(groupTime, dataBlob);
+            }
+            let ts = new Date().getTime();
+            dataBlob.push({
+              key: item.id + "-" + ts,
+              value: item,
+            });
+            i++;
+          });
+    
+          dataMap.forEach(function (value, key, map) {
+            sectionLob.push({
+              key: key,
+              data: value,
+            });
+          });
+          dispatch(_loadSuccess(sectionLob, dataMap, qcState, page, hasMore));
+          data = null;
+          dataBlob = null;
+          sectionLob = null;
+          dataMap = null;
         }
-        let ts = new Date().getTime();
-        dataBlob.push({
-          key: item.id + "-" + ts,
-          value: item,
-        });
-        i++;
+      ).catch(error => {
+        dispatch(_loadError(error, qcState, page));
       });
-
-      dataMap.forEach(function (value, key, map) {
-        sectionLob.push({
-          key: key,
-          data: value,
-        });
+  }else{
+      let equipmentManager = OfflineManager.getEquipmentManager();
+      equipmentManager.getEquipmentList(qcState,page,size).then(
+        (responseData) => {
+            console.log('result===============')
+            console.log(JSON.stringify(responseData))
+          let data = responseData.list;
+          let total = responseData.total;
+          console.log('data=')
+          console.log(data)
+          console.log('total='+total)
+          let hasMore = true;
+            if(data.length<size){
+                hasMore = false;
+            }else{
+                if(page*size+size==total){
+                    hasMore = false;
+                }else{
+                    hasMore = true;
+                }
+            }
+          console.log('hasMore='+hasMore)
+          let dataBlob = [];
+          let dataMap = new Map();
+          let i = 0, j = 0;
+          let sectionLob = [];
+          if (page > 0 && dataMapIn) {
+            dataMap = dataMapIn;
+          }
+          data.forEach(item => {
+            item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
+            item.index = i;
+            item.qcStateShow =  item.committed == true ? "" : "" + API.toQcStateShow(API.QC_STATE_STAGED);
+            item.qcStateColor =  item.committed == true ? "#FFFFFF" : "" + API.toQcStateShowColor(API.QC_STATE_STAGED);
+            let groupTime = item.showTime.substring(0, 10);
+            let dataBlob = dataMap.get(groupTime);
+            if (dataBlob == undefined) {
+              dataBlob = [];
+              dataMap.set(groupTime, dataBlob);
+            }
+            let ts = new Date().getTime();
+            dataBlob.push({
+              key: item.id + "-" + ts,
+              value: item,
+            });
+            i++;
+          });
+    
+          dataMap.forEach(function (value, key, map) {
+            sectionLob.push({
+              key: key,
+              data: value,
+            });
+          });
+          console.log(sectionLob)
+          console.log('000000000000000000000')
+          console.log(dataMap)
+          dispatch(_loadSuccess(sectionLob, dataMap, qcState, page, hasMore));
+          data = null;
+          dataBlob = null;
+          sectionLob = null;
+          dataMap = null;
+        }
+      ).catch(error => {
+          console.log('cccccccccccccccccccccccc')
+        dispatch(_loadError(error, qcState, page));
       });
-      dispatch(_loadSuccess(sectionLob, dataMap, qcState, page, hasMore));
-      data = null;
-      dataBlob = null;
-      sectionLob = null;
-      dataMap = null;
-    }
-  ).catch(error => {
-    dispatch(_loadError(error, qcState, page));
-  });
+  }
+  
 
 }
 export function reset(qcState) {
