@@ -83,6 +83,29 @@ function isParamsChange(info, oldInfo) {
     }
     return ret;
 }
+function generateFileParams(files) {
+    let fileParams = [];
+    if (files) {
+        files.map((item) => {
+            let file = {
+                name: item.name,
+                objectId: item.objectId,
+                extension: item.extension,
+                digest: item.digest,
+                uploadTime: item.uploadTime,
+            }
+            fileParams.push(file)
+        })
+    }
+    return fileParams;
+}
+
+function buildRequestParams(params, type){
+    let requestParams = {...params};
+    requestParams.files = generateFileParams(params.files)
+    return JSON.stringify(requestParams);
+}
+
 /**
  * 提交材设单 新增时的response {"id": 5200418,"code": "CSYS_20180504_002"}，编辑时response未测试。
  * @param {*} params 
@@ -103,8 +126,9 @@ export function submit(params, navigator) {
                 requestParams.files = files;
                 params.files = files;
             }
+            let props = buildRequestParams(requestParams);
             if (fieldId && fieldId != 0) {
-                API.equipmentEditSubmit(storage.loadProject(), fieldId, JSON.stringify(requestParams))
+                API.equipmentEditSubmit(storage.loadProject(), fieldId, props)
                     .then((responseData) => {
                         Toast.hide();
                         dispatch(UpdateDataAction.updateData());
@@ -114,7 +138,7 @@ export function submit(params, navigator) {
                         console.log(error);
                     })
             } else {
-                API.equipmentCreateSubmit(storage.loadProject(), JSON.stringify(requestParams))
+                API.equipmentCreateSubmit(storage.loadProject(),props)
                     .then((responseData) => {
                         Toast.hide();
                         dispatch(UpdateDataAction.updateData());
@@ -148,8 +172,10 @@ export function save(params) {
                 requestParams.files = files;
                 params.files = files;
             }
+            let props = buildRequestParams(requestParams);
+
             if (fieldId && fieldId != 0) {
-                API.equipmentEditSave(storage.loadProject(), fieldId, JSON.stringify(requestParams))
+                API.equipmentEditSave(storage.loadProject(), fieldId, props)
                     .then((responseData) => 
                     {
                         dispatch(UpdateDataAction.updateData());
@@ -160,7 +186,7 @@ export function save(params) {
                         console.log(error);
                     })
             } else {
-                API.equipmentCreateSave(storage.loadProject(), JSON.stringify(requestParams))
+                API.equipmentCreateSave(storage.loadProject(), props)
                     .then((responseData) => {
                         params.id = responseData.data.id;
                         params.code = responseData.data.code;

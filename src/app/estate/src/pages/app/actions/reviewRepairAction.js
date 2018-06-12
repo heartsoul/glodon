@@ -189,6 +189,28 @@ function checkRepairMustInfo(params) {
     let ret = { checked: checked, msg: msg }
     return ret;
 }
+function generateFileParams(files) {
+    let fileParams = [];
+    if (files) {
+        files.map((item) => {
+            let file = {
+                name: item.name,
+                objectId: item.objectId,
+                extension: item.extension,
+                digest: item.digest,
+                uploadTime: item.uploadTime,
+            }
+            fileParams.push(file)
+        })
+    }
+    return fileParams;
+}
+
+function buildRequestParams(params, type){
+    let requestParams = {...params};
+    requestParams.files = generateFileParams(params.files)
+    return JSON.stringify(requestParams);
+}
 
 /**
  * 提交
@@ -232,7 +254,7 @@ function submitReview(inspectionId, description, status, lastRectificationDate, 
             if (files) {
                 params.files = files;
             }
-            let props = JSON.stringify(params);
+            let props = buildRequestParams(params);
             if (!reviewId) {//新建提交
                 API.createSubmitReview(storage.loadProject(), props).then(responseData => {
                     //pop页面
@@ -282,7 +304,7 @@ function submitRepair(inspectionId, description, qualityInfo, editInfo, dispatch
             if (files) {
                 params.files = files;
             }
-            let props = JSON.stringify(params);
+            let props = buildRequestParams(params);
             if (!reviewId) {//新建提交
                 API.createSubmitRepair(storage.loadProject(), props).then(responseData => {
                     //pop页面
@@ -350,7 +372,7 @@ function saveReview(inspectionId, description, status, lastRectificationDate, qu
             if (files) {
                 params.files = files;
             }
-            let props = JSON.stringify(params);
+            let props = buildRequestParams(params);
             if (!reviewId) {//新建保存
                 API.createSaveReview(storage.loadProject(), props).then(responseData => {
                     //"保存成功！"  { data: { id: 5200032, code: 'ZLFC_20180424_001' } }
@@ -413,7 +435,7 @@ function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, 
             if (files) {
                 params.files = files;
             }
-            let props = JSON.stringify(params);
+            let props = buildRequestParams(params);
             if (!reviewId) {//新建保存
                 API.createSaveRepair(storage.loadProject(), props).then(responseData => {
                     //"保存成功！"  { data: { id: 5200032, code: 'ZLFC_20180424_001' } }

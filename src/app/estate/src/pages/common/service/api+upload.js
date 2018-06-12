@@ -269,7 +269,7 @@ async function upLoad(filePath, name, operationCode, callback,nativeFile,index) 
     let api = "/v1/insecure/objects?operationCode=" + operationCode;
     let formData = new FormData();
     if(nativeFile.file) {
-        formData.append("uploaded_file",convertBase64UrlToBlob(nativeFile.file.url),'hi'+name);
+        formData.append("uploaded_file",nativeFile.file,'hi'+name);
     } else {
         let file = { uri: filePath, type: 'application/octet-stream', name: 'i'+name };
         formData.append("uploaded_file", file);   //这里的uploaded_file就是后台需',要的key  

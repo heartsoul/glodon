@@ -59,7 +59,7 @@ function assembleParams(requestParams) {
 
     //关联图纸
     let relevantBlueprint = state.relevantBlueprint;
-    if(relevantBlueprint){
+    if (relevantBlueprint) {
         params.drawingGdocFileId = relevantBlueprint.drawingGdocFileId;
         params.drawingName = relevantBlueprint.drawingName;
         params.drawingPositionX = relevantBlueprint.drawingPositionX;
@@ -68,7 +68,7 @@ function assembleParams(requestParams) {
 
     //关联模型
     let relevantModel = state.relevantModel;
-    if(relevantModel){
+    if (relevantModel) {
         params.elementName = relevantModel.elementName;
         params.elementId = relevantModel.elementId;
         params.buildingName = relevantModel.buildingName;
@@ -82,7 +82,7 @@ function assembleParams(requestParams) {
  * 检查必填项
  * @param {*} params 
  */
-function checkMustInfo(params,callback) {
+function checkMustInfo(params, callback) {
     let info = [];
     let showStar = {
         showInspectCompanyStar: false,
@@ -176,7 +176,7 @@ function loadingToast() {
  * @param {*} uploadCallback 
  */
 function uploadFile(imageChooserEle, uploadCallback) {
-    if(!imageChooserEle){
+    if (!imageChooserEle) {
         return;
     }
     imageChooserEle._loadFile((files) => {
@@ -254,7 +254,7 @@ export function submitFromList(inspectId, callback) {
  */
 function createSubmitInspection(params, navigator, updateData) {
     delete params.inspectId;
-    let requestParams = JSON.stringify(params);
+    let requestParams = buildRequestParams(params);
     API.createSubmitInspection(storage.loadProject(), params.inspectionType, requestParams)
         .then(data => {
             if (updateData) {
@@ -275,8 +275,8 @@ function createSubmitInspection(params, navigator, updateData) {
 function editSubmitInspection(params, navigator, updateData) {
     let inspectId = params.inspectId;
     delete params.inspectId;
-    let requestParams = JSON.stringify(params);
-    API.editSubmitInspection(storage.loadProject(),inspectId, params.inspectionType, requestParams)
+    let requestParams = buildRequestParams(params);
+    API.editSubmitInspection(storage.loadProject(), inspectId, params.inspectionType, requestParams)
         .then(data => {
             if (updateData) {
                 updateData();
@@ -317,13 +317,36 @@ export function save(requestParams, imageChooserEle, callback) {
     }
 }
 
+function generateFileParams(files) {
+    let fileParams = [];
+    if (files) {
+        files.map((item) => {
+            let file = {
+                name: item.name,
+                objectId: item.objectId,
+                extension: item.extension,
+                digest: item.digest,
+                uploadTime: item.uploadTime,
+            }
+            fileParams.push(file)
+        })
+    }
+    return fileParams;
+}
+
+function buildRequestParams(params, type){
+    let requestParams = {...params};
+    requestParams.files = generateFileParams(params.files)
+    return JSON.stringify(requestParams);
+}
+
 /**
  * 检查单 新增 保存
  * @param {*} params 
  */
 function createSaveInspection(params, callback) {
     delete params.inspectId;
-    let requestParams = JSON.stringify(params);
+    let requestParams = buildRequestParams(params);
     API.createSaveInspection(storage.loadProject(), params.inspectionType, requestParams)
         .then(data => {
             Toast.hide();
@@ -349,7 +372,7 @@ function createSaveInspection(params, callback) {
 function editSaveInspection(params, callback) {
     let inspectId = params.inspectId;
     delete params.inspectId;
-    let requestParams = JSON.stringify(params);
+    let requestParams = buildRequestParams(params);
     API.editSaveInspection(storage.loadProject(), inspectId, params.inspectionType, requestParams)
         .then(data => {
             console.log(data)
@@ -373,7 +396,7 @@ function editSaveInspection(params, callback) {
  * @param {*} callback 
  */
 export function isEditInfoChange(requestParams, inspectionInfo, imageChooserEle, callback) {
-    if(!imageChooserEle){
+    if (!imageChooserEle) {
         callback(false);
         return;
     }
@@ -408,8 +431,8 @@ function isFileChange(oldFiles, newFiles) {
 function resetFiles(oldFiles, newFiles) {
     if (newFiles) {
         newFiles.map((item) => {
-            let oldFile = relateOldFile(oldFiles,item);
-            if(oldFile){
+            let oldFile = relateOldFile(oldFiles, item);
+            if (oldFile) {
                 item.name = oldFile.name;
                 item.objectId = oldFile.objectId;
                 item.extension = oldFile.extension;
@@ -422,9 +445,9 @@ function resetFiles(oldFiles, newFiles) {
 }
 
 function relateOldFile(oldFiles, file) {
-    if(oldFiles){
+    if (oldFiles) {
         for (let index in oldFiles) {
-            if(oldFiles[index].path === file.path){
+            if (oldFiles[index].path === file.path) {
                 return oldFiles[index];
             }
         }
