@@ -1,16 +1,9 @@
 
 import { NativeModules } from 'react-native'
-import { ActionModal,shareboard } from 'app-components'
+import { ActionModal } from 'app-components'
 
 var PM = NativeModules.GLDPhotoManager;
-export function shareApp(text,url) {
-    text = text || 'BIM协同，真的来了';
-    url = url || 'http://bim.glodon.com';
-    // PM.shareAppAction({text:text,url:url},(data, bSuccess) => {
-        
-    // })
-    shareboard(text,'',url,'BIM协同');
-}
+
 export function chooseImages(retFun, retFiles = [], maxLength = 3, multiple = false, capture = 'camera') {
 
     if (multiple || capture !== 'camera') {
