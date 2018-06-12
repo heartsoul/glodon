@@ -66,7 +66,7 @@ export default class DownloadingHandler extends BaseHandler{
         // console.log(infos)
         let ret = [];
         for( let i=0;i<list.length;i++){
-            ret[i] = JSON.parse(list[i].value);
+            ret[i] = list[i];
         }
         
         return ret;

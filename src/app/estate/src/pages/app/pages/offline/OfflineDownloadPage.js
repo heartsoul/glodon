@@ -260,13 +260,14 @@ class SelectView extends Component{
   }
 }
 
-//下载中-内容页面
-class LoadingView extends Component{
-
+let getData = null;
+//进度条
+class ProgressView extends Component{
   constructor(){
     super();
     this.state={
-      dataList:[],
+      progress:0,
+      totalNum:100,
     }
   }
 
@@ -277,28 +278,111 @@ class LoadingView extends Component{
 
   }
 
+  componentWillUnmount(){
+    //清除间隔取数据
+    if(getData){
+      clearInterval(getData);
+    }
+    this.setState = (pre)=>{
+      return;
+    };
+  }
+
   componentDidMount(){
+    // {"item":{"key":"1528843027521","value":"{\"startTime\":1526164627521,\"endTime\":1528843027521,\"qcState\":[\"\"],\"timeText\":\"近1月\",\"downloadTime\":\"2018-6-12 22:37\",\"size\":29,\"title\":\"检查单\",\"subTitle\":\"( 全部 )\",\"progress\":108,\"total\":174}","downloading":"true"},"index":0,"separators":{}}
+    let callback = this.props.callback;
+    let item = this.props.data;
+    let value = JSON.parse(item.item.value);
+    let key = item.item.key
+    let dm = OfflineManager.getDownloadingManager();
+    if(item){
+      let progress = value.progress;
+      let total = value.total;
+      this.setState((pre)=>{
+        return {
+          ...pre,
+          progress:progress,
+          totalNum:total,
+        }
+      })
+    }
+    let single = null;
+    //每隔500毫秒取一次进度
+    getData = setInterval(()=>{
+        single = dm.getRecordByKey(key);
+        if(single){
+          //可以取到数据   刷新进度
+          let p = single.progress;
+          let t = single.total;
+          this.setState((pre)=>{
+            return {
+              ...pre,
+              progress:p,
+              totalNum:t,
+            }
+          })
+        }else{
+          //取不到数据，是因为在下载中的数据，改为了已完成，需要刷新页面，重新获取下载中的数据
+          clearInterval(getData);
+          callback();
+        }
+    },500);
+  }
+
+  // setInterval(()=>{
+    //   console.log('333333333333333333')
+    // },1000);
+    // clearInterval()
+
+  render(){
+    return (
+      <CircleProgressBar startDownload={this._startDownload} stopDownload={this._stopDownload} progress={this.state.progress} totalNum={this.state.totalNum} finishText={'已下载'}/>
+    );
+  }
+}
+
+//下载中-内容页面
+class LoadingView extends Component{
+
+  constructor(){
+    super();
+    this.state={
+      dataList:[],
+    }
+  }
+
+  componentWillUnmount(){
+    this.setState = (pre)=>{
+      return;
+    };
+  }
+
+  componentDidMount(){
+    this._getRecords();
+    
+  }
+
+  _callback=()=>{
+    console.log('444444444444444')
+    this._getRecords();
+  }
+
+  _getRecords=()=>{
     let dm = OfflineManager.getDownloadingManager();
     let list = dm.getAllRecords();
-    console.log(list)
     this.setState((pre)=>{
       return {
         ...pre,
         dataList:list,
       }
     })
-
-    // setInterval(()=>{
-    //   console.log('333333333333333333')
-    // },1000);
   }
 
   renderItemView=(item)=>{
-    let source = item.item.source;
-    let title = item.item.title;
-    let subTitle = item.item.timeText+item.item.subTitle;
-    let progress = item.progress;
-    let total = item.total;
+    let value = JSON.parse(item.item.value);
+    let source = value.source;
+    let title = value.title;
+    let subTitle = value.timeText+value.subTitle;
     return (
       <View style={{height:55,backgroundColor:'#ffffff'}} >
         <View style={{height:54,backgroundColor:'#ffffff' ,flexDirection:'row',alignItems:'center' }}>
@@ -308,7 +392,7 @@ class LoadingView extends Component{
             <Text style={{fontSize:14,color:'#333333'}} >{title}</Text>
             <Text style={{fontSize:10,color:'#999999'}} >{subTitle}</Text>
           </View>
-          <CircleProgressBar startDownload={this._startDownload} stopDownload={this._stopDownload} progress={progress} totalNum={total} finishText={'已下载'}/>
+          <ProgressView data={item} callback={this._callback}/>
           
         </View>
         <View style={{height:1,backgroundColor:'#ececec',flex:1}} />

@@ -23,6 +23,8 @@ import {ToOnlineDialog} from 'app-components';
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 import OfflineManager from '../../../offline/manager/OfflineManager'
 import * as API from "app-api";
+import { YellowBox } from 'react-native';//忽略黄色警告
+
 var { width, height } = Dimensions.get("window");
 class MainTabTitle extends Component {
     render = () => {
@@ -42,6 +44,8 @@ export default class extends Component {
             isShowOfflineHint:true,
             activeIndex : 0
         }
+        //忽略黄色警告
+        YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
     };
 
     _loadQualityForm = () => {
