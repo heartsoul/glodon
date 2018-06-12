@@ -5,7 +5,7 @@ import BaseHandler from './BaseHandler';
 
 let name = null;
 let realm = null;
-export default class EquipmentConditionHandler extends BaseHandler{
+export default class DownloadingHandler extends BaseHandler{
 
     constructor(eName,eRealm){
         super();
@@ -15,20 +15,19 @@ export default class EquipmentConditionHandler extends BaseHandler{
     }
 
     
-    insert=(key,value)=>{
-        console.log('save='+value)
+    insert=(key,value,downloading)=>{
         if(!this.isEmpty(value)){
             realm.write(()=> {
-                realm.create(name, {key:key,value:value},true);
+                realm.create(name, {key:key,value:value,downloading:downloading},true);
             })
         }
         
     }
 
-    update=(key,value)=>{
+    update=(key,value,downloading)=>{
         if(!this.isEmpty(value)){
             realm.write(()=> {
-                realm.create(name, {key:key,value:value},true);
+                realm.create(name, {key:key,value:value,downloading:downloading},true);
             })
         }
     }
@@ -48,6 +47,7 @@ export default class EquipmentConditionHandler extends BaseHandler{
             realm.delete(infos);
         });
     }
+
     query =(key)=>{
             let infos = realm.objects(name);
             let item = infos.filtered(`key="${key}"`);
@@ -59,12 +59,14 @@ export default class EquipmentConditionHandler extends BaseHandler{
     
     queryAll = ()=>{
         let infos = realm.objects(name).sorted('key',true);
+        let downloading = 'true';
+        let list = infos.filtered(`downloading="${downloading}"`)
         // console.log('--------------------------------')
         // console.log(infos.length)
         // console.log(infos)
         let ret = [];
-        for( let i=0;i<infos.length;i++){
-            ret[i] = JSON.parse(infos[i].value);
+        for( let i=0;i<list.length;i++){
+            ret[i] = JSON.parse(list[i].value);
         }
         
         return ret;

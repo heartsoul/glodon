@@ -3,9 +3,12 @@ import * as API from 'app-api';
 import EquipmentHandler from '../handler/EquipmentHandler';
 import DownloadImg from '../model/DownloadImg';
 import * as CONSTANT from "../../common/service/api+constant"
+import OfflineManager from './OfflineManager';
+
 let handler = null;
 let projectId ;
 let projectVersionId ;
+let downloadingManager = null;
 /**
  * 质量相关下载
  */
@@ -105,7 +108,7 @@ export default class EquipmentManager {
     
 
     //下载单据信息
-    download = (startTime=0,endTime=0,states=[]) => {
+    download = (startTime=0,endTime=0,states=[],downloadKey,record) => {
         let qcState = CONSTANT.QC_STATE_ALL;
         if(states.length>0){
             if(states[0] == '待提交'){
@@ -118,6 +121,27 @@ export default class EquipmentManager {
             handler.update(key,value,committed,qualified,updateTime,submitState,errorMsg);
         }
          
+        downloadingManager = OfflineManager.getDownloadingManager();
+        _saveProgress=(progress,total,size)=>{
+            console.log('progress='+progress+'  total='+total+' size='+size);
+            record.size = size;
+            record.progress = progress;
+            record.total = total;
+
+            let downloading = progress<total?'true':'false';
+            if(progress>total){
+                progress = total;
+            }
+            downloadingManager.saveRecord(downloadKey,JSON.stringify(record),downloading);
+
+            if(progress == total){
+                //下载完毕  存储到已下载列表
+                let conditionManager = OfflineManager.getEquipmentConditionManager();
+                conditionManager.saveRecord(downloadKey,JSON.stringify(record));
+                //从下载中删除
+                downloadingManager.delete(downloadKey);
+            }
+        }
         
         //材设单下载列表
         function _getEquipmentList(page,size){
@@ -215,6 +239,7 @@ export default class EquipmentManager {
 
         let detailArr = []//保存详情
         async function download(){
+
             let page = 0;
             let size = 30;
             let data = await _getEquipmentList(page,size);
@@ -235,18 +260,22 @@ export default class EquipmentManager {
 
 
             if(qualityList && qualityList.length>0){
-                
-
+                let progress = 0;
+                num = qualityList.length;
+                total = num *3;
+                _saveProgress(progress++,total,num);
                 for (item of qualityList){
 
                     //全部   都有详情
                     let detail = await _getEquipmentDetail(item.id);
+                    _saveProgress(progress++,total,num);
                     // console.log(detail)
                     detailArr = [...detailArr,detail]
                     //待提交   编辑信息
                     let editInfo = null;
                     if(!item.committed){
                         editInfo = await _getEquipmentEditInfo(item.id);
+                        _saveProgress(progress++,total,num);
                     }
                     
 
@@ -263,8 +292,8 @@ export default class EquipmentManager {
                     let errorMsg = '';
                     _saveToDb(key,JSON.stringify(value),committed,qualified,updateTime,submitState,errorMsg);
                 }
+                _saveProgress(total,total,num);
             }
-            
             return true;
         }
         

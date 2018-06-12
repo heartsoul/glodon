@@ -17,7 +17,7 @@ import OfflineManager from '../../../offline/manager/OfflineManager'
 
 let timeStart=0
 let timeEnd = 0
-let equipmentConditionManager = null;
+// let equipmentConditionManager = null;
 let equipmentManager = null;
 var { width, height } = Dimensions.get("window");
 //材设进场清单下载条件选择
@@ -30,7 +30,7 @@ export default class extends Component {
 
   constructor() {
       super();
-      equipmentConditionManager = OfflineManager.getEquipmentConditionManager();
+      // equipmentConditionManager = OfflineManager.getEquipmentConditionManager();
       equipmentManager = OfflineManager.getEquipmentManager();
       this.state={
         top1:true,
@@ -206,6 +206,12 @@ export default class extends Component {
     this.state.bottom1?qcState=['全部']:'';
     this.state.bottom2?qcState=[...qcState,'待提交']:''
 
+    let qcStateText = '( ';
+    for(item of qcState){
+      qcStateText += item;
+    }
+    qcStateText += ' )';
+
     let timeText = '近3天'
     if(this.state.top4){
       timeText=st+' - '+et;
@@ -221,16 +227,21 @@ export default class extends Component {
       timeText:timeText,//在下载记录中 显示的时间   近3天。。。
       downloadTime:date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+(date.getMinutes()<10?'0'+date.getMinutes():date.getMinutes()),//下载时间
       size:111,//下载的单据的条数
+
+      title:'材设进场单',
+      subTitle:qcStateText,
+      progress:0,
+      total:100,
     }
 
-    equipmentConditionManager.saveRecord(date.getTime()+'',JSON.stringify(record));
+    // equipmentConditionManager.saveRecord(date.getTime()+'',JSON.stringify(record));
 
     console.log('startTime='+startTime+' endTime='+endTime);
     let startDate = this._formatDate(startTime,'yyyy-MM-dd')
     let endDate = this._formatDate(endTime,'yyyy-MM-dd')
     console.log('startDate='+startDate+' endDate='+endDate);
     console.log(JSON.stringify(qcState));
-    equipmentManager.download(startDate,endDate,qcState);
+    equipmentManager.download(startDate,endDate,qcState,date.getTime()+'',record);
   }
 
   _formatDate(timestamp, formater) { 

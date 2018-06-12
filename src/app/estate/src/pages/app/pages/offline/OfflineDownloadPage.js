@@ -9,7 +9,8 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  FlatList
 } from 'react-native';
 
 import {CircleProgressBar} from 'app-components'
@@ -232,12 +233,128 @@ class LoadedView extends Component{
   }
 }
 
+//选中按钮
+class SelectView extends Component{
+  constructor(){
+    super();
+    this.state={
+      selected:false
+    }
+  }
+
+  click=()=>{
+    this.setState((pre)=>{
+      return {
+        selected:!pre.selected
+      }
+    })
+  }
+
+  render(){
+    let url = this.state.selected?require('app-images/icon_downloading_selected.png'):require('app-images/icon_downloading_unselected.png');
+    return (
+      <TouchableOpacity onPress = {this.click} >
+        <Image style={{ width:16,height:16,marginLeft:11}} source= {url} />
+      </TouchableOpacity>
+    );
+  }
+}
 
 //下载中-内容页面
 class LoadingView extends Component{
-  render(){
+
+  constructor(){
+    super();
+    this.state={
+      dataList:[],
+    }
+  }
+
+  _startDownload=()=>{
+
+  }
+  _stopDownload=()=>{
+
+  }
+
+  componentDidMount(){
+    let dm = OfflineManager.getDownloadingManager();
+    let list = dm.getAllRecords();
+    console.log(list)
+    this.setState((pre)=>{
+      return {
+        ...pre,
+        dataList:list,
+      }
+    })
+
+    // setInterval(()=>{
+    //   console.log('333333333333333333')
+    // },1000);
+  }
+
+  renderItemView=(item)=>{
+    let source = item.item.source;
+    let title = item.item.title;
+    let subTitle = item.item.timeText+item.item.subTitle;
+    let progress = item.progress;
+    let total = item.total;
     return (
-      <Text >ssssss</Text>
+      <View style={{height:55,backgroundColor:'#ffffff'}} >
+        <View style={{height:54,backgroundColor:'#ffffff' ,flexDirection:'row',alignItems:'center' }}>
+          <SelectView />
+          <Image source={require('app-images/icon_downloading_quality.png')} style={{width:40,height:40,marginLeft:11,marginRight:14}} />
+          <View style={{flex:1,justifyContent:'center'}} >
+            <Text style={{fontSize:14,color:'#333333'}} >{title}</Text>
+            <Text style={{fontSize:10,color:'#999999'}} >{subTitle}</Text>
+          </View>
+          <CircleProgressBar startDownload={this._startDownload} stopDownload={this._stopDownload} progress={progress} totalNum={total} finishText={'已下载'}/>
+          
+        </View>
+        <View style={{height:1,backgroundColor:'#ececec',flex:1}} />
+      </View>
+    );
+  }
+
+  clickCancel=()=>{
+    console.log('click clickCancel')
+  }
+  clickContinue=()=>{
+    console.log('click clickContinue')
+
+  }
+  clickPause=()=>{
+    console.log('click clickPause')
+
+  }
+
+  render(){
+    
+    return (
+      <View style={{flex:1,backgroundColor:'#f9f9f9'}} >
+          <FlatList style={{flex:1}}
+            data={this.state.dataList}
+            renderItem={this.renderItemView}
+            keyExtractor={(item, index) => index+''}
+          />
+        <View style={{height:50,flexDirection:'row',alignItems:'center',justifyContent:'flex-end',backgroundColor:'#f9f9f9',marginBottom:80}}>
+          <TouchableOpacity onPress={this.clickCancel}>
+            <View style={{backgroundColor:'#f9f9f9',width:58,height:28,borderColor:'#cccccc',borderWidth:1,borderRadius:100,alignItems:'center',justifyContent:'center'}} >
+              <Text style={{fontSize:14,color:'#cccccc',}} >取消</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.clickContinue}>
+            <View style={{backgroundColor:'#f9f9f9',width:58,height:28,borderColor:'#31c2f3',borderWidth:1, borderRadius:100,alignItems:'center',justifyContent:'center',marginLeft:10}} >
+              <Text style={{fontSize:14,color:'#31c2f3'}} >继续</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.clickPause}>
+            <View style={{backgroundColor:'rgba(0,181,242,0.80)',width:58,height:28,alignItems:'center',justifyContent:'center',borderRadius:100,marginLeft:10,marginRight:10}} >
+              <Text style={{fontSize:14,color:'#ffffff'}} >暂停</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   }
 }

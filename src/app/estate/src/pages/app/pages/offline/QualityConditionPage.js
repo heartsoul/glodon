@@ -17,7 +17,7 @@ import OfflineManager from '../../../offline/manager/OfflineManager';
 
 let timeStart=0
 let timeEnd = 0
-let qualityConditionManager = null;
+// let qualityConditionManager = null;
 let qualityManager = null;
 var { width, height } = Dimensions.get("window");
 //质检清单下载条件选择
@@ -30,7 +30,7 @@ export default class extends Component {
 
   constructor() {
       super();
-      qualityConditionManager = OfflineManager.getQualityConditionManager();
+      // qualityConditionManager = OfflineManager.getQualityConditionManager();
       qualityManager = OfflineManager.getQualityManager();
       this.state={
         top1:true,
@@ -239,8 +239,30 @@ export default class extends Component {
     this.state.bottom1?qcState=['']:'';
     this.state.bottom2?qcState=[...qcState,'staged']:''
     this.state.bottom3?qcState=[...qcState,'unrectified']:''
-    this.state.bottom4?qcState=[...qcState,'inspected']:''
+    this.state.bottom4?qcState=[...qcState,'unreviewed']:''
     this.state.bottom5?qcState=[...qcState,'delayed']:''
+
+    let qcStateText = '(';
+    for(item of qcState){
+      switch(item){
+        case '':
+        qcStateText += ' 全部 ';
+        break;
+        case 'staged':
+        qcStateText += ' 待提交 ';
+        break;
+        case 'unrectified':
+        qcStateText += ' 待整改 ';
+        break;
+        case 'unreviewed':
+        qcStateText += ' 待复查 ';
+        break;
+        case 'delayed':
+        qcStateText += ' 已延迟 ';
+        break;
+      }
+    }
+    qcStateText += ')';
 
     let timeText = '近3天'
     if(this.state.top4){
@@ -257,10 +279,15 @@ export default class extends Component {
       timeText:timeText,//在下载记录中 显示的时间   近3天。。。
       downloadTime:date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+(date.getMinutes()<10?'0'+date.getMinutes():date.getMinutes()),//下载时间
       size:111,//下载的单据的条数
+
+      title:'检查单',
+      subTitle:qcStateText,
+      progress:0,
+      total:100,
     }
 
     
-    qualityConditionManager.saveRecord(date.getTime()+'',JSON.stringify(record));
+    // qualityConditionManager.saveRecord(date.getTime()+'',JSON.stringify(record));
 
 
     console.log('startTime='+startTime+' endTime='+endTime);
@@ -268,7 +295,7 @@ export default class extends Component {
     let endDate = this._formatDate(endTime,'yyyy-MM-dd')
     console.log('startDate='+startDate+' endDate='+endDate);
     console.log(JSON.stringify(qcState));
-    qualityManager.download(startDate,endDate,qcState)
+    qualityManager.download(startDate,endDate,qcState,date.getTime()+'',record)
   }
 
 

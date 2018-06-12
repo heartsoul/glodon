@@ -59,7 +59,7 @@ export default class QualityConditionHandler extends BaseHandler{
     }
     
     queryAll = ()=>{
-        let infos = realm.objects(name);
+        let infos = realm.objects(name).sorted('key',true);
         let ret = [];
         for( let i=0;i<infos.length;i++){
             ret[i] = JSON.parse(infos[i].value);

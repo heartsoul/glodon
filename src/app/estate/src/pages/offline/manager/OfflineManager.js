@@ -4,6 +4,7 @@ import EquipmentConditionManager from './EquipmentConditionManager';
 import QualityConditionManager from './QualityConditionManager';
 import QualityManager from './QualityManager';
 import EquipmentManager from './EquipmentManager';
+import DownloadingManager from './DownloadingManager';
 
 const Realm = require('realm');
 
@@ -14,6 +15,7 @@ let equipmentConditionManager = null;
 let qualityConditionManager = null;
 let qualityManager = null;
 let equipmentManager = null;
+let downloadingManager = null;
 
 export default class OfflineManager{
     //获取数据库表后缀名称
@@ -38,6 +40,7 @@ export default class OfflineManager{
         let qualityConditionName = 'qualitycondition'+this.getTableName();
         let qualityName = 'quality'+this.getTableName();
         let equipmentName = 'equipment'+this.getTableName();
+        let downloadingName = 'downloading'+this.getTableName();
 
         //基础数据包
         const basicSchema = {
@@ -94,13 +97,24 @@ export default class OfflineManager{
                 errorMsg:'string',//同步失败原因
             }
         }
-        realm = new Realm({schema:[basicSchema,equipmentConditionSchema,qualityconditionSchema,qualitySchema,equipmentSchema]});
+        //下载中  进度记录
+        const downloadingSchema = {
+            name:downloadingName,
+            primaryKey:'key',
+            properties:{
+                key:'string',
+                value:'string',
+                downloading:'string',//true  下载中    false已下载
+            }
+        }
+        realm = new Realm({schema:[basicSchema,equipmentConditionSchema,qualityconditionSchema,qualitySchema,equipmentSchema,downloadingSchema]});
 
         basicInfoManager = new BasicInfoManager(basicInfoName,realm);
         equipmentConditionManager = new EquipmentConditionManager(equipmentConditionName,realm);
         qualityConditionManager = new QualityConditionManager(qualityConditionName,realm);
         qualityManager = new QualityManager(qualityName,realm);
         equipmentManager = new EquipmentManager(equipmentName,realm);
+        downloadingManager = new DownloadingManager(downloadingName,realm);
     }
 
     static getBasicInfoManager(){
@@ -121,6 +135,10 @@ export default class OfflineManager{
 
     static getEquipmentManager(){
         return equipmentManager;
+    }
+
+    static getDownloadingManager(){
+        return downloadingManager;
     }
 
     static close(){

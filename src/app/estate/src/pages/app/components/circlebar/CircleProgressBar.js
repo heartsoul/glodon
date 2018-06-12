@@ -78,7 +78,7 @@ export default class CircleProgressBar extends Component {
 
 var styles = StyleSheet.create({
     container:{
-        width:200,
+        width:130,
         height:34,
         alignItems: 'center', 
         flexDirection:'row',

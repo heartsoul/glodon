@@ -2,10 +2,13 @@
 import * as API from 'app-api';
 import QualityHandler from '../handler/QualityHandler';
 import DownloadImg from '../model/DownloadImg';
+import OfflineManager from './OfflineManager';
+
 
 let handler = null;
 let projectId ;
 let projectVersionId ;
+let downloadingManager = null;
 /**
  * 质量相关下载
  */
@@ -16,6 +19,7 @@ export default class QualityManager {
         projectId = storage.loadProject();
         projectVersionId = storage.getLatestVersionId(projectId);
         // projectVersionId = storage.projectIdVersionId;
+        
     }
  
      //从数据库获取
@@ -24,7 +28,6 @@ export default class QualityManager {
          return new Promise((resolve,reject)=>{
             let infos = JSON.parse(info);
             resolve(infos);
-            
         });
      }
 
@@ -87,26 +90,34 @@ export default class QualityManager {
     
 
     //下载单据信息
-    download = (startTime=0,endTime=0,qcState='') => {
+    download = (startTime=0,endTime=0,qcState='',downloadKey,record) => {
         //保存到数据库
         _saveToDb=(key,value,qcState,qualityCheckpointId,updateTime,submitState,errorMsg)=>{
             handler.update(key,value,qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
         }
-         
-        //记录进度
-        _saveProgress=(callback,progress,totalNum)=>{
-            //回调页面
-            if(callback!=null && callback!=undefined){
-                callback(progress,totalNum);
+
+        downloadingManager = OfflineManager.getDownloadingManager();
+        _saveProgress=(progress,total,size)=>{
+            console.log('progress='+progress+'  total='+total+' size='+size);
+            record.size = size;
+            record.progress = progress;
+            record.total = total;
+
+            let downloading = progress<total?'true':'false';
+            if(progress>total){
+                progress = total;
             }
-            
-            if(progress==totalNum){
-                //记录终极状态
-                let date = new Date();
-                let time = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+(date.getMinutes()<10?'0'+date.getMinutes():date.getMinutes());
-                _saveToDb('downloadedTime',time);
+            downloadingManager.saveRecord(downloadKey,JSON.stringify(record),downloading);
+
+            if(progress == total){
+                //下载完毕  存储到已下载列表
+                let qualityConditionManager = OfflineManager.getQualityConditionManager();
+                qualityConditionManager.saveRecord(downloadKey,JSON.stringify(record));
+                //从下载中删除
+                downloadingManager.delete(downloadKey);
             }
         }
+         
         //质检单下载列表
         //          {"全部", "待提交",  "待整改",       "待复查",      "已检查",      "已复查",    "已延迟",  "已验收"};
         //          {"",     "staged", "unrectified",  "unreviewed",  "inspected",  "reviewed",  "delayed","accepted"};
@@ -217,9 +228,10 @@ export default class QualityManager {
                 }
             }
 
-
-
             if(qualityList && qualityList.length>0){
+                let progress = 0;
+                num = qualityList.length;
+                total = num * 6;
                 // {"全部","待提交",  "待整改",      "待复查",    "已检查",    "已复查",  "已延迟",  "已验收"};
                 // {"",   "staged",  "unrectified","unreviewed","inspected","reviewed","delayed","accepted"};
                 // [{ id: 5200303,
@@ -235,28 +247,31 @@ export default class QualityManager {
                 //     updateTime: 1526526006000,
                 //     files: [],
                 //     needRectification: true }]
-
+                _saveProgress(progress++,total,num);
                 for (item of qualityList){
 
                     //全部   都有详情
                     let detail = await _getQualityDetail(item.id);
+                    _saveProgress(progress++,total,num);
                     detailArr = [...detailArr,detail]
                     //待提交   编辑信息
                     let editInfo = null;
                     if(item.qcState =='staged'){
                         editInfo = await _getQualityEditInfo(item.id);
                     }
+                    _saveProgress(progress++,total,num);
                     //待整改   待整改编辑信息
                     let repairInfo = null;
                     if(item.qcState =='unrectified'){
                         repairInfo = await _getRepairEditInfo(item.id);
                     }
+                    _saveProgress(progress++,total,num);
                     //待复查   待复查 编辑信息
                     let reviewInfo = null;
                     if(item.qcState =='unreviewed'){
                         reviewInfo = await _getReviewEditInfo(item.id);
                     }
-
+                    _saveProgress(progress++,total,num);
                     let key = item.id+'';
                     let value = {
                         item:item,
@@ -272,6 +287,7 @@ export default class QualityManager {
                     let errorMsg = '';
                     _saveToDb(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
                 }
+                _saveProgress(total,total,num);
             }
             
             return true;
@@ -307,7 +323,6 @@ export default class QualityManager {
                 let dli = new DownloadImg();
                 dli.download(arr);
             }
-
         },(e)=>{
             console.log(e);
         });
