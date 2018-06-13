@@ -243,7 +243,7 @@ export default class extends Component {
     this.state.bottom5?qcState=[...qcState,'delayed']:''
 
     let qcStateText = '(';
-    for(item of qcState){
+    for(let item of qcState){
       switch(item){
         case '':
         qcStateText += ' 全部 ';

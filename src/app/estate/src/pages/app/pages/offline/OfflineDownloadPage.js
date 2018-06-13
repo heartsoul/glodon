@@ -10,7 +10,8 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  FlatList
+  FlatList,
+  DeviceEventEmitter
 } from 'react-native';
 
 import {CircleProgressBar} from 'app-components'
@@ -260,7 +261,6 @@ class SelectView extends Component{
   }
 }
 
-let getData = null;
 //进度条
 class ProgressView extends Component{
   constructor(){
@@ -278,26 +278,18 @@ class ProgressView extends Component{
 
   }
 
-  componentWillUnmount(){
-    //清除间隔取数据
-    if(getData){
-      clearInterval(getData);
-    }
-    this.setState = (pre)=>{
-      return;
-    };
-  }
 
   componentDidMount(){
     // {"item":{"key":"1528843027521","value":"{\"startTime\":1526164627521,\"endTime\":1528843027521,\"qcState\":[\"\"],\"timeText\":\"近1月\",\"downloadTime\":\"2018-6-12 22:37\",\"size\":29,\"title\":\"检查单\",\"subTitle\":\"( 全部 )\",\"progress\":108,\"total\":174}","downloading":"true"},"index":0,"separators":{}}
     let callback = this.props.callback;
     let item = this.props.data;
-    let value = JSON.parse(item.item.value);
+    // let value = JSON.parse(item.item.value);
     let key = item.item.key
-    let dm = OfflineManager.getDownloadingManager();
-    if(item){
-      let progress = value.progress;
-      let total = value.total;
+    // let dm = OfflineManager.getDownloadingManager();
+
+    this.subscription = DeviceEventEmitter.addListener(key, (params)=>{
+      let progress = params.progress;
+      let total = params.total;
       this.setState((pre)=>{
         return {
           ...pre,
@@ -305,38 +297,22 @@ class ProgressView extends Component{
           totalNum:total,
         }
       })
-    }
-    let single = null;
-    //每隔500毫秒取一次进度
-    getData = setInterval(()=>{
-        single = dm.getRecordByKey(key);
-        if(single){
-          //可以取到数据   刷新进度
-          let p = single.progress;
-          let t = single.total;
-          this.setState((pre)=>{
-            return {
-              ...pre,
-              progress:p,
-              totalNum:t,
-            }
-          })
-        }else{
-          //取不到数据，是因为在下载中的数据，改为了已完成，需要刷新页面，重新获取下载中的数据
-          clearInterval(getData);
+      if(progress == total){
+        this.subscription&&this.subscription.remove();
+        if(callback!=null){
           callback();
+          callback = null;
         }
-    },500);
+        
+      }
+    });
+    
   }
 
-  // setInterval(()=>{
-    //   console.log('333333333333333333')
-    // },1000);
-    // clearInterval()
 
   render(){
     return (
-      <CircleProgressBar startDownload={this._startDownload} stopDownload={this._stopDownload} progress={this.state.progress} totalNum={this.state.totalNum} finishText={'已下载'}/>
+      <CircleProgressBar startDownload={this._startDownload} stopDownload={this._stopDownload} progress={this.state.progress} totalNum={this.state.totalNum} finishText={''}/>
     );
   }
 }
@@ -363,7 +339,7 @@ class LoadingView extends Component{
   }
 
   _callback=()=>{
-    console.log('444444444444444')
+    console.log('33333333333333333')
     this._getRecords();
   }
 

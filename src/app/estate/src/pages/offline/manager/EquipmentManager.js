@@ -1,4 +1,4 @@
-
+import { DeviceEventEmitter } from 'react-native'
 import * as API from 'app-api';
 import EquipmentHandler from '../handler/EquipmentHandler';
 import DownloadImg from '../model/DownloadImg';
@@ -8,7 +8,6 @@ import OfflineManager from './OfflineManager';
 let handler = null;
 let projectId ;
 let projectVersionId ;
-let downloadingManager = null;
 /**
  * 质量相关下载
  */
@@ -39,21 +38,21 @@ export default class EquipmentManager {
     
     //获取材设列表
     getEquipmentList=(qcState,page,size)=>{
-        console.log(qcState)
-        console.log('page='+page+' size='+size)
+        // console.log(qcState)
+        // console.log('page='+page+' size='+size)
         if (qcState == CONSTANT.QC_STATE_EDIT) {
-            console.log('111111111111111111111')
+            // console.log('111111111111111111111')
             return this._getEquipmentListCommited(page, size, false);
         }
         if (qcState == CONSTANT.QC_STATE_STANDARD) {
-            console.log('22222222222222222')
+            // console.log('22222222222222222')
             return this._getEquipmentListQualified(page, size, true);
         }
         if (qcState == CONSTANT.QC_STATE_NOT_STANDARD) {
-            console.log('33333333333333333333')
+            // console.log('33333333333333333333')
             return this._getEquipmentListQualified(page, size, false);
         }
-        console.log('44444444444444444444444')
+        // console.log('44444444444444444444444')
         return this._getEquipmentListAll(page,size);
     }
 
@@ -117,13 +116,13 @@ export default class EquipmentManager {
         }
 
         //保存到数据库
-        _saveToDb=(key,value,committed,qualified,updateTime,submitState,errorMsg)=>{
+        let _saveToDb=(key,value,committed,qualified,updateTime,submitState,errorMsg)=>{
             handler.update(key,value,committed,qualified,updateTime,submitState,errorMsg);
         }
          
-        downloadingManager = OfflineManager.getDownloadingManager();
-        _saveProgress=(progress,total,size)=>{
-            console.log('progress='+progress+'  total='+total+' size='+size);
+        let downloadingManager = OfflineManager.getDownloadingManager();
+        let _saveProgress=(progress,total,size)=>{
+            // console.log('key='+downloadKey+'  progress='+progress+'  total='+total+' size='+size);
             record.size = size;
             record.progress = progress;
             record.total = total;
@@ -141,10 +140,11 @@ export default class EquipmentManager {
                 //从下载中删除
                 downloadingManager.delete(downloadKey);
             }
+            DeviceEventEmitter.emit(downloadKey,record);
         }
         
         //材设单下载列表
-        function _getEquipmentList(page,size){
+        let  _getEquipmentList=(page,size)=>{
             return API.equipmentListByDate(projectId, qcState,page,size,startTime,endTime).then(
                 (responseData) => {
                 
@@ -161,7 +161,7 @@ export default class EquipmentManager {
             });
         }
         //材设单详情下载
-        function _getEquipmentDetail(id) {
+        let _getEquipmentDetail=(id)=> {
             return  API.equipmentDetail(projectId, id).then((responseData) => {
                 // { data:
                 //     I/ReactNativeJS( 2780):    { id: 5200663,
@@ -222,7 +222,7 @@ export default class EquipmentManager {
         }
 
         //材设单编辑信息
-        function _getEquipmentEditInfo(id) {
+        let _getEquipmentEditInfo=(id) =>{
             return  API.equipmentDetail(projectId, id).then((responseData) => {
                 // console.log('材设单编辑信息 start--------------');
                 // console.log(responseData); //
@@ -246,7 +246,7 @@ export default class EquipmentManager {
             let qualityList = [];
             if(data && data.list && data.list.length>0){
                 qualityList = [...qualityList,...data.list];
-                totalPages = data.totalPages;
+                let totalPages = data.totalPages;
                 console.log('totalpages='+totalPages)
                 page++;
                 //循环取数据
@@ -261,10 +261,10 @@ export default class EquipmentManager {
 
             if(qualityList && qualityList.length>0){
                 let progress = 0;
-                num = qualityList.length;
-                total = num *3;
+                let num = qualityList.length;
+                let total = num *2;
                 _saveProgress(progress++,total,num);
-                for (item of qualityList){
+                for (let item of qualityList){
 
                     //全部   都有详情
                     let detail = await _getEquipmentDetail(item.id);

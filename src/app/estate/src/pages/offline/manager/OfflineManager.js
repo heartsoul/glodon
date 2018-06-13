@@ -17,6 +17,7 @@ let qualityManager = null;
 let equipmentManager = null;
 let downloadingManager = null;
 
+// let equipmentName=null;
 export default class OfflineManager{
     //获取数据库表后缀名称
     static getTableName = ()=>{
@@ -134,6 +135,7 @@ export default class OfflineManager{
     }
 
     static getEquipmentManager(){
+        // equipmentManager = new EquipmentManager(equipmentName,realm);
         return equipmentManager;
     }
 

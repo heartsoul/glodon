@@ -17,7 +17,6 @@ import OfflineManager from '../../../offline/manager/OfflineManager'
 
 let timeStart=0
 let timeEnd = 0
-// let equipmentConditionManager = null;
 let equipmentManager = null;
 var { width, height } = Dimensions.get("window");
 //材设进场清单下载条件选择
@@ -30,7 +29,6 @@ export default class extends Component {
 
   constructor() {
       super();
-      // equipmentConditionManager = OfflineManager.getEquipmentConditionManager();
       equipmentManager = OfflineManager.getEquipmentManager();
       this.state={
         top1:true,
@@ -185,29 +183,23 @@ export default class extends Component {
     let st= this.state.startText=='起始日期'?day:this.state.startText;;
     let et = this.state.endText=='终止日期'?day:this.state.endText;
 
-    // console.log('startTime='+startTime+' endTime='+endTime);
-    // console.log(st+' '+et)
     this.state.top1?(startTime=date.getTime()-3*24*60*60*1000,endTime=date.getTime()):'';
     this.state.top2?(startTime=date.getTime()-7*24*60*60*1000,endTime=date.getTime()):'';
     this.state.top3?(startTime=date.getTime()-31*24*60*60*1000,endTime=date.getTime()):'';
     this.state.top4?(startTime=timeStart>0?timeStart:date.getTime()):'';
     this.state.top5?(endTime=timeEnd>0?timeEnd:date.getTime()):'';
-    // console.log('startTime='+startTime+' endTime='+endTime);
-    // console.log(st+' '+et)
     if (this.state.top4 || this.state.top5){
       startTime<endTime?'':([st,et]=[et,st]);
     }
     startTime<endTime?'':([startTime,endTime]=[endTime,startTime])
     
-    // console.log('startTime='+startTime+' endTime='+endTime);
-    // console.log(st+' '+et)
 
     let qcState=[];
     this.state.bottom1?qcState=['全部']:'';
     this.state.bottom2?qcState=[...qcState,'待提交']:''
 
     let qcStateText = '( ';
-    for(item of qcState){
+    for(let item of qcState){
       qcStateText += item;
     }
     qcStateText += ' )';
@@ -234,7 +226,6 @@ export default class extends Component {
       total:100,
     }
 
-    // equipmentConditionManager.saveRecord(date.getTime()+'',JSON.stringify(record));
 
     console.log('startTime='+startTime+' endTime='+endTime);
     let startDate = this._formatDate(startTime,'yyyy-MM-dd')
@@ -242,6 +233,8 @@ export default class extends Component {
     console.log('startDate='+startDate+' endDate='+endDate);
     console.log(JSON.stringify(qcState));
     equipmentManager.download(startDate,endDate,qcState,date.getTime()+'',record);
+    
+    
   }
 
   _formatDate(timestamp, formater) { 

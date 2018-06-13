@@ -1,4 +1,4 @@
-
+import { DeviceEventEmitter } from 'react-native'
 import * as API from 'app-api';
 import QualityHandler from '../handler/QualityHandler';
 import DownloadImg from '../model/DownloadImg';
@@ -92,13 +92,13 @@ export default class QualityManager {
     //下载单据信息
     download = (startTime=0,endTime=0,qcState='',downloadKey,record) => {
         //保存到数据库
-        _saveToDb=(key,value,qcState,qualityCheckpointId,updateTime,submitState,errorMsg)=>{
+        let _saveToDb=(key,value,qcState,qualityCheckpointId,updateTime,submitState,errorMsg)=>{
             handler.update(key,value,qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
         }
 
         downloadingManager = OfflineManager.getDownloadingManager();
-        _saveProgress=(progress,total,size)=>{
-            console.log('progress='+progress+'  total='+total+' size='+size);
+        let _saveProgress=(progress,total,size)=>{
+            // console.log('key='+downloadKey+'  progress='+progress+'  total='+total+' size='+size);
             record.size = size;
             record.progress = progress;
             record.total = total;
@@ -116,12 +116,13 @@ export default class QualityManager {
                 //从下载中删除
                 downloadingManager.delete(downloadKey);
             }
+            DeviceEventEmitter.emit(downloadKey,record);
         }
          
         //质检单下载列表
         //          {"全部", "待提交",  "待整改",       "待复查",      "已检查",      "已复查",    "已延迟",  "已验收"};
         //          {"",     "staged", "unrectified",  "unreviewed",  "inspected",  "reviewed",  "delayed","accepted"};
-        function _getQualityList(page,size){
+        let  _getQualityList =(page,size)=>{
             return API.getQualityInspectionAllByDate(projectId, qcState,page,size,startTime,endTime).then(
                 (responseData) => {
                 // { data:
@@ -153,7 +154,7 @@ export default class QualityManager {
             });
         }
         //质检单详情下载
-        function _getQualityDetail(id) {
+        let  _getQualityDetail=(id)=> {
             return  API.getQualityInspectionDetail(projectId, id).then((responseData) => {
                 // console.log('质检单详情 start--------------');
                 // console.log(responseData); //
@@ -168,7 +169,7 @@ export default class QualityManager {
         }
 
         //质检单编辑信息
-        function _getQualityEditInfo(id) {
+        let  _getQualityEditInfo=(id)=> {
             return  API.getQualityInspectionDetail(projectId, id).then((responseData) => {
                 // console.log('质检单编辑信息 start--------------');
                 // console.log(responseData); //
@@ -182,7 +183,7 @@ export default class QualityManager {
             });
         }
         //整改单编辑信息
-        function _getRepairEditInfo(id) {
+        let  _getRepairEditInfo=(id)=> {
             return API.getRepairInfo(projectId, id).then((responseData) => {
                 // console.log('整改单编辑信息 start--------------');
                 // console.log(responseData); //
@@ -196,7 +197,7 @@ export default class QualityManager {
             });
         }
         //复查单编辑信息
-        function _getReviewEditInfo(id) {
+        let  _getReviewEditInfo=(id)=> {
             return API.getReviewInfo(projectId, id).then((responseData) => {
                 // console.log('复查单编辑信息 start--------------');
                 // console.log(responseData); //
@@ -218,7 +219,7 @@ export default class QualityManager {
             let qualityList = [];
             if(data && data.list && data.list.length>0){
                 qualityList = [...qualityList,...data.list];
-                totalPages = data.totalPages;
+                let totalPages = data.totalPages;
                 page++;
                 //循环取数据
                 while(page<totalPages){
@@ -230,8 +231,8 @@ export default class QualityManager {
 
             if(qualityList && qualityList.length>0){
                 let progress = 0;
-                num = qualityList.length;
-                total = num * 6;
+                let num = qualityList.length;
+                let total = num * 5;
                 // {"全部","待提交",  "待整改",      "待复查",    "已检查",    "已复查",  "已延迟",  "已验收"};
                 // {"",   "staged",  "unrectified","unreviewed","inspected","reviewed","delayed","accepted"};
                 // [{ id: 5200303,
@@ -248,7 +249,7 @@ export default class QualityManager {
                 //     files: [],
                 //     needRectification: true }]
                 _saveProgress(progress++,total,num);
-                for (item of qualityList){
+                for (let item of qualityList){
 
                     //全部   都有详情
                     let detail = await _getQualityDetail(item.id);

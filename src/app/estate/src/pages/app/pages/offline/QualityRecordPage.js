@@ -37,7 +37,6 @@ export default class extends Component {
     title: '质检清单',
     headerRight:<TouchableOpacity onPress={()=>{
       qualityConditionManager.deleteAll();
-      qualityConditionManager.close();
       clearFun();
     }}>
                    <Image source={require('app-images/icon_bottom_delete.png')} style={{width:24,height:24,marginRight:12} }/>
