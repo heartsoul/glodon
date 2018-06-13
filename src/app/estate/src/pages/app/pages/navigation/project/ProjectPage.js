@@ -57,19 +57,9 @@ class ProjectPage extends Component {
         );
     }
 
-    //获取当前项目最新版本
-    _getlatestVersion = (projectId)=>{
-        API.getModelLatestVersion(projectId).then((responseData) => {
-            let latestVersion = responseData.data.data.versionId;
-            storage.projectIdVersionId = latestVersion;
-            storage.setLatestVersionId(projectId,latestVersion);
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-
     _itemClick = (item, index) => {
-        this._getlatestVersion(item.value.id);//获取项目最新版本
+        // {"key":"P05213135","value":{"id":5213135,"code":"APP材设","name":"APP材设","simpleName":null,"parentDeptId":5211919,"parentDeptName":"11301919","deptId":5213135,"responder":null,"scale":null,"projectTypeCode":"Estate_Project_Type_House","projectTypeName":"住宅","countryCode":null,"regionCode":"Estate_Project_Region_CentralChina","regionName":"华中","address":null,"plannedDuration":0,"plannedStart":null,"plannedEnd":null,"actualDuration":0,"actualStart":null,"actualEnd":null,"projectStatusCode":null,"projectStatusName":null,"description":null,"relateId":null,"relateStageId":null,"stageCode":null,"stageName":null,"external":null,"settingTime":null,"attachmentInfo":null,"concerned":true}}
+        
         let navigator = this.props.navigation;
         let prevTenant = storage.loadLastTenant();
         let newTenant = this.props.navigation.state.params.tenantId;

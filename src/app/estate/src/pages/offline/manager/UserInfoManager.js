@@ -40,16 +40,11 @@ export default class UserInfoManager {
                         API.getProjects(0, responseData.data.totalElements,tenantId).then(
                             (responseData) => {
                                 if(responseData.data.content.length>0){
-                                    console.log(responseData)
                                     let list=responseData.data.content;
-                                    // console.log('项目列表 start-------------')
-                                    // console.log(JSON.stringify(list))
-                                    // console.log('项目列表 end-------------')
 
                                     let tenantInfo = storage.loadTenantInfo();
                                     let tenantObj = JSON.parse(tenantInfo);
                                     let tenantId = tenantObj.value.tenantId;//租户的id
-                                    // console.log('=====================setlist  '+tenantId)
                                     _saveToDb(tenantId+'',JSON.stringify(list))
                                     return list;
                                 }

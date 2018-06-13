@@ -199,7 +199,9 @@ export async function getModelBimFiles(projectId, projectVersionId, buildingId =
 }
  */
 export async function getModelBimFileChildren(projectId, projectVersionId, pageIndex, fileId = 0) {
-    let api = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children";
+    // let api = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children";
+    // model/{deptId}/modelVersions/{modelVersionId}/drawingFiles/children
+    let api = "/model/" + projectId + "/modelVersions/" + projectVersionId + "/drawingFiles/children";
     let filter = '';
     if (!(fileId === 0)) {
         filter += '&fileId=' + fileId;

@@ -534,7 +534,7 @@ export default class BasicInfoManager {
                     console.log('模型列表 start----------------')
                     console.log(responseData)
                     console.log('模型列表 end----------------')
-                    let list = responseData.data.data.items;
+                    let list = responseData.data;
                     return list;
                 }
             ).catch((error) => {

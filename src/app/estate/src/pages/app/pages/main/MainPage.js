@@ -94,15 +94,7 @@ export default class extends Component {
     componentDidMount() {
         //每次进来都刷新一遍基础数据
         OfflineManager.init();
-        let bm = OfflineManager.getBasicInfoManager();
-        bm.downloadBasicInfo((p,t)=>{
-            if(t==p){
-                // setTimeout(()=>{
-                //     bm.close();
-                // }, 1000)
-                
-            }
-        });
+        
         //请求数据
         // this.fetchData();
         // console.log("----------------------------componentDidMount")
@@ -172,6 +164,9 @@ export default class extends Component {
             let latestVersion = responseData.data.data.versionId;
             storage.projectIdVersionId = latestVersion;
             storage.setLatestVersionId(projectId,latestVersion);
+
+            let bm = OfflineManager.getBasicInfoManager();
+            bm.downloadBasicInfo((p,t)=>{});
         }).catch((error) => {
             console.log(error);
         });
