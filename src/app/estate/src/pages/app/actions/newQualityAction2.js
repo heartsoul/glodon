@@ -3,7 +3,7 @@
 import * as types from '../constants/newQualityTypes';
 import * as API from "app-api";
 import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
-import BasicInfoManager from '../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../offline/manager/OfflineManager'
 let responseCount = 0;//请求完成的次数
 
 export function fetchData(params) {
@@ -159,14 +159,26 @@ function getTransformInfo(params) {
  * @param {*} fileId 质检单id
  */
 function _getQualityInspectionDetail(fileId) {
-    return API.getQualityInspectionDetail(storage.loadProject(), fileId)
+    if(OfflineStateUtil.isOnLine()){
+        return API.getQualityInspectionDetail(storage.loadProject(), fileId)
+            .then((responseData) => {
+                let params = {};
+                if (responseData.data && responseData.data.inspectionInfo) {
+                    params = getDetailInfo(responseData.data.inspectionInfo)
+                }
+                return params;
+            });
+    }else{
+        let qualityManager = OfflineManager.getQualityManager();
+        return qualityManager.getQualityDetail(fileId)
         .then((responseData) => {
             let params = {};
-            if (responseData.data && responseData.data.inspectionInfo) {
-                params = getDetailInfo(responseData.data.inspectionInfo)
-            }
-            return params;
-        });
+                if (responseData && responseData.inspectionInfo) {
+                    params = getDetailInfo(responseData.inspectionInfo)
+                }
+                return params;
+        })
+    }
 }
 
 /**
@@ -254,7 +266,7 @@ function _getInspectionCompanies() {
             return inspectionCompanies;
         });
     }else{
-        let bm = new BasicInfoManager();
+        let bm = OfflineManager.getBasicInfoManager();
         return bm.getInspectionCompany();
     }
     
@@ -274,7 +286,7 @@ function _getSupporters() {
                 return supporters;
             });
     }else{
-        let bm = new BasicInfoManager();
+        let bm = OfflineManager.getBasicInfoManager();
         return bm.getSupporters();
     }
 }

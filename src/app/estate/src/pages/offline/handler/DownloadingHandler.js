@@ -1,33 +1,33 @@
+
 import BaseHandler from './BaseHandler';
 
-//基础信息包
+//材设清单下载条件
 
 let name = null;
 let realm = null;
-export default class BasicInfoHandler extends BaseHandler{
+export default class DownloadingHandler extends BaseHandler{
 
-
-    constructor(baseInfoname,baseInfoRealm){
+    constructor(eName,eRealm){
         super();
-        name = baseInfoname;
-        realm = baseInfoRealm;
-        console.log('name='+name)
+        name = eName;
+        realm = eRealm;
+        
     }
 
     
-    insert=(key,value)=>{
+    insert=(key,value,downloading)=>{
         if(!this.isEmpty(value)){
             realm.write(()=> {
-                realm.create(name, {key:key,value:value},true);
+                realm.create(name, {key:key,value:value,downloading:downloading},true);
             })
         }
         
     }
 
-    update=(key,value)=>{
+    update=(key,value,downloading)=>{
         if(!this.isEmpty(value)){
             realm.write(()=> {
-                realm.create(name, {key:key,value:value},true);
+                realm.create(name, {key:key,value:value,downloading:downloading},true);
             })
         }
     }
@@ -47,6 +47,7 @@ export default class BasicInfoHandler extends BaseHandler{
             realm.delete(infos);
         });
     }
+
     query =(key)=>{
             let infos = realm.objects(name);
             let item = infos.filtered(`key="${key}"`);
@@ -57,8 +58,18 @@ export default class BasicInfoHandler extends BaseHandler{
     }
     
     queryAll = ()=>{
-        let infos = realm.objects(name);
-        return infos;
+        let infos = realm.objects(name).sorted('key',true);
+        let downloading = 'true';
+        let list = infos.filtered(`downloading="${downloading}"`)
+        // console.log('--------------------------------')
+        // console.log(infos.length)
+        // console.log(infos)
+        let ret = [];
+        for( let i=0;i<list.length;i++){
+            ret[i] = list[i];
+        }
+        
+        return ret;
     }
 
     

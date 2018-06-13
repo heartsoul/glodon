@@ -104,6 +104,23 @@ export async function getQualityInspectionAll(projectId, qcState, page, size, qu
         method: 'GET',
     });
 }
+/**
+ * 获取质量列表  根据两个时间点截取
+ */
+export async function getQualityInspectionAllByDate(projectId, qcState, page, size, startDate, endDate) {
+    // return demoData(100);
+    let api = "/quality/" + projectId + "/qualityInspection/all";
+    // let filter = '';
+    // if (!(qualityCheckpointId === 0)) {
+    //     filter += '&qualityCheckpointId=' + qualityCheckpointId;
+    // }
+    // if (!(qualityCheckpointName === '')) {
+    //     filter += '&qualityCheckpointName=' + qualityCheckpointName;
+    // }
+    return requestJSON(api + '?sort=updateTime,desc&page=' + page + '&size=' + size + "&qcState=" + qcState + '&startDate=' + startDate + "&endDate=" + endDate, {
+        method: 'GET',
+    });
+}
 
 /**
  * 根据id查询检查历史详情
@@ -1264,6 +1281,35 @@ export async function equipmentList(projectId, qcState, page, size, sort) {
     });
 }
 
+/**
+ * 材设列表 全部 根据两个时间点筛选
+ */
+export async function equipmentListByDate(projectId, qcState, page, size,startDate,endDate) {
+    let sort = 'updateTime,desc';
+    // return demoDataEquipment(100);
+    if (qcState == CONSTANT.QC_STATE_EDIT) {
+        return equipmentListCommittedByDate(projectId, page, size,false,startDate,endDate)
+    }
+    let filter = `?page=${page}&size=${size}&sort=${sort}&startDate=${startDate}&endDate=${endDate}`;
+    let api = `/quality/${projectId}/facilityAcceptance${filter}`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
+
+
+/**
+ * 材设列表 待提交  根据两个时间点筛选
+ * @param {boolean} committed committed
+ */
+function equipmentListCommittedByDate(projectId, page, size,committed,startDate,endDate) {
+    let sort = 'updateTime,desc';
+    let filter = `?page=${page}&size=${size}&sort=${sort}&committed=${committed}&startDate=${startDate}&endDate=${endDate}`;
+    let api = `/quality/${projectId}/facilityAcceptance${filter}`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+}
 /**
  * 材设列表 待提交
  * @param {boolean} committed committed

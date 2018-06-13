@@ -8,8 +8,8 @@ let handler = null;
  */
 export default class EquipmentConditionManager {
     
-    constructor(){
-        handler = new EquipmentConditionHandler();
+    constructor(name,realm){
+        handler = new EquipmentConditionHandler(name,realm);
     }
  
     //获取所有下载记录
@@ -28,7 +28,5 @@ export default class EquipmentConditionManager {
         handler.deleteAll();
     }
 
-    close =()=>{
-        handler.close();
-    }
+    
 }

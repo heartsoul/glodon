@@ -3,7 +3,7 @@ import * as types from '../constants/equipmentInfoTypes'
 import { Toast } from 'antd-mobile';
 import * as UpdateDataAction from "./updateDataAction";
 import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
-import BasicInfoManager from '../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../offline/manager/OfflineManager'
 
 /**
  * 是否有过修改
@@ -237,19 +237,37 @@ export function fetchData(fieldId) {
 }
 
 function loadDetail(dispatch,fieldId) {
-    API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
-        if (responseData.data.files && responseData.data.files.length > 0) {
-            loadFileUrls(responseData.data.files, (files) => {
-                responseData.data.files = files;
+    if(OfflineStateUtil.isOnLine()){
+        API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
+            if (responseData.data.files && responseData.data.files.length > 0) {
+                loadFileUrls(responseData.data.files, (files) => {
+                    responseData.data.files = files;
+                    dispatch(_loadSuccess(responseData.data));
+                });
+            }
+            else {
                 dispatch(_loadSuccess(responseData.data));
-            });
-        }
-        else {
-            dispatch(_loadSuccess(responseData.data));
-        }
-    }).catch(error => {
-        dispatch(_loadError(error));
-    });
+            }
+        }).catch(error => {
+            dispatch(_loadError(error));
+        });
+    }else{
+        let equimentManager = OfflineManager.getEquipmentManager();
+        equimentManager.getQualityDetail(fieldId).then((responseData) => {
+            if (responseData.data.files && responseData.data.files.length > 0) {
+                loadFileUrls(responseData.data.files, (files) => {
+                    responseData.data.files = files;
+                    dispatch(_loadSuccess(responseData.data));
+                });
+            }
+            else {
+                dispatch(_loadSuccess(responseData.data));
+            }
+        }).catch(error => {
+            dispatch(_loadError(error));
+        });
+    }
+    
 }
 
 function loadFileUrls(files, finsh) {
@@ -325,7 +343,7 @@ function equipmentAcceptanceCompanies(dispatch) {
                 dispatch(_loadingAcceptanceCompaniesSuccess(responseData.data));
             }).catch(error => { })
     }else{
-        let bm = new BasicInfoManager();
+        let bm = OfflineManager.getBasicInfoManager();
         bm.equipmentAcceptanceCompanies().then(data =>{
             dispatch(_loadingAcceptanceCompaniesSuccess(data));
         }).catch(err => {

@@ -1,47 +1,20 @@
 
 import BaseHandler from './BaseHandler';
 
-import Realm from 'realm'
-
 //质检清单下载条件
 
 let name = null;
 let realm = null;
 export default class QualityConditionHandler extends BaseHandler{
 
-//获取数据库表后缀名称
-getTableName = ()=>{
-    let userInfo = storage.loadUserInfo();
-    // let userObj = JSON.parse(userInfo);
-    let account = userInfo.username;//手机号
 
-    let tenantInfo = storage.loadTenantInfo();
-    let tenantObj = JSON.parse(tenantInfo);
-    let tenantId = tenantObj.value.tenantId;//租户的id
-
-    let projectId = storage.loadProject();//项目的id
-    let targetPath = `${account}${tenantId}${projectId}`;
-    return targetPath;
-}
-
-    constructor(){
+    constructor(eName,eRealm){
         super();
-        name = 'qualitycondition'+this.getTableName();
-        console.log('name='+name)
-        const basicSchema = {
-            name:name,
-            primaryKey:'key',
-            properties:{
-                key:'string',
-                value:'string',
-            }
-        }
-        realm = new Realm({schema:[basicSchema]});
+        name = eName;
+        realm = eRealm;
     }
 
-    close=()=>{
-        realm.close();
-    }
+    
     
     insert=(key,value)=>{
         console.log('save='+value)
@@ -86,10 +59,7 @@ getTableName = ()=>{
     }
     
     queryAll = ()=>{
-        let infos = realm.objects(name);
-        // console.log('--------------------------------')
-        // console.log(infos.length)
-        // console.log(infos)
+        let infos = realm.objects(name).sorted('key',true);
         let ret = [];
         for( let i=0;i<infos.length;i++){
             ret[i] = JSON.parse(infos[i].value);

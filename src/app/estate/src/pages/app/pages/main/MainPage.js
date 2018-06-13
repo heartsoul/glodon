@@ -21,16 +21,21 @@ import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择�
 
 import {ActionModal} from 'app-components';
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
-import BasiInfoManager from '../../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../../offline/manager/OfflineManager'
 import * as API from "app-api";
+import { YellowBox } from 'react-native';//忽略黄色警告
+
 var { width, height } = Dimensions.get("window");
 export default class extends Component {
     constructor() {
         super();
         this.state={
             isShowOfflineHint:true,
+            activeIndex : 0
         }
         this.bPress = false;
+        //忽略黄色警告
+        YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
     };
 
     _loadQualityForm = (event) => {
@@ -82,21 +87,29 @@ export default class extends Component {
         BimFileEntry.chooseQualityModelFromHome(navigator);
     }
 
+    componentWillUnmount(){
+        OfflineManager.close();
+    }
+
     componentDidMount() {
+        //每次进来都刷新一遍基础数据
+        OfflineManager.init();
+        let bm = OfflineManager.getBasicInfoManager();
+        bm.downloadBasicInfo((p,t)=>{
+            if(t==p){
+                // setTimeout(()=>{
+                //     bm.close();
+                // }, 1000)
+                
+            }
+        });
+        //请求数据
+        // this.fetchData();
+        // console.log("----------------------------componentDidMount")
         CheckVersionManager.checkVersion("auto")
         if(Platform.OS === 'web') {
             return;
         }
-        //每次进来都刷新一遍基础数据
-        let bm = new BasiInfoManager();
-        bm.downloadBasicInfo((p,t)=>{
-            if(t==p){
-                setTimeout(()=>{
-                    bm.close();
-                }, 1000)
-                
-            }
-        });
 
     }
     fetchData = () => {

@@ -5,10 +5,11 @@ import { View, StyleSheet, Text as Label, Image, TouchableOpacity } from 'react-
 import { StatusActionButton } from "app-components"
 import * as API from "app-api"
 import { push } from 'connected-react-router';
-
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
+import DirManager from '../../../offline/manager/DirManager';
+// import RNFS from 'react-native-fs';
 const benchmarkImage = require("app-images/icon_benchmark.png");
 const userImage = require("app-images/icon_mine_default_header.png");
-
 
 export default class QualityInfoCellItem extends React.Component {
     onClick = (event) => {
@@ -78,8 +79,15 @@ export default class QualityInfoCellItem extends React.Component {
     bigImage = (images, index) => {
         let media = [];
         images.map((item, index) => {
+            let path = item.url;
+            if(!OfflineStateUtil.isOnLine()){
+                if(item){
+                    let dm = new DirManager();
+                     path  = 'file://'+dm.getImagePathById(item.objectId);
+                }
+            }
             media.push({
-                photo: item.url,
+                photo: path,
                 objectId:item.objectId
             });
         });
@@ -89,6 +97,14 @@ export default class QualityInfoCellItem extends React.Component {
     }
     renderImage = () => {
         const { url } = this.props;
+        // console.log('exist================'+url)
+        if(!OfflineStateUtil.isOnLine()){
+            if(url){
+                let dm = new DirManager();
+                let path  = 'file://'+dm.getImagePathById(url.objectId);
+                url.url = path;
+            }
+        }
         return (
             <View style={styles.containerView} >
                 <TouchableOpacity activeOpacity={0.5} onPress={(event) => {
@@ -99,11 +115,20 @@ export default class QualityInfoCellItem extends React.Component {
             </View>
         );
     }
+
     renderImages = () => {
         return (
             <View style={styles.containerView} >
                 {
                     this.props.urls.map((url, index) => {
+                        if(!OfflineStateUtil.isOnLine()){
+                            if(url){
+                                let dm = new DirManager();
+                                let path  = 'file://'+dm.getImagePathById(url.objectId);
+                                url.url = path;
+                                // console.log('exist================'+url.url)
+                            }
+                        }
                         return (
                             <TouchableOpacity key={'xxx' + index} activeOpacity={0.5} onPress={(event) => { this.bigImage(this.props.urls, index); }}>
                                 <Image source={{ uri: url.url }} style={styles.imageNarmal} />

@@ -4,6 +4,8 @@ import { Toast } from 'antd-mobile';
 import * as API from "app-api";
 import { ActionModal } from 'app-components'
 import * as UpdateDataAction from "./updateDataAction";
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil';
+import OfflineManager from '../../offline/manager/OfflineManager';
 
 /**
  * request data
@@ -231,7 +233,8 @@ export function submit(requestParams, imageChooserEle, navigator, callback, upda
  * @param {*} inspectId 
  */
 export function submitFromList(inspectId, callback) {
-    API.getQualityInspectionDetail(storage.loadProject(), inspectId)
+    if(OfflineStateUtil.isOnLine()){
+        API.getQualityInspectionDetail(storage.loadProject(), inspectId)
         .then((responseData) => {
             let params = responseData.data.inspectionInfo;
             params.inspectId = params.id;
@@ -245,6 +248,24 @@ export function submitFromList(inspectId, callback) {
             Toast.hide();
             callback({ res: "error", data: err });
         });
+    }else{
+        let qualityManager = OfflineManager.getQualityManager();
+        qualityManager.getQualityDetail(inspectId)
+        .then((responseData) => {
+            let params = responseData.inspectionInfo;
+            params.inspectId = params.id;
+            API.editSubmitInspection(storage.loadProject(), inspectId, params.inspectionType, JSON.stringify(params))
+                .then(data => {
+                    callback({ res: "success", data: data, });
+                }).catch(err => {
+                    Toast.hide();
+                })
+        }).catch(err => {
+            Toast.hide();
+            callback({ res: "error", data: err });
+        });
+    }
+    
 }
 
 

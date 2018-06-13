@@ -10,7 +10,7 @@ import * as API from "app-api";
 import { AuthorityManager } from "app-entry";
 import EquipmentListView from "./equipmentListView";
 import { BarItems, LoadingView } from "app-components";
-
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 var { width, height } = Dimensions.get("window");
 class QualityListTitle extends Component {
     render = () => {
@@ -59,30 +59,32 @@ export default class extends PureComponent {
     }
     _keyExtractor = (item, index) => index;
     _loadInspectionSummary = () => {
-        let eShow = AuthorityManager.isEquipmentBrowser()
-        if (!eShow) {
-            return;
-        }
-        API.equipmentListNum(storage.loadProject()).then(
-            (responseData) => {
-                // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
-                let items = responseData.data;
-                let qualityBadgeItem = [0, 0, 0, 0];
-                API.EQUIPMENT_CLASSIFY_STATES_SUMMARY.map((item, index) => {
-                    let find = items[item];
-                    if (find) {
-                        qualityBadgeItem[index] = find;
-                    }
-                });
-                // console.log(JSON.stringify(qualityBadgeItem));
-                this.setState({
-                    equipmentBadge: { item: qualityBadgeItem },
-                })
-                // 获取数量数据
+        if(OfflineStateUtil.isOnLine()){
+            let eShow = AuthorityManager.isEquipmentBrowser()
+            if (!eShow) {
+                return;
             }
-        ).catch(err => {
+            API.equipmentListNum(storage.loadProject()).then(
+                (responseData) => {
+                    // console.log('getQualityInspectionSummary' + JSON.stringify(responseData.data))
+                    let items = responseData.data;
+                    let qualityBadgeItem = [0, 0, 0, 0];
+                    API.EQUIPMENT_CLASSIFY_STATES_SUMMARY.map((item, index) => {
+                        let find = items[item];
+                        if (find) {
+                            qualityBadgeItem[index] = find;
+                        }
+                    });
+                    // console.log(JSON.stringify(qualityBadgeItem));
+                    this.setState({
+                        equipmentBadge: { item: qualityBadgeItem },
+                    })
+                    // 获取数量数据
+                }
+            ).catch(err => {
 
-        });
+            });
+        }
     }
     componentDidMount = () => {
         storage.equipmentNavigation = this.props.navigation;

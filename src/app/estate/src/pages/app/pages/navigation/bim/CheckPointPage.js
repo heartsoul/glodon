@@ -25,7 +25,7 @@ import { FlatList } from "app-3rd"
 import * as QUALITYAPI from "app-api";
 import { BarItems, LoadingView } from "app-components";
 import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil'
-import BasicInfoManager from '../../../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../../../offline/manager/OfflineManager'
 export default class CheckPointList extends React.Component {
 
     constructor() {
@@ -66,7 +66,7 @@ export default class CheckPointList extends React.Component {
                 });
             });
         }else{
-            let bm = new BasicInfoManager();
+            let bm = OfflineManager.getBasicInfoManager();
             bm.getCheckPoints()
             .then(data => {
                 this.setState({

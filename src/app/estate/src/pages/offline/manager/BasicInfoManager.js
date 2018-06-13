@@ -11,8 +11,8 @@ let projectVersionId ;
  */
 export default class BasicInfoManager {
     
-    constructor(){
-        basicHandler = new BasicInfoHandler();
+    constructor(name,realm){
+        basicHandler = new BasicInfoHandler(name,realm);
         projectId = storage.loadProject();
         projectVersionId = storage.getLatestVersionId(projectId);
         // projectVersionId = storage.projectIdVersionId;
@@ -24,10 +24,7 @@ export default class BasicInfoManager {
          return new Promise((resolve,reject)=>{
             let infos = JSON.parse(info);
             resolve(infos);
-            // reject('bbb');
-            if(basicHandler!=null){
-                this.close();
-            }
+            
         });
      }
 
@@ -531,18 +528,19 @@ export default class BasicInfoManager {
         }
 
         function _getModelList(fileId=0){
+            console.log(projectId + '  '+projectVersionId+'  '+fileId)
             return API.getModelBimFileChildren(projectId, projectVersionId, 0, fileId).then(
                 (responseData) => {
-                    // console.log('模型列表 start----------------')
-                    // console.log(responseData)
-                    // console.log('模型列表 end----------------')
+                    console.log('模型列表 start----------------')
+                    console.log(responseData)
+                    console.log('模型列表 end----------------')
                     let list = responseData.data.data.items;
                     return list;
                 }
             ).catch((error) => {
-                // console.log('模型列表 err  start----------------')
+                console.log('模型列表 err  start----------------')
                 console.log(error)
-                // console.log('模型列表 err  end----------------')
+                console.log('模型列表 err  end----------------')
             });
         }
 
@@ -651,7 +649,4 @@ export default class BasicInfoManager {
         });
     }
 
-    close =()=>{
-        basicHandler.close();
-    }
 }

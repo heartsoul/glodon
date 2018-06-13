@@ -38,26 +38,51 @@ export default class DownloadImg{
                 // });
             }
         };
-        try {
-            //开始下载
-            const ret = RNFS.downloadFile(options);
-            ret.promise.then(res => {
-                // console.log('success', res);
+
+        RNFS.exists(downloadDest)
+         .then((str) => {
+             if(!str){
+                try {
+                    //开始下载
+                    const ret = RNFS.downloadFile(options);
+                    ret.promise.then(res => {
+                        console.log('success', res);
+                        i++
+                        if(i<arr.length){
+                            this.downloadImg(arr,i);
+                        }
+                    }).catch(err => {
+                        console.log('err', err);
+                        i++
+                        if(i<arr.length){
+                            this.downloadImg(arr,i);
+                        }
+                    });
+                }
+                catch (e) {
+                    console.log(e);
+                    i++
+                        if(i<arr.length){
+                            this.downloadImg(arr,i);
+                        }
+                }
+             }else{
                 i++
                 if(i<arr.length){
                     this.downloadImg(arr,i);
                 }
-            }).catch(err => {
-                console.log('err', err);
-                i++
-                if(i<arr.length){
-                    this.downloadImg(arr,i);
-                }
-            });
-        }
-        catch (e) {
-            console.log(e);
-        }
+             }
+             
+         })
+         .catch((error) => {
+             console.log(error);
+             i++
+            if(i<arr.length){
+                this.downloadImg(arr,i);
+            }
+         })
+
+        
 
     }
 

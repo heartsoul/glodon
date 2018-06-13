@@ -18,7 +18,7 @@ import ModelManager from '../../../../offline/manager/ModelManager';
 import DirManager from '../../../../offline/manager/DirManager';
 import ModelServer from '../../../../offline/model/ServerModule';
 import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil';
-import BasicInfoManager from '../../../../offline/manager/BasicInfoManager';
+import OfflineManager from '../../../../offline/manager/OfflineManager';
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
@@ -367,7 +367,7 @@ class RelevantModelPage extends Component {
                 }
             }).catch(error => { })
         }else{
-                let bm = new BasicInfoManager();
+                let bm = OfflineManager.getBasicInfoManager();
                 bm.getQualityModelHistory(this.state.relevantModel.gdocFileId).then((data)=>{
                     console.log('获取质量模型历史-------------------------------------')
                 console.log(data)
@@ -456,7 +456,7 @@ class RelevantModelPage extends Component {
                 }
             }).catch(error => { })
         }else{
-            let bm = new BasicInfoManager();
+            let bm = OfflineManager.getBasicInfoManager();
             bm.getEquipmentModelHistory(this.state.relevantModel.gdocFileId).then((data)=>{
                 console.log('获取材设模型历史-------------------------------------')
                 console.log(data)

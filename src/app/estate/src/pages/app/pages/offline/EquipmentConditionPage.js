@@ -13,11 +13,12 @@ import {
 } from 'react-native';
 import WideButton from "../../../app/components/WideButton";
 import { DatePicker } from 'antd-mobile';
-import QualityConditionManager from '../../../offline/manager/EquipmentConditionManager'
+import OfflineManager from '../../../offline/manager/OfflineManager'
 
 let timeStart=0
 let timeEnd = 0
-let qualityConditionManager = null;
+// let equipmentConditionManager = null;
+let equipmentManager = null;
 var { width, height } = Dimensions.get("window");
 //材设进场清单下载条件选择
 export default class extends Component {
@@ -29,7 +30,8 @@ export default class extends Component {
 
   constructor() {
       super();
-      
+      // equipmentConditionManager = OfflineManager.getEquipmentConditionManager();
+      equipmentManager = OfflineManager.getEquipmentManager();
       this.state={
         top1:true,
         top2:false,
@@ -183,26 +185,32 @@ export default class extends Component {
     let st= this.state.startText=='起始日期'?day:this.state.startText;;
     let et = this.state.endText=='终止日期'?day:this.state.endText;
 
-    console.log('startTime='+startTime+' endTime='+endTime);
-    console.log(st+' '+et)
+    // console.log('startTime='+startTime+' endTime='+endTime);
+    // console.log(st+' '+et)
     this.state.top1?(startTime=date.getTime()-3*24*60*60*1000,endTime=date.getTime()):'';
     this.state.top2?(startTime=date.getTime()-7*24*60*60*1000,endTime=date.getTime()):'';
     this.state.top3?(startTime=date.getTime()-31*24*60*60*1000,endTime=date.getTime()):'';
     this.state.top4?(startTime=timeStart>0?timeStart:date.getTime()):'';
     this.state.top5?(endTime=timeEnd>0?timeEnd:date.getTime()):'';
-    console.log('startTime='+startTime+' endTime='+endTime);
-    console.log(st+' '+et)
+    // console.log('startTime='+startTime+' endTime='+endTime);
+    // console.log(st+' '+et)
     if (this.state.top4 || this.state.top5){
       startTime<endTime?'':([st,et]=[et,st]);
     }
     startTime<endTime?'':([startTime,endTime]=[endTime,startTime])
     
-    console.log('startTime='+startTime+' endTime='+endTime);
-    console.log(st+' '+et)
+    // console.log('startTime='+startTime+' endTime='+endTime);
+    // console.log(st+' '+et)
 
     let qcState=[];
     this.state.bottom1?qcState=['全部']:'';
     this.state.bottom2?qcState=[...qcState,'待提交']:''
+
+    let qcStateText = '( ';
+    for(item of qcState){
+      qcStateText += item;
+    }
+    qcStateText += ' )';
 
     let timeText = '近3天'
     if(this.state.top4){
@@ -219,20 +227,47 @@ export default class extends Component {
       timeText:timeText,//在下载记录中 显示的时间   近3天。。。
       downloadTime:date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+(date.getMinutes()<10?'0'+date.getMinutes():date.getMinutes()),//下载时间
       size:111,//下载的单据的条数
+
+      title:'材设进场单',
+      subTitle:qcStateText,
+      progress:0,
+      total:100,
     }
 
-    if(qualityConditionManager==null){
-      qualityConditionManager = new QualityConditionManager();
-    }
-    qualityConditionManager.saveRecord(date.getTime()+'',JSON.stringify(record));
+    // equipmentConditionManager.saveRecord(date.getTime()+'',JSON.stringify(record));
+
+    console.log('startTime='+startTime+' endTime='+endTime);
+    let startDate = this._formatDate(startTime,'yyyy-MM-dd')
+    let endDate = this._formatDate(endTime,'yyyy-MM-dd')
+    console.log('startDate='+startDate+' endDate='+endDate);
+    console.log(JSON.stringify(qcState));
+    equipmentManager.download(startDate,endDate,qcState,date.getTime()+'',record);
   }
 
-  componentWillUnmount=()=>{
-    if(qualityConditionManager!=null){
-      qualityConditionManager.close();
-    }
-    
-  }
+  _formatDate(timestamp, formater) { 
+        let date = new Date();
+        date.setTime(parseInt(timestamp));
+        formater = (formater != null)? formater : 'yyyy-MM-dd hh:mm';
+        Date.prototype.Format = function (fmt) {
+          var o = {
+            "M+": this.getMonth() + 1, //月
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+          };
+     
+          if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+          for (var k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ?
+              (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+          }
+          return fmt;
+        }
+        return date.Format(formater);
+      }
 
   render() {
     return (

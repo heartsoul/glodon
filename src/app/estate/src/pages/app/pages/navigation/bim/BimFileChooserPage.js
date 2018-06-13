@@ -13,7 +13,7 @@ import ThumbnailImage from "./ThumbnailImage";
 import { NoDataView} from 'app-components';
 import { SERVER_TYPE } from 'common-module';
 import {DeviceEventEmitter} from 'app-3rd/index';
-import BasicInfoManager from '../../../../offline/manager/BasicInfoManager';
+import OfflineManager from '../../../../offline/manager/OfflineManager';
 
 var { width, height } = Dimensions.get("window");
 let modelList= null;//模型列表
@@ -81,14 +81,14 @@ export default class BimFileChooser extends Component {
         }
 
         //本地数据库获取所有的模型和图纸列表
-        let bm = new BasicInfoManager();
+        let bm = OfflineManager.getBasicInfoManager();
         modelList = bm.getModelList();
         // console.log('-----------modellist--------------')
         // console.log(modelList);
         blueprintList = bm.getBlueprintList();
         // console.log('------------blueprintlist-------------')
         // console.log(blueprintList);
-        bm.close();
+        
 
     }
 

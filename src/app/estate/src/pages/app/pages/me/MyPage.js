@@ -64,6 +64,11 @@ export default class extends Component {
   _gotoSubscribe = () => {
 
   }
+  //到我的订阅
+  _gotoSubscribe=()=>{
+
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>

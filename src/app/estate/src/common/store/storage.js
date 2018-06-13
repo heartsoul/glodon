@@ -35,7 +35,7 @@ class BaseStorage extends Component {
     }
     // 存储数据
     _setItem = (key, value) => {
-         console.log("_setItem:"+value)
+        //  console.log("_setItem:"+value)
         this.storage.setItem(key, value, (error, result) => {
         });
     }
@@ -133,6 +133,10 @@ export default class GLDStorage extends BaseStorage {
     }
     setRootNavigation(navigation) {
         this.homeNavigation = navigation;
+    }
+
+    getRootNavigation=()=>{
+        return this.homeNavigation;
     }
     //保存用户信息
     saveUserInfo(userInfo) {
@@ -449,6 +453,16 @@ export default class GLDStorage extends BaseStorage {
         return versionId;
     }
 
+     //保存当前租户的项目列表
+     setProjectListByTenant = (tenantId,value) =>{
+        this.setItem(__KEY_tenantProjectList + userId()+tenantId,value);
+    }
+    //获取当前租户的项目列表
+    getProjectListByTenant = (tenantId)=>{
+        let value = this.getItem(__KEY_tenantProjectList + userId()+tenantId);
+        return value;
+    }
+
     //保存模型id与离线包名对应关系
     setModelFileIdOfflineName = (fileId,offlineName) =>{
         this.setItem(__KEY_modelFileIdOfflineName + userId()+fileId,offlineName);
@@ -487,3 +501,4 @@ const __KEY_autoDownload = "autoDownload"; // Android版本更新自动下载
 const __KEY_offlineState = "offlineState"; // Android版本更新自动下载
 const __KEY_latestVersionId = "latestVersionId"; // 当前项目最新版本
 const __KEY_modelFileIdOfflineName = "modelFileIdOfflineName"; // 模型id与离线包名的对应关系存储
+const __KEY_tenantProjectList = "tenantProjectList"; // 模型id与离线包名的对应关系存储

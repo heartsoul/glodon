@@ -123,7 +123,6 @@ class SettingPage extends Component {
         }, 10000);
     }
 
-
     render() {
         return (
             <SafeAreaView style={styles.container}>

@@ -11,7 +11,7 @@ import GLDListRow from "./GLDListRow";
 
 import * as API from "app-api";
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
-import BasicInfoManager from '../../../offline/manager/BasicInfoManager'
+import OfflineManager from '../../../offline/manager/OfflineManager'
 /**
  * 检查单位、施工单位、责任人选择
  */
@@ -151,7 +151,7 @@ class SelectView extends Component {
                 console.log(e);
             });
         }else{
-            let bm = new BasicInfoManager();
+            let bm = OfflineManager.getBasicInfoManager();
             bm.fetchPersons(coperationId).then(data =>{
                 if(data&& data.length>0){
                     this.state.dataList = data;
@@ -212,7 +212,7 @@ class SelectView extends Component {
                     console.log(e);
                 });
         }else{
-            let bm = new BasicInfoManager();
+            let bm = OfflineManager.getBasicInfoManager();
             bm.fetchPersons(coperationId).then(data =>{
                 if(data&& data.length>0){
                     let selectIndex = this.getSelectPersonIndex(data);

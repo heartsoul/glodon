@@ -1,23 +1,43 @@
 import * as API from 'app-api'
 import * as types from '../constants/qualityInfoTypes'
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
+import OfflineManager from '../../offline/manager/OfflineManager'
 
 // 获取数据
 export function fetchData(fieldId) {
   return dispatch => {
     // dispatch(_loading());
-    API.getQualityInspectionDetail(storage.loadProject(), fieldId).then((responseData) => {
-      if (responseData.data.files && responseData.data.files.length > 0) {
-        loadFileUrls(responseData.data.files, (files) => {
-          responseData.data.files = files;
+    if(OfflineStateUtil.isOnLine()){
+      API.getQualityInspectionDetail(storage.loadProject(), fieldId).then((responseData) => {
+        if (responseData.data.files && responseData.data.files.length > 0) {
+          loadFileUrls(responseData.data.files, (files) => {
+            responseData.data.files = files;
+            dispatch(_loadSuccess(responseData.data));
+          });
+        }
+        else {
           dispatch(_loadSuccess(responseData.data));
+        }
+      }).catch(err => {
+        dispatch(_loadError(error));
+      });
+    }else{
+      let qualityManager = OfflineManager.getQualityManager();
+        qualityManager.getQualityDetail(fieldId)
+        .then((responseData) => {
+          if (responseData.files && responseData.files.length > 0) {
+            loadFileUrls(responseData.files, (files) => {
+              responseData.files = files;
+              dispatch(_loadSuccess(responseData));
+            });
+          }
+          else {
+            dispatch(_loadSuccess(responseData));
+          }
+        }).catch(err => {
+          dispatch(_loadError(error));
         });
-      }
-      else {
-        dispatch(_loadSuccess(responseData.data));
-      }
-    }).catch(err => {
-      dispatch(_loadError(error));
-    });
+    }
   }
 }
 function loadFileUrls(files, finsh) {

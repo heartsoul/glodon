@@ -2,50 +2,15 @@ import BaseHandler from './BaseHandler';
 
 //质量  列表 详情 编辑信息表
 
-import Realm from 'realm'
 
 let name = null;
 let realm = null;
 export default class BasicInfoHandler extends BaseHandler{
 
-   
-    //获取数据库表后缀名称
-    getTableName = ()=>{
-        let userInfo = storage.loadUserInfo();
-        // let userObj = JSON.parse(userInfo);
-        let account = userInfo.username;//手机号
-
-        let tenantInfo = storage.loadTenantInfo();
-        let tenantObj = JSON.parse(tenantInfo);
-        let tenantId = tenantObj.value.tenantId;//租户的id
-
-        let projectId = storage.loadProject();//项目的id
-        let targetPath = `${account}${tenantId}${projectId}`;
-        return targetPath;
-    }
-
-    close=()=>{
-        realm.close();
-    }
-
-    constructor(){
+    constructor(eName,eRealm){
         super();
-        name = 'quality'+this.getTableName();
-        console.log('name='+name)
-        const basicSchema = {
-            name:name,
-            primaryKey:'key',
-            properties:{
-                key:'string',//单据的id
-                value:'string',//单据内容
-                qcState:'string',//单据当前状态
-                qualityCheckpointId:'string',//质检项目
-                updateTime:'string',
-                submitState:'string',//待同步
-                errorMsg:'string',//同步失败原因
-            }
-        }
-        realm = new Realm({schema:[basicSchema]});
+        name = eName;
+        realm = eRealm;
     }
 
     
@@ -113,28 +78,21 @@ export default class BasicInfoHandler extends BaseHandler{
             qcStateList = infos;
         }
         let checkList = null;
-        if(qualityCheckpointId){
+        if(qualityCheckpointId!='0'){
             checkList = qcStateList.filtered(`qualityCheckpointId="${qualityCheckpointId}"`)
         }else{
             checkList = qcStateList;
         }
         let objList = checkList.slice(page*size,(page+1)*size);
-        let list = null;
+        let list = [];
         if(objList && objList.length>0){
             list = Array.from(objList, (item) => {
                 obj = JSON.parse(item.value)
                 return obj.item
             })
         }
-        // console.log('----------------------all-----------------------')
-        // console.log(list.length)
-        // let ret = [];
-        // for( let i=0;i<list.length;i++){
-        //     // ret[i] = JSON.parse(list[i].value);
-        //     // console.log(i+' '+list[i].key+' '+list[i].updateTime+' '+list[i].qualityCheckpointId+' '+list[i].qcState)
-        //     console.log(list[i])
-        // }
-        return list;
+        // 返回当前page的list  和总数
+        return {list:list,total:checkList.length};
     }
     
 }

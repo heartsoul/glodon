@@ -39,6 +39,24 @@ export default class ChangeProjectPage extends Component {
         this.trueTenantStr = storage.loadTenantInfo();
     }
 
+        // //获取当前选中的项目
+        // storage.loadProject((retVal) => {
+        //     this.selectProjectId = Number.parseInt(retVal);
+        // });
+
+    //获取当前项目最新版本
+    _getlatestVersion = (projectId)=>{
+        API.getModelLatestVersion(projectId).then((responseData) => {
+            let latestVersion = responseData.data.data.versionId;
+            storage.projectIdVersionId = latestVersion;
+            storage.setLatestVersionId(projectId,latestVersion);
+        }).catch((error) => {
+            console.log(error);
+        });
+
+        // userInfoManager = new UserInfoManager();
+    }
+
    
 
     //获取当前项目最新版本
@@ -88,7 +106,6 @@ export default class ChangeProjectPage extends Component {
     }
 
     componentWillUnmount() {
-        // userInfoManager.close();
         BackHandler.removeEventListener('hardwareBackPress', () => {
             this._goBack();
             return true;
@@ -115,6 +132,12 @@ export default class ChangeProjectPage extends Component {
         ).catch(err => {
             console.log(err);
         });
+
+        // userInfoManager.getProjectList().then((list)=>{
+        //     this.setState(preState => {
+        //         return { ...preState, dataList:list }
+        //     });
+        // })
     }
 
 
