@@ -31,6 +31,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2426A08920CB902700AFB93C /* RNUMConfigure.m in Sources */ = {isa = PBXBuildFile; fileRef = 2426A04520CB902700AFB93C /* RNUMConfigure.m */; };
 		2426A08A20CB902700AFB93C /* UMShareModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2426A04A20CB902700AFB93C /* UMShareModule.m */; };
+		242924BC20CFE83A00A80D9B /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 242924BB20CFE7F400A80D9B /* libRNFetchBlob.a */; };
 		246079FA20B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 246079F920B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m */; };
 		24607A2220B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24607A2120B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib */; };
 		24607A2420B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24607A2320B293AA00F2CA6F /* SoulDrawColorPickerCollectionViewCell.xib */; };
@@ -253,6 +254,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 83CBBA2E1A601D0E00E9B192;
 			remoteInfo = React;
+		};
+		242924BA20CFE7F400A80D9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 242924B620CFE7F400A80D9B /* RNFetchBlob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A15C300E1CD25C330074CB35;
+			remoteInfo = RNFetchBlob;
 		};
 		24607AFF20B39FD500F2CA6F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -477,6 +485,7 @@
 		2426A04620CB902700AFB93C /* RNUMConfigure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNUMConfigure.h; sourceTree = "<group>"; };
 		2426A04A20CB902700AFB93C /* UMShareModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UMShareModule.m; sourceTree = "<group>"; };
 		2426A04B20CB902700AFB93C /* UMShareModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMShareModule.h; sourceTree = "<group>"; };
+		242924B620CFE7F400A80D9B /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
 		246079F820B2850D00F2CA6F /* SoulDrawColorPickerToolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoulDrawColorPickerToolbar.h; sourceTree = "<group>"; };
 		246079F920B2850D00F2CA6F /* SoulDrawColorPickerToolbar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoulDrawColorPickerToolbar.m; sourceTree = "<group>"; };
 		24607A2120B2897300F2CA6F /* SoulDrawColorPickerToolbar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SoulDrawColorPickerToolbar.xib; sourceTree = "<group>"; };
@@ -696,6 +705,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				242924BC20CFE83A00A80D9B /* libRNFetchBlob.a in Frameworks */,
 				2469D7F320CBC2F200F53C4B /* libART.a in Frameworks */,
 				2469D7E920CBC14D00F53C4B /* libRNFS.a in Frameworks */,
 				2498F88E2084299600ABA826 /* libRCTCameraRoll.a in Frameworks */,
@@ -918,6 +928,14 @@
 				2426A04B20CB902700AFB93C /* UMShareModule.h */,
 			);
 			path = share_ios;
+			sourceTree = "<group>";
+		};
+		242924B720CFE7F400A80D9B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				242924BB20CFE7F400A80D9B /* libRNFetchBlob.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		24607AFC20B39FD500F2CA6F /* Products */ = {
@@ -1427,6 +1445,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				242924B620CFE7F400A80D9B /* RNFetchBlob.xcodeproj */,
 				2469D7EA20CBC2E900F53C4B /* ART.xcodeproj */,
 				2469D7BA20CBC11000F53C4B /* RNFS.xcodeproj */,
 				2498F8632084297900ABA826 /* RCTCameraRoll.xcodeproj */,
@@ -1607,6 +1626,10 @@
 					ProjectRef = BF96D02BC51F4FEEA6C088B0 /* RealmReact.xcodeproj */;
 				},
 				{
+					ProductGroup = 242924B720CFE7F400A80D9B /* Products */;
+					ProjectRef = 242924B620CFE7F400A80D9B /* RNFetchBlob.xcodeproj */;
+				},
+				{
 					ProductGroup = 2469D7BB20CBC11000F53C4B /* Products */;
 					ProjectRef = 2469D7BA20CBC11000F53C4B /* RNFS.xcodeproj */;
 				},
@@ -1729,6 +1752,13 @@
 			fileType = archive.ar;
 			path = libReact.a;
 			remoteRef = 146834031AC3E56700842450 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		242924BB20CFE7F400A80D9B /* libRNFetchBlob.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFetchBlob.a;
+			remoteRef = 242924BA20CFE7F400A80D9B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		24607B0020B39FD500F2CA6F /* libRealmReact.a */ = {

@@ -39,6 +39,8 @@ target 'estate' do
   pod 'UMCShare/Social/Email'
   # 集成短信
   pod 'UMCShare/Social/SMS'
+#  pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+
 end
 target 'CKSecurityTool' do
   project './CKSecurityTool/CKSecurityTool.xcodeproj'

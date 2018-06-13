@@ -497,7 +497,8 @@
     if (attr[NSFileSize]) {
       size = attr[NSFileSize];
     }
-    path = fileUrl.absoluteString;
+//    path = fileUrl.absoluteString;
+    
     NSString * md5 = [self.class getMD5WithData:[NSData dataWithContentsOfURL:fileUrl]]; finish(@{@"path":path,@"key":itemid,@"md5":md5,@"name":fileUrl.lastPathComponent,@"length":size});
     return;
   }
@@ -505,7 +506,7 @@
     [[SDDataCache fileDataCache] storeData:imageData forKey:itemid];
     NSString * path = [[[SDDataCache fileDataCache] imageCache] defaultCachePathForKey:itemid];
     NSURL * fileUrl = [NSURL fileURLWithPath:path];
-    path = fileUrl.absoluteString;
+//    path = fileUrl.absoluteString;
     NSString * md5 = [self.class getMD5WithData:[NSData dataWithContentsOfURL:fileUrl]]; finish(@{@"path":path,@"key":itemid,@"md5":md5,@"name":fileUrl.lastPathComponent,@"length":@(imageData.length)});
   }];
 }

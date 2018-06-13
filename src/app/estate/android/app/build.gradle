@@ -220,6 +220,8 @@ android {
 }
 
 dependencies {
+    compile project(':realm')
+    compile project(':react-native-fetch-blob')
     compile project(':react-native-zip-archive')
     compile project(':react-native-fs')
     compile fileTree(include: ['*.jar'], dir: 'libs')
