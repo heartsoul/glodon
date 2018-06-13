@@ -1,7 +1,7 @@
 
 import { requestJSON, BASE_UPLOAD_URL } from "common-module"
 import * as AppConfig from "common-module";
-
+import {uploadFileBlob, operationCode} from './api+uploadBlob'
 var count = 0;//请求成功的数量
 var len = 0;//上传文件的数量
 /**
@@ -107,37 +107,42 @@ function isUploadedFile(file,callback,index) {
  * @param {*} digest md5签名
  */
 async function getOperationCode(filePath, name, length, callback,digest=null,file,index) {
-    
-    let api = "/bimpm/attachment/operationCode";
-    let timestamp = new Date().getTime();
-    let filter = "?containerId=" + timestamp + "&name=" + name + "&digest=" + (digest?digest:name) + "&length=" + length;
+    operationCode(name,length,digest).then((responseData)=>{
+        console.log("getOperationCode result:"+ JSON.stringify(responseData));
+        upLoad(filePath, name, responseData.data.data, callback,file,index);
+    }).catch(error=>{
+        callback("fail", error)
+    })
+    // let api = "/bimpm/attachment/operationCode";
+    // let timestamp = new Date().getTime();
+    // let filter = "?containerId=" + timestamp + "&name=" + name + "&digest=" + (digest?digest:name) + "&length=" + length;
 
-    let ops = {
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json;charset=utf-8",
-            "X-Requested-With": "XMLHttpRequest",
-        },
-        credentials: 'include', // 带上cookie
-    };
+    // let ops = {
+    //     method: 'GET',
+    //     headers: {
+    //         "Content-Type": "application/json;charset=utf-8",
+    //         "X-Requested-With": "XMLHttpRequest",
+    //     },
+    //     credentials: 'include', // 带上cookie
+    // };
 
-    if (storage.isLogin()) {
-        ops.headers.Authorization = "Bearer " + storage.getLoginToken();
-        let t = storage.loadLastTenant();
-        if(t && t != '0') {
-            ops.headers['X-CORAL-TENANT'] = t;
-        }
-    }
-    console.log("getOperationCode:"+AppConfig.BASE_URL + api + filter);
-    return fetch(AppConfig.BASE_URL + api + filter, ops)
-        .then((response) => response.text())
-        .then((responseData) => {
-            console.log("getOperationCode result:"+responseData);
-            upLoad(filePath, name, responseData, callback,file,index);
-        })
-        .catch((error) => {
-            callback("fail", error)
-        });
+    // if (storage.isLogin()) {
+    //     ops.headers.Authorization = "Bearer " + storage.getLoginToken();
+    //     let t = storage.loadLastTenant();
+    //     if(t && t != '0') {
+    //         ops.headers['X-CORAL-TENANT'] = t;
+    //     }
+    // }
+    // console.log("getOperationCode:"+AppConfig.BASE_URL + api + filter);
+    // return fetch(AppConfig.BASE_URL + api + filter, ops)
+    //     .then((response) => response.json())
+    //     .then((responseData) => {
+    //         console.log("getOperationCode result:"+responseData);
+    //         upLoad(filePath, name, responseData.data, callback,file,index);
+    //     })
+    //     .catch((error) => {
+    //         callback("fail", error)
+    //     });
 }
 
 /**
@@ -265,42 +270,56 @@ function convertBase64UrlToBlob(urlData){
  * @param {*} callback 回调
  */
 async function upLoad(filePath, name, operationCode, callback,nativeFile,index) {
-
-    let api = "/v1/insecure/objects?operationCode=" + operationCode;
-    let formData = new FormData();
-    if(nativeFile.file) {
-        formData.append("uploaded_file",nativeFile.file,'hi'+name);
-    } else {
-        let file = { uri: filePath, type: 'application/octet-stream', name: 'i'+name };
-        formData.append("uploaded_file", file);   //这里的uploaded_file就是后台需',要的key  
-    }
-   
-    let ops = {
-        method: 'POST',
-        body: formData,
-    };
-
-    return fetch(BASE_UPLOAD_URL + api, ops)
-        .then((response) => response.json())
-        .then((data) => {
-            //处理上传成功的数据
-            if (data && data.message && "success" == data.message) {
-                count++;
-                let res = parseUploadData(data.data);
-                if (res && res.name) {
-                    resultArray.push({...nativeFile,...res,index:index});
-                }
-            } else {
-                callback("fail", data);
-            }
-
-            if (count == len) {
+    
+    uploadFileBlob({name:name,path:filePath},operationCode,(written, total) => {
+        console.log('uploaded', written / total);  
+    }).then((data)=>{
+            count ++;
+            if (data && data.name) {
+                 resultArray.push({...nativeFile,...data,index:index});
+             }
+             if (count == len) {
                 callback("success", resultArray);
-            }
-        })
-        .catch((error) => {
-            callback("fail", error);
-        });
+             }
+        }
+    ).catch(error=>{
+        callback("fail", error);
+    });
+    // let api = "/v1/insecure/objects?operationCode=" + operationCode;
+    // let formData = new FormData();
+    // if(nativeFile.file) {
+    //     formData.append("uploaded_file",nativeFile.file,'hi'+name);
+    // } else {
+    //     let file = { uri: filePath, type: 'application/octet-stream', name: 'i'+name };
+    //     formData.append("uploaded_file", file);   //这里的uploaded_file就是后台需',要的key  
+    // }
+   
+    // let ops = {
+    //     method: 'POST',
+    //     body: formData,
+    // };
+
+    // return fetch(BASE_UPLOAD_URL + api, ops)
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //         //处理上传成功的数据
+    //         if (data && data.message && "success" == data.message) {
+    //             count++;
+    //             let res = parseUploadData(data.data);
+    //             if (res && res.name) {
+    //                 resultArray.push({...nativeFile,...res,index:index});
+    //             }
+    //         } else {
+    //             callback("fail", data);
+    //         }
+
+    //         if (count == len) {
+    //             callback("success", resultArray);
+    //         }
+    //     })
+    //     .catch((error) => {
+    //         callback("fail", error);
+    //     });
 }
 /**
  * 处理返回成功的数据
