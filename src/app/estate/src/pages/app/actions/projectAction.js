@@ -21,6 +21,7 @@ function __fetchData(page, dataArray, dispatch, newTenant, prevTenant) {
     }
     API.getProjects(page, 35 ,newTenant).then(
         (responseData) => {
+            console.log(JSON.stringify(responseData))
             let data = responseData.data.content;
             let last = responseData.data.last;
 
@@ -58,8 +59,12 @@ function __fetchData(page, dataArray, dispatch, newTenant, prevTenant) {
         }
     ).catch(err => {
         Toast.hide()
-        dispatch(_loadError(error, page));
+        console.log(err)
+        dispatch(_loadError(err, page));
     });
+    
+    
+    
     // {
     //     "content": [{
     //         "id": 5212498,

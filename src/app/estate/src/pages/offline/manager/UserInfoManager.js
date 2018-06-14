@@ -12,9 +12,20 @@ export default class UserInfoManager {
         userHandler = new UserInfoHandler();
     }
  
+    //保存账户信息
+    saveAccountInfo(key,value){
+        userHandler.saveAccountInfo(key,value);
+    }
+
+    //验证账户信息
+    checkAccountInfo(key,value){
+        return userHandler.checkAccountInfo(key,value);
+    }
+
      //从数据库获取
      _getFromDb=(key)=>{
          let info = userHandler.query(key);
+         console.log(info)
          return new Promise((resolve,reject)=>{
             let infos = JSON.parse(info);
             resolve(infos);
@@ -41,11 +52,7 @@ export default class UserInfoManager {
                             (responseData) => {
                                 if(responseData.data.content.length>0){
                                     let list=responseData.data.content;
-
-                                    let tenantInfo = storage.loadTenantInfo();
-                                    let tenantObj = JSON.parse(tenantInfo);
-                                    let tenantId = tenantObj.value.tenantId;//租户的id
-                                    _saveToDb(tenantId+'',JSON.stringify(list))
+                                    _saveToDb(tenantId+'',JSON.stringify(responseData))
                                     return list;
                                 }
                             }
@@ -58,10 +65,6 @@ export default class UserInfoManager {
             ).catch(err => {
                 console.log(err);
             });
-        }
-        //项目权限
-        _getProjectAuthority=(projectId)=>{
-
         }
 
         async function downloadProject(){
@@ -79,14 +82,8 @@ export default class UserInfoManager {
 
 
     //获取当前租户的项目列表
-    getProjectList=()=>{
-        let tenantInfo = storage.loadTenantInfo();
-        let tenantObj = JSON.parse(tenantInfo);
-        let tenantId = tenantObj.value.tenantId;//租户的id
+    getProjectList=(tenantId)=>{
         return  this._getFromDb(tenantId+'');
     }
    
-
-    
-    
 }

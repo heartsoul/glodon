@@ -40,31 +40,9 @@ class BimFileFilterView extends Component {
     }
 
     componentDidMount() {
-        if(OfflineStateUtil.isOnLine()){
-            //专业
-            API.getPmbasicSpecialty(false).then(responseData => {
-                if (responseData) {
-                    let all = {
-                        code:'all',
-                        name:'全部',
-                        keywords: null,
-                        parentId: null,
-                        id: 0,
-                        treePath: '0/',
-                        orderNum: 0 
-                    }
-                    let list =[all];
-                    let dataList = responseData.data;
-                    let data = [...list,...dataList];
-                    this.setState({
-                        specialty: data
-                    });
-                }
-            }).catch((err) => {
-            });
-        }else{
-            let bm = OfflineManager.getBasicInfoManager();
-            bm.getSpecialList().then(res =>{
+        //专业
+        API.getPmbasicSpecialty(false).then(responseData => {
+            if (responseData) {
                 let all = {
                     code:'all',
                     name:'全部',
@@ -75,39 +53,18 @@ class BimFileFilterView extends Component {
                     orderNum: 0 
                 }
                 let list =[all];
-                let dataList = res;
+                let dataList = responseData.data;
                 let data = [...list,...dataList];
                 this.setState({
                     specialty: data
                 });
-            }).catch(err => {
-                console.log(err)
-            });
-        }
-        if(OfflineStateUtil.isOnLine()){
-            //单体
-            API.getPmbasicBuildings(storage.loadProject()).then(responseData => {
-                if (responseData) {
-                    let all = {
-                        name: '全部',
-                        code: '0',
-                        structureType: '123123',
-                        area: 124311113000,
-                        projectId: 5213135,
-                        id: 0
-                    }
-                    let list =[all];
-                    let dataList = responseData.data;
-                    let data = [...list,...dataList];
-                    this.setState({
-                        buildings: data
-                    });
-                }
-            }).catch((err) => {
-            });                                                     
-         }else{
-            let bm = OfflineManager.getBasicInfoManager();
-            bm.getSingleList().then(res =>{
+            }
+        }).catch((err) => {
+        });
+    
+        //单体
+        API.getPmbasicBuildings(storage.loadProject()).then(responseData => {
+            if (responseData) {
                 let all = {
                     name: '全部',
                     code: '0',
@@ -117,16 +74,15 @@ class BimFileFilterView extends Component {
                     id: 0
                 }
                 let list =[all];
-                let dataList = res;
+                let dataList = responseData.data;
                 let data = [...list,...dataList];
                 this.setState({
                     buildings: data
                 });
-            }).catch(err => {
-                console.log(err)
-            });
-        }
-
+            }
+        }).catch((err) => {
+        });                                                     
+    
     }
 
 

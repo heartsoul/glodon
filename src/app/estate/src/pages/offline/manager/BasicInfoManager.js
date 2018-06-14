@@ -149,7 +149,7 @@ export default class BasicInfoManager {
                         let inspectionCompanies = [];
                         if (data && data.data) {
                             inspectionCompanies = data.data;
-                            let retValue = JSON.stringify(inspectionCompanies);
+                            let retValue = JSON.stringify(data);
                             // console.log('检查单位 start--------------');
                             // console.log(retValue); //[{"parentId":null,"code":"s567uytr","name":"龙湖新租户A","alias":null,"type":"GROUP","extData":null,"id":5200001,"treePath":"5200001/","orderNum":1,"external":false,"formal":true}]
                             // console.log('检查单位 end--------------');
@@ -172,7 +172,7 @@ export default class BasicInfoManager {
                         // console.log('施工单位 start--------------');
                         // console.log(retValue); //
                         // console.log('施工单位 end--------------');
-                        _saveToDb(key_getSupporters,retValue);
+                        _saveToDb(key_getSupporters,JSON.stringify(data));
                         return retValue;
                     }
                     
@@ -188,7 +188,7 @@ export default class BasicInfoManager {
                     // console.log('责任人 data--------------');
                     // console.log(data)
                     if (data && data.data && data.data.length > 0) {
-                        let retValue = JSON.stringify(data.data);
+                        let retValue = JSON.stringify(data);
                         // console.log('责任人 start--------------');
                         // console.log(retValue); //
                         // console.log('责任人 end--------------');
@@ -208,7 +208,7 @@ export default class BasicInfoManager {
                         // console.log('质检项目 start--------------');
                         // console.log(retValue); //
                         // console.log('质检项目 end--------------');
-                        _saveToDb(key_getCheckPoints,retValue);
+                        _saveToDb(key_getCheckPoints,JSON.stringify(data));
                         return retValue;
                 });
         }
@@ -217,7 +217,7 @@ export default class BasicInfoManager {
         function _getStandards(templateId){
             let key_getStandards = `/quality/acceptanceStandard/templates/${templateId}/standards/items`;
             return API.getStandardsItems(templateId).then((responseData) => {
-                let html = JSON.stringify(responseData.data);
+                let html = JSON.stringify(responseData);
                 // console.log('质检项目标准 start--------------templateId='+templateId);
                 // console.log(html); //
                 // console.log('质检项目标准 end--------------');
@@ -232,7 +232,7 @@ export default class BasicInfoManager {
         function _getSpecialList(){
             return API.getPmbasicSpecialty(false).then(responseData => {
                         if (responseData) {
-                            let list = JSON.stringify( responseData.data);
+                            let list = JSON.stringify( responseData);
                             // console.log('模型专业 start--------------');
                             // console.log(list); //
                             // console.log('模型专业 end--------------');
@@ -248,7 +248,7 @@ export default class BasicInfoManager {
         function _getSingleList(){
             return API.getPmbasicBuildings(projectId).then(responseData => {
                         if (responseData) {
-                            let list = JSON.stringify( responseData.data);
+                            let list = JSON.stringify( responseData);
                             // console.log('模型单体 start--------------');
                             // console.log(list); //
                             // console.log('模型单体 end--------------');
@@ -267,7 +267,7 @@ export default class BasicInfoManager {
             return API.equipmentAcceptanceCompanies(projectId)
                 .then(responseData => {
                     if (responseData) {
-                        let list = JSON.stringify( responseData.data);
+                        let list = JSON.stringify( responseData);
                         // console.log('验收单位 start--------------');
                         // console.log(list); //
                         // console.log('验收单位 end--------------');
@@ -322,7 +322,7 @@ export default class BasicInfoManager {
         }
         
          download().then((a)=>{
-            // console.log("basicinfo  download over-----------------------------------------");
+            console.log("basicinfo  download over-----------------------------------------");
             // this.getInspectionCompany().then(res=>{console.log(res)})
             // this.getSupporters().then(res=>{console.log(res)})
             // this.getSpecialList().then(res=>{console.log(res)})
@@ -422,7 +422,7 @@ export default class BasicInfoManager {
                     //     this.getModelElementProperty(item, len, "quality");
                     // })
                     let key = `/quality/${projectId}/qualityInspection/all/model/${fileId}/elements`;
-                    _saveToDb(key,JSON.stringify(responseData.data));
+                    _saveToDb(key,JSON.stringify(responseData));
                     return responseData.data
                 }
                 return null;
@@ -439,7 +439,7 @@ export default class BasicInfoManager {
                 // console.log('材设 模型  单据历史 end-------------------')
                 if (responseData && responseData.data) {
                     let key = "/quality/" + projectId + "/facilityAcceptance/model/" + fileId + "/elements";
-                    _saveToDb(key,JSON.stringify(responseData.data));
+                    _saveToDb(key,JSON.stringify(responseData));
                     return responseData.data
                 }
                 return null;
@@ -483,7 +483,7 @@ export default class BasicInfoManager {
                 // console.log('图纸  单据历史 end-------------------')
                 if (responseData && responseData.data) {
                     let key = `/quality/${projectId}/qualityInspection/all/drawings/${fileId}/drawingPositions`;
-                    _saveToDb(key,JSON.stringify(responseData.data));
+                    _saveToDb(key,JSON.stringify(responseData));
                     return responseData.data
                 }
                 return null;

@@ -12,8 +12,8 @@ import {
 import { WebView } from 'app-3rd/index';
 import * as API from "app-api"
 import { BarItems, LoadingView } from "app-components";
-import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
-import OfflineManager from '../../../offline/manager/OfflineManager'
+// import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
+// import OfflineManager from '../../../offline/manager/OfflineManager'
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
@@ -197,42 +197,23 @@ export default class QualityStatardsPage extends Component {
         // "qualityCheckpointName": "墙面",
         this.props.navigation.setParams({ title: this.props.navigation.state.params.qualityCheckpointName })
         let templateId = this.props.navigation.state.params.qualityCheckpointId;
-        if(OfflineStateUtil.isOnLine()){
-            API.getStandardsItems(templateId).then((responseData) => {
-                let html = this.proccessData(responseData.data);
-                this.setState({
-                    isLoading: false,
-                    error: false,
-                    errorInfo: "",
-                    html: html,
-                });
-            }).catch(err => {
-                this.setState = {
-                    isLoading: false,
-                    error: err,
-                    errorInfo: err,
-                    html: '',
-                };
+        API.getStandardsItems(templateId).then((responseData) => {
+            let html = this.proccessData(responseData.data);
+            this.setState({
+                isLoading: false,
+                error: false,
+                errorInfo: "",
+                html: html,
             });
-        }else{
-            let bm = OfflineManager.getBasicInfoManager();
-            bm.getStandards(templateId).then(data =>{
-                let html = this.proccessData(data);
-                this.setState({
-                    isLoading: false,
-                    error: false,
-                    errorInfo: "",
-                    html: html,
-                });
-            }).catch(err => {
-                this.setState = {
-                    isLoading: false,
-                    error: err,
-                    errorInfo: err,
-                    html: '',
-                };
-            });
-        }
+        }).catch(err => {
+            this.setState = {
+                isLoading: false,
+                error: err,
+                errorInfo: err,
+                html: '',
+            };
+        });
+        
     }
     componentDidMount = () => {
         this.fetchData();

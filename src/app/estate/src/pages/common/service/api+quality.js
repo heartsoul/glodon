@@ -3,6 +3,9 @@ import { requestJSON } from "common-module"
  * 质量检查相关API
  */
 import * as CONSTANT from "./api+constant"
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
+import OfflineManager from '../../offline/manager/OfflineManager'
+
 /**
  * 生产测试数据
  * 
@@ -340,10 +343,15 @@ export async function getQualityInspectionElements(projectId, gdocFileId) {
 ]
  */
 export async function getQualityFacilityAcceptanceElements(projectId, gdocFileId) {
-    let api = "/quality/" + projectId + "/facilityAcceptance/model/" + gdocFileId + "/elements";
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = "/quality/" + projectId + "/facilityAcceptance/model/" + gdocFileId + "/elements";
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getBasicInfoManager();
+        return bm.getEquipmentModelHistory(gdocFileId);
+    }
 }
 
 /**
@@ -383,10 +391,16 @@ export async function getQualityCheckpointsProject(projectId, projectIdIn) {
 ]
  */
 export async function getInspectionCompanies(projectId) {
-    let api = `/quality/${projectId}/qualityInspection/inspectionCompanys`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityInspection/inspectionCompanys`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getBasicInfoManager();
+        return bm.getInspectionCompany();
+    }
+
 }
 /**
  * 获取质检项目列表
@@ -409,11 +423,16 @@ export async function getInspectionCompanies(projectId) {
 ]
  */
 export async function getCheckPoints(projectId) {
-    let api = `/quality/${projectId}/checkpoints/templates/whole`;
-    let filter = `?ifOther=true`;
-    return requestJSON(api + filter, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/checkpoints/templates/whole`;
+        let filter = `?ifOther=true`;
+        return requestJSON(api + filter, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getBasicInfoManager();
+        return bm.getCheckPoints();
+    }
 }
 
 /**
@@ -533,19 +552,29 @@ export async function createDeleteInspection(projectId, inspectionType, fileId) 
         responsibleUserId: 5210022 } ]
  */
 export async function getBluePrintDots(projectId, drawingGdocFileId) {
-    let api = `/quality/${projectId}/qualityInspection/all/drawings/${drawingGdocFileId}/drawingPositions`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityInspection/all/drawings/${drawingGdocFileId}/drawingPositions`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getBasicInfoManager();
+        return bm.getBlueprintDots(drawingGdocFileId);
+    }
 }
 /**
  * App端查询模型文件对应的所有关联构件
  */
 export async function getElements(projectId, gdocFileId) {
-    let api = `/quality/${projectId}/qualityInspection/all/model/${gdocFileId}/elements`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityInspection/all/model/${gdocFileId}/elements`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getBasicInfoManager();
+        return bm.getQualityModelHistory(gdocFileId);
+    }
 }
 
 
@@ -566,10 +595,15 @@ export async function getElements(projectId, gdocFileId) {
 ]
  */
 export async function getStandardsItems(templateId) {
-    let api = `/quality//acceptanceStandard/templates/${templateId}/standards/items`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality//acceptanceStandard/templates/${templateId}/standards/items`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getBasicInfoManager();
+        return bm.getStandards(templateId);
+    }
 }
 /**
  * 复查单  新增  保存
@@ -1132,10 +1166,15 @@ export async function equipmentDetail(projectId, id) {
 ]
  */
 export async function equipmentAcceptanceCompanies(projectId) {
-    let api = `/quality/${projectId}/facilityAcceptance/acceptanceCompanys`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/facilityAcceptance/acceptanceCompanys`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getBasicInfoManager();
+        return bm.equipmentAcceptanceCompanies();
+    }
 }
 
 /**

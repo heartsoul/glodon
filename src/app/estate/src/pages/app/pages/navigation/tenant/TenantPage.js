@@ -7,7 +7,8 @@ import ReactNative, { ActivityIndicator, Animated, ScrollView, StyleSheet, Text,
 import { BarItems } from "app-components";
 import { FlatList } from "app-3rd"
 import * as API from "app-api";
-import UserInfoManager from '../../../../offline/manager/UserInfoManager'
+import UserInfoManager from '../../../../offline/manager/UserInfoManager';
+import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil';
 
 let userInfoManager= null;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -178,30 +179,39 @@ export default class tenantList extends Component {
 
     //点击列表点击每一行
     _clickItem = (item, index) => {
-        //   alert(item.value.tenantId);
-        API.setCurrentTenant(item.value.tenantId).then((responseData) => {
+        if(OfflineStateUtil.isOnLine()){
+            API.setCurrentTenant(item.value.tenantId).then((responseData) => {
             
+                let navigator = this.props.navigation;
+                if (!this.changeProject) {
+                    storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
+                    userInfoManager.downloadProjectInfo(item.value.tenantId+'');//切换租户后，获取租户下所有项目信息  保存到本地数据库
+                    storage.pushNext(navigator, "ProjectPage", { tenantId: item.value.tenantId, id: item.value.id })
+                } else {
+                    storage.saveTenant(item.value.id);
+                    storage.saveLastTenant(item.value.tenantId);
+                    storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
+                    storage.saveTenantInfoRefresh('1');//设置刷新
+                    userInfoManager.downloadProjectInfo(item.value.tenantId+'');//切换租户后，获取租户下所有项目信息  保存到本地数据库
+                    navigator.pop(1);//返回上一级
+    
+                }
+            });
+        }else{
             let navigator = this.props.navigation;
-            // storage.saveTenant(item.value.id);
-            // storage.saveLastTenant(item.value.tenantId);
-            // storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
-            // storage.pushNext(navigator, "ProjectPage")
-            if (!this.changeProject) {
-                storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
-                userInfoManager.downloadProjectInfo(item.value.tenantId+'');//切换租户后，获取租户下所有项目信息  保存到本地数据库
-                storage.pushNext(navigator, "ProjectPage", { tenantId: item.value.tenantId, id: item.value.id })
-            } else {
-                storage.saveTenant(item.value.id);
-                storage.saveLastTenant(item.value.tenantId);
-                storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
-                storage.saveTenantInfoRefresh('1');//设置刷新
-                userInfoManager.downloadProjectInfo(item.value.tenantId+'');//切换租户后，获取租户下所有项目信息  保存到本地数据库
-                navigator.pop(1);//返回上一级
-
-            }
-           
-
-        });
+                if (!this.changeProject) {
+                    storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
+                    storage.pushNext(navigator, "ProjectPage", { tenantId: item.value.tenantId, id: item.value.id })
+                } else {
+                    storage.saveTenant(item.value.id);
+                    storage.saveLastTenant(item.value.tenantId);
+                    storage.saveTenantInfo(JSON.stringify(item));//保存当前的租户item信息
+                    storage.saveTenantInfoRefresh('1');//设置刷新
+                    navigator.pop(1);//返回上一级
+    
+                }
+        }
+        
     }
     //返回itemView
     renderItemView = ({ item, index }) => {

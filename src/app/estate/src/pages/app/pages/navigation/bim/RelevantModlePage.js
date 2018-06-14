@@ -355,33 +355,17 @@ class RelevantModelPage extends Component {
      * 显示质检单模型历史选择信息
      */
     getElements = () => {
-        if(OfflineStateUtil.isOnLine()){
-            API.getElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
-            .then(responseData => {
-                if (responseData && responseData.data) {
-                    let len = responseData.data.length;
-                    this.mQualityPositionMap = [];
-                    responseData.data.map((item) => {
-                        this.getModelElementProperty(item, len, "quality");
-                    })
-                }
-            }).catch(error => { })
-        }else{
-                let bm = OfflineManager.getBasicInfoManager();
-                bm.getQualityModelHistory(this.state.relevantModel.gdocFileId).then((data)=>{
-                    console.log('获取质量模型历史-------------------------------------')
-                console.log(data)
-                    if(data ){
-                        let len = data.length;
-                    this.mQualityPositionMap = [];
-                    data.map((item) => {
-                        this.getModelElementProperty(item, len, "quality");
-                    })
-                    }
-                }).catch(error =>{
-                    console.log(error)
+        API.getElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
+        .then(responseData => {
+            if (responseData && responseData.data) {
+                let len = responseData.data.length;
+                this.mQualityPositionMap = [];
+                responseData.data.map((item) => {
+                    this.getModelElementProperty(item, len, "quality");
                 })
             }
+        }).catch(error => { })
+        
         
     }
 
@@ -436,50 +420,24 @@ class RelevantModelPage extends Component {
      * 显示材设单模型历史选择信息
      */
     getEquipmentList = () => {
-        if(OfflineStateUtil.isOnLine()){
-            API.getQualityFacilityAcceptanceElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
-            .then(responseData => {
-                if (responseData && responseData.data) {
-                    let len = responseData.data.length;
-                    for (let i = 0; i < len; i++) {
-                        let item = responseData.data[i];
-                        if (item.committed) {
-                            item.qcState = item.qualified ? API.QC_STATE_STANDARD : API.QC_STATE_NOT_STANDARD;
-                        } else {
-                            item.qcState = API.QC_STATE_EDIT;
-                        }
+        API.getQualityFacilityAcceptanceElements(storage.loadProject(), this.state.relevantModel.gdocFileId)
+        .then(responseData => {
+            if (responseData && responseData.data) {
+                let len = responseData.data.length;
+                for (let i = 0; i < len; i++) {
+                    let item = responseData.data[i];
+                    if (item.committed) {
+                        item.qcState = item.qualified ? API.QC_STATE_STANDARD : API.QC_STATE_NOT_STANDARD;
+                    } else {
+                        item.qcState = API.QC_STATE_EDIT;
                     }
-                    this.mEquipmentPositionMap = [];
-                    responseData.data.map((item) => {
-                        this.getModelElementProperty(item, len, "equipment");
-                    })
                 }
-            }).catch(error => { })
-        }else{
-            let bm = OfflineManager.getBasicInfoManager();
-            bm.getEquipmentModelHistory(this.state.relevantModel.gdocFileId).then((data)=>{
-                console.log('获取材设模型历史-------------------------------------')
-                console.log(data)
-                if(data ){
-                    let len = data.length;
-                    for (let i = 0; i < len; i++) {
-                        let item = data[i];
-                        if (item.committed) {
-                            item.qcState = item.qualified ? API.QC_STATE_STANDARD : API.QC_STATE_NOT_STANDARD;
-                        } else {
-                            item.qcState = API.QC_STATE_EDIT;
-                        }
-                    }
-                    this.mEquipmentPositionMap = [];
-                    data.map((item) => {
-                        this.getModelElementProperty(item, len, "equipment");
-                    })
-                }
-            }).catch(error =>{
-                console.log(error)
-            })
-        }
-        
+                this.mEquipmentPositionMap = [];
+                responseData.data.map((item) => {
+                    this.getModelElementProperty(item, len, "equipment");
+                })
+            }
+        }).catch(error => { }) 
     }
 
     cancelPosition = () => {

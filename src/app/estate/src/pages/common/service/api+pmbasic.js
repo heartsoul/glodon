@@ -1,4 +1,6 @@
 import { requestJSON } from "common-module"
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
+import OfflineManager from '../../offline/manager/OfflineManager'
 /**
  * 模型相关API
  */
@@ -19,10 +21,15 @@ import { requestJSON } from "common-module"
 ]
  */
 export async function getPmbasicBuildings(projectId) {
-    let api = "/pmbasic/projects/" + projectId + "/buildings";
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = "/pmbasic/projects/" + projectId + "/buildings";
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getBasicInfoManager();
+        return bm.getSpecialList();
+    }
 }
 
 /**
@@ -43,10 +50,15 @@ export async function getPmbasicBuildings(projectId) {
 ]
  */
 export async function getPmbasicSpecialty(includeChildren=true) {
-    let api = "/pmbasic/specialty";
-    return requestJSON(api + '?includeChildren=' + includeChildren, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = "/pmbasic/specialty";
+        return requestJSON(api + '?includeChildren=' + includeChildren, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getBasicInfoManager();
+        return bm.getSpecialList();
+    }
 }
 
 /**
@@ -74,10 +86,15 @@ export async function getPmbasicSpecialty(includeChildren=true) {
  * 
  */
 export async function getCompaniesList(projectId, deptTypeEnums) {
-    let api = `/pmbasic/projects/${projectId}/supporters`;
-    return requestJSON(api + '?deptTypeEnums=' + deptTypeEnums, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/pmbasic/projects/${projectId}/supporters`;
+        return requestJSON(api + '?deptTypeEnums=' + deptTypeEnums, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getBasicInfoManager();
+        return bm.getSupporters();
+    }
 }
 
 
@@ -105,9 +122,14 @@ export async function getCompaniesList(projectId, deptTypeEnums) {
 ]
  */
 export async function getPersonList(projectId, coperationCorpId) {
-    let api = `/pmbasic/projects/${projectId}/coperationCorps/${coperationCorpId}/coperationRoles`;
-    let filter = `?active=true`;
-    return requestJSON(api + filter, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/pmbasic/projects/${projectId}/coperationCorps/${coperationCorpId}/coperationRoles`;
+        let filter = `?active=true`;
+        return requestJSON(api + filter, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getBasicInfoManager();
+        return bm.fetchPersons(coperationCorpId);
+    }
 }

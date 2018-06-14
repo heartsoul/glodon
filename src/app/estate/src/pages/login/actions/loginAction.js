@@ -2,6 +2,8 @@ import * as API from 'app-api';
 import { SERVER_TYPE } from 'common-module';
 import { NativeModules,Platform } from 'react-native';
 import * as types from '../constants/loginTypes';
+import UserInfoManager from '../../offline/manager/UserInfoManager';
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil';
 
 var RNBridgeModule = NativeModules.GLDRNBridgeModule; //你的类名
 
@@ -52,15 +54,36 @@ function loginOld(username, pwd) {
 function loginNew(username, pwd) {
   return dispatch => {
     dispatch(isLogining(username))
+    let um = new UserInfoManager();
 
-    API.authToken(username, pwd).then((response) => {
-       console.log('response.data:'+response.data1);
-      loadAccount(dispatch,response,username, pwd,response.data.access_token);
-    }).catch((e) => {
-      dispatch(loginError(false));
-    });
+    if(OfflineStateUtil.isOnLine()){
+      API.authToken(username, pwd).then((response) => {
+          console.log('response.data:'+response.data1);
+          um.saveAccountInfo(username,pwd);
+          loadAccount(dispatch,response,username, pwd,response.data.access_token);
+      }).catch((e) => {
+        dispatch(loginError(false));
+      });
+    }else{
+      //离线情况下的登录
+      if(um.checkAccountInfo(username,pwd)){
+        loadAccountOffline(dispatch,username,pwd)
+      }else{
+        dispatch(loginError(false));
+      }
+    }
+    
   }
 }
+
+//离线处理
+function loadAccountOffline(dispatch,username, pwd) {
+  
+    dispatch(loginSuccess(true, null, username))
+  
+}
+
+//在线处理
 function loadAccount(dispatch,response,username, pwd, token = 'cookie_token') {
   storage.saveLoginToken(token);
   API.accountInfo().then((userInfo) => {

@@ -16,6 +16,9 @@ import { BarItems, LoadingView } from "app-components";
 import * as API from "app-api";
 import { Toast } from 'antd-mobile'
 
+import UserInfoManager from '../../../../offline/manager/UserInfoManager';
+import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil';
+
 var { width, height } = Dimensions.get("window");
 class ProjectPage extends Component {
 
@@ -63,21 +66,27 @@ class ProjectPage extends Component {
         let navigator = this.props.navigation;
         let prevTenant = storage.loadLastTenant();
         let newTenant = this.props.navigation.state.params.tenantId;
-        AuthorityManager.loadAuthoritys("" + item.value.id, (success) => {
-            if (!success) {
-                Toast.info('获取权限失败', 1.5);
-                return;
-            }
-            API.setCurrentTenant(newTenant).then((responseData) => {
-                storage.saveTenant(this.props.navigation.state.params.id);
-                storage.saveLastTenant(newTenant);
-                storage.saveProject("" + item.value.id, "" + item.value.name);
-                storage.gotoMainPage(navigator);
-            }).catch(error => {
-                Toast.info('切换失败', 1.5);
-            });
-
-        }, newTenant);
+        if(OfflineStateUtil.isOnLine()){
+            AuthorityManager.loadAuthoritys("" + item.value.id, (success) => {
+                if (!success) {
+                    Toast.info('获取权限失败', 1.5);
+                    return;
+                }
+                API.setCurrentTenant(newTenant).then((responseData) => {
+                    storage.saveTenant(this.props.navigation.state.params.id);
+                    storage.saveLastTenant(newTenant);
+                    storage.saveProject("" + item.value.id, "" + item.value.name);
+                    storage.gotoMainPage(navigator);
+                }).catch(error => {
+                    Toast.info('切换失败', 1.5);
+                });
+    
+            }, newTenant);
+        }else{
+            storage.saveProject("" + item.value.id, "" + item.value.name);
+            storage.gotoMainPage(navigator);
+        }
+        
 
     }
 

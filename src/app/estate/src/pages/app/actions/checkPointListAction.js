@@ -2,37 +2,19 @@
 
 import * as types from '../constants/checkPointListTypes';
 import * as API from 'app-api'
-import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
-import OfflineManager from '../../offline/manager/OfflineManager'
+// import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
+// import OfflineManager from '../../offline/manager/OfflineManager'
 
 export function getCheckPoints() {
     return dispatch => {
-        if(OfflineStateUtil.isOnLine()){
-            API.getCheckPoints(storage.loadProject())
-                .then(data => {
-                    let topNode = getListByParentId(data.data, null);
-                    let topDirNode = [];
-                    let topModelNode = [];
-                    topNode.map((item) => {
-                        if (item.viewType == 1) {
-                            item.childList = getListByParentId(data.data, item.id)
-                            topDirNode.push(item);
-                        } else {
-                            topModelNode.push(item);
-                        }
-                    });
-                    dispatch(loadSuccess(topDirNode, topModelNode));
-                })
-        }else{
-            let bm = OfflineManager.getBasicInfoManager();
-            bm.getCheckPoints()
+        API.getCheckPoints(storage.loadProject())
             .then(data => {
-                let topNode = getListByParentId(data, null);
+                let topNode = getListByParentId(data.data, null);
                 let topDirNode = [];
                 let topModelNode = [];
                 topNode.map((item) => {
                     if (item.viewType == 1) {
-                        item.childList = getListByParentId(data, item.id)
+                        item.childList = getListByParentId(data.data, item.id)
                         topDirNode.push(item);
                     } else {
                         topModelNode.push(item);
@@ -40,7 +22,7 @@ export function getCheckPoints() {
                 });
                 dispatch(loadSuccess(topDirNode, topModelNode));
             })
-        }
+        
     }
 }
 

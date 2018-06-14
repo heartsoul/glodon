@@ -337,19 +337,11 @@ function loadingToast() {
 }
 
 function equipmentAcceptanceCompanies(dispatch) {
-    if(OfflineStateUtil.isOnLine()){
-        API.equipmentAcceptanceCompanies(storage.loadProject())
-            .then(responseData => {
-                dispatch(_loadingAcceptanceCompaniesSuccess(responseData.data));
-            }).catch(error => { })
-    }else{
-        let bm = OfflineManager.getBasicInfoManager();
-        bm.equipmentAcceptanceCompanies().then(data =>{
-            dispatch(_loadingAcceptanceCompaniesSuccess(data));
-        }).catch(err => {
-            console.log(err)
-        });
-    }
+    API.equipmentAcceptanceCompanies(storage.loadProject())
+        .then(responseData => {
+            dispatch(_loadingAcceptanceCompaniesSuccess(responseData.data));
+        }).catch(error => { })
+    
 }
 
 

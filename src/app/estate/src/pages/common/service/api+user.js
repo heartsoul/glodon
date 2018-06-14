@@ -1,5 +1,7 @@
 
 import { requestHTML, requestJSON, BASE_URL, SERVER_TYPE} from "common-module"
+import UserInfoManager from '../../offline/manager/UserInfoManager';
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil';
 // import {NativeModules} from 'react-native'
 // import {FileReaderModule} from NativeModules
 // 用户登录
@@ -64,14 +66,20 @@ export async function accountInfo() {
 
 // 项目信息
 export async function getProjects(page, size, tenantId = '0') {
-    let headers = {};
-    if(tenantId && tenantId != '0') {
-        headers = {'X-CORAL-TENANT':''+tenantId};
+    if(OfflineStateUtil.isOnLine()){
+        let headers = {};
+        if(tenantId && tenantId != '0') {
+            headers = {'X-CORAL-TENANT':''+tenantId};
+        }
+        return requestJSON(api_pmbasic_projects_available + '?sort=createTime,desc&page=' + page + '&size=' + size, {
+            method: 'GET',
+            headers: headers
+        });
+    }else{
+        let um = new UserInfoManager();
+        return um.getProjectList(tenantId);
     }
-    return requestJSON(api_pmbasic_projects_available + '?sort=createTime,desc&page=' + page + '&size=' + size, {
-        method: 'GET',
-        headers: headers
-    });
+    
 }
 
 // 设置当前租户

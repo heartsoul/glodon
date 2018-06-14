@@ -18,6 +18,15 @@ export default class UserInfoHandler extends BaseHandler{
         return value;
     }
     
-    
+     //保存账户信息
+    saveAccountInfo(key,value){
+        storage.saveAccountInfo(key,value);
+    }
+
+    //验证账户信息
+    checkAccountInfo(key,value){
+        let result = storage.getAccountInfo(key);
+        return result == value;
+    }
 }
 

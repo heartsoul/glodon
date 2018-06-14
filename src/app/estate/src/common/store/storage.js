@@ -463,6 +463,17 @@ export default class GLDStorage extends BaseStorage {
         return value;
     }
 
+    //保存当前账户信息
+    saveAccountInfo = (key,value) =>{
+        this.setItem(__KEY_accountInfo + key,value);
+    }
+    //获取当前账户信息
+    getAccountInfo = (key)=>{
+        let value = this.getItem(__KEY_accountInfo + key);
+        return value;
+    }
+
+
     //保存模型id与离线包名对应关系
     setModelFileIdOfflineName = (fileId,offlineName) =>{
         this.setItem(__KEY_modelFileIdOfflineName + userId()+fileId,offlineName);
@@ -502,3 +513,4 @@ const __KEY_offlineState = "offlineState"; // Android版本更新自动下载
 const __KEY_latestVersionId = "latestVersionId"; // 当前项目最新版本
 const __KEY_modelFileIdOfflineName = "modelFileIdOfflineName"; // 模型id与离线包名的对应关系存储
 const __KEY_tenantProjectList = "tenantProjectList"; // 模型id与离线包名的对应关系存储
+const __KEY_accountInfo = "accountInfo"; // 账户信息

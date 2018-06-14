@@ -256,19 +256,16 @@ function _getModelElementProperty(gdocFileId, elementId) {
   * 获取项目下检查单位列表
   */
 function _getInspectionCompanies() {
-    if(OfflineStateUtil.isOnLine()){
-        return API.getInspectionCompanies(storage.loadProject())
-        .then(data => {
-            let inspectionCompanies = [];
-            if (data && data.data) {
-                inspectionCompanies = data.data;
-            }
-            return inspectionCompanies;
-        });
-    }else{
-        let bm = OfflineManager.getBasicInfoManager();
-        return bm.getInspectionCompany();
-    }
+    return API.getInspectionCompanies(storage.loadProject())
+    .then(data => {
+        console.log('333333333333')
+        console.log(data)
+        let inspectionCompanies = [];
+        if (data && data.data) {
+            inspectionCompanies = data.data;
+        }
+        return inspectionCompanies;
+    });
     
 }
 
@@ -276,19 +273,14 @@ function _getInspectionCompanies() {
  * 获取施工单位列表
  */
 function _getSupporters() {
-    if(OfflineStateUtil.isOnLine()){
-        return API.getCompaniesList(storage.loadProject(), 'SGDW')
-            .then(data => {
-                let supporters = [];
-                if (data && data.data) {
-                    supporters = data.data;
-                }
-                return supporters;
-            });
-    }else{
-        let bm = OfflineManager.getBasicInfoManager();
-        return bm.getSupporters();
-    }
+    return API.getCompaniesList(storage.loadProject(), 'SGDW')
+        .then(data => {
+            let supporters = [];
+            if (data && data.data) {
+                supporters = data.data;
+            }
+            return supporters;
+        });
 }
 
 
