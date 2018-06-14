@@ -100,6 +100,16 @@ class NewQualityView extends React.Component {
             if (props.editParams.editInfo) {
                 editInfo = props.editParams.editInfo;
             }
+            let files = [];
+            if(editInfo.files && editInfo.files.length) {
+                editInfo.files.map((item,index)=>{
+                    let newItem = {...item};
+                    if(newItem.randomKey){
+                        newItem.randomKey = newItem.randomKey +'_'+ this.props.type;
+                    }
+                    files.push(newItem);
+                });
+            }
             this.contentDescription = editInfo.contentDescription ? editInfo.contentDescription : '';
             this.setState({
                 isLoading: false,
@@ -124,7 +134,7 @@ class NewQualityView extends React.Component {
                 showDescriptionStar: false,
                 showCheckpointStar: false,
                 showRectificationStar: false,
-                files: editInfo.files ? editInfo.files : [], //附件图片
+                files: files, //附件图片
                 initial: true,
             });
         }

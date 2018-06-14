@@ -5,7 +5,7 @@ import { TouchableOpacity, View, Image } from 'react-native';
 import { ActionSheet } from 'app-3rd/teaset';
 import { ActionModal } from 'app-components';
 import { chooseImages } from './ImageManager';
-
+import UploadingView from './UploadingView';
 const icon_add_picture = require('app-images/icon_add_picture.png')
 const icon_login_password_delete = require('app-images/login/icon_login_password_delete.png')
 
@@ -117,25 +117,27 @@ export default class ImageChooserView extends React.Component {
         }
         return null;
     }
-    renderImageItem = (url,index) => {
+    renderImageItem = (url,index,randomKey) => {
         return <View key={'img_item_'+index} style={{marginRight:5}}>
             <TouchableOpacity onPress={()=>this.onBigImage(index)}>
             <Image style={{marginTop:5,marginRight:5,width:80,height:80,resizeMode:'cover'}} source={{uri:url}}/>
+            <UploadingView uploadKey={randomKey||null} style={{position:'absolute',width:80,bottom:0}}>
+            </UploadingView>
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>this.onDeleteImage(index)} style={{position:'absolute',top:0,right:0}}>
             <Image style={{width:20,height:20,backgroundColor:'transparent',resizeMode:'contain'}} source={icon_login_password_delete}/>
             </TouchableOpacity>
+            
             </View>
     }
     renderImage = () => {
         return (
         this.state.files.map((item,index)=>{
-            return this.renderImageItem(item.thumbUrl ? item.thumbUrl : item.url,index);
+            return this.renderImageItem(item.thumbUrl ? item.thumbUrl : item.url,index,item.randomKey);
         })
         )
     }
     render = () =>{
-        console.log('render1');
         return (
             <View
                 {...this.props}

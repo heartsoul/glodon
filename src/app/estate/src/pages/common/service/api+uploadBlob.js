@@ -1,6 +1,10 @@
 
-import { requestJSON, BASE_UPLOAD_URL } from "common-module"
-import RNFetchBlob from 'react-native-fetch-blob' 
+import { requestJSON, BASE_UPLOAD_URL } from "common-module/index"
+import { RNFetchBlob, RNFS } from 'app-3rd/index' 
+// import RNFetchBlob from 'react-native-fetch-blob'
+import {
+    DeviceEventEmitter,
+} from 'react-native';
 
 /**
  * 获取operationCode
@@ -25,7 +29,7 @@ export async function operationCode(name, length,digest=null) {
  * @param {*} operationCode 上传操作校验码
  * @param {*} onProgress 进度 onProgress(written, total)
  */
-export async function uploadFileBlob(fileData,operationCode,onProgress) {
+export async function uploadFileBlob(key,fileData,operationCode,onProgress) {
     let api = "/v1/insecure/objects?operationCode=" + operationCode;
     let formData = {};
     if(fileData.url) {
@@ -37,15 +41,31 @@ export async function uploadFileBlob(fileData,operationCode,onProgress) {
         console.log('path1:', path);
         formData = {name : 'uploaded_file', filename : 'hi'+fileData.name, data: RNFetchBlob.wrap(path)};
     }
-   return RNFetchBlob.fetch('POST', BASE_UPLOAD_URL + api, {
+    
+    let task = RNFetchBlob.fetch('POST', BASE_UPLOAD_URL + api, {
         'Content-Type' : 'multipart/form-data',
-      }, [formData]).uploadProgress({ interval : 1000 }, (written, total) => {
+      }, [formData]);
+      
+    DeviceEventEmitter.emit('uploadProcessStart',key,task,()=>{
+        task.cancel((reason)=>{
+            throw new Error(reason);
+        });
+    });
+    task.uploadProgress({ interval : 200 }, (written, total) => {
         console.log('uploaded', written / total)
+        // DeviceEventEmitter.emit('uploadProcessPercent',key,written, total);
+        if(task.onProgress){
+            task.onProgress(written,total);
+        }
         onProgress && onProgress(written,total);
     }).then((response) => response.json())
     .then((data) => {
         //处理上传成功的数据
         if (data && data.message && "success" == data.message) {
+            // DeviceEventEmitter.emit('uploadProcessFinish',key,null);
+            if(task.onFinish){
+                task.onFinish();
+            }
             let res = parseUploadData(data.data);
             if (res && res.name) {
                 return res;
@@ -54,6 +74,7 @@ export async function uploadFileBlob(fileData,operationCode,onProgress) {
             return null
         }
     })
+    return task;
 }
 
 /**

@@ -3,7 +3,7 @@ import { NativeModules } from 'react-native'
 import { ActionModal } from 'app-components'
 
 var PM = NativeModules.GLDPhotoManager;
-
+var randomKey = 19830529;
 export function chooseImages(retFun, retFiles = [], maxLength = 3, multiple = false, capture = 'camera') {
 
     if (multiple || capture !== 'camera') {
@@ -17,6 +17,7 @@ export function chooseImages(retFun, retFiles = [], maxLength = 3, multiple = fa
                 }
                 data.map((item, index) => {
                     item.url = "file://" + item.path;
+                    item.randomKey = randomKey ++;
                     retFiles.push(item);
                 });
                 retFun(retFiles, bSuccess)
@@ -33,6 +34,7 @@ export function chooseImages(retFun, retFiles = [], maxLength = 3, multiple = fa
                 }
                 data.map((item, index) => {
                     item.url = "file://" + item.path;
+                    item.randomKey = randomKey ++;
                     retFiles.push(item);
                 });
                 retFun(retFiles, bSuccess)
