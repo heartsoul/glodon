@@ -5,7 +5,6 @@
  */
 
 import {BASE_URL} from 'common-module'
-import { Toast } from 'antd-mobile';
 // 关于fetch https://github.com/github/fetch
 // fetch('/users', {
 //   method: 'POST',

@@ -1,40 +1,38 @@
 import React, { Component } from 'react';
 import {
-    Text,
     View,
-    TouchableOpacity,
-    Image,
     StyleSheet,
-    DeviceEventEmitter,
 } from 'react-native';
+import CircleProgressView from './circlebar/CircleProgressView'
 import PropTypes from 'prop-types'
-const icon_login_password_delete = require('app-images/login/icon_login_password_delete.png')
+import {DeviceEventEmitter} from 'app-3rd'
 class UploadingProcessView extends Component {
     render() {
-        const { height = 5, percent = 0, uploading = false } = this.props;
+        const { height = 5, progress = 0} = this.props;
         return (<View style={[styles.progressViewOut, { height: height, borderRadius: height / 2, }]}>
-            <View style={[styles.progressViewIn, { width: + percent + '%', height: height, borderRadius: height / 2, }]}></View>
-            {
-                uploading ?
-                    <TouchableOpacity style={{ position: 'absolute', top: 0, right: 0 }} onPress={this.props.onCancel}>
-                        <Image style={{ width: height, height: height, backgroundColor: 'transparent', resizeMode: 'contain' }} source={icon_login_password_delete} />
-                    </TouchableOpacity>
-                    : null
-            }
+            <View style={[styles.progressViewIn, { width: + progress + '%', height: height, borderRadius: height / 2, }]}></View>
+            {this.props.children}
         </View>
-
         )
     }
 }
 UploadingProcessView.propTypes = {
     percent: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
-    onCancel: PropTypes.func,
-    uploading: PropTypes.bool,
 }
 class UploadingCircleProcessView extends Component {
-
+    render() {
+        <CircleProgressView progress={this.props.progress} totalNum={this.props.totalNum} raduis={this.props.raduis}>
+        {this.props.children}
+        </CircleProgressView>
+    }
 }
+
+UploadingCircleProcessView.propTypes = {
+    progress: PropTypes.number.isRequired,
+    raduis: PropTypes.number.isRequired,
+}
+
 export default class UploadingView extends Component {
 
     constructor(props) {
@@ -62,6 +60,10 @@ export default class UploadingView extends Component {
         }
     }
 
+    // 这个会被任务给重写
+    onCancel = () => {
+        // 这里如果有任务的话，就可以取消掉任务。
+    }
     componentWillMount = () => {
         if (!this.state.uploadKey) {
             return;
@@ -89,6 +91,7 @@ export default class UploadingView extends Component {
     }
 
     onFinish = () => {
+        this.onCancel = ()=>{}; // 重置取消方法，完成了就不用了。
         let percent = 100;
         this.setState(
             {
@@ -115,7 +118,7 @@ export default class UploadingView extends Component {
 
         }
         return (<View style={[this.props.style]}>
-            <UploadingProcessView percent={this.state.percent} uploading={this.state.uploading} height={5} onCancel={() => {
+            <UploadingProcessView progress={this.state.percent} uploading={this.state.uploading} height={5} onCancel={() => {
                 this.onCancel && this.onCancel();
             }} />
         </View>);

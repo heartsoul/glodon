@@ -1,10 +1,7 @@
 
 import { requestJSON, BASE_UPLOAD_URL } from "common-module/index"
-import { RNFetchBlob, RNFS } from 'app-3rd/index' 
-// import RNFetchBlob from 'react-native-fetch-blob'
-import {
-    DeviceEventEmitter,
-} from 'react-native';
+import { RNFetchBlob} from 'app-3rd' 
+import {DeviceEventEmitter} from 'app-3rd'
 
 /**
  * 获取operationCode
@@ -32,8 +29,8 @@ export async function operationCode(name, length,digest=null) {
 export async function uploadFileBlob(key,fileData,operationCode,onProgress) {
     let api = "/v1/insecure/objects?operationCode=" + operationCode;
     let formData = {};
-    if(fileData.url) {
-        formData = {name : 'uploaded_file', filename : 'hi'+fileData.name, data: fileData.url};
+    if(fileData.file) {
+        formData = {name : 'uploaded_file', filename : 'hi'+fileData.name, data: fileData.file};
     } else {
         path = fileData.path;
         console.log('path:', path);

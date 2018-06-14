@@ -6,7 +6,7 @@ import QualityManager from './QualityManager';
 import EquipmentManager from './EquipmentManager';
 import DownloadingManager from './DownloadingManager';
 
-const {Realm} = require('app-3rd/realm');
+const {Realm} = require('app-3rd');
 
 
 let realm = null;

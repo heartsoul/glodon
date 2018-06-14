@@ -270,8 +270,13 @@ function convertBase64UrlToBlob(urlData){
  * @param {*} callback 回调
  */
 async function upLoad(filePath, name, operationCode, callback,nativeFile,index) {
-    
-    uploadFileBlob(nativeFile.randomKey,{name:name,path:filePath},operationCode,(written, total) => {
+    let formData = {};
+    if(nativeFile.file) {
+        formData = {name:name,file:nativeFile.file}
+    } else {
+        formData = {name:name,path:filePath}
+    }
+    uploadFileBlob(nativeFile.randomKey,formData,operationCode,(written, total) => {
         console.log('uploaded', written / total);  
     }).then((data)=>{
             count ++;

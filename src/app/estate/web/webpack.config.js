@@ -2,8 +2,9 @@ const webpack = require('webpack')
 const path = require('path')
 
 const appDirectory = path.resolve(__dirname, '../')
-const {BASE_URL_PROXY} = require('./../src/common/constant/server-config.proxy.web')
+const {BASE_URL_PROXY,UPLOAD_URL_PROXY} = require('./../src/common/constant/server-config.proxy.web')
 var ___SERVER = BASE_URL_PROXY;
+var ___SERVER_UP = UPLOAD_URL_PROXY;
 var utils = require('./utils');
 var PORT = 8099;
 var HOST = utils.getIP();
@@ -119,6 +120,13 @@ var config = {
                 changeOrigin: true,
                 secure: false
             },
+            '/v1/*': {
+                target: ___SERVER_UP,
+                changeOrigin: true,
+                secure: false
+            },
+
+            
         }
     },
 
