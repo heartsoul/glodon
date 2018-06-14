@@ -11,9 +11,9 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
-  DeviceEventEmitter
+  
 } from 'react-native';
-
+import { DeviceEventEmitter } from "app-3rd"
 import {CircleProgressBar} from 'app-components'
 import OfflineManager from '../../../offline/manager/OfflineManager'
 var { width, height } = Dimensions.get("window");
