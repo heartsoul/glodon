@@ -339,7 +339,6 @@ class LoadingView extends Component{
   }
 
   _callback=()=>{
-    console.log('33333333333333333')
     this._getRecords();
   }
 
@@ -356,14 +355,31 @@ class LoadingView extends Component{
 
   renderItemView=(item)=>{
     let value = JSON.parse(item.item.value);
-    let source = value.source;
+    let url = require('app-images/icon_downloading_quality.png');
     let title = value.title;
+    switch(title){
+      case '检查单':
+      url = require('app-images/icon_downloading_quality.png');
+      break;
+      case '材设进场单':
+      url = require('app-images/icon_downloading_equipment.png');
+      break;
+      case '基础数据包':
+      url = require('app-images/icon_blueprint_file.png');
+      break;
+    }
+    if(title.startsWith('模型')){
+      url = require('app-images/icon_downloading_model.png');
+    }
+    if(title.startsWith('图纸')){
+      url = require('app-images/icon_downloading_blueprint.png');
+    }
     let subTitle = value.timeText+value.subTitle;
     return (
       <View style={{height:55,backgroundColor:'#ffffff'}} >
         <View style={{height:54,backgroundColor:'#ffffff' ,flexDirection:'row',alignItems:'center' }}>
           <SelectView />
-          <Image source={require('app-images/icon_downloading_quality.png')} style={{width:40,height:40,marginLeft:11,marginRight:14}} />
+          <Image source={url} style={{width:40,height:40,marginLeft:11,marginRight:14}} />
           <View style={{flex:1,justifyContent:'center'}} >
             <Text style={{fontSize:14,color:'#333333'}} >{title}</Text>
             <Text style={{fontSize:10,color:'#999999'}} >{subTitle}</Text>

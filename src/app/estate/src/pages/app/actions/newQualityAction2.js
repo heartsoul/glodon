@@ -159,26 +159,15 @@ function getTransformInfo(params) {
  * @param {*} fileId 质检单id
  */
 function _getQualityInspectionDetail(fileId) {
-    if(OfflineStateUtil.isOnLine()){
-        return API.getQualityInspectionDetail(storage.loadProject(), fileId)
-            .then((responseData) => {
-                let params = {};
-                if (responseData.data && responseData.data.inspectionInfo) {
-                    params = getDetailInfo(responseData.data.inspectionInfo)
-                }
-                return params;
-            });
-    }else{
-        let qualityManager = OfflineManager.getQualityManager();
-        return qualityManager.getQualityDetail(fileId)
+    return API.getQualityInspectionDetail(storage.loadProject(), fileId)
         .then((responseData) => {
             let params = {};
-                if (responseData && responseData.inspectionInfo) {
-                    params = getDetailInfo(responseData.inspectionInfo)
-                }
-                return params;
-        })
-    }
+            if (responseData.data && responseData.data.inspectionInfo) {
+                params = getDetailInfo(responseData.data.inspectionInfo)
+            }
+            return params;
+        });
+   
 }
 
 /**

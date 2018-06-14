@@ -46,7 +46,7 @@ export default class DownloadImg{
                     //开始下载
                     const ret = RNFS.downloadFile(options);
                     ret.promise.then(res => {
-                        console.log('success', res);
+                        // console.log('success', res);
                         i++
                         if(i<arr.length){
                             this.downloadImg(arr,i);

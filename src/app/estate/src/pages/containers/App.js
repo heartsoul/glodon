@@ -124,6 +124,9 @@ const screens = {
     SharePage:{
         screen:GLD.SharePage
     },
+    OfflineAsyncPage:{
+        screen:GLD.OfflineAsyncPage
+    },
 };
 
 const options = () => {

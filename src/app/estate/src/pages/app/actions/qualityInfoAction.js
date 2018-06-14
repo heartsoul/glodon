@@ -7,8 +7,8 @@ import OfflineManager from '../../offline/manager/OfflineManager'
 export function fetchData(fieldId) {
   return dispatch => {
     // dispatch(_loading());
-    if(OfflineStateUtil.isOnLine()){
       API.getQualityInspectionDetail(storage.loadProject(), fieldId).then((responseData) => {
+        
         if (responseData.data.files && responseData.data.files.length > 0) {
           loadFileUrls(responseData.data.files, (files) => {
             responseData.data.files = files;
@@ -19,25 +19,9 @@ export function fetchData(fieldId) {
           dispatch(_loadSuccess(responseData.data));
         }
       }).catch(err => {
-        dispatch(_loadError(error));
+        dispatch(_loadError(err));
       });
-    }else{
-      let qualityManager = OfflineManager.getQualityManager();
-        qualityManager.getQualityDetail(fieldId)
-        .then((responseData) => {
-          if (responseData.files && responseData.files.length > 0) {
-            loadFileUrls(responseData.files, (files) => {
-              responseData.files = files;
-              dispatch(_loadSuccess(responseData));
-            });
-          }
-          else {
-            dispatch(_loadSuccess(responseData));
-          }
-        }).catch(err => {
-          dispatch(_loadError(error));
-        });
-    }
+    
   }
 }
 function loadFileUrls(files, finsh) {

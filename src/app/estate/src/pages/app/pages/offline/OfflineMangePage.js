@@ -38,8 +38,8 @@ export default class extends Component {
   }
   //离线进程跟踪
   _gotoOfflineManage=()=>{
-    // let navigator = this.props.navigation;
-    // storage.pushNext(navigator,'SettingPage');
+    let navigator = this.props.navigation;
+    storage.pushNext(navigator,'OfflineAsyncPage');
   }
   //进入离线模式
   _gotoOfflineMode=()=>{

@@ -41,6 +41,7 @@ import EquipmentRecordPage from './app/pages/offline/EquipmentRecordPage'
 import QualityConditionPage from './app/pages/offline/QualityConditionPage'
 import QualityRecordPage from './app/pages/offline/QualityRecordPage'
 import SharePage from './app/pages/me/SharePage'
+import OfflineAsyncPage from './app/pages/offline/OfflineAsyncPage'
 
 export {
     LoginPage,
@@ -83,4 +84,5 @@ export {
     QualityConditionPage,
     QualityRecordPage,
     SharePage,
+    OfflineAsyncPage,
 }

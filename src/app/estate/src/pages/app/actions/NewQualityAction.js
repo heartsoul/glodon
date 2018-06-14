@@ -233,38 +233,20 @@ export function submit(requestParams, imageChooserEle, navigator, callback, upda
  * @param {*} inspectId 
  */
 export function submitFromList(inspectId, callback) {
-    if(OfflineStateUtil.isOnLine()){
-        API.getQualityInspectionDetail(storage.loadProject(), inspectId)
-        .then((responseData) => {
-            let params = responseData.data.inspectionInfo;
-            params.inspectId = params.id;
-            API.editSubmitInspection(storage.loadProject(), inspectId, params.inspectionType, JSON.stringify(params))
-                .then(data => {
-                    callback({ res: "success", data: data, });
-                }).catch(err => {
-                    Toast.hide();
-                })
-        }).catch(err => {
-            Toast.hide();
-            callback({ res: "error", data: err });
-        });
-    }else{
-        let qualityManager = OfflineManager.getQualityManager();
-        qualityManager.getQualityDetail(inspectId)
-        .then((responseData) => {
-            let params = responseData.inspectionInfo;
-            params.inspectId = params.id;
-            API.editSubmitInspection(storage.loadProject(), inspectId, params.inspectionType, JSON.stringify(params))
-                .then(data => {
-                    callback({ res: "success", data: data, });
-                }).catch(err => {
-                    Toast.hide();
-                })
-        }).catch(err => {
-            Toast.hide();
-            callback({ res: "error", data: err });
-        });
-    }
+    API.getQualityInspectionDetail(storage.loadProject(), inspectId)
+    .then((responseData) => {
+        let params = responseData.data.inspectionInfo;
+        params.inspectId = params.id;
+        API.editSubmitInspection(storage.loadProject(), inspectId, params.inspectionType, JSON.stringify(params))
+            .then(data => {
+                callback({ res: "success", data: data, });
+            }).catch(err => {
+                Toast.hide();
+            })
+    }).catch(err => {
+        Toast.hide();
+        callback({ res: "error", data: err });
+    });
     
 }
 

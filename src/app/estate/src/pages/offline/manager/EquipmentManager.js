@@ -96,11 +96,7 @@ export default class EquipmentManager {
 
     //获取材设单编辑状态信息
     getQualityEdit=(id)=>{
-        let info = handler.query(id);
-        let obj = JSON.parse(info);
-        return new Promise((resolve,reject)=>{
-            resolve(obj.editInfo);
-        });
+        return this.getQualityDetail(id);
     }
 
    
@@ -299,14 +295,14 @@ export default class EquipmentManager {
         
          download().then((a)=>{
              console.log('==============downloadOver=====================')
-            //  console.log(detailArr.length)
+             
              //缓存图片
             if(detailArr && detailArr.length>0){
                 let arr = [];
-                for (item of detailArr){
+                for (let item of detailArr){
                     let files = item.data.files;
                     if(files && files.length>0){
-                        for (f of files){
+                        for (let f of files){
                             //获取图片信息
                             arr = [...arr,{fileId:f.objectId,url:f.url}]
                         }

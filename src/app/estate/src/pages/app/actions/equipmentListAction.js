@@ -21,33 +21,17 @@ export function deleteData(id) {
 
 export function submitData(id) {
   return dispatch => {
-    if(OfflineStateUtil.isOnLine()){
-        API.equipmentDetail(storage.loadProject(), id).then((responseData) => {
-            let params = responseData.data;
-            API.equipmentEditSubmit(storage.loadProject(), id, JSON.stringify(params))
-            .then((responseData) => {
-                dispatch(UpdateDataAction.updateData());
-            }).catch(error => {
-                console.log(error);
-            })
+    API.equipmentDetail(storage.loadProject(), id).then((responseData) => {
+        let params = responseData.data;
+        API.equipmentEditSubmit(storage.loadProject(), id, JSON.stringify(params))
+        .then((responseData) => {
+            dispatch(UpdateDataAction.updateData());
         }).catch(error => {
-            console.log(error)
-        });
-    }else{
-        let equimentManager = OfflineManager.getEquipmentManager();
-        equimentManager.getQualityDetail(id).then((responseData) => {
-            let params = responseData.data;
-            API.equipmentEditSubmit(storage.loadProject(), id, JSON.stringify(params))
-            .then((responseData) => {
-                dispatch(UpdateDataAction.updateData());
-            }).catch(error => {
-                console.log(error);
-            })
-        }).catch(error => {
-            console.log(error)
-        });
-    }
-   
+            console.log(error);
+        })
+    }).catch(error => {
+        console.log(error)
+    });
   }
 }
 

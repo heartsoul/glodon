@@ -233,10 +233,15 @@ export async function getQualityInspectionAllByDate(projectId, qcState, page, si
 }
  */
 export async function getQualityInspectionDetail(projectId, fileId) {
-    let api = "/quality/" + projectId + "/qualityInspection/" + fileId + '/detail';
-    return requestJSON(api + '?fileId=' + fileId, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = "/quality/" + projectId + "/qualityInspection/" + fileId + '/detail';
+        return requestJSON(api + '?fileId=' + fileId, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getQualityManager();
+        return bm.getQualityDetail(fileId);
+    }
 }
 
 /**
@@ -698,10 +703,15 @@ export async function editSubmitReview(projectId, fileId, props) {
 
  */
 export async function getReviewInfo(projectId, inspectionId) {
-    let api = `/quality/${projectId}/qualityReviews/staged?inspectionId=${inspectionId}`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityReviews/staged?inspectionId=${inspectionId}`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getQualityManager();
+        return bm.getReviewEditInfo(inspectionId);
+    }
 }
 
 /**
@@ -771,15 +781,20 @@ export async function editSubmitRepair(projectId, fileId, props) {
 }
 
 /**
- * 整改单  查询保存后的复查单数据
+ * 整改单  查询保存后的整改单数据
  * @param {*} projectId 
  * @param {*} inspectionId 
  */
 export async function getRepairInfo(projectId, inspectionId) {
-    let api = `/quality/${projectId}/qualityRectification/staged?inspectionId=${inspectionId}`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityRectification/staged?inspectionId=${inspectionId}`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getQualityManager();
+        return bm.getRepairEditInfo(inspectionId);
+    }
 }
 
 /**
@@ -1141,10 +1156,15 @@ export async function equipmentDetail(projectId, id) {
     //     "unit": "string",
     //     "updateTime": "1518853268000"
     //   }}
-    let api = `/quality/${projectId}/facilityAcceptance/${id}`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/facilityAcceptance/${id}`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }else{
+        let bm = OfflineManager.getEquipmentManager();
+        return bm.getQualityDetail(id);
+    }
 }
 
 /**

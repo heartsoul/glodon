@@ -60,11 +60,7 @@ export default class QualityManager {
 
     //获取检查单编辑状态信息
     getQualityEdit=(id)=>{
-        let info = handler.query(id);
-        let obj = JSON.parse(info);
-        return new Promise((resolve,reject)=>{
-            resolve(obj.editInfo);
-        });
+        return this.getQualityDetail(id);
     }
 
     //获取整改单编辑信息
@@ -160,7 +156,7 @@ export default class QualityManager {
                 // console.log(responseData); //
                 // console.log('质检单详情 end--------------');
                 if(responseData && responseData.data ){
-                    return responseData.data;
+                    return responseData;
                 }
                 return null;
             }).catch(err => {
@@ -174,8 +170,8 @@ export default class QualityManager {
                 // console.log('质检单编辑信息 start--------------');
                 // console.log(responseData); //
                 // console.log('质检单编辑信息 end--------------');
-                if(responseData && responseData.data && responseData.data.inspectionInfo){
-                    return responseData.data.inspectionInfo;
+                if(responseData){
+                    return responseData;
                 }
                 return null;
             }).catch(err => {
@@ -299,21 +295,21 @@ export default class QualityManager {
              //缓存图片
             if(detailArr && detailArr.length>0){
                 let arr = [];
-                for (item of detailArr){
+                for (let item of detailArr){
                     // console.log('===================================')
-                    // console.log(item.inspectionInfo.files)
-                    let files = item.inspectionInfo.files;
+                    // console.log(item)
+                    let files = item.data.inspectionInfo.files;
                     if(files && files.length>0){
-                        for (f of files){
+                        for (let f of files){
                             arr = [...arr,{fileId:f.objectId,url:f.url}]
                         }
                         
                     }
-                    if(item.progressInfos && item.progressInfos.length>0){
-                        for(p of item.progressInfos){
+                    if(item.data.progressInfos && item.data.progressInfos.length>0){
+                        for(let p of item.data.progressInfos){
                             let files = p.files;
                             if(files && files.length>0){
-                                for (f of files){
+                                for (let f of files){
                                     arr = [...arr,{fileId:f.objectId,url:f.url}]
                                 }
                                 

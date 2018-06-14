@@ -25,62 +25,35 @@ function loadingToast() {
  * 获取质检单详情
  */
 function getQualityInfo(fieldId, dispatch) {
-    if(OfflineStateUtil.isOnLine()){
-        API.getQualityInspectionDetail(storage.loadProject(), fieldId)
-        .then((responseData) => {
-            dispatch(_loadDetailSuccess(responseData.data));
-        }).catch(err => {
-            dispatch(_loadError(err));
-        });
-    }else{
-        let qualityManager = OfflineManager.getQualityManager();
-        return qualityManager.getQualityDetail(fieldId)
-        .then((responseData) => {
-            dispatch(_loadDetailSuccess(responseData));
-        }).catch(err => {
-            dispatch(_loadError(err));
-        });
-    }
+    API.getQualityInspectionDetail(storage.loadProject(), fieldId)
+    .then((responseData) => {
+        dispatch(_loadDetailSuccess(responseData.data));
+    }).catch(err => {
+        dispatch(_loadError(err));
+    });
+    
 }
 
 /**
  * 获取以前保存的复查单信息
  */
 function getReviewInfo(fieldId, dispatch) {
-    if(OfflineStateUtil.isOnLine()){
-        API.getReviewInfo(storage.loadProject(), fieldId).then((responseData) => {
-            dispatch(_loadEditInfoSuccess(responseData.data));
-        }).catch(err => {
-            dispatch(_loadError(err))
-        });
-    }else{
-        let qualityManager = OfflineManager.getQualityManager();
-        qualityManager.getReviewEditInfo(fieldId).then((responseData) => {
-            dispatch(_loadEditInfoSuccess(responseData.data));
-        }).catch(err => {
-            dispatch(_loadError(err))
-        });
-    }
+    API.getReviewInfo(storage.loadProject(), fieldId).then((responseData) => {
+        dispatch(_loadEditInfoSuccess(responseData.data));
+    }).catch(err => {
+        dispatch(_loadError(err))
+    });
+    
 }
 /**
  * 获取以前保存的整改单信息
  */
 function getRepairInfo(fieldId, dispatch) {
-    if(OfflineStateUtil.isOnLine()){
-        API.getRepairInfo(storage.loadProject(), fieldId).then((responseData) => {
-            dispatch(_loadEditInfoSuccess(responseData.data));
-        }).catch(err => {
-            dispatch(_loadError(err))
-        });
-    }else{
-        let qualityManager = OfflineManager.getQualityManager();
-        qualityManager._getRepairEditInfo(fieldId).then((responseData) => {
-            dispatch(_loadEditInfoSuccess(responseData.data));
-        }).catch(err => {
-            dispatch(_loadError(err))
-        });
-    }
-    
+    API.getRepairInfo(storage.loadProject(), fieldId).then((responseData) => {
+        dispatch(_loadEditInfoSuccess(responseData.data));
+    }).catch(err => {
+        dispatch(_loadError(err))
+    });
 }
 
 /**
