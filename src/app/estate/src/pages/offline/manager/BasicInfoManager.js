@@ -123,12 +123,12 @@ export default class BasicInfoManager {
         this.downloadModel();
         this.downloadBluePrint();
         //保存到数据库
-        _saveToDb=(key,value)=>{
+        let _saveToDb=(key,value)=>{
             basicHandler.update(key,value);
         }
         
         //记录进度
-        _saveProgress=(callback,progress,totalNum)=>{
+        let _saveProgress=(callback,progress,totalNum)=>{
             //回调页面
             if(callback!=null && callback!=undefined){
                 callback(progress,totalNum);
@@ -143,7 +143,7 @@ export default class BasicInfoManager {
         }
         //检查单位
         let key_getInspectionCompany = `/quality/${projectId}/qualityInspection/inspectionCompanys`;
-        function _getInspectionCompany(){
+        let _getInspectionCompany=()=>{
             return API.getInspectionCompanies(projectId)
                     .then(data => {
                         let inspectionCompanies = [];
@@ -162,7 +162,7 @@ export default class BasicInfoManager {
         }
         //施工单位
         let key_getSupporters = `/pmbasic/projects/${projectId}/supporters`;
-        function _getSupporters() {
+        let _getSupporters=()=> {
             return API.getCompaniesList(projectId, 'SGDW')
                 .then(data => {
                     let supporters = [];
@@ -179,7 +179,7 @@ export default class BasicInfoManager {
                 });
         }
         //责任人
-        function _fetchPersons(coperationId){
+        let _fetchPersons=(coperationId)=>{
             let key_fetchPersons = `/pmbasic/projects/${projectId}/coperationCorps/${coperationId}/coperationRoles`;
             // console.log('----------------------168')
             // console.log(projectId+"  "+coperationId)
@@ -201,7 +201,7 @@ export default class BasicInfoManager {
         }
         //质检项目
         let key_getCheckPoints = `/quality/${projectId}/checkpoints/templates/whole`;
-        function _getCheckPoints(){
+        let _getCheckPoints=()=>{
             return API.getCheckPoints(storage.loadProject())
                 .then(data => {
                     let retValue = JSON.stringify(data.data);
@@ -214,7 +214,7 @@ export default class BasicInfoManager {
         }
 
         //质检项目标准
-        function _getStandards(templateId){
+        let _getStandards=(templateId)=>{
             let key_getStandards = `/quality/acceptanceStandard/templates/${templateId}/standards/items`;
             return API.getStandardsItems(templateId).then((responseData) => {
                 let html = JSON.stringify(responseData);
@@ -229,7 +229,7 @@ export default class BasicInfoManager {
         }
         //模型专业
         let key_getSpecialList = "/pmbasic/specialty";
-        function _getSpecialList(){
+        let _getSpecialList=()=>{
             return API.getPmbasicSpecialty(false).then(responseData => {
                         if (responseData) {
                             let list = JSON.stringify( responseData);
@@ -245,7 +245,7 @@ export default class BasicInfoManager {
         }
         //模型单体
         let key_getSingleList ="/pmbasic/projects/" + projectId + "/buildings";
-        function _getSingleList(){
+        let _getSingleList=()=>{
             return API.getPmbasicBuildings(projectId).then(responseData => {
                         if (responseData) {
                             let list = JSON.stringify( responseData);
@@ -263,7 +263,7 @@ export default class BasicInfoManager {
 
         //材设  验收单位
         let key_equipmentAcceptanceCompanies = `/quality/${projectId}/facilityAcceptance/acceptanceCompanys`;
-        function _equipmentAcceptanceCompanies() {
+        let _equipmentAcceptanceCompanies=()=> {
             return API.equipmentAcceptanceCompanies(projectId)
                 .then(responseData => {
                     if (responseData) {
@@ -355,7 +355,7 @@ export default class BasicInfoManager {
         // for(item of modelList){
         //     console.log(item.fileId);
         // }
-        _getThumbnailUrl =(fileId)=>{
+        let _getThumbnailUrl =(fileId)=>{
             // console.log('fileId='+item.fileId)
             return API.getBluePrintThumbnail(projectId, projectVersionId, fileId)
             .then(responseData => {
@@ -404,12 +404,12 @@ export default class BasicInfoManager {
     //下载模型 单据历史
     downloadModelHistory(){
         //保存到数据库
-        _saveToDb=(key,value)=>{
+        let _saveToDb=(key,value)=>{
             basicHandler.update(key,value);
         }
         let modelList = this.getModelList();
 
-        _getQualityHistories=(fileId)=>{
+        let _getQualityHistories=(fileId)=>{
             return API.getElements(projectId,fileId)
             .then(responseData => {
                 // console.log('质量 模型  单据历史 start-------------------')
@@ -431,7 +431,7 @@ export default class BasicInfoManager {
             })
         }
 
-        _getEquipmentHistories=(fileId)=>{
+        let _getEquipmentHistories=(fileId)=>{
             return API.getQualityFacilityAcceptanceElements(projectId,fileId)
             .then(responseData => {
                 // console.log('材设 模型  单据历史 start-------------------')
@@ -470,12 +470,12 @@ export default class BasicInfoManager {
      //下载质量-图纸  点的数据
      downloadQualityBlueprintHistory(){
          //保存到数据库
-        _saveToDb=(key,value)=>{
+         let _saveToDb=(key,value)=>{
             basicHandler.update(key,value);
         }
         let list = this.getBlueprintList();
 
-        _getDots=(fileId)=>{
+        let _getDots=(fileId)=>{
             return API.getBluePrintDots(projectId,fileId)
             .then(responseData => {
                 // console.log('图纸  单据历史 start-------------------')
@@ -503,7 +503,7 @@ export default class BasicInfoManager {
         }
 
         download().then((a)=>{
-            // console.log("图纸  点的数据  download over-----------------------------------------");
+            console.log("图纸  点的数据  download over-----------------------------------------");
 
         },(e)=>{
             console.log(e);
@@ -523,11 +523,11 @@ export default class BasicInfoManager {
 
     _downloadModelAndBlueprint(name){
         //保存到数据库
-        _saveToDb=(key,value)=>{
+        let _saveToDb=(key,value)=>{
             basicHandler.update(key,value);
         }
 
-        function _getModelList(fileId=0){
+        let _getModelList=(fileId=0)=>{
             console.log(projectId + '  '+projectVersionId+'  '+fileId)
             return API.getModelBimFileChildren(projectId, projectVersionId, 0, fileId).then(
                 (responseData) => {
