@@ -1,4 +1,4 @@
-import { DeviceEventEmitter } from 'react-native'
+import { DeviceEventEmitter } from 'app-3rd'
 import * as API from 'app-api';
 import QualityHandler from '../handler/QualityHandler';
 import DownloadImg from '../model/DownloadImg';
