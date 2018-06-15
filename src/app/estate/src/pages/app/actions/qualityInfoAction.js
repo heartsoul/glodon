@@ -8,6 +8,8 @@ export function fetchData(fieldId) {
   return dispatch => {
     // dispatch(_loading());
       API.getQualityInspectionDetail(storage.loadProject(), fieldId).then((responseData) => {
+
+        console.log(responseData)
         
         if (responseData.data.files && responseData.data.files.length > 0) {
           loadFileUrls(responseData.data.files, (files) => {

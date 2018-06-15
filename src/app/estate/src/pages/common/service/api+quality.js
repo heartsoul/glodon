@@ -459,13 +459,19 @@ function getApiType(inspectionType) {
  * {"id":5201156,"code":"ZLJC_20180328_003"}
  */
 export async function createSubmitInspection(projectId, inspectionType, props) {
-    let type = getApiType(inspectionType)
-
-    let api = `/quality/${projectId}/${type}/commit`;
-    return requestJSON(api, {
-        method: 'POST',
-        body: props,
-    });
+    
+    if(OfflineStateUtil.isOnLine()){
+        let type = getApiType(inspectionType)
+        let api = `/quality/${projectId}/${type}/commit`;
+        return requestJSON(api, {
+            method: 'POST',
+            body: props,
+        });
+    }else{
+        let qm = OfflineManager.getQualityManager();
+        qm.createSubmitInspection(projectId, inspectionType, JSON.parse(props));
+    }
+    
 }
 
 

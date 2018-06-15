@@ -115,16 +115,45 @@ export default class extends Component {
 //待处理-内容页面
 class AllView extends Component{
 
+  constructor(){
+    super();
+    this.state={
+      dataList:[]
+    }
+  }
+
+  componentDidMount(){
+    let am = OfflineManager.getAsyncManager();
+    let list = am.getRecordsByState('待同步');
+    this.setState((pre)=>{
+      return {
+        ...pre,
+        dataList:list,
+      }
+    })
+  }
+
   _renderItem =(item,index)=>{
+  //   let asyncValue = {
+  //     id:key,
+  //     title:props.code,
+  //     subTitle:this._formatDate(updateTime),
+  //     state:'待同步',   待同步   已同步  同步失败
+  //     type:'quality'
+  // }
+  let title = item.item.title;
+  let subTitle = item.item.subTitle;
+  let state = item.item.state;
+  let source = item.item.type=='quality'? require('app-images/icon_downloading_quality.png'):require('app-images/icon_downloading_equipment.png');
     return (
       <View style={{height:55,backgroundColor:'#ffffff'}} >
         <View style={{height:55,backgroundColor:'#ffffff' ,flexDirection:'row',alignItems:'center' }}>
-          <Image source={require('app-images/icon_downloading_quality.png')} style={{width:40,height:40,marginLeft:15,marginRight:10}} />
+          <Image source={source} style={{width:40,height:40,marginLeft:15,marginRight:10}} />
           <View style={{flex:1,justifyContent:'center'}} >
-            <Text style={{fontSize:14,color:'#333333'}} >检查单</Text>
-            <Text style={{fontSize:10,color:'#999999'}} >201825865</Text>
+            <Text style={{fontSize:14,color:'#333333'}} >{title} </Text>
+            <Text style={{fontSize:10,color:'#999999'}} >{subTitle} </Text>
           </View>
-          <Text style={{fontSize:12,color:'#f39b3d',marginRight:20}} >待同步</Text>
+          <Text style={{fontSize:12,color:'#f39b3d',marginRight:20}} > {state}</Text>
           
         </View>
       </View>
@@ -142,7 +171,7 @@ class AllView extends Component{
       <View style={{backgroundColor:'#f9f9f9'}} >
 
         <FlatList 
-          data={[1,2,3,4]}
+          data={this.state.dataList}
           renderItem={this._renderItem}
           ItemSeparatorComponent={this._separtor}
           keyExtractor={(item, index) => index+''}
@@ -156,16 +185,39 @@ class AllView extends Component{
 //已成功-内容页面
 class LoadedView extends Component{
 
+  constructor(){
+    super();
+    this.state={
+      dataList:[]
+    }
+  }
+
+  componentDidMount(){
+    let am = OfflineManager.getAsyncManager();
+    let list = am.getRecordsByState('已同步');
+    this.setState((pre)=>{
+      return {
+        ...pre,
+        dataList:list,
+      }
+    })
+  }
+
   _renderItem =(item,index)=>{
+    let title = item.item.title;
+    let subTitle = item.item.subTitle;
+    let state = item.item.state;
+    let source = item.item.type=='quality'? require('app-images/icon_downloading_quality.png'):require('app-images/icon_downloading_equipment.png');
+
     return (
       <View style={{height:55,backgroundColor:'#ffffff'}} >
         <View style={{height:55,backgroundColor:'#ffffff' ,flexDirection:'row',alignItems:'center' }}>
-          <Image source={require('app-images/icon_downloading_quality.png')} style={{width:40,height:40,marginLeft:15,marginRight:10}} />
+          <Image source={source} style={{width:40,height:40,marginLeft:15,marginRight:10}} />
           <View style={{flex:1,justifyContent:'center'}} >
-            <Text style={{fontSize:14,color:'#333333'}} >检查单</Text>
-            <Text style={{fontSize:10,color:'#999999'}} >201825865</Text>
+            <Text style={{fontSize:14,color:'#333333'}} >{title} </Text>
+            <Text style={{fontSize:10,color:'#999999'}} >{subTitle} </Text>
           </View>
-          <Text style={{fontSize:12,color:'#666666',marginRight:20}} >已同步</Text>
+          <Text style={{fontSize:12,color:'#666666',marginRight:20}} > {state}</Text>
           
         </View>
       </View>
@@ -182,7 +234,7 @@ class LoadedView extends Component{
     return (
       <View style={{backgroundColor:'#f9f9f9'}} >
         <FlatList 
-          data={[1,2,3,4]}
+          data={this.state.dataList}
           renderItem={this._renderItem}
           ItemSeparatorComponent={this._separtor}
           keyExtractor={(item, index) => index+''}
@@ -207,21 +259,44 @@ class LoadingView extends Component{
   _clickSubmit=()=>{
     
   }
+  constructor(){
+    super();
+    this.state={
+      dataList:[]
+    }
+  }
+
+  componentDidMount(){
+    let am = OfflineManager.getAsyncManager();
+    let list = am.getRecordsByState('同步失败');
+    this.setState((pre)=>{
+      return {
+        ...pre,
+        dataList:list,
+      }
+    })
+  }
+
   _renderItem =(item,index)=>{
+    let title = item.item.title;
+    let subTitle = item.item.subTitle;
+    let state = item.item.state;
+    let source = item.item.type=='quality'? require('app-images/icon_downloading_quality.png'):require('app-images/icon_downloading_equipment.png');
+    let errMsg = item.item.errMsg;
     return (
       <View style={{height:206,backgroundColor:'#ffffff',borderRadius:6,marginLeft:10,marginRight:10,marginTop:10}} >
         <View style={{height:60,backgroundColor:'#ffffff' ,flexDirection:'row',alignItems:'center' }}>
           <Image source={require('app-images/icon_downloading_quality.png')} style={{width:40,height:40,marginLeft:15,marginRight:10}} />
           <View style={{flex:1,justifyContent:'center'}} >
-            <Text style={{fontSize:14,color:'#333333'}} >检查单</Text>
-            <Text style={{fontSize:10,color:'#999999'}} >201825865</Text>
+            <Text style={{fontSize:14,color:'#333333'}} >{title} </Text>
+            <Text style={{fontSize:10,color:'#999999'}} >{subTitle} </Text>
           </View>
-          <Text style={{fontSize:12,color:'#f39b3d',marginRight:20}} >同步失败</Text>
+          <Text style={{fontSize:12,color:'#f39b3d',marginRight:20}} > {state}</Text>
         </View>
 
         <View style={{height:100,backgroundColor:'#fafafa',marginLeft:20,marginRight:20}}>
           <Text style={{fontSize:14,color:'#ff460d',marginTop:9}} >失败原因：</Text>
-          <Text style={{fontSize:13,color:'#262525',marginTop:8}} >失败原因描述失败原因描述失败原因描述失败原因描述失败原因描述</Text>
+          <Text style={{fontSize:13,color:'#262525',marginTop:8}} >{errMsg}</Text>
         </View>
 
         <View style={{height:46,flexDirection:'row',alignItems:'center',justifyContent:'flex-end',backgroundColor:'#ffffff'}}>
@@ -251,7 +326,7 @@ class LoadingView extends Component{
     return (
       <View style={{backgroundColor:'#f9f9f9',flex:1,}} >
           <FlatList 
-            data={[1,2,3,4]}
+            data={this.state.dataList}
             renderItem={this._renderItem}
             keyExtractor={(item, index) => index+''}
           />

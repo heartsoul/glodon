@@ -48,6 +48,7 @@ export const QC_STATE_INSPECTED = "inspected";
 export const QC_STATE_REVIEWED = "reviewed";
 export const QC_STATE_DELAYED = "delayed";
 export const QC_STATE_ACCEPTED = "accepted";
+export const QC_STATE_Q_NEW_SUBMIT = "qnsubmit";
 export const CREATE_CHECK_LIST_PROPS = "createCheckListProps";
 export const QUALITY_CHECK_LIST_SHOW_REPAIR = "showRepair";
 
@@ -95,6 +96,7 @@ export const CLASSIFY_STATES_COLOR = ["#979797"
 , "#28d575"
 , "#f55353"
 , "#28d575"
+, "#f55353"
 ];
 // 状态
 export const CLASSIFY_STATES = [STATUS_ALL
@@ -105,6 +107,7 @@ export const CLASSIFY_STATES = [STATUS_ALL
 , QC_STATE_REVIEWED
 , QC_STATE_DELAYED
 , QC_STATE_ACCEPTED
+, QC_STATE_Q_NEW_SUBMIT
 ];
 // 状态
 export const CLASSIFY_STATES_SUMMARY = ["-"+STATUS_ALL
@@ -125,6 +128,7 @@ export const CLASSIFY_NAMES = ["全部"
 , "已复查"
 , "已延迟"
 , "已验收"
+, "提交 待同步"
 ];
 // 状态数据总表
 export const CLASSIFY_STATUS_LIST = [{ name: CLASSIFY_NAMES[0], state: CLASSIFY_STATES[0], color: CLASSIFY_STATES_COLOR[0] }
@@ -216,7 +220,7 @@ export function toQcStateShowColor(qcState) {
     if (index > 0) {
         return CLASSIFY_STATES_COLOR[index];
     }
-    return "";
+    return "#f55353";
 }
 
 /**

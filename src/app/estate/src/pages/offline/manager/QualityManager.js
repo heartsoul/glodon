@@ -3,12 +3,13 @@ import * as API from 'app-api';
 import QualityHandler from '../handler/QualityHandler';
 import DownloadImg from '../model/DownloadImg';
 import OfflineManager from './OfflineManager';
-
+import * as CONSTANT from "../../common/service/api+constant"
 
 let handler = null;
 let projectId ;
 let projectVersionId ;
 let downloadingManager = null;
+let asyncManager = null;
 /**
  * 质量相关下载
  */
@@ -22,6 +23,31 @@ export default class QualityManager {
         
     }
  
+    _formatDate(timestamp, formater) { 
+            let date = new Date();
+            date.setTime(parseInt(timestamp));
+            formater = (formater != null)? formater : 'yyyy-MM-dd hh:mm';
+            Date.prototype.Format = function (fmt) {
+              var o = {
+                "M+": this.getMonth() + 1, //月
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+              };
+         
+              if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+              for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ?
+                  (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+              }
+              return fmt;
+            }
+            return date.Format(formater);
+          }
+
      //从数据库获取
      _getFromDb=(key)=>{
          let info = handler.query(key);
@@ -37,6 +63,12 @@ export default class QualityManager {
         return JSON.parse(info);
     }
     
+    //根据id查询离线建立的单据的参数信息
+    getSubmitInfoById =(id)=>{
+        let info = handler.query(id);
+        let obj = JSON.parse(info);
+        return obj.submitInfo;
+    }
 
     //获取质量列表 根据状态  页数   质检项目查询
     getQualityList=(qcState,page,size,checkpointId=0)=>{
@@ -83,7 +115,172 @@ export default class QualityManager {
         });
     }
 
-    
+    // let key = item.id+'';
+    // let value = {
+    //     item:item,
+    //     detail:detail,
+    //     editInfo:editInfo,
+    //     repairInfo:repairInfo,
+    //     reviewInfo:reviewInfo,
+    //     submitInfo:'',//提交、保存时保存的参数
+    // }
+    // let qcState = item.qcState;
+    // let qualityCheckpointId =detail.qualityCheckpointId+'';
+    // let updateTime = item.updateTime+'';
+    // let submitState = '';  
+    // let errorMsg = '';
+
+    //submitState: qnsubmit质检单 新建 提交  qnsave 质检单 新建保存  qesubmit质检单编辑提交  qesave质检单 编辑 保存  qdelete质检单 编辑时 删除  
+    //submitState: znsubmit 整改单 新建 提交  znsave 整改单 新建 保存  zesubmit 整改单 编辑 提交  zesave 整改单 编辑 保存  zdelete 整改单  删除
+    //submitState: fnsubmit 复查单 新建 提交  fnsave 复查单 新建 保存  fesubmit 复查单 编辑 提交  fesave 复查单 编辑 保存  fdelete 复查单  删除
+    //新建检查单、整改单、复查单后保存到数据库
+    insert=(key,value,qcState,qualityCheckpointId,updateTime,submitState,errorMsg)=>{
+        handler.update(key,value,qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+    }
+
+    /**
+     * 检查单 新增 提交
+     *  props {
+        * "constructionCompanyId":5212715,
+        * "constructionCompanyName":"施工单位A",
+        * "description":"1111111\n",
+        * "code":"",
+        * "inspectionCompanyId":5211919,
+        * "inspectionCompanyName":"11301919",
+        * "inspectionType":"inspection",
+        * "needRectification":true,
+        * "lastRectificationDate":1529028540278,
+        * "projectId":"5213135",
+        * "projectName":"APP材设",
+        * "qualityCheckpointId":5200243,
+        * "qualityCheckpointName":"管道（暖）",
+        * "responsibleUserId":5200299,
+        * "responsibleUserName":"XP",
+        * "responsibleUserTitle":"总工",
+        * "files":[]
+     * }
+     */
+    createSubmitInspection(projectId, inspectionType, props){
+        let date = new Date();
+        let creatorId = storage.loadTenant();//当前用户在当前租户下的id
+        let id = '_'+date.getTime();
+        let qcstate = CONSTANT.QC_STATE_Q_NEW_SUBMIT;
+        //列表显示的信息
+        let item = {
+            id: id,
+            code: props.code,
+            qcState: qcstate,
+            projectId: projectId,
+            inspectionDate: date.getTime(),
+            lastRectificationDate: props.lastRectificationDate,
+            description: props.description,
+            inspectionType: props.inspectionType,
+            creatorId: creatorId,
+            responsibleUserId: props.responsibleUserId,
+            updateTime: date.getTime(),
+            files: props.files,
+            needRectification: props.needRectification,
+        }
+
+        let detail = { 
+            data:
+               { 
+                   inspectionInfo:
+                        {   
+                            id: id,
+                            code: props.code,
+                            qcState: qcstate,
+                            projectId: props.projectId,
+                            projectName: props.projectName,
+                            inspectionDate: date.getTime(),
+                            creatorId: creatorId,
+                            creatorName: storage.loadUserInfo().accountInfo.name,
+                             //检查单位
+                            inspectionCompanyId: props.inspectionCompanyId,
+                            inspectionCompanyName: props.inspectionCompanyName,
+                            //质检项目
+                            qualityCheckpointId:props.qualityCheckpointId,
+                            qualityCheckpointName:props.qualityCheckpointName,
+                            //施工单位
+                            constructionCompanyId:props.constructionCompanyId,
+                            constructionCompanyName:props.constructionCompanyName,
+                            //整改期限
+                            needRectification: props.needRectification,
+                            lastRectificationDate: props.lastRectificationDate,
+                            //描述及图片
+                            description: props.description,
+                            inspectionType: props.inspectionType,
+                            files: [],
+                            //责任人
+                            responsibleUserId:props.responsibleUserId,
+                            responsibleUserName:props.responsibleUserName,
+                            responsibleUserTitle: props.responsibleUserTitle,
+                            //模型
+                            gdocFileId: props.gdocFileId,
+                            buildingId: props.buildingId,
+                            buildingName: props.buildingName,
+                            elementId: props.elementId,
+                            elementName: props.elementName,
+                            //图纸
+                            drawingGdocFileId: props.drawingGdocFileId,
+                            drawingName: props.drawingName,
+                            drawingPositionX: props.drawingPositionX,
+                            drawingPositionY: props.drawingPositionY,
+                            //岗位
+                            inspectionUserTitle:'',
+                            createTime: date.getTime(),
+                            updateTime: date.getTime(),
+                            commitTime: date.getTime(),
+                            committed: false 
+                        },
+                    progressInfos:[]
+                }
+            }
+
+        let submitInfo = {
+            projectId:projectId, 
+            inspectionType:inspectionType, 
+            props:props
+        }
+
+        let key = item.id+'';
+        let value = {
+            item:item,
+            detail:detail,
+            editInfo:'',
+            repairInfo:'',
+            reviewInfo:'',
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qcState = item.qcState;
+        let qualityCheckpointId =detail.qualityCheckpointId+'';
+        let updateTime = item.updateTime+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+        // console.log(item)
+        // console.log(detail)
+
+        //保存到同步列表
+        // key:'string',//单据的id
+        // value:'string',//展示的列表信息
+        // state:'string',//单据状态  待同步   已同步  同步失败
+        // updateTime:'string',//更新时间
+        // type:'string',//单据类型  quality质量   equipment材设
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:props.code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+    }
 
     //下载单据信息
     download = (startTime=0,endTime=0,qcState='',downloadKey,record) => {
@@ -276,12 +473,14 @@ export default class QualityManager {
                         editInfo:editInfo,
                         repairInfo:repairInfo,
                         reviewInfo:reviewInfo,
+                        submitInfo:'',//提交、保存时保存的参数
                     }
                     let qcState = item.qcState;
                     let qualityCheckpointId =detail.qualityCheckpointId+'';
                     let updateTime = item.updateTime+'';
                     let submitState = '';
                     let errorMsg = '';
+                    console.log(value);
                     _saveToDb(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
                 }
                 _saveProgress(total,total,num);
@@ -327,3 +526,103 @@ export default class QualityManager {
 
 
 }
+
+// { item:
+//     I/ReactNativeJS(18961):    { id: 5201694,
+//     I/ReactNativeJS(18961):      code: 'ZLJC_20180515_001',
+//     I/ReactNativeJS(18961):      qcState: 'delayed',
+//     I/ReactNativeJS(18961):      projectId: 5213135,
+//     I/ReactNativeJS(18961):      inspectionDate: 1526313600000,
+//     I/ReactNativeJS(18961):      lastRectificationDate: 1526400000000,
+//     I/ReactNativeJS(18961):      description: '1122334',
+//     I/ReactNativeJS(18961):      inspectionType: 'inspection',
+//     I/ReactNativeJS(18961):      creatorId: 5200300,
+//     I/ReactNativeJS(18961):      responsibleUserId: 5200299,
+//     I/ReactNativeJS(18961):      updateTime: 1526352107000,
+//     I/ReactNativeJS(18961):      files: [],
+//     I/ReactNativeJS(18961):      needRectification: true },
+//     I/ReactNativeJS(18961):   detail:
+//     I/ReactNativeJS(18961):    { data:
+//     I/ReactNativeJS(18961):       { inspectionInfo:
+//     I/ReactNativeJS(18961):          { id: 5201694,
+//     I/ReactNativeJS(18961):            code: 'ZLJC_20180515_001',
+//     I/ReactNativeJS(18961):            qcState: 'unrectified',
+//     I/ReactNativeJS(18961):            projectId: 5213135,
+//     I/ReactNativeJS(18961):            projectName: 'APP材设',
+//     I/ReactNativeJS(18961):            inspectionDate: 1526313600000,
+//     I/ReactNativeJS(18961):            inspectionCompanyId: 5213140,
+//     I/ReactNativeJS(18961):            inspectionCompanyName: '监理单位A',
+//     I/ReactNativeJS(18961):            creatorId: 5200300,
+//     I/ReactNativeJS(18961):            creatorName: 'XU新号',
+//     I/ReactNativeJS(18961):            inspectionUserTitle: '8961):            
+        // I/ReactNativeJS(18961):         constructionCompanyId: 5212715,
+        // I/ReactNativeJS(18961):         constructionCompanyName: '施工单位A',
+        // I/ReactNativeJS(18961):         responsibleUserId: 5200299,
+        // I/ReactNativeJS(18961):         responsibleUserName: 'XP',
+        // I/ReactNativeJS(18961):         responsibleUserTitle: '总工',
+        // I/ReactNativeJS(18961):         qualityCheckpointId: 0,
+        // I/ReactNativeJS(18961):         qualityCheckpointName: '1321',
+        // I/ReactNativeJS(18961):         buildingId: null,
+//     I/ReactNativeJS(18961):            buildingName: null,
+//     I/ReactNativeJS(18961):            elementId: null,
+//     I/ReactNativeJS(18961):            elementName: null,
+//     I/ReactNativeJS(18961):            gdocFileId: null,
+//     I/ReactNativeJS(18961):            needRectification: true,
+//     I/ReactNativeJS(18961):            lastRectificationDate: 1526400000000,
+//     I/ReactNativeJS(18961):            description: '1122334',
+//     I/ReactNativeJS(18961):            inspectionType: 'inspection',
+//     I/ReactNativeJS(18961):            createTime: 1526351798000,
+//     I/ReactNativeJS(18961):            updateTime: 1526352107000,
+//     I/ReactNativeJS(18961):            commitTime: 1526351821000,
+        // I/ReactNativeJS(18961):         files:
+        // I/ReactNativeJS(18961):          [ { objectId: '497bfb000c9c4161be751035be5ee7a8',
+        // I/ReactNativeJS(18961):              name: 'Penguins.jpg',
+        // I/ReactNativeJS(18961):              extension: 'jpg',
+        // I/ReactNativeJS(18961):              length: 0,
+        // I/ReactNativeJS(18961):              digest: '9d377b10ce778c4938b3c7e2c63a229a',
+        // I/ReactNativeJS(18961):              targetId: '5202080',
+        // I/ReactNativeJS(18961):              targetType: 'Estate_Quality_Inspection',
+        // I/ReactNativeJS(18961):              uploadId: null,
+        // I/ReactNativeJS(18961):              uploadTime: 1503068529000,
+        // I/ReactNativeJS(18961):              remark: null,
+        // I/ReactNativeJS(18961):              extData: null,
+        // I/ReactNativeJS(18961):              id: 5207054,
+        // I/ReactNativeJS(18961):              creatorId: 5200286,
+        // I/ReactNativeJS(18961):              creatorName: '徐园',
+        // I/ReactNativeJS(18961):              updatorId: 5200286,
+        // I/ReactNativeJS(18961):              updatorName: '徐园',
+        // I/ReactNativeJS(18961):              createTime: 1528883207000,
+        // I/ReactNativeJS(18961):              updateTime: 1528883207000,
+        // I/ReactNativeJS(18961):              url: 'https://gly-dev-gdoc.oss-cn-shanghai.aliyuncs.com/NAJVGyexqBCLJkcmHqmvWSNvcxwlIofb/nss/497bfb000c9c4161be751035be5ee7a8/96.png?Expires=1529046919&OSSAccessKeyId=LTAIP9gxLRjd80Fl&Signature=1YLl7KqWSTAsfSbL6iRmdYthiDE%3D',
+        // I/ReactNativeJS(18961):              convertStatus: null } ],
+//     I/ReactNativeJS(18961):            drawingGdocFileId: 'abc0472beb804ec4b38d40aaaa72a2f6',
+//     I/ReactNativeJS(18961):            drawingName: '电缆沟图纸.dwg',
+//     I/ReactNativeJS(18961):            drawingPositionX: '9604.0322265625',
+//     I/ReactNativeJS(18961):            drawingPositionY: '4913.50390625',
+//     I/ReactNativeJS(18961):            committed: false },
+//     I/ReactNativeJS(18961):         progressInfos:
+//     I/ReactNativeJS(18961):          [ { id: 5200356,
+//     I/ReactNativeJS(18961):              code: 'ZLZG_20180515_001',
+//     I/ReactNativeJS(18961):              billType: '整改',
+//     I/ReactNativeJS(18961):              description: 'test112',
+//     I/ReactNativeJS(18961):              lastRectificationDate: null,
+//     I/ReactNativeJS(18961):              handleDate: 1526313600000,
+//     I/ReactNativeJS(18961):              handlerId: 5200299,
+//     I/ReactNativeJS(18961):              handlerName: 'XP',
+//     I/ReactNativeJS(18961):              handlerTitle: '总工',
+//     I/ReactNativeJS(18961):              commitTime: 1526351960000,
+//     I/ReactNativeJS(18961):              files: [] },
+//     I/ReactNativeJS(18961):            { id: 5200351,
+//     I/ReactNativeJS(18961):              code: 'ZLFC_20180515_001',
+//     I/ReactNativeJS(18961):              billType: '复查',
+//     I/ReactNativeJS(18961):              description: '856',
+//     I/ReactNativeJS(18961):              lastRectificationDate: 1526313600000,
+//     I/ReactNativeJS(18961):              handleDate: 1526313600000,
+//     I/ReactNativeJS(18961):              handlerId: 5200300,
+//     I/ReactNativeJS(18961):              handlerName: 'XU新号',
+//     I/ReactNativeJS(18961):              handlerTitle: '总监理工程师',
+//     I/ReactNativeJS(18961):              commitTime: 1526352107000,
+//     I/ReactNativeJS(18961):              files: [] } ] } },
+//     I/ReactNativeJS(18961):   editInfo: null,
+//     I/ReactNativeJS(18961):   repairInfo: null,
+//     I/ReactNativeJS(18961):   reviewInfo: null }

@@ -5,6 +5,7 @@ import QualityConditionManager from './QualityConditionManager';
 import QualityManager from './QualityManager';
 import EquipmentManager from './EquipmentManager';
 import DownloadingManager from './DownloadingManager';
+import AsyncManager from './AsyncManager';
 
 const {Realm} = require('app-3rd');
 
@@ -16,6 +17,7 @@ let qualityConditionManager = null;
 let qualityManager = null;
 let equipmentManager = null;
 let downloadingManager = null;
+let asyncManager = null;
 
 // let equipmentName=null;
 export default class OfflineManager{
@@ -35,13 +37,14 @@ export default class OfflineManager{
     }
 
     static init(){
-        console.log('init');
-        let basicInfoName =  'basic'+this.getTableName();
-        let equipmentConditionName = 'equipmentcondition'+this.getTableName();
-        let qualityConditionName = 'qualitycondition'+this.getTableName();
-        let qualityName = 'quality'+this.getTableName();
-        let equipmentName = 'equipment'+this.getTableName();
-        let downloadingName = 'downloading'+this.getTableName();
+        let tableName = this.getTableName();
+        let basicInfoName =  'basic'+tableName;//基础信息
+        let equipmentConditionName = 'equipmentcondition'+tableName;//材设下载条件
+        let qualityConditionName = 'qualitycondition'+tableName;//质量条件下载
+        let qualityName = 'quality'+tableName;//质量相关
+        let equipmentName = 'equipment'+tableName;//材设相关
+        let downloadingName = 'downloading'+tableName;//下载中
+        let asyncListName = 'asyncList'+tableName;//离线进程跟踪列表
 
         //基础数据包
         const basicSchema = {
@@ -108,7 +111,18 @@ export default class OfflineManager{
                 downloading:'string',//true  下载中    false已下载
             }
         }
-        realm = new Realm({schema:[basicSchema,equipmentConditionSchema,qualityconditionSchema,qualitySchema,equipmentSchema,downloadingSchema]});
+        //待同步列表
+        const asyncSchema = {
+            name:asyncListName,
+            primaryKey:'key',
+            properties:{
+                key:'string',//单据的id
+                value:'string',//展示的列表信息
+                state:'string',//单据状态  待同步   已成功  已失败
+                updateTime:'string',//更新时间
+            }
+        }
+        realm = new Realm({schema:[basicSchema,equipmentConditionSchema,qualityconditionSchema,qualitySchema,equipmentSchema,downloadingSchema,asyncSchema]});
 
         basicInfoManager = new BasicInfoManager(basicInfoName,realm);
         equipmentConditionManager = new EquipmentConditionManager(equipmentConditionName,realm);
@@ -116,6 +130,7 @@ export default class OfflineManager{
         qualityManager = new QualityManager(qualityName,realm);
         equipmentManager = new EquipmentManager(equipmentName,realm);
         downloadingManager = new DownloadingManager(downloadingName,realm);
+        asyncManager = new AsyncManager(asyncListName,realm);
     }
 
     static getBasicInfoManager(){
@@ -143,6 +158,9 @@ export default class OfflineManager{
         return downloadingManager;
     }
 
+    static getAsyncManager(){
+        return asyncManager;
+    }
     static close(){
         if(realm!=null){
             realm.close();
