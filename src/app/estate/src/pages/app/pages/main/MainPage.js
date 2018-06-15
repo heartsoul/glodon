@@ -105,7 +105,6 @@ export default class extends Component {
         if(Platform.OS === 'web') {
             return;
         }
-        OfflineManager.close();
     }
 
     componentDidMount() {
@@ -113,7 +112,7 @@ export default class extends Component {
         if(Platform.OS === 'web') {
             return;
         }
-
+        OfflineManager.close();
         //每次进来都刷新一遍基础数据
         OfflineManager.init();
         
@@ -191,8 +190,8 @@ export default class extends Component {
             storage.projectIdVersionId = latestVersion;
             storage.setLatestVersionId(projectId,latestVersion);
 
-            let bm = OfflineManager.getBasicInfoManager();
-            bm.downloadBasicInfo((p,t)=>{});
+            // let bm = OfflineManager.getBasicInfoManager();
+            // bm.downloadBasicInfo((p,t)=>{});
         }).catch((error) => {
             console.log(error);
         });
