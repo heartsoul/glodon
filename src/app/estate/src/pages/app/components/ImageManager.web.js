@@ -5,6 +5,7 @@ export function shareApp(text,url) {
     url = url || 'http://bim.glodon.com';
     
 }
+var randomKey = 19830529;
 function compressImg(imgData, maxHeight, onCompress) {
 
     if (!imgData) return;
@@ -82,7 +83,7 @@ export function chooseImages(retFun,retFiles = [],maxLength = 3,multiple=false,c
                     compressImg(url,160,(thumbUrl,thumbBlob)=>{
                         itemCount--;
                         file.thumbUrl = thumbUrl;
-                        retFiles.push({url:url,thumbUrl:thumbUrl,name:file.name||'image',type:'h5',length:file.size||0,lastModified:file.lastModified,file:file})
+                        retFiles.push({url:url,randomKey:randomKey++,thumbUrl:thumbUrl,name:file.name||'image',type:'h5',length:file.size||0,lastModified:file.lastModified,file:file})
                         if(itemCount <= 0) {
                             retFun(retFiles,true);
                         }
