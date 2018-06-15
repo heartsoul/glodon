@@ -122,6 +122,22 @@ class WebStorage extends Storage {
         }
         navigator.pop(params);
     }
+    globalBack = (navigation, params = 1) => {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
+        if(global.storage.backInterceptor) {
+            global.storage.backInterceptor(navigator,params);
+
+        } else {
+            navigator.pop(params);
+        }
+    }
+    
 }
 // 全局变量
 if (!global.storage) {

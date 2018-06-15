@@ -127,11 +127,20 @@ class NewQualityPage extends Component {
                 }
             )
         }
+        if(Platform.OS === 'web') {
+            global.storage.backInterceptor = (navigator,params)=>{
+                if (storage.currentRouteName === this.props.navigation.state.routeName) {
+                    this.goBack();
+                    return true;
+                }
+            }
+        }
     }
 
     componentWillUnmount() {
         this.props.reset();
         this.removeBackListener()
+        global.storage.backInterceptor = null;
     }
     removeBackListener() {
         if (this.backListener) {

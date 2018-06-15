@@ -13,7 +13,8 @@
     "webStart": "webpack --config ./web/webpack.config.js",
     "webServer": "webpack-dev-server --open --config ./web/webpack.config.js --port 8099 ",
     "webBuild": "webpack --config ./web/webpack.production.config.js --progress",
-    "apk": "sudo ./android/gradlew assembleRelease"
+    "apk": "sudo ./android/gradlew assembleRelease",
+    "macEmulator":"~/Library/Android/sdk/tools/emulator @Nexus_5X_API_24"
   },
   "dependencies": {
     "ajv": "^5.0.1",

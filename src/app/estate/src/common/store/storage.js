@@ -403,8 +403,18 @@ export default class GLDStorage extends BaseStorage {
         }
         navigator.pop(params);
     }
+    // 处理浏览器，手机返回键，这里还需要处理需要阻止返回的情形
+    globalBack = (navigation, params = 1) => {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
+        navigator.pop(params);
+    }
 
-    
     //质量管理相关state
     //模型图纸选择后新建页面回调
     bimFileChooseCallback = (bimFile) => { }
