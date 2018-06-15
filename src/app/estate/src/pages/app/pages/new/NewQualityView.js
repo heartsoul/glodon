@@ -1,39 +1,19 @@
 'use strict';
+import { ActionModal, ImageChooserView, StatusActionButton } from 'app-components';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    StatusBar,
-    Switch,
-    TextInput,
-    ScrollView,
-    Button,
-    Image,
-    TouchableHighlight,
-    TouchableOpacity,
-    ActivityIndicator,
-    Dimensions,
-} from 'react-native';
+import React from 'react';
+import { ActivityIndicator, Dimensions, StatusBar, StyleSheet, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
-import { ActionModal, StatusActionButton } from 'app-components';
-import { Modal, Toast } from 'antd-mobile';
-import { SegmentedView, ListRow, Label, ActionSheet, PullPicker, Theme } from 'app-3rd/teaset';
-import { ImageChooserView } from 'app-components';
-import SelectView from './SelectView';
-import RectificationView from './RectificationView';//整改
-import SelectCheckPointView from './SelectCheckPointView';
-import StarView from "./StarView";
-import WideButton from "./../../components/WideButton";
-
-import * as PageType from '../navigation/bim/PageTypes';
-import * as API from "app-api";
-import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
 import * as NewQualityAction from "./../../actions/NewQualityAction";
 import * as UpdateDataAction from "./../../actions/updateDataAction";
+import * as BimFileEntry from "./../navigation/bim/BimFileEntry";
 import callOnceInInterval from './callOnceInInterval';
 import GLDListRow from "./GLDListRow";
+import RectificationView from './RectificationView'; //整改
+import SelectCheckPointView from './SelectCheckPointView';
+import SelectView from './SelectView';
+import StarView from "./StarView";
+
 
 var { width, height } = Dimensions.get("window");
 const REF_PHOTO = 'gldPhoto';

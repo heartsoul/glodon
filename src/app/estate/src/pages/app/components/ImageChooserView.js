@@ -1,7 +1,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { TouchableOpacity, View, Image } from 'react-native';
+import { TouchableOpacity, View, Image, Text } from 'react-native';
 import { ActionSheet } from 'app-3rd/teaset';
 import { ActionModal } from 'app-components';
 import { chooseImages } from './ImageManager';
@@ -118,9 +118,15 @@ export default class ImageChooserView extends React.Component {
         return null;
     }
     renderImageItem = (url,index,randomKey) => {
+        let source = {icon_login_password_delete};
+        if(url && url.length > 0) {
+            source = {uri:url};
+        } else {
+            return <View key={'img_item_'+index} style={{marginRight:5, width:85,height:85,justifyContent:'center',alignContent:'center',borderWidth:1,borderColor:'#666666'}}><Text>无图片</Text></View>
+        }
         return <View key={'img_item_'+index} style={{marginRight:5}}>
             <TouchableOpacity onPress={()=>this.onBigImage(index)}>
-            <Image style={{marginTop:5,marginRight:5,width:80,height:80,resizeMode:'cover'}} source={{uri:url}}/>
+            <Image style={{marginTop:5,marginRight:5,width:80,height:80,resizeMode:'cover'}} source={source}/>
             <UploadingView uploadKey={randomKey||null} style={{position:'absolute',width:80,bottom:0}}>
             </UploadingView>
             </TouchableOpacity>

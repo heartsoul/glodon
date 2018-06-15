@@ -161,14 +161,14 @@ function checkReviewMustInfo(params) {
     if (params.status === API.STATUS_CLOSED) {
         checked = !isDescriptionEmpty;
         if (isDescriptionEmpty) {
-            msg = "您还未选择现场情况描述!";
+            msg = "您还未填写现场情况描述！";
         }
     } else if (params.status === API.STATUS_NOT_ACCEPTED) {
         checked = (!isDescriptionEmpty && !isDateEmpty && !isDateDisable)
         if (isDescriptionEmpty && isDateEmpty) {
             msg = "您还未选择现场情况描述和整改期限!";
         } else if (isDescriptionEmpty) {
-            msg = "您还未选择现场情况描述!";
+            msg = "您还未填写现场情况描述！";
         } else if (isDateEmpty) {
             msg = "您还未选择整改期限!";
         } else if (isDateDisable) {

@@ -80,6 +80,11 @@ var config = {
         progress: true,
         host:HOST,
         proxy: {
+            '/uaa': {
+                target: ___SERVER,
+                changeOrigin: true,
+                secure: false
+            },
             '/uaa/*': {
                 target: ___SERVER,
                 changeOrigin: true,

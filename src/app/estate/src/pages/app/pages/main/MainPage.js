@@ -102,10 +102,18 @@ export default class extends Component {
     }
 
     componentWillUnmount(){
+        if(Platform.OS === 'web') {
+            return;
+        }
         OfflineManager.close();
     }
 
     componentDidMount() {
+
+        if(Platform.OS === 'web') {
+            return;
+        }
+
         //每次进来都刷新一遍基础数据
         OfflineManager.init();
         
@@ -113,9 +121,7 @@ export default class extends Component {
         // this.fetchData();
         // console.log("----------------------------componentDidMount")
         CheckVersionManager.checkVersion("auto")
-        if(Platform.OS === 'web') {
-            return;
-        }
+        
 
     }
     fetchData = () => {
@@ -248,7 +254,7 @@ export default class extends Component {
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{ backgroundColor: '#ffffff' }}>
                 {
-                    this.offlineHintView()
+                   Platform.OS !=='web' ? this.offlineHintView() : null
                 }
                 <ImageBackground style={{ height: 203, marginTop: 44, backgroundColor: '#ffffff' }} resizeMode='contain' source={require('app-images/icon_main_page_top_bg.png')}>
                     {

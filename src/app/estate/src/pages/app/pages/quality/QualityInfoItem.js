@@ -46,7 +46,7 @@ export default class QualityInfoItem extends React.Component {
             <Label style={styles.leftTitle}>{this.props.leftTitle}</Label>
             </View>
             <View style={styles.contentView}>
-            <TouchableOpacity activeOpacity={0.5} onPress={(event)=>{this.onClick(event)}}>
+            <TouchableOpacity activeOpacity={0.5} onPress={(event)=>{this.props.content && this.props.content.length && this.onClick && this.onClick(event)}}>
                 <Label style={[styles.content,styles.link]}>{this.props.content}</Label>
             </TouchableOpacity>
             </View>
@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
         color:'#00b5f2',
         textDecorationLine:'underline',
         fontSize:14,
-        marginRight:75,
         fontWeight:'100',
     },
     leftTitle: {
@@ -139,8 +138,8 @@ const styles = StyleSheet.create({
     },
     contentView: {
         flexDirection:'row',
-        marginRight:75,
-        alignItems:'center'
+        alignItems:'center',
+        flex:1
     },
     infoMark:{
         marginLeft:5,

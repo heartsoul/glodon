@@ -1,33 +1,19 @@
 "use strict"
 
-import React, { Component } from 'react';
-import ReactNative, {
-    View,
-    Text,
-    StatusBar,
-    StyleSheet,
-    Dimensions,
-    TouchableOpacity,
-    BackHandler,
-    ActivityIndicator,
-    Platform,
-} from 'react-native';
-import { Tabs, } from 'antd-mobile';
-import { BarItems } from "app-components"
-import NewCheckListTabBar from "./NewCheckListTabBar";
-import NewQualityView from "./NewQualityView";
+import { Tabs } from 'antd-mobile';
 import { KeyboardAwareScrollView } from 'app-3rd/index';
+import { BarItems } from "app-components";
+import React, { Component } from 'react';
+import ReactNative, { ActivityIndicator, Dimensions, Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from "./../../actions/newQualityAction2";
-
-var { width, height } = Dimensions.get("window");
+import NewCheckListTabBar from "./NewCheckListTabBar";
+import NewQualityView from "./NewQualityView";
 
 const tabs = [
     { title: '检查单', type: "inspection" },
     { title: '验收单', type: "acceptance" },
 ];
-const REF_INSPECTION = 'REF_INSPECTION';//
-const REF_ACCEPTANCE = 'REF_ACCEPTANCE';//
 
 class NewQualityPage extends Component {
    

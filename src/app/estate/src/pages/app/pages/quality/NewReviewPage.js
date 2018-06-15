@@ -18,8 +18,7 @@ import { connect } from 'react-redux';
 import { ListRow } from 'app-3rd/teaset';
 import { DatePicker, List, Modal, Toast } from 'antd-mobile';
 
-import WideButton from "./../../components/WideButton";
-import { ImageChooserView, ActionModal, BarItems } from 'app-components';
+import { ImageChooserView, ActionModal, BarItems,StatusActionButton,LoadingView } from 'app-components';
 import * as API from "app-api";
 import * as reviewRepairAction from "./../../actions/reviewRepairAction";
 import QualityDetailView from "./QualityDetailView";
@@ -67,6 +66,7 @@ class NewReviewPage extends Component {
             lastRectificationDate: now,//整改时间
             switchValue: null,
             isSetEditInfo: false,
+            firstLoad:true,
             showRectificationView: showRectificationView,//是否显示复查合格
             files: filesIn, //附件图片
         };
@@ -103,7 +103,13 @@ class NewReviewPage extends Component {
             //设置编辑数据
             this.setEditInfo(nextProps.editInfo);
             return false;
+        } else {
+            if(nextProps.isLoading === false && this.state.firstLoad === true) {
+                this.setState({firstLoad:false});
+                return false;
+            }
         }
+        
         return true;
     }
 
@@ -133,6 +139,7 @@ class NewReviewPage extends Component {
             switchValue = true;
         }
         this.setState({
+            firstLoad:false,
             status: status,
             description: editInfo.description,
             lastRectificationDate: date,
@@ -249,6 +256,9 @@ class NewReviewPage extends Component {
         );
     }
     render() {
+        if(this.state.firstLoad === true) {
+            return (<LoadingView />);
+        }
         return (
             <ScrollView>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
@@ -293,10 +303,10 @@ class NewReviewPage extends Component {
 
                 </View>
 
-                <WideButton text="保存" onClick={this.save} style={{ marginTop: 30 }} />
+                <StatusActionButton style={{ height: 40, marginTop: 30, marginRight: 40, marginLeft: 40, backgroundColor: "#00b5f2", borderColor: "#00b5f2", }}  color='#ffffff' text='保存' onClick={this.save} />
                 {
                     (this.props.editInfo && this.props.editInfo.id) ? (
-                        <WideButton text="删除" type="gray" onClick={this.deleteForm} style={{ marginTop: 20 }} />
+                        <StatusActionButton text='删除' style={{ height: 40, marginTop: 20, marginRight: 40, marginLeft: 40, backgroundColor: "#ffffff", borderColor: "#ffffff", }} color='#000000' onClick={this.deleteForm} />
                     ) : (null)
                 }
 
@@ -313,6 +323,7 @@ export default connect(
         qualityInfo: state.reviewRepair.qualityInfo,
         editInfo: state.reviewRepair.editInfo,
         error: state.reviewRepair.error,
+        isLoading:state.reviewRepair.isLoading
     }),
     dispatch => ({
         fetchData: (fileId, type) => {
