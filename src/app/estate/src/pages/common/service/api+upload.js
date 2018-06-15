@@ -282,6 +282,9 @@ async function upLoad(filePath, name, operationCode, callback,nativeFile,index) 
             count ++;
             if (data && data.name) {
                  resultArray.push({...nativeFile,...data,index:index});
+             } else {
+                 throw new Error("上传失败！"+(data && data.message));
+                 return null;
              }
              if (count == len) {
                 callback("success", resultArray);

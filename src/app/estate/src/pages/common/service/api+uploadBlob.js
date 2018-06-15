@@ -48,7 +48,7 @@ export async function uploadFileBlob(key,fileData,operationCode,onProgress) {
             throw new Error(reason);
         });
     });
-    task.uploadProgress({ interval : 200 }, (written, total) => {
+    return task.uploadProgress({ interval : 200 }, (written, total) => {
         console.log('uploaded', written / total)
         // DeviceEventEmitter.emit('uploadProcessPercent',key,written, total);
         if(task.onProgress){
@@ -68,10 +68,11 @@ export async function uploadFileBlob(key,fileData,operationCode,onProgress) {
                 return res;
             }
         } else {
-            return null
+            throw new Error('上传失败：'+(data&&data.message))
+            return data;
         }
     })
-    return task;
+    // return task;
 }
 
 /**
