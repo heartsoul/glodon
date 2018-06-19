@@ -239,6 +239,8 @@ export function submitFromList(inspectId, callback) {
         params.inspectId = params.id;
         API.editSubmitInspection(storage.loadProject(), inspectId, params.inspectionType, JSON.stringify(params))
             .then(data => {
+                // console.log('55555555555555555555555555555f33333333333')
+                // console.log(data)
                 callback({ res: "success", data: data, });
             }).catch(err => {
                 Toast.hide();
@@ -260,6 +262,8 @@ function createSubmitInspection(params, navigator, updateData) {
     let requestParams = buildRequestParams(params);
     API.createSubmitInspection(storage.loadProject(), params.inspectionType, requestParams)
         .then(data => {
+            // console.log('---------1111111111---------')
+            // console.log(data)
             if (updateData) {
                 updateData();
             }
@@ -310,11 +314,13 @@ export function save(requestParams, imageChooserEle, callback) {
             if (files) {
                 params.files = files;
             }
+            // console.log('444444444444444444')
+            // console.log(params)
             //区分新增提交和编辑提交
-            if (params.inspectId === 0) {
-                createSaveInspection(params, callback);
-            } else {
+            if (params.inspectId > 0) {
                 editSaveInspection(params, callback);
+            } else {
+                createSaveInspection(params, callback);
             }
         });
     }
@@ -348,7 +354,9 @@ function buildRequestParams(params, type){
  * @param {*} params 
  */
 function createSaveInspection(params, callback) {
-    delete params.inspectId;
+    if(OfflineStateUtil.isOnLine()){
+        delete params.inspectId;
+    }
     let requestParams = buildRequestParams(params);
     API.createSaveInspection(storage.loadProject(), params.inspectionType, requestParams)
         .then(data => {
@@ -356,11 +364,12 @@ function createSaveInspection(params, callback) {
             if (data) {
                 params.id = data.data.id;
                 params.code = data.data.code;
-                callback({
-                    inspectId: data.data.id,
-                    code: data.data.code,
-                    inspectionInfo: params,
-                });
+                    callback({
+                        inspectId: data.data.id,
+                        code: data.data.code,
+                        inspectionInfo: params,
+                    });
+                
                 Toast.success('保存成功', 1);
             }
         }).catch(err => {

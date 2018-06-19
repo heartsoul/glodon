@@ -41,6 +41,12 @@ export default class QualityListCell extends PureComponent {
             this.props.onCellAction(item,index,'delete');
         } });
     }
+    // 新建的保存的单据的  删除
+    _onNewDeleteAction = (item, index) => {
+        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消'}, { text: '删除', onPress:()=>{
+            this.props.onCellAction(item,index,'newDelete');
+        } });
+    }
     // 检查
     _onInspectAction = (item, index) => {
 
@@ -61,7 +67,7 @@ export default class QualityListCell extends PureComponent {
     _toDetail = (item) => {
         let power = AuthorityManager.isQualityCheckSubmit() && AuthorityManager.isMe(item.value.creatorId);
         // 未提交状态就进入编辑
-        if (item.value.qcState === API.QC_STATE_STAGED && power) {
+        if ((item.value.qcState === API.QC_STATE_STAGED && power)||(item.value.qcState === API.QC_STATE_Q_NEW_SAVE)) {
             storage.pushNext(null, "NewPage", { "item": item });
         } else {
             storage.pushNext(null, "QualityDetailPage", { "item": item });
@@ -145,6 +151,25 @@ export default class QualityListCell extends PureComponent {
         )
     }
 
+    // 新建  保存  待同步的删除
+    renderDeleteAction = (item, index) => {
+        if (!AuthorityManager.isMe(item.value.creatorId)) {
+            return null;
+        }
+        let bDelete = AuthorityManager.isQualityCheckDelete();
+        if (!( bDelete)) {
+            return null;
+        }
+        return (
+            <View style={[styles.contentActionView]}>
+                {
+                    bDelete ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE)} style={{elevation:0,width:58, height:28, borderWidth:0.5,borderColor:API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE), marginRight:14}}
+                        onClick={() => { this._onNewDeleteAction(item, index) }} text={API.BILL_TYPE_ITEM_DELETE} />) : (null)
+                }
+            </View>
+        )
+    }
+
     // 整改
     renderRectifyAction = (item, index) => {
         if (AuthorityManager.isCreateRectify() && AuthorityManager.isMe(item.value.responsibleUserId)) {
@@ -172,20 +197,24 @@ export default class QualityListCell extends PureComponent {
     // 操作条
     renderActionBar = (item, index) => {
         switch (item.value.qcState) {
-            case API.QC_STATE_STAGED: {
+            case API.QC_STATE_STAGED: {//待提交
                 return this.renderSubmitAndDeleteAction(item, index)
             }
                 break;
-            case API.QC_STATE_UNRECTIFIED: {
+            case API.QC_STATE_UNRECTIFIED: {//待整改
                 return this.renderRectifyAction(item, index)
             }
                 break;
-            case API.QC_STATE_UNREVIEWED: {
+            case API.QC_STATE_UNREVIEWED: {//待复查
                 return this.renderReviewAction(item, index)
             }
                 break;
-            case API.QC_STATE_DELAYED: {
+            case API.QC_STATE_DELAYED: {//已延迟
                 return this.renderRectifyAction(item, index)
+            }
+                break;
+            case API.QC_STATE_Q_NEW_SAVE: {//新建   保存 待同步
+                return this.renderDeleteAction(item, index)
             }
                 break;
             default:

@@ -23,7 +23,7 @@ import {ActionModal} from 'app-components';
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 import OfflineManager from '../../../offline/manager/OfflineManager'
 import * as API from "app-api";
-// import { YellowBox } from 'react-native';//忽略黄色警告
+import { YellowBox } from 'react-native';//忽略黄色警告
 
 var { width, height } = Dimensions.get("window");
 
@@ -49,7 +49,7 @@ export default class extends Component {
         }
         this.bPress = false;
         //忽略黄色警告
-        // YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+        YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
     };
 
     _loadQualityForm = (event) => {
@@ -115,6 +115,14 @@ export default class extends Component {
         OfflineManager.close();
         //每次进来都刷新一遍基础数据
         OfflineManager.init();
+        let isOnline = OfflineStateUtil.isOnLine();
+        if(isOnline){
+            //在线情况  刷一遍最新版本信息
+            this._getlatestVersion(storage.loadProject())
+            //自动离线数据同步到服务器
+            // let am = OfflineManager.getAsyncManager();
+            // am.syncList();
+        }
         
         //请求数据
         // this.fetchData();
@@ -192,6 +200,8 @@ export default class extends Component {
 
             // let bm = OfflineManager.getBasicInfoManager();
             // bm.downloadBasicInfo((p,t)=>{});
+
+
         }).catch((error) => {
             console.log(error);
         });
@@ -202,8 +212,6 @@ export default class extends Component {
         //如果是离线模式 需要显示离线标记
         let isOnline = OfflineStateUtil.isOnLine();
         if(isOnline){
-            //在线情况  刷一遍最新版本信息
-            this._getlatestVersion(storage.loadProject())
             return null;
         }
         if(!this.state.isShowOfflineHint){

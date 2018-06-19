@@ -82,6 +82,10 @@ class QualityListView extends PureComponent {
             this.props.deleteData(this.props.qcState, item.value.id, item.value.inspectionType, this.props.qualityCheckpointId, this.props.qualityCheckpointName)
             return;
         }
+        if (type == 'newDelete') {
+            this.props.newDeleteData(this.props.qcState, item.value.id, item.value.inspectionType, this.props.qualityCheckpointId, this.props.qualityCheckpointName)
+            return;
+        }
         if (type == 'submit') {
             this.props.submitData(this.props.qcState, item.value.id, item.value.inspectionType, this.props.qualityCheckpointId, this.props.qualityCheckpointName)
             return;
@@ -240,6 +244,11 @@ function mapDispatchToProps(dispatch) {
         deleteData: (qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName) => {
             if (dispatch) {
                 dispatch(actions.deleteData(qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName))
+            }
+        },
+        newDeleteData: (qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName) => {
+            if (dispatch) {
+                dispatch(actions.newDeleteData(qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName))
             }
         },
         submitData: (qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName) => {

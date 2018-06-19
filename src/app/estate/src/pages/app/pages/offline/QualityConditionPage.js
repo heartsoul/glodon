@@ -292,7 +292,7 @@ export default class extends Component {
 
     console.log('startTime='+startTime+' endTime='+endTime);
     let startDate = this._formatDate(startTime,'yyyy-MM-dd')
-    let endDate = this._formatDate(endTime,'yyyy-MM-dd')
+    let endDate = this._formatDate(endTime+24*60*60*1000,'yyyy-MM-dd')
     console.log('startDate='+startDate+' endDate='+endDate);
     console.log(JSON.stringify(qcState));
     qualityManager.download(startDate,endDate,qcState,date.getTime()+'',record)

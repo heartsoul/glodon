@@ -89,6 +89,12 @@ export default class QualityManager {
             
         });
     }
+    //获取质量详情
+    getQualityDetailObj=(id)=>{
+        let info = handler.query(id);
+        let obj = JSON.parse(info);
+        return obj.detail;
+    }
 
     //获取检查单编辑状态信息
     getQualityEdit=(id)=>{
@@ -138,6 +144,10 @@ export default class QualityManager {
         handler.update(key,value,qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
     }
 
+    delete=(key)=>{
+        handler.delete(key);
+    }
+    
     /**
      * 检查单 新增 提交
      *  props {
@@ -280,8 +290,600 @@ export default class QualityManager {
         }
         asyncManager = OfflineManager.getAsyncManager();
         asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:'code',
+                id:'123'
+            }
+        }
+        resolve(data);
+      });
     }
 
+    /**
+     * 检查单 新增 保存
+     *  props {
+        * "constructionCompanyId":5212715,
+        * "constructionCompanyName":"施工单位A",
+        * "description":"1111111\n",
+        * "code":"",
+        * "inspectionCompanyId":5211919,
+        * "inspectionCompanyName":"11301919",
+        * "inspectionType":"inspection",
+        * "needRectification":true,
+        * "lastRectificationDate":1529028540278,
+        * "projectId":"5213135",
+        * "projectName":"APP材设",
+        * "qualityCheckpointId":5200243,
+        * "qualityCheckpointName":"管道（暖）",
+        * "responsibleUserId":5200299,
+        * "responsibleUserName":"XP",
+        * "responsibleUserTitle":"总工",
+        * "files":[]
+     * }
+     */
+    createSaveInspection(projectId, inspectionType, props){
+        // console.log('333333333333333333333')
+        // console.log(props)
+        let date = new Date();
+        let creatorId = storage.loadTenant();//当前用户在当前租户下的id
+
+        let id = '_'+date.getTime();
+        if(props.inspectId){
+            id = props.inspectId;
+        }
+        let qcstate = CONSTANT.QC_STATE_Q_NEW_SAVE;
+        //列表显示的信息
+        let item = {
+            id: id,
+            code: props.code,
+            qcState: qcstate,
+            projectId: projectId,
+            inspectionDate: date.getTime(),
+            lastRectificationDate: props.lastRectificationDate,
+            description: props.description,
+            inspectionType: props.inspectionType,
+            creatorId: creatorId,
+            responsibleUserId: props.responsibleUserId,
+            updateTime: date.getTime(),
+            files: props.files,
+            needRectification: props.needRectification,
+        }
+
+        let detail = { 
+            data:
+               { 
+                   inspectionInfo:
+                        {   
+                            id: id,
+                            code: props.code,
+                            qcState: qcstate,
+                            projectId: props.projectId,
+                            projectName: props.projectName,
+                            inspectionDate: date.getTime(),
+                            creatorId: creatorId,
+                            creatorName: storage.loadUserInfo().accountInfo.name,
+                             //检查单位
+                            inspectionCompanyId: props.inspectionCompanyId,
+                            inspectionCompanyName: props.inspectionCompanyName,
+                            //质检项目
+                            qualityCheckpointId:props.qualityCheckpointId,
+                            qualityCheckpointName:props.qualityCheckpointName,
+                            //施工单位
+                            constructionCompanyId:props.constructionCompanyId,
+                            constructionCompanyName:props.constructionCompanyName,
+                            //整改期限
+                            needRectification: props.needRectification,
+                            lastRectificationDate: props.lastRectificationDate,
+                            //描述及图片
+                            description: props.description,
+                            inspectionType: props.inspectionType,
+                            files: [],
+                            //责任人
+                            responsibleUserId:props.responsibleUserId,
+                            responsibleUserName:props.responsibleUserName,
+                            responsibleUserTitle: props.responsibleUserTitle,
+                            //模型
+                            gdocFileId: props.gdocFileId,
+                            buildingId: props.buildingId,
+                            buildingName: props.buildingName,
+                            elementId: props.elementId,
+                            elementName: props.elementName,
+                            //图纸
+                            drawingGdocFileId: props.drawingGdocFileId,
+                            drawingName: props.drawingName,
+                            drawingPositionX: props.drawingPositionX,
+                            drawingPositionY: props.drawingPositionY,
+                            //岗位
+                            inspectionUserTitle:'',
+                            createTime: date.getTime(),
+                            updateTime: date.getTime(),
+                            commitTime: date.getTime(),
+                            committed: false 
+                        },
+                    progressInfos:[]
+                }
+            }
+
+        delete props.inspectId;
+        let submitInfo = {
+            projectId:projectId, 
+            inspectionType:inspectionType, 
+            props:props
+        }
+
+        let key = item.id+'';
+        let value = {
+            item:item,
+            detail:detail,
+            editInfo:detail,
+            repairInfo:'',
+            reviewInfo:'',
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qcState = item.qcState;
+        let qualityCheckpointId =detail.qualityCheckpointId+'';
+        let updateTime = item.updateTime+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+        // console.log(item)
+        // console.log(detail)
+
+        //保存到同步列表
+        // key:'string',//单据的id
+        // value:'string',//展示的列表信息
+        // state:'string',//单据状态  待同步   已同步  同步失败
+        // updateTime:'string',//更新时间
+        // type:'string',//单据类型  quality质量   equipment材设
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:props.code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:id,
+                id:id
+            }
+        }
+        resolve(data);
+      });
+    }
+
+    //检查单 编辑 提交
+    editSubmitInspection(projectId, fileId, inspectionType, props){
+        // console.log('fileid='+fileId)
+        // console.log(props)
+        let date = new Date();
+        let creatorId = props.creatorId;//当前用户在当前租户下的id
+        let id = fileId;
+        let qcstate = CONSTANT.QC_STATE_Q_EDIT_SUBMIT;
+        //列表显示的信息
+        let item = {
+            id: id,
+            code: props.code,
+            qcState: qcstate,
+            projectId: projectId,
+            inspectionDate: props.inspectionDate,
+            lastRectificationDate: props.lastRectificationDate,
+            description: props.description,
+            inspectionType: props.inspectionType,
+            creatorId: creatorId,
+            responsibleUserId: props.responsibleUserId,
+            updateTime: date.getTime(),
+            files: props.files,
+            needRectification: props.needRectification,
+        }
+        console.log('1')
+        let detail = { 
+            data:
+               { 
+                   inspectionInfo:
+                        {   
+                            id: id,
+                            code: props.code,
+                            qcState: qcstate,
+                            projectId: props.projectId,
+                            projectName: props.projectName,
+                            inspectionDate: props.inspectionDate,
+                            creatorId: creatorId,
+                            creatorName: props.creatorName,
+                             //检查单位
+                            inspectionCompanyId: props.inspectionCompanyId,
+                            inspectionCompanyName: props.inspectionCompanyName,
+                            //质检项目
+                            qualityCheckpointId:props.qualityCheckpointId,
+                            qualityCheckpointName:props.qualityCheckpointName,
+                            //施工单位
+                            constructionCompanyId:props.constructionCompanyId,
+                            constructionCompanyName:props.constructionCompanyName,
+                            //整改期限
+                            needRectification: props.needRectification,
+                            lastRectificationDate: props.lastRectificationDate,
+                            //描述及图片
+                            description: props.description,
+                            inspectionType: props.inspectionType,
+                            files: props.files,
+                            //责任人
+                            responsibleUserId:props.responsibleUserId,
+                            responsibleUserName:props.responsibleUserName,
+                            responsibleUserTitle: props.responsibleUserTitle,
+                            // //模型
+                            gdocFileId: props.gdocFileId,
+                            buildingId: props.buildingId,
+                            buildingName: props.buildingName,
+                            elementId: props.elementId,
+                            elementName: props.elementName,
+                            //图纸
+                            drawingGdocFileId: props.drawingGdocFileId,
+                            drawingName: props.drawingName,
+                            drawingPositionX: props.drawingPositionX,
+                            drawingPositionY: props.drawingPositionY,
+                            //岗位
+                            inspectionUserTitle:props.inspectionUserTitle,
+                            createTime: date.getTime()+'',
+                            updateTime: props.updateTime+'',
+                            commitTime: date.getTime()+'',
+                            committed: props.committed 
+                        },
+                    progressInfos:[]
+                }
+            }
+            console.log('12')
+        let submitInfo = {
+            projectId:projectId, 
+            inspectionType:inspectionType, 
+            props:props
+        }
+        console.log('2')
+        let key = item.id+'';
+        let value = {
+            item:item,
+            detail:detail,
+            editInfo:'',
+            repairInfo:'',
+            reviewInfo:'',
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qcState = item.qcState;
+        let qualityCheckpointId =detail.qualityCheckpointId+'';
+        let updateTime = item.updateTime+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        console.log('insert')
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+        // console.log(item)
+        // console.log(detail)
+
+        //保存到同步列表
+        // key:'string',//单据的id
+        // value:'string',//展示的列表信息
+        // state:'string',//单据状态  待同步   已同步  同步失败
+        // updateTime:'string',//更新时间
+        // type:'string',//单据类型  quality质量   equipment材设
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:props.code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        console.log('save')
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:props.code,
+                id:id
+            }
+        }
+        console.log(data)
+        resolve(data);
+      });
+    }
+
+
+    //检查单  编辑  保存
+    editSaveInspection(projectId, fileId, inspectionType, props){
+        // console.log('fileid='+fileId)
+        // console.log(props)
+        let date = new Date();
+        let creatorId = props.creatorId;//当前用户在当前租户下的id
+        let id = fileId;
+        let qcstate = CONSTANT.QC_STATE_Q_EDIT_SAVE;
+        //列表显示的信息
+        let item = {
+            id: id,
+            code: props.code,
+            qcState: qcstate,
+            projectId: projectId,
+            inspectionDate: props.inspectionDate,
+            lastRectificationDate: props.lastRectificationDate,
+            description: props.description,
+            inspectionType: props.inspectionType,
+            creatorId: creatorId,
+            responsibleUserId: props.responsibleUserId,
+            updateTime: date.getTime(),
+            files: props.files,
+            needRectification: props.needRectification,
+        }
+        console.log('1')
+        let detail = { 
+            data:
+               { 
+                   inspectionInfo:
+                        {   
+                            id: id,
+                            code: props.code,
+                            qcState: qcstate,
+                            projectId: props.projectId,
+                            projectName: props.projectName,
+                            inspectionDate: props.inspectionDate,
+                            creatorId: creatorId,
+                            creatorName: props.creatorName,
+                             //检查单位
+                            inspectionCompanyId: props.inspectionCompanyId,
+                            inspectionCompanyName: props.inspectionCompanyName,
+                            //质检项目
+                            qualityCheckpointId:props.qualityCheckpointId,
+                            qualityCheckpointName:props.qualityCheckpointName,
+                            //施工单位
+                            constructionCompanyId:props.constructionCompanyId,
+                            constructionCompanyName:props.constructionCompanyName,
+                            //整改期限
+                            needRectification: props.needRectification,
+                            lastRectificationDate: props.lastRectificationDate,
+                            //描述及图片
+                            description: props.description,
+                            inspectionType: props.inspectionType,
+                            files: props.files,
+                            //责任人
+                            responsibleUserId:props.responsibleUserId,
+                            responsibleUserName:props.responsibleUserName,
+                            responsibleUserTitle: props.responsibleUserTitle,
+                            // //模型
+                            gdocFileId: props.gdocFileId,
+                            buildingId: props.buildingId,
+                            buildingName: props.buildingName,
+                            elementId: props.elementId,
+                            elementName: props.elementName,
+                            //图纸
+                            drawingGdocFileId: props.drawingGdocFileId,
+                            drawingName: props.drawingName,
+                            drawingPositionX: props.drawingPositionX,
+                            drawingPositionY: props.drawingPositionY,
+                            //岗位
+                            inspectionUserTitle:props.inspectionUserTitle,
+                            createTime: date.getTime()+'',
+                            updateTime: props.updateTime+'',
+                            commitTime: date.getTime()+'',
+                            committed: props.committed 
+                        },
+                    progressInfos:[]
+                }
+            }
+            console.log('12')
+        let submitInfo = {
+            projectId:projectId, 
+            inspectionType:inspectionType, 
+            props:props
+        }
+        console.log('2')
+        let key = item.id+'';
+        let value = {
+            item:item,
+            detail:detail,
+            editInfo:detail,
+            repairInfo:'',
+            reviewInfo:'',
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qcState = item.qcState;
+        let qualityCheckpointId =detail.qualityCheckpointId+'';
+        let updateTime = item.updateTime+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        console.log('insert')
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+        // console.log(item)
+        // console.log(detail)
+
+        //保存到同步列表
+        // key:'string',//单据的id
+        // value:'string',//展示的列表信息
+        // state:'string',//单据状态  待同步   已同步  同步失败
+        // updateTime:'string',//更新时间
+        // type:'string',//单据类型  quality质量   equipment材设
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:props.code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        console.log('save')
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:props.code,
+                id:id
+            }
+        }
+        console.log(data)
+        resolve(data);
+      });
+    }
+
+    //检查单 删除
+    createDeleteInspection(projectId, inspectionType, fileId){
+        console.log('fileid='+fileId)
+        let date = new Date();
+        let qcstate = CONSTANT.QC_STATE_Q_DELETE;
+        let updateTime = date.getTime()+'';
+        let detail = this.getQualityDetailObj(fileId+'')
+        console.log(detail)
+        let id = fileId+'';
+        if(id.startsWith('_')){
+            //如果以_开头，则表示是离线时建立的  则直接删除同步列表即可
+            let asyncManager = OfflineManager.getAsyncManager();
+            asyncManager.deleteByKey(fileId+'');
+            //单据列表中删除
+            this.delete(id);
+            return new Promise(function(resolve, reject) {
+                let data ={
+                    data:{
+                        msg:'msg'
+                    }
+                }
+                resolve(data);
+            });
+        }
+        let props = detail.data.inspectionInfo;
+        //列表显示的信息
+        let item = {
+            id: id,
+            code: props.code,
+            qcState: qcstate,
+            projectId: projectId,
+            inspectionDate: props.inspectionDate,
+            lastRectificationDate: props.lastRectificationDate,
+            description: props.description,
+            inspectionType: props.inspectionType,
+            creatorId: props.creatorId,
+            responsibleUserId: props.responsibleUserId,
+            updateTime: date.getTime()+'',
+            files: props.files,
+            needRectification: props.needRectification,
+        }
+        console.log('1')
+        let detailInfo = { 
+            data:
+               { 
+                   inspectionInfo:
+                        {   
+                            id: id,
+                            code: props.code,
+                            qcState: qcstate,
+                            projectId: props.projectId,
+                            projectName: props.projectName,
+                            inspectionDate: props.inspectionDate,
+                            creatorId: props.creatorId,
+                            creatorName: props.creatorName,
+                             //检查单位
+                            inspectionCompanyId: props.inspectionCompanyId,
+                            inspectionCompanyName: props.inspectionCompanyName,
+                            //质检项目
+                            qualityCheckpointId:props.qualityCheckpointId,
+                            qualityCheckpointName:props.qualityCheckpointName,
+                            //施工单位
+                            constructionCompanyId:props.constructionCompanyId,
+                            constructionCompanyName:props.constructionCompanyName,
+                            //整改期限
+                            needRectification: props.needRectification,
+                            lastRectificationDate: props.lastRectificationDate,
+                            //描述及图片
+                            description: props.description,
+                            inspectionType: props.inspectionType,
+                            files: props.files,
+                            //责任人
+                            responsibleUserId:props.responsibleUserId,
+                            responsibleUserName:props.responsibleUserName,
+                            responsibleUserTitle: props.responsibleUserTitle,
+                            // //模型
+                            gdocFileId: props.gdocFileId,
+                            buildingId: props.buildingId,
+                            buildingName: props.buildingName,
+                            elementId: props.elementId,
+                            elementName: props.elementName,
+                            //图纸
+                            drawingGdocFileId: props.drawingGdocFileId,
+                            drawingName: props.drawingName,
+                            drawingPositionX: props.drawingPositionX,
+                            drawingPositionY: props.drawingPositionY,
+                            //岗位
+                            inspectionUserTitle:props.inspectionUserTitle,
+                            createTime: date.getTime()+'',
+                            updateTime: props.updateTime+'',
+                            commitTime: date.getTime()+'',
+                            committed: props.committed 
+                        },
+                    progressInfos:[]
+                }
+            }
+            console.log('12')
+        let submitInfo = {
+            projectId:projectId, 
+            inspectionType:inspectionType, 
+            fileId:fileId
+        }
+        console.log('2')
+        let key = item.id+'';
+        let value = {
+            item:item,
+            detail:detailInfo,
+            editInfo:detailInfo,
+            repairInfo:'',
+            reviewInfo:'',
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qcState = item.qcState;
+        let qualityCheckpointId =detail.qualityCheckpointId+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        console.log('insert')
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+        // console.log(item)
+        // console.log(detail)
+
+        //保存到同步列表
+        // key:'string',//单据的id
+        // value:'string',//展示的列表信息
+        // state:'string',//单据状态  待同步   已同步  同步失败
+        // updateTime:'string',//更新时间
+        // type:'string',//单据类型  quality质量   equipment材设
+        let state = '待同步';
+        let asyncValue = {
+            id:fileId+'',
+            title:props.code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                msg:'msg'
+            }
+        }
+        resolve(data);
+      });
+    }
     //下载单据信息
     download = (startTime=0,endTime=0,qcState='',downloadKey,record) => {
         //保存到数据库
@@ -291,25 +893,28 @@ export default class QualityManager {
 
         downloadingManager = OfflineManager.getDownloadingManager();
         let _saveProgress=(progress,total,size)=>{
-            // console.log('key='+downloadKey+'  progress='+progress+'  total='+total+' size='+size);
-            record.size = size;
-            record.progress = progress;
-            record.total = total;
+            if(downloadKey && record){
+                // console.log('key='+downloadKey+'  progress='+progress+'  total='+total+' size='+size);
+                record.size = size;
+                record.progress = progress;
+                record.total = total;
 
-            let downloading = progress<total?'true':'false';
-            if(progress>total){
-                progress = total;
-            }
-            downloadingManager.saveRecord(downloadKey,JSON.stringify(record),downloading);
+                let downloading = progress<total?'true':'false';
+                if(progress>total){
+                    progress = total;
+                }
+                downloadingManager.saveRecord(downloadKey,JSON.stringify(record),downloading);
 
-            if(progress == total){
-                //下载完毕  存储到已下载列表
-                let qualityConditionManager = OfflineManager.getQualityConditionManager();
-                qualityConditionManager.saveRecord(downloadKey,JSON.stringify(record));
-                //从下载中删除
-                downloadingManager.delete(downloadKey);
+                if(progress == total){
+                    //下载完毕  存储到已下载列表
+                    let qualityConditionManager = OfflineManager.getQualityConditionManager();
+                    qualityConditionManager.saveRecord(downloadKey,JSON.stringify(record));
+                    //从下载中删除
+                    downloadingManager.delete(downloadKey);
+                }
+                DeviceEventEmitter.emit(downloadKey,record);
             }
-            DeviceEventEmitter.emit(downloadKey,record);
+           
         }
          
         //质检单下载列表
@@ -421,7 +1026,7 @@ export default class QualityManager {
                     page++;
                 }
             }
-
+            console.log(qualityList.length)
             if(qualityList && qualityList.length>0){
                 let progress = 0;
                 let num = qualityList.length;

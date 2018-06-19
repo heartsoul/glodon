@@ -461,6 +461,11 @@ function getApiType(inspectionType) {
 export async function createSubmitInspection(projectId, inspectionType, props) {
     
     if(OfflineStateUtil.isOnLine()){
+        // console.log('======================')
+        //     console.log(projectId)
+        //     console.log(inspectionType)
+        //     console.log(props)
+        //     console.log('======================')
         let type = getApiType(inspectionType)
         let api = `/quality/${projectId}/${type}/commit`;
         return requestJSON(api, {
@@ -469,7 +474,7 @@ export async function createSubmitInspection(projectId, inspectionType, props) {
         });
     }else{
         let qm = OfflineManager.getQualityManager();
-        qm.createSubmitInspection(projectId, inspectionType, JSON.parse(props));
+        return qm.createSubmitInspection(projectId, inspectionType, JSON.parse(props));
     }
     
 }
@@ -483,12 +488,17 @@ export async function createSubmitInspection(projectId, inspectionType, props) {
  * {"id":5201156,"code":"ZLJC_20180328_003"}
  */
 export async function createSaveInspection(projectId, inspectionType, props) {
-    let type = getApiType(inspectionType)
-    let api = `/quality/${projectId}/${type}`;
-    return requestJSON(api, {
-        method: 'POST',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let type = getApiType(inspectionType)
+        let api = `/quality/${projectId}/${type}`;
+        return requestJSON(api, {
+            method: 'POST',
+            body: props,
+        });
+    }else{
+        let qm = OfflineManager.getQualityManager();
+        return qm.createSaveInspection(projectId, inspectionType, JSON.parse(props));
+    }
 }
 
 /**
@@ -500,12 +510,18 @@ export async function createSaveInspection(projectId, inspectionType, props) {
  * 
  */
 export async function editSubmitInspection(projectId, fileId, inspectionType, props) {
-    let type = getApiType(inspectionType)
-    let api = `/quality/${projectId}/${type}/${fileId}/commit`;
-    return requestJSON(api, {
-        method: 'PUT',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let type = getApiType(inspectionType)
+        let api = `/quality/${projectId}/${type}/${fileId}/commit`;
+        return requestJSON(api, {
+            method: 'PUT',
+            body: props,
+        });
+    }else{
+        let qm = OfflineManager.getQualityManager();
+        return qm.editSubmitInspection(projectId, fileId,inspectionType, JSON.parse(props));
+    }
+    
 }
 
 /**
@@ -516,12 +532,17 @@ export async function editSubmitInspection(projectId, fileId, inspectionType, pr
  * @returns responsebody无内容
  */
 export async function editSaveInspection(projectId, fileId, inspectionType, props) {
-    let type = getApiType(inspectionType)
-    let api = `/quality/${projectId}/${type}/${fileId}`;
-    return requestJSON(api, {
-        method: 'PUT',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let type = getApiType(inspectionType)
+        let api = `/quality/${projectId}/${type}/${fileId}`;
+        return requestJSON(api, {
+            method: 'PUT',
+            body: props,
+        });
+    }else{
+        let qm = OfflineManager.getQualityManager();
+        return qm.editSaveInspection(projectId, fileId,inspectionType, JSON.parse(props));
+    }
 }
 
 /**
@@ -531,11 +552,17 @@ export async function editSaveInspection(projectId, fileId, inspectionType, prop
  * @returns responsebody无内容
  */
 export async function createDeleteInspection(projectId, inspectionType, fileId) {
-    let type = getApiType(inspectionType)
-    let api = `/quality/${projectId}/${type}/${fileId}`;
-    return requestJSON(api, {
-        method: 'DELETE',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let type = getApiType(inspectionType)
+        let api = `/quality/${projectId}/${type}/${fileId}`;
+        return requestJSON(api, {
+            method: 'DELETE',
+        });
+    }else{
+        let qm = OfflineManager.getQualityManager();
+        return qm.createDeleteInspection(projectId, inspectionType, fileId);
+    }
+    
 }
 
 /**

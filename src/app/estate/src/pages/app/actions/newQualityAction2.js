@@ -19,6 +19,8 @@ export function fetchData(params) {
  * @param {*} dispatch 
  */
 function getPageParams(params, dispatch) {
+    console.log('5555555555555555')
+    console.log(params)
     responseCount = 0;
     let totalRequestCount = 2;//请求的次数
     let isEdit = false;//由列表待提交进入编辑页面

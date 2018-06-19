@@ -19,6 +19,25 @@ export function deleteData(qcState, inspectId, inspectionType, qualityCheckpoint
             });
     }
 }
+
+// 新建  保存 后 删除草稿
+export function newDeleteData(qcState, inspectId, inspectionType, qualityCheckpointId = 0, qualityCheckpointName = '') {
+    return dispatch => {
+        let qm = OfflineManager.getQualityManager();
+        qm.delete(inspectId+'');//单据列表中删除
+        let am = OfflineManager.getAsyncManager();
+        am.deleteByKey(inspectId+'');//同步列表中删除
+        dispatch(updateAction.updateData())
+        // API.createDeleteInspection(storage.loadProject(), inspectionType, inspectId)
+        //     .then(data => {
+        //         dispatch(updateAction.updateData())
+        //     }).catch(error => {
+        //         dispatch(_loadError(error, qcState, 0, qualityCheckpointId, qualityCheckpointName));
+        //     });
+    }
+}
+
+//提交
 export function submitData(qcState, inspectId, inspectionType, qualityCheckpointId = 0, qualityCheckpointName = '') {
     return dispatch => {
         BimFileEntry.submitInspectionFromList(inspectId, (data) => {
