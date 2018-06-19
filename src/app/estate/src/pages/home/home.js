@@ -5,6 +5,8 @@ import { TabView, Theme} from 'app-3rd/teaset'
 import { BimFileEntry, AuthorityManager } from 'app-entry';
 import { BarItems } from "app-components";
 import * as CONSTANTS from 'app-api';
+import CreateButton from './CreateButton'
+
 const primaryColor = '#00baf3';
 
 Theme.set({
@@ -67,17 +69,7 @@ export default class extends React.Component {
         type='button'
         title=''
         icon={
-          <View style={{
-            width: 70,
-            height: 70,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <Image
-              style={[{ width: 61, height: 61,resizeMode:'contain',position:'absolute'},Platform.OS ==='ios' ? {top:20} : {top:10}]}
-              source={require('app-images/home/icon_main_create.png')}
-            />
-          </View>
+          <CreateButton />
         }
         style={{width:70,backgroundColor:'orange',}}
         iconContainerStyle={{ justifyContent: 'center' }}
