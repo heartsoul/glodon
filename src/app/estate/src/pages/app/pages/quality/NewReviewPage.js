@@ -13,10 +13,11 @@ import ReactNative, {
     Dimensions,
     Platform,
 } from 'react-native';
-import PropTypes from 'prop-types';
+
 import { connect } from 'react-redux';
 import { ListRow } from 'app-3rd/teaset';
-import { DatePicker, List, Modal, Toast } from 'antd-mobile';
+import { BackHandler } from 'app-3rd';
+import {Toast } from 'antd-mobile';
 
 import { ImageChooserView, ActionModal, BarItems,StatusActionButton,LoadingView } from 'app-components';
 import * as API from "app-api";
@@ -96,12 +97,16 @@ class NewReviewPage extends Component {
             )
         }
         if(Platform.OS === 'web') {
-            global.storage.backInterceptor = (navigator,params)=>{
-                if (storage.currentRouteName === this.props.navigation.state.routeName) {
-                    this.goBack();
-                    return true;
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    if (storage.currentRouteName === this.props.navigation.state.routeName) {
+                        this.goBack();
+                        return true;
+                    }
+                    return false;
                 }
-            }
+            )
         }
     }
 

@@ -2,21 +2,18 @@
  * Created by JokAr on 2017/4/12.
  */
 'use strict';
-import React, { Component } from "react";
-import ReactNative, {
-    ActivityIndicator, ScrollView, StyleSheet, Text, View, StatusBar, Platform
-} from "react-native";
-import { connect } from 'react-redux' // 引入connect函数
-
-import { BimFileEntry, AuthorityManager } from "app-entry";
-import * as API from "app-api";
-import EquipmentDetailView from "./equipmentDetailView"
-
+import { BackHandler } from 'app-3rd';
 import { KeyboardAwareScrollView } from 'app-3rd/index';
-import { BarItems, ActionModal } from "app-components";
+import * as API from "app-api";
+import { ActionModal, BarItems } from "app-components";
+import { AuthorityManager } from "app-entry";
+import React, { Component } from "react";
+import ReactNative, { ActivityIndicator, Platform, StatusBar, Text, View } from "react-native";
+import { connect } from 'react-redux'; // 引入connect函数
 import * as actions from '../../actions/equipmentInfoAction';
 import * as relevantModelAction from "../../actions/relevantModelAction";
-import { getModelElementProperty } from "app-api";
+import EquipmentDetailView from "./equipmentDetailView";
+
 
 class EquipmentDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -212,6 +209,22 @@ class EquipmentDetailPage extends Component {
             const BackHandler = ReactNative.BackHandler
                 ? ReactNative.BackHandler
                 : ReactNative.BackAndroid
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    if(storage.currentRouteName === this.props.navigation.state.routeName){
+                        this.needBack((needBack)=>{
+                            if(needBack) {
+                              storage.pop(this.props.navigation,1)
+                            }
+                          })
+                        return true;
+                    }
+                    return false;
+                }
+            )
+        }
+        if (Platform.OS === 'web') {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
                 () => {

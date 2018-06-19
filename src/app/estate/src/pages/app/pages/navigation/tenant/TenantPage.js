@@ -2,13 +2,13 @@
  * Created by Soul on 2018/03/16.
  */
 'use strict';
-import React, { Component, } from "react";
-import ReactNative, { ActivityIndicator, Animated, ScrollView, StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, Platform } from "react-native";
-import { BarItems } from "app-components";
-import { FlatList } from "app-3rd"
+import { BackHandler, FlatList } from "app-3rd";
 import * as API from "app-api";
-import UserInfoManager from '../../../../offline/manager/UserInfoManager';
+import { BarItems } from "app-components";
+import React, { Component } from "react";
+import ReactNative, { ActivityIndicator, Animated, Image, Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil';
+import UserInfoManager from '../../../../offline/manager/UserInfoManager';
 
 let userInfoManager= null;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -143,6 +143,18 @@ export default class tenantList extends Component {
                     if (storage.currentRouteName === this.props.navigation.state.routeName) {
                         this.resetTenant();
                         return true
+                    }
+                    return false;
+                }
+            )
+        }
+        if(Platform.OS === 'web') {
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    if (storage.currentRouteName === this.props.navigation.state.routeName) {
+                        this.resetTenant();
+                        return true;
                     }
                     return false;
                 }

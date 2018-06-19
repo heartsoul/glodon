@@ -1,10 +1,11 @@
 "use strict"
 
 import { Tabs } from 'antd-mobile';
+import { BackHandler } from 'app-3rd';
 import { KeyboardAwareScrollView } from 'app-3rd/index';
 import { BarItems } from "app-components";
 import React, { Component } from 'react';
-import ReactNative, { ActivityIndicator, Dimensions, Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
+import ReactNative, { ActivityIndicator, Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from "./../../actions/newQualityAction2";
 import NewCheckListTabBar from "./NewCheckListTabBar";
@@ -106,6 +107,18 @@ class NewQualityPage extends Component {
                 'hardwareBackPress',
                 () => {
                     if(storage.currentRouteName === this.props.navigation.state.routeName){
+                        this.goBack();
+                        return true;
+                    }
+                    return false;
+                }
+            )
+        }
+        if(Platform.OS === 'web') {
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    if (storage.currentRouteName === this.props.navigation.state.routeName) {
                         this.goBack();
                         return true;
                     }

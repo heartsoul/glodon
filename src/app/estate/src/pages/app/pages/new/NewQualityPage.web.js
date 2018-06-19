@@ -1,24 +1,16 @@
 "use strict"
 
-import React, { Component } from 'react';
-import ReactNative, {
-    View,
-    Text,
-    StatusBar,
-    StyleSheet,
-    Dimensions,
-    TouchableOpacity,
-    BackHandler,
-    ActivityIndicator,
-    Platform,
-} from 'react-native';
-import { Tabs, } from 'antd-mobile';
-import { BarItems } from "app-components"
-import NewCheckListTabBar from "./NewCheckListTabBar";
-import NewQualityView from "./NewQualityView";
+import { Tabs } from 'antd-mobile';
+import { BackHandler } from 'app-3rd';
 import { KeyboardAwareScrollView } from 'app-3rd/index';
+import { BarItems } from "app-components";
+import React, { Component } from 'react';
+import ReactNative, { ActivityIndicator, Dimensions, Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from "./../../actions/newQualityAction2";
+import NewCheckListTabBar from "./NewCheckListTabBar";
+import NewQualityView from "./NewQualityView";
+
 
 var { width, height } = Dimensions.get("window");
 
@@ -128,12 +120,16 @@ class NewQualityPage extends Component {
             )
         }
         if(Platform.OS === 'web') {
-            global.storage.backInterceptor = (navigator,params)=>{
-                if (storage.currentRouteName === this.props.navigation.state.routeName) {
-                    this.goBack();
-                    return true;
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    if (storage.currentRouteName === this.props.navigation.state.routeName) {
+                        this.goBack();
+                        return true;
+                    }
+                    return false;
                 }
-            }
+            )
         }
     }
 

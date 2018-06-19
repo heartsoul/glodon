@@ -1,23 +1,13 @@
 'use strict';
-import React, { Component } from 'react';
-import ReactNative, {
-  StyleSheet,
-  Text,
-  View,
-  StatusBar,
-  SafeAreaView,
-  Dimensions,
-  Image,
-  BackHandler,
-  Platform,
-} from 'react-native';
-import { connect } from 'react-redux' // 引入connect函数
-import { Toast } from 'antd-mobile' // 引入connect函数
-import * as fogotAction from '../actions/forgotAction' // 导入action方法 
-import * as types from '../constants/forgotTypes'
-import { KeyboardAwareScrollView } from 'app-3rd/index';
-import { ActionButton, TextInputNormal, TextInputPassword, TextInputImage, BarItems } from 'app-components';
-import * as API from 'app-api'
+import { Toast } from 'antd-mobile'; // 引入connect函数
+import { BackHandler, KeyboardAwareScrollView } from 'app-3rd';
+import * as API from 'app-api';
+import { ActionButton, BarItems, TextInputImage, TextInputNormal, TextInputPassword } from 'app-components';
+import React from 'react';
+import ReactNative, { Dimensions, Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux'; // 引入connect函数
+import * as fogotAction from '../actions/forgotAction'; // 导入action方法 
+import * as types from '../constants/forgotTypes';
 
 var { width, height } = Dimensions.get("window");
 class ForgotPage extends React.Component {
@@ -147,6 +137,19 @@ class ForgotPage extends React.Component {
             }
         )
     }
+    if(Platform.OS === 'web') {
+      this.backListener = BackHandler.addEventListener(
+          'hardwareBackPress',
+          () => {
+            this.needBack((bRet)=>{
+              if(bRet){
+                storage.pop(this.props.navigation,1);
+              }
+            });
+            return true;
+          }
+      )
+  }
 }
 
 removeBackListener() {

@@ -1,22 +1,11 @@
 'use strict'
 
-import React, { Component } from 'react';
-import {
-    View,
-    ScrollView,
-    Text,
-    Image,
-    StyleSheet,
-    TouchableHighlight,
-    TouchableOpacity,
-    BackHandler,
-} from 'react-native';
-
+import { BackHandler, FlatList } from 'app-3rd';
 import * as API from 'app-api';
-import * as AuthorityManager from "../navigation/project/AuthorityManager";
-import { Dimensions } from 'react-native';
 import { BarItems } from "app-components";
-import { FlatList } from "app-3rd"
+import React, { Component } from 'react';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Platform } from 'react-native';
+import * as AuthorityManager from "../navigation/project/AuthorityManager";
 //切换项目主页
 export default class ChangeProjectPage extends Component {
 
@@ -39,17 +28,17 @@ export default class ChangeProjectPage extends Component {
         this.trueTenantStr = storage.loadTenantInfo();
     }
 
-        // //获取当前选中的项目
-        // storage.loadProject((retVal) => {
-        //     this.selectProjectId = Number.parseInt(retVal);
-        // });
+    // //获取当前选中的项目
+    // storage.loadProject((retVal) => {
+    //     this.selectProjectId = Number.parseInt(retVal);
+    // });
 
     //获取当前项目最新版本
-    _getlatestVersion = (projectId)=>{
+    _getlatestVersion = (projectId) => {
         API.getModelLatestVersion(projectId).then((responseData) => {
             let latestVersion = responseData.data.data.versionId;
             storage.projectIdVersionId = latestVersion;
-            storage.setLatestVersionId(projectId,latestVersion);
+            storage.setLatestVersionId(projectId, latestVersion);
         }).catch((error) => {
             console.log(error);
         });
@@ -57,22 +46,22 @@ export default class ChangeProjectPage extends Component {
         // userInfoManager = new UserInfoManager();
     }
 
-   
+
 
     //获取当前项目最新版本
-    _getlatestVersion = (projectId)=>{
+    _getlatestVersion = (projectId) => {
         API.getModelLatestVersion(projectId).then((responseData) => {
             let latestVersion = responseData.data.data.versionId;
             storage.projectIdVersionId = latestVersion;
-            storage.setLatestVersionId(projectId,latestVersion);
+            storage.setLatestVersionId(projectId, latestVersion);
         }).catch((error) => {
             console.log(error);
         });
     }
 
-      //第一次render后调用
-    componentDidMount(){
-        
+    //第一次render后调用
+    componentDidMount() {
+
         //渲染当前的租户和项目列表
         this._refreshData();
         //增加监听，切换租户后回来调用
@@ -97,11 +86,28 @@ export default class ChangeProjectPage extends Component {
             }
         );
 
-        //硬件返回监听
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            this._goBack();
-            return true;
-        });
+
+        if (Platform.OS === 'web') {
+            this.backListener = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    if (storage.currentRouteName === this.props.navigation.state.routeName) {
+                        this._goBack();
+                        return true;
+                    }
+                    return false;
+                }
+            )
+        } else {
+            //硬件返回监听
+            BackHandler.addEventListener('hardwareBackPress', () => {
+                if (storage.currentRouteName === this.props.navigation.state.routeName) {
+                    this._goBack();
+                    return true;
+                }
+                return false;
+            });
+        }
 
     }
 
@@ -115,15 +121,15 @@ export default class ChangeProjectPage extends Component {
     //获取当前租户及项目
     _refreshData() {
         let retVal = storage.loadTenantInfo();
-       // JSON.parse(retVal)   retVal={"key":"A09","value":{"id":5200286,"admin":true,"tenantId":5200052,"tenantName":"11301919"}}
-       let tenant = JSON.parse(retVal);
-       this.setState({tenantName: tenant.value.tenantName});
-       this._getProjects(tenant.value.tenantId);
+        // JSON.parse(retVal)   retVal={"key":"A09","value":{"id":5200286,"admin":true,"tenantId":5200052,"tenantName":"11301919"}}
+        let tenant = JSON.parse(retVal);
+        this.setState({ tenantName: tenant.value.tenantName });
+        this._getProjects(tenant.value.tenantId);
     }
 
     //获取当前租户的所有项目列表
     _getProjects(tenantId) {
-        API.getProjects(0, 10000000,tenantId).then(
+        API.getProjects(0, 10000000, tenantId).then(
             (responseData) => {
                 this.setState(preState => {
                     return { ...preState, dataList: responseData.data.content }
@@ -181,14 +187,14 @@ export default class ChangeProjectPage extends Component {
             storage.saveProject("" + item.id, "" + item.name);
             storage.gotoMainPage(navigator);
         });
-        
+
     }
     //item的view
     renderItemView = ({ item }) => {
         let width = Dimensions.get('window').width - 22;
         if (this.selectProjectId != item.id) {
             return (
-                <TouchableOpacity  activeOpacity={0.5} onPress={(event) =>{event.preventDefault(); this._itemClick(item)}}>
+                <TouchableOpacity activeOpacity={0.5} onPress={(event) => { event.preventDefault(); this._itemClick(item) }}>
                     <View style={styles.containerView}>
                         <Text style={styles.content}> {item.name}</Text>
                         <View style={{ marginLeft: 22, height: 1, width: width, backgroundColor: '#F7F7F7' }} />
@@ -197,7 +203,7 @@ export default class ChangeProjectPage extends Component {
             );
         } else {
             return (
-                <TouchableOpacity activeOpacity={0.5} onPress={(event) =>{event.preventDefault(); this._itemClick(item)}}>
+                <TouchableOpacity activeOpacity={0.5} onPress={(event) => { event.preventDefault(); this._itemClick(item) }}>
                     <View style={styles.containerView}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                             <Text style={styles.contentSelected}> {item.name}</Text>
@@ -216,7 +222,7 @@ export default class ChangeProjectPage extends Component {
         let dataList = this.state.dataList;
         return (
             <ScrollView style={{ backgroundColor: '#F7F7F7' }} >
-                <TouchableOpacity onPress={(event)=>{event.preventDefault();this._tenantChoose}}>
+                <TouchableOpacity onPress={(event) => { event.preventDefault(); this._tenantChoose && this._tenantChoose(); }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', height: 51 }}>
                         <Image source={require('app-images/icon_choose_project_item.png')} style={{ width: 30, height: 30, marginLeft: 20 }} />
                         <Text style={{ fontSize: 16, color: '#6F899B', marginLeft: 12, flex: 1 }} >{tenantName}</Text>
@@ -226,7 +232,7 @@ export default class ChangeProjectPage extends Component {
                 <FlatList style={{ marginTop: 10, backgroundColor: '#FFFFFF' }}
                     data={dataList}
                     renderItem={this.renderItemView}
-                    keyExtractor={(item, index) => index+''}
+                    keyExtractor={(item, index) => index + ''}
                 />
 
                 <TouchableHighlight
