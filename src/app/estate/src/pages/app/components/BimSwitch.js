@@ -3,6 +3,9 @@ import  {PropTypes} from 'prop-types';
 import{
     Image,TouchableOpacity
 } from 'react-native';
+const icon_switch_open = require('app-images/icon_switch_open.png');
+const icon_switch_close = require('app-images/icon_switch_close.png');
+
 //设置界面的开关按钮
 export default class BimSwitch extends Component{
 
@@ -38,12 +41,11 @@ export default class BimSwitch extends Component{
         })
     }
     render(){
-        
-        let path = this.state.isOpen?require('app-images/icon_switch_open.png'):require('app-images/icon_switch_close.png')
-        // let path = value?require('app-images/icon_switch_open.png'):require('app-images/icon_switch_close.png')
+        let {styleIn={}} = this.props;
+        let path = this.state.isOpen?icon_switch_open:icon_switch_close
         return (
-            <TouchableOpacity onPress={(event)=>{event.preventDefault(); this._click()}}>
-                <Image source={path} style={{width:36,height:18,marginRight:21}} />
+            <TouchableOpacity style={styleIn} onPress={(event)=>{event.preventDefault(); this._click()}}>
+                <Image source={path} style={{width:36,height:18}} />
             </TouchableOpacity>
         );
     }

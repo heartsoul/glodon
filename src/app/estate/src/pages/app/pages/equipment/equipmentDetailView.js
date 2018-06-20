@@ -2,62 +2,25 @@
  * Created by JokAr on 2017/4/12.
  */
 'use strict';
-import React, { Component } from "react";
-import {
-    ActivityIndicator,
-    Text,
-    View,
-    Image,
-    StyleSheet,
-    Switch,
-    Dimensions,
-    Platform,
-    ScrollView,
-    Keyboard,
-} from "react-native";
-import PropTypes from 'prop-types'
-
-import { ActionModal, ImageChooserView } from "app-components"
-import { BimFileEntry, AuthorityManager } from "app-entry";
+import ListStyle from 'antd-mobile/lib/list/style/index.native';
 import { PullPicker } from 'app-3rd/teaset';
-
 import * as API from "app-api";
-
-import EquipmentInfoItem from "./equipmentInfoItem"
-import { ActionButton, StatusActionButton } from "app-components";
-import { DatePicker, List } from 'antd-mobile';
+import { ActionModal, BimSwitch, ImageChooserView, StatusActionButton } from "app-components";
+import { AuthorityManager, BimFileEntry } from "app-entry";
+import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import { Dimensions, Image, Keyboard, StyleSheet, Text, View } from "react-native";
 import GLDDatePicker from "./../../components/GLDDatePicker";
+import EquipmentInfoItem from "./equipmentInfoItem";
+
+
+
 const standardImage = require("app-images/icon_up_to_standard.png");
 const notStandardImage = require("app-images/icon_not_up_to_standard.png");
 
-var { width, height } = Dimensions.get("window");
+var { width } = Dimensions.get("window");
 const REF_PHOTO = 'gldPhoto';
 
-import ListStyle from 'antd-mobile/lib/list/style/index.native';
-
-const newStyle = {
-    ...ListStyle,
-    Extra: {
-        ...ListStyle.Extra,
-        color: "#666666",
-        fontSize: 16,
-        textAlign: 'left',
-        width: width - 157,
-        marginLeft: 8,
-        flexDirection: "row",
-    },
-    column: {
-        ...ListStyle.column,
-        flex: 0,
-    },
-    Arrow: {
-        ...ListStyle.Arrow,
-        width: 14,
-        height: 14,
-        resizeMode: "contain",
-        marginRight: 23,
-    }
-}
 export default class EquipmentDetailView extends Component {
 
     constructor(props) {
@@ -461,7 +424,9 @@ export default class EquipmentDetailView extends Component {
                     justifyContent: 'flex-start',
                 }}>
                     <Text style={{ color: '#666666' }}>验收合格:</Text>
-                    <Switch style={{ right: 0, position: 'absolute', }} value={info.qualified === true ? true : false} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
+                    <View style={{ right: 0, position: 'absolute', }}>
+                    <BimSwitch value={info.qualified === true ? true : false} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
+                    </View>
                 </View>
             </View>
             <View style={{ marginTop: 20 }}>

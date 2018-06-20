@@ -22,7 +22,7 @@ import * as USERAPI from "app-api";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
-import { BimSwitch as Switch, ToCleanDialog, ActionButton, share } from 'app-components';
+import { BimSwitch, ToCleanDialog, ActionButton, share } from 'app-components';
 
 var { width, height } = Dimensions.get("window");
 
@@ -234,7 +234,7 @@ class SettingItemView extends React.Component {
                     <Text style={styles.settingItemText}>{this.props.title} </Text>
                     {extText}
                     {
-                        this.props.showSwitch ? <Switch style={{ marginRight: 20, }} value={this.state.switchValue} onValueChange={(value) => {
+                        this.props.showSwitch ? <BimSwitch style={{ marginRight: 20, }} value={this.state.switchValue} onValueChange={(value) => {
                             this.setState({
                                 switchValue: value
                             }, () => {

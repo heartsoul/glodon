@@ -10,6 +10,8 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import {BimSwitch} from 'app-components'
+
 const rightImage = require("app-images/icon_arrow_right_gray.png");
 
 class Item extends Component {
@@ -94,7 +96,7 @@ class SwitchItem extends Component {
             <View style={{ display: "block" }}>
                 <View style={styles.itemContainer}>
                     <Text style={styles.itemTitle}>{this.props.title}</Text>
-                    <Switch value={this.props.switchValue} onValueChange={(value) => { this.props.onValueChange(value) }} />
+                    <BimSwitch value={this.props.switchValue} onValueChange={(value) => { this.props.onValueChange(value) }} />
                 </View>
                 {getBottomSeparator(this.props.bottomSeparator)}
             </View>

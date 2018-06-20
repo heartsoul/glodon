@@ -2,12 +2,10 @@ import React, { Component } from 'react'
 import {
     StyleSheet,
     Text,
-    Switch,
     View,
-    TouchableOpacity,
 } from 'react-native';
 import PropTypes from 'prop-types'
-import { ListRow } from 'app-3rd/teaset';
+import {BimSwitch} from 'app-components'
 import { DatePicker, List } from 'antd-mobile';
 import StarView from "./StarView";
 import GLDListRow from "./GLDListRow";
@@ -48,7 +46,7 @@ export default class RectificationView extends Component {
 
     renderSwitchView = () => {
         return (
-            <Switch value={this.state.needRectification} onValueChange={(value) => { this.onChangeSwitch(value) }} />
+            <BimSwitch value={this.state.needRectification} onValueChange={(value) => { this.onChangeSwitch(value) }} />
         );
     }
 

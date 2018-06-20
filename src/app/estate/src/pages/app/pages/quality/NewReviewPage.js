@@ -1,29 +1,17 @@
 "use strict"
 
-import React, { Component } from 'react';
-import ReactNative, {
-    StyleSheet,
-    View,
-    Text,
-    Image,
-    TextInput,
-    StatusBar,
-    Switch,
-    ScrollView,
-    Dimensions,
-    Platform,
-} from 'react-native';
-
-import { connect } from 'react-redux';
-import { ListRow } from 'app-3rd/teaset';
+import { Toast } from 'antd-mobile';
 import { BackHandler } from 'app-3rd';
-import {Toast } from 'antd-mobile';
-
-import { ImageChooserView, ActionModal, BarItems,StatusActionButton,LoadingView } from 'app-components';
+import { ListRow } from 'app-3rd/teaset';
 import * as API from "app-api";
+import { ActionModal, BarItems, BimSwitch, ImageChooserView, LoadingView, StatusActionButton } from 'app-components';
+import React, { Component } from 'react';
+import ReactNative, { Dimensions, Image, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
+import { connect } from 'react-redux';
 import * as reviewRepairAction from "./../../actions/reviewRepairAction";
-import QualityDetailView from "./QualityDetailView";
 import GLDDatePicker from "./../../components/GLDDatePicker";
+import QualityDetailView from "./QualityDetailView";
+
 
 const REF_PHOTO = 'gldPhoto';
 const nowTimeStamp = Date.now();
@@ -246,7 +234,7 @@ class NewReviewPage extends Component {
 
     renderSwitchView = () => {
         return (
-            <Switch value={this.state.switchValue} onValueChange={(value) => { this.onChangeSwitch(value) }} />
+            <BimSwitch value={this.state.switchValue} onValueChange={(value) => { this.onChangeSwitch(value) }} />
         );
     }
 
