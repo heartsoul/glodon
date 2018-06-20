@@ -60,7 +60,7 @@ export class TextInputNormal extends Component {
       onFocus={(event)=>{this.state.focus = true;this.props.onFocus(event)}}
     />
      <View style={[styles.style_input_action]}>
-     <TouchableOpacity style={[this.state.textB && this.state.textB.length && this.state.focus ? {} : {'display':'none'}]} onPress={this._onClearTextEntry}>
+     <TouchableOpacity style={[this.state.textB && this.state.textB.length && this.state.focus ? {} : {'display':'none'}]} onPress={(event)=>{event.preventDefault(); this._onClearTextEntry(event)}}>
      <Image style={styles.style_image_delete} source={icon_login_password_delete}/>
      </TouchableOpacity>
     </View>
@@ -159,7 +159,7 @@ export class TextInputPassword extends Component {
     <View  style={[styles.style_input_action,{width:80}]}>
     <TouchableOpacity style={[this.state.value  && this.state.value.length && this.state.focus? {} : {'display':'none'}]} onPress={this._onClearTextEntry}><Image style={styles.style_image_delete} source={icon_login_password_delete}/></TouchableOpacity>
     
-    <TouchableOpacity onPress={this._onSecureTextEntry}><Image style={styles.style_image} source={this.state.secureTextEntry ? icon_login_password_hide : icon_login_password_show}/></TouchableOpacity>
+    <TouchableOpacity onPress={(event)=>{event.preventDefault(); this._onSecureTextEntry}}><Image style={styles.style_image} source={this.state.secureTextEntry ? icon_login_password_hide : icon_login_password_show}/></TouchableOpacity>
     </View>
     </View>
     )
@@ -220,7 +220,7 @@ export class TextInputImage extends Component {
       onFocus={this.props.onFocus}
     />
     <View  style={[styles.style_input_action,{width:120}]}>
-    <TouchableOpacity onPress={this.props.onImageClick}>
+    <TouchableOpacity onPress={(event)=>{event.preventDefault(); this.props.onImageClick}}>
     <Image style={styles.style_image_captcha} source={this.props.imageUrl ? {uri:this.props.imageUrl} : icon_login_password_delete}/></TouchableOpacity>
     </View>
     </View>

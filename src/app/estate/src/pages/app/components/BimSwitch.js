@@ -42,7 +42,7 @@ export default class BimSwitch extends Component{
         let path = this.state.isOpen?require('app-images/icon_switch_open.png'):require('app-images/icon_switch_close.png')
         // let path = value?require('app-images/icon_switch_open.png'):require('app-images/icon_switch_close.png')
         return (
-            <TouchableOpacity onPress={()=>{this._click()}}>
+            <TouchableOpacity onPress={(event)=>{event.preventDefault(); this._click()}}>
                 <Image source={path} style={{width:36,height:18,marginRight:21}} />
             </TouchableOpacity>
         );

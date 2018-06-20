@@ -32,7 +32,7 @@ export default class QualityInfoItem extends React.Component {
             </View>
             <View style={styles.contentView}>
             <Label style={styles.content}>{this.props.content}</Label>
-            <TouchableOpacity activeOpacity={0.5} onPress={(event)=>{this.onClick(event)}}>
+            <TouchableOpacity activeOpacity={0.5} onPress={(event)=>{event.preventDefault(); this.onClick(event)}}>
                 <Image source={benchmarkImage} style={styles.infoMark} />
             </TouchableOpacity>
             </View>
@@ -46,7 +46,7 @@ export default class QualityInfoItem extends React.Component {
             <Label style={styles.leftTitle}>{this.props.leftTitle}</Label>
             </View>
             <View style={styles.contentView}>
-            <TouchableOpacity activeOpacity={0.5} onPress={(event)=>{this.props.content && this.props.content.length && this.onClick && this.onClick(event)}}>
+            <TouchableOpacity activeOpacity={0.5} onPress={(event)=>{event.preventDefault(); this.props.content && this.props.content.length && this.onClick && this.onClick(event)}}>
                 <Label style={[styles.content,styles.link]}>{this.props.content}</Label>
             </TouchableOpacity>
             </View>

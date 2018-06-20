@@ -149,7 +149,7 @@ class BimFileFilterView extends Component {
     //专业item
     renderSpecialItem = ({ item, index }) => {
         return (
-            <TouchableOpacity onPress={() => { this.onFilterChange(FILTER_TYPE_SPECIAL, item) }}>
+            <TouchableOpacity onPress={(event) => {event.preventDefault(); this.onFilterChange(FILTER_TYPE_SPECIAL, item) }}>
                 <View style={styles.specialItem}>
                     <Text style={(this.state.selectedSpecialty && this.state.selectedSpecialty.id === item.id) ? styles.specialItemTextSelected : styles.specialItemText}>{item.name}</Text>
                     <Image style={(this.state.selectedSpecialty && this.state.selectedSpecialty.id === item.id) ? styles.specialItemImageSelected : styles.specialItemImage} source={require("app-images/icon_choose_list_selected.png")} />
@@ -160,7 +160,7 @@ class BimFileFilterView extends Component {
     //单体item
     renderBuildingItem = ({ item, index }) => {
         return (
-            <TouchableOpacity onPress={() => { this.onFilterChange(FILTER_TYPE_BUILDING, item) }}>
+            <TouchableOpacity onPress={(event) => {event.preventDefault(); this.onFilterChange(FILTER_TYPE_BUILDING, item) }}>
                 <View style={styles.buildingItem}>
                     <View style={(this.state.selectedBuilding && this.state.selectedBuilding.id === item.id) ? styles.buildingItemBoxSelected : styles.buildingItemBox}>
                         <Text style={(this.state.selectedBuilding && this.state.selectedBuilding.id === item.id) ? styles.buildingItemTextSelected : styles.buildingItemText}>{item.name}</Text>
@@ -194,13 +194,13 @@ class BimFileFilterView extends Component {
         return (
             <View>
                 <View style={styles.container}>
-                    <TouchableOpacity style={styles.touchBtn} onPress={() => { this.onClickFilter(FILTER_TYPE_SPECIAL) }}>
+                    <TouchableOpacity style={styles.touchBtn} onPress={(event) => {event.preventDefault(); this.onClickFilter(FILTER_TYPE_SPECIAL) }}>
                         <View style={styles.leftBtn}>
                             <Text style={(this.state.filterType === FILTER_TYPE_SPECIAL && this.state.show) ? (styles.filterTextNormalSelected) : (styles.filterTextNormal)}>{this.state.selectedSpecialty ? this.state.selectedSpecialty.name : "专业"}</Text>
                             <Image style={styles.filterImage} source={(this.state.filterType === FILTER_TYPE_SPECIAL && this.state.show) ? selectedImage : normalImage} />
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.touchBtn} onPress={() => { this.onClickFilter(FILTER_TYPE_BUILDING) }}>
+                    <TouchableOpacity style={styles.touchBtn} onPress={(event) => {event.preventDefault(); this.onClickFilter(FILTER_TYPE_BUILDING) }}>
                         <View style={styles.rightBtn}>
                             <Text style={(this.state.filterType === FILTER_TYPE_BUILDING && this.state.show) ? (styles.filterTextNormalSelected) : (styles.filterTextNormal)}>{this.state.selectedBuilding ? this.state.selectedBuilding.name : "单体"}</Text>
                             <Image style={styles.filterImage} source={(this.state.filterType === FILTER_TYPE_BUILDING && this.state.show) ? selectedImage : normalImage} />
@@ -219,7 +219,7 @@ class BimFileFilterView extends Component {
 
                                 }
                             </View>
-                            <TouchableOpacity style={{ flex: 1 }} onPress={() => {
+                            <TouchableOpacity style={{ flex: 1 }} onPress={(event) => {event.preventDefault(); 
                                 this.hideFilter();
                             }} />
                         </View>

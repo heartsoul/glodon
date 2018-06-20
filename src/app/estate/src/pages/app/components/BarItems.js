@@ -15,7 +15,7 @@ TitleBarItem.propTypes = {
 
 export class RightBarItem extends React.Component {
   render = () => {
-    return <TouchableOpacity style={styles.actionView} onPress={() => this.props.onPress(this.props.navigation)} >
+    return <TouchableOpacity style={styles.actionView} onPress={(event) =>{event.preventDefault();  this.props.onPress(this.props.navigation)}} >
       <View style={styles.spliteItem} />
       {
          this.props.imageSource 
@@ -46,7 +46,7 @@ export class LeftBarItem extends React.Component {
       event.preventDefault();
       this.props.onPress(this.props.navigation)
     } ;
-    return <TouchableOpacity style={styles.actionView} onPress={onPress} >
+    return <TouchableOpacity style={styles.actionView} onPress={(event)=>{event.preventDefault(); onPress && onPress(event)}} >
       <View style={styles.spliteItem} />
       <View style={styles.spliteItem} />
       {

@@ -92,7 +92,7 @@ export default class ActionModal extends Component {
                 {
                     actions.map((action,index)=>{
                        return (<TouchableOpacity key={'action_item'+index} style={[styles.style_actionView,{width:widthP}
-                       ,index==0?{borderLeftWidth:0}:null]} onPress={(e)=>{ActionModal.close();action.onPress && action.onPress(e);}}><Text style={action.style}>{action.text}</Text></TouchableOpacity>
+                       ,index==0?{borderLeftWidth:0}:null]} onPress={(e)=>{e.preventDefault(); ActionModal.close();action.onPress && action.onPress(e);}}><Text style={action.style}>{action.text}</Text></TouchableOpacity>
                         )
                     })
                 }

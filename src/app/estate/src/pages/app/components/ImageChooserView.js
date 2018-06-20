@@ -112,7 +112,7 @@ export default class ImageChooserView extends React.Component {
     renderAdd = () => {
         if(this.state.files && this.state.files.length < 3) {
             
-            return <TouchableOpacity onPress={this.onAddImage}>
+            return <TouchableOpacity onPress={(event)=>{event.preventDefault(); this.onAddImage(event)}}>
             <Image style={{marginTop:5,marginRight:5,width:80,height:80,backgroundColor:'white',resizeMode:'contain'}} source={icon_add_picture}/></TouchableOpacity>
         }
         return null;
@@ -125,12 +125,12 @@ export default class ImageChooserView extends React.Component {
             return <View key={'img_item_'+index} style={{marginRight:5, width:85,height:85,justifyContent:'center',alignContent:'center',borderWidth:1,borderColor:'#666666'}}><Text>无图片</Text></View>
         }
         return <View key={'img_item_'+index} style={{marginRight:5}}>
-            <TouchableOpacity onPress={()=>this.onBigImage(index)}>
+            <TouchableOpacity onPress={(event)=>{event.preventDefault(); this.onBigImage(index)}}>
             <Image style={{marginTop:5,marginRight:5,width:80,height:80,resizeMode:'cover'}} source={source}/>
             <UploadingView uploadKey={randomKey||null} style={{position:'absolute',width:80,bottom:0}}>
             </UploadingView>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>this.onDeleteImage(index)} style={{position:'absolute',top:0,right:0}}>
+            <TouchableOpacity onPress={(event)=>{event.preventDefault(); this.onDeleteImage(index)}} style={{position:'absolute',top:0,right:0}}>
             <Image style={{width:20,height:20,backgroundColor:'transparent',resizeMode:'contain'}} source={icon_login_password_delete}/>
             </TouchableOpacity>
             

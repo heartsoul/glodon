@@ -36,7 +36,7 @@ class Item extends Component {
 
     render() {
         return (
-            <TouchableOpacity onPress={this.props.onPress}>
+            <TouchableOpacity onPress={(event)=>{ event.preventDefault(); this.props.onPress}}>
                 <View style={styles.itemContainer}>
                     <Text style={styles.itemTitle}>{this.props.title}</Text>
                     {
@@ -67,7 +67,7 @@ class SwitchItem extends Component {
     }
     render() {
         return (
-            <TouchableOpacity >
+            <TouchableOpacity onPress={(event)=>{ event.preventDefault(); }} >
                 <View style={styles.itemContainer}>
                     <Text style={styles.itemTitle}>{this.props.title}</Text>
                     <Switch value={this.props.switchValue} onValueChange={(value) => { this.props.onValueChange(value) }} />

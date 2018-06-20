@@ -173,7 +173,7 @@ class SearchPage extends BaseSearchPage {
 
     renderMoreView = (moreCallback) => {
         return (
-            <TouchableOpacity onPress={moreCallback}>
+            <TouchableOpacity onPress={(event)=>{event.preventDefault();moreCallback&&moreCallback(event)}}>
                 <View style={{ flexDirection: "row", alignItems: "center", paddingLeft: 20, paddingRight: 20, marginTop: 5 }}>
                     <View style={{ height: 1, backgroundColor: "#e6e6e6", flex: 1 }}></View>
                     <Text style={{ color: "#b0b0b0", fontSize: 14, marginLeft: 10 }}>查看更多</Text>

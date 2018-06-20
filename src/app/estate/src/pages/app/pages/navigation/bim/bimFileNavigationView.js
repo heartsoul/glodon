@@ -34,7 +34,7 @@ export default class BimFileNavigationView extends Component {
                         ) : (null)
                     }
                 </View>
-                <TouchableOpacity style={{ flex: 1 }} onPress={() => {
+                <TouchableOpacity style={{ flex: 1 }} onPress={(event) => {event.preventDefault(); 
                 }} />
             </View>
 

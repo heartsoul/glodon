@@ -96,7 +96,7 @@ class ProjectPage extends Component {
     //返回itemView
     renderItemView = ({ item, index }) => {
         return (
-            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)} style={{}}>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={(event) =>{ event.preventDefault(); this._itemClick(item, index)}} style={{}}>
                 <View style={[styles.containerView, item.value.id == storage.loadProject() ? styles.selectContainer : null]}>
                     <Text style={[styles.content, item.value.id == storage.loadProject() ? { color: '#00baf3', fontWeight: "bold" } : null]}> {item.value.name}</Text>
                 </View>
@@ -107,7 +107,7 @@ class ProjectPage extends Component {
     //返回itemView
     renderItemSimpleView = ({ item, index }) => {
         return (
-            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._itemClick(item, index)}>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={(event) =>{ event.preventDefault(); this._itemClick(item, index)}}>
                 <View style={styles.containerSimpleView}>
                     <Image
                         source={require("app-images/icon_choose_project_item.png")}

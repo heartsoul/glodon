@@ -6,7 +6,7 @@ export default class Button extends Component {
   render() {
     const { text, onClick } = this.props
     return (
-      <TouchableOpacity style={styles.Button} onPress={onClick}>
+      <TouchableOpacity style={styles.Button} onPress={(event)=>{event.preventDefault(); onClick && onClick(event)}}>
         <Text>{text}</Text>
       </TouchableOpacity>
     )

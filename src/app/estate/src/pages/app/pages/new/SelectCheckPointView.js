@@ -103,7 +103,7 @@ export default class SelectCheckPointView extends Component {
                 />
                 {
                     (this.state.isShowMark) ? (
-                        <TouchableOpacity style={{ paddingRight: 5, alignSelf: "center", }} onPress={() => { this.toCheckPointInfo() }}>
+                        <TouchableOpacity style={{ paddingRight: 5, alignSelf: "center", }} onPress={(event) => {event.preventDefault();  this.toCheckPointInfo() }}>
                             <Image style={styles.markImage} source={require('app-images/icon_benchmark.png')} />
                         </TouchableOpacity>
                     ) : (null)

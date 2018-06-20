@@ -228,7 +228,7 @@ export default class tenantList extends Component {
     //返回itemView
     renderItemView = ({ item, index }) => {
         return (
-            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this._clickItem(item, index)}>
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={(event) => { event.preventDefault(); this._clickItem(item, index)}}>
                 <View style={styles.containerView}>
                     <Image
                         source={require("app-images/icon_choose_tenant_item.png")}

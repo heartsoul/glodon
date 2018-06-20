@@ -120,7 +120,7 @@ export default class CheckPointList extends React.Component {
 
     renderNavItemView = ({ item, index }) => {
         return (
-            <TouchableOpacity activeOpacity={0.5} onPress={() => this._navItemClick(item, index)} >
+            <TouchableOpacity activeOpacity={0.5} onPress={(event) =>{ event.preventDefault(); this._navItemClick(item, index)}} >
                 <View style={styles.navContainer}>
                     <Text style={(index == this.state.navData.length - 1) ? styles.lastNavName : styles.navName}> {item.name}</Text>
                     {
@@ -140,7 +140,7 @@ export default class CheckPointList extends React.Component {
     renderDirItemView = ({ item, index }) => {
         return (
 
-            <TouchableOpacity activeOpacity={0.5} onPress={() => { this._moduleItemClick(item, index) }}>
+            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { event.preventDefault(); this._moduleItemClick(item, index) }}>
                 <View style={styles.moduleItemContainer}>
                     <Image source={require('app-images/icon_blueprint_file.png')} style={styles.moduleDirIcon} />
                     <Text style={styles.moduleDirItemName}> {item.name}</Text>
@@ -157,10 +157,10 @@ export default class CheckPointList extends React.Component {
 
     renderModuleItemView = ({ item, index }) => {
         return (
-            <TouchableOpacity activeOpacity={0.5} onPress={() => { this._moduleItemClick(item, index) }} >
+            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { event.preventDefault(); this._moduleItemClick(item, index) }} >
                 <View style={styles.moduleItemContainer}>
                     <Text style={styles.moduleChildItemName}> {item.name}</Text>
-                    <TouchableOpacity onPress={() => { this.toCheckPointInfo(item) }}>
+                    <TouchableOpacity onPress={(event) => { event.preventDefault(); this.toCheckPointInfo(item) }}>
                         <Image source={require('app-images/icon_benchmark.png')} style={styles.moduleChildMark} />
                     </TouchableOpacity>
                     <View style={{ flex: 1 }} />

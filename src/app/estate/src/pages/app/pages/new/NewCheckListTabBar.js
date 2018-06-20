@@ -38,7 +38,7 @@ class NewCheckListTabBar extends Component {
     renderTab = (tab, index) => {
 
         return (
-            <TouchableOpacity key={index} onPress={() => { this.onTabClick(index) }}>
+            <TouchableOpacity key={index} onPress={(event) => { event.preventDefault(); this.onTabClick(index) }}>
                 <View style={styles.tabTextContainer}>
                     <Text style={(this.state.activeTab == index) ? styles.tabTextSelected : styles.tabText} >{tab.title}</Text>
                 </View>

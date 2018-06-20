@@ -14,14 +14,14 @@ export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的u
 
 // 预生产服务器
 // export const SERVER_TYPE = "PRERELEASE"
-// export const BASE_UPLOAD_URL =  "https://api.glodon.com/nss";//图片服务
-// export const BASE_URL = "http://47.95.204.243"; // 应用服务
+// export const BASE_UPLOAD_URL =  "";//图片服务
+// export const BASE_URL = ""; // 应用服务
 // export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址
 
 // 生产服务器
 // export const SERVER_TYPE = "PRODUCT"
-// export const BASE_UPLOAD_URL =  "https://api.glodon.com/nss";//图片服务
-// export const BASE_URL = "http://bimcop.glodon.com"; // 应用服务
+// export const BASE_UPLOAD_URL =  "";//图片服务
+// export const BASE_URL = ""; // 应用服务
 // export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址
 
 

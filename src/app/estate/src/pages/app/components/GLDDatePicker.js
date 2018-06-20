@@ -29,6 +29,7 @@ class GLDDatePicker extends Component {
         return (
             <View>
                 <TouchableOpacity activeOpacity={0.5} onPress={(event) => { 
+                    event.preventDefault(); 
                     Keyboard.dismiss();
                     this.setState({ visible: true }) }}>
                     <View style={[styles.containerView, this.props.style]}>

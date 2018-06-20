@@ -167,7 +167,7 @@ export default class BaseSearchPage extends React.Component {
                         {
                             this.props.searchHistory.map((item, index) => {
                                 return (
-                                    <TouchableOpacity key={'history' + index} style={{ height: 52, justifyContent: "center", borderBottomColor: "#e6e6e6", borderBottomWidth: 0.5 }} onPress={() => {
+                                    <TouchableOpacity key={'history' + index} style={{ height: 52, justifyContent: "center", borderBottomColor: "#e6e6e6", borderBottomWidth: 0.5 }} onPress={(event) => {event.preventDefault(); 
                                         this.searchHistory(item);
                                     }}>
                                         <Text style={{ fontSize: 16, marginLeft: 20, color: "#000000" }}>{item}</Text>

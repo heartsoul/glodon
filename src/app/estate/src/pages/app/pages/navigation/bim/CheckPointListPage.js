@@ -84,13 +84,13 @@ class CheckPointListPage extends Component {
             <TouchableOpacity onPress={() => { this.toQualityCheckList(item) }} >
                 <View style={styles.itemView} >
                     <Text style={styles.listItemText}>{item.name}</Text>
-                    <TouchableOpacity style={{ paddingRight: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.toCheckPointInfoPage(item) }}>
+                    <TouchableOpacity style={{ paddingRight: 20, padding: 10, paddingBottom: 10 }} onPress={(event) => { event.preventDefault(); this.toCheckPointInfoPage(item) }}>
                         <Image style={styles.markImage} source={require('app-images/icon_module_standard_white.png')} />
                     </TouchableOpacity>
                     <View style={{ flex: 1 }} />
                     {
                         AuthorityManager.isQualityCreate() ? (
-                            <TouchableOpacity style={{ paddingLeft: 20, padding: 10, paddingBottom: 10 }} onPress={() => { this.toAddPage(item) }}>
+                            <TouchableOpacity style={{ paddingLeft: 20, padding: 10, paddingBottom: 10 }} onPress={(event) => { event.preventDefault(); this.toAddPage(item) }}>
                                 <Image style={styles.addImage} source={require('app-images/icon_module_create_white.png')} />
                             </TouchableOpacity>) : (null)
                     }

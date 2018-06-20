@@ -39,7 +39,7 @@ class Item extends Component {
     render() {
         if (this.props.detailTouchable) {
             return (
-                <TouchableOpacity onPress={this.props.onPress} style={{ display: "block" }}>
+                <TouchableOpacity onPress={(event)=>{event.preventDefault(); this.props.onPress(event)}} style={{ display: "block" }}>
                     <View style={styles.itemContainer}>
                         <Text style={styles.itemTitle}>{this.props.title}</Text>
                         {
@@ -55,13 +55,13 @@ class Item extends Component {
             return (
                 <View onPress={this.props.onPress} style={{ display: "block" }}>
                     <View style={styles.itemContainer}>
-                        <TouchableOpacity onPress={this.props.onPress}>
+                        <TouchableOpacity onPress={(event)=>{event.preventDefault(); this.props.onPress(event)}}>
                             <Text style={styles.itemTitle}>{this.props.title}</Text>
                         </TouchableOpacity>
                         {
                             this.getDetailView(this.props.detail)
                         }
-                        <TouchableOpacity onPress={this.props.onPress}>
+                        <TouchableOpacity onPress={(event)=>{event.preventDefault(); this.props.onPress}}>
                             <Image source={rightImage} style={styles.rightArrow} />
 
                         </TouchableOpacity>

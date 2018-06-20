@@ -77,7 +77,7 @@ class Breadcrumb extends Component {
 
     renderPopItem = (item) => {
         return (
-            <TouchableOpacity key={item.fileId} onPress={() => {
+            <TouchableOpacity key={item.fileId} onPress={(event) => {event.preventDefault(); 
                 this.popItemClick(item);
             }}>
                 <View style={styles.specialItem}>
@@ -102,7 +102,8 @@ class Breadcrumb extends Component {
                         }
                     </ScrollView>
                 </View>
-                <TouchableOpacity style={{ flex: 1 }} onPress={() => {
+                <TouchableOpacity style={{ flex: 1 }} onPress={(event) => {
+                    event.preventDefault(); 
                     this.setState({
                         showPop: false,
                     })

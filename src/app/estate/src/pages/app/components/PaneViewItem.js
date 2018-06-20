@@ -22,7 +22,7 @@ export default class PaneViewItem extends Component {
 
     renderSection = () => {
         return (
-            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+            <TouchableOpacity activeOpacity={0.5} onPress={(event) => {event.preventDefault();  this.onClick(event) }}>
                 <View style={[styles.containerView]}>
                     <Image source={this.props.image} style={styles.infoMark} />
                     <View style={styles.titleView}>
@@ -36,7 +36,7 @@ export default class PaneViewItem extends Component {
 
     renderSectionSimple = () => {
         return (
-            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+            <TouchableOpacity activeOpacity={0.5} onPress={(event) => {event.preventDefault();  this.onClick(event) }}>
                 <View style={[styles.containerView]}>
                     <Image source={this.props.image} style={styles.infoMark} />
                     <View style={styles.titleView}>
@@ -56,7 +56,7 @@ export default class PaneViewItem extends Component {
     }
     renderItem = () => {
         return (
-            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { this.onClick(event) }}>
+            <TouchableOpacity activeOpacity={0.5} onPress={(event) => {event.preventDefault();  this.onClick(event) }}>
                 <View style={[styles.containerView]}>
                     <View style={styles.imageEmpty} />
                     <View style={styles.titleView}>

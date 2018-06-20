@@ -47,7 +47,8 @@ export default class extends React.Component {
         <View style={styles.backgroundImage}>
         <Image source={image5} style={styles.backgroundImage} >
         </Image>
-        <TouchableOpacity style={styles.btn} onPress={() => {
+        <TouchableOpacity style={styles.btn} onPress={(event) => {
+          event.preventDefault(); 
                           storage.saveGuide();
                           storage.gotoMain(this.props.navigation,'LoginPage')
                         }} >
@@ -56,7 +57,8 @@ export default class extends React.Component {
       </TouchableOpacity>
       </View>
       </ScrollView>
-      <TouchableOpacity style={styles.skipBtn} onPress={() =>{ 
+      <TouchableOpacity style={styles.skipBtn} onPress={(event) =>{ 
+        event.preventDefault(); 
         storage.saveGuide();
         storage.gotoMain(this.props.navigation,'LoginPage')
       }}

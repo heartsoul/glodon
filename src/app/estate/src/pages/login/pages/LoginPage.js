@@ -271,7 +271,7 @@ static navigationOptions = {
           </ActionButton> 
         </View>
         <View style={styles.style_fogotTextView}>
-        <TouchableOpacity onPressOut={this._fogotAction}>
+        <TouchableOpacity onPressOut={(event)=>{event.preventDefault();this._fogotAction && this._fogotAction(event)}}>
         <Text style={[styles.style_fogotText]}>忘记密码</Text>
         </TouchableOpacity>
         </View>

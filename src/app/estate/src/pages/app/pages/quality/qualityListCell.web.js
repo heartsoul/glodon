@@ -78,7 +78,7 @@ export default class QualityListCell extends PureComponent {
         let barItem = this.renderActionBar(item, index);
         let bToolbar = barItem ? true : false;
         return (
-            <TouchableOpacity style={[styles.containerView,]} activeOpacity={0.5} onPress={() => { this._toDetail(item) }}>
+            <TouchableOpacity style={[styles.containerView,]} activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this._toDetail(item) }}>
                 <View style={[styles.contentHeaderView]}>
                     <Image source={projectTimeImage} style={styles.imageTime} />
                     <Text style={styles.contentTime}>{item.value.showTime}</Text>
