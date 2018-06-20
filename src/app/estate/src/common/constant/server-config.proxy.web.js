@@ -11,10 +11,9 @@ exports.BASE_URL_PROXY = "http://10.1.83.30";
 exports.UPLOAD_URL_PROXY = "http://172.16.233.183:8093";
 // 预生产服务器
 // exports.BASE_URL_PROXY = "http://47.95.204.243";
-
+// exports.UPLOAD_URL_PROXY = "https://api.glodon.com/nss/";
 // 生产服务器
-// export const SERVER_TYPE = "PRODUCT"
-// export const BASE_UPLOAD_URL =  "https://api.glodon.com/nss/";//图片服务
-// export const BASE_URL = "http://bimcop.glodon.com"; // 应用服务
-// export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址
+// exports.BASE_URL_PROXY = "http://bimcop.glodon.com";
+// exports.UPLOAD_URL_PROXY = "https://api.glodon.com/nss/";
+
 

@@ -20,7 +20,7 @@ export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的u
 
 // 生产服务器
 // export const SERVER_TYPE = "PRODUCT"
-// export const BASE_UPLOAD_URL =  "https://api.glodon.com/nss/";//图片服务
+// export const BASE_UPLOAD_URL =  "https://api.glodon.com/nss";//图片服务
 // export const BASE_URL = "http://bimcop.glodon.com"; // 应用服务
 // export const BASE_URL_BLUEPRINT_TOKEN = BASE_URL+"/app.html?param=";//图纸的url地址
 

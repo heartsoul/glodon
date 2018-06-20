@@ -2,11 +2,7 @@ const webpack = require('webpack')
 const path = require('path')
 
 const appDirectory = path.resolve(__dirname, '../')
-const {BASE_URL_PROXY} = require('./../src/common/constant/server-config.proxy.web')
-var ___SERVER = BASE_URL_PROXY;
-var utils = require('./utils');
-var PORT = 8099;
-var HOST = utils.getIP();
+
 // This is needed for webpack to compile JavaScript.
 // Many OSS React Native packages are not compiled to ES5 before being
 // published. If you depend on uncompiled packages they may cause webpack build

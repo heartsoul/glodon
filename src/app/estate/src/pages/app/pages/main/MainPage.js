@@ -23,7 +23,7 @@ import {ActionModal} from 'app-components';
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 import OfflineManager from '../../../offline/manager/OfflineManager'
 import * as API from "app-api";
-import { YellowBox } from 'react-native';//忽略黄色警告
+// import { YellowBox } from 'react-native';//忽略黄色警告
 
 var { width, height } = Dimensions.get("window");
 
@@ -49,7 +49,7 @@ export default class extends Component {
         }
         this.bPress = false;
         //忽略黄色警告
-        YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+        // YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
     };
 
     _loadQualityForm = (event) => {

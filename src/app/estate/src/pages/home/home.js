@@ -73,7 +73,7 @@ export default class extends React.Component {
         }
         style={{width:70,backgroundColor:'orange',}}
         iconContainerStyle={{ justifyContent: 'center' }}
-        onPress={() => {this.onNewClick()}}
+        onPress={(event) => { event.preventDefault(); this.onNewClick()}}
       />
     }
     return null;
