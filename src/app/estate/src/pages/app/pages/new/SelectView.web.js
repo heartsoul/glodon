@@ -96,7 +96,7 @@ class SelectView extends Component {
     }
 
     getSelectedSupporterIndex = (data) => {
-        let index = 0;
+        let index = -1;
         let value = this.props.value;
         if (data && data.length > 0) {
             if (value && value.id) {
@@ -107,8 +107,12 @@ class SelectView extends Component {
                     }
                 }
             }
+            index = parseInt(index);
+            if(index < 0 && data.length == 1) {
+                index = 0;
+            }
         }
-        index = parseInt(index);
+        
         return index;
     }
 
@@ -273,7 +277,7 @@ class SelectView extends Component {
         }
         let detail = '';
         if (this.props.value) {
-            detail = this.props.value.name;
+            detail = this.props.value.name || '';
         }
         if (this.state.selectIndex > -1) {
             detail = this.state.dataList[this.state.selectIndex].name;

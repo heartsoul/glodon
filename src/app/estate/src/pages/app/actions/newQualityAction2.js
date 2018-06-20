@@ -19,8 +19,8 @@ export function fetchData(params) {
  * @param {*} dispatch 
  */
 function getPageParams(params, dispatch) {
-    console.log('5555555555555555')
-    console.log(params)
+    // console.log('5555555555555555')
+    // console.log(params)
     responseCount = 0;
     let totalRequestCount = 2;//请求的次数
     let isEdit = false;//由列表待提交进入编辑页面
@@ -249,8 +249,8 @@ function _getModelElementProperty(gdocFileId, elementId) {
 function _getInspectionCompanies() {
     return API.getInspectionCompanies(storage.loadProject())
     .then(data => {
-        console.log('333333333333')
-        console.log(data)
+        // console.log('333333333333')
+        // console.log(data)
         let inspectionCompanies = [];
         if (data && data.data) {
             inspectionCompanies = data.data;
