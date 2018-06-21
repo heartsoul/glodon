@@ -61,7 +61,12 @@ const urlLoaderConfiguration = {
 }
 var config = {
     entry: path.resolve(appDirectory, 'index.web.js'),
-    devtool: 'cheap-module-source-map',
+    devtool: 'cheap-module-source-map', plugins: [
+        // compress js
+        new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true
+        })
+    ],
     output: {
         filename: 'bundle.web.js',
         path: path.resolve(appDirectory, './dist'),

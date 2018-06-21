@@ -1,5 +1,5 @@
 'use strict';
-import { ActionModal, ImageChooserView, StatusActionButton } from 'app-components';
+import { ActionModal, ImageChooserView, StatusActionButton, LoadingView } from 'app-components';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { ActivityIndicator, Dimensions, StatusBar, StyleSheet, TextInput, View, Keyboard } from 'react-native';
@@ -312,12 +312,7 @@ class NewQualityView extends React.Component {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <ActivityIndicator
-                    animating={true}
-                    style={{ height: 80 }}
-                    color='#00baf3'
-                    size="large"
-                />
+                <LoadingView/>
             </View>
         );
     }
