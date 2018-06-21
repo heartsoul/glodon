@@ -39,7 +39,10 @@ function getQualityInfo(fieldId, dispatch) {
  */
 function getReviewInfo(fieldId, dispatch) {
     API.getReviewInfo(storage.loadProject(), fieldId).then((responseData) => {
-        dispatch(_loadEditInfoSuccess(responseData.data));
+        if(responseData){
+            dispatch(_loadEditInfoSuccess(responseData.data));
+        }
+        
     }).catch(err => {
         dispatch(_loadError(err))
     });
@@ -50,7 +53,9 @@ function getReviewInfo(fieldId, dispatch) {
  */
 function getRepairInfo(fieldId, dispatch) {
     API.getRepairInfo(storage.loadProject(), fieldId).then((responseData) => {
-        dispatch(_loadEditInfoSuccess(responseData.data));
+        if(responseData){
+            dispatch(_loadEditInfoSuccess(responseData.data));
+        }
     }).catch(err => {
         dispatch(_loadError(err))
     });
@@ -488,15 +493,15 @@ function saveRepair(inspectionId, description, qualityInfo, editInfo, dispatch, 
  * @param {*} type 
  * @param {*} navigator 
  */
-export function deleteForm(fileId, type, navigator) {
+export function deleteForm(inspectionId,fileId, type, navigator) {
     return dispatch => {
         if (type === API.CREATE_TYPE_REVIEW) {//删除复查单
-            API.deleteReview(storage.loadProject(), fileId).then(responseData => {
+            API.deleteReview(inspectionId,storage.loadProject(), fileId).then(responseData => {
                 dispatch(reset())
                 storage.goBack(navigator, null)
             })
         } else if (type === API.CREATE_TYPE_RECTIFY) {//删除整改单
-            API.deleteRepair(storage.loadProject(), fileId).then(responseData => {
+            API.deleteRepair(inspectionId,storage.loadProject(), fileId).then(responseData => {
                 dispatch(reset())
                 storage.goBack(navigator, null)
             })

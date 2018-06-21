@@ -63,6 +63,13 @@ export default class QualityManager {
         return JSON.parse(info);
     }
     
+    //根据id查询一条数据
+    getValueInfoById =(id)=>{
+        let info = handler.query(id);
+        let obj = JSON.parse(info);
+        return obj;
+    }
+
     //根据id查询离线建立的单据的参数信息
     getSubmitInfoById =(id)=>{
         let info = handler.query(id);
@@ -105,6 +112,9 @@ export default class QualityManager {
     getRepairEditInfo=(id)=>{
         let info = handler.query(id);
         let obj = JSON.parse(info);
+        // console.log('0000000000000000000')
+        // console.log(typeof 'aaaa')
+        // console.log(obj)
         return new Promise((resolve,reject)=>{
             resolve(obj.repairInfo);
             
@@ -884,6 +894,728 @@ export default class QualityManager {
         resolve(data);
       });
     }
+
+    //整改单 新增  提交
+    createSubmitRepair(projectId, props){
+        // {
+        //     *  code:1223, //当前时间戳
+        //     *  description:'xxx',//描述
+        //     *  files:[],//图片
+        //     *  flawId:3, //最后一条如果是复查单  传此code 如果没有  则是检查单的code
+        //     *  inspectionId:3,//检查单id
+        //     * }
+        let date =new Date();
+        let detail = this.getQualityDetailObj(props.inspectionId+'');
+        let id = detail.data.inspectionInfo.id;
+        let key = id+'';
+        let code = detail.data.inspectionInfo.code;
+        let updateTime = date.getTime()+'';
+        let qcState = CONSTANT.QC_STATE_REPAIR_NEW_SUBMIT;
+        //修改同步列表
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        
+        //修改单据列表
+        let submitInfo ={
+            projectId:projectId,
+            props:props,
+        }
+        let value = this.getValueInfoById(key);
+        let item = value.item;
+        item = {
+            ...item,
+            qcState:qcState,
+        }
+        let detailInfo = value.detail;
+        detailInfo = {
+            ...detailInfo,
+            qcState:qcState,
+        }
+        value = {
+            ...value,
+            item:item,
+            detail:detailInfo,
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:props.code,
+                id:id
+            }
+        }
+        console.log(data)
+        resolve(data);
+       })
+        
+    }
+
+    //整改单  新增  保存
+    createSaveRepair(projectId, props){
+        console.log('props================')
+        console.log(props)
+        // {
+        //     *  code:1223, //当前时间戳
+        //     *  description:'xxx',//描述
+        //     *  files:[],//图片
+        //     *  flawId:3, //最后一条如果是复查单  传此code 如果没有  则是检查单的code
+        //     *  inspectionId:3,//检查单id
+        //     * }
+        let date =new Date();
+        let detail = this.getQualityDetailObj(props.inspectionId+'');
+        let id = detail.data.inspectionInfo.id;
+        let key = id+'';
+        console.log(key)
+        let code = detail.data.inspectionInfo.code;
+        let updateTime = date.getTime()+'';
+        let qcState = CONSTANT.QC_STATE_REPAIR_NEW_SAVE;
+        //修改同步列表
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        
+        //修改单据列表
+        let submitInfo ={
+            projectId:projectId,
+            props:props,
+        }
+        let value = this.getValueInfoById(key);
+        let item = value.item;
+        item = {
+            ...item,
+            qcState:qcState,
+        }
+        let detailInfo = value.detail;
+        detailInfo = {
+            ...detailInfo,
+            qcState:qcState,
+        }
+        let repairData ={
+            inspectionId:props.inspectionId,
+            files:props.files,
+            code:props.code,
+            description:props.description,
+            id:key,
+            lastRectificationDate:detail.data.inspectionInfo.lastRectificationDate,
+        }
+        let repairInfo = {
+            data:repairData,
+        };
+        
+        value = {
+            ...value,
+            item:item,
+            detail:detailInfo,
+            repairInfo:repairInfo,
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        console.log(value)
+        let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:props.code,
+                id:id
+            }
+        }
+        console.log(data)
+        resolve(data);
+       })
+    }
+
+    //整改单  编辑 保存
+    editSaveRepair=(projectId,fileId, props)=>{
+// {
+        //     *  code:1223, //当前时间戳
+        //     *  description:'xxx',//描述
+        //     *  files:[],//图片
+        //     *  flawId:3, //最后一条如果是复查单  传此code 如果没有  则是检查单的code
+        //     *  inspectionId:3,//检查单id
+        //     * }
+        let date =new Date();
+        let detail = this.getQualityDetailObj(props.inspectionId+'');
+        let id = detail.data.inspectionInfo.id;
+        let key = id+'';
+        let code = detail.data.inspectionInfo.code;
+        let updateTime = date.getTime()+'';
+        let qcState = CONSTANT.QC_STATE_REPAIR_EDIT_SAVE;
+        //修改同步列表
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        
+        //修改单据列表
+        let submitInfo ={
+            projectId:projectId,
+            props:props,
+            fileId:fileId,
+        }
+        let value = this.getValueInfoById(key);
+        let item = value.item;
+        item = {
+            ...item,
+            qcState:qcState,
+        }
+        let detailInfo = value.detail;
+        detailInfo = {
+            ...detailInfo,
+            qcState:qcState,
+        }
+        
+        let repairInfo = value.repairInfo;
+        let repairData = repairInfo.data;
+        repairData ={
+            ...repairData,
+            inspectionId:props.inspectionId,
+            files:props.files,
+            code:props.code,
+            description:props.description,
+        }
+        repairInfo = {
+            ...repairInfo,
+            data:repairData,
+        }
+        value = {
+            ...value,
+            item:item,
+            detail:detailInfo,
+            repairInfo:repairInfo,
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:props.code,
+                id:id
+            }
+        }
+        console.log(data)
+        resolve(data);
+       })
+    }
+
+    //整改单  编辑  提交
+    editSubmitRepair(projectId,fileId, props){
+        //     *  code:1223, //当前时间戳
+        //     *  description:'xxx',//描述
+        //     *  files:[],//图片
+        //     *  flawId:3, //最后一条如果是复查单  传此code 如果没有  则是检查单的code
+        //     *  inspectionId:3,//检查单id
+        //     * }
+        let date =new Date();
+        let detail = this.getQualityDetailObj(props.inspectionId+'');
+        let id = detail.data.inspectionInfo.id;
+        let key = id+'';
+        let code = detail.data.inspectionInfo.code;
+        let updateTime = date.getTime()+'';
+        let qcState = CONSTANT.QC_STATE_REPAIR_EDIT_SUBMIT;
+        //修改同步列表
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        
+        //修改单据列表
+        let submitInfo ={
+            projectId:projectId,
+            props:props,
+            fileId:fileId,
+        }
+        let value = this.getValueInfoById(key);
+        let item = value.item;
+        item = {
+            ...item,
+            qcState:qcState,
+        }
+        let detailInfo = value.detail;
+        detailInfo = {
+            ...detailInfo,
+            qcState:qcState,
+        }
+        value = {
+            ...value,
+            item:item,
+            detail:detailInfo,
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:props.code,
+                id:id
+            }
+        }
+        console.log(data)
+        resolve(data);
+       })
+    }
+
+    //整改单 删除
+    deleteRepair(inspectionId,projectId, fileId){
+        let date =new Date();
+        let detail = this.getQualityDetailObj(inspectionId+'');
+        let id = detail.data.inspectionInfo.id;
+        let key = id+'';
+        let code = detail.data.inspectionInfo.code;
+        let updateTime = date.getTime()+'';
+        let qcState = CONSTANT.QC_STATE_REPAIR_DELETE;
+        //修改同步列表
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        
+        //修改单据列表
+        let submitInfo ={
+            projectId:projectId,
+            inspectionId:inspectionId,
+            fileId:fileId,
+        }
+        let value = this.getValueInfoById(key);
+        let item = value.item;
+        item = {
+            ...item,
+            qcState:qcState,
+        }
+        let detailInfo = value.detail;
+        detailInfo = {
+            ...detailInfo,
+            qcState:qcState,
+        }
+        value = {
+            ...value,
+            item:item,
+            detail:detailInfo,
+            repairInfo:'',
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:code,
+                id:id
+            }
+        }
+        resolve(data);
+       })
+    }
+
+    //复查单  新增  提交
+    createSubmitReview(projectId, props){
+// {
+        //     *  code:1223, //当前时间戳
+        //     *  description:'xxx',//描述
+        //     *  files:[],//图片
+        //     *  flawId:3, //最后一条如果是复查单  传此code 如果没有  则是检查单的code
+        //     *  inspectionId:3,//检查单id
+        //     * }
+        let date =new Date();
+        let detail = this.getQualityDetailObj(props.inspectionId+'');
+        let id = detail.data.inspectionInfo.id;
+        let key = id+'';
+        let code = detail.data.inspectionInfo.code;
+        let updateTime = date.getTime()+'';
+        let qcState = CONSTANT.QC_STATE_REVIEW_NEW_SUBMIT;
+        //修改同步列表
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        
+        //修改单据列表
+        let submitInfo ={
+            projectId:projectId,
+            props:props,
+        }
+        let value = this.getValueInfoById(key);
+        let item = value.item;
+        item = {
+            ...item,
+            qcState:qcState,
+        }
+        let detailInfo = value.detail;
+        detailInfo = {
+            ...detailInfo,
+            qcState:qcState,
+        }
+        value = {
+            ...value,
+            item:item,
+            detail:detailInfo,
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:props.code,
+                id:id
+            }
+        }
+        resolve(data);
+       })
+    }
+
+    //复查单   编辑 提交
+    editSubmitReview(projectId,fileId, props){
+        let date =new Date();
+        let detail = this.getQualityDetailObj(props.inspectionId+'');
+        let id = detail.data.inspectionInfo.id;
+        let key = id+'';
+        let code = detail.data.inspectionInfo.code;
+        let updateTime = date.getTime()+'';
+        let qcState = CONSTANT.QC_STATE_REVIEW_EDIT_SUBMIT;
+        //修改同步列表
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        
+        //修改单据列表
+        let submitInfo ={
+            projectId:projectId,
+            props:props,
+            fileId:fileId,
+        }
+        let value = this.getValueInfoById(key);
+        let item = value.item;
+        item = {
+            ...item,
+            qcState:qcState,
+        }
+        let detailInfo = value.detail;
+        detailInfo = {
+            ...detailInfo,
+            qcState:qcState,
+        }
+        value = {
+            ...value,
+            item:item,
+            detail:detailInfo,
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:props.code,
+                id:id
+            }
+        }
+        console.log(data)
+        resolve(data);
+       })
+    }
+
+    //复查单  新增 保存
+    createSaveReview(projectId, props){
+// {
+        //     *  code:1223, //当前时间戳
+        //     *  description:'xxx',//描述
+        //     *  files:[],//图片
+        //     *  flawId:3, //最后一条如果是复查单  传此code 如果没有  则是检查单的code
+        //     *  inspectionId:3,//检查单id
+        //     * }
+        let date =new Date();
+        let detail = this.getQualityDetailObj(props.inspectionId+'');
+        let id = detail.data.inspectionInfo.id;
+        let key = id+'';
+        let code = detail.data.inspectionInfo.code;
+        let updateTime = date.getTime()+'';
+        let qcState = CONSTANT.QC_STATE_REVIEW_NEW_SAVE;
+        //修改同步列表
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        
+        //修改单据列表
+        let submitInfo ={
+            projectId:projectId,
+            props:props,
+        }
+        let value = this.getValueInfoById(key);
+        let item = value.item;
+        item = {
+            ...item,
+            qcState:qcState,
+        }
+        let detailInfo = value.detail;
+        detailInfo = {
+            ...detailInfo,
+            qcState:qcState,
+        }
+        let reviewData ={
+            inspectionId:props.inspectionId,
+            files:props.files,
+            code:props.code,
+            description:props.description,
+            id:key,
+            lastRectificationDate:detail.data.inspectionInfo.lastRectificationDate,
+        }
+        let reviewInfo = {
+            data:reviewData,
+        };
+        value = {
+            ...value,
+            item:item,
+            detail:detailInfo,
+            reviewInfo:reviewInfo,
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:props.code,
+                id:id
+            }
+        }
+        console.log(data)
+        resolve(data);
+       })
+    }
+
+    //复查单  编辑 保存
+    editSaveReview(projectId,fileId, props){
+// {
+        //     *  code:1223, //当前时间戳
+        //     *  description:'xxx',//描述
+        //     *  files:[],//图片
+        //     *  flawId:3, //最后一条如果是复查单  传此code 如果没有  则是检查单的code
+        //     *  inspectionId:3,//检查单id
+        //     * }
+        let date =new Date();
+        let detail = this.getQualityDetailObj(props.inspectionId+'');
+        let id = detail.data.inspectionInfo.id;
+        let key = id+'';
+        let code = detail.data.inspectionInfo.code;
+        let updateTime = date.getTime()+'';
+        let qcState = CONSTANT.QC_STATE_REVIEW_EDIT_SAVE;
+        //修改同步列表
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        
+        //修改单据列表
+        let submitInfo ={
+            projectId:projectId,
+            props:props,
+            fileId:fileId,
+        }
+        let value = this.getValueInfoById(key);
+        let item = value.item;
+        item = {
+            ...item,
+            qcState:qcState,
+        }
+        let detailInfo = value.detail;
+        detailInfo = {
+            ...detailInfo,
+            qcState:qcState,
+        }
+        let reviewInfo = value.reviewInfo;
+        let reviewData = reviewInfo.data;
+        reviewData ={
+            ...reviewData,
+            inspectionId:props.inspectionId,
+            files:props.files,
+            code:props.code,
+            description:props.description,
+        }
+        reviewInfo = {
+            ...reviewInfo,
+            data:reviewData,
+        }
+        value = {
+            ...value,
+            item:item,
+            detail:detailInfo,
+            reviewInfo:reviewInfo,
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:props.code,
+                id:id
+            }
+        }
+        console.log(data)
+        resolve(data);
+       })
+    }
+    //复查单 删除
+    deleteReview(inspectionId,projectId, fileId){
+        let date =new Date();
+        let detail = this.getQualityDetailObj(inspectionId+'');
+        let id = detail.data.inspectionInfo.id;
+        let key = id+'';
+        let code = detail.data.inspectionInfo.code;
+        let updateTime = date.getTime()+'';
+        let qcState = CONSTANT.QC_STATE_REVIEW_DELETE;
+        //修改同步列表
+        let state = '待同步';
+        let asyncValue = {
+            id:key,
+            title:code,
+            subTitle:this._formatDate(updateTime),
+            state:state,
+            type:'quality',
+            qcState:qcState,
+        }
+        asyncManager = OfflineManager.getAsyncManager();
+        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        
+        //修改单据列表
+        let submitInfo ={
+            projectId:projectId,
+            inspectionId:inspectionId,
+            fileId:fileId,
+        }
+        let value = this.getValueInfoById(key);
+        let item = value.item;
+        item = {
+            ...item,
+            qcState:qcState,
+        }
+        let detailInfo = value.detail;
+        detailInfo = {
+            ...detailInfo,
+            qcState:qcState,
+        }
+        value = {
+            ...value,
+            item:item,
+            detail:detailInfo,
+            reviewInfo:'',
+            submitInfo:submitInfo,//提交、保存时保存的参数
+        }
+        let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
+        let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        let errorMsg = '';
+        //保存到单据列表
+        this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+       return new Promise(function(resolve, reject) {
+        let data ={
+            data:{
+                code:code,
+                id:id
+            }
+        }
+        console.log(data)
+        resolve(data);
+       })
+    }
     //下载单据信息
     download = (startTime=0,endTime=0,qcState='',downloadKey,record) => {
         //保存到数据库
@@ -1085,7 +1817,7 @@ export default class QualityManager {
                     let updateTime = item.updateTime+'';
                     let submitState = '';
                     let errorMsg = '';
-                    console.log(value);
+                    // console.log(value);
                     _saveToDb(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
                 }
                 _saveProgress(total,total,num);
@@ -1102,6 +1834,168 @@ export default class QualityManager {
                 for (let item of detailArr){
                     // console.log('===================================')
                     // console.log(item)
+                    let files = item.data.inspectionInfo.files;
+                    if(files && files.length>0){
+                        for (let f of files){
+                            arr = [...arr,{fileId:f.objectId,url:f.url}]
+                        }
+                        
+                    }
+                    if(item.data.progressInfos && item.data.progressInfos.length>0){
+                        for(let p of item.data.progressInfos){
+                            let files = p.files;
+                            if(files && files.length>0){
+                                for (let f of files){
+                                    arr = [...arr,{fileId:f.objectId,url:f.url}]
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                let dli = new DownloadImg();
+                dli.download(arr);
+            }
+        },(e)=>{
+            console.log(e);
+        });
+    }
+
+    //更新当前id的单据列表信息
+    uploadById = (id) => {
+        // console.log('uploadById id='+id)
+
+        let inspectId = id+'';
+        //保存到数据库
+        let _saveToDb=(key,value,qcState,qualityCheckpointId,updateTime,submitState,errorMsg)=>{
+            handler.update(key,value,qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+        }
+
+         
+        
+        //质检单详情下载
+        let  _getQualityDetail=(id)=> {
+            return  API.getQualityInspectionDetail(projectId, id).then((responseData) => {
+                // console.log('质检单详情 start--------------');
+                // console.log(responseData); //
+                // console.log('质检单详情 end--------------');
+                if(responseData && responseData.data ){
+                    return responseData;
+                }
+                return null;
+            }).catch(err => {
+                console.log(err)
+            });
+        }
+
+        //质检单编辑信息
+        let  _getQualityEditInfo=(id)=> {
+            return  API.getQualityInspectionDetail(projectId, id).then((responseData) => {
+                // console.log('质检单编辑信息 start--------------');
+                // console.log(responseData); //
+                // console.log('质检单编辑信息 end--------------');
+                if(responseData){
+                    return responseData;
+                }
+                return null;
+            }).catch(err => {
+                console.log(err)
+            });
+        }
+        //整改单编辑信息
+        let  _getRepairEditInfo=(id)=> {
+            return API.getRepairInfo(projectId, id).then((responseData) => {
+                // console.log('整改单编辑信息 start--------------');
+                // console.log(responseData); //
+                // console.log('整改单编辑信息 end--------------');
+                if(responseData && responseData.data){
+                    return responseData;
+                }
+                return null;
+            }).catch(err => {
+                console.log(err)
+            });
+        }
+        //复查单编辑信息
+        let  _getReviewEditInfo=(id)=> {
+            return API.getReviewInfo(projectId, id).then((responseData) => {
+                // console.log('复查单编辑信息 start--------------');
+                // console.log(responseData); //
+                // console.log('复查单编辑信息 end--------------');
+                if(responseData && responseData.data){
+                    return responseData;
+                }
+                return null;
+            }).catch(err => {
+                console.log(err)
+            });
+        }
+
+        let detailArr = []//保存详情
+        async function download(){
+            //全部   都有详情
+            let detail = await _getQualityDetail(inspectId);
+            // console.log(detail)
+            let inspectionData = detail.data.inspectionInfo;
+            // console.log(inspectionData)
+            let qcState = inspectionData.qcState;
+            // console.log(qcState)
+            detailArr = [...detailArr,detail];
+            //待提交   编辑信息
+            let editInfo = null;
+            if(qcState =='staged'){
+                editInfo = await _getQualityEditInfo(inspectId);
+            }
+            //待整改   待整改编辑信息
+            let repairInfo = null;
+            if(qcState =='unrectified'){
+                repairInfo = await _getRepairEditInfo(inspectId);
+            }
+            //待复查   待复查 编辑信息
+            let reviewInfo = null;
+            if(qcState =='unreviewed'){
+                reviewInfo = await _getReviewEditInfo(inspectId);
+            }
+            let key = inspectId;
+            let listItem = {
+                id:inspectionData.id,
+                code:inspectionData.code,
+                qcState:qcState,
+                projectId:inspectionData.projectId,
+                inspectionDate:inspectionData.inspectionDate,
+                lastRectificationDate:inspectionData.lastRectificationDate,
+                description:inspectionData.description,
+                inspectionType:inspectionData.inspectionType,
+                creatorId:inspectionData.creatorId,
+                responsibleUserId:inspectionData.responsibleUserId,
+                updateTime:inspectionData.updateTime,
+                files:inspectionData.files,
+                needRectification:inspectionData.needRectification,
+            }
+            let value = {
+                item:listItem,
+                detail:detail,
+                editInfo:editInfo,
+                repairInfo:repairInfo,
+                reviewInfo:reviewInfo,
+                submitInfo:'',//提交、保存时保存的参数
+            }
+            let qualityCheckpointId =inspectionData.qualityCheckpointId+'';
+            let updateTime = inspectionData.updateTime+'';
+            let submitState = '';
+            let errorMsg = '';
+            // console.log(value);
+            _saveToDb(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+            
+            return true;
+        }
+        
+         download().then((a)=>{
+             //缓存图片
+            if(detailArr && detailArr.length>0){
+                let arr = [];
+                for (let item of detailArr){
+
                     let files = item.data.inspectionInfo.files;
                     if(files && files.length>0){
                         for (let f of files){

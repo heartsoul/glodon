@@ -53,6 +53,16 @@ export const QC_STATE_Q_EDIT_SUBMIT = "qesubmit";
 export const QC_STATE_Q_NEW_SAVE = "qnsave";
 export const QC_STATE_Q_EDIT_SAVE = "qesave";
 export const QC_STATE_Q_DELETE = "qdelete";
+export const QC_STATE_REPAIR_NEW_SUBMIT = "rnsubmit";
+export const QC_STATE_REPAIR_NEW_SAVE = "rnsave";
+export const QC_STATE_REPAIR_EDIT_SAVE = "resave";
+export const QC_STATE_REPAIR_EDIT_SUBMIT = "resubmit";
+export const QC_STATE_REPAIR_DELETE = "rpdelete";
+export const QC_STATE_REVIEW_DELETE = "redelete";
+export const QC_STATE_REVIEW_NEW_SUBMIT = "reviewnewdelete";
+export const QC_STATE_REVIEW_NEW_SAVE = "reviewnewsave";
+export const QC_STATE_REVIEW_EDIT_SAVE = "revieweditsave";
+export const QC_STATE_REVIEW_EDIT_SUBMIT = "revieweditdelete";
 export const CREATE_CHECK_LIST_PROPS = "createCheckListProps";
 export const QUALITY_CHECK_LIST_SHOW_REPAIR = "showRepair";
 
@@ -106,6 +116,16 @@ export const CLASSIFY_STATES_COLOR = ["#979797"
 , "#f55353"
 , "#f55353"
 , "#f55353"
+, "#f55353"
+, "#f55353"
+, "#f55353"
+, "#f55353"
+, "#f55353"
+, "#f55353"
+, "#f55353"
+, "#f55353"
+, "#f55353"
+, "#f55353"
 ];
 // 状态
 export const CLASSIFY_STATES = [STATUS_ALL
@@ -121,6 +141,16 @@ export const CLASSIFY_STATES = [STATUS_ALL
 , QC_STATE_Q_EDIT_SUBMIT
 , QC_STATE_Q_EDIT_SAVE
 , QC_STATE_Q_DELETE
+, QC_STATE_REPAIR_NEW_SUBMIT
+, QC_STATE_REPAIR_NEW_SAVE
+, QC_STATE_REPAIR_EDIT_SAVE
+, QC_STATE_REPAIR_EDIT_SUBMIT
+, QC_STATE_REPAIR_DELETE
+, QC_STATE_REVIEW_DELETE
+, QC_STATE_REVIEW_NEW_SUBMIT
+, QC_STATE_REVIEW_EDIT_SUBMIT
+, QC_STATE_REVIEW_NEW_SAVE
+, QC_STATE_REVIEW_EDIT_SAVE
 ];
 // 状态
 export const CLASSIFY_STATES_SUMMARY = ["-"+STATUS_ALL
@@ -146,6 +176,16 @@ export const CLASSIFY_NAMES = ["全部"
 , "提交 待同步"
 , "保存 待同步"
 , "删除 待同步"
+, "提交 待同步"
+, "保存 待同步"
+, "保存 待同步"
+, "提交 待同步"
+, "删除 待同步"
+, "删除 待同步"
+, "提交 待同步"
+, "提交 待同步"
+, "保存 待同步"
+, "保存 待同步"
 ];
 // 状态数据总表
 export const CLASSIFY_STATUS_LIST = [{ name: CLASSIFY_NAMES[0], state: CLASSIFY_STATES[0], color: CLASSIFY_STATES_COLOR[0] }

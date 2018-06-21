@@ -649,11 +649,16 @@ export async function getStandardsItems(templateId) {
  * @param {*} props 
  */
 export async function createSaveReview(projectId, props) {
-    let api = `/quality/${projectId}/qualityReviews`;
-    return requestJSON(api, {
-        method: 'POST',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityReviews`;
+        return requestJSON(api, {
+            method: 'POST',
+            body: props,
+        });
+    }else{
+        let bm = OfflineManager.getQualityManager();
+        return bm.createSaveReview(projectId, JSON.parse(props));
+    }
 }
 
 /**
@@ -663,11 +668,16 @@ export async function createSaveReview(projectId, props) {
  * @param {*} props 
  */
 export async function editSaveReview(projectId, fileId, props) {
-    let api = `/quality/${projectId}/qualityReviews/${fileId}`;
-    return requestJSON(api, {
-        method: 'PUT',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityReviews/${fileId}`;
+        return requestJSON(api, {
+            method: 'PUT',
+            body: props,
+        });
+    }else{
+        let bm = OfflineManager.getQualityManager();
+        return bm.editSaveReview(projectId,fileId, JSON.parse(props));
+    }
 }
 
 /**
@@ -676,11 +686,16 @@ export async function editSaveReview(projectId, fileId, props) {
  * @param {*} props 
  */
 export async function createSubmitReview(projectId, props) {
-    let api = `/quality/${projectId}/qualityReviews/commit`;
-    return requestJSON(api, {
-        method: 'POST',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityReviews/commit`;
+        return requestJSON(api, {
+            method: 'POST',
+            body: props,
+        });
+    }else{
+        let bm = OfflineManager.getQualityManager();
+        return bm.createSubmitReview(projectId, JSON.parse(props));
+    }
 }
 
 /**
@@ -690,11 +705,16 @@ export async function createSubmitReview(projectId, props) {
  * @param {*} props 
  */
 export async function editSubmitReview(projectId, fileId, props) {
-    let api = `/quality/${projectId}/qualityReviews/${fileId}/commit`;
-    return requestJSON(api, {
-        method: 'PUT',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityReviews/${fileId}/commit`;
+        return requestJSON(api, {
+            method: 'PUT',
+            body: props,
+        });
+    }else{
+        let bm = OfflineManager.getQualityManager();
+        return bm.editSubmitReview(projectId,fileId, JSON.parse(props));
+    }
 }
 
 /**
@@ -752,11 +772,16 @@ export async function getReviewInfo(projectId, inspectionId) {
  * @param {*} projectId 
  * @param {*} fileId 
  */
-export async function deleteReview(projectId, fileId) {
-    let api = `/quality/${projectId}/qualityReviews/${fileId}`;
-    return requestJSON(api, {
-        method: 'DELETE',
-    });
+export async function deleteReview(inspectionId,projectId, fileId) {
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityReviews/${fileId}`;
+        return requestJSON(api, {
+            method: 'DELETE',
+        });
+    }else{
+        let bm = OfflineManager.getQualityManager();
+        return bm.deleteReview(inspectionId,projectId, fileId);
+    }
 }
 
 /**
@@ -765,38 +790,75 @@ export async function deleteReview(projectId, fileId) {
  * @param {*} props 
  */
 export async function createSaveRepair(projectId, props) {
-    let api = `/quality/${projectId}/qualityRectification`;
-    return requestJSON(api, {
-        method: 'POST',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityRectification`;
+        return requestJSON(api, {
+            method: 'POST',
+            body: props,
+        });
+    }else{
+        let qm = OfflineManager.getQualityManager();
+        return qm.createSaveRepair(projectId, JSON.parse(props));
+    }
 }
 
 /**
  * 整改单  编辑  保存
  * @param {*} projectId 
- * @param {*} fileId 
+ * @param {*} fileId  整改单id
  * @param {*} props 
  */
 export async function editSaveRepair(projectId, fileId, props) {
-    let api = `/quality/${projectId}/qualityRectification/${fileId}`;
-    return requestJSON(api, {
-        method: 'PUT',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityRectification/${fileId}`;
+        return requestJSON(api, {
+            method: 'PUT',
+            body: props,
+        });
+    }else{
+        let qm = OfflineManager.getQualityManager();
+        return qm.editSaveRepair(projectId,fileId, JSON.parse(props));
+    }
 }
 
 /**
  * 整改单  新增  提交
  * @param {*} projectId 
  * @param {*} props 
+ * {
+ *  code:1223, //当前时间戳
+ *  description:'xxx',//描述
+ *  files:[],//图片
+ *  flawId:3, //最后一条如果是复查单  传此code 如果没有  则是检查单的code
+ *  inspectionId:3,//检查单id
+ * }
+ * 
+ * 
+ * file:
+ * public String objectId;
+    public String name;
+    public String extension;
+    public long length;
+    public String digest;
+    public String targetId;
+    public String targetType;
+    public String uploadId;
+    public String uploadTime;
+    public String extData;
+    public String url;
  */
 export async function createSubmitRepair(projectId, props) {
-    let api = `/quality/${projectId}/qualityRectification/commit`;
-    return requestJSON(api, {
-        method: 'POST',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityRectification/commit`;
+        return requestJSON(api, {
+            method: 'POST',
+            body: props,
+        });
+    }else{
+        let qm = OfflineManager.getQualityManager();
+        return qm.createSubmitRepair(projectId, JSON.parse(props));
+    }
+    
 }
 
 /**
@@ -806,17 +868,55 @@ export async function createSubmitRepair(projectId, props) {
  * @param {*} props 
  */
 export async function editSubmitRepair(projectId, fileId, props) {
-    let api = `/quality/${projectId}/qualityRectification/${fileId}/commit`;
-    return requestJSON(api, {
-        method: 'PUT',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityRectification/${fileId}/commit`;
+        return requestJSON(api, {
+            method: 'PUT',
+            body: props,
+        });
+    }else{
+        let qm = OfflineManager.getQualityManager();
+        return qm.editSubmitRepair(projectId,fileId, JSON.parse(props));
+    }
 }
 
 /**
  * 整改单  查询保存后的整改单数据
  * @param {*} projectId 
  * @param {*} inspectionId 
+ * 
+ * return :
+ * { data:
+I/ReactNativeJS(28137):    { id: 5200440,
+I/ReactNativeJS(28137):      code: 'ZLZG_20180620_001',
+I/ReactNativeJS(28137):      qcState: 'staged',
+I/ReactNativeJS(28137):      projectId: 5213135,
+I/ReactNativeJS(28137):      projectName: 'APP材设',
+I/ReactNativeJS(28137):      inspectionId: 5202224,
+I/ReactNativeJS(28137):      inspectionCode: 'ZLJC_20180619_025',
+I/ReactNativeJS(28137):      inspectionCompanyId: 5211919,
+I/ReactNativeJS(28137):      inspectionCompanyName: '11301919',
+I/ReactNativeJS(28137):      constructionCompanyId: 5212715,
+I/ReactNativeJS(28137):      constructionCompanyName: '施工单位A',
+I/ReactNativeJS(28137):      qualityCheckpointName: '空调水管（通）',
+I/ReactNativeJS(28137):      reviewId: null,
+I/ReactNativeJS(28137):      reviewCode: null,
+I/ReactNativeJS(28137):      creatorId: 5200299,
+I/ReactNativeJS(28137):      creatorName: 'XP',
+I/ReactNativeJS(28137):      rectificationDate: 1529424000000,
+I/ReactNativeJS(28137):      description: '123',
+I/ReactNativeJS(28137):      buildingId: null,
+I/ReactNativeJS(28137):      buildingName: null,
+I/ReactNativeJS(28137):      elementId: null,
+I/ReactNativeJS(28137):      elementName: null,
+I/ReactNativeJS(28137):      gdocFileId: null,
+I/ReactNativeJS(28137):      files: [],
+I/ReactNativeJS(28137):      existStaged: false,
+I/ReactNativeJS(28137):      drawingGdocFileId: null,
+I/ReactNativeJS(28137):      drawingName: null,
+I/ReactNativeJS(28137):      drawingPositionX: null,
+I/ReactNativeJS(28137):      drawingPositionY: null,
+I/ReactNativeJS(28137):      committed: false } }
  */
 export async function getRepairInfo(projectId, inspectionId) {
     if(OfflineStateUtil.isOnLine()){
@@ -833,13 +933,18 @@ export async function getRepairInfo(projectId, inspectionId) {
 /**
  * 整改单  删除
  * @param {*} projectId 
- * @param {*} fileId 
+ * @param {*} fileId 整改单id
  */
-export async function deleteRepair(projectId, fileId) {
-    let api = `/quality/${projectId}/qualityRectification/${fileId}`;
-    return requestJSON(api, {
-        method: 'DELETE',
-    });
+export async function deleteRepair(inspectionId,projectId, fileId) {
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityRectification/${fileId}`;
+        return requestJSON(api, {
+            method: 'DELETE',
+        });
+    }else{
+        let bm = OfflineManager.getQualityManager();
+        return bm.deleteRepair(inspectionId,projectId, fileId);
+    }
 }
 
 

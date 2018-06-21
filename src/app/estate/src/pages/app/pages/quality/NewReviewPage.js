@@ -100,6 +100,8 @@ class NewReviewPage extends Component {
 
 
     shouldComponentUpdate(nextProps, nextState) {
+        // console.log('shouldComponentUpdate')
+        // console.log(nextProps)
         if (!this.state.isSetEditInfo && nextProps.editInfo && nextProps.editInfo.id) {
             //设置编辑数据
             this.setEditInfo(nextProps.editInfo);
@@ -130,6 +132,8 @@ class NewReviewPage extends Component {
      * 编辑草稿时，设置数据
      */
     setEditInfo = (editInfo) => {
+        // console.log('66666666666666------------------')
+        // console.log(editInfo)
         let date = now;
         let status = editInfo.status;
         let switchValue = this.state.switchValue;
@@ -216,10 +220,11 @@ class NewReviewPage extends Component {
     }
 
     deleteForm = () => {
+        let params = this.props.navigation.state.params;
         ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消' }, {
             text: '删除', onPress: () => {
                 let params = this.props.navigation.state.params;
-                this.props.deleteForm(this.props.editInfo.id, params.createType, this.props.navigation);
+                this.props.deleteForm(params.qualityCheckListId,this.props.editInfo.id, params.createType, this.props.navigation);
             }
         });
     }
@@ -341,9 +346,9 @@ export default connect(
         submit: (inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, navigator, imageChooserEle) => {
             dispatch(reviewRepairAction.submit(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, navigator, imageChooserEle))
         },
-        deleteForm: (fileId, type, navigator) => {
+        deleteForm: (inspectionId,fileId, type, navigator) => {
             if (dispatch) {
-                dispatch(reviewRepairAction.deleteForm(fileId, type, navigator))
+                dispatch(reviewRepairAction.deleteForm(inspectionId,fileId, type, navigator))
             }
         },
         reset: () => {
