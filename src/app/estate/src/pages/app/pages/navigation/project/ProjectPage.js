@@ -224,31 +224,23 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
     },
     containerSimpleView: {
-        flex: 1,
         borderRadius: 8,
         borderWidth: 1,
         borderColor: "#00baf3",
         height: 60,
         marginTop: 5,
-
         marginBottom: 15,
         marginLeft: 20,
         marginRight: 20,
         backgroundColor: '#FFF',
         alignItems:"center",
         flexDirection:"row"
-        // elevation: 2.5, // android 
-        // shadowColor: "#00baf3", // iOS
-        // shadowOffset: { width: 3, height: 7 }, // iOS
-        // shadowOpacity: 0.15, // iOS
-        // shadowRadius: 3, // iOS
-
     },
     containerView: {
         height: 50,
         paddingLeft: 40,
         paddingRight: 40,
-        justifyContent: "center"
+        justifyContent: "center",
     },
     selectContainer: {
         backgroundColor: '#F2FcFf',

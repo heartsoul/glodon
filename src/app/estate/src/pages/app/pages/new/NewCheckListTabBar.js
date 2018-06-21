@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     tabTextContainer: {
-        height: 44,
+        height: 42,
         alignItems: "center",
         flexDirection: "row",
         alignSelf: "center",
@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
     underLine: {
         width: 26,
         height: 2,
-        bottom: 4,
-        position: "absolute",
+        // bottom: 4,
+        // position: "absolute",
         alignSelf: "center",
         backgroundColor: "#ffffff",
     },
