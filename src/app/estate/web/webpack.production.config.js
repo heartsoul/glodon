@@ -57,6 +57,8 @@ const urlLoaderConfiguration = {
     loader: 'url-loader',
     options: {
         mimetype: 'image/png',
+        limit:1,
+        name: '/imgs/[name].[ext]',
     },
 }
 var config = {
@@ -64,7 +66,8 @@ var config = {
     devtool: 'cheap-module-source-map', plugins: [
         // compress js
         new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true
+            sourceMap: true,
+            beautify: true
         })
     ],
     output: {
@@ -90,13 +93,13 @@ var config = {
     },
 
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(
-                process.env.NODE_ENV || 'development'
-            ),
-            __DEV__: process.env.NODE_ENV === 'production' || true,
-        }),
-        new webpack.HotModuleReplacementPlugin(),
+        // new webpack.DefinePlugin({
+        //     'process.env.NODE_ENV': JSON.stringify(
+        //         process.env.NODE_ENV || 'development'
+        //     ),
+        //     __DEV__: process.env.NODE_ENV === 'production' || true,
+        // }),
+        // new webpack.HotModuleReplacementPlugin(),
     ],
 
     resolve: {

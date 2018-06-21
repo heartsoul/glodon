@@ -18,6 +18,7 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/react-native-safe-area-view'),
         path.resolve(appDirectory, 'node_modules/react-navigation'),
         path.resolve(appDirectory, 'node_modules/antd-mobile'),
+        path.resolve(appDirectory, 'node_modules/teaset'),
         // path.resolve(appDirectory, 'node_modules/react-native-image-zoom-viewer')
         path.resolve(appDirectory, 'src'),
         path.resolve(appDirectory, 'index.web.js'),
