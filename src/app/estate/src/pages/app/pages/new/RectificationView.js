@@ -6,10 +6,12 @@ import {
     Keyboard
 } from 'react-native';
 import PropTypes from 'prop-types'
-import {BimSwitch} from 'app-components'
+import { BimSwitch } from 'app-components'
 import { DatePicker, List } from 'antd-mobile';
 import StarView from "./StarView";
 import GLDListRow from "./GLDListRow";
+import GLDDatePicker from "./../../components/GLDDatePicker";
+
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
 
@@ -69,19 +71,9 @@ export default class RectificationView extends Component {
     renderStarChildView = () => {
         return (
             <View>
-                <DatePicker
-                    mode="date"
-                    title=" "
-                    extra=" "
-                    value={this.state.date}
-                    onChange={date => this.setState({ date: date })}
-                >
-                    <List.Item arrow="horizontal" >
-                        <Text style={{ fontSize: 16, color: "#000000", marginLeft: 7, paddingTop: 8, paddingBottom: 8 }}>
-                            整改期限
-                                </Text>
-                    </List.Item>
-                </DatePicker>
+                <GLDDatePicker title={"整改期限"} date={this.state.date} onDateChange={(date) => {
+                    this.setState({ date: date })
+                }}></GLDDatePicker>
             </View>
         );
     }

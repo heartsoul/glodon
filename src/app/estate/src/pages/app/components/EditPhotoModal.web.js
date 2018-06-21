@@ -73,26 +73,54 @@ class GLDCanvas extends Component {
             editState: EditState.INIT,
             deleteVisible: false,
             showDotPlaceHolder: false,
-            placeholderHeight: 0
         }
     }
 
-
     componentDidMount() {
         this._initCanvas();
+        this._registerKeyboardListener();
 
-        var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-        window.addEventListener('resize', function () {
-            var nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-            if (clientHeight > nowClientHeight) {
-                // let placeholderHeight = parseInt(clientHeight) - parseInt(nowClientHeight);
-                // //键盘弹出的事件处理
-                // let ele = document.getElementById("placeholder");
-                // ele.style.height = placeholderHeight + "px"
-            } else {
-                // ele.style.height = 0
-            }
-        });
+    }
+    _registerKeyboardListener = () => {
+        if (isAndroid()) {
+            var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+            window.addEventListener('resize', function () {
+                var nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+                if (clientHeight > nowClientHeight) {
+                    let placeholderHeight = parseInt(clientHeight) - parseInt(nowClientHeight);
+                    //键盘弹出的事件处理
+                    let ele = document.getElementById("placeholder");
+                    if (ele) {
+                        ele.style.height = placeholderHeight
+                    }
+
+                } else {
+                    let ele = document.getElementById("placeholder");
+                    if (ele) {
+                        ele.style.height = 0
+                    }
+                }
+            });
+        }
+
+        if (isiOS()) {
+            document.addEventListener('focusin', function () {
+                //软键盘弹出的事件处理
+                //键盘弹出的事件处理
+                let ele = document.getElementById("placeholder");
+                if (ele) {
+                    ele.style.height = 252;
+                }
+            });
+            document.addEventListener('focusout', function () {
+                //软键盘收起的事件处理
+                let ele = document.getElementById("placeholder");
+                if (ele) {
+                    ele.style.height = 0;
+                }
+            });
+        }
+
     }
     //
     _initCanvas() {
@@ -132,10 +160,10 @@ class GLDCanvas extends Component {
 
     //触摸
     _touchEvents = (e) => {
-        e.preventDefault();
         if (this.state.editState != EditState.EDIT_LINE) {
             return;
         }
+        e.preventDefault();
         if (e.type == "touchstart") {
             let touch = event.touches[0];
             let startx = touch.pageX;
@@ -352,6 +380,7 @@ class GLDCanvas extends Component {
                                     editable={node.editable}
                                     changeText={this._changeText}
                                     showBorder={node.showBorder}
+                                    editState={this.state.editState}
                                     rect={{ top: this.canvas.offsetTop, bottom: this.canvas.offsetTop + this.canvas.height }}
                                     changeLocation={(x, y) => {
                                         node.location = {
@@ -402,10 +431,10 @@ class TransformTextInput extends Component {
     deltaY = 0;
     //触摸
     _touchEvents = (e) => {
-        e.preventDefault();
-        if (this.props.editable) {
+        if (this.props.editState === EditState.EDIT_TEXT) {
             return;
         }
+        e.preventDefault();
         if (e.type == "touchstart") {
             let touch = event.touches[0];
             this.deltaX = parseInt(this.myEle.style.left) - touch.pageX;
@@ -421,6 +450,7 @@ class TransformTextInput extends Component {
             this._setBorderRectVisible(false);
             this._checkLocation();
             this.props.setDeleteVisible(false);
+            this.mInput.blur();
         }
     }
 
@@ -442,12 +472,9 @@ class TransformTextInput extends Component {
     }
 
     _transfromInput = (movex, movey) => {
+        console.log(`movey - ${movey} top - ${this.props.rect} `)
         if (movey < this.props.rect.top) {
             return;
-        }
-        if (movey + this.mInput.style.height > this.props.rect.bottom) {
-            //显示删除框
-
         }
         this.myEle.style.left = (movex)
         this.myEle.style.top = (movey)
@@ -490,7 +517,7 @@ class TransformTextInput extends Component {
         }
     }
     render() {
-        let w = this.props.editable ? width : parseInt(this._getTextWidth(this.props.value, 16)) + 15;
+        let w = this.props.editable ? width : parseInt(this._getTextWidth(this.props.value, 16)) + 20;
         if (w > width - 20) {
             w = width - 20;
         }
@@ -530,7 +557,16 @@ class TransformTextInput extends Component {
         )
     }
 }
-
+function isAndroid() {
+    var u = navigator.userAgent;
+    var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+    return isAndroid;
+}
+function isiOS() {
+    var u = navigator.userAgent;
+    var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    return isiOS;
+}
 
 const styles = StyleSheet.create({
     hide: {
