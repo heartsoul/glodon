@@ -1,5 +1,6 @@
 
 import { ActionModal } from 'app-components'
+import EditPhotoModal from "./EditPhotoModal.web"
 export function shareApp(text,url) {
     text = text || 'BIM协同，真的来了';
     url = url || 'http://bim.glodon.com';
@@ -78,17 +79,24 @@ export function chooseImages(retFun,retFiles = [],maxLength = 3,multiple=false,c
              reader.readAsDataURL(file);
              reader.onload = function(e){
                 reader = null;
-                compressImg(e.target.result,1136,(url,blob)=>{
-                    file.url = url;
-                    compressImg(url,160,(thumbUrl,thumbBlob)=>{
-                        itemCount--;
-                        file.thumbUrl = thumbUrl;
-                        retFiles.push({url:url,randomKey:randomKey++,thumbUrl:thumbUrl,name:file.name||'image',type:'h5',length:file.size||0,lastModified:file.lastModified,file:file})
-                        if(itemCount <= 0) {
-                            retFun(retFiles,true);
-                        }
+                EditPhotoModal.show(e.target.result,(imageData)=>{
+                    if(!imageData){
+                        retFun(retFiles,false);
+                    }
+                    compressImg(imageData,1136,(url,blob)=>{
+                        file.url = url;
+                        compressImg(url,160,(thumbUrl,thumbBlob)=>{
+                            itemCount--;
+                            file.thumbUrl = thumbUrl;
+                            retFiles.push({url:url,randomKey:randomKey++,thumbUrl:thumbUrl,name:file.name||'image',type:'h5',length:file.size||0,lastModified:file.lastModified,file:file})
+                            if(itemCount <= 0) {
+                                retFun(retFiles,true);
+                            }
+                        })
                     })
-                })
+                });
+
+
              };
         };
        
