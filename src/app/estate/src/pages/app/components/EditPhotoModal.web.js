@@ -101,23 +101,20 @@ class GLDCanvas extends Component {
                     }
                 }
             });
-        }
-
-        if (isiOS()) {
+        } else if (isiOS()) {
             document.addEventListener('focusin', function () {
-                //软键盘弹出的事件处理
-                //键盘弹出的事件处理
-                let ele = document.getElementById("placeholder");
-                if (ele) {
-                    ele.style.height = 252;
-                }
+                    //软键盘弹出的事件处理
+                    let ele = document.getElementById("placeholder");
+                    if (ele) {
+                        ele.style.height = 252;
+                    }
             });
             document.addEventListener('focusout', function () {
-                //软键盘收起的事件处理
-                let ele = document.getElementById("placeholder");
-                if (ele) {
-                    ele.style.height = 0;
-                }
+                    //软键盘收起的事件处理
+                    let ele = document.getElementById("placeholder");
+                    if (ele) {
+                        ele.style.height = 0;
+                    }
             });
         }
 
@@ -362,7 +359,7 @@ class GLDCanvas extends Component {
                                 </View>
                             </TouchableOpacity>
                         </View>
-                        <View id={"placeholder"}></View>
+                        <div id={"placeholder"}></div>
                     </View>
                     <View style={[styles.bottomMenu, { alignItems: "center", paddingTop: 10 }, this.state.deleteVisible ? {} : styles.hide]}>
                         <Image style={{ height: 24, width: 24, resizeMode: "contain", }} source={require("app-images/icon_bottom_delete.png")} />
@@ -420,11 +417,11 @@ class TransformTextInput extends Component {
     componentDidMount() {
         this.mInput = document.getElementById(`transform_input_${this.props.id}`);
         this.mInput.style.height = this.mInput.scrollHeight + "px"
-        this.myEle = document.getElementById(`transform_box_${this.props.id}`);
+        let boxId = `transform_box_${this.props.id}`;
+        this.myEle = document.getElementById(boxId);
         this.myEle.addEventListener('touchstart', this._touchEvents, false);
         this.myEle.addEventListener('touchmove', this._touchEvents, false);
         this.myEle.addEventListener('touchend', this._touchEvents, false);
-
     }
 
     deltaX = 0;
@@ -521,8 +518,9 @@ class TransformTextInput extends Component {
         if (w > width - 20) {
             w = width - 20;
         }
+        let boxId = `transform_box_${this.props.id}`;
         return (
-            <View id={`transform_box_${this.props.id}`} style={{
+            <div id={boxId} style={{
                 position: "absolute",
                 top: this.props.rect.top + 10 < 36 ? 36 : this.props.rect.top + 10,
                 left: 10,
@@ -552,7 +550,7 @@ class TransformTextInput extends Component {
                 <div class={`borderRect_${this.props.id}`} style={{ position: "absolute", right: 0, top: 0, width: 3, height: 3, backgroundColor: "#fff", display: "none" }}></div>
                 <div class={`borderRect_${this.props.id}`} style={{ position: "absolute", left: 0, bottom: 0, width: 3, height: 3, backgroundColor: "#fff", display: "none" }}></div>
                 <div class={`borderRect_${this.props.id}`} style={{ position: "absolute", right: 0, bottom: 0, width: 3, height: 3, backgroundColor: "#fff", display: "none" }}></div>
-            </View>
+            </div>
 
         )
     }
