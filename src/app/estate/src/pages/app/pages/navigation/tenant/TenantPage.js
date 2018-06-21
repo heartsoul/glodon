@@ -11,7 +11,7 @@ import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil';
 import UserInfoManager from '../../../../offline/manager/UserInfoManager';
 
 let userInfoManager= null;
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+// const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 export default class tenantList extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -246,9 +246,9 @@ export default class tenantList extends Component {
     _keyExtractor = (item, index) => index;
     renderData() {
         return (
-            <View style={{backgroundColor:"#fff",height:"100%",flex:1}}>
+            <View style={{backgroundColor:"#fff",flex:1}}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <AnimatedFlatList
+                <FlatList
                     style={{backgroundColor:"#fff"}}
                     ListHeaderComponent={<View style={{height:25}}/>}
                     data={this.state.dataArray}
@@ -286,19 +286,15 @@ const styles = StyleSheet.create({
         height: 180
     },
     containerView: {
-        flex: 1,
         borderRadius: 8,
-        // borderWidth:1,
-        // borderColor:"#0F0",
         height: 60,
         marginTop: 5,
-
         marginBottom: 15,
         marginLeft: 20,
         marginRight: 20,
-        backgroundColor: '#FFF',
+        backgroundColor: '#FFFFFF',
         elevation: 5, // android 
-        shadowColor: "#333", // iOS
+        shadowColor: "#333333", // iOS
         shadowOffset: { width: 3, height: 7 }, // iOS
         shadowOpacity: 0.15, // iOS
         shadowRadius: 3, // iOS

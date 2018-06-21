@@ -5,7 +5,7 @@ import { BackHandler } from 'app-3rd';
 import { KeyboardAwareScrollView } from 'app-3rd/index';
 import { BarItems } from "app-components";
 import React, { Component } from 'react';
-import ReactNative, { ActivityIndicator, Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
+import ReactNative, { ActivityIndicator, Platform, StatusBar, StyleSheet, Text, View, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from "./../../actions/newQualityAction2";
 import NewCheckListTabBar from "./NewCheckListTabBar";
@@ -86,6 +86,7 @@ class NewQualityPage extends Component {
         }
     }
     onChangePage = (data, index) => {
+        Keyboard.dismiss();
         if (index == 0) {
             this.activePage = this.inspectionPage;
         } else if (index == 1) {
@@ -139,6 +140,7 @@ class NewQualityPage extends Component {
         }
     }
     submit = () => {
+        Keyboard.dismiss();
         if (this.activePage) {
             this.activePage.submit(this.props.navigation);
         } else {
@@ -146,6 +148,7 @@ class NewQualityPage extends Component {
     }
 
     goBack = () => {
+        Keyboard.dismiss();
         if (this.activePage) {
             this.activePage.goBack(this.props.navigation);
         } else {

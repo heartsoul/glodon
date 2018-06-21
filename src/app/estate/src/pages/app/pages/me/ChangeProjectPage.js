@@ -86,7 +86,6 @@ export default class ChangeProjectPage extends Component {
             }
         );
 
-
         if (Platform.OS === 'web') {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
@@ -98,9 +97,12 @@ export default class ChangeProjectPage extends Component {
                     return false;
                 }
             )
-        } else {
+        } else if(Platform.OS === 'android'){
+            const BackHandler = ReactNative.BackHandler
+                ? ReactNative.BackHandler
+                : ReactNative.BackAndroid;
             //硬件返回监听
-            BackHandler.addEventListener('hardwareBackPress', () => {
+            this.backListener = BackHandler.addEventListener('hardwareBackPress', () => {
                 if (storage.currentRouteName === this.props.navigation.state.routeName) {
                     this._goBack();
                     return true;
@@ -112,10 +114,14 @@ export default class ChangeProjectPage extends Component {
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', () => {
-            this._goBack();
-            return true;
-        });
+        if(this.backListener) {
+            this.backListener.remove();
+            this.backListener = null;
+        }
+        // BackHandler.removeEventListener('hardwareBackPress', () => {
+        //     this._goBack();
+        //     return true;
+        // });
     }
 
     //获取当前租户及项目
@@ -221,40 +227,37 @@ export default class ChangeProjectPage extends Component {
         let tenantName = this.state.tenantName;
         let dataList = this.state.dataList;
         return (
-            <ScrollView style={{ backgroundColor: '#F7F7F7' }} >
-                <TouchableOpacity onPress={(event) => { event.preventDefault(); this._tenantChoose && this._tenantChoose(); }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', height: 51 }}>
+                <FlatList style={{ paddingTop: 10, backgroundColor: '#F7F7F7' }}
+                    data={dataList}
+                    ListHeaderComponent={(<View><TouchableOpacity onPress={(event) => { event.preventDefault(); this._tenantChoose && this._tenantChoose(); }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', height: 51,width:'100%' }}>
                         <Image source={require('app-images/icon_choose_project_item.png')} style={{ width: 30, height: 30, marginLeft: 20 }} />
                         <Text style={{ fontSize: 16, color: '#6F899B', marginLeft: 12, flex: 1 }} >{tenantName}</Text>
                         <Image source={require('app-images/icon_arrow_right_gray.png')} style={{ width: 5, height: 12, marginRight: 18 }} />
                     </View>
-                </TouchableOpacity>
-                <FlatList style={{ marginTop: 10, backgroundColor: '#FFFFFF' }}
-                    data={dataList}
+                </TouchableOpacity><View style={{height:10,width:'100%'}}></View></View>)}
                     renderItem={this.renderItemView}
+                    ListFooterComponent={(<TouchableHighlight
+                        onPress={(event) => { event.preventDefault(); this._goBack&&this._goBack(event)}}
+                        underlayColor="#0099f3"
+                        activeOpacity={1.0}
+    
+                        style={
+                            this.state.pressed
+                                ? styles.logoutTextViewPressed
+                                : styles.logoutTextView
+                        }
+                        onHideUnderlay={() => {
+                            this.setState({ pressed: false });
+                        }}
+                        onShowUnderlay={() => {
+                            this.setState({ pressed: true });
+                        }}
+                    >
+                        <Text style={styles.logoutText}>返回 </Text>
+                    </TouchableHighlight>)}
                     keyExtractor={(item, index) => index + ''}
-                />
-
-                <TouchableHighlight
-                    onPress={this._goBack}
-                    underlayColor="#0099f3"
-                    activeOpacity={1.0}
-
-                    style={
-                        this.state.pressed
-                            ? styles.logoutTextViewPressed
-                            : styles.logoutTextView
-                    }
-                    onHideUnderlay={() => {
-                        this.setState({ pressed: false });
-                    }}
-                    onShowUnderlay={() => {
-                        this.setState({ pressed: true });
-                    }}
-                >
-                    <Text style={styles.logoutText}>返回 </Text>
-                </TouchableHighlight>
-            </ScrollView>
+                />                
         );
     }
 
@@ -301,10 +304,9 @@ const styles = StyleSheet.create({
     containerView: {
         height: 50,
         flexDirection: 'column',
-        flex: 1,
+        backgroundColor:'#FFFFFF'
     },
     content: {
-
         alignItems: "center",
         textAlign: "left",
         fontSize: 16,

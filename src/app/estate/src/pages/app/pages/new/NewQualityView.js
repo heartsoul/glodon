@@ -2,7 +2,7 @@
 import { ActionModal, ImageChooserView, StatusActionButton } from 'app-components';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { ActivityIndicator, Dimensions, StatusBar, StyleSheet, TextInput, View } from 'react-native';
+import { ActivityIndicator, Dimensions, StatusBar, StyleSheet, TextInput, View, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import * as NewQualityAction from "./../../actions/NewQualityAction";
 import * as UpdateDataAction from "./../../actions/updateDataAction";
@@ -130,6 +130,7 @@ class NewQualityView extends React.Component {
     }
     //返回
     goBack = (navigation) => {
+        Keyboard.dismiss();
         //判断信息是否改变
         let requestParams = this.assembleParams();
         NewQualityAction.isEditInfoChange(requestParams, this.state.inspectionInfo, this.refs[REF_PHOTO], (isChange) => {
@@ -201,6 +202,7 @@ class NewQualityView extends React.Component {
 
     //提交
     submit = (navigation) => {
+        Keyboard.dismiss();
         //提交
         let requestParams = this.assembleParams();
         NewQualityAction.submit(requestParams, this.refs[REF_PHOTO], navigation, (params) => {
@@ -211,6 +213,7 @@ class NewQualityView extends React.Component {
     isQualitySaveLoading = false;
     //保存
     save = () => {
+        Keyboard.dismiss();
         callOnceInInterval(() => {
             let requestParams = this.assembleParams();
             NewQualityAction.save(requestParams, this.refs[REF_PHOTO], (params) => {
@@ -222,6 +225,7 @@ class NewQualityView extends React.Component {
 
     //删除
     delete = (navigation) => {
+        Keyboard.dismiss();
         ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消' }, {
             text: '删除', onPress: () => {
                 NewQualityAction.deleteInspection(this.state.inspectId, this.props.type, () => {
@@ -235,6 +239,7 @@ class NewQualityView extends React.Component {
 
     //选择图纸文件
     _bimFileChooserBluePrint = (dataType) => {
+        Keyboard.dismiss();
         let navigator = this.props.navigation;
         storage.bimFileChooseCallback = this._bimChooserCallback;
         BimFileEntry.chooseBlueprintFromQualityNew(navigator,
@@ -247,6 +252,7 @@ class NewQualityView extends React.Component {
 
     //选择模型文件
     _bimFileChooserModel = (dataType) => {
+        Keyboard.dismiss();
         let navigator = this.props.navigation;
         storage.bimFileChooseCallback = this._bimChooserCallback;
         BimFileEntry.chooseModelFromQualityNew(navigator,

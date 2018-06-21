@@ -2,16 +2,12 @@
  * Created by soul on 2018/4/12.
  */
 'use strict';
-import React, { Component, PureComponent } from "react";
-import {
-    ActivityIndicator, StyleSheet, Text, View, StatusBar, Image,
-    RefreshControl, Dimensions
-} from "react-native";
-import * as API from "app-api";
-import { LoadingView, NoDataView } from "app-components";
-import { SectionList } from "app-3rd"
-import { connect } from 'react-redux' // 引入connect函数
-import * as actions from '../../actions/qualityListAction'
+import { SectionList } from "app-3rd";
+import { DateGroupHeaderView, LoadingView, NoDataView } from "app-components";
+import React, { PureComponent } from "react";
+import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
+import { connect } from 'react-redux'; // 引入connect函数
+import * as actions from '../../actions/qualityListAction';
 import QualityListCell from "./qualityListCell";
 var { width, height } = Dimensions.get("window");
 
@@ -101,11 +97,7 @@ class QualityListView extends PureComponent {
 
     _sectionComp = (info) => {
         var txt = info.section.key;
-        return <View style={styles.groupHeaderView}  key={txt}>
-            <View style={styles.headerLine}></View>
-            <Text
-                style={styles.groupTitle}>{txt}</Text>
-        </View>
+        return <DateGroupHeaderView key={txt} text={txt} />
     }
     _onEndReached = () => {
         if (this.props.isLoading || this.props.hasMore == false) {
@@ -199,30 +191,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#F8f8f8',
         // height:180
     },
-
-    groupHeaderView: {
-        backgroundColor: '#fafafa',
-        height: 30,
-        justifyContent:"center",
-        alignItems:"center",
-    },
-    headerLine: {
-        backgroundColor: '#e2e2e2',
-        height: 1,
-        width:"100%",
-        marginLeft: 20,
-        marginRight: 20,
-    },
-    groupTitle: {
-        position:"absolute",
-        height: 20,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        color: '#B0B0B0',
-        fontSize: 14,
-        width: 100,
-        backgroundColor: '#fafafa',
-    }
 });
 
 function mapStateToProps(state) {

@@ -21,7 +21,7 @@ export default class extends Component {
 
   static navigationOptions = {
     title: '',
-    header: null
+    // header: null
   };
 
   constructor() {
@@ -73,12 +73,12 @@ export default class extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-        <ScrollView bounces={false}>
-          <View style={{ backgroundColor: '#00baf3', marginBottom: 20 }}>
+        <View style={{ backgroundColor: '#00baf3', marginBottom: 20 }}>
             <Image source={require('app-images/icon_mine_default_header.png')} style={styles.mineAvatar} />
             <Text style={styles.mineName}>{name}</Text>
             <Image source={require('app-images/icon_mine_wave.png')} style={styles.mineWave} />
           </View>
+          <ScrollView bounces={false}>
           {Platform.OS !== 'web' ? <MineItemView icon={require('app-images/icon_my_offline_manage.png')} title='离线管理' onPress={() => this._gotoOfflineManage()}></MineItemView> : null}
           {Platform.OS !== 'web' ? <View style={styles.mineItemLine}></View> : null}
           <MineItemView icon={require('app-images/icon_my_missions.png')} title='我的任务' onPress={() => this._gotoTask()}></MineItemView>
@@ -90,13 +90,13 @@ export default class extends Component {
         
           <View style={{ marginTop: 40, marginLeft: 20, marginRight: 20 }}>
             <ActionButton
-              onPress={(event) => { this._gotoTenantChoose() }}
+              onPress={(event) => {event.preventDefault(); this._gotoTenantChoose() }}
               isDisabled={() => { return false }}
               text="切换项目"
             />
           </View>
 
-          <View style={{ height: 35, width: '100%' }} />
+          <View style={{ height: 65, width: '100%' }} />
         </ScrollView>
       </SafeAreaView>
     );
@@ -123,8 +123,9 @@ class MineItemView extends Component {
 var styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
-    width: width,
-    height: height
+    // width: width,
+    // height: height
+    flex:1,
   },
   mineAvatar: {
     width: 90,
