@@ -45,10 +45,11 @@ function compressImg(imgData, maxHeight, onCompress) {
  * multiple 是否多选 PS：如果设置了这个属性为true，那么capture属性就无效了，等同于选择所有文件/相册/拍照 
  * capture camera,audio,video
  */
-// let input = document.createElement('input');
+var input;
 export function chooseImages(retFun,retFiles = [],maxLength = 3,multiple=false,capture='camera') {
     // ActionModal.alertTip('敬请期待',null,{text:'知道了'});
-    let input = document.createElement('input');
+    input = null;
+    input = document.createElement('input');
     input.type = 'file';
     input.id = "input_file_id_"+Math.random();
     input.hidden = true;
@@ -59,7 +60,8 @@ export function chooseImages(retFun,retFiles = [],maxLength = 3,multiple=false,c
     input.accept = 'image/*';
 
     input.onchange=(ev)=>{
-        document.removeChild
+        // document.removeChild
+        
         let itemCount = ev.target.files.length;
         if(itemCount > maxLength) {
             ActionModal.alertTip('数量超过限制',null,{text:'知道了'});
@@ -79,6 +81,7 @@ export function chooseImages(retFun,retFiles = [],maxLength = 3,multiple=false,c
              reader.readAsDataURL(file);
              reader.onload = function(e){
                 reader = null;
+                // alert(e.target.result);
                 EditPhotoModal.show(e.target.result,(imageData)=>{
                     if(!imageData){
                         retFun(retFiles,false);

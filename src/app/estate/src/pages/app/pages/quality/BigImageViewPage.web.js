@@ -19,9 +19,11 @@ export default class BigImageViewPage extends Component {
         
         const media = params.media || [];
         const index = params.index || 0;
+        let smallMedia = [];
         media.map((item, index) => {
             item.url = item.photo;
             delete item.photo;
+            smallMedia.push(item.url);
         });
         // media.push({url:"http://img.zcool.cn/community/01c60259ac0f91a801211d25904e1f.jpg@1280w_1l_2o_100sh.jpg"});
         // media.push({url:"http://img.zcool.cn/community/01c53f5567f0930000016756edc878.jpg@1280w_1l_2o_100sh.png"});
@@ -36,8 +38,10 @@ export default class BigImageViewPage extends Component {
         this.state = {
             media: [...media],
             bigMedia: [],
+            smallMedia: smallMedia,
             modalVisible: true,
         }
+
 
     }
     toUrls = (media) =>{
@@ -109,20 +113,27 @@ export default class BigImageViewPage extends Component {
                     }} />
                 </Modal>
             );
-        }
-        return (
-            <View onClick={() => { // 图片单击事件
-                this.props.navigation.goBack();
-            }} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <ActivityIndicator
-                    animating={true}
-                    style={[{ height: 80 }]}
-                    color='#00baf3'
-                    size="large"
-                />
-            </View>
-        );
+        } 
+       return <Modal
+                    key={'big'} visible={this.state.modalVisible} transparent={true} onRequestClose={() => { this._setModalVisible(false) }}>
+                    <ImageViewer key={'bigImageView'} index={index} urls={this.state.smallMedia} onClose={() => { // 图片单击事件
+                        this.props.navigation.goBack();
+                    }} />
+                </Modal>
+
+        // return (
+        //     <View onClick={() => { // 图片单击事件
+        //         this.props.navigation.goBack();
+        //     }} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+        //         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
+        //         <ActivityIndicator
+        //             animating={true}
+        //             style={[{ height: 80 }]}
+        //             color='#00baf3'
+        //             size="large"
+        //         />
+        //     </View>
+        // );
     }
 }
 

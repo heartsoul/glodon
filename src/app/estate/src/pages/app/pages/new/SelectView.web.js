@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react';
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image,Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -221,6 +221,7 @@ class SelectView extends Component {
      * 如果点击的是责任人先获取数据
      */
     onPress = () => {
+        Keyboard.dismiss();
         if (this.props.title === '责任人') {
             this.getPersonList();
         } else {

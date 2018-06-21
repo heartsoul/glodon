@@ -3,6 +3,7 @@ import {
     StyleSheet,
     Text,
     View,
+    Keyboard
 } from 'react-native';
 import PropTypes from 'prop-types'
 import {BimSwitch} from 'app-components'
@@ -38,6 +39,7 @@ export default class RectificationView extends Component {
     }
 
     onChangeSwitch = (needRectification) => {
+        Keyboard.dismiss();
         this.setState({
             needRectification: needRectification,
         })
