@@ -72,12 +72,27 @@ class GLDCanvas extends Component {
             inputNodes: [],
             editState: EditState.INIT,
             deleteVisible: false,
+            showDotPlaceHolder: false,
+            placeholderHeight: 0
         }
     }
 
 
     componentDidMount() {
         this._initCanvas();
+
+        var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        window.addEventListener('resize', function () {
+            var nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+            if (clientHeight > nowClientHeight) {
+                // let placeholderHeight = parseInt(clientHeight) - parseInt(nowClientHeight);
+                // //键盘弹出的事件处理
+                // let ele = document.getElementById("placeholder");
+                // ele.style.height = placeholderHeight + "px"
+            } else {
+                // ele.style.height = 0
+            }
+        });
     }
     //
     _initCanvas() {
@@ -319,6 +334,7 @@ class GLDCanvas extends Component {
                                 </View>
                             </TouchableOpacity>
                         </View>
+                        <View id={"placeholder"}></View>
                     </View>
                     <View style={[styles.bottomMenu, { alignItems: "center", paddingTop: 10 }, this.state.deleteVisible ? {} : styles.hide]}>
                         <Image style={{ height: 24, width: 24, resizeMode: "contain", }} source={require("app-images/icon_bottom_delete.png")} />
@@ -367,9 +383,11 @@ class TransformTextInput extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: this.props.value
+            value: this.props.value,
         }
     }
+
+
     componentDidMount() {
         this.mInput = document.getElementById(`transform_input_${this.props.id}`);
         this.mInput.style.height = this.mInput.scrollHeight + "px"
@@ -377,6 +395,7 @@ class TransformTextInput extends Component {
         this.myEle.addEventListener('touchstart', this._touchEvents, false);
         this.myEle.addEventListener('touchmove', this._touchEvents, false);
         this.myEle.addEventListener('touchend', this._touchEvents, false);
+
     }
 
     deltaX = 0;
@@ -403,6 +422,23 @@ class TransformTextInput extends Component {
             this._checkLocation();
             this.props.setDeleteVisible(false);
         }
+    }
+
+
+    _getTextWidth = function (text, fontSize) {
+        var span = document.getElementById("__getwidth");
+        if (span == null) {
+            span = document.createElement("span");
+            span.id = "__getwidth";
+            document.body.appendChild(span);
+            span.style.visibility = "hidden";
+            span.style.height = "0px";
+            span.style.whiteSpace = "nowrap";
+        }
+        span.innerText = text;
+        span.style.fontSize = fontSize + "px";
+        var offsetwidth = span.offsetWidth;
+        return offsetwidth;
     }
 
     _transfromInput = (movex, movey) => {
@@ -433,9 +469,11 @@ class TransformTextInput extends Component {
     }
 
     _changeText = (value) => {
-        this.mInput.cols = value.length + 2;
+        // this.mInput.cols = value.length + 4;
         this.mInput.style.height = this.mInput.scrollHeight + "px"
-        this.setState({ value: value })
+        this.setState({
+            value: value,
+        })
         this.props.changeText(this.props.id, value)
     }
 
@@ -452,6 +490,10 @@ class TransformTextInput extends Component {
         }
     }
     render() {
+        let w = this.props.editable ? width : parseInt(this._getTextWidth(this.props.value, 16)) + 15;
+        if (w > width - 20) {
+            w = width - 20;
+        }
         return (
             <View id={`transform_box_${this.props.id}`} style={{
                 position: "absolute",
@@ -460,6 +502,7 @@ class TransformTextInput extends Component {
             }}>
                 <TextInput id={`transform_input_${this.props.id}`} multiline={true} autoFocus={true} underlineColorAndroid={"transparent"}
                     style={{
+                        width: w,
                         maxWidth: width - 20,
                         minWidth: 20,
                         fontSize: "16px",
