@@ -92,7 +92,7 @@ export default class SelectCheckPointView extends Component {
         return (
             <View style={{ flexDirection: 'row', flex: 1, }}>
                 <TextInput
-                    style={{ flex: 1, textAlignVertical: 'center',textAlign:"right", minWidth: 100, paddingLeft: 12, paddingRight: 12,}}
+                    style={{ flex: 1, textAlignVertical: 'center',textAlign:"right", minWidth: 100, paddingLeft: 12, paddingRight: 5,}}
                     placeholder={'请设置'}
                     multiline={false}
                     autoCorrect={false} 

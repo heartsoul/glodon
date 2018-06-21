@@ -4,7 +4,7 @@ import { BackHandler, FlatList } from 'app-3rd';
 import * as API from 'app-api';
 import { BarItems } from "app-components";
 import React, { Component } from 'react';
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Platform } from 'react-native';
+import ReactNative, { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Platform } from 'react-native';
 import * as AuthorityManager from "../navigation/project/AuthorityManager";
 //切换项目主页
 export default class ChangeProjectPage extends Component {
@@ -97,7 +97,7 @@ export default class ChangeProjectPage extends Component {
                     return false;
                 }
             )
-        } else if(Platform.OS === 'android'){
+        } else if (Platform.OS === 'android') {
             const BackHandler = ReactNative.BackHandler
                 ? ReactNative.BackHandler
                 : ReactNative.BackAndroid;
@@ -114,7 +114,7 @@ export default class ChangeProjectPage extends Component {
     }
 
     componentWillUnmount() {
-        if(this.backListener) {
+        if (this.backListener) {
             this.backListener.remove();
             this.backListener = null;
         }
@@ -227,37 +227,37 @@ export default class ChangeProjectPage extends Component {
         let tenantName = this.state.tenantName;
         let dataList = this.state.dataList;
         return (
-                <FlatList style={{ paddingTop: 10, backgroundColor: '#F7F7F7' }}
-                    data={dataList}
-                    ListHeaderComponent={(<View><TouchableOpacity onPress={(event) => { event.preventDefault(); this._tenantChoose && this._tenantChoose(); }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', height: 51,width:'100%' }}>
+            <FlatList style={{ paddingTop: 10, backgroundColor: '#F7F7F7' }}
+                data={dataList}
+                ListHeaderComponent={(<View><TouchableOpacity onPress={(event) => { event.preventDefault(); this._tenantChoose && this._tenantChoose(); }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', height: 51, width: '100%' }}>
                         <Image source={require('app-images/icon_choose_project_item.png')} style={{ width: 30, height: 30, marginLeft: 20 }} />
                         <Text style={{ fontSize: 16, color: '#6F899B', marginLeft: 12, flex: 1 }} >{tenantName}</Text>
                         <Image source={require('app-images/icon_arrow_right_gray.png')} style={{ width: 5, height: 12, marginRight: 18 }} />
                     </View>
-                </TouchableOpacity><View style={{height:10,width:'100%'}}></View></View>)}
-                    renderItem={this.renderItemView}
-                    ListFooterComponent={(<TouchableHighlight
-                        onPress={(event) => { event.preventDefault(); this._goBack&&this._goBack(event)}}
-                        underlayColor="#0099f3"
-                        activeOpacity={1.0}
-    
-                        style={
-                            this.state.pressed
-                                ? styles.logoutTextViewPressed
-                                : styles.logoutTextView
-                        }
-                        onHideUnderlay={() => {
-                            this.setState({ pressed: false });
-                        }}
-                        onShowUnderlay={() => {
-                            this.setState({ pressed: true });
-                        }}
-                    >
-                        <Text style={styles.logoutText}>返回 </Text>
-                    </TouchableHighlight>)}
-                    keyExtractor={(item, index) => index + ''}
-                />                
+                </TouchableOpacity><View style={{ height: 10, width: '100%' }}></View></View>)}
+                renderItem={this.renderItemView}
+                ListFooterComponent={(<TouchableHighlight
+                    onPress={(event) => { event.preventDefault(); this._goBack && this._goBack(event) }}
+                    underlayColor="#0099f3"
+                    activeOpacity={1.0}
+
+                    style={
+                        this.state.pressed
+                            ? styles.logoutTextViewPressed
+                            : styles.logoutTextView
+                    }
+                    onHideUnderlay={() => {
+                        this.setState({ pressed: false });
+                    }}
+                    onShowUnderlay={() => {
+                        this.setState({ pressed: true });
+                    }}
+                >
+                    <Text style={styles.logoutText}>返回 </Text>
+                </TouchableHighlight>)}
+                keyExtractor={(item, index) => index + ''}
+            />
         );
     }
 
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
     containerView: {
         height: 50,
         flexDirection: 'column',
-        backgroundColor:'#FFFFFF'
+        backgroundColor: '#FFFFFF'
     },
     content: {
         alignItems: "center",

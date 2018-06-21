@@ -71,10 +71,13 @@ export default class RectificationView extends Component {
     renderStarChildView = () => {
         return (
             <View>
-                <GLDDatePicker title={"整改期限"} date={this.state.date} onDateChange={(date) => {
-                    this.setState({ date: date })
-                }}></GLDDatePicker>
-            </View>
+                <GLDDatePicker title={"整改期限"}
+                    date={this.state.date} onDateChange={(date) => {
+                        this.setState({ date: date })
+                    }}
+                    textStyle={{ alignItems: "flex-end" }}
+                ></GLDDatePicker>
+            </View >
         );
     }
 

@@ -26,17 +26,21 @@ class GLDDatePicker extends Component {
     }
 
     render() {
+        let { textStyle = { alignItems: "flex-start" } } = this.props
         return (
             <View>
-                <TouchableOpacity activeOpacity={0.5} onPress={(event) => { 
-                    event.preventDefault(); 
+                <TouchableOpacity activeOpacity={0.5} onPress={(event) => {
+                    event.preventDefault();
                     Keyboard.dismiss();
-                    this.setState({ visible: true }) }}>
+                    this.setState({ visible: true })
+                }}>
                     <View style={[styles.containerView, this.props.style]}>
                         <View style={styles.titleView}>
                             <Text style={styles.title}>{this.props.title}</Text>
                         </View>
-                        <Text style={styles.content}>{this.props.date ? API.formatUnixtimestampSimple(new Date(this.props.date).getTime()) : API.formatUnixtimestampSimple(new Date().getTime())}</Text>
+                        <View style={[{ flex: 1, paddingRight: 5 }, textStyle]}>
+                            <Text style={styles.content}>{this.props.date ? API.formatUnixtimestampSimple(new Date(this.props.date).getTime()) : API.formatUnixtimestampSimple(new Date().getTime())}</Text>
+                        </View>
                         <Image source={rightImage} style={styles.infoMark} />
                     </View>
                 </TouchableOpacity>
@@ -61,6 +65,7 @@ class GLDDatePicker extends Component {
 }
 GLDDatePicker.proptypes = {
     onDateChange: PropTypes.func,
+    textStyle: PropTypes.any,// "flex-start flex-end " alignItems: flex-end
 }
 
 export default GLDDatePicker;
@@ -73,7 +78,7 @@ const styles = StyleSheet.create({
         height: 40,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor:"#ffffff",
+        backgroundColor: "#ffffff",
     },
     titleView: {
         flexDirection: 'row',
@@ -95,7 +100,6 @@ const styles = StyleSheet.create({
     content: {
         fontSize: 16,
         fontWeight: '100',
-        flex: 1,
         alignContent: 'center',
         color: "#666666"
     },
