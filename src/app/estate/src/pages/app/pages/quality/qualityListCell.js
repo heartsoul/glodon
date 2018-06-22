@@ -35,16 +35,22 @@ export default class QualityListCell extends PureComponent {
         // BimFileEntry.showNewReviewPage(null,item.value.qualityCheckListId,API.CREATE_TYPE_REVIEW); 
         this.props.onCellAction(item,index,'submit');
     }
+
+    // 检查单 整改单  复查单  新建 编辑    提交
+    _onNewSubmitAction = (item, index,qcState) => {
+        // BimFileEntry.showNewReviewPage(null,item.value.qualityCheckListId,API.CREATE_TYPE_REVIEW); 
+        this.props.onCellAction(item,index,'submit'+qcState);
+    }
     // 删除
     _onDeleteAction = (item, index) => {
         ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消'}, { text: '删除', onPress:()=>{
             this.props.onCellAction(item,index,'delete');
         } });
     }
-    // 新建的保存的单据的  删除
-    _onNewDeleteAction = (item, index) => {
+    // 检查单 整改单  复查单  新建 编辑 删除 
+    _onNewDeleteAction = (item, index,qcState) => {
         ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消'}, { text: '删除', onPress:()=>{
-            this.props.onCellAction(item,index,'newDelete');
+            this.props.onCellAction(item,index,'delete'+qcState);
         } });
     }
     // 检查
@@ -151,20 +157,61 @@ export default class QualityListCell extends PureComponent {
         )
     }
 
-    // 新建  保存  待同步的删除
-    renderDeleteAction = (item, index) => {
-        if (!AuthorityManager.isMe(item.value.creatorId)) {
-            return null;
+
+    //item=
+    //                          { key: '5202034',
+    // I/ReactNativeJS(28901):    value:
+    // I/ReactNativeJS(28901):    { id: 5202034,
+    // I/ReactNativeJS(28901):      code: 'ZLJC_20180611_005',
+    // I/ReactNativeJS(28901):      qcState: 'resave',
+    // I/ReactNativeJS(28901):      projectId: 5213135,
+    // I/ReactNativeJS(28901):      inspectionDate: 1528646400000,
+    // I/ReactNativeJS(28901):      lastRectificationDate: 1536595200000,
+    // I/ReactNativeJS(28901):      description: '444444',
+    // I/ReactNativeJS(28901):      inspectionType: 'inspection',
+    // I/ReactNativeJS(28901):      creatorId: 5200286,
+    // I/ReactNativeJS(28901):      responsibleUserId: 5200299,
+    // I/ReactNativeJS(28901):      updateTime: 1528698597000,
+    // I/ReactNativeJS(28901):      files: [],
+    // I/ReactNativeJS(28901):      needRectification: true,
+    // I/ReactNativeJS(28901):      showTime: '2018-06-11 06:29:57',
+    // I/ReactNativeJS(28901):      index: 1,
+    // I/ReactNativeJS(28901):      qcStateShow: '保存 待同步' } }
+    // 检查单 整改单  复查单  新建 编辑 保存  
+    renderDeleteAction = (item, index,qcState) => {
+        switch(qcState){
+            case API.QC_STATE_Q_NEW_SAVE: //检查单 新建   保存
+            case API.QC_STATE_Q_EDIT_SAVE: //检查单 编辑   保存
+            case API.QC_STATE_REVIEW_NEW_SAVE: //复查单 新建   保存
+            case API.QC_STATE_REVIEW_EDIT_SAVE: //复查单 编辑   保存
+                if (!AuthorityManager.isMe(item.value.creatorId)) {
+                    return null;
+                }
+            break;
+            case API.QC_STATE_REPAIR_NEW_SAVE: //整改单 新建   保存
+            case API.QC_STATE_REPAIR_EDIT_SAVE: //整改单 编辑   保存
+                if (!AuthorityManager.isMe(item.value.responsibleUserId)) {
+                    return null;
+                }
+            break;
         }
-        let bDelete = AuthorityManager.isQualityCheckDelete();
-        if (!( bDelete)) {
+        
+        let bSubmit = true;
+        let bDelete = true;
+        // let bSubmit = AuthorityManager.isQualityCheckSubmit();
+        // let bDelete = AuthorityManager.isQualityCheckDelete();
+        if (!(bSubmit || bDelete)) {
             return null;
         }
         return (
             <View style={[styles.contentActionView]}>
                 {
+                    bSubmit ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_SUBMIT)} style={{elevation:0,width:58, height:28, borderWidth:0.5,borderColor:API.toBillTypeColor(API.BILL_TYPE_ITEM_SUBMIT), marginRight:14}}
+                        onClick={() => { this._onNewSubmitAction(item, index,qcState) }} text={API.BILL_TYPE_ITEM_SUBMIT} />) : (null)
+                }
+                {
                     bDelete ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE)} style={{elevation:0,width:58, height:28, borderWidth:0.5,borderColor:API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE), marginRight:14}}
-                        onClick={() => { this._onNewDeleteAction(item, index) }} text={API.BILL_TYPE_ITEM_DELETE} />) : (null)
+                        onClick={() => { this._onNewDeleteAction(item, index,qcState) }} text={API.BILL_TYPE_ITEM_DELETE} />) : (null)
                 }
             </View>
         )
@@ -213,8 +260,14 @@ export default class QualityListCell extends PureComponent {
                 return this.renderRectifyAction(item, index)
             }
                 break;
-            case API.QC_STATE_Q_NEW_SAVE: {//新建   保存 待同步
-                return this.renderDeleteAction(item, index)
+                case API.QC_STATE_Q_NEW_SAVE: //检查单 新建   保存
+                case API.QC_STATE_Q_EDIT_SAVE: //检查单 编辑   保存
+                case API.QC_STATE_REPAIR_NEW_SAVE: //整改单 新建   保存
+                case API.QC_STATE_REPAIR_EDIT_SAVE: //整改单 编辑   保存
+                case API.QC_STATE_REVIEW_NEW_SAVE: //复查单 新建   保存
+                case API.QC_STATE_REVIEW_EDIT_SAVE: //复查单 编辑   保存
+            { 
+                return this.renderDeleteAction(item, index,item.value.qcState)
             }
                 break;
             default:

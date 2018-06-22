@@ -20,20 +20,115 @@ export function deleteData(qcState, inspectId, inspectionType, qualityCheckpoint
     }
 }
 
-// 新建  保存 后 删除草稿
-export function newDeleteData(qcState, inspectId, inspectionType, qualityCheckpointId = 0, qualityCheckpointName = '') {
+// 离线下  单据列表中 删除和提交的处理
+export function newDeleteData(type,item,qcState, inspectId, inspectionType, qualityCheckpointId = 0, qualityCheckpointName = '') {
     return dispatch => {
+        // case API.QC_STATE_Q_NEW_SAVE: //检查单 新建   保存
+        //         case API.QC_STATE_Q_EDIT_SAVE: //检查单 编辑   保存
+        //         case API.QC_STATE_REPAIR_NEW_SAVE: //整改单 新建   保存
+        //         case API.QC_STATE_REPAIR_EDIT_SAVE: //整改单 编辑   保存
+        //         case API.QC_STATE_REVIEW_NEW_SAVE: //复查单 新建   保存
+        //         case API.QC_STATE_REVIEW_EDIT_SAVE: //复查单 编辑   保存
+        let submitPre = 'submit';
+        let deletePre = 'delete';
         let qm = OfflineManager.getQualityManager();
-        qm.delete(inspectId+'');//单据列表中删除
         let am = OfflineManager.getAsyncManager();
-        am.deleteByKey(inspectId+'');//同步列表中删除
-        dispatch(updateAction.updateData())
-        // API.createDeleteInspection(storage.loadProject(), inspectionType, inspectId)
-        //     .then(data => {
-        //         dispatch(updateAction.updateData())
-        //     }).catch(error => {
-        //         dispatch(_loadError(error, qcState, 0, qualityCheckpointId, qualityCheckpointName));
-        //     });
+        let projectId = item.value.projectId;
+        let param = qm.getSubmitInfoById(inspectId);
+        switch(type){
+            case submitPre+API.QC_STATE_Q_NEW_SAVE://检查单 新建   保存
+                submitData(qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName)
+            break;
+
+            case deletePre+API.QC_STATE_Q_NEW_SAVE://检查单 新建   保存
+                qm.delete(inspectId+'');//单据列表中删除
+                am.deleteByKey(inspectId+'');//同步列表中删除
+                dispatch(updateAction.updateData())
+            break;
+
+            case submitPre+API.QC_STATE_Q_EDIT_SAVE: //检查单 编辑   保存
+                submitData(qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName)
+            break;
+
+            case deletePre+API.QC_STATE_Q_EDIT_SAVE: //检查单 编辑   保存
+                qm.createDeleteInspection(projectId).then((data)=>{
+                    dispatch(updateAction.updateData())
+                })
+            break;
+
+
+            case submitPre+API.QC_STATE_REPAIR_NEW_SAVE: //整改单 新建   保存
+                if(param){
+                    let projectId=param.projectId;
+                    let props=param.props;
+                    qm.createSubmitRepair(projectId,props).then((data)=>{
+                        dispatch(updateAction.updateData())
+                    })
+                }
+            break;
+            case deletePre+API.QC_STATE_REPAIR_NEW_SAVE: //整改单 新建   保存
+                qm.deleteRepair(inspectId,projectId,'').then((data)=>{
+                    dispatch(updateAction.updateData())
+                })
+            break;
+            case submitPre+API.QC_STATE_REPAIR_EDIT_SAVE: //整改单 编辑   保存
+                if(param){
+                    let projectId=param.projectId;
+                    let props=param.props;
+                    let fileId=param.fileId;
+                    qm.editSubmitRepair(projectId,fileId, props).then((data)=>{
+                        dispatch(updateAction.updateData())
+                    })
+                }
+                
+            break;
+            case deletePre+API.QC_STATE_REPAIR_EDIT_SAVE: //整改单 编辑   保存
+                if(param){
+                    let projectId=param.projectId;
+                    let props=param.props;
+                    let fileId=param.fileId;
+                    qm.deleteRepair(inspectId,projectId,fileId).then((data)=>{
+                        dispatch(updateAction.updateData())
+                    })
+                }
+            break;
+
+
+            case submitPre+API.QC_STATE_REVIEW_NEW_SAVE: //复查单 新建   保存
+                if(param){
+                    let projectId=param.projectId;
+                    let props=param.props;
+                    qm.createSubmitReview(projectId,props).then((data)=>{
+                        dispatch(updateAction.updateData())
+                    })
+                }
+            break;
+            case deletePre+API.QC_STATE_REVIEW_NEW_SAVE: //复查单 新建   保存
+                qm.deleteReview(inspectId,projectId,'').then((data)=>{
+                    dispatch(updateAction.updateData())
+                })
+            break;
+            case submitPre+API.QC_STATE_REVIEW_EDIT_SAVE: //复查单 编辑   保存
+                if(param){
+                    let projectId=param.projectId;
+                    let props=param.props;
+                    qm.createSubmitReview(projectId,props).then((data)=>{
+                        dispatch(updateAction.updateData())
+                    })
+                }
+            break;
+            case deletePre+API.QC_STATE_REVIEW_EDIT_SAVE: //复查单 编辑   保存
+                if(param){
+                    let projectId=param.projectId;
+                    let props=param.props;
+                    let fileId=param.fileId;
+                    qm.deleteReview(inspectId,projectId,fileId).then((data)=>{
+                        dispatch(updateAction.updateData())
+                    })
+                }
+            break;
+            
+        }
     }
 }
 

@@ -121,6 +121,16 @@ export default class QualityManager {
         });
     }
 
+    //获取整改单编辑信息
+    getRepairEditInfoObj=(id)=>{
+        let info = handler.query(id);
+        let obj = JSON.parse(info);
+        // console.log('0000000000000000000')
+        // console.log(typeof 'aaaa')
+        // console.log(obj)
+        return obj.repairInfo;
+    }
+
     //获取复查单编辑信息
     getReviewEditInfo=(id)=>{
         let info = handler.query(id);
@@ -129,6 +139,12 @@ export default class QualityManager {
             resolve(obj.reviewInfo);
             
         });
+    }
+    //获取复查单编辑信息
+    getReviewEditInfoObj=(id)=>{
+        let info = handler.query(id);
+        let obj = JSON.parse(info);
+        return obj.reviewInfo;
     }
 
     // let key = item.id+'';
@@ -604,7 +620,6 @@ export default class QualityManager {
                 id:id
             }
         }
-        console.log(data)
         resolve(data);
       });
     }
@@ -966,8 +981,6 @@ export default class QualityManager {
 
     //整改单  新增  保存
     createSaveRepair(projectId, props){
-        console.log('props================')
-        console.log(props)
         // {
         //     *  code:1223, //当前时间戳
         //     *  description:'xxx',//描述
@@ -979,7 +992,6 @@ export default class QualityManager {
         let detail = this.getQualityDetailObj(props.inspectionId+'');
         let id = detail.data.inspectionInfo.id;
         let key = id+'';
-        console.log(key)
         let code = detail.data.inspectionInfo.code;
         let updateTime = date.getTime()+'';
         let qcState = CONSTANT.QC_STATE_REPAIR_NEW_SAVE;
@@ -1010,7 +1022,7 @@ export default class QualityManager {
         let detailInfo = value.detail;
         detailInfo = {
             ...detailInfo,
-            qcState:qcState,
+            // qcState:qcState,
         }
         let repairData ={
             inspectionId:props.inspectionId,
@@ -1031,6 +1043,7 @@ export default class QualityManager {
             repairInfo:repairInfo,
             submitInfo:submitInfo,//提交、保存时保存的参数
         }
+        console.log('整改单  新增 保存')
         console.log(value)
         let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
         let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
@@ -1044,7 +1057,6 @@ export default class QualityManager {
                 id:id
             }
         }
-        console.log(data)
         resolve(data);
        })
     }
@@ -1060,6 +1072,7 @@ export default class QualityManager {
         //     * }
         let date =new Date();
         let detail = this.getQualityDetailObj(props.inspectionId+'');
+        console.log(detail)
         let id = detail.data.inspectionInfo.id;
         let key = id+'';
         let code = detail.data.inspectionInfo.code;
@@ -1093,7 +1106,7 @@ export default class QualityManager {
         let detailInfo = value.detail;
         detailInfo = {
             ...detailInfo,
-            qcState:qcState,
+            // qcState:qcState,
         }
         
         let repairInfo = value.repairInfo;
@@ -1121,6 +1134,8 @@ export default class QualityManager {
         let errorMsg = '';
         //保存到单据列表
         this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
+        console.log('整改单  编辑 保存')
+        console.log(value)
        return new Promise(function(resolve, reject) {
         let data ={
             data:{
@@ -1128,7 +1143,6 @@ export default class QualityManager {
                 id:id
             }
         }
-        console.log(data)
         resolve(data);
        })
     }
@@ -1203,6 +1217,12 @@ export default class QualityManager {
 
     //整改单 删除
     deleteRepair(inspectionId,projectId, fileId){
+
+        let repairInfo = this.getRepairEditInfoObj(inspectionId+'');
+        let isNew = true;//表示是在离线下生成的
+        if(repairInfo.projectId){
+            isNew = false;
+        }
         let date =new Date();
         let detail = this.getQualityDetailObj(inspectionId+'');
         let id = detail.data.inspectionInfo.id;
@@ -1210,18 +1230,27 @@ export default class QualityManager {
         let code = detail.data.inspectionInfo.code;
         let updateTime = date.getTime()+'';
         let qcState = CONSTANT.QC_STATE_REPAIR_DELETE;
-        //修改同步列表
-        let state = '待同步';
-        let asyncValue = {
-            id:key,
-            title:code,
-            subTitle:this._formatDate(updateTime),
-            state:state,
-            type:'quality',
-            qcState:qcState,
+        if(isNew){
+            qcState = detail.data.inspectionInfo.qcState;
         }
+        
         asyncManager = OfflineManager.getAsyncManager();
-        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        if(isNew){
+            asyncManager.deleteByKey(key);
+        }else{
+            //修改同步列表
+            let state = '待同步';
+            let asyncValue = {
+                id:key,
+                title:code,
+                subTitle:this._formatDate(updateTime),
+                state:state,
+                type:'quality',
+                qcState:qcState,
+            }
+            asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        }
+        
         
         //修改单据列表
         let submitInfo ={
@@ -1238,7 +1267,7 @@ export default class QualityManager {
         let detailInfo = value.detail;
         detailInfo = {
             ...detailInfo,
-            qcState:qcState,
+            // qcState:qcState,
         }
         value = {
             ...value,
@@ -1249,6 +1278,9 @@ export default class QualityManager {
         }
         let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
         let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        if(isNew){
+            submitState='';
+        }
         let errorMsg = '';
         //保存到单据列表
         this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
@@ -1556,6 +1588,11 @@ export default class QualityManager {
     }
     //复查单 删除
     deleteReview(inspectionId,projectId, fileId){
+        let reviewInfo = this.getReviewEditInfoObj(inspectionId+'');
+        let isNew = true;//表示是在离线下生成的
+        if(reviewInfo.projectId){
+            isNew = false;
+        }
         let date =new Date();
         let detail = this.getQualityDetailObj(inspectionId+'');
         let id = detail.data.inspectionInfo.id;
@@ -1563,18 +1600,26 @@ export default class QualityManager {
         let code = detail.data.inspectionInfo.code;
         let updateTime = date.getTime()+'';
         let qcState = CONSTANT.QC_STATE_REVIEW_DELETE;
-        //修改同步列表
-        let state = '待同步';
-        let asyncValue = {
-            id:key,
-            title:code,
-            subTitle:this._formatDate(updateTime),
-            state:state,
-            type:'quality',
-            qcState:qcState,
+        if(isNew){
+            qcState = detail.data.inspectionInfo.qcState;
         }
         asyncManager = OfflineManager.getAsyncManager();
-        asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        if(isNew){
+            asyncManager.deleteByKey(key);
+        }else{
+            //修改同步列表
+            let state = '待同步';
+            let asyncValue = {
+                id:key,
+                title:code,
+                subTitle:this._formatDate(updateTime),
+                state:state,
+                type:'quality',
+                qcState:qcState,
+            }
+            asyncManager.saveRecord(key,JSON.stringify(asyncValue),state,updateTime);
+        }
+        
         
         //修改单据列表
         let submitInfo ={
@@ -1591,7 +1636,7 @@ export default class QualityManager {
         let detailInfo = value.detail;
         detailInfo = {
             ...detailInfo,
-            qcState:qcState,
+            // qcState:qcState,
         }
         value = {
             ...value,
@@ -1602,6 +1647,9 @@ export default class QualityManager {
         }
         let qualityCheckpointId =detailInfo.qualityCheckpointId+'';
         let submitState = 'true';  //表示此条数据有需要提交到服务器的操作
+        if(isNew){
+            submitState = ''; 
+        }
         let errorMsg = '';
         //保存到单据列表
         this.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);

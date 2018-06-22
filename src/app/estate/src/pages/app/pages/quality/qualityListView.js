@@ -78,12 +78,19 @@ class QualityListView extends PureComponent {
             this.props.deleteData(this.props.qcState, item.value.id, item.value.inspectionType, this.props.qualityCheckpointId, this.props.qualityCheckpointName)
             return;
         }
-        if (type == 'newDelete') {
-            this.props.newDeleteData(this.props.qcState, item.value.id, item.value.inspectionType, this.props.qualityCheckpointId, this.props.qualityCheckpointName)
-            return;
-        }
         if (type == 'submit') {
             this.props.submitData(this.props.qcState, item.value.id, item.value.inspectionType, this.props.qualityCheckpointId, this.props.qualityCheckpointName)
+            return;
+        }
+
+        //         case API.QC_STATE_Q_NEW_SAVE: //检查单 新建   保存
+        //         case API.QC_STATE_Q_EDIT_SAVE: //检查单 编辑   保存
+        //         case API.QC_STATE_REPAIR_NEW_SAVE: //整改单 新建   保存
+        //         case API.QC_STATE_REPAIR_EDIT_SAVE: //整改单 编辑   保存
+        //         case API.QC_STATE_REVIEW_NEW_SAVE: //复查单 新建   保存
+        //         case API.QC_STATE_REVIEW_EDIT_SAVE: //复查单 编辑   保存
+        if (type) {
+            this.props.newDeleteData(type,item,this.props.qcState, item.value.id, item.value.inspectionType, this.props.qualityCheckpointId, this.props.qualityCheckpointName)
             return;
         }
 
