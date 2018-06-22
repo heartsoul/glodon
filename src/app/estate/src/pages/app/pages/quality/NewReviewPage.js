@@ -55,7 +55,7 @@ class NewReviewPage extends Component {
             lastRectificationDate: now,//整改时间
             switchValue: null,
             isSetEditInfo: false,
-            firstLoad:true,
+            firstLoad: true,
             showRectificationView: showRectificationView,//是否显示复查合格
             files: filesIn, //附件图片
         };
@@ -84,7 +84,7 @@ class NewReviewPage extends Component {
                 }
             )
         }
-        if(Platform.OS === 'web') {
+        if (Platform.OS === 'web') {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
                 () => {
@@ -107,12 +107,12 @@ class NewReviewPage extends Component {
             this.setEditInfo(nextProps.editInfo);
             return false;
         } else {
-            if(nextProps.isLoading === false && this.state.firstLoad === true) {
-                this.setState({firstLoad:false});
+            if (nextProps.isLoading === false && this.state.firstLoad === true) {
+                this.setState({ firstLoad: false });
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -145,7 +145,7 @@ class NewReviewPage extends Component {
             switchValue = true;
         }
         this.setState({
-            firstLoad:false,
+            firstLoad: false,
             status: status,
             description: editInfo.description,
             lastRectificationDate: date,
@@ -224,7 +224,7 @@ class NewReviewPage extends Component {
         ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消' }, {
             text: '删除', onPress: () => {
                 let params = this.props.navigation.state.params;
-                this.props.deleteForm(params.qualityCheckListId,this.props.editInfo.id, params.createType, this.props.navigation);
+                this.props.deleteForm(params.qualityCheckListId, this.props.editInfo.id, params.createType, this.props.navigation);
             }
         });
     }
@@ -263,11 +263,11 @@ class NewReviewPage extends Component {
         );
     }
     render() {
-        if(this.state.firstLoad === true) {
+        if (this.state.firstLoad === true) {
             return (<LoadingView />);
         }
         return (
-            <ScrollView>
+            <ScrollView style={{ paddingBottom: 10 }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <TextInput
                     maxLength={255}
@@ -298,7 +298,10 @@ class NewReviewPage extends Component {
                 <View style={{ backgroundColor: "#ffffff", paddingLeft: 8, marginTop: 20 }}>
                     <ListRow title='检查单' bottomSeparator='full'
                         accessory={this.renderAccessory()}
-                        onPress={() => { this.setState({ expand: !this.state.expand, }) }}
+                        onPress={(event) => {
+                            event.preventDefault();
+                            this.setState({ expand: !this.state.expand, })
+                        }}
                     />
                 </View>
 
@@ -310,7 +313,7 @@ class NewReviewPage extends Component {
 
                 </View>
 
-                <StatusActionButton style={{ height: 40, marginTop: 30, marginRight: 40, marginLeft: 40, backgroundColor: "#00b5f2", borderColor: "#00b5f2", }}  color='#ffffff' text='保存' onClick={this.save} />
+                <StatusActionButton style={{ height: 40, marginTop: 30, marginRight: 40, marginLeft: 40, backgroundColor: "#00b5f2", borderColor: "#00b5f2", }} color='#ffffff' text='保存' onClick={this.save} />
                 {
                     (this.props.editInfo && this.props.editInfo.id) ? (
                         <StatusActionButton text='删除' style={{ height: 40, marginTop: 20, marginRight: 40, marginLeft: 40, backgroundColor: "#ffffff", borderColor: "#ffffff", }} color='#000000' onClick={this.deleteForm} />
@@ -330,7 +333,7 @@ export default connect(
         qualityInfo: state.reviewRepair.qualityInfo,
         editInfo: state.reviewRepair.editInfo,
         error: state.reviewRepair.error,
-        isLoading:state.reviewRepair.isLoading
+        isLoading: state.reviewRepair.isLoading
     }),
     dispatch => ({
         fetchData: (fileId, type) => {
@@ -346,9 +349,9 @@ export default connect(
         submit: (inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, navigator, imageChooserEle) => {
             dispatch(reviewRepairAction.submit(inspectionId, description, status, lastRectificationDate, qualityInfo, editInfo, type, navigator, imageChooserEle))
         },
-        deleteForm: (inspectionId,fileId, type, navigator) => {
+        deleteForm: (inspectionId, fileId, type, navigator) => {
             if (dispatch) {
-                dispatch(reviewRepairAction.deleteForm(inspectionId,fileId, type, navigator))
+                dispatch(reviewRepairAction.deleteForm(inspectionId, fileId, type, navigator))
             }
         },
         reset: () => {
