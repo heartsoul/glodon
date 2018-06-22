@@ -81,10 +81,10 @@ export default class EquipmentListCell extends PureComponent {
                     <Text style={styles.content}>编码：{item.value.facilityCode}</Text>
                     <Text style={styles.content}>名称：{
                         hightlightData.map((item, index) => {
-                            if (item.highlight) {
-                                return <Text key={index} style={[styles.content, { color: "#00baf3" }]}>{item.text}</Text>
-                            } else {
-                                return <Text key={index} style={styles.content}>{item.text}</Text>
+                            if(item.highlight){
+                                return <Text key={index} style={[styles.content,{color:"#00baf3", marginLeft:0}]}>{item.text}</Text>
+                            }else{
+                                return <Text key={index} style={[styles.content,{marginLeft:0}]}>{item.text}</Text>
                             }
                         })
 

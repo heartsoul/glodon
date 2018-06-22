@@ -270,6 +270,9 @@ class NewReviewPage extends Component {
             <ScrollView style={{ paddingBottom: 10 }}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <TextInput
+                    ref={(ref) => {
+                        this.inputRef = ref;
+                    }}
                     maxLength={255}
                     style={styles.input}
                     placeholder={'现场情况描述...'}
@@ -299,6 +302,9 @@ class NewReviewPage extends Component {
                     <ListRow title='检查单' bottomSeparator='full'
                         accessory={this.renderAccessory()}
                         onPress={(event) => {
+                            if(this.inputRef){
+                                this.inputRef.blur();
+                            }
                             event.preventDefault();
                             this.setState({ expand: !this.state.expand, })
                         }}
