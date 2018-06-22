@@ -17,6 +17,7 @@ import BaseSearchPage from "./BaseSearchPage";
 import ThumbnailImage from "./../navigation/bim/ThumbnailImage"
 import * as API from "app-api";
 import { BimFileEntry } from "app-entry";
+import { SearchHistory } from './SearchHistory';
 
 var { width, height } = Dimensions.get("window");
 
@@ -125,7 +126,7 @@ function mapDispatchToProps(dispatch) {
         },
         loadHistory: () => {
             if (dispatch) {
-                dispatch(SearchAction.loadHistory());
+                dispatch(SearchAction.loadHistory(SearchHistory.SEARCH_TYPE_BIM));
             }
         },
         searchBimFileReset: () => {

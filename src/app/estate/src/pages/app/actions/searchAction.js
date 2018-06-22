@@ -1,11 +1,12 @@
 import * as API from "app-api";
 import * as types from "./../constants/searchTypes";
 import { Toast } from 'antd-mobile';
+import { SearchHistory } from "./../pages/search/SearchHistory"
 
 export function search(keywords) {
     return dispatch => {
         loadingToast();
-        saveHistory(keywords, dispatch);
+        saveHistory(SearchHistory.SEARCH_TYPE_GLOBAL, keywords, dispatch);
         dispatch(searchStart());
         API.searchQualityData(storage.loadProject(), keywords, 0, 3)
             .then((responseData) => {
@@ -74,45 +75,24 @@ function parseQualityData(data, dataMapIn, page) {
  * 加载搜索历史
  * @param {*} items 
  */
-export function loadHistory(items) {
+export function loadHistory(type) {
     return dispatch => {
-        let history = storage.loadSearchHistory();
-        let items = [];
-        if (history && history.length > 0) {
-            items = history.split(",")
-        }
-        dispatch(loadHistoryDone(items));
+        dispatch(loadHistoryDone(SearchHistory.loadSearchHistory(type)));
     }
 }
 
-function saveHistory(keywords, dispatch) {
+function saveHistory(type, keywords, dispatch) {
     if (!keywords || keywords.length == 0) {
         return;
     }
-    let history = storage.loadSearchHistory();
-    let items = [];
-    if (history && history.length > 0) {
-        items = history.split(",")
-    }
-    let index = items.findIndex((value) => {
-        return keywords === value;
-    });
-    if (index >= 0) {
-        items.splice(index, 1)
-    }
-    items.unshift(keywords);
-    if (items.length > 20) {
-        items.pop();
-    }
-    let newHistory = items.join(",");
-    storage.setSearchHistory(newHistory);
+    let items = SearchHistory.saveHistory(keywords, type)
     dispatch(loadHistoryDone(items))
 }
 
 export function searchBimFile(keywords, suffix, isModel) {
     return dispatch => {
         loadingToast();
-        saveHistory(keywords, dispatch);
+        saveHistory(SearchHistory.SEARCH_TYPE_BIM, keywords, dispatch);
         API.searchModuleBlueprint(storage.loadProject(), storage.projectIdVersionId, keywords, suffix, isModel)
             .then((responseData) => {
                 let data = responseData.data;

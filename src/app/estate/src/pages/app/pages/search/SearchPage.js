@@ -19,6 +19,7 @@ import QualityListCell from "./../quality/qualityListCell";
 import EquipmentListCell from "./../equipment/equipmentListCell";
 import * as qualityListAction from '../../actions/qualityListAction'
 import * as equipmentAction from '../../actions/equipmentListAction'
+import { SearchHistory } from './SearchHistory';
 
 class SearchPage extends BaseSearchPage {
 
@@ -80,7 +81,7 @@ class SearchPage extends BaseSearchPage {
         }
         return (
             <ScrollView style={{ marginBottom: 20 }}>
-                <View style={{height:"100%"}}>
+                <View style={{ height: "100%" }}>
                     {
                         this.renderQualityContent()
                     }
@@ -126,7 +127,7 @@ class SearchPage extends BaseSearchPage {
             value: item,
         }
         return (
-            <EquipmentListCell key={item.key} onCellAction={this.onEquipmentCellAction} item={item} index={index} keywords={this.state.keywords}/>
+            <EquipmentListCell key={item.key} onCellAction={this.onEquipmentCellAction} item={item} index={index} keywords={this.state.keywords} />
         );
     }
 
@@ -173,7 +174,7 @@ class SearchPage extends BaseSearchPage {
 
     renderMoreView = (moreCallback) => {
         return (
-            <TouchableOpacity onPress={(event)=>{event.preventDefault();moreCallback&&moreCallback(event)}}>
+            <TouchableOpacity onPress={(event) => { event.preventDefault(); moreCallback && moreCallback(event) }}>
                 <View style={{ flexDirection: "row", alignItems: "center", paddingLeft: 20, paddingRight: 20, marginTop: 5 }}>
                     <View style={{ height: 1, backgroundColor: "#e6e6e6", flex: 1 }}></View>
                     <Text style={{ color: "#b0b0b0", fontSize: 14, marginLeft: 10 }}>查看更多</Text>
@@ -208,7 +209,7 @@ function mapDispatchToProps(dispatch) {
         },
         loadHistory: () => {
             if (dispatch) {
-                dispatch(SearchAction.loadHistory());
+                dispatch(SearchAction.loadHistory(SearchHistory.SEARCH_TYPE_GLOBAL));
             }
         },
         deleteQualityData: (qcState, inspectId, inspectionType, qualityCheckpointId, qualityCheckpointName) => {

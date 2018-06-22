@@ -15,6 +15,7 @@ import BaseSearchPage from "./BaseSearchPage"
 import * as SearchAction from "./../../actions/searchAction";
 import EquipmentListCell from "./../equipment/equipmentListCell";
 import EquipmentListView from "./../equipment/equipmentListView";
+import { SearchHistory } from './SearchHistory';
 
 class EquipmentSearchPage extends BaseSearchPage {
     listRef = null;
@@ -68,7 +69,7 @@ function mapDispatchToProps(dispatch) {
         },
         loadHistory: () => {
             if (dispatch) {
-                dispatch(SearchAction.loadHistory());
+                dispatch(SearchAction.loadHistory(SearchHistory.SEARCH_TYPE_EQUIPMENT));
             }
         }
     }
