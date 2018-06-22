@@ -103,6 +103,9 @@ export function searchData(keywords, page, qcState, dataMapIn) {
 }
 
 function saveHistory(keywords, dispatch) {
+    if (!keywords || keywords.length == 0) {
+        return;
+    }
     let history = storage.loadSearchHistory();
     let items = [];
     if (history && history.length > 0) {

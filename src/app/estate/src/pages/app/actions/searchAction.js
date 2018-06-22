@@ -86,6 +86,9 @@ export function loadHistory(items) {
 }
 
 function saveHistory(keywords, dispatch) {
+    if (!keywords || keywords.length == 0) {
+        return;
+    }
     let history = storage.loadSearchHistory();
     let items = [];
     if (history && history.length > 0) {
@@ -116,7 +119,7 @@ export function searchBimFile(keywords, suffix, isModel) {
                 let bimFiles = [];
                 if (data && data.message === "success") {
                     bimFiles = data.data;
-                    bimFiles.map((item)=>{
+                    bimFiles.map((item) => {
                         item.name = parseBimFileName(item.name);
                     })
                 }
@@ -129,12 +132,12 @@ export function searchBimFile(keywords, suffix, isModel) {
     }
 }
 
-function parseBimFileName(htmlName){
+function parseBimFileName(htmlName) {
     // 电缆沟<span class=\'highlight-search\'>图</span>纸.<span class=\'highlight-search\'>dwg</span>
-    var reg1=new RegExp(/<span class='highlight-search'>/g); 
-    var reg2=new RegExp(/<\/span>/g); 
-    var str1 = htmlName.replace(reg1,''); 
-    var str2 = str1.replace(reg2,''); 
+    var reg1 = new RegExp(/<span class='highlight-search'>/g);
+    var reg2 = new RegExp(/<\/span>/g);
+    var str1 = htmlName.replace(reg1, '');
+    var str2 = str1.replace(reg2, '');
     return str2;
 }
 
