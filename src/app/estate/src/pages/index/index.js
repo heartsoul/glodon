@@ -2,7 +2,7 @@
  * 应用入口
  */
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View, Dimensions} from 'react-native';
 import { loadStorageData } from '../../common/store/store+base';
 import App from '../containers/App';
 
@@ -27,6 +27,15 @@ export default class extends React.Component {
   }
   renderPage() {
     return (<App />)
+  }
+  onWindowResize =()=>{
+    this.forceUpdate();
+  }
+  componentWillMount = () =>{
+    window.addEventListener('resize', this.onWindowResize)
+  }
+  componentWillUnmount = () => {
+    window.removeEventListener('resize', this.onWindowResize)
   }
   render() {
     if (this.state.hasLoad) {

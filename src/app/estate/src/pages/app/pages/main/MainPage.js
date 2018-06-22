@@ -25,8 +25,6 @@ import OfflineManager from '../../../offline/manager/OfflineManager'
 import * as API from "app-api";
 // import { YellowBox } from 'react-native';//忽略黄色警告
 
-var { width, height } = Dimensions.get("window");
-
 class MainTabTitle extends Component {
     render = () => {
         const {text,activeTitleStyle,titleStyle,select} = this.props;
@@ -101,12 +99,18 @@ export default class extends Component {
         BimFileEntry.chooseQualityModelFromHome(navigator);
     }
 
-    componentWillUnmount(){
-        if(Platform.OS === 'web') {
-            return;
-        }
-    }
-
+    onWindowResize = (event) => {
+        event.preventDefault();
+        setTimeout(() => {
+          this.forceUpdate();
+        }, 200);
+      }
+      componentWillMount = () => {
+        window.addEventListener('resize', this.onWindowResize)
+      }
+      componentWillUnmount = () => {
+        window.removeEventListener('resize', this.onWindowResize)
+      }
     componentDidMount() {
 
         if(Platform.OS === 'web') {
@@ -150,6 +154,7 @@ export default class extends Component {
     }
 
     renderCarouselView = (qShow, eShow) => {
+        let { width } = Dimensions.get("window");
         if (qShow && eShow) {
             return (
                 <Carousel cycle={false} startIndex={0} ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
@@ -254,7 +259,7 @@ export default class extends Component {
                 </View>
             </SafeAreaView>
         }
-
+        let { width } = Dimensions.get("window");
         return (
             <SafeAreaView style={{width:'100%',height:'100%'}}>
             <ScrollView style={{ backgroundColor: '#f8f8f8' }}>
@@ -316,7 +321,7 @@ var styles = StyleSheet.create({
         color: 'green',
     },
     topImageView: {
-        width: width,
+        width: '100%',
         height: 203,
         alignItems: 'center',
         justifyContent: 'center',

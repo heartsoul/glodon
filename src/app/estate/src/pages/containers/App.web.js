@@ -1,11 +1,12 @@
+import { Toast } from 'antd-mobile';
 import React from 'react'
-import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState } from 'react-native'
+import { View, Image, Platform} from 'react-native'
 import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'
 import configureStore, { history } from '../store/ConfigureStore'
 import * as GLD from './pages.web'
 import * as API from 'app-api'
-import { createStackNavigator,NavigationActions, StackActions } from 'app-3rd/react-navigation';
+import { createStackNavigator , NavigationActions, StackActions} from 'app-3rd/react-navigation';
 const store = configureStore()
 
 const screens = {
@@ -153,6 +154,45 @@ const RootChooseStack = createStackNavigator(
     navigationOptions: options,
   }
 );
+
+function resetGetStateForAction(RootStack) {
+  const defaultGetStateForAction = RootStack.router.getStateForAction;
+  // console.log("defaultGetStateForAction:"+defaultGetStateForAction+"\n");
+
+  RootStack.router.getStateForAction = (action, state) => {
+      // console.log("action info -- type:"+action.type+",key:"+action.key+",params:"+action.params+",path:"+action.path+",routeName:"+action.routeName+",n:"+action.n+"\n");
+      const { n } = action;
+      if (action.type === StackActions.POP && typeof n === 'string') {
+          let backRouteIndex = state.index;
+          let findN = n;
+          // 支持按照routeName进行回退，如果存在重名了，那么就回到
+          const backRoute = state.routes.find(route => route.routeName === findN);
+          findN = Math.max(0, backRouteIndex - state.routes.indexOf(backRoute));
+          if (findN > 0) {
+              action.n = findN;
+          } else {
+              action.n = null;
+          }
+      }
+      // if (Platform.OS === 'web' && action.type === NavigationActions.BACK && state.routes.length === 1) {
+      //     let systemDate = new Date().getTime();
+      //     if (systemDate - clickTime > 2000) {
+      //         clickTime = systemDate
+      //         Toast.info("再按一次退出", 1);
+      //         return null;
+      //     }
+
+      // }
+      return defaultGetStateForAction(action, state);
+  };
+}
+
+
+resetGetStateForAction(RootMainStack);
+resetGetStateForAction(RootLoginStack);
+resetGetStateForAction(RootGuideStack);
+resetGetStateForAction(RootChooseStack);
+
 export default class extends React.Component {
   constructor() {
     super();
@@ -163,8 +203,9 @@ export default class extends React.Component {
   componentDidMount = () => {
     this.fireHeartBeat();
     clickTime = new Date().getTime();
+    
+    
   }
-
   fireHeartBeat = () => {
     if (storage.hasChoose()) {
       let tenant = storage.loadLastTenant();

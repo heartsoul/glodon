@@ -1,14 +1,14 @@
-import React from 'react'
-import { Provider } from 'react-redux'
-import { createStackNavigator,NavigationActions, StackActions } from 'app-3rd/react-navigation';
-import ReactNative, { View, Text, Image, ActivityIndicator, Platform, StyleSheet, AppState,NetInfo, } from 'react-native'
-
-import * as API from 'app-api'
-import { BarItems } from "app-components"
-import * as GLD from '../pages'
-import configureStore, { history } from '../store/ConfigureStore'
 import { Toast } from 'antd-mobile';
-import NetWorkUtil from '../../common/utils/NetWorkUtil'
+import { createStackNavigator, NavigationActions, StackActions } from 'app-3rd/react-navigation';
+import * as API from 'app-api';
+import { BarItems } from "app-components";
+import React from 'react';
+import { Platform, View } from 'react-native';
+import { Provider } from 'react-redux';
+import NetWorkUtil from '../../common/utils/NetWorkUtil';
+import * as GLD from '../pages';
+import configureStore from '../store/ConfigureStore';
+
 
 const store = configureStore()
 const screens = {

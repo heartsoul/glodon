@@ -66,8 +66,9 @@ var config = {
     devtool: 'cheap-module-source-map', plugins: [
         // compress js
         new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            beautify: true
+            sourceMap: false,
+            beautify: false,
+            comments: false
         })
     ],
     output: {
@@ -93,12 +94,12 @@ var config = {
     },
 
     plugins: [
-        // new webpack.DefinePlugin({
-        //     'process.env.NODE_ENV': JSON.stringify(
-        //         process.env.NODE_ENV || 'development'
-        //     ),
-        //     __DEV__: process.env.NODE_ENV === 'production' || true,
-        // }),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(
+                process.env.NODE_ENV || 'production'
+            ),
+            __DEV__: process.env.NODE_ENV === 'development' || false,
+        }),
         // new webpack.HotModuleReplacementPlugin(),
     ],
 

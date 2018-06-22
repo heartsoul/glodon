@@ -3,35 +3,32 @@ import { Toast } from 'antd-mobile'; // 引入connect函数
 import { KeyboardAwareScrollView } from 'app-3rd/index';
 import { ActionButton, BarItems, TextInputNormal, TextInputPassword, ActionModal } from 'app-components';
 import React from "react";
-import ReactNative, { Animated, Dimensions, Image, Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View, Keyboard} from "react-native";
+import ReactNative, { Animated, Dimensions, Image, Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View, Keyboard } from "react-native";
 import { connect } from 'react-redux'; // 引入connect函数
 import * as loginAction from '../actions/loginAction'; // 导入action方法 
 
-
-
-var { width, height } = Dimensions.get("window");
-
 class LoginPage extends React.Component {
 
-static navigationOptions = {
-    headerTitle: <BarItems.TitleBarItem text='用户登录'/>,
-    headerRight:<View/>,
-    header:null
+  static navigationOptions = {
+    headerTitle: <BarItems.TitleBarItem text='用户登录' />,
+    headerRight: <View />,
+    header: null
   };
 
   constructor(props) {
     super(props);
-    if(!storage.homeNavigation) {
+    if (!storage.homeNavigation) {
       storage.homeNavigation = this.props.navigation;
     }
     this.passwordTextInput = null;
     this.userNameTextInput = null;
     /*用来指示是否显示Loading提示符号*/
     let un = props.userName;
-    if(!un) {
+    if (!un) {
       un = '';
     }
     this.state = {
+      width: 0,
       disabled: false,
       pressed: false,
       username: un,
@@ -44,18 +41,30 @@ static navigationOptions = {
       nameAnim: new Animated.Value(un.length > 0 ? 0.5 : 0.0)
     };
   }
- componentDidMount = () => {
- }
+  onWindowResize = (event) => {
+    // event.preventDefault();
+    // setTimeout(() => {
+    //   this.forceUpdate();
+    // }, 200);
+  }
+  componentWillMount = () => {
+    window.addEventListener('resize', this.onWindowResize)
+  }
+  componentWillUnmount = () => {
+    window.removeEventListener('resize', this.onWindowResize)
+  }
+  componentDidMount = () => {
+  }
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.status === '重试' && nextProps.retryTimes > 0) {
-      this.props.login(this.state.username,this.state.password);
+      this.props.login(this.state.username, this.state.password);
       return false;
     }
     // 登录完成,切成功登录
     if (nextProps.status === '登录成功' && nextProps.isSuccess && storage.isLogin()) {
       let navigator = this.props.navigation;
       Toast.hide();
-      storage.gotoMain(navigator);  
+      storage.gotoMain(navigator);
       return false
     }
     Toast.hide();
@@ -66,113 +75,128 @@ static navigationOptions = {
     return (this.state.username.length > 1 && this.state.password.length > 5);
   }
   _onUserNameChangeText = text => {
-    if(text.indexOf('\n')>=0) {
+    if (text.indexOf('\n') >= 0) {
       this.passwordTextInput.focus();
       // this.passwordTextInput.setSelectionRange(0, this.passwordTextInput.value.length);
       return;
     }
     let check = text.length > 1 && this.state.password.length > 5;
-    this.setState({ username: text, disabled:!check});
+    this.setState({ username: text, disabled: !check });
   };
   _onUserNameBlur = () => {
-    this.setState({ disabled:!this._checkInput()});
-      Animated.timing(
-        this.state.lineAnim,
-        {toValue: this.state.username.length <= 0 ? 0.0 : 0.5,duration:0.0}
-      ).start();
-      Animated.timing(
-        this.state.nameAnim,
-        {toValue: this.state.username.length <= 0 ? 0.0 : 0.5}
-      ).start();
+    this.setState({ disabled: !this._checkInput() });
+    Animated.timing(
+      this.state.lineAnim,
+      { toValue: this.state.username.length <= 0 ? 0.0 : 0.5, duration: 0.0 }
+    ).start();
+    Animated.timing(
+      this.state.nameAnim,
+      { toValue: this.state.username.length <= 0 ? 0.0 : 0.5 }
+    ).start();
   };
   _onPasswordBlur = () => {
-    this.setState({ disabled:!this._checkInput()});
+    this.setState({ disabled: !this._checkInput() });
     Animated.timing(
       this.state.linePwdAnim,
-      {toValue: this.state.password.length <= 0 ? 0.0 : 0.5,duration:0.0}
+      { toValue: this.state.password.length <= 0 ? 0.0 : 0.5, duration: 0.0 }
     ).start();
     Animated.timing(
       this.state.namePwdAnim,
-      {toValue: this.state.password.length <= 0 ? 0.0 : 0.5}
+      { toValue: this.state.password.length <= 0 ? 0.0 : 0.5 }
     ).start();
   };
   _onUserNameFocus = () => {
 
-    this.setState({disabled:!this._checkInput()
+    this.setState({
+      disabled: !this._checkInput()
     });
     Animated.timing(
       this.state.lineAnim,
-      {toValue: 1.0}
+      { toValue: 1.0 }
     ).start();
-    
+
     Animated.timing(
       this.state.nameAnim,
-      {toValue: 1.0}
+      { toValue: 1.0 }
     ).start();
   };
   _onPasswordFocus = () => {
-    this.setState({disabled:!this._checkInput()});
+    this.setState({ disabled: !this._checkInput() });
     Animated.timing(
       this.state.linePwdAnim,
-      {toValue: 1.0}
+      { toValue: 1.0 }
     ).start();
-  
+
     Animated.timing(
       this.state.namePwdAnim,
-      {toValue: 1.0}
+      { toValue: 1.0 }
     ).start();
   };
-  
+
   _onPasswordChangeText = text => {
-    if(text && text.indexOf('\n')>=0) {
-     if(this._checkInput()) {
-       this.doLogin();
-     }
+    if (text && text.indexOf('\n') >= 0) {
+      if (this._checkInput()) {
+        this.doLogin();
+      }
       return;
     }
-    if(!text) {
+    if (!text) {
       text = '';
-    } 
+    }
     // console.log("_onPasswordChangeText" + text);
     let check = text.length > 5 && this.state.username.length > 1;
-    this.setState({ password: text, disabled:!check});
+    this.setState({ password: text, disabled: !check });
   };
   _fogotAction = () => {
     let navigator = this.props.navigation;
-    storage.pushNext(navigator, "ForgotPage",{title:'找回密码'})
+    storage.pushNext(navigator, "ForgotPage", { title: '找回密码' })
   };
-  doLogin=()=>{
+  doLogin = () => {
     Keyboard.dismiss();
     Toast.loading('正在登录...', 0, null, true);
     const { login } = this.props
-    login(this.state.username,this.state.password)
+    login(this.state.username, this.state.password)
   }
-  
-  componentWillReceiveProps(nextProps){
-    if(nextProps.isSuccess == false && nextProps.status === '登录失败' && this.props.status != nextProps.status) {
-        ActionModal.alertTip('提示','账号或密码错误',{text:'知道了', style: { color: '#00baf3' }});
-        Keyboard.dismiss();
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isSuccess == false && nextProps.status === '登录失败' && this.props.status != nextProps.status) {
+      ActionModal.alertTip('提示', '账号或密码错误', { text: '知道了', style: { color: '#00baf3' } });
+      Keyboard.dismiss();
     }
     return true;
   }
   render() {
+    let { width } = Dimensions.get("window");
+    this.state.width = width;
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={Platform.OS ==='ios'? 'on-drag':'none'} 
-      style={[{backgroundColor: "#ffffff",flex: 1,
-      marginLeft: 0,
-      marginRight: 0,width:'100%',height:'100%'}]}>
-     
+      <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} keyboardDismissMode={Platform.OS === 'ios' ? 'on-drag' : 'none'}
+        style={[{
+          backgroundColor: "#ffffff", flex: 1,
+          marginLeft: 0,
+          marginRight: 0, width: '100%', height: '100%'
+        }]}>
+
         <StatusBar
           barStyle="light-content"
           backgroundColor="#00baf3"
           translucent={true}
         />
-        <Image
-          source={require("app-images/login/icon_login_top_bg.png")}
-          style={[styles.style_login_image]}
-        />
-        <View style={{marginLeft:20,marginRight:20}}>
-        <Animated.Text
+        <View style={{
+          height: this.state.width * 759 / 1125,
+          width: this.state.width,
+
+        }}>
+          <Image
+            source={require("app-images/login/icon_login_top_bg.png")}
+            style={{
+              height: '100%',
+              width: '100%',
+              resizeMode: "contain"
+            }}
+          />
+        </View>
+        <View style={{ marginLeft: 20, marginRight: 20}}>
+          <Animated.Text
             style={[
               styles.style_input_title,
               { marginTop: 28, },
@@ -195,31 +219,31 @@ static navigationOptions = {
           >
             账户名
         </Animated.Text>
-        <TextInputNormal
-          placeholder={''}
-          inputStyle={{fontSize:18}}
-          onBlur={() => this._onUserNameBlur()}
-          onFocus={() => this._onUserNameFocus()}
-          onChangeText={text => this._onUserNameChangeText(text)}
-          defaultValue={this.state.username}
-          ref={(ref)=>{this.userNameTextInput=ref}}
-        />
-        <View style={styles.style_input_line_gray}>
-        <Animated.View
-          style={[ styles.style_input_line,
+          <TextInputNormal
+            placeholder={''}
+            inputStyle={{ fontSize: 18 }}
+            onBlur={() => this._onUserNameBlur()}
+            onFocus={() => this._onUserNameFocus()}
+            onChangeText={text => this._onUserNameChangeText(text)}
+            defaultValue={this.state.username}
+            ref={(ref) => { this.userNameTextInput = ref }}
+          />
+          <View style={styles.style_input_line_gray}>
+            <Animated.View
+              style={[styles.style_input_line,
               {
-                width:this.state.lineAnim.interpolate({
-                    inputRange: [0,0.5,1],
-                    outputRange: ['0%', '0%', '100%'] //线性插值，0对应60，0.6对应30，1对应0
-                  })
+                width: this.state.lineAnim.interpolate({
+                  inputRange: [0, 0.5, 1],
+                  outputRange: ['0%', '0%', '100%'] //线性插值，0对应60，0.6对应30，1对应0
+                })
               }
-          ]
-          }
-        />
-        </View>
-        <Animated.Text
-          style={[
-            styles.style_input_title,
+              ]
+              }
+            />
+          </View>
+          <Animated.Text
+            style={[
+              styles.style_input_title,
               { marginTop: 20 },
               {
                 color: "rgb(153,153,146)",
@@ -236,45 +260,45 @@ static navigationOptions = {
                   },
                 ],
               }
-          ]}
-        >
-          密码
-        </Animated.Text>
-        <TextInputPassword
-          placeholder={''}
-          inputStyle={{fontSize:18}}
-          onChangeText={text => this._onPasswordChangeText(text)}
-          value={this.state.password}
-          onBlur={() => this._onPasswordBlur()}
-          onFocus={() => this._onPasswordFocus()}
-          ref={(ref)=>{this.passwordTextInput=ref}}
-        />
-        <View style={styles.style_input_line_gray}>
-        <Animated.View
-          style={[ styles.style_input_line,
-              {
-                width:this.state.linePwdAnim.interpolate({
-                    inputRange: [0,0.5,1],
-                    outputRange: ['0%', '0%', '100%'] //线性插值，0对应60，0.6对应30，1对应0
-                  })
-              }
-          ]
-          }
-        />
-        </View>
-        <View>
-          <ActionButton
-            onPress={()=>{this.doLogin()}}
-            isDisabled={()=>{return this.state.disabled}}
-            text="登 录"
+            ]}
           >
-          </ActionButton> 
-        </View>
-        <View style={styles.style_fogotTextView}>
-        <TouchableOpacity onPressOut={(event)=>{event.preventDefault();this._fogotAction && this._fogotAction(event)}}>
-        <Text style={[styles.style_fogotText]}>忘记密码</Text>
-        </TouchableOpacity>
-        </View>
+            密码
+        </Animated.Text>
+          <TextInputPassword
+            placeholder={''}
+            inputStyle={{ fontSize: 18 }}
+            onChangeText={text => this._onPasswordChangeText(text)}
+            value={this.state.password}
+            onBlur={() => this._onPasswordBlur()}
+            onFocus={() => this._onPasswordFocus()}
+            ref={(ref) => { this.passwordTextInput = ref }}
+          />
+          <View style={styles.style_input_line_gray}>
+            <Animated.View
+              style={[styles.style_input_line,
+              {
+                width: this.state.linePwdAnim.interpolate({
+                  inputRange: [0, 0.5, 1],
+                  outputRange: ['0%', '0%', '100%'] //线性插值，0对应60，0.6对应30，1对应0
+                })
+              }
+              ]
+              }
+            />
+          </View>
+          <View>
+            <ActionButton
+              onPress={(event) => { event.preventDefault(); this.doLogin() }}
+              isDisabled={() => { return this.state.disabled }}
+              text="登 录"
+            >
+            </ActionButton>
+          </View>
+          <View style={styles.style_fogotTextView}>
+            <TouchableOpacity onPressOut={(event) => { event.preventDefault(); this._fogotAction && this._fogotAction(event) }}>
+              <Text style={[styles.style_fogotText]}>忘记密码</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </KeyboardAwareScrollView>
     );
@@ -290,8 +314,8 @@ const styles = StyleSheet.create({
     marginLeft: 0
   },
   style_login_image: {
-    height: width * 759 / 1125,
-    width: width,
+    height: Dimensions.get("window").width * 759 / 1125,
+    width: Dimensions.get("window").width,
     marginTop: 0,
     marginLeft: 0,
     resizeMode: "contain"
@@ -310,11 +334,11 @@ const styles = StyleSheet.create({
     marginTop: 440,
     alignSelf: "center"
   },
- 
+
   style_input_line: {
     height: 2,
     backgroundColor: "#00baf3",
-    borderRadius:1
+    borderRadius: 1
     // marginLeft: 20,
     // marginRight: 20
   },
@@ -323,8 +347,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(243,242,242)",
     marginLeft: 20,
     marginRight: 20,
-    borderRadius:1
-    
+    borderRadius: 1
+
   },
   style_view_unlogin: {
     fontSize: 12,
@@ -343,14 +367,14 @@ const styles = StyleSheet.create({
 
   style_fogotText: {
     height: 20,
-    marginTop: Platform.OS === 'web' ? 30:10,
+    marginTop: 10,
     marginLeft: 20,
     marginRight: 20,
     alignItems: "center",
     textAlign: "center",
     fontSize: 14,
     color: "rgb(153,153,146)",
-    alignSelf:'center'
+    alignSelf: 'center'
   },
 
   style_loginText: {
@@ -367,10 +391,9 @@ const styles = StyleSheet.create({
   },
   style_fogotTextView: {
     alignItems: "center",
-    flex: 1,
     flexDirection: "row",
-    justifyContent:"center",
-    alignContent:"center",
+    justifyContent: "center",
+    alignContent: "center",
     height: 40,
     marginTop: 10,
   },
@@ -381,12 +404,12 @@ export default connect(
     status: state.loginIn.status,
     isSuccess: state.loginIn.isSuccess,
     userName: storage.getLoginUserName(),
-    retryTimes:state.loginIn.retryTimes,
+    retryTimes: state.loginIn.retryTimes,
   }),
   dispatch => ({
-    login: (userName,password) =>{
-      if(dispatch) {
-        dispatch(loginAction.login(userName,password))
+    login: (userName, password) => {
+      if (dispatch) {
+        dispatch(loginAction.login(userName, password))
       }
     },
   })
