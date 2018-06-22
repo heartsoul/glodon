@@ -84,16 +84,15 @@ class GLDCanvas extends Component {
     _registerKeyboardListener = () => {
         if (isAndroid()) {
             var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-            window.addEventListener('resize', function () {
+            window.addEventListener('resize', () => {
                 var nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-                if (clientHeight > nowClientHeight) {
+                if (clientHeight > nowClientHeight && this.state.editState == EditState.EDIT_TEXT) {
                     let placeholderHeight = parseInt(clientHeight) - parseInt(nowClientHeight);
                     //键盘弹出的事件处理
                     let ele = document.getElementById("placeholder");
                     if (ele) {
                         ele.style.height = placeholderHeight
                     }
-
                 } else {
                     let ele = document.getElementById("placeholder");
                     if (ele) {
@@ -102,19 +101,21 @@ class GLDCanvas extends Component {
                 }
             });
         } else if (isiOS()) {
-            document.addEventListener('focusin', function () {
-                    //软键盘弹出的事件处理
+            document.addEventListener('focusin', () => {
+                //软键盘弹出的事件处理
+                if (this.state.editState == EditState.EDIT_TEXT) {
                     let ele = document.getElementById("placeholder");
                     if (ele) {
                         ele.style.height = 252;
                     }
+                }
             });
-            document.addEventListener('focusout', function () {
-                    //软键盘收起的事件处理
-                    let ele = document.getElementById("placeholder");
-                    if (ele) {
-                        ele.style.height = 0;
-                    }
+            document.addEventListener('focusout', () => {
+                //软键盘收起的事件处理
+                let ele = document.getElementById("placeholder");
+                if (ele) {
+                    ele.style.height = 0;
+                }
             });
         }
 
@@ -212,11 +213,14 @@ class GLDCanvas extends Component {
     }
     _addText = () => {
         this.id++;
+        let top = parseInt(this.canvas.offsetTop) + 10 < 36 ? 36 : parseInt(this.canvas.offsetTop) + 10
+        let y = top - parseInt(this.canvas.offsetTop) + 23;
         let node = {
             editable: true,
             autoFocus: true,
             id: `${this.id}`,
-            color: this.state.selectedDotColor
+            color: this.state.selectedDotColor,
+            location: { x: parseInt(this.canvas.offsetLeft) + 17, y: y }
         };
         let nodes = [];
         this.state.inputNodes.map((item) => {
@@ -225,10 +229,9 @@ class GLDCanvas extends Component {
             nodes.push(item);
         })
         nodes.push(node)
-
+        this.state.editState = EditState.EDIT_TEXT;
         this.setState({
             inputNodes: nodes,
-            editState: EditState.EDIT_TEXT,
         })
     }
 
@@ -475,7 +478,7 @@ class TransformTextInput extends Component {
         }
         this.myEle.style.left = (movex)
         this.myEle.style.top = (movey)
-        this.props.changeLocation(movex + 5, movey + 5 + 16)//处理padding，及文字大小
+        this.props.changeLocation(movex + 7, movey + 7 + 16)//处理padding，及文字大小
     }
     _checkLocation = () => {
         if (parseInt(this.myEle.style.left) < 0) {
@@ -514,9 +517,9 @@ class TransformTextInput extends Component {
         }
     }
     render() {
-        let w = this.props.editable ? width : parseInt(this._getTextWidth(this.props.value, 16)) + 20;
-        if (w > width - 20) {
-            w = width - 20;
+        let w = this.props.editable ? width : parseInt(this._getTextWidth(this.props.value, 16)) + 27;
+        if (w > width - 27) {
+            w = width - 27;
         }
         let boxId = `transform_box_${this.props.id}`;
         return (
