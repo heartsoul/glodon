@@ -425,13 +425,13 @@ export default class GLDStorage extends BaseStorage {
     };
 
     // 获取单据搜索历史
-    loadSearchHistory = () => {
-        let history = this.getItem(__KEY_searchHistory + userId());
+    loadSearchHistory = (searchType) => {
+        let history = this.getItem(`${__KEY_searchHistory}-${searchType}-${userId()}`);
         return history;
     }
     // 保存单据搜索历史
-    setSearchHistory = (history) => {
-        this.setItem(__KEY_searchHistory + userId(), history);
+    setSearchHistory = (searchType,history) => {
+        this.setItem(`${__KEY_searchHistory}-${searchType}-${userId()}`, history);
     }
     // wlan下自动下载
     loadAutoDownload = () => {

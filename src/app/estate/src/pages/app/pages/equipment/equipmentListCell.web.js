@@ -24,8 +24,8 @@ export default class EquipmentListCell extends PureComponent {
         }
     }
     render() {
-        return( 
-            <View style={{display:"block"}}>
+        return (
+            <View style={{ display: "block" }}>
                 {this.renderItem(this.state.item, this.state.index)}
             </View>)
     }
@@ -33,13 +33,15 @@ export default class EquipmentListCell extends PureComponent {
     // 提交
     _onSubmitAction = (item, index) => {
         // BimFileEntry.showNewReviewPage(null,item.value.qualityCheckListId,API.CREATE_TYPE_REVIEW); 
-        this.props.onCellAction(item,index,'submit');
+        this.props.onCellAction(item, index, 'submit');
     }
     // 删除
     _onDeleteAction = (item, index) => {
-        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消'}, { text: '删除', onPress:()=>{
-            this.props.onCellAction(item,index,'delete');
-        } });
+        ActionModal.alertConfirm('是否确认删除？', "删除当前数据后，数据不可恢复哦！", { text: '取消' }, {
+            text: '删除', onPress: () => {
+                this.props.onCellAction(item, index, 'delete');
+            }
+        });
     }
     // 检查
     _onInspectAction = (item, index) => {
@@ -47,11 +49,11 @@ export default class EquipmentListCell extends PureComponent {
     }
     // 复查
     _onReviewAction = (item, index) => {
-        BimFileEntry.showNewReviewPage(null,item.value.qualityCheckListId,API.CREATE_TYPE_REVIEW);
+        BimFileEntry.showNewReviewPage(null, item.value.qualityCheckListId, API.CREATE_TYPE_REVIEW);
     }
     // 整改
     _onRectifyAction = (item, index) => {
-        BimFileEntry.showNewReviewPage(null,item.value.qualityCheckListId,API.CREATE_TYPE_RECTIFY);
+        BimFileEntry.showNewReviewPage(null, item.value.qualityCheckListId, API.CREATE_TYPE_RECTIFY);
     }
     // 验收
     _onAcceptAction = (item, index) => {
@@ -64,31 +66,31 @@ export default class EquipmentListCell extends PureComponent {
     renderItem = (item, index) => {
         let barItem = this.renderActionBar(item, index);
         let bToolbar = barItem ? true : false;
-        let renderLine = bToolbar ? (<View style={{height:1, backgroundColor:'#fafafa'}}></View>) : null
-        let hightlightData = this.searchHighlightData(this.props.keywords,item.value.facilityName);
+        let renderLine = bToolbar ? (<View style={{ height: 1, backgroundColor: '#fafafa' }}></View>) : null
+        let hightlightData = this.searchHighlightData(this.props.keywords, item.value.facilityName);
         return (
-            <TouchableOpacity style={[styles.containerView,]} activeOpacity={0.5} onPress={(event) => {event.preventDefault(); this._toDetail(item) }}>
+            <TouchableOpacity style={[styles.containerView,]} activeOpacity={0.5} onPress={(event) => { event.preventDefault(); this._toDetail(item) }}>
                 <View style={[styles.contentHeaderView]}>
                     <Image source={projectTimeImage} style={styles.imageTime} />
                     <Text style={styles.contentTime}>进场日期：{API.formatUnixtimestampSimple(item.value.approachDate)}</Text>
                     <Text style={[styles.contentStatus, { color: item.value.qcStateColor }]}>{item.value.qcStateShow}</Text>
                 </View>
-                <View style={{height:1, backgroundColor:'#fafafa'}}></View>
-                <View style={[styles.contentView, !bToolbar? styles.contentView_border:{}]}>
+                <View style={{ height: 1, backgroundColor: '#fafafa' }}></View>
+                <View style={[styles.contentView, !bToolbar ? styles.contentView_border : {}]}>
                     <Text style={styles.content}>批号：{item.value.batchCode}</Text>
                     <Text style={styles.content}>编码：{item.value.facilityCode}</Text>
                     <Text style={styles.content}>名称：{
-                        hightlightData.map((item, index)=>{
-                            if(item.highlight){
-                                return <Text key={index} style={[styles.content,{color:"#00baf3"}]}>{item.text}</Text>
-                            }else{
+                        hightlightData.map((item, index) => {
+                            if (item.highlight) {
+                                return <Text key={index} style={[styles.content, { color: "#00baf3" }]}>{item.text}</Text>
+                            } else {
                                 return <Text key={index} style={styles.content}>{item.text}</Text>
                             }
                         })
 
                     }</Text>
-                    
-                    <View style={{height:10, backgroundColor:'#ffffff'}}></View>
+
+                    <View style={{ height: 10, backgroundColor: '#ffffff' }}></View>
                 </View>
                 {renderLine}
                 {barItem}
@@ -99,20 +101,20 @@ export default class EquipmentListCell extends PureComponent {
 
     searchHighlightData = (keywords, content) => {
         let data = [];
-        if( content && content.length > 0){
-            if(keywords && keywords.length > 0){
+        if (content && content.length > 0) {
+            if (keywords && keywords.length > 0) {
                 let len = keywords.length;
                 let index = content.indexOf(keywords);
-                while(index > -1){
+                while (index > -1) {
                     let str1 = content.substring(0, index);
-                    let str2 = content.substring(index,index+len);
-                    data.push({highlight:false,text:str1})
-                    data.push({highlight:true,text:str2})
-                    content = content.substring(index+len);
+                    let str2 = content.substring(index, index + len);
+                    data.push({ highlight: false, text: str1 })
+                    data.push({ highlight: true, text: str2 })
+                    content = content.substring(index + len);
                     index = content.indexOf(keywords);
                 }
             }
-            data.push({highlight:false,text:content})
+            data.push({ highlight: false, text: content })
         }
         return data;
     }
@@ -121,16 +123,16 @@ export default class EquipmentListCell extends PureComponent {
         // if(item.value.qcState != API.QC_STATE_EDIT) return;
         let imageSource = null
         if (item.value.committed === true) {
-            if(item.value.qualified === true) {
+            if (item.value.qualified === true) {
                 imageSource = standardImage;
             } else {
                 imageSource = notStandardImage;
             }
-            if(imageSource) {
+            if (imageSource) {
                 return (<Image source={imageSource} style={[styles.image]} />)
             }
         }
-        
+
         return null
     }
     // 提交 & 删除
@@ -146,11 +148,11 @@ export default class EquipmentListCell extends PureComponent {
         return (
             <View style={[styles.contentActionView]}>
                 {
-                    bSubmit ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_SUBMIT)} style={{ width:80, marginRight:20}}
+                    bSubmit ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_SUBMIT)} style={{ elevation: 0, width: 58, height: 28, borderWidth: 0.5, borderColor: API.toBillTypeColor(API.BILL_TYPE_ITEM_SUBMIT), marginRight: 14 }}
                         onClick={() => { this._onSubmitAction(item, index) }} text={API.BILL_TYPE_ITEM_SUBMIT} />) : (null)
                 }
                 {
-                    bDelete ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE)} style={{ width:80, marginRight:20}}
+                    bDelete ? (<StatusActionButton color={API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE)} style={{ elevation: 0, width: 58, height: 28, borderWidth: 0.5, borderColor: API.toBillTypeColor(API.BILL_TYPE_ITEM_DELETE), marginRight: 14 }}
                         onClick={() => { this._onDeleteAction(item, index) }} text={API.BILL_TYPE_ITEM_DELETE} />) : (null)
                 }
             </View>
@@ -160,7 +162,7 @@ export default class EquipmentListCell extends PureComponent {
     // 操作条
     renderActionBar = (item, index) => {
         if (!item.value.committed === true) {
-           return this.renderSubmitAndDeleteAction(item, index)
+            return this.renderSubmitAndDeleteAction(item, index)
         }
         return null;
     }
@@ -188,7 +190,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 1.5, height: 5 }, // iOS
         shadowOpacity: 0.15, // iOS
         shadowRadius: 3, // iOS
-    
+
     },
     contentHeaderView: {
         height: 40,
@@ -201,7 +203,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         fontSize: 15,
         color: '#666',
-        wordBreak:"break-all"
+        wordBreak: "break-all"
     },
     contentView: {
         left: 0,
@@ -221,8 +223,8 @@ const styles = StyleSheet.create({
         height: 75,
         right: 20,
         bottom: -7,
-        position:'absolute',
-        resizeMode:'contain',
+        position: 'absolute',
+        resizeMode: 'contain',
     },
     imageTime: {
         marginLeft: 10,

@@ -1,11 +1,12 @@
 import * as API from "app-api";
 import * as types from "./../constants/searchTypes";
 import { Toast } from 'antd-mobile';
+import { SearchHistory } from "./../pages/search/SearchHistory"
 
 export function search(keywords) {
     return dispatch => {
         loadingToast();
-        saveHistory(keywords, dispatch);
+        saveHistory(SearchHistory.SEARCH_TYPE_GLOBAL, keywords, dispatch);
         dispatch(searchStart());
         API.searchQualityData(storage.loadProject(), keywords, 0, 3)
             .then((responseData) => {
@@ -74,49 +75,31 @@ function parseQualityData(data, dataMapIn, page) {
  * 加载搜索历史
  * @param {*} items 
  */
-export function loadHistory(items) {
+export function loadHistory(type) {
     return dispatch => {
-        let history = storage.loadSearchHistory();
-        let items = [];
-        if (history && history.length > 0) {
-            items = history.split(",")
-        }
-        dispatch(loadHistoryDone(items));
+        dispatch(loadHistoryDone(SearchHistory.loadSearchHistory(type)));
     }
 }
 
-function saveHistory(keywords, dispatch) {
-    let history = storage.loadSearchHistory();
-    let items = [];
-    if (history && history.length > 0) {
-        items = history.split(",")
+function saveHistory(type, keywords, dispatch) {
+    if (!keywords || keywords.length == 0) {
+        return;
     }
-    let index = items.findIndex((value) => {
-        return keywords === value;
-    });
-    if (index >= 0) {
-        items.splice(index, 1)
-    }
-    items.unshift(keywords);
-    if (items.length > 20) {
-        items.pop();
-    }
-    let newHistory = items.join(",");
-    storage.setSearchHistory(newHistory);
+    let items = SearchHistory.saveHistory(keywords, type)
     dispatch(loadHistoryDone(items))
 }
 
 export function searchBimFile(keywords, suffix, isModel) {
     return dispatch => {
         loadingToast();
-        saveHistory(keywords, dispatch);
+        saveHistory(SearchHistory.SEARCH_TYPE_BIM, keywords, dispatch);
         API.searchModuleBlueprint(storage.loadProject(), storage.projectIdVersionId, keywords, suffix, isModel)
             .then((responseData) => {
                 let data = responseData.data;
                 let bimFiles = [];
                 if (data && data.message === "success") {
                     bimFiles = data.data;
-                    bimFiles.map((item)=>{
+                    bimFiles.map((item) => {
                         item.name = parseBimFileName(item.name);
                     })
                 }
@@ -129,12 +112,12 @@ export function searchBimFile(keywords, suffix, isModel) {
     }
 }
 
-function parseBimFileName(htmlName){
+function parseBimFileName(htmlName) {
     // 电缆沟<span class=\'highlight-search\'>图</span>纸.<span class=\'highlight-search\'>dwg</span>
-    var reg1=new RegExp(/<span class='highlight-search'>/g); 
-    var reg2=new RegExp(/<\/span>/g); 
-    var str1 = htmlName.replace(reg1,''); 
-    var str2 = str1.replace(reg2,''); 
+    var reg1 = new RegExp(/<span class='highlight-search'>/g);
+    var reg2 = new RegExp(/<\/span>/g);
+    var str1 = htmlName.replace(reg1, '');
+    var str2 = str1.replace(reg2, '');
     return str2;
 }
 

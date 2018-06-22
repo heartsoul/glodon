@@ -6,6 +6,7 @@ import * as searchTypes from "./../constants/searchTypes";
 import * as UpdateDataAction from "./updateDataAction";
 import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
 import OfflineManager from '../../offline/manager/OfflineManager'
+import { SearchHistory } from "./../pages/search/SearchHistory"
 
 // 删除草稿
 export function deleteData(id) {
@@ -103,23 +104,10 @@ export function searchData(keywords, page, qcState, dataMapIn) {
 }
 
 function saveHistory(keywords, dispatch) {
-    let history = storage.loadSearchHistory();
-    let items = [];
-    if (history && history.length > 0) {
-        items = history.split(",")
+    if (!keywords || keywords.length == 0) {
+        return;
     }
-    let index = items.findIndex((value) => {
-        return keywords === value;
-    });
-    if (index >= 0) {
-        items.splice(index, 1)
-    }
-    items.unshift(keywords);
-    if (items.length > 20) {
-        items.pop();
-    }
-    let newHistory = items.join(",");
-    storage.setSearchHistory(newHistory);
+    let items = SearchHistory.saveHistory(keywords,SearchHistory.SEARCH_TYPE_EQUIPMENT)
     dispatch(loadHistoryDone(items))
 }
 
