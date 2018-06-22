@@ -237,6 +237,13 @@ export function submitFromList(inspectId, callback) {
     .then((responseData) => {
         let params = responseData.data.inspectionInfo;
         params.inspectId = params.id;
+        if (params.needRectification) {
+            var timeStamp = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+            if (timeStamp > params.lastRectificationDate) {
+                Toast.info("整改期限不能早于当前日期！", 1);
+                return;
+            }
+        }
         API.editSubmitInspection(storage.loadProject(), inspectId, params.inspectionType, JSON.stringify(params))
             .then(data => {
                 // console.log('55555555555555555555555555555f33333333333')
@@ -244,6 +251,7 @@ export function submitFromList(inspectId, callback) {
                 callback({ res: "success", data: data, });
             }).catch(err => {
                 Toast.hide();
+                Toast.info("提交失败", 1);
             })
     }).catch(err => {
         Toast.hide();
