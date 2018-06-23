@@ -1,7 +1,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { TouchableOpacity, View, Image, Text } from 'react-native';
+import { TouchableOpacity, View, Image, Text, Keyboard } from 'react-native';
 import { ActionSheet } from 'app-3rd/teaset';
 import { ActionModal } from 'app-components';
 import { chooseImages } from './ImageManager';
@@ -31,6 +31,7 @@ export default class ImageChooserView extends React.Component {
          console.log(files);
     }
     onBigImage = (index) => {
+        Keyboard.dismiss();
         this.bigImage(this.state.files,index);
     }
     bigImage = (images, index) => {
@@ -74,12 +75,14 @@ export default class ImageChooserView extends React.Component {
        
     }
     onDeleteImage = (index) => {
+        Keyboard.dismiss();
         ActionModal.alertConfirm('您确认删除此图片么？',null,{text:'删除',style:{color:'red',fontSize:18},onPress:()=>{
             this.state.files.splice(index,1);
             this.setState({files:this.state.files});
         }},{text:'取消'});
     }
     onAddImage = () => {
+        Keyboard.dismiss();
         let maxLength = this.props.maxSelectedCount || 3;
         let retFun = (files,success)=>{
             if(success) {
