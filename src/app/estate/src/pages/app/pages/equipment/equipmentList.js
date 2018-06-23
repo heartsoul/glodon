@@ -9,10 +9,10 @@ import { SegmentedView,Badge } from 'app-3rd/teaset';
 import * as API from "app-api";
 import { AuthorityManager } from "app-entry";
 import EquipmentListView from "./equipmentListView";
-import { BarItems, LoadingView } from "app-components";
+import { BarItems } from "app-components";
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 var { width, height } = Dimensions.get("window");
-class QualityListTitle extends Component {
+class EquipmentListTitle extends Component {
     render = () => {
         let {text,activeTitleStyle,titleStyle,select,badge,style} = this.props;
         let w = 28;
@@ -22,7 +22,7 @@ class QualityListTitle extends Component {
             right = 0;
         }
         text = text;
-        return <View style={{paddingTop:4,
+        return <View style={{paddingTop:Platform.OS === 'web'?7:4,
         overflow: 'visible',
         alignItems: 'center', paddingRight:20,
         justifyContent: 'center'}}>
@@ -114,7 +114,7 @@ export default class extends PureComponent {
                     {
                         API.EQUIPMENT_CLASSIFY_STATUS_LIST.map((item, index) => {
                             return (
-                                <SegmentedView.Sheet key={item.name} title={<QualityListTitle key={item.name} text={item.name} badge={this.state.equipmentBadge.item[index]}  select={this.state.activeIndex == index} activeTitleStyle={{color:'#00baf3',fontSize:14}} titleStyle={{color:'#6f899b',fontSize:14}} />}>
+                                <SegmentedView.Sheet key={item.name} title={<EquipmentListTitle key={item.name} text={item.name} badge={this.state.equipmentBadge.item[index]}  select={this.state.activeIndex == index} activeTitleStyle={{color:'#00baf3',fontSize:14}} titleStyle={{color:'#6f899b',fontSize:14}} />}>
                                     <EquipmentListView
                                         onRef={(ref) => { this.state.equipmentView[index] = ref }}
                                         style={{ flex: 1}}

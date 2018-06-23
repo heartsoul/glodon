@@ -30,7 +30,7 @@ class QualityListTitle extends Component {
             text = '     '+ text + '     ';
         }
         
-        return <View style={{alignItems:alignItems,alignContent:'center',paddingTop:4,overflow:'visible'}}>
+        return <View style={{alignItems:alignItems,alignContent:'center',paddingTop:Platform.OS === 'web'?9:4,overflow:'visible'}}>
             <Text style={select ? activeTitleStyle : titleStyle} >{text}</Text>
             <View style={{width:w,height:3,marginTop:0}}>
                {select ? <View style={[{width:w,height:2,backgroundColor:'#00baf3',position:'absolute'},Platform.OS === 'ios' ? {top:12} : {top:8}]} resizeMode='contain'/> : null}
@@ -107,7 +107,6 @@ export default class qualityList extends PureComponent {
         if(this.state.qualityView[index].fetchData) {
             this.state.qualityView[index].fetchData(API.CLASSIFY_STATES[index]);
         }
-        
     }
     _toTop = () => {
         let index = this.state.activeIndex;

@@ -42,10 +42,10 @@ class LoginPage extends React.Component {
     };
   }
   onWindowResize = (event) => {
-    // event.preventDefault();
-    // setTimeout(() => {
-    //   this.forceUpdate();
-    // }, 200);
+    event.preventDefault();
+    setTimeout(() => {
+      this.forceUpdate();
+    }, 200);
   }
   componentWillMount = () => {
     window.addEventListener('resize', this.onWindowResize)

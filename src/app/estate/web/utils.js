@@ -22,14 +22,18 @@ exports.fullPath = function(dir) {
 };
 
 exports.getIP = function() {
-    var os = require('os');
-    var IPv4 = '127.0.0.1';
-    var interfaces = os.networkInterfaces();
-    for (var key in interfaces) {
+    let os = require('os');
+    let IPv4 = '127.0.0.1';
+    let find = false;
+    let interfaces = os.networkInterfaces();
+    for (let key in interfaces) {
         interfaces[key].some(function(details) {
             if (details.family == 'IPv4' && !details.internal) {
+                if(find) return false;
+                find = true
                 IPv4 = details.address;
-                return true;
+                console.log(IPv4);
+                return false;
             }
         });
     }
