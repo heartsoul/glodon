@@ -10,6 +10,7 @@ import { StatusActionButton, ActionModal } from "app-components"
 var { width, height } = Dimensions.get("window");
 
 import { BimFileEntry, AuthorityManager } from "app-entry";
+import * as CONSTANT from "../../../common/service/api+constant"
 
 const standardImage = require("app-images/icon_up_to_standard.png");
 const notStandardImage = require("app-images/icon_not_up_to_standard.png");
@@ -56,9 +57,20 @@ export default class EquipmentListCell extends PureComponent {
     }
 
     _toDetail = (item) => {
+        //如果是提交待同步 或删除待同步状态  则不进入详情
+        if(item.value.isOffline){
+            switch(item.value.qcState){
+                case CONSTANT.QC_STATE_EQUIPMENT_NEW_SUBMIT:
+                case CONSTANT.QC_STATE_EQUIPMENT_EDIT_SUBMIT:
+                case CONSTANT.QC_STATE_EQUIPMENT_DELETE:
+                    return;
+                break;
+            }
+        }
         storage.pushNext(null, "EquipmentDetailPage", { "item": item });
     }
     renderItem = (item, index) => {
+        // console.log(item)
         let barItem = this.renderActionBar(item, index);
         let bToolbar = barItem ? true : false;
         let renderLine = bToolbar ? (<View style={{height:1, backgroundColor:'#fafafa'}}></View>) : null
@@ -159,6 +171,15 @@ export default class EquipmentListCell extends PureComponent {
     // 操作条
     renderActionBar = (item, index) => {
         if (!item.value.committed === true) {
+            if(item.value.isOffline){
+                switch(item.value.qcState){
+                    case CONSTANT.QC_STATE_EQUIPMENT_NEW_SUBMIT:
+                    case CONSTANT.QC_STATE_EQUIPMENT_EDIT_SUBMIT:
+                    case CONSTANT.QC_STATE_EQUIPMENT_DELETE:
+                        return null;
+                        break;
+                }
+            }
            return this.renderSubmitAndDeleteAction(item, index)
         }
         return null;

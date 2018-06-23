@@ -721,6 +721,107 @@ export default class AsyncManager {
                     return _asyncError(item,err);
                 })
         }
+
+        //材设单  新增  提交
+        _equipmentCreateSubmit=(item,projectId, props)=>{
+            return API.equipmentCreateSubmit(projectId, JSON.stringify(props))
+            .then(data => {
+                //{data:{id:33,code:'xxx'}}
+               //提交成功
+                //删除旧数据
+                this.deleteByKey(item.id+'');
+                //修改同步列表
+                let key = data.data.id+'';
+                let date = new Date();
+                let updateTime = date.getTime()+'';
+                let state = '已同步';
+                let value={
+                    id:data.data.id+'',
+                    title:data.data.code,
+                    subTitle:this._formatDate(updateTime),
+                    state:state,
+                    type:item.type,
+                    qcState:item.qcState,
+                }
+                this.saveRecord(key,JSON.stringify(value),state,updateTime+'');
+                //修改单据列表
+                return key;
+            }).catch(err => {
+                //修改为 同步失败
+                return _asyncError(item,err);
+            })
+        }
+
+        //材设单 编辑  提交
+        _equipmentEditSubmit=(item,projectId, equipmentId, props)=>{
+            return API.equipmentEditSubmit(projectId,equipmentId, JSON.stringify(props))
+            .then(data => {
+                //{data:{id:33,code:'xxx'}}
+               //提交成功
+                return _asyncSuccess(item);
+            }).catch(err => {
+                //修改为 同步失败
+                return _asyncError(item,err);
+            })
+        }
+
+        //材设单  新增  保存
+        _equipmentCreateSave=(item,projectId, props)=>{
+            return API.equipmentCreateSave(projectId, JSON.stringify(props))
+            .then(data => {
+                //{data:{id:33,code:'xxx'}}
+               //提交成功
+                //删除旧数据
+                this.deleteByKey(item.id+'');
+                //修改同步列表
+                let key = data.data.id+'';
+                let date = new Date();
+                let updateTime = date.getTime()+'';
+                let state = '已同步';
+                let value={
+                    id:data.data.id+'',
+                    title:data.data.code,
+                    subTitle:this._formatDate(updateTime),
+                    state:state,
+                    type:item.type,
+                    qcState:item.qcState,
+                }
+                this.saveRecord(key,JSON.stringify(value),state,updateTime+'');
+                //修改单据列表
+                return key;
+            }).catch(err => {
+                //修改为 同步失败
+                return _asyncError(item,err);
+            })
+        }
+
+        //材设单 编辑  保存
+        _equipmentEditSave=(item,projectId, equipmentId, props)=>{
+            return API.equipmentEditSave(projectId,equipmentId, JSON.stringify(props))
+            .then(data => {
+                //{data:{id:33,code:'xxx'}}
+               //提交成功
+                return _asyncSuccess(item);
+            }).catch(err => {
+                //修改为 同步失败
+                return _asyncError(item,err);
+            })
+        }
+
+        //材设单 删除
+        _equipmentDelete=(item,projectId, id)=>{
+            return API.equipmentDelete(projectId,id)
+            .then(data => {
+                //{data:{id:33,code:'xxx'}}
+               //提交成功
+                return _asyncSuccess(item);
+            }).catch(err => {
+                //修改为 同步失败
+                return _asyncError(item,err);
+            })
+        }
+
+        
         //质检单详情下载
         let  _getQualityDetail=(projectId,id)=> {
             return  API.getQualityInspectionDetail(projectId, id).then((responseData) => {
@@ -793,6 +894,7 @@ export default class AsyncManager {
                 //      qcState:'xxx' } ]
                 for (let item of list){
                     let qm = OfflineManager.getQualityManager();
+                    let em = OfflineManager.getEquipmentManager();
                     switch(item.qcState){
                         case CONSTANT.QC_STATE_Q_NEW_SUBMIT://质检单  新建 提交
                             if(qm){
@@ -856,7 +958,6 @@ export default class AsyncManager {
                                         // // console.log(updateTime)
                                         // // console.log('oooooooooooooooooooooooooo')
                                         // qm.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
-                                        let qm = OfflineManager.getQualityManager();
                                         qm.uploadById(id)
                                         qm.delete(item.id+'');
                                     }
@@ -875,7 +976,6 @@ export default class AsyncManager {
                                     let props=params.props;
                                     let inspectId = props.inspectId;
                                     let id = await _editSubmitInspection(item,projectId,inspectId, inspectionType, props);
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                     // if(id){
                                     //     let detail = await _getQualityDetail(projectId,id);
@@ -946,7 +1046,6 @@ export default class AsyncManager {
                                 let inspectionType=params.inspectionType;
                                 let props=params.props;
                                 let id = await _createSaveInspection(item,projectId, inspectionType, props);
-                                let qm = OfflineManager.getQualityManager();
                                 if(id){
                                     // let detail = await _getQualityDetail(projectId,id);
                                     // let inspectionData = detail.data.inspectionInfo;
@@ -1001,7 +1100,6 @@ export default class AsyncManager {
                                     // // console.log(updateTime)
                                     // // console.log('oooooooooooooooooooooooooo')
                                     // qm.insert(key,JSON.stringify(value),qcState,qualityCheckpointId,updateTime,submitState,errorMsg);
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(id)
                                     qm.delete(item.id+'');
                                 }
@@ -1019,8 +1117,6 @@ export default class AsyncManager {
                                     let props=params.props;
                                     let inspectId = props.inspectId;
                                     let id = await _editSaveInspection(item,projectId,inspectId, inspectionType, props);
-
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                     // if(id){
                                     //     let detail = await _getQualityDetail(projectId,id);
@@ -1092,7 +1188,6 @@ export default class AsyncManager {
                                     let fileId=params.fileId;
                                     
                                     let id = await _createDeleteInspection(item,projectId, inspectionType,fileId);
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.delete(fileId+'');
                                     
                                 }
@@ -1109,7 +1204,6 @@ export default class AsyncManager {
                                     
                                     let id = await _createSubmitRepair(item,projectId, props);
                                     //更新当前的单据列表
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                     
                                 }
@@ -1127,7 +1221,6 @@ export default class AsyncManager {
                                     
                                     let id = await _createSaveRepair(item,projectId, props);
                                     //更新当前的单据列表
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                     
                                 }
@@ -1145,7 +1238,6 @@ export default class AsyncManager {
 
                                     let id = await _editSaveRepair(item,projectId,fileId, props);
                                     //更新当前的单据列表
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                     
                                 }
@@ -1163,7 +1255,6 @@ export default class AsyncManager {
 
                                     let id = await _editSubmitRepair(item,projectId,fileId, props);
                                     //更新当前的单据列表
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                     
                                 }
@@ -1181,7 +1272,6 @@ export default class AsyncManager {
 
                                     let id = await _deleteRepair(item,inspectionId,projectId, fileId);
                                     //更新当前的单据列表
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                     
                                 }
@@ -1200,7 +1290,6 @@ export default class AsyncManager {
 
                                     let id = await _createSubmitReview(item,projectId, props);
                                     //更新当前的单据列表
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                 }
                             }
@@ -1217,7 +1306,6 @@ export default class AsyncManager {
                                     let fileId = params.fileId;
                                     let id = await _editSubmitReview(item,projectId,fileId, props);
                                     //更新当前的单据列表
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                 }
                             }
@@ -1232,7 +1320,6 @@ export default class AsyncManager {
                                     let props=params.props;
                                     let id = await _createSaveReview(item,projectId, props);
                                     //更新当前的单据列表
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                 }
                             }
@@ -1248,7 +1335,6 @@ export default class AsyncManager {
                                     let fileId = params.fileId;
                                     let id = await _editSaveReview(item,projectId,fileId, props);
                                     //更新当前的单据列表
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                 }
                             }
@@ -1265,11 +1351,90 @@ export default class AsyncManager {
 
                                     let id = await _deleteReview(item,inspectionId,projectId, fileId);
                                     //更新当前的单据列表
-                                    let qm = OfflineManager.getQualityManager();
                                     qm.uploadById(item.id)
                                 }
                             }
                             
+                        break;
+
+                        //  [ { id: '_1529051607958',
+                        //     title: '',
+                        //      subTitle: '2018-06-15 08:33',
+                        //      state: '待同步',
+                        //      type: 'quality'
+                        //      qcState:'xxx' } ]
+                        case CONSTANT.QC_STATE_EQUIPMENT_NEW_SUBMIT://材设单  新增 提交
+                            if(em){
+                                let params = em.getSubmitInfoById(item.id);
+                                if(params){
+                                    let projectId=params.projectId;
+                                    let props=params.props;
+
+                                    let id = await _equipmentCreateSubmit(item,projectId, props);
+                                    //更新当前的单据列表
+                                    em.delete(item.id+'')
+                                    em.updateById(id)
+                                }
+                            }
+                        break;
+
+                        case CONSTANT.QC_STATE_EQUIPMENT_EDIT_SUBMIT://材设单  编辑 提交
+                            if(em){
+                                let params = em.getSubmitInfoById(item.id);
+                                if(params){
+                                    let projectId=params.projectId;
+                                    let props=params.props;
+                                    let equipmentId = params.equipmentId;
+
+                                    let id = await _equipmentEditSubmit(item,projectId,equipmentId, props);
+                                    //更新当前的单据列表
+                                    em.updateById(id)
+                                }
+                            }
+                        break;
+
+                        case CONSTANT.QC_STATE_EQUIPMENT_NEW_SAVE://材设单  新增 保存
+                            if(em){
+                                let params = em.getSubmitInfoById(item.id);
+                                if(params){
+                                    let projectId=params.projectId;
+                                    let props=params.props;
+
+                                    let id = await _equipmentCreateSave(item,projectId, props);
+                                    //更新当前的单据列表
+                                    em.delete(item.id+'')
+                                    em.updateById(id)
+                                }
+                            }
+                        break;
+
+                        case CONSTANT.QC_STATE_EQUIPMENT_EDIT_SAVE://材设单  编辑  保存
+                            if(em){
+                                let params = em.getSubmitInfoById(item.id);
+                                if(params){
+                                    let projectId=params.projectId;
+                                    let props=params.props;
+                                    let equipmentId = params.equipmentId;
+
+                                    let id = await _equipmentEditSave(item,projectId,equipmentId, props);
+                                    //更新当前的单据列表
+                                    em.updateById(id)
+                                }
+                            }
+                        break;
+
+                        case CONSTANT.QC_STATE_EQUIPMENT_DELETE://材设单  删除
+                            if(em){
+                                let params = em.getSubmitInfoById(item.id);
+                                if(params){
+                                    let projectId=params.projectId;
+                                    let equipmentId = params.equipmentId;
+
+                                    let id = await _equipmentDelete(item,projectId,equipmentId);
+                                    //更新当前的单据列表
+                                    em.delete(item.id+'')
+                                }
+                            }
                         break;
                     }
                 }

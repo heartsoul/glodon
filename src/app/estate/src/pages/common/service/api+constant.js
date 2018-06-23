@@ -63,6 +63,11 @@ export const QC_STATE_REVIEW_NEW_SUBMIT = "reviewnewdelete";
 export const QC_STATE_REVIEW_NEW_SAVE = "reviewnewsave";
 export const QC_STATE_REVIEW_EDIT_SAVE = "revieweditsave";
 export const QC_STATE_REVIEW_EDIT_SUBMIT = "revieweditdelete";
+export const QC_STATE_EQUIPMENT_NEW_SUBMIT = "ensubmit";
+export const QC_STATE_EQUIPMENT_EDIT_SUBMIT = "eesubmit";
+export const QC_STATE_EQUIPMENT_NEW_SAVE = "ensave";
+export const QC_STATE_EQUIPMENT_EDIT_SAVE = "eesave";
+export const QC_STATE_EQUIPMENT_DELETE = "edelete";
 export const CREATE_CHECK_LIST_PROPS = "createCheckListProps";
 export const QUALITY_CHECK_LIST_SHOW_REPAIR = "showRepair";
 

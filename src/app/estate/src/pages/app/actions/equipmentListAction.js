@@ -183,9 +183,9 @@ function __fetchData(qcState, page, dataMapIn, dispatch) {
             console.log(JSON.stringify(responseData))
           let data = responseData.list;
           let total = responseData.total;
-          console.log('data=')
-          console.log(data)
-          console.log('total='+total)
+          // console.log('data=')
+          // console.log(data)
+          // console.log('total='+total)
           let hasMore = true;
             if(data.length<size){
                 hasMore = false;
@@ -196,7 +196,7 @@ function __fetchData(qcState, page, dataMapIn, dispatch) {
                     hasMore = true;
                 }
             }
-          console.log('hasMore='+hasMore)
+          // console.log('hasMore='+hasMore)
           let dataBlob = [];
           let dataMap = new Map();
           let i = 0, j = 0;
@@ -207,8 +207,11 @@ function __fetchData(qcState, page, dataMapIn, dispatch) {
           data.forEach(item => {
             item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
             item.index = i;
-            item.qcStateShow =  item.committed == true ? "" : "" + API.toQcStateShow(API.QC_STATE_STAGED);
-            item.qcStateColor =  item.committed == true ? "#FFFFFF" : "" + API.toQcStateShowColor(API.QC_STATE_STAGED);
+            if(!item.isOffline){
+              item.qcStateShow =  item.committed == true ? "" : "" + API.toQcStateShow(API.QC_STATE_STAGED);
+              item.qcStateColor =  item.committed == true ? "#FFFFFF" : "" + API.toQcStateShowColor(API.QC_STATE_STAGED);
+            }
+            
             let groupTime = item.showTime.substring(0, 10);
             let dataBlob = dataMap.get(groupTime);
             if (dataBlob == undefined) {

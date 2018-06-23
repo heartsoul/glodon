@@ -1000,11 +1000,17 @@ export async function deleteRepair(inspectionId,projectId, fileId) {
 }
  */
 export async function equipmentCreateSubmit(projectId, props) {
-    let api = `/quality/${projectId}/facilityAcceptance/commit`;
-    return requestJSON(api, {
-        method: 'POST',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/facilityAcceptance/commit`;
+        return requestJSON(api, {
+            method: 'POST',
+            body: props,
+        });
+    }else{
+        let em = OfflineManager.getEquipmentManager();
+        return em.equipmentCreateSubmit(projectId, JSON.parse(props));
+    }
+    
 }
 /**
  * 材设 编辑提交
@@ -1054,11 +1060,16 @@ export async function equipmentCreateSubmit(projectId, props) {
 }
  */
 export async function equipmentEditSubmit(projectId, id, props) {
-    let api = `/quality/${projectId}/facilityAcceptance/${id}/commit`;
-    return requestJSON(api, {
-        method: 'PUT',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/facilityAcceptance/${id}/commit`;
+        return requestJSON(api, {
+            method: 'PUT',
+            body: props,
+        });
+    }else{
+        let em = OfflineManager.getEquipmentManager();
+        return em.equipmentEditSubmit(projectId, id, JSON.parse(props));
+    }
 }
 
 /**
@@ -1113,11 +1124,16 @@ export async function equipmentEditSubmit(projectId, id, props) {
 }
  */
 export async function equipmentCreateSave(projectId, props) {
-    let api = `/quality/${projectId}/facilityAcceptance`;
-    return requestJSON(api, {
-        method: 'POST',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/facilityAcceptance`;
+        return requestJSON(api, {
+            method: 'POST',
+            body: props,
+        });
+    }else{
+        let em = OfflineManager.getEquipmentManager();
+        return em.equipmentCreateSave(projectId, JSON.parse(props));
+    }
 }
 
 /**
@@ -1172,11 +1188,16 @@ export async function equipmentCreateSave(projectId, props) {
 }
  */
 export async function equipmentEditSave(projectId, id, props) {
-    let api = `/quality/${projectId}/facilityAcceptance/${id}`;
-    return requestJSON(api, {
-        method: 'PUT',
-        body: props,
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/facilityAcceptance/${id}`;
+        return requestJSON(api, {
+            method: 'PUT',
+            body: props,
+        });
+    }else{
+        let em = OfflineManager.getEquipmentManager();
+        return em.equipmentEditSave(projectId, id, JSON.parse(props));
+    }
 }
 
 /**
@@ -1184,10 +1205,15 @@ export async function equipmentEditSave(projectId, id, props) {
  * @param {*} id 材设单id
  */
 export async function equipmentDelete(projectId, id) {
-    let api = `/quality/${projectId}/facilityAcceptance/${id}`;
-    return requestJSON(api, {
-        method: 'DELETE',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/facilityAcceptance/${id}`;
+        return requestJSON(api, {
+            method: 'DELETE',
+        });
+    }else{
+        let em = OfflineManager.getEquipmentManager();
+        return em.equipmentDelete(projectId, id);
+    }
 }
 
 /**
