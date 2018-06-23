@@ -423,11 +423,9 @@ export default class EquipmentDetailView extends Component {
                     alignItems: 'center',
                     justifyContent: 'flex-start',
                 }}>
-                    <Text style={{ color: '#666666' }}>验收合格:</Text>
-                    <View style={{ right: 0, position: 'absolute', }}>
+                    <Text style={{ color: '#666666',flex:1 }}>验收合格:</Text>
                     <BimSwitch value={info.qualified === true ? true : false} onValueChange={(value) => { this.onChangeSwitch(value, info) }} />
-                    </View>
-                </View>
+                 </View>
             </View>
             <View style={{ marginTop: 20 }}>
                 {this.renderActionNextInfo(info, this._toConfirmInfoAction)}

@@ -106,10 +106,10 @@ export default class extends Component {
         }, 200);
       }
       componentWillMount = () => {
-        window.addEventListener('resize', this.onWindowResize)
+        window && window.addEventListener && window.addEventListener('resize', this.onWindowResize)
       }
       componentWillUnmount = () => {
-        window.removeEventListener('resize', this.onWindowResize)
+        window && window.addEventListener && window.removeEventListener('resize', this.onWindowResize)
       }
     componentDidMount() {
 

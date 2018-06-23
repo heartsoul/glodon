@@ -32,10 +32,10 @@ export default class extends React.Component {
     this.forceUpdate();
   }
   componentWillMount = () =>{
-    window.addEventListener('resize', this.onWindowResize)
+    window && window.addEventListener && window.addEventListener('resize', this.onWindowResize)
   }
   componentWillUnmount = () => {
-    window.removeEventListener('resize', this.onWindowResize)
+    window && window.addEventListener && window.removeEventListener('resize', this.onWindowResize)
   }
   render() {
     if (this.state.hasLoad) {
