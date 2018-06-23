@@ -277,21 +277,7 @@ class NewQualityView extends React.Component {
             });
         }
     }
-
-    //加载等待的view
-    renderLoadingView = () => {
-        return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <ActivityIndicator
-                    animating={true}
-                    style={[styles.gray, { height: 80 }]}
-                    color='green'
-                    size="large"
-                />
-            </View>
-        );
-    }
+    
     renderDescriptionView = () => {
         return (
             <TextInput

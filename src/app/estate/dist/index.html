@@ -6,10 +6,95 @@
     <title>BIM协同</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <script type="text/javascript" >
+    var loadResource = function loadResource( callback) {
+       createResource('bundle.web.js', function (data) {
+           callback(data);
+       });
+     };
+     var createResource = function createResource(url, callback) {
+       var head = document.getElementsByTagName('head')[0];
+       var staticTag;
+       if (url.indexOf('.css') > -1) {
+         staticTag = document.createElement('link');
+         staticTag.setAttribute('href', url);
+         staticTag.setAttribute('rel', 'stylesheet');
+       } else {
+         staticTag = document.createElement('script');
+         staticTag.setAttribute('src', url);
+       }
+       staticTag.isLoaded = false;
+       staticTag.addEventListener('load', function () {
+         staticTag.isLoaded = true;
+         callback && callback({
+           message: 'success'
+         });
+       });
+       staticTag.addEventListener('error', function () {
+         staticTag.isLoaded = false;
+         callback && callback({
+           element: url,
+           message: 'error'
+         });
+       });
+       head.appendChild(staticTag);
+       return staticTag;
+     };
+   
+     var ajax = function ajax(options) {
+       var defaults = {
+         type: 'get',
+         data: null,
+         success: null,
+         failure: null
+       };
+   
+       var _opt = Object.assign(defaults, options);
+       var xmlhttp;
+       if (window.XMLHttpRequest) {
+         xmlhttp = new XMLHttpRequest();
+       } else {
+         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+       }
+       xmlhttp.onreadystatechange = function () {
+         if (xmlhttp.readyState == 4) {
+           var status = xmlhttp.status;
+           if (status >= 200 && status < 300) {
+             _opt.success && _opt.success(xmlhttp.responseText, xmlhttp.responseXML);
+           } else {
+             _opt.failure && _opt.failure(status);
+           }
+         }
+       };
+       xmlhttp.open(_opt.type, _opt.url, _opt.async);
+       xmlhttp.send(_opt.data);
+     };
+ 
+   </script>
+   <style>
+.alignCenterImage { 
+    margin:auto; 
+    margin-top: 30%;
+clear: both; 
+display: block; 
+
+} 
+   </style>
+   <script type="text/javascript">
+    loadResource((data)=>{
+        if(data && data.message == 'success') {
+            // ok
+        } else {
+            document.getElementById('loadingText').style.display = 'none';
+            alert('加载失败了');
+        }
+    });
+    </script>
 </head>
 <body>
-<div id='root' style="position:absolute;width:100%;top:0;bottom:0;background:#FFFFFF">
-</div>
-<script type="text/javascript" src="bundle.web.js"></script>
+    <div id='root' style="position:absolute;width:100%;top:0;bottom:0;background:#FFFFFF">
+            <div id='loading'><img src="loading.gif" class='alignCenterImage'/></div>
+    </div>   
+<!-- < script type="text/javascript" src="bundle.web.js"></script> -->
 </body>
 </html>
