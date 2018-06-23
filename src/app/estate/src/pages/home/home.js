@@ -42,7 +42,11 @@ export default class extends React.Component {
       return options();
     }  
    return ({
-    title:'首页',
+    // title:title ? title : CONSTANTS.PAGE_NAME_HOME,
+    headerTitle: (<BarItems.TitleBarItem text={storage.loadCurrentProjectName()}/>),
+    headerRight:(<BarItems.RightBarItem imageSource={require('app-images/icon_search_white.png')} navigation={navigation}
+    onPress={()=>{}} />),
+    headerLeft: <View></View>,
   })
 };
   constructor(props) {
