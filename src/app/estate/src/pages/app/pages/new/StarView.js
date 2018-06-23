@@ -27,19 +27,16 @@ class StartView extends Component {
 
     render() {
         return (
-            <View style={{ flexDirection: "row" }}>
-                <View style={styles.childViewContainer}>
+          <View style={styles.childViewContainer}>
                     {
                         (this.props.childView) ? (this.props.childView) : (null)
                     }
-                </View>
-                {
+                    {
                     (this.state.showStar) ? (
                         <Image source={require("app-images/icon_create_check_list_star.png")} style={styles.starImage} />
                     ) : (null)
                 }
-
-            </View>
+         </View>
         );
     }
 }
@@ -56,13 +53,13 @@ StartView.propTypes = {
 
 const styles = StyleSheet.create({
     childViewContainer: {
-        flex: 1,
     },
     starImage: {
         width: 8,
         height: 8,
-        position: 'absolute',
-        alignSelf: 'center'
+        top:24,
+        left:6,
+        position:'absolute',
     },
 })
 
