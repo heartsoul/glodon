@@ -47,13 +47,6 @@ export default class RectificationView extends Component {
         })
     }
 
-
-    renderSwitchView = () => {
-        return (
-            <BimSwitch value={this.state.needRectification} onValueChange={(value) => { this.onChangeSwitch(value) }} />
-        );
-    }
-
     /**
      * 获取整改信息
      */

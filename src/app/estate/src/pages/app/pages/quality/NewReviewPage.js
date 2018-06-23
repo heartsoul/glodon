@@ -10,6 +10,7 @@ import ReactNative, { Dimensions, Image, Platform, ScrollView, StatusBar, StyleS
 import { connect } from 'react-redux';
 import * as reviewRepairAction from "./../../actions/reviewRepairAction";
 import GLDDatePicker from "./../../components/GLDDatePicker";
+import GLDListRow from "./../new/GLDListRow";
 import QualityDetailView from "./QualityDetailView";
 
 
@@ -245,7 +246,7 @@ class NewReviewPage extends Component {
 
     renderReviewDate = () => {
         return (
-            <GLDDatePicker title={"整改期限"} date={this.state.lastRectificationDate} onDateChange={(date) => {
+            <GLDDatePicker title={"整改期限"} textStyle={{ alignItems: "flex-end" }} date={this.state.lastRectificationDate} onDateChange={(date) => {
                 this.setState({ lastRectificationDate: date })
             }}></GLDDatePicker>
         )
@@ -288,24 +289,23 @@ class NewReviewPage extends Component {
                 </View>
                 {
                     this.state.showRectificationView ? (
-                        <View style={{ backgroundColor: "#ffffff" }}>
-                            <View style={{ paddingLeft: 8 }}>
-                                <ListRow title='复查合格' bottomSeparator='full' detail={this.renderSwitchView()} />
-                            </View>
+                        <View style={{ backgroundColor: "#ffffff",marginTop:10 }}>
+                    <GLDListRow.SwitchItem title="需要整改" bottomSeparator={this.state.switchValue? "full" : "indent"} switchValue={this.state.switchValue} onValueChange={this.onChangeSwitch} />
+                            
                             {
                                 (this.state.switchValue) ? (null) : (this.renderReviewDate())
                             }
                         </View>
                     ) : (null)
                 }
-                <View style={{ backgroundColor: "#ffffff", paddingLeft: 8, marginTop: 20 }}>
-                    <ListRow title='检查单' bottomSeparator='full'
+                <View style={{ backgroundColor: "#ffffff", paddingLeft: 8, marginTop: 10 }}>
+                    <ListRow title={(<Text style={{fontSize:16}}>检查单</Text>)} bottomSeparator='none'
                         accessory={this.renderAccessory()}
                         onPress={(event) => {
+                            event.preventDefault();
                             if(this.inputRef){
                                 this.inputRef.blur();
                             }
-                            event.preventDefault();
                             this.setState({ expand: !this.state.expand, })
                         }}
                     />
@@ -325,7 +325,7 @@ class NewReviewPage extends Component {
                         <StatusActionButton text='删除' style={{ height: 40, marginTop: 20, marginRight: 40, marginLeft: 40, backgroundColor: "#ffffff", borderColor: "#ffffff", }} color='#000000' onClick={this.deleteForm} />
                     ) : (null)
                 }
-
+                <View style={{width:'100%',height:50}}/>
 
             </ScrollView>
         );

@@ -26,7 +26,7 @@ class GLDDatePicker extends Component {
     }
 
     render() {
-        let { textStyle = { alignItems: "flex-start" } } = this.props
+        let { textStyle = { alignItems: "flex-start" },titleStyle={},contentStyle={}} = this.props
         return (
             <View>
                 <TouchableOpacity activeOpacity={0.5} onPress={(event) => {
@@ -36,10 +36,10 @@ class GLDDatePicker extends Component {
                 }}>
                     <View style={[styles.containerView, this.props.style]}>
                         <View style={styles.titleView}>
-                            <Text style={styles.title}>{this.props.title}</Text>
+                            <Text style={[styles.title,titleStyle]}>{this.props.title}</Text>
                         </View>
                         <View style={[{ flex: 1, paddingRight: 5 }, textStyle]}>
-                            <Text style={styles.content}>{this.props.date ? API.formatUnixtimestampSimple(new Date(this.props.date).getTime()) : API.formatUnixtimestampSimple(new Date().getTime())}</Text>
+                            <Text style={[styles.content,contentStyle]}>{this.props.date ? API.formatUnixtimestampSimple(new Date(this.props.date).getTime()) : API.formatUnixtimestampSimple(new Date().getTime())}</Text>
                         </View>
                         <Image source={rightImage} style={styles.infoMark} />
                     </View>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 16,
         color: '#000000',
-        fontWeight: '200',
+        // fontWeight: '200',
     },
 
     infoMark: {
@@ -99,8 +99,8 @@ const styles = StyleSheet.create({
     },
     content: {
         fontSize: 16,
-        fontWeight: '100',
+        // fontWeight: '100',
         alignContent: 'center',
-        color: "#666666"
+        color: "#000000"
     },
 })

@@ -350,7 +350,7 @@ export default class EquipmentDetailView extends Component {
                 <EquipmentInfoItem.EquipmentInfoItemTextInput key='b1' leftTitle="批次编号：" content={info.batchCode ? info.batchCode : ''} showType="input"
                     onChangeText={(value) => { info.batchCode = value; this._checkBasicInfo(info); }} />
                 <EquipmentInfoItem showType="line" />
-                <GLDDatePicker title={"进场日期："} date={info.approachDate} onDateChange={(date) => {
+                <GLDDatePicker title={"进场日期："} titleStyle={{ fontWeight: "200" }}  contentStyle={{color:'#666666', fontWeight: "100" }} date={info.approachDate} onDateChange={(date) => {
                     info.approachDate = date.getTime();
                     this._checkBasicInfo(info);
                     this.props.switchPage({ ...info })
