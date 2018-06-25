@@ -111,31 +111,58 @@ function editPhoto(file, retFun, retFiles) {
     reader.readAsDataURL(file);
     reader.onload = function (e) {
         reader = null;
-        storage.pushNext(null, "EditPhotoPage", {
-            url: e.target.result,
-            callback: (imageData) => {
-                if (!imageData) {
-                    retFun(retFiles, false);
-                }
-                file.url = imageData;
-                compressImg(imageData, 160, (thumbUrl, thumbBlob) => {
-                    file.thumbUrl = thumbUrl;
-                    retFiles.push({ url: imageData, randomKey: randomKey++, thumbUrl: thumbUrl, name: file.name || 'image', type: 'h5', length: file.size || 0, lastModified: file.lastModified, file: file })
-                    retFun(retFiles, true);
-                })
-            }
-        })
-        // EditPhotoModal.show(e.target.result, (imageData) => {
-        //     if (!imageData) {
-        //         retFun(retFiles, false);
-        //     }
-        //     file.url = imageData;
-        //     compressImg(imageData, 160, (thumbUrl, thumbBlob) => {
-        //         file.thumbUrl = thumbUrl;
-        //         retFiles.push({ url: imageData, randomKey: randomKey++, thumbUrl: thumbUrl, name: file.name || 'image', type: 'h5', length: file.size || 0, lastModified: file.lastModified, file: file })
-        //         retFun(retFiles, true);
-        //     })
-        // })
+        if (isiOS()) {
+            rotateImage(e.target.result, (imageData) => {
+                navigateToEdit(imageData, file, retFiles, retFun);
+            })
+        } else {
+            navigateToEdit(e.target.result, file, retFiles, retFun);
+        }
     }
+}
+/**
+ * 跳转到图片编辑页
+ * @param {*} data 
+ * @param {*} file 
+ * @param {*} retFiles 
+ * @param {*} retFun 
+ */
+function navigateToEdit(data, file, retFiles, retFun) {
+    storage.pushNext(null, "EditPhotoPage", {
+        url: data,
+        callback: (imageData) => {
+            if (!imageData) {
+                retFun(retFiles, false);
+            }
+            file.url = imageData;
+            compressImg(imageData, 160, (thumbUrl, thumbBlob) => {
+                file.thumbUrl = thumbUrl;
+                retFiles.push({ url: imageData, randomKey: randomKey++, thumbUrl: thumbUrl, name: file.name || 'image', type: 'h5', length: file.size || 0, lastModified: file.lastModified, file: file })
+                retFun(retFiles, true);
+            })
+        }
+    })
+}
 
+function rotateImage(imageData, callback) {
+    var canvas = document.createElement('canvas');
+    var img = document.createElement('img');
+    img.onload = function () {
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // canvas清屏
+        //重置canvans宽高 
+        canvas.width = img.height;
+        canvas.height = img.width;
+        ctx.rotate(Math.PI / 2);
+        ctx.translate(0, -img.height);
+        ctx.drawImage(img, 0, 0, img.width, img.height); // 将图像绘制到canvas上
+        callback(canvas.toDataURL("image/png"));//
+    };
+    img.src = imageData;
+}
+
+function isiOS() {
+    var u = navigator.userAgent;
+    var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    return isiOS;
 }
