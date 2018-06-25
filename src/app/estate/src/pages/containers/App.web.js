@@ -98,6 +98,9 @@ const screens = {
   ChangeProjectPage: {
     screen: GLD.ChangeProjectPage
   },
+  EditPhotoPage:{
+    screen: GLD.EditPhotoPage
+  }
 };
 
 const options = () => {

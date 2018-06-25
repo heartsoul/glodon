@@ -35,6 +35,7 @@ import FeedbackPage from './../app/pages/me/FeedbackPage'
 import ForgotPage from './../login/pages/ForgotPage'
 import ChangeProjectPage from './../app/pages/me/ChangeProjectPage'
 import SharePage from './../app/pages/me/SharePage'
+import EditPhotoPage from './../app/components/editPhoto/EditPhotoPage'
 
 export {
     LoginPage,
@@ -71,4 +72,5 @@ export {
     FeedbackPage,
     ChangeProjectPage,
     SharePage,
+    EditPhotoPage,
 }
