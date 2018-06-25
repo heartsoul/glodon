@@ -1,6 +1,3 @@
-/**
- * Created by wangfei on 17/8/28.
- */
 import React, { Component } from 'react';
 import {
     View,
@@ -12,42 +9,16 @@ import {
     TouchableOpacity,
     StyleSheet,
 } from 'react-native';
-import { Overlay, } from 'app-3rd/teaset';
+
 var { width, height } = Dimensions.get('window')
-export default class EditPhotoModal {
 
-
-    static show(url, callback) {
-        let overlayView =
-            (
-                <Overlay.View side='bottom' modal={false}
-                    style={{ flexDirection: 'column', backgroundColor: "#000" }}
-                    overlayOpacity={0.7}
-                    ref={v => overlayView = v}
-                >
-                    <GLDCanvas
-                        close={() => {
-                            overlayView.close();
-                            callback(null)
-                        }}
-                        useImage={(imageData) => {
-                            overlayView.close();
-                            callback(imageData)
-                        }}
-                        url={url} />
-                </Overlay.View>
-            );
-        Overlay.show(overlayView);
-    }
-
-}
 const EditState = {
     EDIT_LINE: "EDIT_LINE",
     EDIT_TEXT: "EDIT_TEXT",
     INIT: "INIT",
 }
 
-class GLDCanvas extends Component {
+export default class GLDCanvas extends Component {
 
     canvas;
     ctx;
@@ -63,7 +34,7 @@ class GLDCanvas extends Component {
     ]
     tempCount = 0;//编辑状态下，新添加的线的数量，用于取消时候做pop操作
     id = 0;//每个input的唯一id
-
+    placeHolderHeight = 252;
     constructor(props) {
         super(props)
         this.state = {
@@ -79,7 +50,6 @@ class GLDCanvas extends Component {
     componentDidMount() {
         this._initCanvas();
         this._registerKeyboardListener();
-
     }
     _registerKeyboardListener = () => {
         if (isAndroid()) {
@@ -88,37 +58,42 @@ class GLDCanvas extends Component {
                 var nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
                 if (clientHeight > nowClientHeight && this.state.editState == EditState.EDIT_TEXT) {
                     let placeholderHeight = parseInt(clientHeight) - parseInt(nowClientHeight);
+                    this.placeHolderHeight = placeholderHeight;
                     //键盘弹出的事件处理
-                    let ele = document.getElementById("placeholder");
-                    if (ele) {
-                        ele.style.height = placeholderHeight
-                    }
+                    this._setPlaceHolder(placeholderHeight);
                 } else {
-                    let ele = document.getElementById("placeholder");
-                    if (ele) {
-                        ele.style.height = 0
-                    }
+                    this._setPlaceHolder(0);
                 }
             });
+
         } else if (isiOS()) {
-            document.addEventListener('focusin', () => {
+            document.addEventListener('focusin', (ev) => {
                 //软键盘弹出的事件处理
-                if (this.state.editState == EditState.EDIT_TEXT) {
-                    let ele = document.getElementById("placeholder");
-                    if (ele) {
-                        ele.style.height = 252;
+                let len = this.state.inputNodes.length;
+                setTimeout(() => {
+                    if (this.state.editState == EditState.EDIT_TEXT && len > 0 && ev && ev.target && ev.target.id === `transform_input_${this.state.inputNodes[len - 1].id}`) {
+                        this._setPlaceHolder(252);
+                    } else {
+                        this._setPlaceHolder(0);
                     }
-                }
+                }, 200)
+
             });
-            document.addEventListener('focusout', () => {
+            document.addEventListener('focusout', (ev) => {
+                let len = this.state.inputNodes.length;
                 //软键盘收起的事件处理
-                let ele = document.getElementById("placeholder");
-                if (ele) {
-                    ele.style.height = 0;
-                }
+                setTimeout(() => {
+                    this._setPlaceHolder(0);
+                }, 100)
             });
         }
 
+    }
+    _setPlaceHolder = (height) => {
+        let ele = document.getElementById("placeholder");
+        if (ele) {
+            ele.style.height = height;
+        }
     }
     //
     _initCanvas() {
@@ -129,6 +104,7 @@ class GLDCanvas extends Component {
             this._drawImage(img);
         }
         img.src = this.props.url;
+
         this.canvas.addEventListener('touchstart', this._touchEvents, false);
         this.canvas.addEventListener('touchmove', this._touchEvents, false);
         this.canvas.addEventListener('touchend', this._touchEvents, false);
@@ -138,8 +114,8 @@ class GLDCanvas extends Component {
         let size = this._calcuteImgSize(img);
         img.width = size.width;
         img.height = size.height;
-        this.canvas.width = img.width;
-        this.canvas.height = img.height;
+        this.canvas.width = size.width;
+        this.canvas.height = size.height;
         this.ctx.drawImage(img, 0, 0, img.width, img.height); // 将图像绘制到canvas上  
         this.state.imageDatas.push(this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height));
     }
@@ -259,6 +235,7 @@ class GLDCanvas extends Component {
                 editInput.editable = false;
             }
         }
+        this._setPlaceHolder(0);
         this.setState({ editState: EditState.INIT })
     }
 
@@ -425,6 +402,8 @@ class TransformTextInput extends Component {
         this.myEle.addEventListener('touchstart', this._touchEvents, false);
         this.myEle.addEventListener('touchmove', this._touchEvents, false);
         this.myEle.addEventListener('touchend', this._touchEvents, false);
+
+
     }
 
     deltaX = 0;
@@ -434,19 +413,18 @@ class TransformTextInput extends Component {
         if (this.props.editState === EditState.EDIT_TEXT) {
             return;
         }
+        this.mInput = document.getElementById(`transform_input_${this.props.id}`);
         e.preventDefault();
         if (e.type == "touchstart") {
             let touch = event.touches[0];
             this.deltaX = parseInt(this.myEle.style.left) - touch.pageX;
             this.deltaY = parseInt(this.myEle.style.top) - touch.pageY;
-            this.mInput.style.borderColor = "#ffffff";
             this._setBorderRectVisible(true);
             this.props.setDeleteVisible(true);
         } else if (e.type == "touchmove") {
             let touch = event.touches[0];
             this._transfromInput(touch.pageX + this.deltaX, touch.pageY + this.deltaY);
         } else if (e.type == "touchend" || e.type == "touchcancel") {
-            this.mInput.style.borderColor = "transparent";
             this._setBorderRectVisible(false);
             this._checkLocation();
             this.props.setDeleteVisible(false);
@@ -515,6 +493,10 @@ class TransformTextInput extends Component {
                 }
             }
         }
+        if (visible) {
+            let borderBox = document.getElementById(`border_box_${this.props.id}`);
+            borderBox.style.border = "1px solid #fff";
+        }
     }
     render() {
         let w = this.props.editable ? width : parseInt(this._getTextWidth(this.props.value, 16)) + 27;
@@ -528,27 +510,51 @@ class TransformTextInput extends Component {
                 top: this.props.rect.top + 10 < 36 ? 36 : this.props.rect.top + 10,
                 left: 10,
             }}>
-                <TextInput id={`transform_input_${this.props.id}`} multiline={true} autoFocus={true} underlineColorAndroid={"transparent"}
-                    style={{
-                        width: w,
-                        maxWidth: width - 20,
-                        minWidth: 20,
-                        fontSize: "16px",
-                        margin: 1,
-                        borderColor: 'transparent',
-                        borderWidth: 1,
-                        color: this.props.color,
-                        padding: 5,
-                        overflow: "hidden",
-                        resize: "none",
-                        fontFamily: "sans-serif",
-                    }}
-                    onChangeText={this._changeText}
-                    editable={true}
-                    value={this.state.value}
-                    autoFocus={this.props.autoFocus}
-                    editable={this.props.editable}
-                />
+                {
+                    this.props.editable ? (
+                        <TextInput id={`transform_input_${this.props.id}`} multiline={true} underlineColorAndroid={"transparent"}
+                            style={{
+                                width: w,
+                                maxWidth: width - 20,
+                                minWidth: 20,
+                                fontSize: "16px",
+                                margin: 1,
+                                borderColor: 'transparent',
+                                borderWidth: 1,
+                                color: this.props.color,
+                                padding: 5,
+                                overflow: "hidden",
+                                resize: "none",
+                                fontFamily: "sans-serif",
+                            }}
+                            onChangeText={this._changeText}
+                            value={this.state.value}
+                            autoFocus={this.props.autoFocus}
+                            editable={this.props.editable}
+                        />
+                    ) : (
+                            <Text id={`transform_input_${this.props.id}`}
+                                style={{
+                                    width: w,
+                                    maxWidth: width - 20,
+                                    minWidth: 20,
+                                    fontSize: "16px",
+                                    margin: 1,
+                                    borderColor: 'transparent',
+                                    borderWidth: 1,
+                                    color: this.props.color,
+                                    padding: 5,
+                                    paddingTop: 7,
+                                    paddingLeft: 9,
+                                    display: "blcok",
+                                    overflow: "hidden",
+                                    resize: "none",
+                                    fontFamily: "sans-serif",
+                                }}
+                            >{this.state.value}</Text>
+                        )
+                }
+                <div id={`border_box_${this.props.id}`} class={`borderRect_${this.props.id}`} style={{ position: "absolute", left: 1, top: 1, right: 1, bottom: 1, display: "none" }}></div>
                 <div class={`borderRect_${this.props.id}`} style={{ position: "absolute", left: 0, top: 0, width: 3, height: 3, backgroundColor: "#fff", display: "none" }}></div>
                 <div class={`borderRect_${this.props.id}`} style={{ position: "absolute", right: 0, top: 0, width: 3, height: 3, backgroundColor: "#fff", display: "none" }}></div>
                 <div class={`borderRect_${this.props.id}`} style={{ position: "absolute", left: 0, bottom: 0, width: 3, height: 3, backgroundColor: "#fff", display: "none" }}></div>

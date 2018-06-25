@@ -127,6 +127,9 @@ const screens = {
     OfflineAsyncPage:{
         screen:GLD.OfflineAsyncPage
     },
+    EditPhotoPage:{
+        screen: GLD.EditPhotoPage
+    }
 };
 
 const options = () => {

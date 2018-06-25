@@ -17,7 +17,7 @@ const tabs = [
 ];
 
 class NewQualityPage extends Component {
-   
+
     static navigationOptions = ({ navigation, screenProps }) => ({
         // title: '新建',
         headerTitle: (navigation.state.params.headerTitle),
@@ -25,10 +25,10 @@ class NewQualityPage extends Component {
         headerStyle: { backgroundColor: "#00baf3" },
         headerRight: (
             <BarItems navigation={navigation}>
-            <BarItems.RightBarItem text="提交" navigation={navigation}  onPress={(navigation) => navigation.state.params.rightNavigatePress()} />
-           </BarItems>
+                <BarItems.RightBarItem text="提交" navigation={navigation} onPress={(navigation) => navigation.state.params.rightNavigatePress()} />
+            </BarItems>
         ),
-        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : null,
+        headerLeft: navigation.state.params && navigation.state.params.loadLeftTitle ? navigation.state.params.loadLeftTitle() : (<BarItems navigation={navigation}></BarItems>),
         gesturesEnabled: false,
         // header: null
     });
@@ -107,7 +107,7 @@ class NewQualityPage extends Component {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
                 () => {
-                    if(storage.currentRouteName === this.props.navigation.state.routeName){
+                    if (storage.currentRouteName === this.props.navigation.state.routeName) {
                         this.goBack();
                         return true;
                     }
@@ -115,7 +115,7 @@ class NewQualityPage extends Component {
                 }
             )
         }
-        if(Platform.OS === 'web') {
+        if (Platform.OS === 'web') {
             this.backListener = BackHandler.addEventListener(
                 'hardwareBackPress',
                 () => {
@@ -215,7 +215,7 @@ class NewQualityPage extends Component {
         return (
             <KeyboardAwareScrollView>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                <View style={[{ marginTop: -44, width:'100%',height:"100%",}]}>
+                <View style={[{ marginTop: -44, width: '100%', height: "100%", }]}>
                     <Tabs
                         tabs={tabs}
                         ananimated={true}

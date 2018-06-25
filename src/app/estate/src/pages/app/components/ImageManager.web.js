@@ -1,6 +1,5 @@
 
 import { ActionModal } from 'app-components'
-import EditPhotoModal from "./EditPhotoModal.web"
 export function shareApp(text, url) {
     text = text || 'BIM协同，真的来了';
     url = url || 'http://bim.glodon.com';
@@ -112,17 +111,31 @@ function editPhoto(file, retFun, retFiles) {
     reader.readAsDataURL(file);
     reader.onload = function (e) {
         reader = null;
-        EditPhotoModal.show(e.target.result, (imageData) => {
-            if (!imageData) {
-                retFun(retFiles, false);
+        storage.pushNext(null, "EditPhotoPage", {
+            url: e.target.result,
+            callback: (imageData) => {
+                if (!imageData) {
+                    retFun(retFiles, false);
+                }
+                file.url = imageData;
+                compressImg(imageData, 160, (thumbUrl, thumbBlob) => {
+                    file.thumbUrl = thumbUrl;
+                    retFiles.push({ url: imageData, randomKey: randomKey++, thumbUrl: thumbUrl, name: file.name || 'image', type: 'h5', length: file.size || 0, lastModified: file.lastModified, file: file })
+                    retFun(retFiles, true);
+                })
             }
-            file.url = imageData;
-            compressImg(imageData, 160, (thumbUrl, thumbBlob) => {
-                file.thumbUrl = thumbUrl;
-                retFiles.push({ url: imageData, randomKey: randomKey++, thumbUrl: thumbUrl, name: file.name || 'image', type: 'h5', length: file.size || 0, lastModified: file.lastModified, file: file })
-                retFun(retFiles, true);
-            })
         })
+        // EditPhotoModal.show(e.target.result, (imageData) => {
+        //     if (!imageData) {
+        //         retFun(retFiles, false);
+        //     }
+        //     file.url = imageData;
+        //     compressImg(imageData, 160, (thumbUrl, thumbBlob) => {
+        //         file.thumbUrl = thumbUrl;
+        //         retFiles.push({ url: imageData, randomKey: randomKey++, thumbUrl: thumbUrl, name: file.name || 'image', type: 'h5', length: file.size || 0, lastModified: file.lastModified, file: file })
+        //         retFun(retFiles, true);
+        //     })
+        // })
     }
 
 }

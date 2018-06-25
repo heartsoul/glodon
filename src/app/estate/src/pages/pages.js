@@ -42,6 +42,7 @@ import QualityConditionPage from './app/pages/offline/QualityConditionPage'
 import QualityRecordPage from './app/pages/offline/QualityRecordPage'
 import SharePage from './app/pages/me/SharePage'
 import OfflineAsyncPage from './app/pages/offline/OfflineAsyncPage'
+import EditPhotoPage from './app/components/editPhoto/EditPhotoPage'
 
 export {
     LoginPage,
@@ -85,4 +86,5 @@ export {
     QualityRecordPage,
     SharePage,
     OfflineAsyncPage,
+    EditPhotoPage,
 }
