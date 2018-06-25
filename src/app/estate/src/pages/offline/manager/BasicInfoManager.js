@@ -79,6 +79,7 @@ export default class BasicInfoManager {
     //获取所有模型列表
     getModelList=()=>{
         let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children/model";
+        console.log(this._getFromDbJson(key_getModelList))
         return  this._getFromDbJson(key_getModelList);
     }
 
@@ -529,19 +530,36 @@ export default class BasicInfoManager {
 
         let _getModelList=(fileId=0)=>{
             console.log(projectId + '  '+projectVersionId+'  '+fileId)
-            return API.getModelBimFileChildren(projectId, projectVersionId, 0, fileId).then(
-                (responseData) => {
-                    // console.log('模型列表 start----------------')
-                    // console.log(responseData)
-                    // console.log('模型列表 end----------------')
-                    let list = responseData.data;
-                    return list;
-                }
-            ).catch((error) => {
-                // console.log('模型列表 err  start----------------')
-                console.log(error)
-                // console.log('模型列表 err  end----------------')
-            });
+            if(name=='图纸文件'){
+                return API.getDrawingDataList(projectId, projectVersionId, 0, fileId).then(
+                    (responseData) => {
+                        console.log('图纸文件 start----------------')
+                        console.log(responseData)
+                        console.log('图纸文件 end----------------')
+                        let list = responseData.data;
+                        return list;
+                    }
+                ).catch((error) => {
+                    console.log('图纸文件 err  start----------------')
+                    console.log(error)
+                    console.log('图纸文件 err  end----------------')
+                });
+            }else{
+                return API.getModelDataList(projectId, projectVersionId, 0, fileId).then(
+                    (responseData) => {
+                        console.log('模型列表 start----------------')
+                        console.log(responseData)
+                        console.log('模型列表 end----------------')
+                        let list = responseData.data;
+                        return list;
+                    }
+                ).catch((error) => {
+                    console.log('模型列表 err  start----------------')
+                    console.log(error)
+                    console.log('模型列表 err  end----------------')
+                });
+            }
+            
         }
 
         async function getData(){
@@ -554,10 +572,11 @@ export default class BasicInfoManager {
                 for(let item of modellist){
                     // console.log('bbbbbbbbbbbbbbbbb')
                     // console.log(item)
-                    if(item.name==name){
+                    // if(item.name==name){
                         // console.log('ccccccccccccccccc')
                         item.parentId = '0';
-                        data = [...data,item];
+                        data=[...data,item];
+                        if(item.folder){
                          let list = await _getModelList(item.fileId);
                          data = [...data,...list]
                          for(let item of list){

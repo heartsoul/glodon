@@ -138,7 +138,7 @@ export async function getModelBimFiles(projectId, projectVersionId, buildingId =
 }
 
 /**
- * 获取图纸项目列表 获取文件列表 -- 对应的是选择图纸时的目录
+ * 获取图纸项目列表 直接就是图纸的根目录下面的列表
  * 
  * @export
  * @param {number} projectId 项目id
@@ -198,7 +198,7 @@ export async function getModelBimFiles(projectId, projectVersionId, buildingId =
   "message": "string"
 }
  */
-export async function getModelBimFileChildren(projectId, projectVersionId, pageIndex, fileId = 0) {
+export async function getDrawingDataList(projectId, projectVersionId, pageIndex, fileId = 0) {
     // let api = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children";
     // model/{deptId}/modelVersions/{modelVersionId}/drawingFiles/children
     let api = "/model/" + projectId + "/modelVersions/" + projectVersionId + "/drawingFiles/children";
@@ -210,6 +210,20 @@ export async function getModelBimFileChildren(projectId, projectVersionId, pageI
     return requestJSON(api + '?' + filter, {
         method: 'GET',
     });
+}
+
+export async function getModelDataList(projectId, projectVersionId, pageIndex, fileId = 0) {
+  // let api = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children";
+  // model/{deptId}/modelVersions/{modelVersionId}/drawingFiles/children
+  let api = "/model/" + projectId + "/modelVersions/" + projectVersionId + "/modelFiles/children";
+  let filter = '';
+  if (!(fileId === 0)) {
+      filter += '&fileId=' + fileId;
+  }
+
+  return requestJSON(api + '?' + filter, {
+      method: 'GET',
+  });
 }
 
 /**
@@ -241,3 +255,68 @@ export async function getBluePrintThumbnail(projectId, projectVersion, fileId) {
     });
 }
 
+/**
+ * 创建模型的离线数据包
+ * @param {*} fileId 模型文件id
+ * @returns 
+ * {
+      "code": "string",
+      "data": {
+        "createTime": "string",
+        "databagVersion": "string",
+        "fileId": 0,
+        "reason": "string",
+        "status": "string"
+      },
+      "message": "string"
+    }
+ */
+export async function createModelOfflineZip(fileId) {
+  let api = `/bimpm/model/offline/data/files/${fileId}`;
+  return requestJSON(api, {
+      method: 'PUT',
+  });
+}
+
+/**
+ * 获取离线包的生成状态
+ * @param {*} fileId 模型文件id
+ * @returns 
+ * {
+      "code": "string",
+      "data": {
+        "createTime": "string",
+        "databagVersion": "string",
+        "fileId": 0,
+        "reason": "string",
+        "status": "string"
+      },
+      "message": "string"
+    }
+ */
+export async function getModelOfflineZipStatus(fileId) {
+  let api = `/bimpm/model/offline/data/files/${fileId}`;
+  return requestJSON(api, {
+      method: 'GET',
+  });
+}
+
+/**
+ * 获取离线包的下载地址
+ * @param {*} fileId 模型文件id
+ * @returns 
+ * {
+      "code": "string",
+      "data": "string",
+      "message": "string"
+    }
+ */
+export async function getModelOfflineZipAddress(fileId,databagVersion) {
+  let api = `/bimpm/model/offline/data/files`;
+  let filter = '';
+  filter += '&fileId=' + fileId;
+  filter += '&databagVersion=' + databagVersion;
+    return requestJSON(api + '?' + filter, {
+        method: 'GET',
+    });
+}

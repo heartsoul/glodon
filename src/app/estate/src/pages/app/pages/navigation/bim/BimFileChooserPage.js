@@ -83,11 +83,11 @@ export default class BimFileChooser extends Component {
         //本地数据库获取所有的模型和图纸列表
         let bm = OfflineManager.getBasicInfoManager();
         modelList = bm.getModelList();
-        // console.log('-----------modellist--------------')
-        // console.log(modelList);
+        console.log('-----------modellist--------------')
+        console.log(modelList);
         blueprintList = bm.getBlueprintList();
-        // console.log('------------blueprintlist-------------')
-        // console.log(blueprintList);
+        console.log('------------blueprintlist-------------')
+        console.log(blueprintList);
         
 
     }

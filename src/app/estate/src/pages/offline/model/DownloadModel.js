@@ -4,97 +4,70 @@ import { Platform,} from 'react-native';
   import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive';
   import {Buffer} from 'buffer';
   import DirManager from '../manager/DirManager'
+  import * as API from 'app-api';
 
-  const appKey = 'wAL3NLP0aplEc6GipAXyTbXm7yENchzk';
-  const appSecret = 'XV2tDlHB7aBVpEzHLdgcSspABjGWjIMR';
   
   let dm = new DirManager();
   export default class DownloadModel  {
 
     
 
-    //获取离线下载的token
+    //创建离线数据包
      getToken = (fileId)=>{
 
-        // console.log(RNFS.MainBundlePath);   ios 
-        // console.log(RNFS.DocumentDirectoryPath);android  /data/user/0/com.estate/files
-        
         dm.makeDirs();
+        this.createOffline(fileId);
+    }
 
-        let key = appKey+':'+appSecret;
-        let encodeKey = new Buffer(key).toString('base64');
-        let auth = 'Basic '+encodeKey;
-        let url = 'https://api.bimface.com/oauth2/token';
-        let ops = {
-            method:'POST',
-            headers: {
-                'Accept': 'application/json',
-                "Content-Type": "application/json;charset=utf-8",
-                "X-Requested-With": "XMLHttpRequest",
-                "Authorization":auth,
-            },
-        };
-
-        fetch(url,ops).then((response) => response.json())
+    //生成离线包
+     createOffline=(token='',fileId)=>{
+        API.createModelOfflineZip(fileId)
         .then((responseJson) => {
-            // { code: 'success',
-            //     message: null,
-            //     data:
-            //     { expireTime: '2018-05-29 08:38:49',
-            //     token: '6532e462-334b-48dd-a2f3-86c7b1ab2317' } }
-        //   console.log(responseJson);
-          this.createOffline(responseJson.data.token,fileId);
+            // {
+            //     "code": "string",
+            //     "data": {
+            //       "createTime": "string",
+            //       "databagVersion": "string",
+            //       "fileId": 0,
+            //       "reason": "string",
+            //       "status": "string"
+            //     },
+            //     "message": "string"
+            //   }
+            console.log('createOffline')
+            console.log(responseJson)
+            
+            //查看离线包的生成状态
+            API.getModelOfflineZipStatus(fileId)
+            .then((responseJson)=>{
+                // {
+                //     "code": "string",
+                //     "data": {
+                //       "createTime": "string",
+                //       "databagVersion": "string",
+                //       "fileId": 0,
+                //       "reason": "string",
+                //       "status": "string"
+                //     },
+                //     "message": "string"
+                //   }
+                console.log('createOffline')
+                console.log(responseJson)
+                
+            })
+            .catch((error)=>{
+                console.error(error);
+            })
         })
         .catch((error) => {
           console.error(error);
         });
-    }
-
-    //生成离线包
-     createOffline=(token,fileId)=>{
-        // let fileId = '1353300132668256';
-        let url = `https://api.bimface.com/files/${fileId}/offlineDatabag`;
-        let auth = 'bearer '+token;
-        let ops = {
-            method:'PUT',
-            headers:{
-                'Accept': 'application/json',
-                "Content-Type": "application/json;charset=utf-8",
-                "X-Requested-With": "XMLHttpRequest",
-                "Authorization":auth,
-            },
-        }
-        fetch(url,ops).then((response)=>response.json())
-        .then((responseJson)=>{
-            // { code: 'success',
-            //     message: null,
-            //     data:
-            //     { createTime: '2018-05-22 09:28:23',
-            //     databagVersion: '3.0',
-            //     fileId: 1353300132668256,
-            //     reason: null,
-            //     status: 'success' } }
-            console.log(responseJson);
-            this.getAddress(responseJson.data.fileId,responseJson.data.databagVersion,token);
-        }).catch((error) => {
-            console.error(error);
-          });
+        
     }
 
     //获取离线包地址
-     getAddress = (fileId,databagVersion,token)=>{
-        let url = `https://api.bimface.com/data/databag/downloadUrl?fileId=${fileId}&type=offline&databagVersion=${databagVersion}`;
-        let auth = 'bearer '+token;
-        let ops = {
-            method:'GET',
-            headers:{
-                'Accept': 'application/json',
-                "Content-Type": "application/json;charset=utf-8",
-                "X-Requested-With": "XMLHttpRequest",
-                "Authorization":auth,
-            },
-        }
-        fetch(url,ops).then((response)=>response.json())
+     getAddress = (fileId,databagVersion,token='')=>{
+        APi.getModelOfflineZipAddress(fileId,databagVersion)
         .then((responseJson)=>{
             // { code: 'success',
             //     message: null,
