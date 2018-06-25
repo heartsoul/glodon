@@ -13,8 +13,10 @@ import {
   FlatList,
   
 } from 'react-native';
+import * as API from "app-api";
 import { DeviceEventEmitter } from "app-3rd"
 import OfflineManager from '../../../offline/manager/OfflineManager'
+import * as CONSTANT from "../../../common/service/api+constant"
 var { width, height } = Dimensions.get("window");
 
 //离线数据跟踪
@@ -245,28 +247,76 @@ class LoadedView extends Component{
 }
 
 
-
+let loadData = null;
 //已失败-内容页面
 class LoadingView extends Component{
 
-
-  _clickDelete=()=>{
-
+ 
+  _clickDelete=(item)=>{
+     let am = OfflineManager.getAsyncManager();
+     am.deleteByKey(item.item.id+'');
+     loadData()
   }
-  _clickDetail=()=>{
+  _clickDetail=(id,type)=>{
+    console.log(id+' '+type)
+    if(type=='quality'){//质量
+      let qm = OfflineManager.getQualityManager();
+      let data = qm.getListItemById(id+'');
+      if(data){
+        let item = {
+          value:data,
+        }
+        let power = AuthorityManager.isQualityCheckSubmit() && AuthorityManager.isMe(item.value.creatorId);
+        // 未提交状态就进入编辑
+        if ((item.value.qcState === API.QC_STATE_STAGED && power)||(item.value.qcState === API.QC_STATE_Q_NEW_SAVE)||(item.value.qcState === API.QC_STATE_Q_EDIT_SAVE)) {
+            storage.pushNext(null, "NewPage", { "item": item });
+        } else {
+            storage.pushNext(null, "QualityDetailPage", { "item": item });
+        }
+      }
+      
+    }else{//材设
+      let em = OfflineManager.getEquipmentManager();
+      let data = em.getEquipmentListItem(id);
+      console.log(data)
+      if(data){
+        let item = {
+          value:data,
+        }
+        //如果是提交待同步 或删除待同步状态  则不进入详情
+        if(item.value.isOffline){
+          switch(item.value.qcState){
+              case CONSTANT.QC_STATE_EQUIPMENT_NEW_SUBMIT:
+              case CONSTANT.QC_STATE_EQUIPMENT_EDIT_SUBMIT:
+              case CONSTANT.QC_STATE_EQUIPMENT_DELETE:
+                  return;
+              break;
+          }
+        }
+        storage.pushNext(null, "EquipmentDetailPage", { "item": item });
+      }
+    }
     
   }
-  _clickSubmit=()=>{
-    
+  _clickSubmit=(item)=>{
+    let am = OfflineManager.getAsyncManager();
+    am.syncList(item.item,{
+      onSuccess(){
+        loadData();
+      }
+      ,onFail(err){
+        console.log(err);
+      }
+    })
   }
   constructor(){
     super();
     this.state={
       dataList:[]
     }
-  }
 
-  componentDidMount(){
+     //更新列表数据
+  loadData = ()=>{
     let am = OfflineManager.getAsyncManager();
     let list = am.getRecordsByState('同步失败');
     this.setState((pre)=>{
@@ -276,6 +326,13 @@ class LoadingView extends Component{
       }
     })
   }
+  }
+
+  componentDidMount(){
+    loadData();
+  }
+
+  
 
   _renderItem =(item,index)=>{
     let title = item.item.title;
@@ -300,17 +357,19 @@ class LoadingView extends Component{
         </View>
 
         <View style={{height:46,flexDirection:'row',alignItems:'center',justifyContent:'flex-end',backgroundColor:'#ffffff'}}>
-          <TouchableOpacity onPress={this._clickDelete}>
+          <TouchableOpacity onPress={()=>{
+            this._clickDelete(item)
+          }}>
             <View style={{backgroundColor:'#f9f9f9',width:58,height:28,borderColor:'#979797',borderWidth:1,borderRadius:100,alignItems:'center',justifyContent:'center'}} >
               <Text style={{fontSize:14,color:'#666666',}} >删除</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._clickDetail}>
+          <TouchableOpacity onPress={()=>{this._clickDetail(item.item.id,item.item.type)}}>
             <View style={{backgroundColor:'#f9f9f9',width:80,height:28,borderColor:'#979797',borderWidth:1,borderRadius:100,alignItems:'center',justifyContent:'center',marginLeft:10,marginRight:10}} >
               <Text style={{fontSize:14,color:'#666666',}} >查看详情</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._clickSubmit}>
+          <TouchableOpacity onPress={()=>{this._clickSubmit(item)}}>
             <View style={{backgroundColor:'#f9f9f9',width:80,height:28,borderColor:'#979797',borderWidth:1,borderRadius:100,alignItems:'center',justifyContent:'center',marginRight:10}} >
               <Text style={{fontSize:14,color:'#666666',}} >再次提交</Text>
             </View>

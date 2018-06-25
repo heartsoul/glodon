@@ -127,27 +127,41 @@ export function submit(params, navigator) {
                 params.files = files;
             }
             let props = buildRequestParams(requestParams);
-            if (fieldId && fieldId != 0) {
-                API.equipmentEditSubmit(storage.loadProject(), fieldId, props)
-                    .then((responseData) => {
-                        Toast.hide();
-                        dispatch(UpdateDataAction.updateData());
-                        storage.goBack(navigator, null);
-                    }).catch(error => {
-                        Toast.hide();
-                        console.log(error);
-                    })
-            } else {
+            let id = fieldId+'';
+            if(id.startsWith('_')  && OfflineStateUtil.isOnLine()){
                 API.equipmentCreateSubmit(storage.loadProject(),props)
-                    .then((responseData) => {
-                        Toast.hide();
-                        dispatch(UpdateDataAction.updateData());
-                        storage.goBack(navigator, null);
-                    }).catch(error => {
-                        Toast.hide();
-                        console.log(error);
-                    })
+                .then((responseData) => {
+                    Toast.hide();
+                    dispatch(UpdateDataAction.updateData());
+                    storage.goBack(navigator, null);
+                }).catch(error => {
+                    Toast.hide();
+                    console.log(error);
+                })
+            }else{
+                if (fieldId && fieldId != 0) {
+                    API.equipmentEditSubmit(storage.loadProject(), fieldId, props)
+                        .then((responseData) => {
+                            Toast.hide();
+                            dispatch(UpdateDataAction.updateData());
+                            storage.goBack(navigator, null);
+                        }).catch(error => {
+                            Toast.hide();
+                            console.log(error);
+                        })
+                } else {
+                    API.equipmentCreateSubmit(storage.loadProject(),props)
+                        .then((responseData) => {
+                            Toast.hide();
+                            dispatch(UpdateDataAction.updateData());
+                            storage.goBack(navigator, null);
+                        }).catch(error => {
+                            Toast.hide();
+                            console.log(error);
+                        })
+                }
             }
+            
         });
         
     }
@@ -174,30 +188,52 @@ export function save(params) {
             }
             let props = buildRequestParams(requestParams);
 
-            if (fieldId && fieldId != 0) {
-                API.equipmentEditSave(storage.loadProject(), fieldId, props)
-                    .then((responseData) => 
-                    {
-                        dispatch(UpdateDataAction.updateData());
-                        loadDetail(dispatch, fieldId);
-                        Toast.success('保存成功', 1);
-                    }).catch(error => {
-                        Toast.hide();
-                        console.log(error);
-                    })
-            } else {
+            let id = fieldId+'';
+            if(id.startsWith('_') && OfflineStateUtil.isOnLine()){
                 API.equipmentCreateSave(storage.loadProject(), props)
-                    .then((responseData) => {
-                        params.id = responseData.data.id;
-                        params.code = responseData.data.code;
-                        dispatch(UpdateDataAction.updateData());
+                .then((responseData) => {
+                    console.log(responseData)
+                    params.id = responseData.data.id;
+                    params.code = responseData.data.code;
+                    dispatch(UpdateDataAction.updateData());
+                    if(OfflineStateUtil.isOnLine()){
                         loadDetail(dispatch, params.id);
-                        Toast.success('保存成功', 1);
-                    }).catch(error => {
-                        console.log(error);
-                        Toast.hide();
-                    })
+                    }
+                    Toast.success('保存成功', 1);
+                }).catch(error => {
+                    console.log(error);
+                    Toast.hide();
+                })
+            }else{
+                if (fieldId && fieldId != 0) {
+                    API.equipmentEditSave(storage.loadProject(), fieldId, props)
+                        .then((responseData) => 
+                        {
+                            dispatch(UpdateDataAction.updateData());
+                            loadDetail(dispatch, fieldId);
+                            Toast.success('保存成功', 1);
+                        }).catch(error => {
+                            Toast.hide();
+                            console.log(error);
+                        })
+                } else {
+                    API.equipmentCreateSave(storage.loadProject(), props)
+                        .then((responseData) => {
+                            console.log(responseData)
+                            params.id = responseData.data.id;
+                            params.code = responseData.data.code;
+                            dispatch(UpdateDataAction.updateData());
+                            if(OfflineStateUtil.isOnLine()){
+                                loadDetail(dispatch, params.id);
+                            }
+                            Toast.success('保存成功', 1);
+                        }).catch(error => {
+                            console.log(error);
+                            Toast.hide();
+                        })
+                }
             }
+            
            
         });
     }
@@ -237,19 +273,38 @@ export function fetchData(fieldId) {
 }
 
 function loadDetail(dispatch,fieldId) {
-    API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
-        if (responseData.data.files && responseData.data.files.length > 0) {
-            loadFileUrls(responseData.data.files, (files) => {
-                responseData.data.files = files;
+    let id = fieldId+'';
+    if(id.startsWith('_')){//同步列表失败的部分  从本地数据库取获取详情
+        let em = OfflineManager.getEquipmentManager();
+        em.getQualityDetail(id).then((responseData) => {
+            if (responseData.data.files && responseData.data.files.length > 0) {
+                loadFileUrls(responseData.data.files, (files) => {
+                    responseData.data.files = files;
+                    dispatch(_loadSuccess(responseData.data));
+                });
+            }
+            else {
                 dispatch(_loadSuccess(responseData.data));
-            });
-        }
-        else {
-            dispatch(_loadSuccess(responseData.data));
-        }
-    }).catch(error => {
-        dispatch(_loadError(error));
-    });
+            }
+        }).catch(error => {
+            dispatch(_loadError(error));
+        });
+    }else{
+        API.equipmentDetail(storage.loadProject(), fieldId).then((responseData) => {
+            if (responseData.data.files && responseData.data.files.length > 0) {
+                loadFileUrls(responseData.data.files, (files) => {
+                    responseData.data.files = files;
+                    dispatch(_loadSuccess(responseData.data));
+                });
+            }
+            else {
+                dispatch(_loadSuccess(responseData.data));
+            }
+        }).catch(error => {
+            dispatch(_loadError(error));
+        });
+    }
+    
 }
 
 function loadFileUrls(files, finsh) {

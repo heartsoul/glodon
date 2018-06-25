@@ -84,6 +84,9 @@ export default class EquipmentManager {
     //全部  获取材设列表 根据状态  页数   
     _getEquipmentListAll=(page,size)=>{
         let result = handler.queryAll(page,size);
+        console.log('2323232323')
+            console.log(result)
+        
         return new Promise((resolve,reject)=>{
             resolve(result);
             
@@ -108,10 +111,17 @@ export default class EquipmentManager {
         });
     }
 
+    //获取材设列表的一个item
+    getEquipmentListItem=(id)=>{
+        let info = handler.query(id);
+        let obj = JSON.parse(info);
+        return obj.item;
+    }
         
     //获取材设详情
     getQualityDetail=(id)=>{
         let info = handler.query(id);
+        console.log(info)
         let obj = JSON.parse(info);
         return new Promise((resolve,reject)=>{
             resolve(obj.detail);
@@ -218,7 +228,7 @@ export default class EquipmentManager {
         let data ={
             data:{
                 code:'code',
-                id:'123'
+                id:id
             }
         }
         resolve(data);
@@ -232,6 +242,10 @@ export default class EquipmentManager {
         let committed = false;
         let qualified = props.qualified;
         let qcState = CONSTANT.QC_STATE_EQUIPMENT_EDIT_SUBMIT;
+        let careId = equipmentId+'';
+        if(careId.startsWith('_')){
+            qcState = CONSTANT.QC_STATE_EQUIPMENT_NEW_SUBMIT;
+        }
         let updateTime = date.getTime()+'';
         //列表显示的信息
         let item = {
@@ -297,7 +311,7 @@ export default class EquipmentManager {
         let data ={
             data:{
                 code:'code',
-                id:'123'
+                id:id
             }
         }
         resolve(data);
@@ -379,7 +393,7 @@ export default class EquipmentManager {
         let data ={
             data:{
                 code:'code',
-                id:'123'
+                id:id
             }
         }
         resolve(data);
@@ -395,6 +409,10 @@ export default class EquipmentManager {
         let detailInfo = this.getEquipmentDetailObj(id+'');
         let code = detailInfo.data.code;
         let qcState = CONSTANT.QC_STATE_EQUIPMENT_EDIT_SAVE;
+        let careId = equipmentId+'';
+        if(careId.startsWith('_')){
+            qcState = CONSTANT.QC_STATE_EQUIPMENT_NEW_SAVE;
+        }
         let updateTime = date.getTime()+'';
         //列表显示的信息
         let item = {

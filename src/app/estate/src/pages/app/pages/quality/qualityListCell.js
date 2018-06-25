@@ -73,7 +73,7 @@ export default class QualityListCell extends PureComponent {
     _toDetail = (item) => {
         let power = AuthorityManager.isQualityCheckSubmit() && AuthorityManager.isMe(item.value.creatorId);
         // 未提交状态就进入编辑
-        if ((item.value.qcState === API.QC_STATE_STAGED && power)||(item.value.qcState === API.QC_STATE_Q_NEW_SAVE)) {
+        if ((item.value.qcState === API.QC_STATE_STAGED && power)||(item.value.qcState === API.QC_STATE_Q_NEW_SAVE)||(item.value.qcState === API.QC_STATE_Q_EDIT_SAVE)) {
             storage.pushNext(null, "NewPage", { "item": item });
         } else {
             storage.pushNext(null, "QualityDetailPage", { "item": item });

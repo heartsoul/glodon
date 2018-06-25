@@ -70,6 +70,13 @@ export default class QualityManager {
         return obj;
     }
 
+    //根据id查询一条数据的item
+    getListItemById =(id)=>{
+        let info = handler.query(id);
+        let obj = JSON.parse(info);
+        return obj.item;
+    }
+
     //根据id查询离线建立的单据的参数信息
     getSubmitInfoById =(id)=>{
         let info = handler.query(id);
@@ -321,7 +328,7 @@ export default class QualityManager {
         let data ={
             data:{
                 code:'code',
-                id:'123'
+                id:id
             }
         }
         resolve(data);

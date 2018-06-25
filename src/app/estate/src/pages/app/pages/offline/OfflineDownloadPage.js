@@ -129,8 +129,8 @@ export default class extends Component {
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         <View style={{flexDirection:'row',backgroundColor:'#ffffff'}}>
           <TopItemView title={'全部'} isShowLine={this.state.showAll} num={0} onPress={this._clickAll} />
-          <TopItemView title={'已下载'} isShowLine={this.state.showLoaded} num={3355} onPress={this._clickLoaded} />
-          <TopItemView title={'下载中'} isShowLine={this.state.showLoading} num={33} onPress={this._clickLoading} />
+          <TopItemView title={'已下载'} isShowLine={this.state.showLoaded} num={0} onPress={this._clickLoaded} />
+          <TopItemView title={'下载中'} isShowLine={this.state.showLoading} num={0} onPress={this._clickLoading} />
         </View>
         <View style={{height:10}}></View>
         {
@@ -205,6 +205,7 @@ class LoadedView extends Component{
 
  //基础数据包是否已下载
  _showBasicView=()=>{
+   bm = OfflineManager.getBasicInfoManager();
    let finishTime = bm.getDownloadedTime();
    let isShow = finishTime!=null;
    if(isShow){ 
