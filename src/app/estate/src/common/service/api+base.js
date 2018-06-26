@@ -44,7 +44,10 @@ function checkStatus(response) {
         return response;
         // Message.error('请联系管理员获取相应操作权限');
     } else if (response.status === 401) {
-        storage.gotoLogin();
+        // storage.gotoLogin();
+        const error = new Error("请联系管理员获取相应操作权限");
+        error.response = response;
+        throw error;
     }
     else if (response.status === 500) {
         // alert('数据获取失败(code:500).');
