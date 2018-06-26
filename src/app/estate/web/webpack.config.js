@@ -82,10 +82,28 @@ var config = {
         splitChunks: {
             chunks: 'all', // 只对入口文件处理
             cacheGroups: {
-                vendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
-                    test: /node_modules\//,
-                    name: 'vendor',
+                myVendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                    test: /src\/node_modules\//,
+                    name: 'myVendor',
+                    priority: 8,
+                    enforce: true
+                },
+                andtMobile: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                    test: /[\\/]node_modules\/antd-mobile[\\/]/,
+                    name: 'andtMobile',
+                    priority: 9,
+                    enforce: true
+                },
+                reactNativeWeb: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                    test: /[\\/]node_modules\/react-native-web[\\/]/,
+                    name: 'reactNativeWeb',
                     priority: 10,
+                    enforce: true
+                },
+                vendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendor',
+                    priority: -10,
                     enforce: true
                 },
             }

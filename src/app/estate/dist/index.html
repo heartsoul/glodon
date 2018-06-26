@@ -6,100 +6,25 @@
     <title>BIM协同</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <script type="text/javascript" >
-    var loadResource = function loadResource( callback) {
-       createResource('main.bundle.js', function (data) {
-           callback(data);
-       });
-     };
-     var createResource = function createResource(url, callback) {
-       var head = document.getElementsByTagName('head')[0];
-       var staticTag;
-       if (url.indexOf('.css') > -1) {
-         staticTag = document.createElement('link');
-         staticTag.setAttribute('href', url);
-         staticTag.setAttribute('rel', 'stylesheet');
-       } else {
-         staticTag = document.createElement('script');
-         staticTag.setAttribute('src', url);
-       }
-       staticTag.isLoaded = false;
-       staticTag.addEventListener('load', function () {
-         staticTag.isLoaded = true;
-         console.log('加载完成');
-         callback && callback({
-           message: 'success'
-         });
-       });
-       staticTag.addEventListener('error', function () {
-         staticTag.isLoaded = false;
-         callback && callback({
-           element: url,
-           message: 'error'
-         });
-       });
-       head.appendChild(staticTag);
-       return staticTag;
-     };
    
-     var ajax = function ajax(options) {
-       var defaults = {
-         type: 'get',
-         data: null,
-         success: null,
-         failure: null
-       };
-   
-       var _opt = Object.assign(defaults, options);
-       var xmlhttp;
-       if (window.XMLHttpRequest) {
-         xmlhttp = new XMLHttpRequest();
-       } else {
-         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-       }
-       xmlhttp.onreadystatechange = function () {
-         if (xmlhttp.readyState == 4) {
-           var status = xmlhttp.status;
-           if (status >= 200 && status < 300) {
-             _opt.success && _opt.success(xmlhttp.responseText, xmlhttp.responseXML);
-           } else {
-             _opt.failure && _opt.failure(status);
-           }
-         }
-       };
-       xmlhttp.open(_opt.type, _opt.url, _opt.async);
-       xmlhttp.send(_opt.data);
-     };
- 
-   </script>
    <style>
-.alignCenterImage { 
+  .alignCenterImage { 
     margin:auto; 
-    margin-top: 30%;
-clear: both; 
-display: block; 
-
+    margin-top: 33%;
+    clear: both; 
+    display: block; 
 } 
-   </style>
-   <script type="text/javascript">
-    // loadResource((data)=>{
-    //     if(data && data.message == 'success') {
-    //         // ok
-    //         console.log('加载成功')
-    //     } else {
-    //         document.getElementById('loadingText').style.display = 'none';
-    //         alert('加载失败了');
-    //     }
-    // });
-    </script>
-    <!-- <script src="http://10.1.92.56:8100/target/target-script-min.js#anonymous"></script> -->
+   </style>    
 </head>
 <body>
     <div id='root' style="position:absolute;width:100%;top:0;bottom:0;background:#FFFFFF">
             <div id='loading'><img src="loading.gif" alt='加载中...' class='alignCenterImage'/></div>
     </div>   
-    <script type="text/javascript" src="vendor.bundle.js"></script>
+     <script type="text/javascript" src="vendor.bundle.js"></script>
+    <script type="text/javascript" src="andtMobile.bundle.js"></script>
+    <script type="text/javascript" src="reactNativeWeb.bundle.js"></script>
+    <script type="text/javascript" src="myVendor.bundle.js"></script>
     <script type="text/javascript" src="manifest.bundle.js"></script>
-    <script type="text/javascript" src="main.bundle.js"></script>
+  <script type="text/javascript" src="main.bundle.js"></script>
 </body>
 </html>

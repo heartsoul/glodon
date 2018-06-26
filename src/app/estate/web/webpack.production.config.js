@@ -63,17 +63,10 @@ const urlLoaderConfiguration = {
 }
 var config = {
     mode: 'production',
-    // mode: 'development',
-    entry: path.resolve(appDirectory, 'index.web.js'),
     // devtool: 'cheap-module-source-map',//source-map
-    // plugins: [
-    //     // compress js
-    //     new webpack.optimize.UglifyJsPlugin({
-    //         sourceMap: false,
-    //         beautify: false,
-    //         comments: false
-    //     })
-    // ],
+    // mode: 'development',
+    // devtool: 'source-map',
+    entry: path.resolve(appDirectory, 'index.web.js'),
     
     output: {
         // filename: 'bundle.web.js',
@@ -83,13 +76,34 @@ var config = {
     },
     optimization: {
         splitChunks: {
-            chunks: 'all', // 只对入口文件处理
             cacheGroups: {
-                vendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
-                    test: /node_modules\//,
-                    name: 'vendor',
+                myVendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                    test: /src\/node_modules\//,
+                    name: 'myVendor',
                     priority: 10,
-                    enforce: true
+                    enforce: true,
+                    chunks: 'all',
+                },
+                andtMobile: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                    test: /[\\/]node_modules\/antd-mobile[\\/]/,
+                    name: 'andtMobile',
+                    priority: 9,
+                    enforce: true,
+                    chunks: 'all',
+                },
+                reactNativeWeb: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                    test: /[\\/]node_modules\/react-native-web[\\/]/,
+                    name: 'reactNativeWeb',
+                    priority: 9,
+                    enforce: true,
+                    chunks: 'all',
+                },
+                vendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendor',
+                    priority: -10,
+                    enforce: true,
+                    chunks: 'all',
                 },
             }
         },
@@ -119,7 +133,11 @@ var config = {
                 process.env.NODE_ENV || 'development'
             ),
             __DEV__: process.env.NODE_ENV === 'development' || false,
-        })
+        }),
+        // new webpack.optimize.LimitChunkCountPlugin({
+        //     maxChunks: 5, // Must be greater than or equal to one
+        //     minChunkSize: 100
+        //   }),
     ],
     
     resolve: {

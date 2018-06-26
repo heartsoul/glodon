@@ -1,6 +1,5 @@
-import { Toast } from 'antd-mobile';
 import React from 'react'
-import { View, Image, Platform} from 'react-native'
+import { View, Image} from 'react-native'
 import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'
 import configureStore, { history } from '../store/ConfigureStore'
