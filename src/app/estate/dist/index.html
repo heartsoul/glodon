@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <script type="text/javascript" >
     var loadResource = function loadResource( callback) {
-       createResource('bundle.web.js', function (data) {
+       createResource('main.bundle.js', function (data) {
            callback(data);
        });
      };
@@ -26,6 +26,7 @@
        staticTag.isLoaded = false;
        staticTag.addEventListener('load', function () {
          staticTag.isLoaded = true;
+         console.log('加载完成');
          callback && callback({
            message: 'success'
          });
@@ -81,20 +82,24 @@ display: block;
 } 
    </style>
    <script type="text/javascript">
-    loadResource((data)=>{
-        if(data && data.message == 'success') {
-            // ok
-        } else {
-            document.getElementById('loadingText').style.display = 'none';
-            alert('加载失败了');
-        }
-    });
+    // loadResource((data)=>{
+    //     if(data && data.message == 'success') {
+    //         // ok
+    //         console.log('加载成功')
+    //     } else {
+    //         document.getElementById('loadingText').style.display = 'none';
+    //         alert('加载失败了');
+    //     }
+    // });
     </script>
+    <!-- <script src="http://10.1.92.56:8100/target/target-script-min.js#anonymous"></script> -->
 </head>
 <body>
     <div id='root' style="position:absolute;width:100%;top:0;bottom:0;background:#FFFFFF">
-            <div id='loading'><img src="loading.gif" class='alignCenterImage'/></div>
+            <div id='loading'><img src="loading.gif" alt='加载中...' class='alignCenterImage'/></div>
     </div>   
-<!-- < script type="text/javascript" src="bundle.web.js"></script> -->
+    <script type="text/javascript" src="vendor.bundle.js"></script>
+    <script type="text/javascript" src="manifest.bundle.js"></script>
+    <script type="text/javascript" src="main.bundle.js"></script>
 </body>
 </html>

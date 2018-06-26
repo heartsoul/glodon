@@ -62,20 +62,41 @@ const urlLoaderConfiguration = {
     },
 }
 var config = {
+    mode: 'production',
+    // mode: 'development',
     entry: path.resolve(appDirectory, 'index.web.js'),
-    devtool: 'cheap-module-source-map', plugins: [
-        // compress js
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: false,
-            beautify: false,
-            comments: false
-        })
-    ],
+    // devtool: 'cheap-module-source-map',//source-map
+    // plugins: [
+    //     // compress js
+    //     new webpack.optimize.UglifyJsPlugin({
+    //         sourceMap: false,
+    //         beautify: false,
+    //         comments: false
+    //     })
+    // ],
+    
     output: {
-        filename: 'bundle.web.js',
+        // filename: 'bundle.web.js',
+        filename: '[name].bundle.js',
+        chunkFilename: '[name].bundle.js',
         path: path.resolve(appDirectory, './dist'),
     },
-
+    optimization: {
+        splitChunks: {
+            chunks: 'all', // 只对入口文件处理
+            cacheGroups: {
+                vendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                    test: /node_modules\//,
+                    name: 'vendor',
+                    priority: 10,
+                    enforce: true
+                },
+            }
+        },
+        runtimeChunk: {
+            name: 'manifest'
+        }
+    },
     // devServer: {
     //     contentBase: './dist',
     //     historyApiFallback: true,
@@ -92,17 +113,15 @@ var config = {
             // urlLoaderConfiguration,
         ],
     },
-
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(
-                process.env.NODE_ENV || 'production'
+                process.env.NODE_ENV || 'development'
             ),
             __DEV__: process.env.NODE_ENV === 'development' || false,
-        }),
-        // new webpack.HotModuleReplacementPlugin(),
+        })
     ],
-
+    
     resolve: {
         extensions: ['.web.js', '.js'],
     },

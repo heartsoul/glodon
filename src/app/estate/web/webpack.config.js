@@ -6,8 +6,8 @@ const {BASE_URL_PROXY,UPLOAD_URL_PROXY} = require('./../src/common/constant/serv
 var ___SERVER = BASE_URL_PROXY;
 var ___SERVER_UP = UPLOAD_URL_PROXY;
 var utils = require('./utils');
-var PORT = 8099;
 var HOST = utils.getIP();
+
 // This is needed for webpack to compile JavaScript.
 // Many OSS React Native packages are not compiled to ES5 before being
 // published. If you depend on uncompiled packages they may cause webpack build
@@ -18,7 +18,6 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/react-native-safe-area-view'),
         path.resolve(appDirectory, 'node_modules/react-navigation'),
         path.resolve(appDirectory, 'node_modules/antd-mobile'),
-        path.resolve(appDirectory, 'node_modules/teaset'),
         // path.resolve(appDirectory, 'node_modules/react-native-image-zoom-viewer')
         path.resolve(appDirectory, 'src'),
         path.resolve(appDirectory, 'index.web.js'),
@@ -49,8 +48,8 @@ const imageLoaderConfiguration = {
     use: {
         loader: 'url-loader',
         options: {
-            name: '[name].[ext]',
             limit:1,
+            name: '/imgs/[name].[ext]',
         },
     },
 }
@@ -63,16 +62,38 @@ const urlLoaderConfiguration = {
     loader: 'url-loader',
     options: {
         mimetype: 'image/png',
+        limit:1,
+        name: '/imgs/[name].[ext]',
     },
 }
 var config = {
+    // mode: 'production',
+    mode: 'development',
     entry: path.resolve(appDirectory, 'index.web.js'),
-    devtool: 'eval-source-map',
+    devtool: 'eval-source-map',//source-map
+ 
     output: {
-        filename: 'bundle.web.js',
+        // filename: 'bundle.web.js',
+        filename: '[name].bundle.js',
+        chunkFilename: '[name].bundle.js',
         path: path.resolve(appDirectory, './dist'),
     },
-
+    optimization: {
+        splitChunks: {
+            chunks: 'all', // 只对入口文件处理
+            cacheGroups: {
+                vendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                    test: /node_modules\//,
+                    name: 'vendor',
+                    priority: 10,
+                    enforce: true
+                },
+            }
+        },
+        runtimeChunk: {
+            name: 'manifest'
+        }
+    },
     devServer: {
         contentBase: './dist',
         historyApiFallback: true,
@@ -130,9 +151,7 @@ var config = {
                 target: ___SERVER_UP,
                 changeOrigin: true,
                 secure: false
-            },
-
-            
+            }, 
         }
     },
 
@@ -144,7 +163,6 @@ var config = {
             // urlLoaderConfiguration,
         ],
     },
-
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(
@@ -154,7 +172,7 @@ var config = {
         }),
         new webpack.HotModuleReplacementPlugin(),
     ],
-
+    
     resolve: {
         extensions: ['.web.js', '.js'],
     },
