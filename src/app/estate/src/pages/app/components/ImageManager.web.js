@@ -1,5 +1,7 @@
 
 import { ActionModal } from 'app-components'
+import { EXIF } from 'exif-js/exif'
+
 export function shareApp(text, url) {
     text = text || 'BIM协同，真的来了';
     url = url || 'http://bim.glodon.com';
@@ -111,15 +113,85 @@ function editPhoto(file, retFun, retFiles) {
     reader.readAsDataURL(file);
     reader.onload = function (e) {
         reader = null;
-        if (isiOS()) {
-            rotateImage(e.target.result, (imageData) => {
-                navigateToEdit(imageData, file, retFiles, retFun);
-            })
-        } else {
-            navigateToEdit(e.target.result, file, retFiles, retFun);
-        }
+        rotateImage(file, e.target.result, (imageData) => {
+            navigateToEdit(imageData, file, retFiles, retFun);
+        });
     }
 }
+
+/**
+ * 处理图片旋转
+ * @param {*} file 
+ * @param {*} imageData 
+ * @param {*} callback 
+ */
+function rotateImage(file, imageData, callback) {
+    var orientation = null;
+    EXIF.getData(file, function () {
+        // var _exifInfo = EXIF.getAllTags(this);
+        orientation = EXIF.getTag(this, 'Orientation');
+        if (orientation) {
+            var canvas = document.createElement('canvas');
+            var img = document.createElement('img');
+            img.onload = function () {
+                var width = img.width;
+                var height = img.height
+                var ctx = canvas.getContext("2d");
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // canvas清屏
+                var newImageData = imageData;
+                switch (orientation) {
+                    //正常状态
+                    case 1:
+                        console.log('旋转0°');
+                        break;
+                    //旋转90度
+                    case 6:
+                        console.log('旋转90°');
+                        canvas.height = width;
+                        canvas.width = height;
+                        ctx.rotate(Math.PI / 2);
+                        ctx.translate(0, -height);
+                        ctx.drawImage(img, 0, 0)
+                        newImageData = canvas.toDataURL('Image/png')
+                        break;
+                    //旋转180°
+                    case 3:
+                        console.log('旋转180°');
+                        canvas.height = height;
+                        canvas.width = width;
+                        ctx.rotate(Math.PI);
+                        ctx.translate(-width, -height);
+                        ctx.drawImage(img, 0, 0)
+                        newImageData = canvas.toDataURL('Image/png')
+                        break;
+                    //旋转270°
+                    case 8:
+                        console.log('旋转270°');
+                        canvas.height = width;
+                        canvas.width = height;
+                        ctx.rotate(-Math.PI / 2);
+                        ctx.translate(-height, 0);
+
+                        ctx.drawImage(img, 0, 0)
+                        newImageData = canvas.toDataURL('Image/png')
+                        break;
+                    //undefined时不旋转
+                    case undefined:
+                        console.log('undefined  不旋转');
+                        break;
+                }
+                callback(newImageData);
+            };
+            img.src = imageData;
+
+        } else {
+            callback(imageData);
+        }
+    });
+
+
+}
+
 /**
  * 跳转到图片编辑页
  * @param {*} data 
@@ -142,27 +214,4 @@ function navigateToEdit(data, file, retFiles, retFun) {
             })
         }
     })
-}
-
-function rotateImage(imageData, callback) {
-    var canvas = document.createElement('canvas');
-    var img = document.createElement('img');
-    img.onload = function () {
-        var ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // canvas清屏
-        //重置canvans宽高 
-        canvas.width = img.height;
-        canvas.height = img.width;
-        ctx.rotate(Math.PI / 2);
-        ctx.translate(0, -img.height);
-        ctx.drawImage(img, 0, 0, img.width, img.height); // 将图像绘制到canvas上
-        callback(canvas.toDataURL("image/png"));//
-    };
-    img.src = imageData;
-}
-
-function isiOS() {
-    var u = navigator.userAgent;
-    var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-    return isiOS;
 }
