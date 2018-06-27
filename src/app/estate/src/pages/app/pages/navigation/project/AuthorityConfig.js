@@ -7,6 +7,11 @@
  export const Quality_Risk = "Estate_Integration_Quality_Risk";//质量隐患记录
  export const Quality_Facility = "Estate_Integration_Quality_Facility";//材料设备进场验收
  export const Quality_Rectification = "Estate_Integration_Quality_Rectification";//质量整改记录
+ export const Estate_Model_Document = "Estate_Model_Document";//模型文件
+ export const Estate_Model_Drawing = "Estate_Model_Drawing";//图纸文件
+ export const Estate_Document = "Estate_Document";//项目文档
+
+
 
  //具体权限
  export const DeleteUnit = "DeleteUnit";

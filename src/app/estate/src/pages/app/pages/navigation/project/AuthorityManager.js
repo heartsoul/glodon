@@ -153,74 +153,34 @@ export function isEquipmentBrowser(){
  * 获取所有权限
  */
 export function loadAuthoritys(projectId,retFun,tenantId = '0') {
-    let count = 4;
+     let right_keys = [
+         AuthorityConfig.Quality_Check,//质量检查记录
+        //  AuthorityConfig.Quality_Accept,//质量验收记录
+         AuthorityConfig.Quality_Risk,//质量隐患记录
+         AuthorityConfig.Quality_Facility,//材料设备进场验收
+         AuthorityConfig.Quality_Rectification,//质量整改记录
+         AuthorityConfig.Estate_Model_Document,//模型文件
+         AuthorityConfig.Estate_Model_Drawing,//图纸文件
+         AuthorityConfig.Estate_Document,//项目文档
+    ]
+
+    let count = right_keys.length;
     let error = false;
-    
-    //质量检查记录
-    getAuthority(projectId,AuthorityConfig.Quality_Check,(success)=>{
-        count --
-        if(error) {
-            return;
-        }
-        if(!success) {
-            error = success;
-            retFun(false);
-        }
-        if(count > 0) {return}
-        retFun(true);
-    }, tenantId);
-    // //质量验收记录
-    // getAuthority(projectId,AuthorityConfig.Quality_Accept,(success)=>{
-    //     count --
-    //     if(error) {
-    //         return;
-    //     }
-    //     if(!success) {
-    //         error = success;
-    //         retFun(false);
-    //     }
-    //     if(count > 0) {return}
-    //     retFun(true);
-    // });
-    //质量隐患记录
-    getAuthority(projectId,AuthorityConfig.Quality_Risk,(success)=>{
-        count --
-        if(error) {
-            return;
-        }
-        if(!success) {
-            error = success;
-            retFun(false);
-        }
-        if(count > 0) {return}
-        retFun(true);
-    }, tenantId);
-    //材料设备进场验收
-    getAuthority(projectId,AuthorityConfig.Quality_Facility,(success)=>{
-        count --
-        if(error) {
-            return;
-        }
-        if(!success) {
-            error = success;
-            retFun(false);
-        }
-        if(count > 0) {return}
-        retFun(true);
-    }, tenantId);
-    //质量整改记录
-    getAuthority(projectId,AuthorityConfig.Quality_Rectification,(success)=>{
-        count --
-        if(error) {
-            return;
-        }
-        if(!success) {
-            error = success;
-            retFun(false);
-        }
-        if(count > 0) {return}
-        retFun(true);
-    }, tenantId);
+
+    right_keys.map((key)=>{
+        getAuthority(projectId,key,(success)=>{
+            count --
+            if(error) {
+                return;
+            }
+            if(!success) {
+                error = success;
+                retFun(false);
+            }
+            if(count > 0) {return}
+            retFun(true);
+        }, tenantId);
+    })
 }
 
 export function getAuthority(projectId,key,retFun, tenantId = '0'){
