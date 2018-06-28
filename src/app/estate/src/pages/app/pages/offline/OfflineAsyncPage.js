@@ -16,7 +16,6 @@ import {
 import * as API from "app-api";
 import { DeviceEventEmitter } from "app-3rd"
 import OfflineManager from '../../../offline/manager/OfflineManager'
-import * as CONSTANT from "../../../common/service/api+constant"
 var { width, height } = Dimensions.get("window");
 
 //离线数据跟踪
@@ -286,9 +285,9 @@ class LoadingView extends Component{
         //如果是提交待同步 或删除待同步状态  则不进入详情
         if(item.value.isOffline){
           switch(item.value.qcState){
-              case CONSTANT.QC_STATE_EQUIPMENT_NEW_SUBMIT:
-              case CONSTANT.QC_STATE_EQUIPMENT_EDIT_SUBMIT:
-              case CONSTANT.QC_STATE_EQUIPMENT_DELETE:
+              case API.QC_STATE_EQUIPMENT_NEW_SUBMIT:
+              case API.QC_STATE_EQUIPMENT_EDIT_SUBMIT:
+              case API.QC_STATE_EQUIPMENT_DELETE:
                   return;
               break;
           }

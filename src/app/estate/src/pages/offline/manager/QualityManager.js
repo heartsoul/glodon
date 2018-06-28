@@ -3,7 +3,7 @@ import * as API from 'app-api';
 import QualityHandler from '../handler/QualityHandler';
 import DownloadImg from '../model/DownloadImg';
 import OfflineManager from './OfflineManager';
-import * as CONSTANT from "../../common/service/api+constant"
+import * as CONSTANT from "app-api"
 
 let handler = null;
 let projectId ;
