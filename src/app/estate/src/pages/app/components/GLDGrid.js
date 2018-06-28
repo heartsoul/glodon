@@ -78,7 +78,7 @@ class GLDGrid extends Component {
             }}>
                 <View style={[styles.card, this.props.cardStyle]}>
                     <Image source={item.source} style={[this.props.imageStyle]} />
-                    <Text >{item.name}</Text>
+                    <Text style={styles.itemText} >{item.name}</Text>
                 </View>
             </TouchableOpacity>
 
@@ -90,6 +90,10 @@ const styles = StyleSheet.create({
     card: {
         alignItems: "center",
     },
+    itemText: {
+        color: "#000",
+        fontSize: 14
+    }
 })
 
 export default GLDGrid;

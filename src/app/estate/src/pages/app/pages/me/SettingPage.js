@@ -73,10 +73,10 @@ class SettingPage extends Component {
     _share = () => {
         // let navigator = this.props.navigation;
         // storage.pushNext(navigator, "SharePage")
-        if(Platform.OS === 'web') {
-            Toast.info('敬请期待', 3);
-            return;
-        }
+        // if(Platform.OS === 'web') {
+        //     Toast.info('敬请期待', 3);
+        //     return;
+        // }
         ShareManager.share();
     }
 
