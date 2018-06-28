@@ -344,8 +344,8 @@ export async function deleteDocFile(containerId, fileId) {
  * @param {*} fileIds 数组
  * @param {*} targetParentId 
  */
-export async function moveDocFileBatch(containerId, fileIds) {
-    let api = `/bimpm/doc/containers/${containerId}/files/move/batch`
+export async function deleteDocFileBatch(containerId, fileIds) {
+    let api = `/bimpm/doc/containers/${containerId}/files/batch`
     let params = {
         fileIds: fileIds,
         purge: true,
@@ -441,7 +441,7 @@ export async function recoveryTrashFile(containerId, fileId) {
  * response 
  * no content
  */
-export async function deleteTrashFileBatch(containerId, fileIds) {
+export async function recoveryTrashFileBatch(containerId, fileIds) {
     let api = `/bimpm/doc/containers/${containerId}/files/trash/recovery`;
     let props = JSON.stringify({ fileIds: fileIds })
     return requestJSON(api, {
@@ -455,7 +455,7 @@ export async function deleteTrashFileBatch(containerId, fileIds) {
  * response 
  * no content
  */
-export async function deleteTrashFileBatch(containerId) {
+export async function clearTrashFileBatch(containerId) {
     let api = `/bimpm/doc/containers/${containerId}/files/trash/clear`;
     return requestJSON(api, {
         method: 'DELETE',
@@ -501,7 +501,7 @@ export async function favoritesDocFile(containerId, fileId) {
 ]
  */
 export async function favoritesDocFileBatch(containerId, fileIds) {
-    let api = `/bimpm/doc/containers/${containerId}/files/favorites`;
+    let api = `/bimpm/doc/containers/${containerId}/files/favorites/batch`;
     let props = JSON.stringify({ fileIds: fileIds })
     return requestJSON(api, {
         method: 'POST',
@@ -537,7 +537,7 @@ export async function cancelFavoritesDocFile(containerId, fileId) {
  * no content
  */
 export async function cancelFavoritesDocFileBatch(containerId, fileIds) {
-    let api = `/bimpm/doc/containers/${containerId}/files/favorites`;
+    let api = `/bimpm/doc/containers/${containerId}/files/favorites/batch`;
     let props = JSON.stringify({ fileIds: fileIds })
     return requestJSON(api, {
         method: 'DELETE',
