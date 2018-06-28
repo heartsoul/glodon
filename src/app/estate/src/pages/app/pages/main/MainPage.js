@@ -99,6 +99,11 @@ export default class extends Component {
         BimFileEntry.chooseQualityModelFromHome(navigator);
     }
 
+    // 文档管理
+    _toDocProject= () => {
+        let navigator = this.props.navigation;
+        storage.pushNext(navigator, "DocProjectPage");
+    } 
     onWindowResize = (event) => {
         event.preventDefault();
         setTimeout(() => {
@@ -280,6 +285,8 @@ export default class extends Component {
                         <SegmentedView.Sheet title={<MainTabTitle key="item0" text="质量检查" select={this.state.activeIndex == 0} activeTitleStyle={{color:'#00baf3',fontWeight:'bold',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />}  style={{backgroundColor: '#f8f8f8'}}>
                         <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
+                                    <View style={styles.spliteItem} />
+                                    <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => {event.preventDefault();this._toDocProject(event)}} title="文档管理" />
                                     <View style={styles.spliteItem} />
                                     <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => {event.preventDefault();this._loadQualityForm(event)}} title="质检清单" />
                                     <View style={styles.spliteItem} />
