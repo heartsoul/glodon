@@ -84,26 +84,6 @@ var config = {
         splitChunks: {
             chunks: 'all', // 只对入口文件处理
             cacheGroups: {
-                myVendor: { //
-                    test: /src\/node_modules\//,
-                    name: 'myVendor',
-                    priority: 8,
-                    enforce: true,
-                    chunks: 'all',
-                },
-                andtMobile: { // 
-                    test: /[\\/]node_modules\/antd-mobile[\\/]/,
-                    name: 'andtMobile',
-                    priority: 9,
-                    enforce: true,
-                    chunks: 'all',
-                },
-                reactNativeWeb: { // 
-                    test: /[\\/]node_modules\/react-native-web[\\/]/,
-                    name: 'reactNativeWeb',
-                    priority: 10,
-                    enforce: true
-                },
                 vendor: { // 
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendor',
