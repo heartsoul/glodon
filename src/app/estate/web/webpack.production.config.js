@@ -74,7 +74,7 @@ var config = {
         // filename: 'bundle.web.js',
         filename: '[name].bundle.js',
         chunkFilename: '[name].bundle.js',
-        path: path.resolve(appDirectory, './dist'),
+        path: path.resolve(appDirectory, './dist/product'),
     },
     optimization: {
         splitChunks: {

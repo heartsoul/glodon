@@ -78,7 +78,7 @@ var config = {
         // filename: 'bundle.web.js',
         filename: '[name].bundle.js',
         chunkFilename: '[name].bundle.js',
-        path: path.resolve(appDirectory, './dist'),
+        path: path.resolve(appDirectory, './dist/dev'),
     },
     optimization: {
         splitChunks: {
@@ -118,7 +118,7 @@ var config = {
         }
     },
     devServer: {
-        contentBase: './dist',
+        contentBase: './dist/dev',
         historyApiFallback: true,
         inline: true,
         hot: true,
