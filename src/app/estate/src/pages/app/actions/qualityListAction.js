@@ -1,4 +1,4 @@
-import * as API from 'app-api'
+import API from 'app-api'
 
 import * as types from '../constants/qualityListTypes'
 import * as searchTypes from "./../constants/searchTypes";

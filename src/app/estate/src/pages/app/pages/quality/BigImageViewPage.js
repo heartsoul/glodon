@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { View, Modal, ActivityIndicator, StatusBar } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import * as API from 'app-api';
+import API from 'app-api';
 
 export default class BigImageViewPage extends Component {
     static navigationOptions = {

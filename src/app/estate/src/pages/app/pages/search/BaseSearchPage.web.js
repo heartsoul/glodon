@@ -14,7 +14,7 @@ import {
     ScrollView,
 } from 'react-native';
 import { SearchBar } from 'antd-mobile';
-import * as API from "app-api";
+import API from 'app-api';
 var { width, height } = Dimensions.get("window");
 
 import SearchBarStyle from 'antd-mobile/lib/search-bar/style/index.native';
@@ -62,16 +62,16 @@ export default class BaseSearchPage extends React.Component {
     placeholder = "搜索";
     constructor(props) {
         super(props);
-        let showHistory = true;
+        let showHistory1 = true;
         let state = this.props.navigation.state
         if (state && state.params && state.params.keywords && state.params.keywords.length > 0) {
             searchKeywords = state.params.keywords;
-            showHistory = false;
+            showHistory1 = false;
         }
 
         this.state = {
-            showHistory: showHistory,
-            showContent: !showHistory,
+            showHistory: showHistory1,
+            showContent: !showHistory1,
             inputValue:searchKeywords,
         };
         this.props.loadHistory();

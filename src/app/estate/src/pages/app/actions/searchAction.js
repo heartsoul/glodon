@@ -1,4 +1,4 @@
-import * as API from "app-api";
+import API from 'app-api';
 import * as types from "./../constants/searchTypes";
 import { Toast } from 'antd-mobile';
 import { SearchHistory } from "./../pages/search/SearchHistory"

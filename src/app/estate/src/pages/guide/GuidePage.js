@@ -19,7 +19,6 @@ let image4 = require('./image/4.png');
 let image5 = require('./image/5.png');
 
 import {Util} from 'app-utils';
-
 export default class extends React.Component {
   static navigationOptions = {
     title: '向导',

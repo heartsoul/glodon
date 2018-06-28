@@ -1,6 +1,6 @@
 import { RNFS} from 'app-3rd';
 import DirManager from '../manager/DirManager';
-import * as API from 'app-api';
+import API from 'app-api';
 /**
  * 模型相关处理
  */

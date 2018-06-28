@@ -15,7 +15,7 @@ import { DatePicker } from 'antd-mobile';
 
 const rightImage = require("app-images/icon_arrow_right_gray.png");
 var { width, height } = Dimensions.get("window");
-import * as API from "app-api";
+import API from 'app-api';
 
 class GLDDatePicker extends Component {
     constructor(props) {

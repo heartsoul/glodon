@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import { View, Image, Text,TouchableOpacity } from 'react-native'
 
-import { Overlay } from 'app-3rd/teaset';
+import {Overlay} from 'app-3rd/teaset';
 
 import WideButton from "./WideButton";
 import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
 /**
  * 跳转到离线模式的页面悬浮框
  */
-
 let currentview = null;
 let overlayView = (
     <Overlay.View side='bottom' modal={false}

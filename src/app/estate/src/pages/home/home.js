@@ -4,7 +4,7 @@ import { TabView, Theme} from 'app-3rd/teaset'
 //Theme.set(Theme.themes.black);
 import { BimFileEntry, AuthorityManager } from 'app-entry';
 import { BarItems } from "app-components";
-import * as CONSTANTS from 'app-api';
+import API from 'app-api';
 import CreateButton from './CreateButton'
 
 const primaryColor = '#00baf3';
@@ -42,7 +42,7 @@ export default class extends React.Component {
       return options();
     }  
    return ({
-    // title:title ? title : CONSTANTS.PAGE_NAME_HOME,
+    // title:title ? title : API.PAGE_NAME_HOME,
     headerTitle: (<BarItems.TitleBarItem text={storage.loadCurrentProjectName()}/>),
     headerRight:(<BarItems.RightBarItem imageSource={require('app-images/icon_search_white.png')} navigation={navigation}
     onPress={()=>{}} />),
@@ -59,7 +59,7 @@ export default class extends React.Component {
     this.state = {
       activeIndex:activeIndex
     };
-    props.navigation.setParams({'options':()=>{return this.options(CONSTANTS.PAGE_INNDX_HOME)}})
+    props.navigation.setParams({'options':()=>{return this.options(API.PAGE_INNDX_HOME)}})
   }
   componentDidMount = () => {
     storage.page = this.refs.page;
@@ -85,9 +85,9 @@ export default class extends React.Component {
 
   options = (page) => {
     let title = this.props.navigation.getParam(title);
-    if(page == CONSTANTS.PAGE_INNDX_HOME) {
+    if(page == API.PAGE_INNDX_HOME) {
       return ({
-        // title:title ? title : CONSTANTS.PAGE_NAME_HOME,
+        // title:title ? title : API.PAGE_NAME_HOME,
         headerTitle: (<BarItems.TitleBarItem text={title ? title : storage.loadCurrentProjectName()}/>),
         headerRight:(<BarItems.RightBarItem imageSource={require('app-images/icon_search_white.png')} navigation={this.props.navigation}
         onPress={(navigation) => this.props.navigation.navigate("SearchPage")} />),
@@ -96,25 +96,25 @@ export default class extends React.Component {
       })
     } 
     
-    if(page == CONSTANTS.PAGE_INNDX_SUBSCRIBE) {
+    if(page == API.PAGE_INNDX_SUBSCRIBE) {
       return ({
         headerLeft: <View></View>,
-        headerTitle: <BarItems.TitleBarItem text={title ? title : CONSTANTS.PAGE_NAME_SUBSCRIBE}/>,
+        headerTitle: <BarItems.TitleBarItem text={title ? title : API.PAGE_NAME_SUBSCRIBE}/>,
         // header: {mode:'screen'},
         headerRight: <View></View>,
       })
     }
 
-    if(page == CONSTANTS.PAGE_INNDX_MESSAGE) {
+    if(page == API.PAGE_INNDX_MESSAGE) {
       return ({
         headerLeft: <View></View>,
-        headerTitle: <BarItems.TitleBarItem text={title ? title : CONSTANTS.PAGE_NAME_MESSAGE}/>,
+        headerTitle: <BarItems.TitleBarItem text={title ? title : API.PAGE_NAME_MESSAGE}/>,
         // header: {mode:'screen'},
         headerRight: <View></View>,
       })
     }
 
-    if(page == CONSTANTS.PAGE_INNDX_MINE) {
+    if(page == API.PAGE_INNDX_MINE) {
       return ({
         title:'',
         headerRight:(<BarItems.RightBarItem imageStyle={{width:24,height:24}} imageSource={require('app-images/icon_my_message_white.png')} navigation={this.props.navigation}
@@ -139,14 +139,14 @@ export default class extends React.Component {
     <SafeAreaView style={{height:'100%',backgroundColor:"#f5f8f9"}}>
     <TabView activeIndex={this.state.activeIndex} ref={(ref)=>{this.tabView = ref;}} onChange={this.onChange} style={{ flex: 1,overflow:'visible'}} type='projector'>
       <TabView.Sheet
-        title={CONSTANTS.PAGE_NAME_HOME}
+        title={API.PAGE_NAME_HOME}
         icon={require('app-images/home/icon_main_main_page.png')}
         activeIcon={require('app-images/home/icon_main_page_selected.png')}
       >
         <PAGES.MainPage />
       </TabView.Sheet>
       <TabView.Sheet
-        title={CONSTANTS.PAGE_NAME_SUBSCRIBE}
+        title={API.PAGE_NAME_SUBSCRIBE}
         icon={require('app-images/home/icon_main_subscribe.png')}
         activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
       >
@@ -157,14 +157,14 @@ export default class extends React.Component {
         this.renderCreate()
       }
       <TabView.Sheet
-        title={CONSTANTS.PAGE_NAME_MESSAGE}
+        title={API.PAGE_NAME_MESSAGE}
         icon={require('app-images/home/icon_main_message.png')}
         activeIcon={require('app-images/home/icon_main_message_selected.png')}
       >
         <PAGES.MessagePage />
       </TabView.Sheet>
       <TabView.Sheet
-        title={CONSTANTS.PAGE_NAME_MINE}
+        title={API.PAGE_NAME_MINE}
         icon={require('app-images/home/icon_main_mine.png')}
         activeIcon={require('app-images/home/icon_main_mine_selected.png')}
       // badge={'new'}

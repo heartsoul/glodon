@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { View, StyleSheet, Text as Label, Image, TouchableOpacity } from 'react-native';
 import { StatusActionButton } from "app-components"
-import * as API from "app-api"
+import API from 'app-api'
 import { push } from 'connected-react-router';
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 import DirManager from '../../../offline/manager/DirManager';

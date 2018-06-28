@@ -1,5 +1,5 @@
 import {Toast} from 'antd-mobile'
-import * as API from 'app-api'
+import API from 'app-api'
 import * as types from '../constants/projectListTypes'
 
 // 获取数据

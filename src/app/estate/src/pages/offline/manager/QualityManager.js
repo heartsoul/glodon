@@ -1,5 +1,5 @@
 import { DeviceEventEmitter } from 'app-3rd'
-import * as API from 'app-api';
+import API from 'app-api';
 import QualityHandler from '../handler/QualityHandler';
 import DownloadImg from '../model/DownloadImg';
 import OfflineManager from './OfflineManager';

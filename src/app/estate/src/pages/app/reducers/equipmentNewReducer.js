@@ -1,6 +1,6 @@
 'use strict'
 
-import * as API from 'app-api';
+import API from 'app-api';
 import * as types from '../constants/equipmentInfoTypes';
 
 

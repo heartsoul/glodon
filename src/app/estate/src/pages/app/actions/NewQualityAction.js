@@ -1,7 +1,7 @@
 'use strict'
 
 import { Toast } from 'antd-mobile';
-import * as API from "app-api";
+import API from 'app-api';
 import { ActionModal } from 'app-components'
 import * as UpdateDataAction from "./updateDataAction";
 import OfflineStateUtil from '../../../common/utils/OfflineStateUtil';

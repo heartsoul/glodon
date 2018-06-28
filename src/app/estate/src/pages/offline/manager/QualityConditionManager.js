@@ -1,5 +1,5 @@
 
-import * as API from 'app-api';
+import API from 'app-api';
 import QualityConditionHandler from '../handler/QualityConditionHandler';
 
 let handler = null;

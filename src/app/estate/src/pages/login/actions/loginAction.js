@@ -1,4 +1,4 @@
-import * as API from 'app-api';
+import API from 'app-api';
 import { SERVER_TYPE } from 'common-module';
 import { NativeModules,Platform } from 'react-native';
 import * as types from '../constants/loginTypes';

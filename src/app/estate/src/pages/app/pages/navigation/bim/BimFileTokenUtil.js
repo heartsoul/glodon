@@ -1,5 +1,5 @@
 
-import * as API from 'app-api';
+import API from 'app-api';
 import { Toast } from 'antd-mobile';
 /**
  * 每次加载模型图纸后重新获取token

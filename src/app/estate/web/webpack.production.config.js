@@ -1,6 +1,7 @@
 const webpack = require('webpack')
 const path = require('path')
-
+// const hwp = require('html-webpack-plugin')
+// const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const appDirectory = path.resolve(__dirname, '../')
 
 // This is needed for webpack to compile JavaScript.
@@ -22,6 +23,8 @@ const babelLoaderConfiguration = {
         options: {
             cacheDirectory: false,
             plugins: [
+                'react-native-web',
+                ['import', { style: 'css', libraryName: 'antd-mobile' }],
                 [
                     "transform-runtime",
                     {
@@ -31,8 +34,6 @@ const babelLoaderConfiguration = {
                       "moduleName": "babel-runtime"
                     }
                 ],
-                'react-native-web',
-                ['import', { style: 'css', libraryName: 'antd-mobile' }],
             ],
             presets: ['react-native'],
         },
@@ -53,6 +54,7 @@ const cssLoaderConfiguration = {
     test: /\.css$/,
     use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
 }
+
 const urlLoaderConfiguration = {
     loader: 'url-loader',
     options: {
@@ -77,31 +79,31 @@ var config = {
     optimization: {
         splitChunks: {
             cacheGroups: {
-                myVendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                myVendor: { 
                     test: /src\/node_modules\//,
                     name: 'myVendor',
                     priority: 10,
                     enforce: true,
                     chunks: 'all',
                 },
-                andtMobile: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                andtMobile: { 
                     test: /[\\/]node_modules\/antd-mobile[\\/]/,
                     name: 'andtMobile',
                     priority: 9,
                     enforce: true,
                     chunks: 'all',
                 },
-                reactNativeWeb: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                reactNativeWeb: { 
                     test: /[\\/]node_modules\/react-native-web[\\/]/,
                     name: 'reactNativeWeb',
                     priority: 9,
                     enforce: true,
                     chunks: 'all',
                 },
-                vendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                vendor: { 
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendor',
-                    priority: -10,
+                    priority: 1,
                     enforce: true,
                     chunks: 'all',
                 },
@@ -130,7 +132,7 @@ var config = {
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(
-                process.env.NODE_ENV || 'development'
+                process.env.NODE_ENV || 'production'
             ),
             __DEV__: process.env.NODE_ENV === 'development' || false,
         }),
@@ -138,10 +140,12 @@ var config = {
         //     maxChunks: 5, // Must be greater than or equal to one
         //     minChunkSize: 100
         //   }),
+        // new hwp(),
+        // new ExtractTextPlugin("styles.css"),
     ],
     
     resolve: {
         extensions: ['.web.js', '.js'],
     },
-}
+};
 module.exports = config;

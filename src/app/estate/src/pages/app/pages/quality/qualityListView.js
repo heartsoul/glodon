@@ -11,7 +11,7 @@ import * as actions from '../../actions/qualityListAction';
 import QualityListCell from "./qualityListCell";
 var { width, height } = Dimensions.get("window");
 
-class QualityListView extends PureComponent {
+export class QualityListView extends PureComponent {
 
     constructor(props) {
         super(props);

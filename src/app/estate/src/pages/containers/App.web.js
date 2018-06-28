@@ -4,7 +4,7 @@ import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'
 import configureStore, { history } from '../store/ConfigureStore'
 import * as GLD from './pages.web'
-import * as API from 'app-api'
+import API from 'app-api'
 import { createStackNavigator , NavigationActions, StackActions} from 'app-3rd/react-navigation';
 const store = configureStore()
 

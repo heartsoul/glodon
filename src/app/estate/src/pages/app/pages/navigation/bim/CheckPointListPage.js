@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import * as checkPointListAction from './../../../actions/checkPointListAction'; // 导入action方法 
 import * as types from '../../../constants/checkPointListTypes';
 
-import * as API from 'app-api'
+import API from 'app-api'
 import { BarItems } from "app-components"
 import { BimFileEntry, AuthorityManager } from 'app-entry';
 

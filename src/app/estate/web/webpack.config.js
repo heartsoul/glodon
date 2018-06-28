@@ -1,6 +1,8 @@
 const webpack = require('webpack')
 const path = require('path')
-
+// const hwp = require('html-webpack-plugin')
+// const etwp = require('extract-text-webpack-plugin')
+// const vConsolePlugin = require('vconsole-webpack-plugin');
 const appDirectory = path.resolve(__dirname, '../')
 const {BASE_URL_PROXY,UPLOAD_URL_PROXY} = require('./../src/common/constant/server-config.proxy.web')
 var ___SERVER = BASE_URL_PROXY;
@@ -16,7 +18,7 @@ const babelLoaderConfiguration = {
     test: /(\.jsx|\.js)$/,
     include: [
         path.resolve(appDirectory, 'node_modules/react-native-safe-area-view'),
-        path.resolve(appDirectory, 'node_modules/react-navigation'),
+        path.resolve(appDirectory, 'node_modules/teaset'),
         path.resolve(appDirectory, 'node_modules/antd-mobile'),
         // path.resolve(appDirectory, 'node_modules/react-native-image-zoom-viewer')
         path.resolve(appDirectory, 'src'),
@@ -27,6 +29,7 @@ const babelLoaderConfiguration = {
         options: {
             cacheDirectory: false,
             plugins: [
+                'react-native-web',
                 [
                     "transform-runtime",
                     {
@@ -36,7 +39,6 @@ const babelLoaderConfiguration = {
                       "moduleName": "babel-runtime"
                     }
                 ],
-                'react-native-web',
                 ['import', { style: 'css', libraryName: 'antd-mobile' }],
             ],
             presets: ['react-native'],
@@ -70,7 +72,7 @@ var config = {
     // mode: 'production',
     mode: 'development',
     entry: path.resolve(appDirectory, 'index.web.js'),
-    devtool: 'eval-source-map',//source-map
+    // devtool: 'eval-source-map',//source-map
  
     output: {
         // filename: 'bundle.web.js',
@@ -82,29 +84,32 @@ var config = {
         splitChunks: {
             chunks: 'all', // 只对入口文件处理
             cacheGroups: {
-                myVendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                myVendor: { //
                     test: /src\/node_modules\//,
                     name: 'myVendor',
                     priority: 8,
-                    enforce: true
+                    enforce: true,
+                    chunks: 'all',
                 },
-                andtMobile: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                andtMobile: { // 
                     test: /[\\/]node_modules\/antd-mobile[\\/]/,
                     name: 'andtMobile',
                     priority: 9,
-                    enforce: true
+                    enforce: true,
+                    chunks: 'all',
                 },
-                reactNativeWeb: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                reactNativeWeb: { // 
                     test: /[\\/]node_modules\/react-native-web[\\/]/,
                     name: 'reactNativeWeb',
                     priority: 10,
                     enforce: true
                 },
-                vendor: { // split `node_modules`目录下被打包的代码到 `page/vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+                vendor: { // 
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendor',
                     priority: -10,
-                    enforce: true
+                    enforce: true,
+                    chunks: 'all',
                 },
             }
         },
@@ -189,6 +194,10 @@ var config = {
             __DEV__: process.env.NODE_ENV === 'development' || true,
         }),
         new webpack.HotModuleReplacementPlugin(),
+        // new vConsolePlugin({
+        //     filter: [],  // 需要过滤的入口文件
+        //     enable: false // 发布代码前记得改回 false
+        // }),
     ],
     
     resolve: {

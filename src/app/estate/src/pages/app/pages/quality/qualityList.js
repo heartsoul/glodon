@@ -6,13 +6,13 @@ import React, { Component, PureComponent } from "react";
 import {StyleSheet, View, StatusBar, Dimensions, Text,Platform} from "react-native";
 import {SegmentedView,Badge} from 'app-3rd/teaset';
 
-import * as API from "app-api";
+import API from 'app-api';
 import QualityListView from "./qualityListView";
 import { AuthorityManager } from "app-entry";
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 
 var { width, height } = Dimensions.get("window");
-class QualityListTitle extends Component {
+export class QualityListTitle extends Component {
     render = () => {
         let {text,activeTitleStyle,titleStyle,select,badge} = this.props;
         let w = 28;

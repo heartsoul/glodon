@@ -1,4 +1,4 @@
-import * as API from 'app-api'
+import API from 'app-api'
 import * as types from '../constants/qualityInfoTypes'
 import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
 import OfflineManager from '../../offline/manager/OfflineManager'

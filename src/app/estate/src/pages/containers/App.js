@@ -1,6 +1,6 @@
 import { Toast } from 'antd-mobile';
 import { createStackNavigator, NavigationActions, StackActions } from 'app-3rd/react-navigation';
-import * as API from 'app-api';
+import API from 'app-api';
 import { BarItems } from "app-components";
 import React from 'react';
 import { Platform, View } from 'react-native';

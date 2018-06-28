@@ -3,7 +3,7 @@
 import { Toast } from 'antd-mobile';
 import { BackHandler } from 'app-3rd';
 import { ListRow } from 'app-3rd/teaset';
-import * as API from "app-api";
+import API from 'app-api';
 import { ActionModal, BarItems, BimSwitch, ImageChooserView, LoadingView, StatusActionButton } from 'app-components';
 import React, { Component } from 'react';
 import ReactNative, { Dimensions, Image, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';

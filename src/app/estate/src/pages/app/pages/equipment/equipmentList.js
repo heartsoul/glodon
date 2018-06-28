@@ -6,13 +6,13 @@ import React, { Component, PureComponent } from "react";
 import { StyleSheet, View, StatusBar, Dimensions, Text, Platform } from "react-native";
 import { SegmentedView,Badge } from 'app-3rd/teaset';
 
-import * as API from "app-api";
+import API from 'app-api';
 import { AuthorityManager } from "app-entry";
 import EquipmentListView from "./equipmentListView";
 import { BarItems } from "app-components";
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 var { width, height } = Dimensions.get("window");
-class EquipmentListTitle extends Component {
+export class EquipmentListTitle extends Component {
     render = () => {
         let {text,activeTitleStyle,titleStyle,select,badge,style} = this.props;
         let w = 28;

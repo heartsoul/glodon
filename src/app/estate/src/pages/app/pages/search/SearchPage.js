@@ -11,7 +11,7 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { connect } from 'react-redux';
-import * as API from "app-api";
+import API from 'app-api';
 
 import BaseSearchPage from "./BaseSearchPage"
 import * as SearchAction from "./../../actions/searchAction";
@@ -21,7 +21,7 @@ import * as qualityListAction from '../../actions/qualityListAction'
 import * as equipmentAction from '../../actions/equipmentListAction'
 import { SearchHistory } from './SearchHistory';
 
-class SearchPage extends BaseSearchPage {
+export class SearchPage extends BaseSearchPage {
 
     constructor(props) {
         super(props);

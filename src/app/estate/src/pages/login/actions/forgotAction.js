@@ -1,4 +1,4 @@
-import * as API from 'app-api'
+import API from 'app-api'
 import * as types from '../constants/forgotTypes'
 import {NativeModules} from 'react-native'
 export function gotoPage(page) {

@@ -1,7 +1,7 @@
 'use strict'
 
 import { BackHandler, FlatList } from 'app-3rd';
-import * as API from 'app-api';
+import API from 'app-api';
 import { BarItems } from "app-components";
 import React, { Component } from 'react';
 import ReactNative, { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Platform } from 'react-native';

@@ -5,7 +5,6 @@ import {
     View,
     Text,
     Image,
-    Switch,
     StyleSheet,
     TouchableOpacity,
 } from 'react-native';
@@ -14,7 +13,7 @@ import {BimSwitch} from 'app-components'
 
 const rightImage = require("app-images/icon_arrow_right_gray.png");
 
-class Item extends Component {
+export class Item extends Component {
     static propTypes = {
         title: PropTypes.string.isRequired,
         detail: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
@@ -77,7 +76,7 @@ class Item extends Component {
     }
 }
 
-class SwitchItem extends Component {
+export class SwitchItem extends Component {
     static propTypes = {
         title: PropTypes.string.isRequired,
         onValueChange: PropTypes.func.isRequired,

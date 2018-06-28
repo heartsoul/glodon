@@ -1,7 +1,7 @@
 'use strict'
 
 import * as types from '../constants/newQualityTypes';
-import * as API from "app-api";
+import API from "app-api";
 import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
 import OfflineManager from '../../offline/manager/OfflineManager'
 let responseCount = 0;//请求完成的次数

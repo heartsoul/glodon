@@ -2,7 +2,7 @@
  * Created by Soul on 2018/03/16.
  */
 'use strict';
-import * as API from "app-api";
+import API from 'app-api';
 import { BarItems, LoadingView } from "app-components";
 import React, { Component } from "react";
 import { Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -18,7 +18,7 @@ import OfflineManager from '../../../../offline/manager/OfflineManager';
 var { width, height } = Dimensions.get("window");
 let modelList= null;//模型列表
 let blueprintList = null;//图纸列表
-class RightBarButtons extends React.Component {
+export class RightBarButtons extends React.Component {
     _onSearchPress = (navigation) => {
         // console.log(navigation);
         // navigation.navigate("BimSearchPage")

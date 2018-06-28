@@ -4,7 +4,7 @@
 'use strict';
 import ListStyle from 'antd-mobile/lib/list/style/index.native';
 import { PullPicker } from 'app-3rd/teaset';
-import * as API from "app-api";
+import API from 'app-api';
 import { ActionModal, BimSwitch, ImageChooserView, StatusActionButton } from "app-components";
 import { AuthorityManager, BimFileEntry } from "app-entry";
 import PropTypes from 'prop-types';

@@ -4,7 +4,7 @@
 'use strict';
 import { BackHandler } from 'app-3rd';
 import { KeyboardAwareScrollView } from 'app-3rd/index';
-import * as API from "app-api";
+import API from 'app-api';
 import { ActionModal, BarItems } from "app-components";
 import { AuthorityManager } from "app-entry";
 import React, { Component } from "react";

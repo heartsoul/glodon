@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { View, Modal, ActivityIndicator, StatusBar } from 'react-native';
 import ImageViewer from 'react-wx-images-viewer';
 
-import * as API from 'app-api';
+import API from 'app-api';
 
 export default class BigImageViewPage extends Component {
     static navigationOptions = {

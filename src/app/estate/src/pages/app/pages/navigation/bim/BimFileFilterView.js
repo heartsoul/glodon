@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-import * as API from "app-api";
+import API from 'app-api';
 import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil'
 import OfflineManager from '../../../../offline/manager/OfflineManager'
 

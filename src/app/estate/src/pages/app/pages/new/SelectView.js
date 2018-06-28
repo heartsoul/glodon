@@ -9,7 +9,7 @@ import { ListRow, PullPicker } from 'app-3rd/teaset';
 import StarView from './StarView';
 import GLDListRow from "./GLDListRow";
 
-import * as API from "app-api";
+import API from 'app-api';
 // import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
 // import OfflineManager from '../../../offline/manager/OfflineManager'
 /**

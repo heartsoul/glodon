@@ -22,10 +22,10 @@ import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择�
 import {ActionModal} from 'app-components';
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 import OfflineManager from '../../../offline/manager/OfflineManager'
-import * as API from "app-api";
+import API from 'app-api';
 // import { YellowBox } from 'react-native';//忽略黄色警告
 
-class MainTabTitle extends Component {
+export class MainTabTitle extends Component {
     render = () => {
         const {text,activeTitleStyle,titleStyle,select} = this.props;
         return <View style={{alignItems:'center'}}>

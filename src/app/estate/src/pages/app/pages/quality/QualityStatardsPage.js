@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import { WebView } from 'app-3rd/index';
-import * as API from "app-api"
+import API from 'app-api'
 import { BarItems, LoadingView } from "app-components";
 // import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
 // import OfflineManager from '../../../offline/manager/OfflineManager'

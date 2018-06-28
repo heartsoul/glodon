@@ -4,7 +4,7 @@ import { StyleSheet, Text as Label, View, ScrollView, Image, TouchableOpacity, D
 
 import { Drawer } from 'app-3rd/teaset';
 
-import * as API from 'app-api'
+import API from 'app-api'
 
 import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择及展示入口
 

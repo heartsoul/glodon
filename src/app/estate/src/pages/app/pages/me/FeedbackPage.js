@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Toast } from 'antd-mobile';
 import { KeyboardAwareScrollView } from 'app-3rd/index';
-import * as API from 'app-api'
+import API from 'app-api'
 import { BarItems } from "app-components"
 import EquipmentInfoItem from "../equipment/equipmentInfoItem"
 export default class extends React.Component {

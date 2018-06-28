@@ -13,7 +13,7 @@ import { FlatList } from "app-3rd"
 import * as AuthorityManager from "./AuthorityManager";
 import * as actions from '../../../actions/projectAction'
 import { BarItems, LoadingView } from "app-components";
-import * as API from "app-api";
+import API from 'app-api';
 import { Toast } from 'antd-mobile'
 
 import UserInfoManager from '../../../../offline/manager/UserInfoManager';

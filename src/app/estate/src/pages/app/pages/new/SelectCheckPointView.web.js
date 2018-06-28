@@ -3,33 +3,31 @@
 import React, { Component } from 'react';
 import {
     StyleSheet,
-    Text,
     TextInput,
     TouchableOpacity,
     Image,
     View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { ListRow } from 'app-3rd/teaset';
 import GLDListRow from "./GLDListRow";
 
 /**
  * 选择质检项目
  */
-export default class SelectCheckPointView extends Component {
+class SelectCheckPointView extends Component {
 
-    inputName = "";
+    // inputName = "";
     constructor(props) {
         super(props);
-        let selectedCheckPoint = this.props.selectedCheckPoint;
+        let selectedCheckPoint2 = props.selectedCheckPoint;
         let id = 0;
         let name = "";
-        let isShowMark = false;
-        if (selectedCheckPoint && selectedCheckPoint.name) {
-            id = selectedCheckPoint.id;
-            name = selectedCheckPoint.name;
-            this.inputName = selectedCheckPoint.name;
-            isShowMark = selectedCheckPoint.id && selectedCheckPoint.id != 0;
+        let showMark = false;
+        if (selectedCheckPoint2 && selectedCheckPoint2.name) {
+            id = selectedCheckPoint2.id;
+            name = selectedCheckPoint2.name;
+            this.inputName = selectedCheckPoint2.name;
+            showMark = selectedCheckPoint2.id && selectedCheckPoint2.id != 0;
         }
 
         this.state = {
@@ -37,7 +35,7 @@ export default class SelectCheckPointView extends Component {
                 id: id,
                 name: name,
             },
-            isShowMark: isShowMark,
+            isShowMark: showMark,
         };
     }
 
@@ -48,10 +46,10 @@ export default class SelectCheckPointView extends Component {
             {
                 selectedCheckPoint: this.state.selectedCheckPoint,
                 callback: (checkPoint) => {
-                    let selectedCheckPoint = { ...checkPoint };
+                    let selectedCheckPoint3 = { ...checkPoint };
                     this.inputName = checkPoint.name,
                         this.setState({
-                            selectedCheckPoint: selectedCheckPoint,
+                            selectedCheckPoint: selectedCheckPoint3,
                             isShowMark: true,
                         });
                 }
@@ -63,23 +61,23 @@ export default class SelectCheckPointView extends Component {
      * 获取选中或者修改后的质检项目
      */
     getSelectedCheckPoint = () => {
-        let selectedCheckPoint = {
+        let selectedCheckPoint4 = {
             name: this.inputName,
             id: 0,
         }
         if (this.state.selectedCheckPoint.name === this.inputName) {
-            selectedCheckPoint.id = this.state.selectedCheckPoint.id;
+            selectedCheckPoint4.id = this.state.selectedCheckPoint.id;
         }
-        return selectedCheckPoint;
+        return selectedCheckPoint4;
     }
 
     textInputChange = (text) => {
         this.inputName = text;
-        let isShowMark = this.state.selectedCheckPoint.name === text
+        let isShowMark3 = this.state.selectedCheckPoint.name === text
             && this.state.selectedCheckPoint.id
             && this.state.selectedCheckPoint.id != 0;
         this.setState({
-            isShowMark: isShowMark,
+            isShowMark: isShowMark3,
         });
     }
 
@@ -140,3 +138,5 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
 })
+
+export default SelectCheckPointView;

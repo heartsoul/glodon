@@ -9,7 +9,7 @@ import {
     ScrollView
 } from 'react-native';
 import { connect } from 'react-redux';
-import * as API from "app-api";
+import API from 'app-api';
 
 import BaseSearchPage from "./BaseSearchPage"
 import * as SearchAction from "./../../actions/searchAction";
@@ -17,7 +17,7 @@ import EquipmentListCell from "./../equipment/equipmentListCell";
 import EquipmentListView from "./../equipment/equipmentListView";
 import { SearchHistory } from './SearchHistory';
 
-class EquipmentSearchPage extends BaseSearchPage {
+export class EquipmentSearchPage extends BaseSearchPage {
     listRef = null;
     constructor(props) {
         super(props);

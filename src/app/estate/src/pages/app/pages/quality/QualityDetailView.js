@@ -12,7 +12,7 @@ import {
 import PropTypes from 'prop-types'
 
 import { BimFileEntry } from "app-entry";
-import * as API from "app-api";
+import API from 'app-api';
 
 import QualityInfoCellItem from "./QualityInfoCellItem";
 import QualityInfoItem from "./QualityInfoItem"

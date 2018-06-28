@@ -11,7 +11,7 @@ import * as actions from '../../actions/equipmentListAction';
 import EquipmentListCell from "./equipmentListCell";
 var { width, height } = Dimensions.get("window");
 
-class EquipmentListView extends PureComponent {
+export class EquipmentListView extends PureComponent {
 
     constructor(props) {
         super(props);

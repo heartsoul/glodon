@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 import {
     StyleSheet,
-    Text,
     View,
     Keyboard
 } from 'react-native';
 import PropTypes from 'prop-types'
-import { BimSwitch } from 'app-components'
-import { DatePicker, List } from 'antd-mobile';
 import StarView from "./StarView";
 import GLDListRow from "./GLDListRow";
 import GLDDatePicker from "./../../components/GLDDatePicker";

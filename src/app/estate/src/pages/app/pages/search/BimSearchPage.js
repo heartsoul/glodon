@@ -15,13 +15,13 @@ import { connect } from 'react-redux';
 import * as SearchAction from "./../../actions/searchAction";
 import BaseSearchPage from "./BaseSearchPage";
 import ThumbnailImage from "./../navigation/bim/ThumbnailImage"
-import * as API from "app-api";
+import API from 'app-api';
 import { BimFileEntry } from "app-entry";
 import { SearchHistory } from './SearchHistory';
 
 var { width, height } = Dimensions.get("window");
 
-class BimSearchPage extends BaseSearchPage {
+export class BimSearchPage extends BaseSearchPage {
 
     constructor(props) {
         super(props);

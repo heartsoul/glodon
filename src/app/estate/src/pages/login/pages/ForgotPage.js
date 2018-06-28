@@ -1,7 +1,7 @@
 'use strict';
 import { Toast } from 'antd-mobile'; // 引入connect函数
 import { BackHandler, KeyboardAwareScrollView } from 'app-3rd';
-import * as API from 'app-api';
+import API from 'app-api';
 import { ActionButton, BarItems, TextInputImage, TextInputNormal, TextInputPassword } from 'app-components';
 import React from 'react';
 import ReactNative, { Dimensions, Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';

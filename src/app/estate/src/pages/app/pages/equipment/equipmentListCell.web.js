@@ -5,7 +5,7 @@ import {
     Button, TouchableOpacity, Dimensions
 } from "react-native";
 
-import * as API from "app-api";
+import API from 'app-api';
 import { StatusActionButton, ActionModal } from "app-components"
 var { width, height } = Dimensions.get("window");
 

@@ -1,5 +1,5 @@
 
-import * as API from 'app-api';
+import API from 'app-api';
 import BasicInfoHandler from '../handler/BasicInfoHandler';
 import DownloadImg from '../model/DownloadImg';
 

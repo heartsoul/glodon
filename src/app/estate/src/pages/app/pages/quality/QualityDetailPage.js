@@ -9,7 +9,7 @@ import {
 import { connect } from 'react-redux' // 引入connect函数
 import { LoadingView, BarItems} from "app-components";
 import { BimFileEntry, AuthorityManager } from "app-entry";
-import * as API from "app-api";
+import API from 'app-api';
 import QualityDetailView from "./QualityDetailView"
 
 import * as actions from '../../actions/qualityInfoAction'

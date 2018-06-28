@@ -1,5 +1,5 @@
 
-import * as API from 'app-api';
+import API from 'app-api';
 import UserInfoHandler from '../handler/UserInfoHandler';
 
 let userHandler = null;

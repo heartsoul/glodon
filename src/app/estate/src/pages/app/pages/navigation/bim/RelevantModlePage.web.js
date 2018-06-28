@@ -1,6 +1,6 @@
 import { Toast } from 'antd-mobile';
 import { ActionSheet } from 'app-3rd/teaset';
-import * as API from "app-api";
+import API from 'app-api';
 import { LoadingView, NoDataView, BarItems } from 'app-components';
 import { BimFileEntry } from "app-entry";
 import * as AppConfig from "common-module";
