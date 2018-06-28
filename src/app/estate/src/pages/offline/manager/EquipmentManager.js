@@ -2,7 +2,7 @@ import { DeviceEventEmitter } from 'app-3rd'
 import * as API from 'app-api';
 import EquipmentHandler from '../handler/EquipmentHandler';
 import DownloadImg from '../model/DownloadImg';
-import * as CONSTANT from "../../common/service/api+constant"
+import * as CONSTANT from "app-api"
 import OfflineManager from './OfflineManager';
 
 let handler = null;

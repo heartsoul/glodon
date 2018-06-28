@@ -1,7 +1,7 @@
 
 import { requestHTML, requestJSON, BASE_URL, SERVER_TYPE} from "common-module"
-import UserInfoManager from '../../offline/manager/UserInfoManager';
-import OfflineStateUtil from '../../../common/utils/OfflineStateUtil';
+import UserInfoManager from '../../../offline/manager/UserInfoManager';
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 // import {NativeModules} from 'react-native'
 // import {FileReaderModule} from NativeModules
 // 用户登录

@@ -1,7 +1,7 @@
 
 import * as API from 'app-api';
 import AsyncHandler from '../handler/AsyncHandler';
-import * as CONSTANT from "../../common/service/api+constant"
+import * as CONSTANT from "app-api"
 import OfflineManager from './OfflineManager';
 
 let handler = null;

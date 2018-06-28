@@ -3,8 +3,8 @@ import { requestJSON } from "common-module"
  * 质量检查相关API
  */
 import * as CONSTANT from "./api+constant"
-import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
-import OfflineManager from '../../offline/manager/OfflineManager'
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
+import OfflineManager from '../../../offline/manager/OfflineManager'
 
 /**
  * 生产测试数据

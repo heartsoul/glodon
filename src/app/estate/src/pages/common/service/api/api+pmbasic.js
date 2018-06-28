@@ -1,6 +1,6 @@
 import { requestJSON } from "common-module"
-import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
-import OfflineManager from '../../offline/manager/OfflineManager'
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
+import OfflineManager from '../../../offline/manager/OfflineManager'
 /**
  * 模型相关API
  */
