@@ -22,7 +22,7 @@ import * as USERAPI from "app-api";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
-import { BimSwitch, ToCleanDialog, ActionButton, share } from 'app-components';
+import { BimSwitch, ToCleanDialog, ActionButton, ShareManager } from 'app-components';
 
 var { width, height } = Dimensions.get("window");
 
@@ -77,7 +77,7 @@ class SettingPage extends Component {
             Toast.info('敬请期待', 3);
             return;
         }
-        share();
+        ShareManager.share();
     }
 
     _password = () => {

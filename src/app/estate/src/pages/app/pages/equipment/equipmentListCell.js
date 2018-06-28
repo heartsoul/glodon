@@ -10,7 +10,7 @@ import { StatusActionButton, ActionModal } from "app-components"
 var { width, height } = Dimensions.get("window");
 
 import { BimFileEntry, AuthorityManager } from "app-entry";
-import * as CONSTANT from "../../../common/service/api+constant"
+import * as CONSTANT from "app-api"
 
 const standardImage = require("app-images/icon_up_to_standard.png");
 const notStandardImage = require("app-images/icon_not_up_to_standard.png");
