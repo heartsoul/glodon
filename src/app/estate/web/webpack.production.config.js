@@ -79,27 +79,6 @@ var config = {
     optimization: {
         splitChunks: {
             cacheGroups: {
-                myVendor: { 
-                    test: /src\/node_modules\//,
-                    name: 'myVendor',
-                    priority: 10,
-                    enforce: true,
-                    chunks: 'all',
-                },
-                andtMobile: { 
-                    test: /[\\/]node_modules\/antd-mobile[\\/]/,
-                    name: 'andtMobile',
-                    priority: 9,
-                    enforce: true,
-                    chunks: 'all',
-                },
-                reactNativeWeb: { 
-                    test: /[\\/]node_modules\/react-native-web[\\/]/,
-                    name: 'reactNativeWeb',
-                    priority: 9,
-                    enforce: true,
-                    chunks: 'all',
-                },
                 vendor: { 
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendor',
