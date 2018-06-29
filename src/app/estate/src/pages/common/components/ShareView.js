@@ -50,7 +50,9 @@ class ShareView extends Component {
             <TouchableOpacity onPress={(event) => {
                 event.preventDefault();
                 this._selectExpireTime(item);
-            }}>
+            }}
+            key = { item.name }
+            >
                 <View style={[styles.flexContainer, { width: (width - 20) / 3 }]}>
                     <Image style={styles.checkImage} source={this._getRadioSource(this.state.selectExpireTime.name === item.name)} />
                     <Text style={[styles.checkText,]}>{item.name}</Text>
@@ -89,7 +91,9 @@ class ShareView extends Component {
             <TouchableOpacity onPress={(event) => {
                 event.preventDefault();
                 this._selectPermission(item);
-            }}>
+            }}
+            key = { item.name }
+            >
                 <View style={[styles.flexContainer, { width: (width - 20) / 3 }]}>
                     <Image style={styles.checkImage} source={this._getCheckBoxSource(index >= 0)} />
                     <Text style={[styles.checkText,]}>{item.name}</Text>
@@ -122,9 +126,9 @@ class ShareView extends Component {
                 </View>
                 <View style={[styles.line]} />
                 <GLDGrid
+                    style={{ width: "100%", }}
                     data={this.props.data}
                     numColumns={4}
-                    cardStyle={{ width: width / 4 }}
                     imageStyle={{ height: 60, width: 60 }}
                     onPress={(item, index) => {
                         GLDActionSheet.close();

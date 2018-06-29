@@ -3,7 +3,7 @@
  */
 
 import { Component } from 'react';
-import ActionRightsObject from './ActionRightsObject';
+import ActionRightsObject from './actionRightsObject';
 import BaseStorage  from './baseStorage';
 
 function userId() {

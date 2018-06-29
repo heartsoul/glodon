@@ -9,42 +9,55 @@ import {
     Text,
     StyleSheet,
     FlatList,
-    Dimensions,
     TouchableOpacity,
     Image,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-var { width, height } = Dimensions.get("window")
-const defaultCardWith = (width - 40) / 4;
-
 class GLDGrid extends Component {
 
     static propTypes = {
         numColumns: PropTypes.number,
-        cardStyle: PropTypes.any,//每个item样式
-        imageStyle: PropTypes.any,//
+        imageStyle: PropTypes.any.isRequired, // 设置图片大小{width:60,height:60}
         onPress: PropTypes.func,
-        horizontal: PropTypes.bool
+        data: PropTypes.array,
+        horizontal: PropTypes.bool,
     }
 
     static defaultProps = {
         numColumns: 4,
         horizontal: false,
-        cardStyle: { width: defaultCardWith },
-        imageStyle: { width: defaultCardWith, height: defaultCardWith, resizeMode: "contain" },
+    }
+
+    constructor(props) {
+        super(props)
+
+
+    }
+
+    _fixData = () => {
+        if (this.props.data) {
+            let len = this.props.data.length;
+            let fixCount = this.props.numColumns - len % this.props.numColumns;
+            for (let i = 0; i < fixCount; i++) {
+                this.props.data.push({})
+            }
+        }
+
     }
 
     _renderGrid = () => {
-        let cardW = this.props.cardStyle.width ? this.props.cardStyle.width : defaultCardWith
-        let flatW = this.props.numColumns * cardW;
+        this._fixData();
         return (
-            <FlatList style={[{ width: flatW, backgroundColor: '#fff' },]}
-                data={this.props.data}
-                renderItem={({ item, index }) => { return this.renderBuildingItem({ item, index }) }}
-                numColumns={this.props.numColumns}
-                keyExtractor={(item) => (item.id + "")}
-            />
+            <View style={{ ...this.props.style }}>
+                <FlatList
+                    data={this.props.data}
+                    renderItem={({ item, index }) => { return this.renderItem({ item, index }) }}
+                    numColumns={this.props.numColumns}
+                    keyExtractor={(item) => (item.id + "")}
+                />
+            </View>
+
         );
     }
     /**
@@ -52,9 +65,9 @@ class GLDGrid extends Component {
      */
     _renderHorizontalList = () => {
         return (
-            <FlatList style={[{ backgroundColor: '#fff' },]}
+            <FlatList
                 data={this.props.data}
-                renderItem={({ item, index }) => { return this.renderBuildingItem({ item, index }) }}
+                renderItem={({ item, index }) => { return this.renderItem({ item, index }) }}
                 keyExtractor={(item) => (item.name + "")}
                 horizontal={true}
             />
@@ -68,21 +81,34 @@ class GLDGrid extends Component {
             return this._renderGrid();
         }
     }
-    renderBuildingItem({ item, index }) {
-        return (
-            <TouchableOpacity onPress={(event) => {
-                event.preventDefault();
-                if (this.props.onPress) {
-                    this.props.onPress(item, index);
-                }
-            }}>
-                <View style={[styles.card, this.props.cardStyle]}>
-                    <Image source={item.source} style={[this.props.imageStyle]} />
-                    <Text style={styles.itemText} >{item.name}</Text>
-                </View>
-            </TouchableOpacity>
+    renderItem({ item, index }) {
+        if (item.name) {
+            return (
+                <TouchableOpacity
+                    style={{ flex: 1 }}
+                    onPress={(event) => {
+                        event.preventDefault();
+                        if (this.props.onPress) {
+                            this.props.onPress(item, index);
+                        }
+                    }}>
+                    <View style={[styles.card, { width: "100%" }]}>
+                        <Image source={item.source} style={[this.props.imageStyle, { resizeMode: "contain" }]} />
+                        <Text style={styles.itemText} >{item.name}</Text>
+                    </View>
+                </TouchableOpacity>
 
-        )
+            )
+        } else {
+            return (
+                <View
+                    style={{ flex: 1 }}
+                >
+                </View>
+
+            )
+        }
+
     }
 }
 
