@@ -7,8 +7,11 @@ import {
     Linking,
     Clipboard,
     Platform,
+    StyleSheet,
+    View,
 } from 'react-native';
-import { GLDGrid, GLDActionSheet } from 'app-components'
+import { GLDGrid, GLDActionSheet, ActionModal } from 'app-components'
+import { Toast } from "antd-mobile"
 import ShareView from './ShareView'
 var { width, height } = Dimensions.get("window")
 var { NativeModules } = require('react-native');
@@ -60,46 +63,70 @@ const data = [
 class ShareManager {
 
     static sharePlatform(text = '', icon = '', link = '', title = '', platform = 0, completion = (a, b) => { }) {
+        if (Platform.OS === 'web') {
+            return;
+        }
         NativeModules.UMShareModule.share(text, icon, link, title, platform, completion);
     }
 
-    static share() {
+    static share(containerId, fileId) {
         let shareView = <ShareView
             data={data}
-            share={(item, token, content) => {
+            containerId={containerId}
+            fileId={fileId}
+            share={(item, token, title, password) => {
+                let userName = storage.loadUserInfo().accountInfo.name;
+                let url = "http://www.baidu.com";
+                let icon = "https://www.baidu.com/img/bd_logo1.png";
+                let textOnly = `${userName}分享了一个文件`;
+                let textWithUrl = `${userName}分享了文件 - ${title}\n${url}`;
                 switch (item.name) {
                     case "微信":
                     case "QQ":
-                        ShareManager.sharePlatform(content, 'https://www.baidu.com/img/bd_logo1.png', 'http://www.baidu.com', "title", item.platform, (a, b) => {
+                        ShareManager.sharePlatform(title, icon, url, textOnly, item.platform, completion = (code, message) => {
 
                         })
                         break;
                     case "更多":
-                        if (Platform.OS === 'andorid') {
-                            ShareManager.sharePlatform(content, 'https://www.baidu.com/img/bd_logo1.png', 'http://www.baidu.com', "title", item.platform, (a, b) => {
-
-                            })
+                        if (Platform.OS === 'android') {
+                            ShareManager.sharePlatform(textWithUrl, icon, url, title, item.platform)
                             break;
                         } else if (Platform.OS === 'ios') {
-                            NativeModules.GLDPhotoManager.shareAppAction({ text: content, url: 'http://www.baidu.com' }, (data, bSuccess) => {
+                            NativeModules.GLDPhotoManager.shareAppAction({ text: textOnly, url: url }, (data, bSuccess) => {
 
                             });
                         }
                         break;
                     case "邮箱":
-                        Linking.openURL("mailto:?subject=fsf&body=aabb").catch(err => console.error('An error occurred', err));
+                        let mailInfo = `mailto:?subject=${title}&body=${textWithUrl}`;
+                        this.openEmail(mailInfo);
                         break;
                     case "链接":
-                        Clipboard.setString(content)
+                        Clipboard.setString(`${url}`)
+                        Toast.success("已复制到剪切板", 1.5)
                         break;
                 }
-
 
             }}
         />
         GLDActionSheet.show(shareView)
     }
 
+    static openEmail(url) {
+        Linking.canOpenURL(url).then(supported => {
+            if (!supported) {
+                Toast.success("无法打开邮箱", 1.5)
+                console.log('Can\'t handle url: ' + url);
+            } else {
+                Linking.openURL(url).catch(err => {
+                    console.error('An error occurred', err)
+                    Toast.success("无法打开邮箱", 1.5)
+                });
+            }
+        }).catch(err => {
+            console.error('An error occurred', err)
+            Toast.success("无法打开邮箱", 1.5)
+        });
+    }
 }
-
 export default ShareManager;
