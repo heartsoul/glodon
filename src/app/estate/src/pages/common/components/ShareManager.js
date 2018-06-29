@@ -4,6 +4,8 @@
 import React, { Component } from 'react';
 import {
     Dimensions,
+    Linking,
+    Clipboard,
 } from 'react-native';
 import { GLDGrid, GLDActionSheet } from 'app-components'
 import ShareView from './ShareView'
@@ -48,8 +50,9 @@ const PLATFORM_EMAIL = 0;
 const PLATFORM_MORE = 33;
 const data = [
     { source: require("app-images/icon_share_wx.png"), name: "微信", platform: PLATFORM_WECHAT },
-    { source: require("app-images/icon_share_collect.png"), name: "收藏", platform: PLATFORM_QQ },
-    { source: require("app-images/icon_share_pyq.png"), name: "朋友圈", platform: PLATFORM_EMAIL },
+    { source: require("app-images/icon_share_collect.png"), name: "QQ", platform: PLATFORM_QQ },
+    { source: require("app-images/icon_share_pyq.png"), name: "邮箱", platform: PLATFORM_EMAIL },
+    { source: require("app-images/icon_share_pyq.png"), name: "链接", platform: PLATFORM_MORE },
     { source: require("app-images/icon_share_pyq.png"), name: "更多", platform: PLATFORM_MORE },
 ];
 
@@ -62,8 +65,24 @@ class ShareManager {
     static share() {
         let shareView = <ShareView
             data={data}
-            share={(item, index, content) => {
-                ShareManager.sharePlatform(item.platform)
+            share={(item, token, content) => {
+                switch (item.name) {
+                    case "微信":
+                    case "QQ":
+                    case "更多":
+                        ShareManager.sharePlatform(content, 'https://www.baidu.com/img/bd_logo1.png', 'http://www.baidu.com',"title", item.platform , (a, b) => {
+                            
+                        })
+                        break;
+                    case "邮箱":
+                         Linking.openURL("mailto:?subject=fsf&body=aabb").catch(err => console.error('An error occurred', err));
+                        break;
+                    case "链接":
+                        Clipboard.setString(content)
+                        break;
+                }
+
+
             }}
         />
         GLDActionSheet.show(shareView)

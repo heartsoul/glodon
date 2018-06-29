@@ -18,6 +18,7 @@ class GLDGrid extends Component {
 
     static propTypes = {
         numColumns: PropTypes.number,
+        itemStyle: PropTypes.any,
         imageStyle: PropTypes.any.isRequired, // 设置图片大小{width:60,height:60}
         onPress: PropTypes.func,
         data: PropTypes.array,
@@ -40,7 +41,7 @@ class GLDGrid extends Component {
             let len = this.props.data.length;
             let fixCount = this.props.numColumns - len % this.props.numColumns;
             for (let i = 0; i < fixCount; i++) {
-                this.props.data.push({})
+                this.props.data.push({ name: "fix-" + i, fix: true })
             }
         }
 
@@ -54,7 +55,6 @@ class GLDGrid extends Component {
                     data={this.props.data}
                     renderItem={({ item, index }) => { return this.renderItem({ item, index }) }}
                     numColumns={this.props.numColumns}
-                    keyExtractor={(item) => (item.id + "")}
                 />
             </View>
 
@@ -82,10 +82,19 @@ class GLDGrid extends Component {
         }
     }
     renderItem({ item, index }) {
-        if (item.name) {
+        if (item.fix) {
+            return (
+                <View
+                    style={{ flex: 1 }}
+                    key={item.name}
+                >
+                </View>
+            )
+        } else {
             return (
                 <TouchableOpacity
-                    style={{ flex: 1 }}
+                    style={{ ...this.props.itemStyle, flex: 1 }}
+                    key={item.name}
                     onPress={(event) => {
                         event.preventDefault();
                         if (this.props.onPress) {
@@ -97,14 +106,6 @@ class GLDGrid extends Component {
                         <Text style={styles.itemText} >{item.name}</Text>
                     </View>
                 </TouchableOpacity>
-
-            )
-        } else {
-            return (
-                <View
-                    style={{ flex: 1 }}
-                >
-                </View>
 
             )
         }

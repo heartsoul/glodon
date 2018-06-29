@@ -630,11 +630,8 @@ export async function getDocFileSingedUrl(containerId) {
 }
  */
 export async function createDocShare(containerId, fileId, encrypt = true, expireTime, privilege) {
-    let api = `/bimpm/doc/containers/${containerId}/files/${fileId}`;
-    let filter = "";
-    if (encrypt) {
-        filter += `&fileId=${encrypt}`
-    }
+    let api = `/bimpm/doc/share/containers/${containerId}/files/${fileId}`;
+    let filter = `&encrypt=${encrypt}`;
     if (expireTime) {
         filter += `&expireTime=${expireTime}`
     }
@@ -642,7 +639,7 @@ export async function createDocShare(containerId, fileId, encrypt = true, expire
         filter += `&privilege=${privilege}`
     }
     return requestJSON(api + `?${filter}`, {
-        method: 'GET',
+        method: 'POST',
     });
 }
 
