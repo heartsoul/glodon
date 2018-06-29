@@ -6,6 +6,7 @@ import {
     Dimensions,
     Linking,
     Clipboard,
+    Platform,
 } from 'react-native';
 import { GLDGrid, GLDActionSheet } from 'app-components'
 import ShareView from './ShareView'
@@ -69,13 +70,24 @@ class ShareManager {
                 switch (item.name) {
                     case "微信":
                     case "QQ":
-                    case "更多":
-                        ShareManager.sharePlatform(content, 'https://www.baidu.com/img/bd_logo1.png', 'http://www.baidu.com',"title", item.platform , (a, b) => {
-                            
+                        ShareManager.sharePlatform(content, 'https://www.baidu.com/img/bd_logo1.png', 'http://www.baidu.com', "title", item.platform, (a, b) => {
+
                         })
                         break;
+                    case "更多":
+                        if (Platform.OS === 'andorid') {
+                            ShareManager.sharePlatform(content, 'https://www.baidu.com/img/bd_logo1.png', 'http://www.baidu.com', "title", item.platform, (a, b) => {
+
+                            })
+                            break;
+                        } else if (Platform.OS === 'ios') {
+                            NativeModules.GLDPhotoManager.shareAppAction({ text: content, url: 'http://www.baidu.com' }, (data, bSuccess) => {
+
+                            });
+                        }
+                        break;
                     case "邮箱":
-                         Linking.openURL("mailto:?subject=fsf&body=aabb").catch(err => console.error('An error occurred', err));
+                        Linking.openURL("mailto:?subject=fsf&body=aabb").catch(err => console.error('An error occurred', err));
                         break;
                     case "链接":
                         Clipboard.setString(content)
