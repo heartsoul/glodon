@@ -8,6 +8,8 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { GLDGrid, GLDActionSheet } from 'app-components'
+import { Toast } from 'antd-mobile'
+import SERVICE from 'app-api/service'
 var { width, height } = Dimensions.get("window")
 
 const SHARE_EXPIRE_TIME = [
@@ -51,7 +53,7 @@ class ShareView extends Component {
                 event.preventDefault();
                 this._selectExpireTime(item);
             }}
-            key = { item.name }
+                key={item.name}
             >
                 <View style={[styles.flexContainer, { width: (width - 20) / 3 }]}>
                     <Image style={styles.checkImage} source={this._getRadioSource(this.state.selectExpireTime.name === item.name)} />
@@ -92,7 +94,7 @@ class ShareView extends Component {
                 event.preventDefault();
                 this._selectPermission(item);
             }}
-            key = { item.name }
+                key={item.name}
             >
                 <View style={[styles.flexContainer, { width: (width - 20) / 3 }]}>
                     <Image style={styles.checkImage} source={this._getCheckBoxSource(index >= 0)} />
@@ -101,6 +103,20 @@ class ShareView extends Component {
             </TouchableOpacity>
         )
     }
+
+    _generateShareToken = (item) => {
+        containerId = "d289a697494247c8a8c148365513bc13";
+        fileId = "7fd5503f31004b79866cfa10fd15c2ce"
+        SERVICE.generateShareToken(containerId, fileId)
+            .then((shareInfo) => {
+                GLDActionSheet.close();
+                let content = `name - ${shareInfo.creatorName} password - ${shareInfo.password}`
+                this.props.share(item, shareInfo.token, content);
+            }).catch(error => {
+                Toast.show("分享链接生成失败")
+            });
+    }
+
     render() {
         let url = this.state.selected ? require('app-images/icon_downloading_selected.png') : require('app-images/icon_downloading_unselected.png');
 
@@ -128,11 +144,11 @@ class ShareView extends Component {
                 <GLDGrid
                     style={{ width: "100%", }}
                     data={this.props.data}
-                    numColumns={4}
+                    horizontal={true}
+                    itemStyle={{ height: 2*width / 9, width: 2*width / 9 }}
                     imageStyle={{ height: 60, width: 60 }}
                     onPress={(item, index) => {
-                        GLDActionSheet.close();
-                        this.props.share(item, index, "分享地址");
+                        this._generateShareToken(item);
                     }}
                 />
             </View>
