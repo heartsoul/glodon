@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
         textAlign: "left",
         fontSize: 15,
         color: 'black',
-        textOverflow:'ellipsis',
-        whiteSpace:'nowrap',
+        // textOverflow:'ellipsis',
+        // whiteSpace:'nowrap',
         overflow:'hidden',
         lineHeight:20
     },
