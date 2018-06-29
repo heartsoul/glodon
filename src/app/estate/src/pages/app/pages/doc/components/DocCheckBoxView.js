@@ -15,10 +15,11 @@ export default class extends React.Component {
         onSelect: PropTypes.func,
     }
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        const {selected} = props; 
         this.state = {
-            selected:this.props.selected || false
+            selected:selected||false
         }
     };
     _getSelectImageSource = (selected) => {

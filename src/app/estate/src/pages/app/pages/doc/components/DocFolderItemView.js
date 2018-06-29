@@ -33,8 +33,8 @@ export default class extends React.Component {
                         source={folderImage}
                         style={styles.image} />
                     <View  style={styles.contentView}>
-                        <Text style={styles.content}>{content}</Text>
-                        <Text style={styles.time}>{time}</Text>
+                        <Text numberOfLines={1} style={styles.content}>{content}</Text>
+                        <Text numberOfLines={1} style={styles.time}>{time}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -45,9 +45,8 @@ export default class extends React.Component {
 const styles = StyleSheet.create({
 
     containerFolderView: {
-        height: 55,
-        marginLeft: 20,
-        marginTop:5,
+        // height: 55,
+        // marginTop:5,
         flexDirection: 'row',
         alignItems: 'center'
     },

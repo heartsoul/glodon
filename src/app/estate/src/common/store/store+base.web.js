@@ -96,7 +96,6 @@ class WebStorage extends Storage {
         if (!navigator) {
             return;
         }
-        console.log(StackActions)
        
         navigator.push(name, params||{});
     }

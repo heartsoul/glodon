@@ -42,6 +42,7 @@ export default class DocProjectPage extends Component {
             errorInfo: "",
             dataArray: [],
             page: 0,
+            isEdit:false,
             hasMore: true,
             projectId: storage.loadProject(),
             latestVersion: storage.projectIdVersionId,
@@ -75,9 +76,7 @@ export default class DocProjectPage extends Component {
         </BarItems>);
     }
     renderHeaderRightButtons = () => {
-       return (<BarItems navigation={this.props.navigation}>
-        <BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} />
-        </BarItems>);
+       return (<BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} />);
     }
    
     _keyExtractor = (item, index) => index;
@@ -218,19 +217,36 @@ export default class DocProjectPage extends Component {
         ShareManager.share(this.state.containerId, item.value.fileId);
     }
     renderFileView = ({ item, index }) => {
+        let onPress = () => {this._itemClick(item, index)};
+        let onMore = ()=>{this.onMore(item, index)};
+        let onSelect = (event,selected) => {this._itemSelected(selected,item, index)};
+        let {selected = false} = item.value;
+        if(this.state.isEdit) {
+            onMore = null;
+            onPress = null;
+        } else {
+            onSelect = null;
+        }
         return (
-            <DocView onMore={()=>this.onMore(item,index)}>
-            <DocView.DocFileItemView key={index} onPress={(event) =>{event.preventDefault(); this._itemClick(item, index)}}
+            <DocView onMore={onMore} onSelect={onSelect} selected={selected}>
+                <DocView.DocFileItemView key={index} onPress={onPress}
              content={item.value.name} time={item.value.createTime} fileId={item.value.fileId} ext={item.value.name}/></DocView>
         );
     }
 
     renderFolderView = ({ item, index }) => {
-        // console.log('-------------renderFolder-----------')
-        // console.log(item)
+        let onPress = () => {this._itemClick(item, index)};
+        let onMore = ()=>{this.onMore(item, index)};
+        let onSelect = (event,selected) => {this._itemSelected(selected,item, index)};
+        let {selected = false} = item.value;
+        if(this.state.isEdit) {
+            onMore = null;
+        } else {
+            onSelect = null;
+        }
         return (
-            <DocView>
-            <DocView.DocFolderItemView key={index} onPress={(event) =>{event.preventDefault(); this._itemClick(item, index)}}
+            <DocView onMore={onMore} onSelect={onSelect} selected={selected}>
+            <DocView.DocFolderItemView key={index} onPress={onPress}
             content={item.value.name} time={item.value.createTime}/></DocView>
         );
     }

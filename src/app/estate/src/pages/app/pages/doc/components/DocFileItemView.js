@@ -31,8 +31,8 @@ export default class extends React.Component {
                 <View style={styles.containerFileView}>
                     <DocImageView imageStyle={styles.image} ext={ext} />
                     <View style={styles.contentView}>
-                        <Text style={styles.content}>{content}</Text>
-                        <Text style={styles.time}>{time}</Text>
+                        <Text numberOfLines={1} style={styles.content}>{content}</Text>
+                        <Text numberOfLines={1} style={styles.time}>{time}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -42,8 +42,7 @@ export default class extends React.Component {
 const styles = StyleSheet.create({
 
     containerFileView: {
-        height: 60,
-        marginLeft: 20,
+        // height: 60,
         flexDirection: 'row',
         alignItems: 'center'
     },

@@ -43,19 +43,14 @@ static defaultProps = {
   constructor() {
     super();
   };
-  renderCheckBox = (onSelect, selected) => {
-      <View style={{width:40, height:40, backgroundColor:'red'}} >
+  
+  render() {
+    let {onSelect, selected = false, onMore} = this.props;
+    return (
+      <View style={{marginLeft: 0, flexDirection: 'row', alignItems: 'center',justifyContent:'center', height:60}}>
+        <View style={{width:40, height:40,alignItems:'center',justifyContent:'center'}} >
         {onSelect ? <DocCheckBoxView selected={selected} onSelect={onSelect} /> : null}
       </View>
-    
-  }
-  render() {
-    let {onPress, onSelect, selected, onMore} = this.props;
-    onSelect = ()=>{};
-    // onMore = ()=>{};
-    return (
-      <View style={{marginLeft: 20, flexDirection: 'row', alignItems: 'center',}}>
-        {this.renderCheckBox(onSelect,selected)}
         <View style={{flex:1}}>
           {this.props.children}
         </View>
