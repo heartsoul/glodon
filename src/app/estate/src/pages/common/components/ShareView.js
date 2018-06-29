@@ -105,14 +105,14 @@ class ShareView extends Component {
     }
 
     _generateShareToken = (item) => {
-        containerId = "d289a697494247c8a8c148365513bc13";
-        fileId = "7fd5503f31004b79866cfa10fd15c2ce"
-        SERVICE.generateShareToken(containerId, fileId)
+        // containerId = "d289a697494247c8a8c148365513bc13";
+        // fileId = "7fd5503f31004b79866cfa10fd15c2ce"
+        SERVICE.generateShareToken(this.props.containerId, this.props.fileId)
             .then((shareInfo) => {
                 GLDActionSheet.close();
-                let content = `name - ${shareInfo.creatorName} password - ${shareInfo.password}`
-                this.props.share(item, shareInfo.token, content);
+                this.props.share(item, shareInfo.token, shareInfo.title, shareInfo.password);
             }).catch(error => {
+                console.log(error)
                 Toast.show("分享链接生成失败")
             });
     }
@@ -145,7 +145,7 @@ class ShareView extends Component {
                     style={{ width: "100%", }}
                     data={this.props.data}
                     horizontal={true}
-                    itemStyle={{ height: 2*width / 9, width: 2*width / 9 }}
+                    itemStyle={{ height: 2 * width / 9, width: 2 * width / 9 }}
                     imageStyle={{ height: 60, width: 60 }}
                     onPress={(item, index) => {
                         this._generateShareToken(item);
