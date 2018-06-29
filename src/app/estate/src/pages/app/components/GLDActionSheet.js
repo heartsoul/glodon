@@ -12,7 +12,6 @@ import {
 import { Overlay, } from 'app-3rd/teaset';
 import GLDGrid from "./GLDGrid"
 var { width, height } = Dimensions.get('window')
-var { NativeModules } = require('react-native');
 
 class GLDActionSheet extends Overlay {
 
