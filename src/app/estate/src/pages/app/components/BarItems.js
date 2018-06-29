@@ -63,7 +63,7 @@ export class LeftBarItem extends React.Component {
     }
 }
 LeftBarItem.propTypes = {
-  imageStyle: PropTypes.any.isRequired,
+  imageStyle: PropTypes.any,
   navigation:PropTypes.any,
   text:PropTypes.any, // text 
   imageSource:PropTypes.any, // image source

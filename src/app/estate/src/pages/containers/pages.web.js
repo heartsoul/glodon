@@ -36,7 +36,7 @@ import ForgotPage from './../login/pages/ForgotPage'
 import ChangeProjectPage from './../app/pages/me/ChangeProjectPage'
 import SharePage from './../app/pages/me/SharePage'
 import EditPhotoPage from './../app/components/editPhoto/EditPhotoPage'
-
+import DocProjectPage from './../app/pages/doc/project/DocProjectPage'
 export {
     LoginPage,
     GuidePage,
@@ -73,4 +73,5 @@ export {
     ChangeProjectPage,
     SharePage,
     EditPhotoPage,
+    DocProjectPage,
 }

@@ -5,7 +5,7 @@ import { requestJSON } from "common-module"
  * 查询子文件（仅包含下一级）
  * @param {*} containerId 
  * @param {*} fileId 
- * @param {*} orderByType 排序字段，可选值：name,type,time,size
+ * @param {*} orderByType 排序字段，可选值：name,type,time,size, 默认不填是time
  * @param {*} withPrivilege  是否包含权限
  * 
  * response
@@ -44,7 +44,7 @@ import { requestJSON } from "common-module"
   },
 ]
  */
-export async function getDocFileChildrens(containerId, fileId, orderByType, withPrivilege = true) {
+export async function getDocFileChildrens(containerId, fileId, orderByType=null, withPrivilege = true,folder=null,order=null,filePath=null,) {
     let api = `/bimpm/doc/containers/${containerId}/files/children`;
     let filter = "";
     if (fileId) {

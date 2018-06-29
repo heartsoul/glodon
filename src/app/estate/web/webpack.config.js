@@ -72,7 +72,7 @@ var config = {
     // mode: 'production',
     mode: 'development',
     entry: path.resolve(appDirectory, 'index.web.js'),
-    // devtool: 'eval-source-map',//source-map
+    devtool: 'eval-source-map',//source-map
  
     output: {
         // filename: 'bundle.web.js',
@@ -146,6 +146,11 @@ var config = {
                 secure: false
             },
             '/bimpm/*': {
+                target: ___SERVER,
+                changeOrigin: true,
+                secure: false
+            },
+            '/doc/*': {
                 target: ___SERVER,
                 changeOrigin: true,
                 secure: false

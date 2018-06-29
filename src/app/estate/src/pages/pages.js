@@ -43,7 +43,7 @@ import QualityRecordPage from './app/pages/offline/QualityRecordPage'
 import SharePage from './app/pages/me/SharePage'
 import OfflineAsyncPage from './app/pages/offline/OfflineAsyncPage'
 import EditPhotoPage from './app/components/editPhoto/EditPhotoPage'
-
+import DocProjectPage from './app/pages/doc/project/DocProjectPage'
 export {
     LoginPage,
     GuidePage,
@@ -87,4 +87,5 @@ export {
     SharePage,
     OfflineAsyncPage,
     EditPhotoPage,
+    DocProjectPage,
 }

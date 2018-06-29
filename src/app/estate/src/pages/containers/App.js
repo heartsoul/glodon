@@ -129,6 +129,9 @@ const screens = {
     },
     EditPhotoPage:{
         screen: GLD.EditPhotoPage
+    },
+    DocProjectPage:{
+        screen: GLD.DocProjectPage
     }
 };
 
