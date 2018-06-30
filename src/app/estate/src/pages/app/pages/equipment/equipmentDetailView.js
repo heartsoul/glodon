@@ -2,7 +2,6 @@
  * Created by JokAr on 2017/4/12.
  */
 'use strict';
-import ListStyle from 'antd-mobile/lib/list/style/index.native';
 import { PullPicker } from 'app-3rd/teaset';
 import API from 'app-api';
 import { ActionModal, BimSwitch, ImageChooserView, StatusActionButton } from "app-components";

@@ -7,20 +7,30 @@ import {
 } from 'react-native';
 import { GLDGrid, GLDActionSheet } from 'app-components'
 
-
-const data = [
-    { source: require("app-images/icon_share_wx.png"), name: "下载", },
-    { source: require("app-images/icon_share_collect.png"), name: "分享", },
-    { source: require("app-images/icon_share_pyq.png"), name: "删除", },
-    { source: require("app-images/icon_share_pyq.png"), name: "下载", },
-    { source: require("app-images/icon_share_pyq.png"), name: "移动", },
-    { source: require("app-images/icon_share_pyq.png"), name: "收藏", },
-    { source: require("app-images/icon_share_pyq.png"), name: "重命名", },
-];
-
 class DocActionSheet {
+    static dataItemNewfolder = { source: require("app-images/icon_share_pyq.png"), name: "新建", itemKey:'newfolder' };
+    static dataItemTakephoto = { source: require("app-images/icon_share_pyq.png"), name: "拍照", itemKey:'takephoto' };
+    static dataItemImage = { source: require("app-images/icon_share_pyq.png"), name: "照片", itemKey:'image' };
+    static dataItemVideo = { source: require("app-images/icon_share_pyq.png"), name: "视频", itemKey:'video' };
+    static dataItemAll = { source: require("app-images/icon_share_pyq.png"), name: "全部", itemKey:'all' };
 
-    static show() {
+    static dataItemDownload = { source: require("app-images/icon_share_pyq.png"), name: "下载", itemKey:'download' };
+    static dataItemShare = { source: require("app-images/icon_share_collect.png"), name: "分享", itemKey:'share' };
+    static dataItemDelete = { source: require("app-images/icon_share_pyq.png"), name: "删除", itemKey:'delete' };
+    static dataItemCopyto = { source: require("app-images/icon_share_pyq.png"), name: "复制到", itemKey:'copyto' };
+    static dataItemMoveto = { source: require("app-images/icon_share_pyq.png"), name: "移动到", itemKey:'moveto' };
+    static dataItemFavorite = { source: require("app-images/icon_share_pyq.png"), name: "收藏", itemKey:'favorite' };
+    static dataItemRename = { source: require("app-images/icon_share_pyq.png"), name: "重命名", itemKey:'rename' };
+    static show(datas=null,onPress=null) {
+        let dataShow = datas || [
+            dataItemDownload,
+            dataItemShare,
+            dataItemDelete,
+            dataItemCopyto,
+            dataItemMoveto,
+            dataItemFavorite,
+            dataItemRename,
+        ];
         let docActionSheet = (
             <View style={styles.container} >
                 <View style={styles.titleBox}>
@@ -30,12 +40,16 @@ class DocActionSheet {
                 <View style={[styles.line]} />
                 <GLDGrid
                     style={{ width: "100%", }}
-                    data={data}
+                    data={dataShow}
                     numColumns={3}
                     imageStyle={{ height: 60, width: 60 }}
                     onPress={(item, index) => {
                         GLDActionSheet.close();
-                        alert(item.name)
+                        if(onPress) {
+                            onPress(item,index,item.itemKey);
+                        } else {
+                            alert(item.name);
+                        }
                     }}
                 />
             </View>

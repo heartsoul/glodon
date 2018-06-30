@@ -37,7 +37,7 @@ class Item extends Component {
 
     render() {
         return (
-            <TouchableOpacity onPress={(event)=>{ event.preventDefault(); this.props.onPress}}>
+            <TouchableOpacity onPress={(event)=>{ event.preventDefault(); this.props.onPress(event);}}>
                 <View style={styles.itemContainer}>
                     <Text style={styles.itemTitle}>{this.props.title}</Text>
                     {

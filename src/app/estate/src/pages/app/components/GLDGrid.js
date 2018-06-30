@@ -35,7 +35,9 @@ class GLDGrid extends Component {
 
 
     }
+keyExtractor = () =>{
 
+}
     _fixData = () => {
         if (this.props.data) {
             let len = this.props.data.length;
@@ -68,7 +70,7 @@ class GLDGrid extends Component {
             <FlatList
                 data={this.props.data}
                 renderItem={({ item, index }) => { return this.renderItem({ item, index }) }}
-                keyExtractor={(item) => (item.name + "")}
+                keyExtractor={(item,index) => (item.name + "_"+index)}
                 horizontal={true}
             />
         );
@@ -86,7 +88,7 @@ class GLDGrid extends Component {
             return (
                 <View
                     style={{ flex: 1 }}
-                    key={item.name}
+                    key={'fix_'+item.name+'_'+index}
                 >
                 </View>
             )
@@ -94,7 +96,7 @@ class GLDGrid extends Component {
             return (
                 <TouchableOpacity
                     style={{ ...this.props.itemStyle, flex: 1 }}
-                    key={item.name}
+                    key={'item_'+item.name+'_'+index}
                     onPress={(event) => {
                         event.preventDefault();
                         if (this.props.onPress) {

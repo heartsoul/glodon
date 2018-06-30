@@ -18,7 +18,7 @@ var PM = NativeModules.GLDPhotoManager;
 import { connect } from 'react-redux' // 引入connect函数
 import * as loginAction from '../../../login/actions/loginAction' // 导入action方法 
 
-import * as USERAPI from "app-api";
+import API from "app-api";
 
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
@@ -89,9 +89,9 @@ class SettingPage extends Component {
         storage.logout();
         Toast.loading('退出中...', 10);
         let overTime = false;
-        USERAPI.loginOut().then(() => {
+        API.loginOut().then(() => {
 
-            USERAPI.uaaLoginOut().then(() => {
+            API.uaaLoginOut().then(() => {
 
             }).catch((error) => {
 

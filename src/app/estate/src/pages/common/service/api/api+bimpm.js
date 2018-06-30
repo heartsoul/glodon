@@ -1,5 +1,16 @@
-import { requestJSON } from "common-module"
+import { requestJSON, BASE_URL } from "common-module"
 
+
+/**
+ * 构建项外分享的URL
+ *
+ * @export
+ * @param {*} shareToken 从服务器端得到的分享token
+ * @returns 用于向外分享的url完整地址。
+ */
+export function buildShareUrl(shareToken) {
+    return `${BASE_URL}/share.html?t=data.token:${shareToken}`;
+}
 
 /**
  * 查询子文件（仅包含下一级）

@@ -15,7 +15,7 @@ TitleBarItem.propTypes = {
 
 export class RightBarItem extends React.Component {
   render = () => {
-    return <TouchableOpacity style={styles.actionView} onPress={(event) =>{event.preventDefault();  this.props.onPress(this.props.navigation)}} >
+    return <View ref='actionView'><TouchableOpacity style={styles.actionView} onPress={(event) =>{event.preventDefault();  this.props.onPress(this.props.navigation,event,this.refs.actionView)}} >
       <View style={styles.spliteItem} />
       {
          this.props.imageSource 
@@ -23,12 +23,13 @@ export class RightBarItem extends React.Component {
       }
       {
          this.props.text 
-         ? ( <Text style={[styles.barItemText,this.props.textStyle ? this.props.textStyle : {}]}>{this.props.text ? this.props.text : '返回'}</Text>) 
+         ? ( <Text numberOfLines={1} style={[styles.barItemText,this.props.textStyle ? this.props.textStyle : {}]}>{this.props.text ? this.props.text : '返回'}</Text>) 
          : null
       }
       <View style={styles.spliteItem} />
       <View style={styles.spliteItem} />
       </TouchableOpacity>
+      </View>
     }
 }
 RightBarItem.propTypes = {

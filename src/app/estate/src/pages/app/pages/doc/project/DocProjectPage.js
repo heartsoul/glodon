@@ -2,27 +2,25 @@
  * Created by Soul on 2018/03/16.
  */
 'use strict';
-import API from 'app-api';
-import { BarItems, LoadingView } from "app-components";
+import SERVICE from 'app-api/service';
+import { BarItems, LoadingView, NoDataView, ShareManager } from "app-components";
 import React, { Component } from "react";
-import { Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
+import { Menu } from 'app-3rd/teaset';
+import { SERVER_TYPE } from "common-module"
+import DocView from './../components/DocView';
+import DocActionSheet from './../components/DocActionSheet';
 
-import ThumbnailImage from "./../../navigation/bim/ThumbnailImage";
-import { NoDataView, ShareManager} from 'app-components';
-import { SERVER_TYPE } from 'common-module';
-import DocView from './../components/DocView'
-
-var { width, height } = Dimensions.get("window");
 
 export default class DocProjectPage extends Component {
-
+   
     static navigationOptions = ({ navigation }) => {
         const { params={} } = navigation.state;
         const {renderTitle,renderLeft,renderRight} = params;
         return {
-            headerTitle: renderTitle,
-            headerRight: renderRight,
-            headerLeft: renderLeft,
+            headerTitle: renderTitle && renderTitle(),
+            headerRight: renderRight && renderRight(),
+            headerLeft: renderLeft && renderLeft(),
         }
     };
     
@@ -31,9 +29,16 @@ export default class DocProjectPage extends Component {
         const {params={}} = this.props.navigation.state ;
         let fileId = params.fileId || 0;
         let dataType = params.dataType || '';
-
-        let navData = params.navData || [];
-
+        let orderType = params.orderType || null;
+        let userPrivilege = params.userPrivilege || {
+            "enter": true,
+            "view": true,
+            "download": false,
+            "create": false,
+            "update": false,
+            "delete": false,
+            "grant": false
+          };
         this.state = {
             isLoading: true,
             refreshing: false,
@@ -44,70 +49,91 @@ export default class DocProjectPage extends Component {
             page: 0,
             isEdit:false,
             hasMore: true,
+            orderType:orderType,
             projectId: storage.loadProject(),
             latestVersion: storage.projectIdVersionId,
             fileId: fileId,
             dataType: dataType,//图纸文件 模型文件 ·
             pageType: params.pageType,
             containerId:params.containerId || null,
-            fileData:{fileId:fileId,"userPrivilege": {
-                "enter": true,
-                "view": true,
-                "download": false,
-                "create": false,
-                "update": false,
-                "delete": false,
-                "grant": false
-              }},
+            fileData:{fileId:fileId,userPrivilege: userPrivilege},
         }
         this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight:this.renderHeaderRightButtons })
     }
     _onSearchPress = () => {
         // 打开搜索页面。
     }
+    _changeOrderType = (type) => {
+        if(this.state.orderType === type) {
+            return;
+        }
+        this.state.orderType = type;
+        this.fetchData(0);
+    } 
+    _onMorePress = (navigation, event, barItem) => {
+        // 菜单
+
+        let fromView = barItem;
+
+        fromView.measureInWindow((x, y, width, height) => {
+            let showMenu = null;
+            let items = [
+                { title: <Text>更多...</Text>, onPress:()=>{}},
+                { title: <View><TouchableOpacity onPress={()=>{Menu.hide(showMenu);this._changeOrderType('time');}}><Text style={{lineHeight:30,color:this.state.orderType !== 'time' ? '#000000' : '#00baf3'}}>文件时间</Text></TouchableOpacity><TouchableOpacity  onPress={()=>{Menu.hide(showMenu);this._changeOrderType('name');}} style={{}}><Text style={{lineHeight:30,color:this.state.orderType !== 'name' ? '#000000' : '#00baf3'}}>文件名称</Text></TouchableOpacity></View>}
+            ];
+            
+            showMenu = Menu.show({ x, y, width, height }, items,{align:'end',showArrow:true,shadow:Platform.OS === 'ios' ? true : false,popoverStyle:[{paddingLeft:10,paddingRight:10}],directionInsets:0,alignInsets:-5,paddingCorner:10});
+        });
+    }
+    
     renderHeaderTitle = () => {
         const title = this.props.navigation.getParam('title');
         return <BarItems.TitleBarItem text={title ? title : '项目文档'} />;
     }
     renderHeaderLeftButtons = () => {
+        let power = (this.state.fileData && this.state.fileData.userPrivilege && this.state.fileData.userPrivilege.create&& (this.state.fileData.userPrivilege.create == true));
         return (<BarItems navigation={this.props.navigation}>
         <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_back_white.png')} onPress={(navigation) => {storage.pop(navigation,1);}} />
-        <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} />
+       {power ? <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_module_create_white.png')} onPress={(navigation) => this.onAdd(navigation)} /> : null}
         </BarItems>);
     }
     renderHeaderRightButtons = () => {
-       return (<BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation) => this._onSearchPress(navigation)} />);
+       return (<BarItems navigation={this.props.navigation}>
+        <BarItems.RightBarItem navigation={this.props.navigation} textStyle={{fontSize:22,height:30,}} text="..." onPress={(navigation,event,barItem) => this._onMorePress(navigation,event,barItem)} />
+        </BarItems>);
     }
    
     _keyExtractor = (item, index) => index;
 
     fetchData = (page) => {
         if (this.state.fileId === '0' || this.state.fileId === 0 ) {
-    
-            API.getDocContainer(storage.loadProject()).then((responseData) => {
-                this.state.containerId = responseData.data.id;
-                API.getDocRootDir(storage.loadProject()).then((responseData) => {
-                    this.state.fileData = responseData.data;
-                    this.fetchDataInner(page, storage.loadProject(), this.state.containerId, this.state.fileData);
+            console.log(SERVICE.getDocContainer);
+            SERVICE.getDocContainer(storage.loadProject()).then((responseData) => {
+                this.state.containerId = responseData.id;
+                SERVICE.getDocRootDir(storage.loadProject()).then((responseData) => {
+                    this.state.fileData = responseData;
+                    this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight:this.renderHeaderRightButtons });
+                    this.fetchDataInner(page, this.state.containerId, this.state.fileData, this.state.orderType);
                 });
-            }).catch((error) => {
-                this.setState(
-                    {
-                        isLoading: false,
-                        error: true,
-                        errorInfo: error,
-                    }
-                );
-            });
+            })
+            // .catch((error) => {
+            //     this.setState(
+            //         {
+            //             isLoading: false,
+            //             error: true,
+            //             errorInfo: error,
+            //         }
+            //     );
+            // });
         } else {
-            this.fetchDataInner(page, storage.loadProject(), this.state.containerId, this.state.fileData);
+            this.fetchDataInner(page, this.state.containerId, this.state.fileData, this.state.orderType);
         }
 
     }
     //网络请求
-    fetchDataInner = (page, projectId, containerId, fileData) => {
-        API.getDocFileChildrens(containerId, fileData.fileId, 'time').then((responseData) => {
-           let dataList = responseData.data;
+    fetchDataInner = (page, containerId, fileData, orderType = null) => {
+        SERVICE.getDocFileChildrens(containerId, fileData.fileId, orderType).then((responseData) => {
+           let dataList = responseData;
             this._handleData(dataList,page);
             }
         ).catch((error) => {
@@ -139,7 +165,7 @@ export default class DocProjectPage extends Component {
                         })
                         i++;
                     });
-                    dataBlob = this.sortData(dataBlob);
+                    // dataBlob = this.sortData(dataBlob);
                     // alert(2);
                     this.setState({
                         //复制数据源
@@ -189,8 +215,13 @@ export default class DocProjectPage extends Component {
     _itemClick = (item, index) => {
         let navigator = this.props.navigation;
         if (item.value.folder === true) {
-            storage.pushNext(navigator, "DocProjectPage", { fileId: item.value.fileId, containerId:this.state.containerId, dataType: this.state.dataType, pageType: this.state.pageType });
+            storage.pushNext(navigator, "DocProjectPage", { fileId: item.value.fileId, containerId:this.state.containerId,orderType:this.state.orderType,userPrivilege:this.state.fileData.userPrivilege, dataType: this.state.dataType, pageType: this.state.pageType });
         } else {
+            if(this.state.isEdit) {
+                // 这里需要处理编辑状态，
+                return;
+            }
+            alert('处理打开文件');
             // if (this.state.dataType === '图纸文件') {
             //     BimFileEntry.showBlueprintFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.name);
             // } else {
@@ -213,8 +244,60 @@ export default class DocProjectPage extends Component {
             return this.renderFileView({ item, index });
         }
     }
-    onMore = (item, index) =>{
-        ShareManager.share(this.state.containerId, item.value.fileId);
+    onAdd = () => {
+        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
+        const { create=false} = userPrivilege || {};
+        let data =[];
+        create && data.push(DocActionSheet.dataItemNewfolder);
+        create && data.push(DocActionSheet.dataItemTakephoto);
+        create && data.push(DocActionSheet.dataItemImage);
+        create && data.push(DocActionSheet.dataItemVideo);
+
+        if(Platform.OS != 'ios') {
+            // ios平台不支持这种方式
+            create && data.push(DocActionSheet.dataItemAll);
+        } 
+        if(data.length < 1) {
+            return;
+        }
+        DocActionSheet.show(data,(actionItem)=>{
+            alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
+        });
+    }
+    onMore = (item, index) => {
+        // 处理权限
+        const {folder,} = item.value;
+        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
+        const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
+        let data =[];
+        if(folder) {
+            download && data.push(DocActionSheet.dataItemDownload);
+            deleteItem && data.push(DocActionSheet.dataItemDelete);
+            create && data.push(DocActionSheet.dataItemCopyto);
+            deleteItem && data.push(DocActionSheet.dataItemMoveto);
+            view && data.push(DocActionSheet.dataItemFavorite);
+            create && data.push(DocActionSheet.dataItemRename);
+        } else {
+            download && data.push(DocActionSheet.dataItemDownload);
+            view && data.push(DocActionSheet.dataItemShare); // 目录暂时不支持分享
+            deleteItem && data.push(DocActionSheet.dataItemDelete);
+            create && data.push(DocActionSheet.dataItemCopyto);
+            deleteItem && data.push(DocActionSheet.dataItemMoveto);
+            view && data.push(DocActionSheet.dataItemFavorite);
+            create && data.push(DocActionSheet.dataItemRename);
+        }
+       
+        // ShareManager.share(this.state.containerId, item.value.fileId);
+        if(data.length < 1) {
+            return;
+        }
+        DocActionSheet.show(data,(actionItem)=>{
+            if(actionItem.itemKey === 'share') {
+                ShareManager.share(this.state.containerId, item.value.fileId);
+                return;
+            }
+            alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
+        });
     }
     renderFileView = ({ item, index }) => {
         let onPress = () => {this._itemClick(item, index)};
@@ -230,7 +313,7 @@ export default class DocProjectPage extends Component {
         return (
             <DocView onMore={onMore} onSelect={onSelect} selected={selected}>
                 <DocView.DocFileItemView key={index} onPress={onPress}
-             content={item.value.name} time={item.value.createTime} fileId={item.value.fileId} ext={item.value.name}/></DocView>
+             content={item.value.name} time={item.value.createTimeShow} fileId={item.value.fileId} ext={item.value.name}/></DocView>
         );
     }
 
@@ -247,7 +330,7 @@ export default class DocProjectPage extends Component {
         return (
             <DocView onMore={onMore} onSelect={onSelect} selected={selected}>
             <DocView.DocFolderItemView key={index} onPress={onPress}
-            content={item.value.name} time={item.value.createTime}/></DocView>
+            content={item.value.name} time={item.value.createTimeShow}/></DocView>
         );
     }
 
