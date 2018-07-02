@@ -9,7 +9,7 @@ import { requestJSON, BASE_URL } from "common-module"
  * @returns 用于向外分享的url完整地址。
  */
 export function buildShareUrl(shareToken) {
-    return `${BASE_URL}/share.html?t=data.token:${shareToken}`;
+    return `${BASE_URL}/share.html?t=${shareToken}`;
 }
 
 /**

@@ -144,7 +144,11 @@ const screens = {
     },
     DocProjectTrashListView: {
         screen: GLD.DocProjectTrashListView
-    }
+    },
+    DocMarkupPage: {
+        screen: GLD.DocMarkupPage
+    },
+    
 };
 
 const options = () => {
