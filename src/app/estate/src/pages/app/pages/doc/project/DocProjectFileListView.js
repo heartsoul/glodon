@@ -16,10 +16,21 @@ export default class extends Component {
    
     static navigationOptions = ({ navigation }) => {
         const { params={} } = navigation.state ;
-        const {renderTitle,renderLeft,renderRight} = params;
+        const {renderLeft,renderRight} = params;
+        const renderNavTitle = ()=>{
+            const title = navigation.getParam('title');
+            return <BarItems.TitleBarItem text={title ? title : '项目文档'} />;        
+        }
+        const renderNavRight= ()=>{
+            if(renderRight) {
+                return renderRight();
+            }
+            return (<BarItems.RightBarItem navigation={navigation} textStyle={{fontSize:22,height:30,}} text="..." onPress={() => {}} />);     
+        }
+        
         return {
-            headerTitle: renderTitle && renderTitle(),
-            headerRight: renderRight && renderRight(),
+            headerTitle: renderNavTitle(),
+            headerRight: renderNavRight(),
             headerLeft: renderLeft && renderLeft(),
         }
     };
@@ -58,7 +69,7 @@ export default class extends Component {
             containerId:params.containerId || null,
             fileData:{fileId:fileId,userPrivilege: userPrivilege},
         }
-        this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight:this.renderHeaderRightButtons })
+        this.props.navigation.setParams({renderLeft: this.renderHeaderLeftButtons, renderRight:this.renderHeaderRightButtons })
     }
     _onSearchPress = () => {
         // 打开搜索页面。
@@ -82,14 +93,10 @@ export default class extends Component {
                 { title: <View><TouchableOpacity onPress={()=>{Menu.hide(showMenu);this._changeOrderType('time');}}><Text style={{lineHeight:30,color:this.state.orderType !== 'time' ? '#000000' : '#00baf3'}}>文件时间</Text></TouchableOpacity><TouchableOpacity  onPress={()=>{Menu.hide(showMenu);this._changeOrderType('name');}} style={{}}><Text style={{lineHeight:30,color:this.state.orderType !== 'name' ? '#000000' : '#00baf3'}}>文件名称</Text></TouchableOpacity></View>}
             ];
             
-            showMenu = Menu.show({ x, y, width, height }, items,{align:'end',showArrow:true,shadow:Platform.OS === 'ios' ? true : false,popoverStyle:[{paddingLeft:10,paddingRight:10}],directionInsets:0,alignInsets:-5,paddingCorner:10});
+            showMenu = Menu.show({ x, y, width, height }, items,{align:'end',showArrow:true,shadow:Platform.OS === 'ios' ? true : false,popoverStyle:[{paddingLeft:10,paddingRight:10,backgroundColor:'white'}],directionInsets:0,alignInsets:-5,paddingCorner:10});
         });
     }
     
-    renderHeaderTitle = () => {
-        const title = this.props.navigation.getParam('title');
-        return <BarItems.TitleBarItem text={title ? title : '项目文档'} />;
-    }
     renderHeaderLeftButtons = () => {
         let power = (this.state.fileData && this.state.fileData.userPrivilege && this.state.fileData.userPrivilege.create&& (this.state.fileData.userPrivilege.create == true));
         return (<BarItems navigation={this.props.navigation}>
@@ -215,7 +222,7 @@ export default class extends Component {
     _itemClick = (item, index) => {
         let navigator = this.props.navigation;
         if (item.value.folder === true) {
-            storage.pushNext(navigator, "DocProjectFileListView", {title:item.name, fileId: item.value.fileId, containerId:this.state.containerId,orderType:this.state.orderType,userPrivilege:this.state.fileData.userPrivilege, dataType: this.state.dataType, pageType: this.state.pageType });
+            storage.pushNext(navigator, "DocProjectFileListView", {title:item.value.name, fileId: item.value.fileId, containerId:this.state.containerId,orderType:this.state.orderType,userPrivilege:this.state.fileData.userPrivilege, dataType: this.state.dataType, pageType: this.state.pageType });
         } else {
             if(this.state.isEdit) {
                 // 这里需要处理编辑状态，
