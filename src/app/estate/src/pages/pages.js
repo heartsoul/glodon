@@ -44,6 +44,11 @@ import SharePage from './app/pages/me/SharePage'
 import OfflineAsyncPage from './app/pages/offline/OfflineAsyncPage'
 import EditPhotoPage from './app/components/editPhoto/EditPhotoPage'
 import DocProjectPage from './app/pages/doc/project/DocProjectPage'
+import DocProjectFileListView from './app/pages/doc/project/DocProjectFileListView'
+import DocProjectTransListView from './app/pages/doc/project/DocProjectTransListView'
+import DocProjectFavListView from './app/pages/doc/project/DocProjectFavListView'
+import DocProjectTrashListView from './app/pages/doc/project/DocProjectTrashListView'
+
 export {
     LoginPage,
     GuidePage,
@@ -88,4 +93,8 @@ export {
     OfflineAsyncPage,
     EditPhotoPage,
     DocProjectPage,
-}
+    DocProjectFileListView,
+    DocProjectTransListView,
+    DocProjectFavListView,
+    DocProjectTrashListView
+};

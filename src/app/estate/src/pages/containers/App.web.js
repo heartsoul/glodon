@@ -2,8 +2,8 @@ import React from 'react'
 import { View, Image} from 'react-native'
 import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'
-import configureStore, { history } from '../store/ConfigureStore'
-import * as GLD from './pages.web'
+import configureStore, { history } from './../store/ConfigureStore'
+import * as GLD from './../pages';
 import API from 'app-api'
 import { createStackNavigator , NavigationActions, StackActions} from 'app-3rd/react-navigation';
 const store = configureStore()
@@ -102,6 +102,18 @@ const screens = {
   },
   DocProjectPage:{
     screen: GLD.DocProjectPage
+  },
+  DocProjectFileListView:{
+    screen: GLD.DocProjectFileListView
+  },
+  DocProjectTransListView:{
+    screen: GLD.DocProjectTransListView
+  },
+  DocProjectFavListView:{
+    screen: GLD.DocProjectFavListView
+  },
+  DocProjectTrashListView:{
+    screen: GLD.DocProjectTrashListView
   }
 };
 

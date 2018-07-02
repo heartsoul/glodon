@@ -5,9 +5,9 @@ import { BarItems } from "app-components";
 import React from 'react';
 import { Platform, View } from 'react-native';
 import { Provider } from 'react-redux';
-import NetWorkUtil from '../../common/utils/NetWorkUtil';
-import * as GLD from '../pages';
-import configureStore from '../store/ConfigureStore';
+import NetWorkUtil from './../../common/utils/NetWorkUtil';
+import * as GLD from './../pages';
+import configureStore from './../store/ConfigureStore';
 
 
 const store = configureStore()
@@ -132,6 +132,18 @@ const screens = {
     },
     DocProjectPage:{
         screen: GLD.DocProjectPage
+    },
+    DocProjectFileListView: {
+        screen: GLD.DocProjectFileListView
+    },
+    DocProjectTransListView: {
+        screen: GLD.DocProjectTransListView
+    },
+    DocProjectFavListView: {
+        screen: GLD.DocProjectFavListView
+    },
+    DocProjectTrashListView: {
+        screen: GLD.DocProjectTrashListView
     }
 };
 
