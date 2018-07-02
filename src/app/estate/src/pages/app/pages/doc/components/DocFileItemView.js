@@ -27,7 +27,7 @@ export default class extends React.Component {
     render() {
         const {content,time, fileId, onPress, ext} = this.props;
         return (
-            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { event.preventDefault(); onPress(event) }}>
+            <TouchableOpacity activeOpacity={0.5} onPress={(event) => { event.preventDefault(); onPress&&onPress(event); }}>
                 <View style={styles.containerFileView}>
                     <DocImageView imageStyle={styles.image} ext={ext} />
                     <View style={styles.contentView}>

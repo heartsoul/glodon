@@ -58,7 +58,11 @@ export default class extends Component {
             containerId:params.containerId || null,
             fileData:{fileId:fileId,userPrivilege: userPrivilege},
         }
-        this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight:this.renderHeaderRightButtons })
+        
+        this.onSelectPage();
+    }
+    onSelectPage = () => {
+        this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight: this.renderHeaderRightButtons });
     }
     _onSearchPress = () => {
         // 打开搜索页面。
@@ -88,10 +92,10 @@ export default class extends Component {
     
     renderHeaderTitle = () => {
         const title = this.props.navigation.getParam('title');
-        return <BarItems.TitleBarItem text={title ? title : '项目文档'} />;
+        return <BarItems.TitleBarItem text={title ? title : '收藏列表'} />;
     }
     renderHeaderLeftButtons = () => {
-        let power = (this.state.fileData && this.state.fileData.userPrivilege && this.state.fileData.userPrivilege.create&& (this.state.fileData.userPrivilege.create == true));
+        let power = false;
         return (<BarItems navigation={this.props.navigation}>
         <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_back_white.png')} onPress={(navigation) => {storage.pop(navigation,1);}} />
        {power ? <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_module_create_white.png')} onPress={(navigation) => this.onAdd(navigation)} /> : null}

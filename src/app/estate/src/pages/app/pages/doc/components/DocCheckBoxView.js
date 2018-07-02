@@ -17,21 +17,17 @@ export default class extends React.Component {
 
     constructor(props) {
         super(props);
-        const {selected} = props; 
-        this.state = {
-            selected:selected||false
-        }
     };
     _getSelectImageSource = (selected) => {
         let url = selected ? imgSelect : imgUnSelect;
         return url;
     }
     render = () => {
-        const {onSelect} = this.props;
+        const {onSelect,selected} = this.props;
         return (
             <TouchableOpacity activeOpacity={0.5} 
-            onPress={(event) => { event.preventDefault();this.setState({selected:!this.state.selected}); onSelect && onSelect(event,this.state.selected) }}>
-                <Image style={styles.checkImage} source={this._getSelectImageSource(this.state.selected)} />
+            onPress={(event) => { event.preventDefault(); onSelect && onSelect(event,selected) }}>
+                <Image style={styles.checkImage} source={this._getSelectImageSource(selected)} />
             </TouchableOpacity>
         );
     }
