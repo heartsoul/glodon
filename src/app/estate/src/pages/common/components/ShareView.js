@@ -40,11 +40,11 @@ class ShareView extends Component {
     }
 
     _selectExpireTime = (item) => {
-        if (this.state.selectExpireTime.name != item.name) {
-            this.setState({
-                selectExpireTime: item
-            })
-        }
+        // if (this.state.selectExpireTime.name != item.name) {
+        //     this.setState({
+        //         selectExpireTime: item
+        //     })
+        // }
     }
 
     _renderRadio = (item) => {
@@ -69,15 +69,15 @@ class ShareView extends Component {
     }
 
     _selectPermission = (item) => {
-        let index = this._findPermissionIndex(item);
-        if (index < 0) {
-            this.state.selectPermission.push(item)
-        } else {
-            this.state.selectPermission.splice(index, 1)
-        }
-        this.setState({
-            selectPermission: this.state.selectPermission
-        })
+        // let index = this._findPermissionIndex(item);
+        // if (index < 0) {
+        //     this.state.selectPermission.push(item)
+        // } else {
+        //     this.state.selectPermission.splice(index, 1)
+        // }
+        // this.setState({
+        //     selectPermission: this.state.selectPermission
+        // })
     }
 
     _findPermissionIndex = (item) => {
