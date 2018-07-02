@@ -13,8 +13,10 @@ import {
 import { GLDGrid, GLDActionSheet, ActionModal } from 'app-components'
 import { Toast } from "antd-mobile"
 import ShareView from './ShareView'
+import API from 'app-api'
 var { width, height } = Dimensions.get("window")
 var { NativeModules } = require('react-native');
+
 // module.exports = NativeModules.UMShareModule;
 // platform
 // case 0: // QQ
@@ -76,8 +78,8 @@ class ShareManager {
             fileId={fileId}
             share={(item, token, title, password) => {
                 let userName = storage.loadUserInfo().accountInfo.name;
-                let url = "http://www.baidu.com";
-                let icon = "https://www.baidu.com/img/bd_logo1.png";
+                let url = API.buildShareUrl(token);
+                let icon = "";
                 let textOnly = `${userName}分享了一个文件`;
                 let textWithUrl = `${userName}分享了文件 - ${title}\n${url}`;
                 switch (item.name) {
@@ -93,7 +95,7 @@ class ShareManager {
                             break;
                         } else if (Platform.OS === 'ios') {
                             NativeModules.GLDPhotoManager.shareAppAction({ text: textOnly, url: url }, (data, bSuccess) => {
-
+                                
                             });
                         }
                         break;
