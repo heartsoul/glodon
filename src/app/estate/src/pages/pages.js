@@ -49,6 +49,7 @@ import DocProjectTransListView from './app/pages/doc/project/DocProjectTransList
 import DocProjectFavListView from './app/pages/doc/project/DocProjectFavListView'
 import DocProjectTrashListView from './app/pages/doc/project/DocProjectTrashListView'
 import DocMarkupPage from './app/pages/doc/markup/DocMarkupPage'
+import DocMarkupDetailPage from './app/pages/doc/markup/DocMarkupDetailPage'
 
 export {
     LoginPage,
@@ -99,4 +100,5 @@ export {
     DocProjectFavListView,
     DocProjectTrashListView,
     DocMarkupPage,
+    DocMarkupDetailPage,
 };
