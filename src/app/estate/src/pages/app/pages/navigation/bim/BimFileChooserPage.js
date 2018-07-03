@@ -14,8 +14,6 @@ import { NoDataView} from 'app-components';
 import { SERVER_TYPE } from 'common-module';
 import {DeviceEventEmitter} from 'app-3rd/index';
 import OfflineManager from '../../../../offline/manager/OfflineManager';
-import DirManager from '../../../../offline/manager/DirManager';
-import ModelServer from '../../../../offline/model/ServerModule';
 var { width, height } = Dimensions.get("window");
 let modelList= null;//模型列表
 let blueprintList = null;//图纸列表
@@ -281,12 +279,6 @@ export default class BimFileChooser extends Component {
         if (this.deEmitter) {
             this.deEmitter.remove();
         }
-        ModelServer.stopServer();
-    }
-
-    componentWillMount =()=>{
-        //启动server
-        ModelServer.startServer(new DirManager().getRootPath(),'8080');
     }
 
     getDirData = () => {
