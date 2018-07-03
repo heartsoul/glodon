@@ -148,7 +148,9 @@ const screens = {
     DocMarkupPage: {
         screen: GLD.DocMarkupPage
     },
-    
+    DocMarkupDetailPage: {
+        screen: GLD.DocMarkupDetailPage
+    },
 };
 
 const options = () => {

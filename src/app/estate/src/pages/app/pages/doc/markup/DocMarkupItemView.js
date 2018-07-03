@@ -6,27 +6,43 @@ import {
     TouchableOpacity,
     StyleSheet
 } from 'react-native';
+import PropTypes from 'prop-types';
+
 class DocMarkupItemView extends Component {
+
+    static propTypes = {
+        markup: PropTypes.any,//批注信息
+        onItemPress: PropTypes.func.isRequired,//点击整个item进详情
+        onThumbnailPress: PropTypes.func.isRequired,//点击缩略图进模型
+    }
+
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+
+        };
     }
+
     render() {
         return (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={(event) => { event.preventDefault(); this.props.onItemPress() }}>
                 <View style={styles.containerView}>
                     <View style={styles.infoContainer}>
                         <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
                         <View style={{ marginLeft: 10, flex: 1 }}>
-                            <Text style={styles.textMain}>name</Text>
-                            <Text style={styles.textLight}>time</Text>
+                            <Text style={styles.textMain}>{this.props.markup.creatorName}</Text>
+                            <Text style={styles.textLight}>{this.props.markup.createTime}</Text>
                         </View>
                         <Image style={styles.pinImage} source={require('app-images/icon_setting_share.png')} />
                     </View>
-                    <Text style={[styles.textMain, styles.textContent]}>content</Text>
-                    <View style={styles.thumbContainer}>
-                        <Image style={styles.thumb} source={require('app-images/icon_blueprint_default.png')} />
-                    </View>
+                    <Text style={[styles.textMain, styles.textContent]}>{this.props.markup.description}</Text>
+
+                    <TouchableOpacity onPress={(event) => { event.preventDefault(); this.props.onThumbnailPress() }}>
+                        <View style={styles.thumbnailContainer}>
+                            <Image style={styles.thumbnail} source={require('app-images/icon_blueprint_default.png')} />
+                        </View>
+                    </TouchableOpacity>
+
                     <View style={styles.line}></View>
                     <View style={styles.commentContainer}>
                         <Image style={styles.commentImage} source={require('app-images/icon_setting_share.png')} />
@@ -43,7 +59,7 @@ class DocMarkupItemView extends Component {
 
 const styles = StyleSheet.create({
     containerView: {
-       
+
         borderRadius: 8,
         marginTop: 10,
         marginBottom: 10,
@@ -90,12 +106,12 @@ const styles = StyleSheet.create({
     textContent: {
         margin: 10
     },
-    thumbContainer: {
+    thumbnailContainer: {
         marginLeft: 10,
         marginRight: 10,
         marginBottom: 10,
     },
-    thumb: {
+    thumbnail: {
         width: '100%',
         height: 130,
         resizeMode: 'cover',

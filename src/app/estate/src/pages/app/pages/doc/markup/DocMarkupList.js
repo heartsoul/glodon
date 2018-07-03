@@ -17,23 +17,14 @@ class DocMarkupList extends Component {
             listType: this.props.listType,
             modelVersionId: '07ca09dc1dc4482b9edf48e2ba8115b8',
             fileId: '5216266',
-            data: [
-                { key: 'aa' },
-                { key: 'bb' },
-                { key: 'cc' },
-                { key: 'dd' },
-                { key: 'ee' },
-                { key: 'ff' },
-            ]
         };
     }
 
     componentDidMount() {
         this._fetchData(0)
     }
-
     _fetchData = (page) => {
-        this.props.fetchData(this.props.listType, this.state.modelVersionId, this.state.fileId, null, page);
+        this.props.fetchData(this.props.listType, this.state.modelVersionId, this.state.fileId, this.props.data, null, page);
     }
 
     _onRefresh = () => {
@@ -51,12 +42,28 @@ class DocMarkupList extends Component {
     }
 
     _emptyView = () => {
-
+        return (
+            <View>
+                <Text>empty</Text>
+            </View>
+        )
     }
 
     _renderItem = (item, index) => {
         return (
-            <DocMarkupItemView key={item.key} />
+            <DocMarkupItemView
+                key={`markup-item-key-${index}`}
+                markup={item}
+                onItemPress={() => {
+                    //进入批注详情
+                    let navigator = this.props.navigation;
+                    storage.pushNext(navigator, "DocMarkupDetailPage", { markup: item });
+                }}
+                onThumbnailPress={() => {
+                    //进入模型
+                    alert("thumb")
+                }}
+            />
         )
     }
 
@@ -64,7 +71,7 @@ class DocMarkupList extends Component {
         return (
             <View style={{ height: "100%" }}>
                 <FlatList
-                    data={this.state.data}
+                    data={this.props.data}
                     renderItem={({ item, index }) => { return this._renderItem(item, index) }}
                     onRefresh={this._onRefresh}
                     refreshing={this.props.isLoading}
@@ -94,8 +101,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default connect(
     mapStateToProps,
     dispatch => ({
-        fetchData: (listType, modelVersionId, fileId, creatorId, pageIndex) => {
-            dispatch(DocMarkupAction.fetchData(listType, modelVersionId, fileId, creatorId, pageIndex));
+        fetchData: (listType, modelVersionId, fileId, dataMap, creatorId, pageIndex) => {
+            dispatch(DocMarkupAction.fetchData(listType, modelVersionId, fileId, dataMap, creatorId, pageIndex));
         },
     }),
     mergeProps
