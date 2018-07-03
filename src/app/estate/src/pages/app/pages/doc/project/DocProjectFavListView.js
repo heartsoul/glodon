@@ -6,7 +6,7 @@ import SERVICE from 'app-api/service';
 import { BarItems, LoadingView, NoDataView, ShareManager } from "app-components";
 import React, { Component } from "react";
 import { FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
-import { Menu } from 'app-3rd/teaset';
+import { Menu,TabView } from 'app-3rd/teaset';
 import { SERVER_TYPE } from "common-module"
 import DocView from './../components/DocView';
 import DocActionSheet from './../components/DocActionSheet';
@@ -49,6 +49,7 @@ export default class extends Component {
             page: 0,
             isEdit:false,
             hasMore: true,
+            selectedItems:[],
             orderType:orderType,
             projectId: storage.loadProject(),
             latestVersion: storage.projectIdVersionId,
@@ -60,6 +61,38 @@ export default class extends Component {
         }
         
         this.onSelectPage();
+    }
+    renderToolbar = ()=> {
+        if(!this.state.isEdit) {
+            return null;
+        }
+       return( <TabView style={{ height:49,bottom:0,right:0,left:0, overflow: 'visible',position:'absolute' }}>
+        <TabView.Sheet
+            title={'下载'}
+            type='button'
+            icon={require('app-images/home/icon_main_main_page.png')}
+            activeIcon={require('app-images/home/icon_main_page_selected.png')}
+            onPress={(event) => { event.preventDefault(); this.doDownload(this.state.selectedItems)}}
+        >
+        </TabView.Sheet>
+        <TabView.Sheet
+            title={'分享'}
+            type='button'
+            icon={require('app-images/home/icon_main_subscribe.png')}
+            activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
+            onPress={(event) => { event.preventDefault(); this.doShare(this.state.selectedItems)}}
+        >
+        </TabView.Sheet>
+
+        <TabView.Sheet
+            title={'取消收藏'}
+            type='button'
+            icon={require('app-images/home/icon_main_message.png')}
+            activeIcon={require('app-images/home/icon_main_message_selected.png')}
+            onPress={(event) => { event.preventDefault(); this.doFavoriteCancel(this.state.selectedItems)}}
+        >
+        </TabView.Sheet>
+    </TabView>);
     }
     onSelectPage = () => {
         this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight: this.renderHeaderRightButtons });
@@ -74,27 +107,49 @@ export default class extends Component {
         this.state.orderType = type;
         this.fetchData(0);
     } 
-    _onMorePress = (navigation, event, barItem) => {
-        // 菜单
-
-        let fromView = barItem;
-
-        fromView.measureInWindow((x, y, width, height) => {
-            let showMenu = null;
-            let items = [
-                { title: <Text>更多...</Text>, onPress:()=>{}},
-                { title: <View><TouchableOpacity onPress={()=>{Menu.hide(showMenu);this._changeOrderType('time');}}><Text style={{lineHeight:30,color:this.state.orderType !== 'time' ? '#000000' : '#00baf3'}}>文件时间</Text></TouchableOpacity><TouchableOpacity  onPress={()=>{Menu.hide(showMenu);this._changeOrderType('name');}} style={{}}><Text style={{lineHeight:30,color:this.state.orderType !== 'name' ? '#000000' : '#00baf3'}}>文件名称</Text></TouchableOpacity></View>}
-            ];
-            
-            showMenu = Menu.show({ x, y, width, height }, items,{align:'end',showArrow:true,shadow:Platform.OS === 'ios' ? true : false,popoverStyle:[{paddingLeft:10,paddingRight:10}],directionInsets:0,alignInsets:-5,paddingCorner:10});
+    _itemSelected = (selected, item, index) => {
+        item.value.selected = !selected;
+        
+        this.state.selectedItems = this.state.dataArray.filter(function (element, index, self) {
+            return element.value.selected === true;
         });
+        this.setState({dataArray:this.state.dataArray});
+        this.onSelectPage(); // 更新标题 
     }
-    
+    _onEditModePress = () => {
+        // 打开搜索页面。
+        this.state.isEdit=true;
+        this.onSelectPage();
+        this.forceUpdate();
+    }
+    _onMorePress = (navigation, event, barItem) => {
+        this._onEditModePress();
+    }
+
+    _onCancelEdit = () =>{
+        this.state.selectedItems = [];
+        this.state.isEdit = false;
+        this.forceUpdate();
+        this.onSelectPage(); // 更新标题 
+    }
+
     renderHeaderTitle = () => {
+        if(this.state.isEdit) {
+            let title = '请选择文件';
+            if(this.state.selectedItems.length > 0) {
+                title = `选中${this.state.selectedItems.length}项`;
+            }
+            return <BarItems.TitleBarItem text={title ? title : '项目文档'} />;
+        }
         const title = this.props.navigation.getParam('title');
         return <BarItems.TitleBarItem text={title ? title : '收藏列表'} />;
     }
     renderHeaderLeftButtons = () => {
+        if(this.state.isEdit) {
+            return (<BarItems navigation={this.props.navigation}>
+                        <BarItems.LeftBarItem navigation={this.props.navigation} text="全选" onPress={(navigation) => this.onSelectAll(navigation)} />
+                </BarItems>);
+        }
         let power = false;
         return (<BarItems navigation={this.props.navigation}>
         <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_back_white.png')} onPress={(navigation) => {storage.pop(navigation,1);}} />
@@ -102,41 +157,39 @@ export default class extends Component {
         </BarItems>);
     }
     renderHeaderRightButtons = () => {
+        if(this.state.isEdit) {
+            return (<BarItems navigation={this.props.navigation}>
+                <BarItems.RightBarItem navigation={this.props.navigation} text="取消" onPress={(navigation,event) => this._onCancelEdit(navigation,event)} />
+                </BarItems>);
+        } else {
        return (<BarItems navigation={this.props.navigation}>
-        <BarItems.RightBarItem navigation={this.props.navigation} textStyle={{fontSize:22,height:30,}} text="..." onPress={(navigation,event,barItem) => this._onMorePress(navigation,event,barItem)} />
+        <BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation,event,barItem) => this._onSearchPress(navigation,event,barItem)} />
+        <BarItems.RightBarItem navigation={this.props.navigation} text="选择" onPress={(navigation,event,barItem) => this._onMorePress(navigation,event,barItem)} />
         </BarItems>);
+        }
     }
    
     _keyExtractor = (item, index) => index;
 
     fetchData = (page) => {
-        if (this.state.fileId === '0' || this.state.fileId === 0 ) {
-            console.log(SERVICE.getDocContainer);
-            SERVICE.getDocContainer(storage.loadProject()).then((responseData) => {
-                this.state.containerId = responseData.id;
-                SERVICE.getDocRootDir(storage.loadProject()).then((responseData) => {
-                    this.state.fileData = responseData;
-                    this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight:this.renderHeaderRightButtons });
-                    this.fetchDataInner(page, this.state.containerId, this.state.fileData, this.state.orderType);
-                });
-            })
-            // .catch((error) => {
-            //     this.setState(
-            //         {
-            //             isLoading: false,
-            //             error: true,
-            //             errorInfo: error,
-            //         }
-            //     );
-            // });
-        } else {
+        SERVICE.getDocContainer(storage.loadProject()).then((responseData) => {
+            this.state.containerId = responseData.id;
+            this.onSelectPage();
             this.fetchDataInner(page, this.state.containerId, this.state.fileData, this.state.orderType);
-        }
-
+        })
+        .catch((error) => {
+            this.setState(
+                {
+                    isLoading: false,
+                    error: true,
+                    errorInfo: error,
+                }
+            );
+        });     
     }
     //网络请求
     fetchDataInner = (page, containerId, fileData, orderType = null) => {
-        SERVICE.getDocFileChildrens(containerId, fileData.fileId, orderType).then((responseData) => {
+        SERVICE.getFavoritesDocFile(containerId).then((responseData) => {
            let dataList = responseData;
             this._handleData(dataList,page);
             }
@@ -217,14 +270,16 @@ export default class extends Component {
         return ( <NoDataView text="加载失败" /> );
     }
     _itemClick = (item, index) => {
+        
+        if(this.state.isEdit) {
+            // 这里需要处理编辑状态，
+            this._itemSelected(item.value.selected,item,index);
+            return;
+        }
         let navigator = this.props.navigation;
         if (item.value.folder === true) {
-            storage.pushNext(navigator, "DocProjectPage", { fileId: item.value.fileId, containerId:this.state.containerId,orderType:this.state.orderType,userPrivilege:this.state.fileData.userPrivilege, dataType: this.state.dataType, pageType: this.state.pageType });
+            storage.pushNext(navigator, "DocProjectFileListView", {isEdit:this.state.isEdit,selectedItems:this.state.selectedItems, title:item.value.name, fileId: item.value.fileId, containerId:this.state.containerId,orderType:this.state.orderType,userPrivilege:this.state.fileData.userPrivilege, dataType: this.state.dataType, pageType: this.state.pageType });
         } else {
-            if(this.state.isEdit) {
-                // 这里需要处理编辑状态，
-                return;
-            }
             alert('处理打开文件');
             // if (this.state.dataType === '图纸文件') {
             //     BimFileEntry.showBlueprintFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.name);
@@ -279,7 +334,7 @@ export default class extends Component {
             deleteItem && data.push(DocActionSheet.dataItemDelete);
             create && data.push(DocActionSheet.dataItemCopyto);
             deleteItem && data.push(DocActionSheet.dataItemMoveto);
-            view && data.push(DocActionSheet.dataItemFavorite);
+            view && data.push(DocActionSheet.dataItemFavoriteCancel);
             create && data.push(DocActionSheet.dataItemRename);
         } else {
             download && data.push(DocActionSheet.dataItemDownload);
@@ -287,7 +342,7 @@ export default class extends Component {
             deleteItem && data.push(DocActionSheet.dataItemDelete);
             create && data.push(DocActionSheet.dataItemCopyto);
             deleteItem && data.push(DocActionSheet.dataItemMoveto);
-            view && data.push(DocActionSheet.dataItemFavorite);
+            view && data.push(DocActionSheet.dataItemFavoriteCancel);
             create && data.push(DocActionSheet.dataItemRename);
         }
        
@@ -297,10 +352,83 @@ export default class extends Component {
         }
         DocActionSheet.show(data,(actionItem)=>{
             if(actionItem.itemKey === 'share') {
-                ShareManager.share(this.state.containerId, item.value.fileId);
+                this.doShare([item]);
+               
+                return;
+            }
+            if(actionItem.itemKey === 'copyto') {
+                this.doCopyto([item]);
+                return;
+            }
+            if(actionItem.itemKey === 'moveto') {
+                this.doMoveto([item]);
+                return;
+            }
+            if(actionItem.itemKey === 'favorite-cancel') {
+                this.doFavoriteCancel([item]);
+                return;
+            }
+            if(actionItem.itemKey === 'download') {
+                this.doDownload([item]);
                 return;
             }
             alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
+        });
+    }
+
+    doShare = (items) => {
+        if(items.length !== 1) {
+            alert('暂不支持批量分享');
+            return;
+        }
+        ShareManager.share(this.state.containerId, items[0].value.fileId); 
+    }
+    doDownload = (items) => {
+        
+    }
+    doMoveto = (items) => {
+        if(items.length < 1) {
+            return;
+        }
+        let fileIds = [];
+        items.map((item)=>{
+            fileIds.push(item.value.fileId);
+        });
+        SERVICE.moveDocFileBatch(this.state.containerId,fileIds).then(()=>{
+            alert('ok');
+        }).catch(err=>{
+            alert('failed');
+        });
+    }
+    doCopyto = (items) => {
+        if(items.length < 1) {
+            return;
+        }
+        let fileIds = [];
+        items.map((item)=>{
+            fileIds.push(item.value.fileId);
+        });
+        SERVICE.copyDocFileBatch(this.state.containerId,fileIds).then(()=>{
+            alert('ok');
+        }).catch(err=>{
+            alert('failed');
+        });
+    }
+    doFavoriteCancel = (items) => {
+        
+        if(items.length < 1) {
+            return;
+        }
+        let fileIds = [];
+        items.map((item)=>{
+            fileIds.push(item.value.fileId);
+        });
+        SERVICE.cancelFavoritesDocFileBatch(this.state.containerId,fileIds).then(()=>{
+            alert('ok');
+            this._onCancelEdit();
+            this.fetchData(1);
+        }).catch(err=>{
+            alert('failed');
         });
     }
     renderFileView = ({ item, index }) => {
@@ -310,7 +438,6 @@ export default class extends Component {
         let {selected = false} = item.value;
         if(this.state.isEdit) {
             onMore = null;
-            onPress = null;
         } else {
             onSelect = null;
         }
@@ -356,6 +483,13 @@ export default class extends Component {
             this.fetchData(this.state.page);
         }, 1500);
     }
+
+    renderFooterView = () => {
+        return <View style={{height:50,width:'100%'}} />
+    }
+    renderEmptyView = () => {
+        return <NoDataView text='暂无数据' />
+    }
   
     /**
      * 列表
@@ -366,6 +500,8 @@ export default class extends Component {
                 data={this.state.dataArray}
                 renderItem={this.renderItemView}
                 ItemSeparatorComponent={this._separator}
+                ListFooterComponent={this.renderFooterView}
+                ListEmptyComponent={this.renderEmptyView}
                 onEndReached={this._onEndReached}
                 onRefresh={this._onRefreshing}
                 refreshing={this.state.refreshing}

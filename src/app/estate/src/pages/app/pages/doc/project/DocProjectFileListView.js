@@ -228,6 +228,7 @@ export default class extends Component {
                 this.state.containerId = responseData.id;
                 SERVICE.getDocRootDir(storage.loadProject()).then((responseData) => {
                     this.state.fileData = responseData;
+                    this.state.fileId = this.state.fileData.fileId;
                     this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight:this.renderHeaderRightButtons });
                     this.fetchDataInner(page, this.state.containerId, this.state.fileData, this.state.orderType);
                 });
@@ -486,6 +487,8 @@ export default class extends Component {
         });
         SERVICE.deleteDocFileBatch(this.state.containerId,fileIds).then(()=>{
             alert('ok');
+            this._onCancelEdit();
+            this.fetchData(1);
         }).catch(err=>{
             alert('failed');
         });
@@ -503,6 +506,8 @@ export default class extends Component {
         });
         SERVICE.moveDocFileBatch(this.state.containerId,fileIds).then(()=>{
             alert('ok');
+            this._onCancelEdit();
+            this.fetchData(1);
         }).catch(err=>{
             alert('failed');
         });
@@ -530,6 +535,8 @@ export default class extends Component {
             fileIds.push(item.value.fileId);
         });
         SERVICE.favoritesDocFileBatch(this.state.containerId,fileIds).then(()=>{
+            this._onCancelEdit();
+            this.fetchData(1);
             alert('ok');
         }).catch(err=>{
             alert('failed');
@@ -537,6 +544,8 @@ export default class extends Component {
     }
     doRename = (item) => {
         SERVICE.renameDocFile(this.state.containerId,item.value.fileId,item.value.name).then(()=>{
+            this._onCancelEdit();
+            this.fetchData(1);
             alert('ok');
         }).catch(err=>{
             alert('failed');
@@ -545,6 +554,8 @@ export default class extends Component {
     doNewFolder = (item) => {
         SERVICE.createDocDir(this.state.containerId,this.state.fileId,item.value.name).then(()=>{
             alert('ok');
+            this._onCancelEdit();
+            this.fetchData(1);
         }).catch(err=>{
             alert('failed');
         });
@@ -608,6 +619,9 @@ export default class extends Component {
     renderFooterView = () => {
         return <View style={{height:50,width:'100%'}} />
     }
+    renderEmptyView = () => {
+        return <NoDataView text='暂无数据' />
+    }
     /**
      * 列表
      */
@@ -617,6 +631,7 @@ export default class extends Component {
                 data={this.state.dataArray}
                 renderItem={this.renderItemView}
                 ListFooterComponent={this.renderFooterView}
+                ListEmptyComponent={this.renderEmptyView}
                 ItemSeparatorComponent={this._separator}
                 onEndReached={this._onEndReached}
                 onRefresh={this._onRefreshing}

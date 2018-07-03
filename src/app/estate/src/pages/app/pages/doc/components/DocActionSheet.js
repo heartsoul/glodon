@@ -20,6 +20,7 @@ class DocActionSheet {
     static dataItemCopyto = { source: require("app-images/icon_share_pyq.png"), name: "复制到", itemKey:'copyto' };
     static dataItemMoveto = { source: require("app-images/icon_share_pyq.png"), name: "移动到", itemKey:'moveto' };
     static dataItemFavorite = { source: require("app-images/icon_share_pyq.png"), name: "收藏", itemKey:'favorite' };
+    static dataItemFavoriteCancel = { source: require("app-images/icon_share_pyq.png"), name: "取消收藏", itemKey:'favorite-cancel' };
     static dataItemRename = { source: require("app-images/icon_share_pyq.png"), name: "重命名", itemKey:'rename' };
     static show(datas=null,onPress=null) {
         let dataShow = datas || [

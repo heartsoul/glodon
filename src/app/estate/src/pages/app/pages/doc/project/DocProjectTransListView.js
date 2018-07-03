@@ -6,7 +6,7 @@ import SERVICE from 'app-api/service';
 import { BarItems, LoadingView, NoDataView, ShareManager } from "app-components";
 import React, { Component } from "react";
 import { FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
-import { Menu } from 'app-3rd/teaset';
+import { Menu,TabView } from 'app-3rd/teaset';
 import { SERVER_TYPE } from "common-module"
 import DocView from './../components/DocView';
 import DocActionSheet from './../components/DocActionSheet';
@@ -109,45 +109,11 @@ export default class extends Component {
     _keyExtractor = (item, index) => index;
 
     fetchData = (page) => {
-        if (this.state.fileId === '0' || this.state.fileId === 0 ) {
-            console.log(SERVICE.getDocContainer);
-            SERVICE.getDocContainer(storage.loadProject()).then((responseData) => {
-                this.state.containerId = responseData.id;
-                SERVICE.getDocRootDir(storage.loadProject()).then((responseData) => {
-                    this.state.fileData = responseData;
-                    this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight:this.renderHeaderRightButtons });
-                    this.fetchDataInner(page, this.state.containerId, this.state.fileData, this.state.orderType);
-                });
-            })
-            // .catch((error) => {
-            //     this.setState(
-            //         {
-            //             isLoading: false,
-            //             error: true,
-            //             errorInfo: error,
-            //         }
-            //     );
-            // });
-        } else {
-            this.fetchDataInner(page, this.state.containerId, this.state.fileData, this.state.orderType);
-        }
-
+        this.fetchDataInner(0, this.state.containerId);      
     }
     //网络请求
-    fetchDataInner = (page, containerId, fileData, orderType = null) => {
-        SERVICE.getDocFileChildrens(containerId, fileData.fileId, orderType).then((responseData) => {
-           let dataList = responseData;
-            this._handleData(dataList,page);
-            }
-        ).catch((error) => {
-            this.setState(
-                {
-                    isLoading: false,
-                    error: true,
-                    errorInfo: error,
-                }
-            );
-        });
+    fetchDataInner = (page, containerId) => {   
+        this._handleData([],page);     
     }
 
     _handleData=(data,page)=>{
@@ -356,6 +322,13 @@ export default class extends Component {
         }, 1500);
     }
   
+    renderFooterView = () => {
+        return <View style={{height:50,width:'100%'}} />
+    }
+    renderEmptyView = () => {
+        return <NoDataView text="暂无数据传输" image={NoDataView.NoDataImage} />
+    }
+
     /**
      * 列表
      */
@@ -365,6 +338,8 @@ export default class extends Component {
                 data={this.state.dataArray}
                 renderItem={this.renderItemView}
                 ItemSeparatorComponent={this._separator}
+                ListFooterComponent={this.renderFooterView}
+                ListEmptyComponent={this.renderEmptyView}
                 onEndReached={this._onEndReached}
                 onRefresh={this._onRefreshing}
                 refreshing={this.state.refreshing}

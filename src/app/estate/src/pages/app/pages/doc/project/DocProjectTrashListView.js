@@ -6,7 +6,7 @@ import SERVICE from 'app-api/service';
 import { BarItems, LoadingView, NoDataView, ShareManager } from "app-components";
 import React, { Component } from "react";
 import { FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
-import { Menu } from 'app-3rd/teaset';
+import { Menu, TabView} from 'app-3rd/teaset';
 import { SERVER_TYPE } from "common-module"
 import DocView from './../components/DocView';
 import DocActionSheet from './../components/DocActionSheet';
@@ -102,40 +102,34 @@ export default class extends Component {
     }
     renderHeaderRightButtons = () => {
        return (<BarItems navigation={this.props.navigation}>
-        <BarItems.RightBarItem navigation={this.props.navigation} textStyle={{fontSize:22,height:30,}} text="..." onPress={(navigation,event,barItem) => this._onMorePress(navigation,event,barItem)} />
+        <BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation,event,barItem) => this._onSearchPress(navigation,event,barItem)} />
+
+        <BarItems.RightBarItem navigation={this.props.navigation} text="选择" onPress={(navigation,event,barItem) => this._onMorePress(navigation,event,barItem)} />
         </BarItems>);
     }
    
     _keyExtractor = (item, index) => index;
 
     fetchData = (page) => {
-        if (this.state.fileId === '0' || this.state.fileId === 0 ) {
-            console.log(SERVICE.getDocContainer);
-            SERVICE.getDocContainer(storage.loadProject()).then((responseData) => {
-                this.state.containerId = responseData.id;
-                SERVICE.getDocRootDir(storage.loadProject()).then((responseData) => {
-                    this.state.fileData = responseData;
-                    this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight:this.renderHeaderRightButtons });
-                    this.fetchDataInner(page, this.state.containerId, this.state.fileData, this.state.orderType);
-                });
-            })
-            // .catch((error) => {
-            //     this.setState(
-            //         {
-            //             isLoading: false,
-            //             error: true,
-            //             errorInfo: error,
-            //         }
-            //     );
-            // });
-        } else {
-            this.fetchDataInner(page, this.state.containerId, this.state.fileData, this.state.orderType);
-        }
+        SERVICE.getDocContainer(storage.loadProject()).then((responseData) => {
+            this.state.containerId = responseData.id;
+            this.onSelectPage();
+            this.fetchDataInner(page, this.state.containerId);
+        })
+        .catch((error) => {
+            this.setState(
+                {
+                    isLoading: false,
+                    error: true,
+                    errorInfo: error,
+                }
+            );
+        });
 
     }
     //网络请求
-    fetchDataInner = (page, containerId, fileData, orderType = null) => {
-        SERVICE.getDocFileChildrens(containerId, fileData.fileId, orderType).then((responseData) => {
+    fetchDataInner = (page, containerId) => {
+        SERVICE.getTrashFiles(containerId, page).then((responseData) => {
            let dataList = responseData;
             this._handleData(dataList,page);
             }
@@ -309,7 +303,6 @@ export default class extends Component {
         let {selected = false} = item.value;
         if(this.state.isEdit) {
             onMore = null;
-            onPress = null;
         } else {
             onSelect = null;
         }
@@ -356,6 +349,13 @@ export default class extends Component {
         }, 1500);
     }
   
+    renderFooterView = () => {
+        return <View style={{height:50,width:'100%'}} />
+    }
+    renderEmptyView = () => {
+        return <NoDataView text='暂无数据' />
+    }
+
     /**
      * 列表
      */
@@ -365,6 +365,8 @@ export default class extends Component {
                 data={this.state.dataArray}
                 renderItem={this.renderItemView}
                 ItemSeparatorComponent={this._separator}
+                ListFooterComponent={this.renderFooterView}
+                ListEmptyComponent={this.renderEmptyView}
                 onEndReached={this._onEndReached}
                 onRefresh={this._onRefreshing}
                 refreshing={this.state.refreshing}
