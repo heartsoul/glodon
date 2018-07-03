@@ -108,7 +108,7 @@ class RelevantModelPage extends Component {
 
     componentWillMount =()=>{
         //启动server
-        ModelServer.startServer();
+        ModelServer.startServer(new DirManager().getRootPath(),8080);
     }
 
     componentWillUnmount = ()=>{

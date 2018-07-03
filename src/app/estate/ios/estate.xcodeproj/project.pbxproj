@@ -129,6 +129,7 @@
 		248E0D332060E0590053F5AA /* RNTMapManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 248E0D322060E0590053F5AA /* RNTMapManager.m */; };
 		2498F88E2084299600ABA826 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2498F86D2084297900ABA826 /* libRCTCameraRoll.a */; };
 		2498F89120842AC200ABA826 /* RNTImagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2498F89020842AC200ABA826 /* RNTImagesView.m */; };
+		24A71A0620EB483400EC87CF /* ModelServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 24A71A0520EB483400EC87CF /* ModelServer.m */; };
 		24BB2FEC20BCF91900545CFC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		24D9E00120637CB800CAB786 /* BaseRCTComponentsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E00020637CB800CAB786 /* BaseRCTComponentsManager.m */; };
 		24D9E00420637E9600CAB786 /* NSDictionary+BaseRCTComponents.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E00320637E9600CAB786 /* NSDictionary+BaseRCTComponents.m */; };
@@ -678,6 +679,9 @@
 		2498F8632084297900ABA826 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		2498F88F20842AC200ABA826 /* RNTImagesView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTImagesView.h; sourceTree = "<group>"; };
 		2498F89020842AC200ABA826 /* RNTImagesView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTImagesView.m; sourceTree = "<group>"; };
+		24A719C620EB3F1700EC87CF /* libGCDWebServers.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libGCDWebServers.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		24A71A0420EB483400EC87CF /* ModelServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelServer.h; sourceTree = "<group>"; };
+		24A71A0520EB483400EC87CF /* ModelServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelServer.m; sourceTree = "<group>"; };
 		24D9DFFF20637CB800CAB786 /* BaseRCTComponentsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseRCTComponentsManager.h; sourceTree = "<group>"; };
 		24D9E00020637CB800CAB786 /* BaseRCTComponentsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRCTComponentsManager.m; sourceTree = "<group>"; };
 		24D9E00220637E9600CAB786 /* NSDictionary+BaseRCTComponents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+BaseRCTComponents.h"; sourceTree = "<group>"; };
@@ -1389,6 +1393,8 @@
 				06958CD5208356F40015C54F /* GlodonPhotoPreviewCollectionViewCell.m */,
 				06958CD7208366880015C54F /* GLDPhotoPickerController.h */,
 				06958CD8208366880015C54F /* GLDPhotoPickerController.m */,
+				24A71A0420EB483400EC87CF /* ModelServer.h */,
+				24A71A0520EB483400EC87CF /* ModelServer.m */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1415,6 +1421,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				24A719C620EB3F1700EC87CF /* libGCDWebServers.a */,
 				247E2C3A20463AC200016F63 /* CKSecurityTool.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				B59B16D1F688C59F154384F6 /* libPods-estate.a */,
@@ -2089,6 +2096,7 @@
 				248E0D2D2060A54F0053F5AA /* RNTSwitchManager.m in Sources */,
 				247E2C052046373400016F63 /* DownSheetCell.m in Sources */,
 				247E2BDC2046373300016F63 /* UIImage+TintColor.m in Sources */,
+				24A71A0620EB483400EC87CF /* ModelServer.m in Sources */,
 				247E2C042046373400016F63 /* UIMenuTableView.m in Sources */,
 				247E2C012046373400016F63 /* RadioButton.m in Sources */,
 				247E2BFD2046373400016F63 /* XHDatePickerView.m in Sources */,
@@ -2201,12 +2209,7 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 5BWXTQUBDE;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/common/common_ios_1.5.1/normal",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/UMSocialUI",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
@@ -2214,19 +2217,15 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-largelist/ios/STTVTableView",
-					"$(SRCROOT)..\node_modules\nealmsrc/**",
+					"$(SRCROOT)..",
+					ode_modules,
+					"ealmsrc/**",
 				);
 				INFOPLIST_FILE = estate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/estate\"",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/SMS",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/WeChat",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/Sina",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/Email",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/QQ",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -2249,27 +2248,18 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5BWXTQUBDE;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/common/common_ios_1.5.1/normal",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/UMSocialUI",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-largelist/ios/STTVTableView",
-					"$(SRCROOT)..\node_modules\nealmsrc/**",
+					"$(SRCROOT)..",
+					ode_modules,
+					"ealmsrc/**",
 				);
 				INFOPLIST_FILE = estate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/estate\"",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/SMS",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/WeChat",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/Sina",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/Email",
-					"$(PROJECT_DIR)/estate/Framework/3rd/UMeng/share/share_ios_6.9.3/SocialLibraries/QQ",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",

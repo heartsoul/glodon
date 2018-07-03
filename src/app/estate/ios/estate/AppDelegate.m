@@ -13,7 +13,6 @@
 #import <React/RCTRootView.h>
 #import "SoulPhotoEditViewController.h"
 #import "RNUMConfigure.h"
-
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -48,6 +47,7 @@
   [UMConfigure setLogEnabled:YES];
 #endif
   [RNUMConfigure initWithAppkey:@"599d6d81c62dca07c5001db6" channel:@"App Store"];
+ 
   return YES;
 }
 //// 支持所有iOS系统
