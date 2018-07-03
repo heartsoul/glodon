@@ -57,7 +57,7 @@ class DocMarkupList extends Component {
                 onItemPress={() => {
                     //进入批注详情
                     let navigator = this.props.navigation;
-                    storage.pushNext(navigator, "DocMarkupDetailPage");
+                    storage.pushNext(navigator, "DocMarkupDetailPage", { markup: item });
                 }}
                 onThumbnailPress={() => {
                     //进入模型

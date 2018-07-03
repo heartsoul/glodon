@@ -13,7 +13,7 @@ class DocMarkupItemView extends Component {
     static propTypes = {
         markup: PropTypes.any,//批注信息
         onItemPress: PropTypes.func.isRequired,//点击整个item进详情
-        onThumbPress: PropTypes.func.isRequired,//点击缩略图进模型
+        onThumbnailPress: PropTypes.func.isRequired,//点击缩略图进模型
     }
 
     constructor(props) {

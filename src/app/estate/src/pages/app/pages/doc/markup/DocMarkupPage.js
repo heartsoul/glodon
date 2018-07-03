@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import {
     View,
-    Text,
     StatusBar,
-    TouchableOpacity,
     StyleSheet,
-    Platform,
 } from 'react-native';
-import { SegmentedView, Menu } from 'app-3rd/teaset';
+import { SegmentedView } from 'app-3rd/teaset';
 import { BarItems } from 'app-components';
 import MarkupSheetTitle from './MarkupSheetTitle'
 import DocMarkupList from './DocMarkupList'
@@ -18,7 +15,7 @@ class DocMarkupPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         headerTitle: <BarItems.TitleBarItem text='批注' />,
         headerLeft: <BarItems />,
-        headerRight: navigation.state.params && navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : <View />
+        headerRight: <View />
     })
 
     constructor(props) {
@@ -26,41 +23,6 @@ class DocMarkupPage extends Component {
         this.state = {
             activeIndex: 0
         };
-        this.props.navigation.setParams({ loadRightTitle: this._loadRightTitle, })
-    }
-
-    _loadRightTitle = () => {
-        return (
-            <BarItems navigation={this.props.navigation}>
-                <BarItems.RightBarItem navigation={this.props.navigation} textStyle={{ fontSize: 22, height: 30, }} text="..." onPress={(navigation, event, barItem) => this._onMorePress(navigation, event, barItem)} />
-            </BarItems>
-        )
-
-    }
-
-    _onMorePress = (navigation, event, barItem) => {
-        // 菜单
-        let fromView = barItem;
-        fromView.measureInWindow((x, y, width, height) => {
-            let showMenu = null;
-            let items = [
-                { title: <Text>更多...</Text>, onPress: () => { } },
-                {
-                    title: <View><TouchableOpacity onPress={() => { Menu.hide(showMenu); this._changeOrderType('time'); }}>
-                        <Text style={{ lineHeight: 30, color: this.state.orderType !== 'time' ? '#000000' : '#00baf3' }}>文件时间</Text>
-                    </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { Menu.hide(showMenu); this._changeOrderType('name'); }} style={{}}>
-                            <Text style={{ lineHeight: 30, color: this.state.orderType !== 'name' ? '#000000' : '#00baf3' }}>文件名称</Text>
-                        </TouchableOpacity>
-                    </View>
-                }
-            ];
-
-            showMenu = Menu.show({ x, y, width, height }, items, {
-                align: 'end', showArrow: true, shadow: Platform.OS === 'ios' ? true : false,
-                popoverStyle: [{ paddingLeft: 10, paddingRight: 10 }], directionInsets: 0, alignInsets: -5, paddingCorner: 10
-            });
-        });
     }
 
     _onSegmentedBarChange = (index) => {
@@ -116,12 +78,6 @@ class DocMarkupPage extends Component {
 }
 
 const styles = StyleSheet.create({
-    moreView: {
-        padding: 7,
-        fontSize: 16,
-        color: "#fff",
-        paddingRight: 20
-    },
 })
 
 export default DocMarkupPage;
