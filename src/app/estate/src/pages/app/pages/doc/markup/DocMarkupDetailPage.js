@@ -4,22 +4,15 @@ import {
     Text,
     Image,
     ScrollView,
-    FlatList,
-    TextInput,
     TouchableOpacity,
-    SafeAreaView,
     StyleSheet,
     Platform,
-    Dimensions,
 } from 'react-native';
 import { BarItems } from 'app-components';
 import { Menu } from 'app-3rd/teaset';
-import { Overlay, } from 'app-3rd/teaset';
-import { KeyboardAwareScrollView } from 'app-3rd/index';
-var { width, height } = Dimensions.get('window')
+import CommentInputView from './CommentInputView'
 
 class DocMarkupDetailPage extends Component {
-
     static navigationOptions = ({ navigation, screenProps }) => ({
         headerTitle: <BarItems.TitleBarItem text='批注' />,
         headerLeft: <BarItems />,
@@ -122,54 +115,9 @@ class DocMarkupDetailPage extends Component {
 
         )
     }
-    _onEndReached = () => {
-
-    }
-
-    _onRefresh = () => {
-
-    }
 
     _showCommentInputView = () => {
-        Overlay.show(
-            <Overlay.View side='bottom' modal={false}
-                style={styles.container}
-                overlayOpacity={0.7}
-                ref={v => this.overlayView = v}
-            >
-                <SafeAreaView style={{ backgroundColor: 'rgba(0,0,0,.5)', width: '100%' }}>
-                    <KeyboardAwareScrollView scrollEnabled={false}>
-                        <View style={styles.inputCard}>
-                            <View style={{ flexDirection: 'row', marginBottom: 10, width: '100%' }}>
-                                <View style={{ flex: 1, flexDirection: 'row', }}>
-                                    <TextInput
-                                        maxLength={255}
-                                        style={styles.commentInput}
-                                        underlineColorAndroid={"transparent"}
-                                        placeholder={'写评论'}
-                                        multiline={true}
-                                        autoFocus={true}
-                                        textAlign="left"
-                                    />
-                                    <Text style={[styles.textLight, { height: 40, position: 'absolute', borderTopColor: '#999', borderTopWidth: 1, backgroundColor: '#fff', bottom: 0, width: '100%' }]}>@</Text>
-                                </View>
-                                <View style={{ justifyContent: 'space-between', alignItems: 'flex-end', paddingBottom: 40, marginLeft: 10 }}>
-                                    <Image style={styles.pinImage} source={require('app-images/icon_setting_share.png')} />
-                                    <Text style={[styles.textLight]}>发送</Text>
-                                </View>
-                            </View>
-                        </View>
-                    </KeyboardAwareScrollView>
-                </SafeAreaView>
-
-            </Overlay.View>
-        )
-    }
-
-    _hideCommentInputView = () => {
-        if (this.overlayView) {
-            this.overlayView.close()
-        }
+        CommentInputView.show();
     }
 
     render() {
@@ -186,9 +134,9 @@ class DocMarkupDetailPage extends Component {
                         }
                     </View>
                 </ScrollView>
-                <View style={{ position: 'absolute', left: 0, bottom: 0, height: 60, width: width, elevation: 2.5, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'flex-end' }}>
+                <View style={styles.commentBar}>
                     <TouchableOpacity onPress={(event) => { event.preventDefault(), this._showCommentInputView() }}>
-                        <Text style={{ color: '#00baf3', fontSize: 14, paddingRight: 20 }}>评论</Text>
+                        <Text style={styles.commentBarText}>评论</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -279,30 +227,21 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         marginRight: 5
     },
-    container: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        alignContent: 'center',
+    commentBar: {
+        position: 'absolute',
+        left: 0,
+        bottom: 0,
+        height: 60,
+        width: '100%',
+        elevation: 2.5,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'flex-end'
     },
-
-    inputCard: {
-        width: width,
-        backgroundColor: "#fff",
-        padding: 20,
-    },
-
-    commentInput: {
-        paddingLeft: 2,
-        paddingRight: 2,
-        paddingTop: 2,
-        paddingBottom: 42,
-        textAlignVertical: 'top',
-        flex: 1,
-        backgroundColor: '#ffffff',
-        minHeight: 120,
-        borderColor: '#999',
-        borderWidth: 1,
+    commentBarText: {
+        color: '#00baf3',
+        fontSize: 14,
+        paddingRight: 20
     },
 })
 
