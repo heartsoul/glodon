@@ -109,9 +109,9 @@ class DocMarkupDetailPage extends Component {
         )
     }
 
-    _renderCommentItem = () => {
+    _renderCommentItem = (item, index) => {
         return (
-            <View>
+            <View key={`comment-key${index}`}>
                 <View style={styles.infoContainer}>
                     <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
                     <Text style={[styles.textMain, { flex: 1, marginLeft: 10 }]}>{this.state.markup.creatorName}</Text>
@@ -137,30 +137,31 @@ class DocMarkupDetailPage extends Component {
                 overlayOpacity={0.7}
                 ref={v => this.overlayView = v}
             >
-           
-                <SafeAreaView>
+                <SafeAreaView style={{ backgroundColor: 'rgba(0,0,0,.5)', width: '100%' }}>
                     <KeyboardAwareScrollView scrollEnabled={false}>
-                    <View  style={[styles.inputCard,{justifyContent:'flex-end',height:height}]}>
-                    <View style={{ flexDirection: 'row', marginBottom: 10,width:'100%' }}>
-                        <TextInput
-                            maxLength={255}
-                            style={styles.commentInput}
-                            underlineColorAndroid={"transparent"}
-                            placeholder={'写评论'}
-                            multiline={true}
-                            autoFocus={true}
-                            textAlign="left"
-                        />
-                        <View style={{ justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                            <Image style={styles.pinImage} source={require('app-images/icon_setting_share.png')} />
-                            <Text style={[styles.textLight]}>发送</Text>
+                        <View style={styles.inputCard}>
+                            <View style={{ flexDirection: 'row', marginBottom: 10, width: '100%' }}>
+                                <View style={{ flex: 1, flexDirection: 'row', }}>
+                                    <TextInput
+                                        maxLength={255}
+                                        style={styles.commentInput}
+                                        underlineColorAndroid={"transparent"}
+                                        placeholder={'写评论'}
+                                        multiline={true}
+                                        autoFocus={true}
+                                        textAlign="left"
+                                    />
+                                    <Text style={[styles.textLight, { height: 40, position: 'absolute', borderTopColor: '#999', borderTopWidth: 1, backgroundColor: '#fff', bottom: 0, width: '100%' }]}>@</Text>
+                                </View>
+                                <View style={{ justifyContent: 'space-between', alignItems: 'flex-end', paddingBottom: 40, marginLeft: 10 }}>
+                                    <Image style={styles.pinImage} source={require('app-images/icon_setting_share.png')} />
+                                    <Text style={[styles.textLight]}>发送</Text>
+                                </View>
+                            </View>
                         </View>
-                    </View>
-                    <Text style={styles.textLight}>@</Text>
-                    </View>
                     </KeyboardAwareScrollView>
                 </SafeAreaView>
-                
+
             </Overlay.View>
         )
     }
@@ -179,8 +180,8 @@ class DocMarkupDetailPage extends Component {
                     <View style={styles.containerView}>
                         {this._renderHeader()}
                         {
-                            this.state.comments.map((item) => {
-                                return this._renderCommentItem()
+                            this.state.comments.map((item, index) => {
+                                return this._renderCommentItem(item, index)
                             })
                         }
                     </View>
@@ -288,16 +289,14 @@ const styles = StyleSheet.create({
     inputCard: {
         width: width,
         backgroundColor: "#fff",
-        paddingLeft: 20,
-        paddingRight: 20,
+        padding: 20,
     },
 
     commentInput: {
         paddingLeft: 2,
         paddingRight: 2,
         paddingTop: 2,
-        paddingBottom: 2,
-        marginRight: 10,
+        paddingBottom: 42,
         textAlignVertical: 'top',
         flex: 1,
         backgroundColor: '#ffffff',
