@@ -287,6 +287,11 @@ export default class extends Component {
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
                                     <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => {event.preventDefault();this._toDocProject(event)}} title="文档管理" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => {event.preventDefault();
+                                        let navigator = this.props.navigation;
+                                        storage.pushNext(navigator, "DocProjectPage");    
+                                    }} title="批注" />
+
                                     <View style={styles.spliteItem} />
                                     <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => {event.preventDefault();this._loadQualityForm(event)}} title="质检清单" />
                                     <View style={styles.spliteItem} />
