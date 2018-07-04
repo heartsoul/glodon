@@ -289,7 +289,7 @@ export default class extends Component {
                                     <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => {event.preventDefault();this._toDocProject(event)}} title="文档管理" />
                                     <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => {event.preventDefault();
                                         let navigator = this.props.navigation;
-                                        storage.pushNext(navigator, "DocProjectPage");    
+                                        storage.pushNext(navigator, "DocMarkupPage");    
                                     }} title="批注" />
 
                                     <View style={styles.spliteItem} />
