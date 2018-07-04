@@ -15,7 +15,7 @@ import {
 import { BarItems } from 'app-components';
 import { Menu } from 'app-3rd/teaset';
 import { Overlay, } from 'app-3rd/teaset';
-
+import { KeyboardAwareScrollView } from 'app-3rd/index';
 var { width, height } = Dimensions.get('window')
 
 class DocMarkupDetailPage extends Component {
@@ -137,8 +137,11 @@ class DocMarkupDetailPage extends Component {
                 overlayOpacity={0.7}
                 ref={v => this.overlayView = v}
             >
-                <SafeAreaView style={styles.inputCard}>
-                    <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+           
+                <SafeAreaView>
+                    <KeyboardAwareScrollView scrollEnabled={false}>
+                    <View  style={[styles.inputCard,{justifyContent:'flex-end',height:height}]}>
+                    <View style={{ flexDirection: 'row', marginBottom: 10,width:'100%' }}>
                         <TextInput
                             maxLength={255}
                             style={styles.commentInput}
@@ -154,7 +157,10 @@ class DocMarkupDetailPage extends Component {
                         </View>
                     </View>
                     <Text style={styles.textLight}>@</Text>
+                    </View>
+                    </KeyboardAwareScrollView>
                 </SafeAreaView>
+                
             </Overlay.View>
         )
     }
@@ -282,7 +288,8 @@ const styles = StyleSheet.create({
     inputCard: {
         width: width,
         backgroundColor: "#fff",
-        padding: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
     },
 
     commentInput: {
