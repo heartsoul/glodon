@@ -50,7 +50,7 @@ export default class CircleProgressBar extends Component {
             }
             return (
                 <View style={styles.container}>
-                    <Text style={{fontSize:12,color:'#00b1f1',marginRight:5}} >下载中{num}%</Text>
+                    <Text style={{fontSize:12,color:'#00b1f1',marginRight:5}} >缓存中{num}%</Text>
                     <CircleProgressView progress={this.props.progress} totalNum={this.props.totalNum} raduis={17}>
                         <View style={{ alignItems: 'center',justifyContent:'center'}}>
                             <TouchableOpacity onPress={()=>this._downloading()}>
@@ -67,7 +67,7 @@ export default class CircleProgressBar extends Component {
     _getFinishView=()=>{
         return (
             <View style={styles.container}>
-                <Text style={{color:'#666666',fontSize:12}}>{this.props.finishText} 已下载</Text>
+                <Text style={{color:'#666666',fontSize:12}}>{this.props.finishText} 已缓存</Text>
             </View>
         );
     }

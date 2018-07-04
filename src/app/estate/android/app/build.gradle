@@ -138,8 +138,8 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
-//        applicationId "com.glodon.bim"
-        applicationId "com.umeng.soexample"
+       applicationId "com.glodon.bim"
+        // applicationId "com.umeng.soexample"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -220,10 +220,10 @@ android {
 }
 
 dependencies {
-    compile project(':realm')
-    compile project(':react-native-fetch-blob')
-    compile project(':react-native-zip-archive')
-    compile project(':react-native-fs')
+    // compile project(':realm')
+    // compile project(':react-native-fetch-blob')
+    // compile project(':react-native-zip-archive')
+    // compile project(':react-native-fs')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.facebook.react:react-native:0.54.4'
     // From node_modules

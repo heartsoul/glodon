@@ -58,16 +58,20 @@ function loginNew(username, pwd) {
 
     if(OfflineStateUtil.isOnLine()){
       API.authToken(username, pwd).then((response) => {
-          console.log('response.data:'+response.data1);
+          // console.log('response.data:'+response.data1);
           um.saveAccountInfo(username,pwd);
           loadAccount(dispatch,response,username, pwd,response.data.access_token);
       }).catch((e) => {
         dispatch(loginError(false));
       });
     }else{
+      // console.log(username+'  '+pwd)
+      // console.log(um.checkAccountInfo(username,pwd))
       //离线情况下的登录
       if(um.checkAccountInfo(username,pwd)){
-        loadAccountOffline(dispatch,username,pwd)
+        let user = um.getUserInfo(username);
+        storage.saveLoginToken('',user.accountInfo.gldAccountId);
+        loadAccountOffline(dispatch,username,user)
       }else{
         dispatch(loginError(false));
       }
@@ -77,9 +81,8 @@ function loginNew(username, pwd) {
 }
 
 //离线处理
-function loadAccountOffline(dispatch,username, pwd) {
-  
-    dispatch(loginSuccess(true, null, username))
+function loadAccountOffline(dispatch,username,user) {
+    dispatch(loginSuccess(true, user, username))
   
 }
 
@@ -114,6 +117,8 @@ function loadAccount(dispatch,response,username, pwd, token = 'cookie_token') {
       storage.saveLoginUserName(username);
     } 
     storage.saveUserInfo(data);
+    let um = new UserInfoManager();
+    um.saveUserInfo(username,data)
     let ret = storage.hasChoose();
 
     if (!ret) {

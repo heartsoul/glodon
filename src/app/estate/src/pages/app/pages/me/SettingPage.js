@@ -23,7 +23,7 @@ import API from "app-api";
 import { Toast } from 'antd-mobile'
 import * as CheckVersion from "./checkVerson";
 import { BimSwitch, ToCleanDialog, ActionButton, ShareManager } from 'app-components';
-
+import OfflineManager from "../../../offline/manager/OfflineManager";
 var { width, height } = Dimensions.get("window");
 
 class SettingPage extends Component {
@@ -180,13 +180,19 @@ class SettingPage extends Component {
 class CleanItemView extends React.Component {
     constructor() {
         super();
+        //获取所有模型文件大小
+        let mm = OfflineManager.getModelManager();
+        let size = mm.getDownloadedModelSize();
+        let text = size>0?size+'M':'';
         this.state = {
-            text: '232M'
+            text: text
         }
     }
     //清除缓存的回调方法
     _cleanCallBack = () => {
-        console.log('ret');
+        //清除数据
+        OfflineManager.clear();
+        //当前缓存大小置为空
         this.setState(() => {
             return {
                 text: ''

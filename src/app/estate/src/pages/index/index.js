@@ -16,7 +16,8 @@ export default class extends React.Component {
   }
   componentDidMount = () => {
     loadStorageData().then(() => {
-
+        console.log('-----------------------------')
+        console.log(JSON.stringify(storage))
       this.setState({
         hasLoad: true
       })

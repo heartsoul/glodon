@@ -94,35 +94,39 @@ function demoData(size) {
 }
  */
 export async function getQualityInspectionAll(projectId, qcState, page, size, qualityCheckpointId = 0, qualityCheckpointName = '') {
-    // return demoData(100);
-    let api = "/quality/" + projectId + "/qualityInspection/all";
-    let filter = '';
-    if (!(qualityCheckpointId === 0)) {
-        filter += '&qualityCheckpointId=' + qualityCheckpointId;
+    if(OfflineStateUtil.isOnLine()){
+        // return demoData(100);
+        let api = "/quality/" + projectId + "/qualityInspection/all";
+        let filter = '';
+        if (!(qualityCheckpointId === 0)) {
+            filter += '&qualityCheckpointId=' + qualityCheckpointId;
+        }
+        if (!(qualityCheckpointName === '')) {
+            filter += '&qualityCheckpointName=' + qualityCheckpointName;
+        }
+        return requestJSON(api + '?sort=updateTime,desc&page=' + page + '&size=' + size + "&qcState=" + qcState + filter, {
+            method: 'GET',
+        });
     }
-    if (!(qualityCheckpointName === '')) {
-        filter += '&qualityCheckpointName=' + qualityCheckpointName;
-    }
-    return requestJSON(api + '?sort=updateTime,desc&page=' + page + '&size=' + size + "&qcState=" + qcState + filter, {
-        method: 'GET',
-    });
 }
 /**
  * 获取质量列表  根据两个时间点截取
  */
 export async function getQualityInspectionAllByDate(projectId, qcState, page, size, startDate, endDate) {
-    // return demoData(100);
-    let api = "/quality/" + projectId + "/qualityInspection/all";
-    // let filter = '';
-    // if (!(qualityCheckpointId === 0)) {
-    //     filter += '&qualityCheckpointId=' + qualityCheckpointId;
-    // }
-    // if (!(qualityCheckpointName === '')) {
-    //     filter += '&qualityCheckpointName=' + qualityCheckpointName;
-    // }
-    return requestJSON(api + '?sort=updateTime,desc&page=' + page + '&size=' + size + "&qcState=" + qcState + '&startDate=' + startDate + "&endDate=" + endDate, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        // return demoData(100);
+        let api = "/quality/" + projectId + "/qualityInspection/all";
+        // let filter = '';
+        // if (!(qualityCheckpointId === 0)) {
+        //     filter += '&qualityCheckpointId=' + qualityCheckpointId;
+        // }
+        // if (!(qualityCheckpointName === '')) {
+        //     filter += '&qualityCheckpointName=' + qualityCheckpointName;
+        // }
+        return requestJSON(api + '?sort=updateTime,desc&page=' + page + '&size=' + size + "&qcState=" + qcState + '&startDate=' + startDate + "&endDate=" + endDate, {
+            method: 'GET',
+        });
+    }
 }
 
 /**
@@ -260,17 +264,19 @@ export async function getQualityInspectionDetail(projectId, fileId) {
 ]
  */
 export async function getQualityInspectionSummary(projectId, qualityCheckpointId = 0, qualityCheckpointName = '') {
-    let api = "/quality/" + projectId + "/qualityInspection/all/qcState/summary";
-    let filter = '';
-    if (!(qualityCheckpointId === 0)) {
-        filter += '&qualityCheckpointId=' + qualityCheckpointId;
+    if(OfflineStateUtil.isOnLine()){
+        let api = "/quality/" + projectId + "/qualityInspection/all/qcState/summary";
+        let filter = '';
+        if (!(qualityCheckpointId === 0)) {
+            filter += '&qualityCheckpointId=' + qualityCheckpointId;
+        }
+        if (!(qualityCheckpointName === '')) {
+            filter += '&qualityCheckpointName=' + qualityCheckpointName;
+        }
+        return requestJSON(api + '?' + filter, {
+            method: 'GET',
+        });
     }
-    if (!(qualityCheckpointName === '')) {
-        filter += '&qualityCheckpointName=' + qualityCheckpointName;
-    }
-    return requestJSON(api + '?' + filter, {
-        method: 'GET',
-    });
 }
 
 /**
@@ -295,10 +301,12 @@ export async function getQualityInspectionSummary(projectId, qualityCheckpointId
 ]
  */
 export async function getQualityInspectionAllDrawingPositions(projectId, qualityCheckpointId) {
-    let api = "/quality/" + projectId + "/qualityInspection/all/all/drawings/" + drawingGdocFileId + "/drawingPositions";
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = "/quality/" + projectId + "/qualityInspection/all/all/drawings/" + drawingGdocFileId + "/drawingPositions";
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }
 }
 
 
@@ -324,10 +332,12 @@ export async function getQualityInspectionAllDrawingPositions(projectId, quality
 ]
  */
 export async function getQualityInspectionElements(projectId, gdocFileId) {
-    let api = "/quality/" + projectId + "/qualityInspection/all/all/model/" + gdocFileId + "/elements";
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = "/quality/" + projectId + "/qualityInspection/all/all/model/" + gdocFileId + "/elements";
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }
 }
 
 /**
@@ -368,10 +378,12 @@ export async function getQualityFacilityAcceptanceElements(projectId, gdocFileId
  * @returns 
  */
 export async function getQualityCheckpointsProject(projectId, projectIdIn) {
-    let api = `/quality/${projectId}/quality/checkpoints/project/${projectIdIn}`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/quality/checkpoints/project/${projectIdIn}`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }
 }
 
 /**
@@ -1487,21 +1499,23 @@ function demoDataEquipment(size) {
 }
  */
 export async function equipmentList(projectId, qcState, page, size, sort) {
-    // return demoDataEquipment(100);
-    if (qcState == CONSTANT.QC_STATE_EDIT) {
-        return equipmentListCommitted(projectId, page, size, sort, false)
+    if(OfflineStateUtil.isOnLine()){
+        // return demoDataEquipment(100);
+        if (qcState == CONSTANT.QC_STATE_EDIT) {
+            return equipmentListCommitted(projectId, page, size, sort, false)
+        }
+        if (qcState == CONSTANT.QC_STATE_STANDARD) {
+            return equipmentListQualified(projectId, page, size, sort, true, true)
+        }
+        if (qcState == CONSTANT.QC_STATE_NOT_STANDARD) {
+            return equipmentListQualified(projectId, page, size, sort, true, false)
+        }
+        let filter = `?page=${page}&size=${size}&sort=${sort}`;
+        let api = `/quality/${projectId}/facilityAcceptance${filter}`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
     }
-    if (qcState == CONSTANT.QC_STATE_STANDARD) {
-        return equipmentListQualified(projectId, page, size, sort, true, true)
-    }
-    if (qcState == CONSTANT.QC_STATE_NOT_STANDARD) {
-        return equipmentListQualified(projectId, page, size, sort, true, false)
-    }
-    let filter = `?page=${page}&size=${size}&sort=${sort}`;
-    let api = `/quality/${projectId}/facilityAcceptance${filter}`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
 }
 
 /**
@@ -1567,10 +1581,12 @@ function equipmentListQualified(projectId, page, size, sort, committed, qualifie
 }
  */
 export async function equipmentListNum(projectId) {
-    let api = `/quality/${projectId}/facilityAcceptance/state/summary`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/facilityAcceptance/state/summary`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }
 }
 /**
  * 搜索质检单
@@ -1580,11 +1596,13 @@ export async function equipmentListNum(projectId) {
  * @param {*} size 
  */
 export async function searchQualityData(projectId, keywords, page, size) {
-    let api = `/quality/${projectId}/qualityInspection/fuzzyMatchResults`;
-    let filter = `?keywords=${keywords}&page=${page}&size=${size}`;
-    return requestJSON(api + filter, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/qualityInspection/fuzzyMatchResults`;
+        let filter = `?keywords=${keywords}&page=${page}&size=${size}`;
+        return requestJSON(api + filter, {
+            method: 'GET',
+        });
+    }
 }
 
 /**
@@ -1595,9 +1613,11 @@ export async function searchQualityData(projectId, keywords, page, size) {
  * @param {*} size 
  */
 export async function searchEquipmentData(projectId, keywords, page, size) {
-    let api = `/quality/${projectId}/facilityAcceptance/fuzzyMatchResults`;
-    let filter = `?keywords=${keywords}&page=${page}&size=${size}`;
-    return requestJSON(api + filter, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/quality/${projectId}/facilityAcceptance/fuzzyMatchResults`;
+        let filter = `?keywords=${keywords}&page=${page}&size=${size}`;
+        return requestJSON(api + filter, {
+            method: 'GET',
+        });
+    }
 }

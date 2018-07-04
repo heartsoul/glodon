@@ -11,7 +11,6 @@ export default class BasicInfoHandler extends BaseHandler{
         super();
         name = baseInfoname;
         realm = baseInfoRealm;
-        console.log('name='+name)
     }
 
     

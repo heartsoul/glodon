@@ -59,9 +59,11 @@ export async function authToken(username, password) {
 }
 // 用户信息
 export async function accountInfo() {
-    return requestJSON(api_uaa_user, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        return requestJSON(api_uaa_user, {
+            method: 'GET',
+        });
+    }
 }
 
 // 项目信息
@@ -84,19 +86,21 @@ export async function getProjects(page, size, tenantId = '0') {
 
 // 设置当前租户
 export async function setCurrentTenant(tenantId) {
-    if(SERVER_TYPE == 'TEST') {
-        return new Promise(function (resolve, reject) {
-            if (tenantId) {
-                resolve({});
-            } else {
-                reject("Invalid param");
-            }
-        });
-    } else {
-        return requestJSON(api_user_currentTenant, {
-            method: 'PUT',
-            body: JSON.stringify({ 'tenantId': parseInt(tenantId) },true),
-        });
+    if(OfflineStateUtil.isOnLine()){
+        if(SERVER_TYPE == 'TEST') {
+            return new Promise(function (resolve, reject) {
+                if (tenantId) {
+                    resolve({});
+                } else {
+                    reject("Invalid param");
+                }
+            });
+        } else {
+            return requestJSON(api_user_currentTenant, {
+                method: 'PUT',
+                body: JSON.stringify({ 'tenantId': parseInt(tenantId) },true),
+            });
+        }
     }
     
 }
@@ -121,10 +125,12 @@ export async function uaaLoginOut() {
 // 	"content": "xxx"
 // }
 export async function feedbacks(jsonData) {
-    return requestJSON(api_backend_feedbacks, {
-        method: 'POST',
-        body: JSON.stringify(jsonData),
-    });
+    if(OfflineStateUtil.isOnLine()){
+        return requestJSON(api_backend_feedbacks, {
+            method: 'POST',
+            body: JSON.stringify(jsonData),
+        });
+    }
 }
 
 function fileReaderReady(reader) {
@@ -146,21 +152,23 @@ function fileReaderReady(reader) {
   }
 // 获取图片验证码
 export async function forgotCaptchaUrl(retFunc) {
-    let signupKey = null
-   return fetch(BASE_URL + api_forgot_captcha,{
-        method:'GET'
-    }).then((response)=>{
-        signupKey = response.headers.get('signup-key');
-        return response.blob();
-    }).then((blobData)=>{
-       return readBlobAsUrlData(blobData);
-    }).then((uri)=>{
-    
-        //  console.log("\n\n\ndata:"+uri+"\n\n");
-         // let data = response.body();
-         
-         return {uri: uri,signupKey:signupKey}
-     });
+    if(OfflineStateUtil.isOnLine()){
+        let signupKey = null
+        return fetch(BASE_URL + api_forgot_captcha,{
+            method:'GET'
+        }).then((response)=>{
+            signupKey = response.headers.get('signup-key');
+            return response.blob();
+        }).then((blobData)=>{
+        return readBlobAsUrlData(blobData);
+        }).then((uri)=>{
+        
+            //  console.log("\n\n\ndata:"+uri+"\n\n");
+            // let data = response.body();
+            
+            return {uri: uri,signupKey:signupKey}
+        });
+    }
 }
 
 
@@ -174,11 +182,13 @@ export async function forgotCaptchaUrl(retFunc) {
 //  GET /uaa/user/password/forgot/check?identity=18610799451 HTTP/1.1
 
 export async function forgotCheck(identity) {
-    return requestJSON(api_forgot_check+'?identity='+identity,{
-        method:'GET'
-    }).then((response)=>{
-        return response.data
-    });
+    if(OfflineStateUtil.isOnLine()){
+        return requestJSON(api_forgot_check+'?identity='+identity,{
+            method:'GET'
+        }).then((response)=>{
+            return response.data
+        });
+    }
 }
 
 
@@ -191,11 +201,13 @@ export async function forgotCheck(identity) {
 // }
 // GET /uaa/user/password/forgot/code?mobile=18610799451&captcha=YZ9Z&signupKey=799adf6c9a2b4df08776d44549ca6f13
 export async function forgotCode(mobile,captcha,signupKey) {
-    return requestJSON(api_forgot_code+`?mobile=${mobile}&captcha=${captcha}&signupKey=${signupKey}`,{
-        method:'GET'
-    }).then((response)=>{
-        return response.data
-    });
+    if(OfflineStateUtil.isOnLine()){
+        return requestJSON(api_forgot_code+`?mobile=${mobile}&captcha=${captcha}&signupKey=${signupKey}`,{
+            method:'GET'
+        }).then((response)=>{
+            return response.data
+        });
+    }
 }
 
 // 校验
@@ -207,20 +219,24 @@ export async function forgotCode(mobile,captcha,signupKey) {
 // }
 // /uaa/user/password/forgot/code/verify?verifyCode=1234&mobile=15822320523
 export async function forgotCodeVerify(mobile,verifyCode) {
-    return requestJSON(api_forgot_code_verify+`?mobile=${mobile}&verifyCode=${verifyCode}`,{
-        method:'GET'
-    }).then((response)=>{
-        return response.data
-    });
+    if(OfflineStateUtil.isOnLine()){
+        return requestJSON(api_forgot_code_verify+`?mobile=${mobile}&verifyCode=${verifyCode}`,{
+            method:'GET'
+        }).then((response)=>{
+            return response.data
+        });
+    }
 }
 
 // 重置密码
 // uaa/user/password/forgot/reset？mobile code pwd
 
 export async function forgotReset(mobile,verifyCode,pwd) {
-    return requestJSON(api_forgot_reset+`?mobile=${mobile}&code=${verifyCode}&pwd=${pwd}`,{
-        method:'POST'
-    }).then((response)=>{
-        return response.data;
-    });
+    if(OfflineStateUtil.isOnLine()){
+        return requestJSON(api_forgot_reset+`?mobile=${mobile}&code=${verifyCode}&pwd=${pwd}`,{
+            method:'POST'
+        }).then((response)=>{
+            return response.data;
+        });
+    }
 }

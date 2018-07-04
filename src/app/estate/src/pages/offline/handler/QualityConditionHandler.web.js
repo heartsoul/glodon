@@ -27,7 +27,6 @@ getTableName = ()=>{
     constructor(){
         super();
         name = 'qualitycondition'+this.getTableName();
-        console.log('name='+name)
         const basicSchema = {
             name:name,
             primaryKey:'key',

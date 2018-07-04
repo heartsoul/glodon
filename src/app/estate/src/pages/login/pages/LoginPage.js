@@ -6,6 +6,7 @@ import React from "react";
 import ReactNative, { Animated, Dimensions, Image, Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View, Keyboard } from "react-native";
 import { connect } from 'react-redux'; // 引入connect函数
 import * as loginAction from '../actions/loginAction'; // 导入action方法 
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil';
 
 class LoginPage extends React.Component {
 
@@ -56,17 +57,30 @@ class LoginPage extends React.Component {
   componentDidMount = () => {
   }
   shouldComponentUpdate(nextProps, nextState) {
+    console.log('------------------')
+    console.log(nextProps)
     if (nextProps.status === '重试' && nextProps.retryTimes > 0) {
       this.props.login(this.state.username, this.state.password);
       return false;
     }
-    // 登录完成,切成功登录
-    if (nextProps.status === '登录成功' && nextProps.isSuccess && storage.isLogin()) {
-      let navigator = this.props.navigation;
-      Toast.hide();
-      storage.gotoMain(navigator);
-      return false
+    if(OfflineStateUtil.isOnLine()){
+      // 登录完成,切成功登录
+      if (nextProps.status == '登录成功' && nextProps.isSuccess && storage.isLogin()) {
+        let navigator = this.props.navigation;
+        Toast.hide();
+        storage.gotoMain(navigator);
+        return false
+      } 
+    }else{
+      // 登录完成,切成功登录
+      if (nextProps.status == '登录成功' && nextProps.isSuccess ) {
+        let navigator = this.props.navigation;
+        Toast.hide();
+        storage.gotoMain(navigator);
+        return false
+      } 
     }
+    
     Toast.hide();
     return true
   }

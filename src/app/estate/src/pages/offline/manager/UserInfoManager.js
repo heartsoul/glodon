@@ -12,6 +12,48 @@ export default class UserInfoManager {
         userHandler = new UserInfoHandler();
     }
  
+
+    //清除本表
+    clear=()=>{
+        
+    }
+
+
+//     { username: '13716955121',
+// I/ReactNativeJS(18588):   gldAccountId: '6260730431164916541',
+// I/ReactNativeJS(18588):   token: null,
+// I/ReactNativeJS(18588):   otherTokens: null,
+// I/ReactNativeJS(18588):   authorities: [ 'ROLE_USER' ],
+// I/ReactNativeJS(18588):   accountInfo:
+// I/ReactNativeJS(18588):    { name: 'chengr',
+// I/ReactNativeJS(18588):      phone: '13716955121',
+// I/ReactNativeJS(18588):      email: null,
+// I/ReactNativeJS(18588):      qq: null,
+// I/ReactNativeJS(18588):      sex: 'MALE',
+// I/ReactNativeJS(18588):      gldAccountId: '6260730431164916541',
+// I/ReactNativeJS(18588):      userTenants:
+// I/ReactNativeJS(18588):       [ { id: 234, admin: true, tenantId: '10000', tenantName: 'default' },
+// I/ReactNativeJS(18588):         { id: 5200403,
+// I/ReactNativeJS(18588):           admin: true,
+// I/ReactNativeJS(18588):           tenantId: '5200057',
+// I/ReactNativeJS(18588):           tenantName: '自动化测试—chengr' },
+// I/ReactNativeJS(18588):         { id: 5200404,
+// I/ReactNativeJS(18588):           admin: true,
+// I/ReactNativeJS(18588):           tenantId: '5200058',
+// I/ReactNativeJS(18588):           tenantName: 'chengr-自动化测试' } ],
+// I/ReactNativeJS(18588):      otherTokens: null },
+// I/ReactNativeJS(18588):   bindTenantId: null }
+    //保存用户信息
+    saveUserInfo(key,value){
+        userHandler.saveUserInfo(key+'_user',value);
+    }
+
+    //获取用户信息
+    getUserInfo(key){
+        let info = userHandler.getUserInfo(key+'_user');
+        return info;
+    }
+
     //保存账户信息
     saveAccountInfo(key,value){
         userHandler.saveAccountInfo(key,value);
@@ -20,6 +62,11 @@ export default class UserInfoManager {
     //验证账户信息
     checkAccountInfo(key,value){
         return userHandler.checkAccountInfo(key,value);
+    }
+
+    //获取当前账户信息   所有用户共用此
+    getCurrentAccountInfo(){
+        return userHandler.getCurrentAccountInfo();
     }
 
      //从数据库获取

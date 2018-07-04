@@ -171,7 +171,7 @@ class AllView extends Component{
     return (
       <View style={{backgroundColor:'#f9f9f9'}} >
 
-        <FlatList 
+        <FlatList style={{marginBottom:100}}
           data={this.state.dataList}
           renderItem={this._renderItem}
           ItemSeparatorComponent={this._separtor}
@@ -234,7 +234,7 @@ class LoadedView extends Component{
   render(){
     return (
       <View style={{backgroundColor:'#f9f9f9'}} >
-        <FlatList 
+        <FlatList style={{marginBottom:100}}
           data={this.state.dataList}
           renderItem={this._renderItem}
           ItemSeparatorComponent={this._separtor}
@@ -383,7 +383,7 @@ class LoadingView extends Component{
   render(){
     return (
       <View style={{backgroundColor:'#f9f9f9',flex:1,}} >
-          <FlatList 
+          <FlatList style={{marginBottom:100}}
             data={this.state.dataList}
             renderItem={this._renderItem}
             keyExtractor={(item, index) => index+''}

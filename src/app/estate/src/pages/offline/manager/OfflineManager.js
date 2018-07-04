@@ -6,6 +6,8 @@ import QualityManager from './QualityManager';
 import EquipmentManager from './EquipmentManager';
 import DownloadingManager from './DownloadingManager';
 import AsyncManager from './AsyncManager';
+import ModelManager from './ModelManager';
+import DirManager from './DirManager';
 
 const {Realm} = require('app-3rd');
 
@@ -18,6 +20,7 @@ let qualityManager = null;
 let equipmentManager = null;
 let downloadingManager = null;
 let asyncManager = null;
+let modelManager = null;
 
 // let equipmentName=null;
 export default class OfflineManager{
@@ -45,6 +48,7 @@ export default class OfflineManager{
         let equipmentName = 'equipment'+tableName;//材设相关
         let downloadingName = 'downloading'+tableName;//下载中
         let asyncListName = 'asyncList'+tableName;//离线进程跟踪列表
+        let modelDownloadingName = 'modelDownloading'+tableName;//离线进程跟踪列表
 
         //基础数据包
         const basicSchema = {
@@ -122,8 +126,25 @@ export default class OfflineManager{
                 updateTime:'string',//更新时间
             }
         }
-        realm = new Realm({schema:[basicSchema,equipmentConditionSchema,qualityconditionSchema,qualitySchema,equipmentSchema,downloadingSchema,asyncSchema]});
-
+        //模型下载的进度列表
+        const modelDownloadingSchema = {
+            name:modelDownloadingName,
+            primaryKey:'key',
+            properties:{
+                key:'string',//模型fileid+versionId
+                value:'string',//离线包的存储路径
+                projectVersionId:'string',//模型版本
+                fileId:'string',//模型文件的id
+                progress:'string',//当前的下载进度
+                total:'string',//总长度
+                done:'string',//是否完成了  false正在下载  true下载完成
+                size:'string',//大小  ‘M'
+                updateTime:'string',//下载时间
+                item:'string',//模型数据
+            }
+        }
+        realm = new Realm({schema:[basicSchema,equipmentConditionSchema,qualityconditionSchema,qualitySchema,equipmentSchema,downloadingSchema,asyncSchema,modelDownloadingSchema]});
+        
         basicInfoManager = new BasicInfoManager(basicInfoName,realm);
         equipmentConditionManager = new EquipmentConditionManager(equipmentConditionName,realm);
         qualityConditionManager = new QualityConditionManager(qualityConditionName,realm);
@@ -131,6 +152,7 @@ export default class OfflineManager{
         equipmentManager = new EquipmentManager(equipmentName,realm);
         downloadingManager = new DownloadingManager(downloadingName,realm);
         asyncManager = new AsyncManager(asyncListName,realm);
+        modelManager = new ModelManager(modelDownloadingName,realm);
     }
 
     static getBasicInfoManager(){
@@ -161,10 +183,29 @@ export default class OfflineManager{
     static getAsyncManager(){
         return asyncManager;
     }
+
+    static getModelManager(){
+        return modelManager;
+    }
     static close(){
         if(realm!=null){
             realm.close();
         }
         
+    }
+
+    //清除所有缓存
+    static clear(){
+        if(basicInfoManager){  basicInfoManager.clear();  }
+        if(equipmentConditionManager){  equipmentConditionManager.clear();  }
+        if(qualityConditionManager){  qualityConditionManager.clear();  }
+        if(qualityManager){  qualityManager.clear();  }
+        if(equipmentManager){  equipmentManager.clear();  }
+        if(downloadingManager){  downloadingManager.clear();  }
+        if(asyncManager){  asyncManager.clear();  }
+        if(modelManager){  modelManager.clear();  }
+
+        let dm = new DirManager();
+        dm.clear();
     }
 }

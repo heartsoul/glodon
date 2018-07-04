@@ -385,7 +385,7 @@ export default class extends Component {
           </View>
           
           
-           <WideButton text="下载" onClick={()=>{this._download();}} style={{ marginTop: 32, width: 297,height:40, alignSelf: "center" }} />
+           <WideButton text="缓存" onClick={()=>{this._download();}} style={{ marginTop: 32, width: 297,height:40, alignSelf: "center" }} />
            
            <DatePicker
                     mode="date"

@@ -22,7 +22,8 @@ import { BimFileEntry, AuthorityManager } from 'app-entry';//图纸模型选择�
 import {ActionModal} from 'app-components';
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 import OfflineManager from '../../../offline/manager/OfflineManager'
-import API from 'app-api';
+import DirManager from '../../../offline/manager/DirManager'
+import * as API from "app-api";
 // import { YellowBox } from 'react-native';//忽略黄色警告
 
 export class MainTabTitle extends Component {
@@ -117,7 +118,6 @@ export default class extends Component {
         window && window.addEventListener && window.removeEventListener('resize', this.onWindowResize)
       }
     componentDidMount() {
-
         if(Platform.OS === 'web') {
             return;
         }
@@ -129,16 +129,19 @@ export default class extends Component {
             //在线情况  刷一遍最新版本信息
             this._getlatestVersion(storage.loadProject())
             //自动离线数据同步到服务器
-            // let am = OfflineManager.getAsyncManager();
-            // am.syncList();
+            let am = OfflineManager.getAsyncManager();
+            am.syncList();
         }
-        
+        //创建缓存目录
+        let dm = new DirManager();
+        dm.makeDirs();
+
         //请求数据
         // this.fetchData();
         // console.log("----------------------------componentDidMount")
         CheckVersionManager.checkVersion("auto")
         
-
+        
     }
     fetchData = () => {
         this.render()
@@ -208,8 +211,14 @@ export default class extends Component {
             storage.projectIdVersionId = latestVersion;
             storage.setLatestVersionId(projectId,latestVersion);
 
-            // let bm = OfflineManager.getBasicInfoManager();
-            // bm.downloadBasicInfo((p,t)=>{});
+            console.log('--------------------------------------')
+            console.log(responseData)
+            let bm = OfflineManager.getBasicInfoManager();
+            bm.downloadBasicInfo((p,t)=>{});
+
+            //启动下载模型
+            // let mm = OfflineManager.getModelManager();
+            // mm && mm.updateDownloadQueue();
 
 
         }).catch((error) => {
@@ -239,9 +248,9 @@ export default class extends Component {
                         <Text style={{color:'#666666',fontSize:12,marginLeft:6}} >当前网络不畅，已进入</Text>
                     </TouchableHighlight>
                     <TouchableHighlight style={{flex:1}} onPress={()=>{
-                        ActionModal.alertConfirm('当前操作环境为离',null,{},{text:'网络模式',onPress:()=>{
+                        ActionModal.alertConfirm('当前操作环境为离线模式',null,{},{text:'网络模式',onPress:()=>{
                             OfflineStateUtil.toOnLine();
-                            this.forceUpdate();
+                            // this.forceUpdate();
                         }})
                     }}>
                         <Text style={{color:'#00baf3',fontSize:12}} >离线模式</Text>

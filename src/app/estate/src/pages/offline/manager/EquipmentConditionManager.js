@@ -12,6 +12,11 @@ export default class EquipmentConditionManager {
         handler = new EquipmentConditionHandler(name,realm);
     }
  
+
+    //清除本表
+    clear=()=>{
+        handler.deleteAll();
+    }
     //获取所有下载记录
     getAllRecords=()=>{
         let infos = handler.queryAll();

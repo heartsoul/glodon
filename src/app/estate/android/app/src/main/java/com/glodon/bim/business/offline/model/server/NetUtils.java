@@ -57,7 +57,7 @@ public class NetUtils {
 //        return null;
 
         try {
-            return InetAddress.getByName("10.11.241.143");//手机ip
+            return InetAddress.getByName("10.11.245.84");//手机ip
 //            return InetAddress.getByName("10.1.92.10");
 //            return InetAddress.getByName("127.0.0.1");
         } catch (UnknownHostException e) {

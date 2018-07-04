@@ -21,7 +21,7 @@ let overlayView = (
             <View style={{width:300,height:340, backgroundColor:'#ffffff',borderRadius:5,alignItems: 'center'}}>
                 <Image source={require("app-images/icon_toOffline_hint.png")} style={{width:242,height:91,marginTop:30}} />
                 <Text style={{ color: '#000000', fontSize: 18, marginTop: 13,marginLeft:23,marginRight:23 }} >当前没有网络信号，建议您进入离线模式！</Text>
-                <Text style={{ color: '#000000', fontSize: 13, marginTop: 20,marginLeft:23,marginRight:23 }} >离线模式下您可以进行基本业务操作。需要您预先在离线BIM里下载模型、图纸、订单等相关信息，网络恢复后，数据将同步更新。</Text>
+                <Text style={{ color: '#000000', fontSize: 13, marginTop: 20,marginLeft:23,marginRight:23 }} >离线模式下您可以进行基本业务操作。需要您预先在离线BIM里缓存模型、图纸、订单等相关信息，网络恢复后，数据将同步更新。</Text>
                 <WideButton text="离线模式" onClick={()=>{
                     // console.log('----click to offline----');
                     this.overlayView && this.overlayView.close(); 

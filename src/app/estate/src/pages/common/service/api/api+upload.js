@@ -2,6 +2,7 @@
 import { requestJSON, BASE_UPLOAD_URL } from "common-module"
 import * as AppConfig from "common-module";
 import {uploadFileBlob, operationCode} from './api+uploadBlob'
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
 var count = 0;//请求成功的数量
 var len = 0;//上传文件的数量
 /**

@@ -15,7 +15,7 @@ import WideButton from "../../../app/components/WideButton";
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
 
 var { width, height } = Dimensions.get("window");
-var name = '离线管理支持您在没有网络状态下完成查阅单据、浏览模型、图纸，编辑业务单据等基本业务操作。为了便于您更好的离线体验，请选择下列必备的数据预先下载至您的手机上。' ;
+var name = '离线管理支持您在没有网络状态下完成查阅单据、浏览模型、图纸，编辑业务单据等基本业务操作。为了便于您更好的离线体验，请选择下列必备的数据预先缓存至您的手机上。' ;
 //离线管理
 export default class extends Component {
   
@@ -46,8 +46,25 @@ export default class extends Component {
     OfflineStateUtil.toOffLine();
     storage.gotoMainPage(this.props.navigation);
   }
- 
 
+  //进入在线模式
+  _gotoOnlineMode=()=>{
+    OfflineStateUtil.toOnLine();
+    // storage.gotoMainPage(this.props.navigation);
+  }
+ 
+  mode = ()=>{
+    let isOnline = OfflineStateUtil.isOnLine();
+    if(isOnline){
+      return (
+        <WideButton text="进入离线模式" onClick={()=>{this._gotoOfflineMode();}} style={{ marginTop: 50, width: 297,height:40, alignSelf: "center" }} />
+      );
+    }else{
+      return (
+        <WideButton text="进入在线模式" onClick={()=>{this._gotoOnlineMode();}} style={{ marginTop: 50, width: 297,height:40, alignSelf: "center" }} />
+      );
+    }
+  }
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -58,12 +75,14 @@ export default class extends Component {
             <Text style={styles.mineName}>{name}</Text>
           </View>
           <View style={{backgroundColor:'#F9F9F9',height:10,flex:1}} />
-          <MineItemView icon = {require('app-images/icon_offline_manage_download.png')} title='离线数据下载' onPress={()=>this._gotoDownloadPage()}></MineItemView>
+          <MineItemView icon = {require('app-images/icon_offline_manage_download.png')} title='离线数据缓存' onPress={()=>this._gotoDownloadPage()}></MineItemView>
           <View style={styles.mineItemLine}></View>
           <MineItemView icon = {require('app-images/icon_offline_manage_trace.png')} title='离线进程跟踪' onPress={()=>this._gotoOfflineManage()}></MineItemView>
           <View style={styles.mineItemLine}></View>
           
-           <WideButton text="进入离线模式" onClick={()=>{this._gotoOfflineMode();}} style={{ marginTop: 50, width: 297,height:40, alignSelf: "center" }} />
+           {
+             this.mode()
+           }
           
         </ScrollView>
       </SafeAreaView>

@@ -266,6 +266,7 @@ function _getInspectionCompanies() {
 function _getSupporters() {
     return API.getCompaniesList(storage.loadProject(), 'SGDW')
         .then(data => {
+            console.log(data)
             let supporters = [];
             if (data && data.data) {
                 supporters = data.data;

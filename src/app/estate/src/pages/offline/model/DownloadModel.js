@@ -4,96 +4,135 @@ import { Platform,} from 'react-native';
   import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive';
   import {Buffer} from 'buffer';
   import DirManager from '../manager/DirManager'
+<<<<<<< Updated upstream
   import API from 'app-api';
-
+=======
+  import * as API from 'app-api';
   
-  let dm = new DirManager();
+
+  import OfflineManager from '../manager/OfflineManager';
+  import ThreadModule from '../model/ThreadModule';
+>>>>>>> Stashed changes
+
+  import {DeviceEventEmitter} from 'app-3rd/index';
+  
   export default class DownloadModel  {
 
-    
-
-    //创建离线数据包
-     getToken = (fileId)=>{
-
-        dm.makeDirs();
-        this.createOffline(fileId);
+    //下载多个文件
+    downloadMultiItems=(list)=>{
+        if(list && list.length>0){
+            for(let item of list){
+                this.downloadSingleItem(item);
+            }
+        }
     }
 
-    //生成离线包
-     createOffline=(token='',fileId)=>{
-        API.createModelOfflineZip(fileId)
-        .then((responseJson) => {
-            // {
-            //     "code": "string",
-            //     "data": {
-            //       "createTime": "string",
-            //       "databagVersion": "string",
-            //       "fileId": 0,
-            //       "reason": "string",
-            //       "status": "string"
-            //     },
-            //     "message": "string"
-            //   }
-            console.log('createOffline')
-            console.log(responseJson)
-            
-            //查看离线包的生成状态
-            API.getModelOfflineZipStatus(fileId)
-            .then((responseJson)=>{
-                // {
-                //     "code": "string",
-                //     "data": {
-                //       "createTime": "string",
-                //       "databagVersion": "string",
-                //       "fileId": 0,
-                //       "reason": "string",
-                //       "status": "string"
-                //     },
-                //     "message": "string"
-                //   }
-                console.log('createOffline')
-                console.log(responseJson)
-                
-            })
-            .catch((error)=>{
-                console.error(error);
-            })
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    //下载模型目录中的单个模型文件
+    downloadSingleItem=(item)=>{
         
+        if(!item){
+            return;
+        }
+        let fileId = item.fileId;
+        let parentId = item.parentId;
+        // this.addToDownloadQueue(fileId,parentId,item);
+        this.getToken(fileId,parentId,item)
     }
 
-    //获取离线包地址
-     getAddress = (fileId,databagVersion,token='')=>{
-        APi.getModelOfflineZipAddress(fileId,databagVersion)
+    //添加到下载队列
+    addToDownloadQueue=(fileId,parentId,item)=>{
+        let projectId = storage.loadProject();
+        let projectVersionId = storage.getLatestVersionId(projectId);
+        let key = fileId+"_"+projectVersionId
+        let modelManager = OfflineManager.getModelManager();
+        let updateTime = new Date().getTime()+'';
+        let value = `path`
+        let progress = 0;
+        let total = 100;
+        let done = progress==total;
+        let size = 10;//'M'
+        
+        modelManager.addToDownloadQueue(key,value,projectVersionId+'',fileId+'',parentId+'',progress+'',total+'',done+'',size+'',updateTime+'',JSON.stringify(item))
+    }
+
+    //根据模型的id 下载模型
+     getToken = (fileId,parentId,item=null)=>{
+         console.log('模型信息=-==============');
+         console.log(item);
+         let projectId = storage.loadProject();
+         let projectVersionId = storage.getLatestVersionId(projectId);
+         //判断是否已经下载过   已经下载了 就不再下载了
+         let mm = OfflineManager.getModelManager();
+         if(mm.isDownloaded(fileId+'_'+projectVersionId)){
+             return ;
+         }
+        let dm = new DirManager();
+        dm.makeDirs();
+        //查看离线包的生成状态
+        API.getModelOfflineZipStatus(fileId,item.workspaceId)
         .then((responseJson)=>{
-            // { code: 'success',
-            //     message: null,
-            //     data: 'http://bf-prod-databag.oss-cn-beijing.aliyuncs.com/1e5345adce95ee35646148ffaa6194e1/1e5345adce95ee35646148ffaa6194e1.zip?Expires=1526971919&OSSAccessKeyId=5nGlEwOIzrwCVaDZ&Signature=z4DFk0dJDBRXL9sElfgAHQxBYWQ%3D' }
-            // console.log(responseJson);
-            let name = this.getName(responseJson.data)
-            //保存模型id与离线包的名字对应关系
-            storage.setModelFileIdOfflineName(fileId,name);
-            //下载离线包
-            this.downloadFile(responseJson.data,name);
-        }).catch((error)=>{
+            //生成中
+                        // : { data:
+                        //     I/ReactNativeJS( 1123):    { code: '0',
+                        //     I/ReactNativeJS( 1123):      message: 'success',
+                        //     I/ReactNativeJS( 1123):      data:
+                        //     I/ReactNativeJS( 1123):       { fileId: 1375483632698784,
+                        //     I/ReactNativeJS( 1123):         databagVersion: '3.5',
+                        //     I/ReactNativeJS( 1123):         status: 'processing',
+                        //     I/ReactNativeJS( 1123):         reason: null,
+                        //     I/ReactNativeJS( 1123):         createTime: '2018-06-27 16:25:53' } } }
+
+                        //成功
+                        // { data:
+                        //     I/ReactNativeJS( 1123):    { code: '0',
+                        //     I/ReactNativeJS( 1123):      message: 'success',
+                        //     I/ReactNativeJS( 1123):      data:
+                        //     I/ReactNativeJS( 1123):       { fileId: 1375483752850848,
+                        //     I/ReactNativeJS( 1123):         databagVersion: '3.5',
+                        //     I/ReactNativeJS( 1123):         status: 'success',
+                        //     I/ReactNativeJS( 1123):         reason: null,
+                        //     I/ReactNativeJS( 1123):         createTime: '2018-06-27 14:03:17' } } }
+            console.log('查看离线包的生成状态')
+            console.log(responseJson)
+
+            if(responseJson && responseJson.data && responseJson.data.data &&responseJson.data.data.status=='success'){
+                let databagVersion = responseJson.data.data.databagVersion;
+                API.getModelOfflineZipAddress(fileId,databagVersion,item.workspaceId)
+                .then((responseJson)=>{
+                    // {
+                    //     "code": "string",
+                    //     "data": "string",
+                    //     "message": "string"
+                    //   }
+                    console.log('查看离线包的下载地址')
+                    console.log(responseJson)
+                    if(responseJson && responseJson.data){
+                        let name = this.getName(responseJson.data.data)
+                        //保存模型id与离线包的名字对应关系
+                        storage.setModelFileIdOfflineName(fileId,name);
+                        //下载离线包
+                        this.downloadFile(responseJson.data.data,name,fileId,parentId,JSON.stringify(item));
+                    }
+                }).catch((error)=>{
+                    console.log('查看离线包的下载地址  err')
+                    console.error(error);
+                })
+            }
+            
+        })
+        .catch((error)=>{
+            console.log('查看离线包的生成状态  err')
             console.error(error);
-        });
+        })
     }
 
-     getName=(url)=>{
-        let index = url.indexOf('?');
-        let str = url.substring(0,index);
-        let lastIndex = str.lastIndexOf('/');
-        let name = str.substring(lastIndex+1);
-        let dotIndex = name.lastIndexOf('.');
-        return name.substring(0,dotIndex);
+    downloadFile=(formUrl,name,fileId,parentId,item=null)=> {
+        ThreadModule.startThread(formUrl,name,fileId,parentId,item,this.downloadFileThread);
     }
 
     /*下载文件*/
-     downloadFile=(formUrl,name)=> {
+     downloadFileThread=(formUrl,name,fileId,parentId,data)=> {
+         let item = JSON.parse(data)
         // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
 
         // 图片
@@ -103,10 +142,18 @@ import { Platform,} from 'react-native';
         // 文件
         // const path = RNFS.DocumentDirectoryPath;
         // const path = RNFS.ExternalStorageDirectoryPath;
+        let dm = new DirManager();
         const path = dm.getModelPath();
         console.log('start download  path='+path);
         const downloadDest = `${path}/${name}.zip`;
         console.log('downloadDest='+downloadDest);
+
+        let projectId = storage.loadProject();
+        let projectVersionId = storage.getLatestVersionId(projectId);
+        let key = fileId+"_"+projectVersionId;
+        let value = `${path}/${name}`;
+        let modelManager = OfflineManager.getModelManager();
+        let updateTime = new Date().getTime()+'';
         // const downloadDest = `${path}/${((Math.random() * 1000) | 0)}.zip`;
         // const formUrl = 'http://files.cnblogs.com/zhuqil/UIWebViewDemo.zip';
 
@@ -124,40 +171,65 @@ import { Platform,} from 'react-native';
         const options = {
             fromUrl: formUrl,
             toFile: downloadDest,
+            progressDivider:10,
             background: true,
             begin: (res) => {
-                console.log('begin', res);
-                console.log('contentLength:', res.contentLength / 1024 / 1024, 'M');
+                // console.log('begin', res);
+                // console.log('contentLength:', res.contentLength / 1024 / 1024, 'M');
+                let progress = 0;
+                let total = res.contentLength;
+                let done = progress==total;
+                let size = total / 1024 / 1024;//'M'
+                size = this.changeTwoDecimal_f(size)
+                modelManager.update(key,value,projectVersionId+'',fileId+'',parentId+'',progress+'',total+'',done+'',size+'',updateTime+'',JSON.stringify(item))
             },
             progress: (res) => {
+                // res = { contentLength: 1166005, bytesWritten: 1135267, jobId: 1 }
+                // key,value,projectVersionId,fileId,parentId,progress,total,done,size
+                // let pro = res.bytesWritten / res.contentLength;
+                
+                let progress = res.bytesWritten;
+                let total = res.contentLength;
+                let done = progress==total;
+                let size = total / 1024 / 1024;//'M'
+                size = this.changeTwoDecimal_f(size)
+                
+                // modelManager.setDownloadingState(true);
+                modelManager.update(key,value,projectVersionId+'',fileId+'',parentId+'',progress+'',total+'',done+'',size+'',updateTime+'',JSON.stringify(item))
 
-                let pro = res.bytesWritten / res.contentLength;
-
-                // console.log('progress='+pro);
-                // this.setState({
-                //     progressNum: pro,
-                // });
+                // console.log(progress+'  '+total)
+                // console.log('11111111111111')
+                // console.log(res)
+                DeviceEventEmitter.emit(key, { 
+                    key: key,
+                    value: value,
+                    projectVersionId: projectVersionId+'',
+                    fileId: fileId+'',
+                    parentId:parentId+'',
+                    progress: progress+'',
+                    total: total+'',
+                    done: done+'',
+                    size: size+'',
+                    updateTime:updateTime,
+                    item:item,
+                });
             }
         };
         try {
-
-
             //开始下载
             const ret = RNFS.downloadFile(options);
+            // res = { statusCode: 200, bytesWritten: 1166005, jobId: 1 }
             ret.promise.then(res => {
+                // console.log('00000000000000000000000000000')
+                // console.log(res)
+                let progress = res.bytesWritten;
+                let total = res.bytesWritten;
+                let done = progress==total;
+                let size = total / 1024 / 1024;//'M'
+                size = this.changeTwoDecimal_f(size)
                 // console.log('success', res);
-
-                // console.log('file://' + downloadDest)
-
-                // RNFS.exists('file://' + downloadDest)
-                // .then((str) => {
-                //     // console.log('++++++44444444+++');
-                //     console.log(str);
-                // })
-                // .catch((error) => {
-                //     // console.log('------------');
-                //     console.log(error);
-                // })
+                // console.log(progress+'  '+total)
+                
 
                 //解压
                 const sourcePath = downloadDest;
@@ -177,7 +249,22 @@ import { Platform,} from 'react-native';
                     console.log(error)
                 })
 
-            
+                //设定下载完毕
+                // modelManager.setDownloadingState(false);
+                modelManager.update(key,value,projectVersionId+'',fileId+'',parentId+'',progress+'',total+'',done+'',size+'',updateTime+'',JSON.stringify(item))
+                DeviceEventEmitter.emit(key, { 
+                    key: key,
+                    value: value,
+                    projectVersionId: projectVersionId+'',
+                    fileId: fileId+'',
+                    parentId:parentId+'',
+                    progress: progress+'',
+                    total: total+'',
+                    done: done+'',
+                    size: size+'',
+                    updateTime:updateTime,
+                    item:item,
+                });
 
             }).catch(err => {
                 console.log('err', err);
@@ -187,6 +274,37 @@ import { Platform,} from 'react-native';
             console.log(error);
         }
 
+    }
+
+    changeTwoDecimal_f(x) {
+        try {
+            let f_x1 = parseFloat(x);
+            if (isNaN(f_x1)) {
+                return x;
+            }
+            let f_x = Math.round(x * 100) / 100;
+            let s_x = f_x.toString();
+            let pos_decimal = s_x.indexOf('.');
+            if (pos_decimal < 0) {
+                pos_decimal = s_x.length;
+                s_x += '.';
+            }
+            while (s_x.length <= pos_decimal + 2) {
+                s_x += '0';
+            }
+            return s_x;
+        } catch (e) {
+            return '0.00';
+        }
+    }
+
+    getName=(url)=>{
+        let index = url.indexOf('?');
+        let str = url.substring(0,index);
+        let lastIndex = str.lastIndexOf('/');
+        let name = str.substring(lastIndex+1);
+        let dotIndex = name.lastIndexOf('.');
+        return name.substring(0,dotIndex);
     }
 
     //复制app.html 到离线包目录下

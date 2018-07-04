@@ -14,11 +14,11 @@ import * as PageType from "./PageTypes";
 import { bimfileHtml } from './bimfileHtml';
 import DownloadModel from '../../../../offline/model/DownloadModel';
 import DownloadView from './RelevantModelPageDownloadView';
-import ModelManager from '../../../../offline/manager/ModelManager';
 import DirManager from '../../../../offline/manager/DirManager';
 import ModelServer from '../../../../offline/model/ServerModule';
 import OfflineStateUtil from '../../../../../common/utils/OfflineStateUtil';
 import OfflineManager from '../../../../offline/manager/OfflineManager';
+import RelevantModelDrawerPaneView from './RelevantModelDrawerPaneView'
 //获取设备的宽度和高度
 var {
     height: deviceHeight,
@@ -47,6 +47,7 @@ document.addEventListener('message', function(e) {eval(e.data);});\
 /**
  * 关联模型
  */
+let isAdd = true;//区分点击的是右上角的完成true   还是点击的属性false    这两者都需要获取当前选中的构件的信息
 class RelevantModelPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -83,9 +84,16 @@ class RelevantModelPage extends Component {
                     navigation={this.props.navigation}
                     onPress={(navigation) => this.goBack(navigation)}
                     imageSource={require('app-images/icon_back_white.png')} />
-                {this.state.showChangeMode ?
+                {
+                    this.state.showChangeMode ?
                     <BarItems.LeftBarItem imageStyle={{}} navigation={this.props.navigation} onPress={(navigation) => this.changeModel(navigation)} imageSource={require('app-images/icon_change_model.png')} />
-                    : null}
+                    : null
+                }
+                <BarItems.LeftBarItem
+                    imageStyle={{}}
+                    navigation={this.props.navigation}
+                    onPress={(navigation) => this.showAttribution(navigation)}
+                    imageSource={require('app-images/icon_module_standard_white.png')} />
             </BarItems>
         )
     }
@@ -121,7 +129,8 @@ class RelevantModelPage extends Component {
         let params = this.props.navigation.state.params;
         let pageType = params.pageType;
         let relevantModel = params.relevantModel;//{"gdocFileId":"1bee3ddc99c241e88f2e3a8512f1500d","buildingId":5210119,"buildingName":"新增单体2"}
-        
+        console.log('relevantModel------------------------')
+        console.log(relevantModel)
         let showChangeMode = false;
         if (pageType === PageType.PAGE_TYPE_EDIT_QUALITY || pageType === PageType.PAGE_TYPE_EDIT_EQUIPMENT) {
             showChangeMode = true;
@@ -153,12 +162,12 @@ class RelevantModelPage extends Component {
 
 
         // let fileId = '1353300132668256';
-        let fileId = this.state.relevantModel.gdocFileId;
-        
+        let fileId = relevantModel.gdocFileId;
+        console.log('fileId================'+fileId)
         //判断是否存在本地离线包
-        let mm = new ModelManager();
+        let mm = OfflineManager.getModelManager();
         mm.exist(fileId).then((result)=>{
-            console.log('offline zip exist?--------------'+result);
+            console.log('offline zip exist?-------------------------------------'+result);
             if(!result){
                 //不存在本地离线包
                 //在线情况
@@ -185,7 +194,8 @@ class RelevantModelPage extends Component {
                 //存在本地离线包
                 let dm = new DirManager();
                 let appUrl = dm.getAppUrl(fileId);
-                console.log('url==========:'+appUrl);
+                console.log('url============================:');
+                console.log(appUrl);
                 this.setState({
                     url: appUrl,
                     html: '',
@@ -194,6 +204,7 @@ class RelevantModelPage extends Component {
                 });
             }
         }).catch((error)=>{
+            console.log('errrrrrrrrrrrrrrrrrr')
             console.log(error);
         })
     }
@@ -209,6 +220,17 @@ class RelevantModelPage extends Component {
     
     goBack = () => {
         storage.goBack(this.props.navigation, null);
+    }
+
+    //展示模型属性
+    showAttribution =(navigation)=>{
+       
+        console.log('isadd = false')
+        isAdd = false;
+        //会出发getPosition方法
+        this.refs.webview.injectJavaScript("javascript:getSelectedComponent();")
+        // this.refs.webview.injectJavaScript("javascript:loadCircleItems('" + JSON.stringify(this.mEquipmentPositionMap) + "');")
+        
     }
 
     changeModel = () => {
@@ -235,9 +257,11 @@ class RelevantModelPage extends Component {
      * 新建
      */
     add = () => {
+        isAdd = true;
         //会出发getPosition方法
         this.refs.webview.injectJavaScript("javascript:getSelectedComponent();")
         // this.refs.webview.injectJavaScript("javascript:loadCircleItems('" + JSON.stringify(this.mEquipmentPositionMap) + "');")
+        
 
     }
 
@@ -278,7 +302,7 @@ class RelevantModelPage extends Component {
     }
 
     onMessage = (e) => {
-        // console.log(e.nativeEvent.data);
+        console.log(e.nativeEvent.data);
         let data = JSON.parse(e.nativeEvent.data);
         let action = data.action;
         if (action) {
@@ -448,6 +472,7 @@ class RelevantModelPage extends Component {
      * 调用 `javascript:getSelectedComponent()`后,返回构件信息
      */
     getPosition = (json) => {
+        console.log(json)
         //{"action":"getPosition","data":{},"callback":"defaultReturn"}
         //{"action":"getPosition","data":"{\"elementId\":\"318370\",\"fileId\":\"\",\"objectId\":\"318370\"}","callback":"defaultReturn"}
         let component = json;//选中的构件
@@ -458,7 +483,20 @@ class RelevantModelPage extends Component {
             Toast.info('您还未选择构件!', 1);
             return;
         }
-        this.finish(component);
+        if(isAdd){
+            this.finish(component);
+        }else{
+            let projectId = storage.loadProject();
+            let projectVersionId = storage.getLatestVersionId(projectId);
+            let fileId = this.state.relevantModel.gdocFileId;
+            let elementId = component.elementId;
+            // let projectId = '5215901';
+            // let projectVersionId = '528f001ad70e4dc6a91dd01d77ec621b';
+            // let fileId = '00b65543f97649748f82214f9b226d0c';
+            // let elementId = '8398946';
+            RelevantModelDrawerPaneView.open(this.props.navigation,projectId,projectVersionId,fileId,elementId)
+        }
+        
     }
 
     //点击圆点 返回信息
@@ -608,14 +646,23 @@ class RelevantModelPage extends Component {
     _downloadModel=()=>{
         // let fileId = '1353300132668256'; relevantModel.gdocFileId
         let fileId = this.state.relevantModel.gdocFileId; 
-        let downloadModel = new DownloadModel();
-        downloadModel.getToken(fileId);
+        let bm = OfflineManager.getBasicInfoManager();
+        let modelList = bm.getModelList();
+        if(modelList && modelList.length>0){
+            for(let item of modelList){
+                if(item.fileId == fileId){
+                    let downloadModel = new DownloadModel();
+                    downloadModel.addToDownloadQueue(fileId,item.parentId,item);
+                    break;
+                }
+            }
+        }
     }
 
     //渲染
     render() {
-        console.log('render');
-        console.log(this.state.uriObj);
+        // console.log('render');
+        // console.log(this.state.uriObj);
         if (this.state.error) {
             return <NoDataView text="加载失败" />
         }

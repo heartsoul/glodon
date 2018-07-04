@@ -12,10 +12,17 @@ let projectVersionId ;
 export default class BasicInfoManager {
     
     constructor(name,realm){
+        // console.log('realm============')
+        // console.log(realm)
         basicHandler = new BasicInfoHandler(name,realm);
         projectId = storage.loadProject();
         projectVersionId = storage.getLatestVersionId(projectId);
         // projectVersionId = storage.projectIdVersionId;
+    }
+
+    //清除本表
+    clear=()=>{
+        basicHandler.deleteAll();
     }
  
      //从数据库获取
@@ -67,20 +74,31 @@ export default class BasicInfoManager {
     //获取模型专业列表
     getSpecialList=()=>{
         let key_getSpecialList = "/pmbasic/specialty";
+        // console.log('----------------getSpecialList----------------')
+        // console.log(this._getFromDb(key_getSpecialList))
         return  this._getFromDb(key_getSpecialList);
     }
 
     //获取模型单体列表
     getSingleList=()=>{
         let key_getSingleList ="/pmbasic/projects/" + projectId + "/buildings";
+        // console.log('----------------getSingleList----------------')
+        // console.log(this._getFromDb(key_getSingleList))
         return  this._getFromDb(key_getSingleList);
     }
 
     //获取所有模型列表
     getModelList=()=>{
         let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children/model";
-        console.log(this._getFromDbJson(key_getModelList))
-        return  this._getFromDbJson(key_getModelList);
+        // console.log('----------------getModelList----------------')
+        // console.log(this._getFromDbJson(key_getModelList))
+        let result =   this._getFromDbJson(key_getModelList);
+        return result ;
+    }
+    //存储所有模型列表
+    setModelList=(list)=>{
+        let key_getModelList = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children/model";
+        basicHandler.update(key_getModelList,JSON.stringify(list));
     }
 
     //获取所有图纸列表

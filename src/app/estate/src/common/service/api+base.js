@@ -105,6 +105,7 @@ export function requestJSON(url, options) {
         return fetch(BASE_URL + url, ops);
     }
     // console.log(">>>请求信息："+BASE_URL + url);
+    // console.log(ops)
     return fetch(BASE_URL + url, ops)
         .then(checkStatus)
         .then(parseJSON)

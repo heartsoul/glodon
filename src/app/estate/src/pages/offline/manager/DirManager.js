@@ -94,4 +94,17 @@ export default class DirManager  {
              console.log(error);
          })
     }
+
+    clear=()=>{
+        let path = this.getProjectPath();
+
+        return RNFS.unlink(path)
+            .then(() => {
+                console.log('FILE DELETED');
+            })
+            // `unlink` will throw an error, if the item to unlink does not exist
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }
 }

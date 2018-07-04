@@ -8,6 +8,7 @@ import com.estate.react.GLDReactPackage;
 import com.facebook.react.ReactApplication;
 import io.realm.react.RealmReactPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
+import com.glodon.bim.business.offline.thread.ThreadModulePackage;
 import com.rnziparchive.RNZipArchivePackage;
 import com.rnfs.RNFSPackage;
 
@@ -52,7 +53,8 @@ public class MainApplication extends Application implements ReactApplication {
                     new RNFSPackage(),
                     new RealmReactPackage(),
                     new GLDReactPackage(),
-                    new ServerModulePackage()
+                    new ServerModulePackage(),
+                    new ThreadModulePackage()
             );
         }
 

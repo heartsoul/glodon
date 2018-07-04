@@ -95,9 +95,16 @@ class GLDStorage extends BaseStorage {
         return this.loadItem(__KEY_currentTenant + userId(), '0', retFun)
     }
 
+    // 获取当前租户信息， 所有用户共用此
+    loadTenantId = (retFun) => {
+
+        return this.loadItem(__KEY_currentTenantId, '0', retFun)
+    }
+
     // 保存当前租户  保存的是整个租户信息
     saveTenantInfo = (tenant) => {
         this.setItem(__KEY_currentTenantInfo + userId(), "" + tenant);
+        this.setItem(__KEY_currentTenantId, "" + tenant);
     }
     // 获取当前租户信息
     loadTenantInfo = (retFun) => {
@@ -197,6 +204,7 @@ class GLDStorage extends BaseStorage {
     }
     // 到home页面
     gotoMainPage = (navigation,params) => {
+        console.log('1111')
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
@@ -240,13 +248,16 @@ class GLDStorage extends BaseStorage {
     }
     // 转到页面，会替换
     gotoMain = (navigation = null, name = "MainPage", params = {}) => {
+        console.log('1111')
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
         }
+        console.log('222')
         if (!navigator) {
             return;
         }
+        console.log(this.hasChoose())
         this.hasChoose() ? navigator.replace(name, params = {}) : navigator.replace("ChoosePage", params = {});
     }
     // 转到页面，replace模式
@@ -367,13 +378,33 @@ class GLDStorage extends BaseStorage {
         return value;
     }
 
-    //保存当前账户信息
+    //保存账户信息
     saveAccountInfo = (key,value) =>{
         this.setItem(__KEY_accountInfo + key,value);
     }
-    //获取当前账户信息
+    //获取账户信息
     getAccountInfo = (key)=>{
         let value = this.getItem(__KEY_accountInfo + key);
+        return value;
+    }
+
+    //保存当前账户信息  所有用户共用此
+    saveCurrentAccountInfo = (key,value) =>{
+        this.setItem(__KEY_currentAccountUserInfo,{key:key,value:value});
+    }
+    //获取当前账户信息  所有用户共用此
+    getCurrentAccountInfo = ()=>{
+        let value = this.getItem(__KEY_currentAccountUserInfo);
+        return value;
+    }
+
+    //保存当前用户信息
+    saveAccountUserInfo = (key,value) =>{
+        this.setItem(__KEY_accountUserInfo + key,value);
+    }
+    //获取当前用户信息
+    getAccountUserInfo = (key)=>{
+        let value = this.getItem(__KEY_accountUserInfo + key);
         return value;
     }
 
@@ -399,7 +430,8 @@ const __KEY_currentProject = "currentProject"; // 当前项目
 const __KEY_guide = "guide"; // 启动引导页面 0: 未启动 1:已经启动过了
 const __KEY_userId = "userId"; // 启动引导页面 0: 未启动 1:已经启动过了
 const __KEY_currentProjectName = "currentProjectName"; // 当前选择项目名
-const __KEY_currentTenant = "currentTenant"; // 当前租户id
+const __KEY_currentTenant = "currentTenant"; // 当前租户id  不同的用户 保存不同的id
+const __KEY_currentTenantId = "currentTenantId"; // 当前租户id  所有用户共用此id
 const __KEY_currentTenantInfo = "currentTenantInfo"; // 当前租户信息
 const __KEY_currentTenantInfoRefresh = "currentTenantInfoRefresh"; // 切换租户后是否刷新
 const __KEY_lastTenant = "lastTenant"; // 上一选择租户
@@ -412,5 +444,7 @@ const __KEY_latestVersionId = "latestVersionId"; // 当前项目最新版本
 const __KEY_modelFileIdOfflineName = "modelFileIdOfflineName"; // 模型id与离线包名的对应关系存储
 const __KEY_tenantProjectList = "tenantProjectList"; // 模型id与离线包名的对应关系存储
 const __KEY_accountInfo = "accountInfo"; // 账户信息
+const __KEY_accountUserInfo = "accountUserInfo"; // 用户信息
+const __KEY_currentAccountUserInfo = "currentAccountUserInfo"; // 用户信息
 
 export default GLDStorage;

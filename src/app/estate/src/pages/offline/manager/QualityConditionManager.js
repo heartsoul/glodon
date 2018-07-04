@@ -12,6 +12,11 @@ export default class QualityConditionManager {
         handler = new QualityConditionHandler(name,realm);
     }
  
+
+    //清除本表
+    clear=()=>{
+        handler.deleteAll();
+    }
     //获取所有质检下载记录
     getAllRecords=()=>{
         let infos = handler.queryAll();

@@ -18,7 +18,7 @@ export default class BimSwitch extends Component{
     }
 
     static propTypes = {
-        value: PropTypes.bool.isRequired,
+        // value: PropTypes.bool.isRequired,
         onValueChange: PropTypes.func.isRequired,
       }
     

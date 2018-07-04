@@ -1,4 +1,5 @@
 import { requestJSON } from "common-module"
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
 /**
  * 模型相关API
  */
@@ -29,10 +30,12 @@ import { requestJSON } from "common-module"
 }
 */
 export async function getModelLatestVersion(projectId) {
+  if(OfflineStateUtil.isOnLine()){
     let api = "/model/" + projectId + "/projectVersion/latestVersion";
     return requestJSON(api, {
         method: 'GET',
     });
+  }
 }
 
 /**
@@ -45,10 +48,12 @@ export async function getModelLatestVersion(projectId) {
  * @returns 
  */
 export async function getModelBimFileToken(projectId, projectVersionId, fileId) {
+  if(OfflineStateUtil.isOnLine()){
     let api = "/model/" + projectId + "/" + projectVersionId + "/bim/view/token";
     return requestJSON(api + '?fileId=' + fileId, {
         method: 'GET',
     });
+  }
 }
 
 /**
@@ -96,10 +101,12 @@ export async function getModelBimFileToken(projectId, projectVersionId, fileId) 
 
  */
 export async function getModelElementProperty(projectId, versionId, fileId, elementId) {
+  if(OfflineStateUtil.isOnLine()){
     let api = "/model/" + projectId + "/" + versionId + "/model/data/element/property";
     return requestJSON(api + '?fileId=' + fileId + '&elementId=' + elementId, {
         method: 'GET',
     });
+  }
 }
 
 /**
@@ -124,6 +131,7 @@ export async function getModelElementProperty(projectId, versionId, fileId, elem
   }
  */
 export async function getModelBimFiles(projectId, projectVersionId, buildingId = 0, specialtyCode = '') {
+  if(OfflineStateUtil.isOnLine()){
     let api = "/model/" + projectId + "/" + projectVersionId + "/bimFiles";
     let filter = '';
     if (!(buildingId === 0)) {
@@ -135,6 +143,7 @@ export async function getModelBimFiles(projectId, projectVersionId, buildingId =
     return requestJSON(api + '?' + filter, {
         method: 'GET',
     });
+  }
 }
 
 /**
@@ -199,6 +208,7 @@ export async function getModelBimFiles(projectId, projectVersionId, buildingId =
 }
  */
 export async function getDrawingDataList(projectId, projectVersionId, pageIndex, fileId = 0) {
+  if(OfflineStateUtil.isOnLine()){
     // let api = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children";
     // model/{deptId}/modelVersions/{modelVersionId}/drawingFiles/children
     let api = "/model/" + projectId + "/modelVersions/" + projectVersionId + "/drawingFiles/children";
@@ -210,20 +220,24 @@ export async function getDrawingDataList(projectId, projectVersionId, pageIndex,
     return requestJSON(api + '?' + filter, {
         method: 'GET',
     });
+  }
 }
 
+//获取模型 列表
 export async function getModelDataList(projectId, projectVersionId, pageIndex, fileId = 0) {
-  // let api = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children";
-  // model/{deptId}/modelVersions/{modelVersionId}/drawingFiles/children
-  let api = "/model/" + projectId + "/modelVersions/" + projectVersionId + "/modelFiles/children";
-  let filter = '';
-  if (!(fileId === 0)) {
-      filter += '&fileId=' + fileId;
-  }
+  if(OfflineStateUtil.isOnLine()){
+    // let api = "/model/" + projectId + "/" + projectVersionId + "/bim/file/children";
+    // model/{deptId}/modelVersions/{modelVersionId}/drawingFiles/children
+    let api = "/model/" + projectId + "/modelVersions/" + projectVersionId + "/modelFiles/children";
+    let filter = '';
+    if (!(fileId === 0)) {
+        filter += '&fileId=' + fileId;
+    }
 
-  return requestJSON(api + '?' + filter, {
-      method: 'GET',
-  });
+    return requestJSON(api + '?' + filter, {
+        method: 'GET',
+    });
+  }
 }
 
 /**
@@ -235,11 +249,13 @@ export async function getModelDataList(projectId, projectVersionId, pageIndex, f
  * @param {*} isModle 默认true
  */
 export async function searchModuleBlueprint(projectId, projectVersionId, name, suffix, isModel = false) {
+  if(OfflineStateUtil.isOnLine()){
     let api = `/model/${projectId}/${projectVersionId}/bim/file/query`;
     let filter = `?name=${name}&suffix=${suffix}&isModel=${isModel}`;
     return requestJSON(api + filter, {
         method: 'POST',
     });
+  }
 }
 
 /**
@@ -249,10 +265,12 @@ export async function searchModuleBlueprint(projectId, projectVersionId, name, s
  * @param {*} fileId 
  */
 export async function getBluePrintThumbnail(projectId, projectVersion, fileId) {
+  if(OfflineStateUtil.isOnLine()){
     let api = `/model/${projectId}/${projectVersion}/viewing/files/${fileId}/thumbnailUrl`;
     return requestJSON(api, {
         method: 'GET',
     });
+  }
 }
 
 /**
@@ -271,11 +289,15 @@ export async function getBluePrintThumbnail(projectId, projectVersion, fileId) {
       "message": "string"
     }
  */
-export async function createModelOfflineZip(fileId) {
-  let api = `/bimpm/model/offline/data/files/${fileId}`;
-  return requestJSON(api, {
-      method: 'PUT',
-  });
+export async function createModelOfflineZip(fileId,containerId) {
+  if(OfflineStateUtil.isOnLine()){
+    let api = `/bimpm/model/offline/data/${containerId}/files/${fileId}`;
+    // console.log(api)
+    return requestJSON(api, {
+        method: 'PUT',
+        // body:JSON.stringify({'key':'value'}),
+    });
+  }
 }
 
 /**
@@ -294,11 +316,13 @@ export async function createModelOfflineZip(fileId) {
       "message": "string"
     }
  */
-export async function getModelOfflineZipStatus(fileId) {
-  let api = `/bimpm/model/offline/data/files/${fileId}`;
-  return requestJSON(api, {
-      method: 'GET',
-  });
+export async function getModelOfflineZipStatus(fileId,containerId) {
+  if(OfflineStateUtil.isOnLine()){
+    let api = `/bimpm/model/offline/data/${containerId}/files/${fileId}`;
+    return requestJSON(api, {
+        method: 'GET',
+    });
+  }
 }
 
 /**
@@ -311,12 +335,53 @@ export async function getModelOfflineZipStatus(fileId) {
       "message": "string"
     }
  */
-export async function getModelOfflineZipAddress(fileId,databagVersion) {
-  let api = `/bimpm/model/offline/data/files`;
-  let filter = '';
-  filter += '&fileId=' + fileId;
-  filter += '&databagVersion=' + databagVersion;
-    return requestJSON(api + '?' + filter, {
-        method: 'GET',
-    });
+export async function getModelOfflineZipAddress(fileId,databagVersion,containerId) {
+  if(OfflineStateUtil.isOnLine()){
+    let api = `/bimpm/model/offline/data/${containerId}/files`;
+    let filter = '';
+    filter += '&fileId=' + fileId;
+    filter += '&databagVersion=' + databagVersion;
+      return requestJSON(api + '?' + filter, {
+          method: 'GET',
+      });
+  }
+}
+
+/**
+ * 获取模型构件的属性
+                        { data:
+I/ReactNativeJS( 7746):    { code: '0',
+I/ReactNativeJS( 7746):      message: 'success',
+I/ReactNativeJS( 7746):      data:
+I/ReactNativeJS( 7746):       { elementId: '8398946',
+I/ReactNativeJS( 7746):         name: '热镀锌 -普通-1.0',
+I/ReactNativeJS( 7746):         familyGuid: '',
+I/ReactNativeJS( 7746):         boundingBox:
+I/ReactNativeJS( 7746):          { min: { x: -10640.99, y: 13619.73, z: 20183.15 },
+I/ReactNativeJS( 7746):            max: { x: -7952.671, y: 13653.43, z: 20216.85 } },
+I/ReactNativeJS( 7746):         properties:
+I/ReactNativeJS( 7746):          [ { group: '基本属性',
+I/ReactNativeJS( 7746):              items:
+I/ReactNativeJS( 7746):               [ { key: 'specialty', value: '', unit: '' },
+I/ReactNativeJS( 7746):                 { key: 'floor', value: '8', unit: '' },
+I/ReactNativeJS( 7746):                 { key: 'categoryId', value: '-2008044', unit: '' },
+I/ReactNativeJS( 7746):                 { key: 'categoryName', value: '管道', unit: '' },
+I/ReactNativeJS( 7746):                 { key: 'family', value: '管道类型', unit: '' },
+I/ReactNativeJS( 7746):                 { key: 'familyType', value: '热镀锌 -普通-1.0', unit: '' },
+I/ReactNativeJS( 7746):                 { key: 'systemType', value: '', unit: '' },
+I/ReactNativeJS( 7746):                 { key: 'building', value: '', unit: '' } ] },
+I/ReactNativeJS( 7746):            { group: 'PG_SEGMENTS_FITTINGS',
+I/ReactNativeJS( 7746):              items: [ { key: '布管系统配置', value: '', unit: '' } ] },
+I/ReactNativeJS( 7746):            ]}}}
+                        */
+export async function getModelAttribute(deptId,versionId,fileId,elementId) {
+  if(OfflineStateUtil.isOnLine()){
+    let api = `/model/${deptId}/${versionId}/model/data/element/property`;
+    let filter = '';
+    filter += '&fileId=' + fileId;
+    filter += '&elementId=' + elementId;
+      return requestJSON(api + '?' + filter, {
+          method: 'GET',
+      });
+  }
 }

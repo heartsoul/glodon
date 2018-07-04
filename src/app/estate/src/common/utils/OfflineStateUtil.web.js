@@ -21,6 +21,13 @@ export default class OfflineStateUtil{
         // return state==true || state==undefined;
         return true
     }
+    //离线操作提示
+    static showOfflineAlert(){
+        // if((!this.isOnLine()) && isShow){
+        //    ActionModal.alert('提示信息', "当前为离线状态，网络恢复后，系统将自动为您提交当前单据，您无需再次操作。", [{ text: '知道了', style: { color: '#00baf3' } }]);
+        //    isShow = false;
+        // }
+   }
 }
 
 

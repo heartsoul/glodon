@@ -20,6 +20,11 @@ export default class EquipmentManager {
         // projectVersionId = storage.projectIdVersionId;
     }
 
+
+    //清除本表
+    clear=()=>{
+        handler.deleteAll();
+    }
     _formatDate(timestamp, formater) { 
             let date = new Date();
             date.setTime(parseInt(timestamp));

@@ -76,7 +76,7 @@ export default class extends Component {
           <View style={{height:61,flexDirection:'row',alignItems:'center'}}>
               <View style={{flex:1}}>
                   <Text style={{color:'#565656',fontSize:14,marginLeft:20}}>{item.item.timeText}</Text>
-                  <Text style={{color:'#999999',fontSize:12,marginLeft:20}}>下载时间:{item.item.downloadTime}</Text>
+                  <Text style={{color:'#999999',fontSize:12,marginLeft:20}}>缓存时间:{item.item.downloadTime}</Text>
               </View>
               <View style={{flexDirection:'row',marginRight:23}}>
                   <Text style={{color:'#999999',fontSize:14}}>{item.item.size}条</Text>

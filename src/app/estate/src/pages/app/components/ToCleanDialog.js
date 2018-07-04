@@ -11,7 +11,7 @@ click = (overlayView)=>{
     // console.log('----click to online----');
     overlayView && overlayView.close(); 
     console.log('to clean current name='+storage.currentRouteName);
-    retFunc();
+    retFunc && retFunc();
 }
 let currentview = null;
 let overlayView = (
@@ -22,7 +22,7 @@ let overlayView = (
         <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', alignContent: 'center', marginBottom: 93, marginTop: 20 }}>
             
             <View style={{width:270,height:142, backgroundColor:'#ffffff',borderRadius:6,alignItems: 'center'}}>
-                <Text style={{ color: '#000000', fontSize: 16, marginTop: 30,marginLeft:20,marginRight:20}} >此操作将删除您已下载的离线应用相关数据，确定清除吗？</Text>
+                <Text style={{ color: '#000000', fontSize: 16, marginTop: 30,marginLeft:20,marginRight:20}} >此操作将删除您已缓存的离线应用相关数据，确定清除吗？</Text>
                 <View style={{backgroundColor:'#e7e7e7',height:1,width:270,marginTop:20}}></View>
                 <View style={{flex:1,flexDirection:'row'}} >
                     <TouchableOpacity onPress={()=>{this.overlayView && this.overlayView.close();}}>

@@ -31,7 +31,6 @@ export default class BasicInfoHandler extends BaseHandler{
     constructor(){
         super();
         name = 'quality'+this.getTableName();
-        console.log('name='+name)
         const basicSchema = {
             name:name,
             primaryKey:'key',

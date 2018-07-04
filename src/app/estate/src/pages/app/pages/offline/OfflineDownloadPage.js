@@ -16,13 +16,14 @@ import {
 import { DeviceEventEmitter } from "app-3rd"
 import {CircleProgressBar} from 'app-components'
 import OfflineManager from '../../../offline/manager/OfflineManager'
+import * as PageType from "../navigation/bim/PageTypes";
 var { width, height } = Dimensions.get("window");
 let bm;
 //离线数据下载
 export default class extends Component {
   
   static navigationOptions = {
-    title: '离线数据下载',
+    title: '离线数据缓存',
 
   };
 
@@ -60,6 +61,18 @@ export default class extends Component {
     //   }
     // );
     bm = OfflineManager.getBasicInfoManager();
+    //进入页面 刷一遍基础数据
+    bm.downloadBasicInfo((progress,total)=>{
+      
+      // this.setState((pre)=>{
+      //   return {
+      //     ...pre,
+      //     progress:progress,
+      //     totalNum:total,
+          
+      //   }
+      // })
+    });
   }
 
   componentWillUnmount=()=>{
@@ -129,8 +142,8 @@ export default class extends Component {
         <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
         <View style={{flexDirection:'row',backgroundColor:'#ffffff'}}>
           <TopItemView title={'全部'} isShowLine={this.state.showAll} num={0} onPress={this._clickAll} />
-          <TopItemView title={'已下载'} isShowLine={this.state.showLoaded} num={0} onPress={this._clickLoaded} />
-          <TopItemView title={'下载中'} isShowLine={this.state.showLoading} num={0} onPress={this._clickLoading} />
+          <TopItemView title={'已缓存'} isShowLine={this.state.showLoaded} num={0} onPress={this._clickLoaded} />
+          <TopItemView title={'缓存中'} isShowLine={this.state.showLoading} num={0} onPress={this._clickLoading} />
         </View>
         <View style={{height:10}}></View>
         {
@@ -156,7 +169,14 @@ class AllView extends Component{
   }
   //点击模型
   _clickModel=()=>{
-
+    let navigator = this.props.navigation;
+    storage.pushNext(navigator, "BimFileChooserPage", {
+        top:false,
+        fileId: 0,
+        dataType: "模型文件",
+        pageType: PageType.PAGE_TYPE_QUALITY_MODEL,
+        isDownloadPage:true
+    });
   }
   //点击图纸
   _clickBlueprint=()=>{
@@ -174,7 +194,7 @@ class AllView extends Component{
         <View style={styles.mineItemLine}></View>
         <MineItemView icon = {require('app-images/icon_offline_download_blueprint.png')} title='图纸' onPress={()=>this._clickBlueprint()}></MineItemView>
         <View style={{height:10}}></View>
-        <BasicDataItemView icon = {require('app-images/icon_offline_download_basic.png')} title='基础数据包' ></BasicDataItemView>
+        {/* <BasicDataItemView icon = {require('app-images/icon_offline_download_basic.png')} title='基础数据包' ></BasicDataItemView> */}
       </View>
     );
   }
@@ -196,7 +216,14 @@ class LoadedView extends Component{
   }
   //点击模型
   _clickModel=()=>{
-
+    let navigator = this.props.navigation;
+    storage.pushNext(navigator, "BimFileChooserPage", {
+        top:false,
+        fileId: 0,
+        dataType: "模型文件",
+        pageType: PageType.PAGE_TYPE_QUALITY_MODEL,
+        downloadedPage:true
+    });
   }
   //点击图纸
   _clickBlueprint=()=>{
@@ -228,7 +255,7 @@ class LoadedView extends Component{
         <MineItemView icon = {require('app-images/icon_offline_download_blueprint.png')} title='图纸' onPress={()=>this._clickBlueprint()}></MineItemView>
         <View style={{height:10}}></View>
         {
-          this._showBasicView()
+          // this._showBasicView()
         }
       </View>
     );
@@ -532,7 +559,7 @@ class BasicDataItemView extends Component{
     }
   }
   _startDownload =()=>{
-    
+    bm = OfflineManager.getBasicInfoManager();
     bm.downloadBasicInfo((progress,total)=>{
       
       this.setState((pre)=>{

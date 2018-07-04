@@ -56,13 +56,13 @@ export  default  class CircleProgressView extends Component {
         }
 
         let size = (this.props.raduis) * 2;
-        console.log("size " + size);
+        // console.log("size " + size);
         let centerW = Math.sqrt(Math.pow(size / 2 - this.props.progressWidth * 3 / 2, 2) / 2) * 2;
-        console.log("centerW " + centerW);
+        // console.log("centerW " + centerW);
         let marginTop = size / 2 - centerW / 2;
         let marginLeft = size / 2 - centerW / 2;
 
-        console.log("marginLeft " + marginLeft);
+        // console.log("marginLeft " + marginLeft);
         this.state = {
             size: size,
             startX: size / 2,

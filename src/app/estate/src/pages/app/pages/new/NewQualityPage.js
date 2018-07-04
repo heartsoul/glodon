@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import * as actions from "./../../actions/newQualityAction2";
 import NewCheckListTabBar from "./NewCheckListTabBar";
 import NewQualityView from "./NewQualityView";
+import OfflineStateUtil from "../../../../common/utils/OfflineStateUtil";
 
 const tabs = [
     { title: '检查单', type: "inspection" },
@@ -99,6 +100,7 @@ class NewQualityPage extends Component {
     }
 
     componentDidMount() {
+        OfflineStateUtil.showOfflineAlert();
         this.props.fetchData(this.props.navigation.state.params);
         if (Platform.OS === 'android') {
             const BackHandler = ReactNative.BackHandler

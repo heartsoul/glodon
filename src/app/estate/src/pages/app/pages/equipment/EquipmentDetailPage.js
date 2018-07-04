@@ -13,6 +13,7 @@ import { connect } from 'react-redux'; // 引入connect函数
 import * as actions from '../../actions/equipmentInfoAction';
 import * as relevantModelAction from "../../actions/relevantModelAction";
 import EquipmentDetailView from "./equipmentDetailView";
+import OfflineStateUtil from "../../../../common/utils/OfflineStateUtil";
 
 
 class EquipmentDetailPage extends Component {
@@ -81,6 +82,7 @@ class EquipmentDetailPage extends Component {
             }
         }
         if (power) {
+            OfflineStateUtil.showOfflineAlert();//在离线时增加 一次提示信息
            return <BarItems navigation={this.props.navigation}>
             <BarItems.RightBarItem text="提交" navigation={this.props.navigation}  onPress={() => this._onSubmit(equipmentInfo)} />
            </BarItems>

@@ -3,7 +3,7 @@ import  {PropTypes} from 'prop-types';
 import {
     View,TouchableOpacity,Image,
 } from 'react-native';
-import ModelManager from '../../../../offline/manager/ModelManager';
+import OfflineManager from '../../../../offline/manager/OfflineManager';
 //模型展示页面中右下角的下载按钮
 export default class RelevantModelPageDownloadView extends Component{
 
@@ -21,10 +21,10 @@ export default class RelevantModelPageDownloadView extends Component{
 
     componentDidMount(){
         const {fileId} = this.props;
-        let mm = new ModelManager();
+        let mm = OfflineManager.getModelManager();
         //判断是否有了离线包
         mm.exist(fileId).then((result)=>{
-            console.log('offline zip exist?--------------'+result);
+            console.log('offline zip exist?++++++++++++++'+result);
             if(!result){
                 this.setState({
                     showDownloadView:true

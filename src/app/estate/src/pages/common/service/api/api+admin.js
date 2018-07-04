@@ -1,4 +1,5 @@
 import { requestJSON } from "common-module"
+import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
 /**
  * admin相关API
  */
@@ -18,10 +19,13 @@ import { requestJSON } from "common-module"
  }
 */
 export async function getProfileModelRights(profileId, moduleCode) {
-    let api = `/admin/auths/admin/moduleRights/?profileId=${profileId}&moduleCode=${moduleCode}`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let api = `/admin/auths/admin/moduleRights/?profileId=${profileId}&moduleCode=${moduleCode}`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }
+    
 }
 
 /**
@@ -40,23 +44,29 @@ export async function getProfileModelRights(profileId, moduleCode) {
   }
  */
 export function getAppModelRights(appCode, moduleCode, deptId, tenantId = '0') {
-    let headers = {};
-    if(tenantId && tenantId != '0') {
-        headers = {'X-CORAL-TENANT':''+tenantId};
+    
+
+    if(OfflineStateUtil.isOnLine()){
+        let headers = {};
+        if(tenantId && tenantId != '0') {
+            headers = {'X-CORAL-TENANT':''+tenantId};
+        }
+        let api = `/admin//auths/${appCode}/moduleRights/${moduleCode}?deptId=${deptId}`;
+        return requestJSON(api, {
+            method: 'GET',
+            headers: headers,
+        });
     }
-    let api = `/admin//auths/${appCode}/moduleRights/${moduleCode}?deptId=${deptId}`;
-    return requestJSON(api, {
-        method: 'GET',
-        headers: headers,
-    });
 }
 /**
  * Android检测版本更新
  */
 export async function checkVersion() {
-    let name = "android";
-    let api = `/basis/sysinfo?name=${name}`;
-    return requestJSON(api, {
-        method: 'GET',
-    });
+    if(OfflineStateUtil.isOnLine()){
+        let name = "android";
+        let api = `/basis/sysinfo?name=${name}`;
+        return requestJSON(api, {
+            method: 'GET',
+        });
+    }
 }
