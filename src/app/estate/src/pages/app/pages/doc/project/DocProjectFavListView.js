@@ -259,7 +259,7 @@ export default class extends Component {
 
     componentDidMount() {
         //请求数据
-        this.fetchData(1);
+        this.fetchData(0);
     }
 
     //加载失败view
@@ -426,7 +426,7 @@ export default class extends Component {
         SERVICE.cancelFavoritesDocFileBatch(this.state.containerId,fileIds).then(()=>{
             alert('ok');
             this._onCancelEdit();
-            this.fetchData(1);
+            this.fetchData(0);
         }).catch(err=>{
             alert('failed');
         });

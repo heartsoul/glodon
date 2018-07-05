@@ -3,7 +3,7 @@
  */
 'use strict';
 import SERVICE from 'app-api/service';
-import { BarItems, LoadingView, NoDataView, ShareManager } from "app-components";
+import { BarItems, LoadingView, NoDataView, ShareManager, ActionModal } from "app-components";
 import React, { Component } from "react";
 import { FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
 import { Menu, TabView } from 'app-3rd/teaset';
@@ -319,7 +319,7 @@ export default class extends Component {
 
     componentDidMount() {
         //请求数据
-        this.fetchData(1);
+        this.fetchData(0);
     }
 
     //加载失败view
@@ -443,6 +443,11 @@ export default class extends Component {
         });
     }
 // actions
+
+    /**
+     * 工具条上的更多，点击打开无法显示开的功能项目
+     *
+     */
     onMoreEdit = () => {
         // 处理权限
         const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
@@ -470,6 +475,11 @@ export default class extends Component {
             alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
         });
     }
+
+    /**
+     * 分享数据
+     * items: 数据列表
+     */
     doShare = (items) => {
         if(items.length !== 1) {
             alert('暂不支持批量分享');
@@ -477,25 +487,44 @@ export default class extends Component {
         }
         ShareManager.share(this.state.containerId, items[0].value.fileId); 
     }
+
+    /**
+     * 删除数据
+     * items: 数据列表
+     */
     doDelete = (items) => {
         if(items.length < 1) {
             return;
         }
-        let fileIds = [];
-        items.map((item)=>{
-            fileIds.push(item.value.fileId);
-        });
-        SERVICE.deleteDocFileBatch(this.state.containerId,fileIds).then(()=>{
-            alert('ok');
-            this._onCancelEdit();
-            this.fetchData(1);
-        }).catch(err=>{
-            alert('failed');
-        });
+        ActionModal.alertConfirm(`确认删除 ${items.length} 项数据么？`,null, {text:'删除',style:{color:'red',fontSize:18},onPress:()=>{
+            let fileIds = [];
+            items.map((item)=>{
+                fileIds.push(item.value.fileId);
+            });
+            SERVICE.deleteDocFileBatch(this.state.containerId,fileIds).then(()=>{
+                alert('ok');
+                this._onCancelEdit();
+                this.fetchData(0);
+            }).catch(err=>{
+                alert('failed');
+            });
+        }}, {text:'取消'});
     }
+
+
+    /**
+     * 下载数据
+     * items: 数据列表
+     */
     doDownload = (items) => {
         
     }
+
+
+    /**
+     * 移动数据
+     * items: 数据列表
+     */
     doMoveto = (items) => {
         if(items.length < 1) {
             return;
@@ -507,11 +536,17 @@ export default class extends Component {
         SERVICE.moveDocFileBatch(this.state.containerId,fileIds).then(()=>{
             alert('ok');
             this._onCancelEdit();
-            this.fetchData(1);
+            this.fetchData(0);
         }).catch(err=>{
             alert('failed');
         });
     }
+
+
+    /**
+     * 复制数据
+     * items: 数据列表
+     */
     doCopyto = (items) => {
         if(items.length < 1) {
             return;
@@ -526,6 +561,11 @@ export default class extends Component {
             alert('failed');
         });
     }
+
+    /**
+     * 收藏数据
+     * items: 数据列表
+     */
     doFavorite = (items) => {
         if(items.length < 1) {
             return;
@@ -536,32 +576,39 @@ export default class extends Component {
         });
         SERVICE.favoritesDocFileBatch(this.state.containerId,fileIds).then(()=>{
             this._onCancelEdit();
-            this.fetchData(1);
+            this.fetchData(0);
             alert('ok');
         }).catch(err=>{
             alert('failed');
         });
     }
+
+    /**
+     * 修改名称
+     *
+     */
     doRename = (item) => {
         SERVICE.renameDocFile(this.state.containerId,item.value.fileId,item.value.name).then(()=>{
             this._onCancelEdit();
-            this.fetchData(1);
+            this.fetchData(0);
             alert('ok');
         }).catch(err=>{
             alert('failed');
         });
     }
+
+    /**
+     * 新建文件夹
+     *
+     */
     doNewFolder = (item) => {
         SERVICE.createDocDir(this.state.containerId,this.state.fileId,item.value.name).then(()=>{
             alert('ok');
             this._onCancelEdit();
-            this.fetchData(1);
+            this.fetchData(0);
         }).catch(err=>{
             alert('failed');
         });
-    }
-    doAddFiles = (items) => {
-        
     }
 
     renderFileView = ({ item, index }) => {

@@ -679,7 +679,7 @@ export default connect(
   }),
   dispatch => ({
     imageCode: () => {
-      if (dispatch) {250179
+      if (dispatch) {
         dispatch(fogotAction.imageCode())
       }
     },

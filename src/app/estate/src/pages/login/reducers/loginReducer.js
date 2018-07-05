@@ -21,7 +21,7 @@ export default function loginIn(state = initialState, action) {
         userName:action.userName,
         user: null,
       }
-      break
+      // break
     case types.LOGIN_IN_DONE:
       return {
         ...state,

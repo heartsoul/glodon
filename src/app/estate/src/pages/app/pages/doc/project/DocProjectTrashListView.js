@@ -151,7 +151,7 @@ export default class extends Component {
 
                 let dataBlob = [];
                 if (data.length > 0) {
-                    if (page > 0) {
+                    if (page > 1) {
                         dataBlob = this.state.dataArray;
                     }
                     let i = 0;
@@ -340,7 +340,7 @@ export default class extends Component {
         //设置刷新状态为正在刷新
         this.setState({
             refreshing: true,
-            page: 0,
+            page: 1,
         });
         //延时加载
         const timer = setTimeout(() => {
