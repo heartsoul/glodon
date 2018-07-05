@@ -1,5 +1,5 @@
 import { requestJSON } from "common-module"
-import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
 /**
  * 模型相关API
  */
