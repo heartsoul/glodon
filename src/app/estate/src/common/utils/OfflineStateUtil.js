@@ -2,7 +2,7 @@
  * 在线离线状态存储
  */
 import React,{Component} from 'react';
-import * as API from 'app-api';
+import API from 'app-api';
 import { ActionModal } from 'app-components';
 import UserInfoManager from '../../pages/offline/manager/UserInfoManager'
 let isShow = true;

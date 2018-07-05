@@ -1,4 +1,4 @@
-import * as API from "./../api/api+bimpm";
+import API from "./../api/api+bimpm";
 
 /**
  * 获取批注列表

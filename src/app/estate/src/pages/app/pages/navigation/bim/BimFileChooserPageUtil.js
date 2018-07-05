@@ -1,4 +1,4 @@
-import * as API from 'app-api';
+import API from 'app-api';
 
 //获取图纸和模型列表数据
 export default class BimFileChooserPageUtil{

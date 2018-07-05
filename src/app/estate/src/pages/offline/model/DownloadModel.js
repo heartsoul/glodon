@@ -4,7 +4,7 @@ import { Platform,} from 'react-native';
   import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive';
   import {Buffer} from 'buffer';
   import DirManager from '../manager/DirManager'
-  import * as API from 'app-api';
+  import API from 'app-api';
   import OfflineManager from '../manager/OfflineManager';
   import ThreadModule from '../model/ThreadModule';
 

@@ -10,7 +10,7 @@ import {
     FlatList,
     Image
 } from 'react-native';
-import * as API from "app-api";
+import API from "app-api";
 
  export default class RelevantModelAttribution extends Component {
 

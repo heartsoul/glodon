@@ -23,7 +23,7 @@ import {ActionModal} from 'app-components';
 import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil';
 import OfflineManager from '../../../offline/manager/OfflineManager'
 import DirManager from '../../../offline/manager/DirManager'
-import * as API from "app-api";
+import API from "app-api";
 // import { YellowBox } from 'react-native';//忽略黄色警告
 
 export class MainTabTitle extends Component {
