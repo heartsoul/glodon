@@ -4,15 +4,9 @@ import { Platform,} from 'react-native';
   import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive';
   import {Buffer} from 'buffer';
   import DirManager from '../manager/DirManager'
-<<<<<<< Updated upstream
-  import API from 'app-api';
-=======
   import * as API from 'app-api';
-  
-
   import OfflineManager from '../manager/OfflineManager';
   import ThreadModule from '../model/ThreadModule';
->>>>>>> Stashed changes
 
   import {DeviceEventEmitter} from 'app-3rd/index';
   

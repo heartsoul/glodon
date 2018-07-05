@@ -162,14 +162,15 @@ android {
          debug {
 //              测试
 //            applicationIdSuffix ".debug"
-//            storePassword "11111111a#"
-//            keyAlias "keystoretest"
-//            keyPassword "11111111a#"
+            storeFile file('keystoretest.jks')
+            storePassword "11111111a#"
+            keyAlias "keystoretest"
+            keyPassword "11111111a#"
 //  友盟分享
-             storeFile file('debug.keystore')
-             storePassword "android"
-             keyAlias "androiddebugkey"
-             keyPassword "android"
+//             storeFile file('debug.keystore')
+//             storePassword "android"
+//             keyAlias "androiddebugkey"
+//             keyPassword "android"
          }
         release {
             storeFile file('release.jks')

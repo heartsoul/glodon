@@ -37,11 +37,7 @@ class Item extends Component {
 
     render() {
         return (
-<<<<<<< Updated upstream
             <TouchableOpacity onPress={(event)=>{ event.preventDefault(); this.props.onPress(event);}}>
-=======
-            <TouchableOpacity onPress={(event)=>{ event.preventDefault(); this.props.onPress();}}>
->>>>>>> Stashed changes
                 <View style={styles.itemContainer}>
                     <Text style={styles.itemTitle}>{this.props.title}</Text>
                     {

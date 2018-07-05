@@ -2,7 +2,7 @@
 import { requestJSON, BASE_UPLOAD_URL } from "common-module/index"
 import { RNFetchBlob} from 'app-3rd' 
 import {DeviceEventEmitter} from 'app-3rd'
-import OfflineStateUtil from '../../../common/utils/OfflineStateUtil'
+import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
 
 /**
  * 获取operationCode

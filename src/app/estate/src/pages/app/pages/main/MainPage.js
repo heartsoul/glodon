@@ -211,7 +211,7 @@ export default class extends Component {
             storage.projectIdVersionId = latestVersion;
             storage.setLatestVersionId(projectId,latestVersion);
 
-            console.log('--------------------------------------')
+            console.log('----------------_getlatestVersion----------------------')
             console.log(responseData)
             let bm = OfflineManager.getBasicInfoManager();
             bm.downloadBasicInfo((p,t)=>{});

@@ -1,8 +1,5 @@
 import { RNFS} from 'app-3rd';
 import DirManager from '../manager/DirManager';
-<<<<<<< Updated upstream
-import API from 'app-api';
-=======
 import * as API from 'app-api';
 import ModelHandler from '../handler/ModelHandler';
 import {DeviceEventEmitter} from 'app-3rd/index';
@@ -13,7 +10,6 @@ let handler = null;
 let projectId ;
 let projectVersionId ;
 let modelList = null;
->>>>>>> Stashed changes
 /**
  * 模型相关处理
  */
