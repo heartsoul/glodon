@@ -2,37 +2,28 @@
  * Created by Soul on 2018/03/16.
  */
 'use strict';
-import { LoadingView, NoDataView } from "app-components";
+
 import PropTypes from 'prop-types';
-import React, { Component } from "react";
-import { FlatList, RefreshControl, StyleSheet, View} from "react-native";
+import {StyleSheet, View} from "react-native";
 import DocView from './DocView';
 
-export default class extends Component {
+export default class DocFileListView extends DataFileListViewBase {
 
     static propTypes = {
-        dataArray: PropTypes.array.isRequired,
+        ...DataFileListViewBase,
         onItemPresss: PropTypes.func,// 选择状态变更 (item,index)=>{xxxxx}
         onItemSelected: PropTypes.func,// 选择状态变更 (seletedItems, selected，item,index)=>{xxxxx}
         onAllItemSelected: PropTypes.func,// 选择状态变更 (seletedItems,seleted)=>{xxxxx}
         onChangeEditMode: PropTypes.func,// 编辑状态变更 (isEdit)=>{xxxxx}
-        isEdit:PropTypes.bool,
+        isEdit:PropTypes.bool, // 是否是编辑状态
+        onMoreAction:PropTypes.bool,  // 是否需要更多...
         userPrivilege:PropTypes.object,
-        onEndReached=PropTypes.func,
-        onRefresh=PropTypes.func,
-        refreshing=PropTypes.bool,
-        isLoading=PropTypes.bool,
-        error:PropTypes.object,
     }
 
     constructor(props) {
         super(props);
-        const {selectedItems=[],isEdit=false,dataArray=[],refreshing=false,isLoading=true,error=null} = this.props ;
+        const {selectedItems=[],isEdit=false} = props ;
         this.state = {
-            error:error,
-            isLoading: isLoading,
-            refreshing: refreshing,
-            dataArray: dataArray,
             isEdit:isEdit,
             selectedItems:selectedItems,
             userPrivilege:userPrivilege
@@ -95,19 +86,6 @@ export default class extends Component {
     }
 
     /**
-     * 数据项点击事件处理
-     *
-     */
-    _itemClick = (item, index) => {
-        if(this.state.isEdit) {
-            // 这里需要处理编辑状态，
-            this._itemSelected(item.value.selected,item,index);
-            return;
-        }
-        this.props.onItemPresss && this.props.onItemPresss(item,index);
-    }
-
-    /**
      * 数据分隔线
      *
      */
@@ -129,15 +107,10 @@ export default class extends Component {
      *
      */
     renderFileView = ({ item, index }) => {
-        let onPress = () => {this._itemClick(item, index)};
-        let onMore = ()=>{this.onMore(item, index)};
-        let onSelect = (event,selected) => {this._itemSelected(selected,item, index)};
+        let onPress = this.props.onItemPresss;
+        let onMore = this.props.onMoreAction;
+        let onSelect = this.props.onItemSelected ? (event,selected) => {this._itemSelected(selected,item, index)} : null;
         let {selected = false} = item.value;
-        if(this.state.isEdit) {
-            onMore = null;
-        } else {
-            onSelect = null;
-        }
         return (
             <DocView onMore={onMore} onSelect={onSelect} selected={selected}>
                 <DocView.DocFileItemView key={index} onPress={onPress}
@@ -150,15 +123,10 @@ export default class extends Component {
      *
      */
     renderFolderView = ({ item, index }) => {
-        let onPress = () => {this._itemClick(item, index)};
-        let onMore = ()=>{this.onMore(item, index)};
-        let onSelect = (event,selected) => {this._itemSelected(selected,item, index)};
+        let onPress = this.props.onItemPresss;
+        let onMore = this.props.onMoreAction;
+        let onSelect = this.props.onItemSelected ? (event,selected) => {this._itemSelected(selected,item, index)} : null;
         let {selected = false} = item.value;
-        if(this.state.isEdit) {
-            onMore = null;
-        } else {
-            onSelect = null;
-        }
         return (
             <DocView onMore={onMore} onSelect={onSelect} selected={selected}>
             <DocView.DocFolderItemView key={index} onPress={onPress}
