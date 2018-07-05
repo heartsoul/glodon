@@ -1,4 +1,4 @@
-import API from "./../api/api+bimpm";
+import * as API from "./../api/api+bimpm";
 
 /**
  * 获取批注列表
@@ -200,6 +200,6 @@ export async function getModelMarkupComments(modelVersionId, fileId, markupId, o
 export async function addModelMarkupComment(modelVersionId, fileId, markupId, content, deptId, receiverIds = []) {
     return API.addModelMarkupComment(modelVersionId, fileId, markupId, content, deptId, receiverIds = [])
         .then(response => {
-            return response;
+            return response.data.data;//返回新增的评论
         })
 }
