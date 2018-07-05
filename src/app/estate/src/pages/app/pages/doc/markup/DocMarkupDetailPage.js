@@ -22,7 +22,6 @@ class DocMarkupDetailPage extends Component {
         headerLeft: <BarItems />,
         headerRight: navigation.state.params && navigation.state.params.loadRightTitle ? navigation.state.params.loadRightTitle() : <View />
     })
-    overlayView = null;//输入框弹窗
 
     constructor(props) {
         super(props);
@@ -39,6 +38,12 @@ class DocMarkupDetailPage extends Component {
         this.props.getModelMarkupComments(this.props.data, this.state.modelVersionId, this.state.fileId, this.state.markup.id, 0)
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.sendStatus != nextProps.sendStatus && nextProps.sendStatus == 'success') {
+            this._onRefresh();//发送成功后刷新列表
+        }
+    }
+
     _loadRightTitle = () => {
         return (
             <BarItems navigation={this.props.navigation}>
@@ -48,7 +53,7 @@ class DocMarkupDetailPage extends Component {
 
     }
 
-    _onMorePress = (navigation, event, barItem,) => {
+    _onMorePress = (navigation, event, barItem, ) => {
         // 菜单
         let fromView = barItem;
         fromView.measureInWindow((x, y, width, height) => {
@@ -102,11 +107,11 @@ class DocMarkupDetailPage extends Component {
 
     //添加评论
     _addModelMarkupComment = (content, receiverIds) => {
-        this.props.addModelMarkupComment(this.state.modelVersionId, this.state.fileId, this.state.markup.id, content, storate.loadProject(), receiverIds)
+        this.props.addModelMarkupComment(this.state.modelVersionId, this.state.fileId, this.state.markup.id, content, storage.loadProject(), receiverIds)
     }
     //显示评论输入框
     _showCommentInputView = () => {
-        CommentInputView.show(this._addModelMarkupComment);
+        CommentInputView.show(this._addModelMarkupComment, { modelVersionId: this.state.modelVersionId, fileId: this.state.fileId, markupId: this.state.markup.id });
     }
 
     _onRefresh = () => {
@@ -329,6 +334,7 @@ export default connect(
         isLoading: state.docMarkup.comments.isLoading,
         comments: state.docMarkup.comments.data,
         hasMore: state.docMarkup.comments.hasMore,
+        sendStatus: state.docMarkup.sendComments.status,
     }),
     dispatch => ({
         getModelMarkupComments: (dataArray, modelVersionId, fileId, markupId, offset, limit) => {
