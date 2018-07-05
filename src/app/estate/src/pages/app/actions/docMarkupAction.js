@@ -19,6 +19,33 @@ export function fetchData(listType, modelVersionId, fileId, dataMap, creatorId, 
     }
 }
 
+/**
+ * 获取批注评论列表
+ * @param {*} dataArray 
+ * @param {*} modelVersionId 
+ * @param {*} fileId 
+ * @param {*} markupId 
+ * @param {*} offset 
+ * @param {*} limit 
+ */
+export function getModelMarkupComments(dataArray, modelVersionId, fileId, markupId, offset, limit) {
+    return dispatch => {
+        // getModelMarkupComments(modelVersionId, fileId, markupId, offset, limit)
+        let list = [];
+        if (offset != 0) {
+            list = dataArray;
+        }
+        SERVICE.getModelMarkupComments(modelVersionId, fileId, markupId, offset, limit)
+            .then(data => {
+                let hasMore = data.length > 0;
+                dispatch(_loadingSuccess('listType', list.concat(data), offset, hasMore))
+            }).catch(err => {
+
+            })
+    }
+}
+
+
 function _loading(listType) {
     return {
         type: types.DOC_MARKUP_TYPE_LOADING,

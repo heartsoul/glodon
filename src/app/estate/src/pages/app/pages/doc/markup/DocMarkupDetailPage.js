@@ -11,6 +11,9 @@ import {
 import { BarItems } from 'app-components';
 import { Menu } from 'app-3rd/teaset';
 import CommentInputView from './CommentInputView'
+import SERVICE from 'app-api/service'
+import { Toast } from 'antd-mobile';
+
 
 class DocMarkupDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -22,10 +25,11 @@ class DocMarkupDetailPage extends Component {
 
     constructor(props) {
         super(props);
-        let { markup = {} } = this.props.navigation.state.params;
+        let { markup = {}, modelVersionId, fileId } = this.props.navigation.state.params;
         this.state = {
             markup: markup,
-            showCommentInput: false,
+            modelVersionId: modelVersionId,
+            fileId: fileId,
             comments: [
                 { name: 'aa', content: "aa" },
                 { name: 'aa', content: "aa" },
@@ -33,8 +37,6 @@ class DocMarkupDetailPage extends Component {
                 { name: 'aa', content: "aa" },
                 { name: 'aa', content: "aa" },
                 { name: 'aa', content: "aa" },
-
-
             ],
         };
         this.props.navigation.setParams({ loadRightTitle: this._loadRightTitle, })
@@ -43,35 +45,70 @@ class DocMarkupDetailPage extends Component {
     _loadRightTitle = () => {
         return (
             <BarItems navigation={this.props.navigation}>
-                <BarItems.RightBarItem navigation={this.props.navigation} textStyle={{ fontSize: 22, height: 30, }} text="..." onPress={(navigation, event, barItem) => this._onMorePress(navigation, event, barItem)} />
+                <BarItems.RightBarItem navigation={this.props.navigation} textStyle={{ fontSize: 22, height: 30, }} text="..." onPress={(navigation, event, barItem, textView) => this._onMorePress(navigation, event, barItem, textView)} />
             </BarItems>
         )
 
     }
 
-    _onMorePress = (navigation, event, barItem) => {
+    _onMorePress = (navigation, event, barItem, textView) => {
         // 菜单
-        let fromView = barItem;
+        let fromView = textView;
         fromView.measureInWindow((x, y, width, height) => {
             let showMenu = null;
             let items = [
-                { title: <Text>更多...</Text>, onPress: () => { } },
                 {
-                    title: <View><TouchableOpacity onPress={() => { Menu.hide(showMenu); this._changeOrderType('time'); }}>
-                        <Text style={{ lineHeight: 30, color: this.state.orderType !== 'time' ? '#000000' : '#00baf3' }}>文件时间</Text>
-                    </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { Menu.hide(showMenu); this._changeOrderType('name'); }} style={{}}>
-                            <Text style={{ lineHeight: 30, color: this.state.orderType !== 'name' ? '#000000' : '#00baf3' }}>文件名称</Text>
-                        </TouchableOpacity>
-                    </View>
-                }
-            ];
+                    title: <Text style={{ color: '#fff', fontSize: 14 }}>删除批注</Text>, onPress: () => {
+                        this._deleteMarkup();
+                    }
+                },
+                {
+                    title: <Text style={{ color: '#fff', fontSize: 14 }}>关闭批注</Text>, onPress: () => {
+                        this._closeMarkup();
+                    }
+                },
 
+            ];
+            y += 15
             showMenu = Menu.show({ x, y, width, height }, items, {
-                align: 'end', showArrow: true, shadow: Platform.OS === 'ios' ? true : false,
+                align: 'end', showArrow: false, shadow: Platform.OS === 'ios' ? true : false,
                 popoverStyle: [{ paddingLeft: 10, paddingRight: 10 }], directionInsets: 0, alignInsets: -5, paddingCorner: 10
             });
         });
+    }
+    //删除批注
+    _deleteMarkup = () => {
+        SERVICE.deleteModelMarkup(this.state.modelVersionId, this.state.fileId, this.state.markupId.id)
+            .then(data => {
+                if (data && data.success) {
+                    Toast.info('批注已删除', 1)
+                    this.props.navigation.goBack();
+                } else {
+                    Toast.info('删除批注失败', 1)
+                }
+            }).catch(err => {
+                Toast.info('删除批注失败', 1)
+            })
+    }
+    //关闭批注
+    _closeMarkup = () => {
+        SERVICE.closeModelMarkup(this.state.modelVersionId, this.state.fileId, this.state.markupId.id)
+            .then(data => {
+                if (data && data.success) {
+                    Toast.info('批注已关闭', 1)
+                } else {
+                    Toast.info('关闭批注失败', 1)
+                }
+            }).catch(err => {
+                Toast.info('关闭批注失败', 1)
+            })
+    }
+    
+    _sendComment = (content) => {
+        SERVICE.addModelMarkupComment(this.state.modelVersionId, this.state.fileId, this.state.markupId.id, content, storage.loadProject(), receiverIds = [])
+            .then(data => {
+                //把新增的评论加入到列表
+            })
     }
 
     _renderHeader = () => {
@@ -117,7 +154,7 @@ class DocMarkupDetailPage extends Component {
     }
 
     _showCommentInputView = () => {
-        CommentInputView.show();
+        CommentInputView.show(this._sendComment);
     }
 
     render() {
