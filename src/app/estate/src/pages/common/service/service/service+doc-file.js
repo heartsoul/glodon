@@ -1,5 +1,5 @@
 import * as CONSTANT from "./../api/api+constant";
-import API from "./../api/api+bimpm";
+import * as API from "./../api/api+bimpm";
 
 
 /**

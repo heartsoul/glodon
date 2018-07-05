@@ -905,7 +905,7 @@ export async function getModelMarkupComments(modelVersionId, fileId, markupId, o
   "message": "string"
 }
  */
-export async function addModelMarkupComment(containerId, fileIds, markupId, content, deptId, receiverIds = []) {
+export async function addModelMarkupComment(modelVersionId, fileId, markupId, content, deptId, receiverIds = []) {
     let api = `/bimpm/modelVersions/${modelVersionId}/files/${fileId}/markups/${markupId}/comments`;
     let params = {
         content: content,

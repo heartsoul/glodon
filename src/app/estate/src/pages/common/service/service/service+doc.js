@@ -1,5 +1,5 @@
 import * as CONSTANT from "./../api/api+constant";
-import API from "./../api/api+doc";
+import * as API from "./../api/api+doc";
 
 /**
  * 获取文档容器信息

@@ -3,7 +3,7 @@ import {
     View,
     Text,
     Image,
-    ScrollView,
+    FlatList,
     TouchableOpacity,
     StyleSheet,
     Platform,
@@ -11,6 +11,10 @@ import {
 import { BarItems } from 'app-components';
 import { Menu } from 'app-3rd/teaset';
 import CommentInputView from './CommentInputView'
+import SERVICE from 'app-api/service'
+import { Toast } from 'antd-mobile';
+import { connect } from 'react-redux';
+import * as DocMarkupAction from '../../../actions/docMarkupAction';
 
 class DocMarkupDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -22,22 +26,17 @@ class DocMarkupDetailPage extends Component {
 
     constructor(props) {
         super(props);
-        let { markup = {} } = this.props.navigation.state.params;
+        let { markup = {}, modelVersionId, fileId } = this.props.navigation.state.params;
         this.state = {
             markup: markup,
-            showCommentInput: false,
-            comments: [
-                { name: 'aa', content: "aa" },
-                { name: 'aa', content: "aa" },
-                { name: 'aa', content: "aa" },
-                { name: 'aa', content: "aa" },
-                { name: 'aa', content: "aa" },
-                { name: 'aa', content: "aa" },
-
-
-            ],
+            modelVersionId: modelVersionId,
+            fileId: fileId,
         };
         this.props.navigation.setParams({ loadRightTitle: this._loadRightTitle, })
+    }
+
+    componentDidMount() {
+        this.props.getModelMarkupComments(this.props.data, this.state.modelVersionId, this.state.fileId, this.state.markup.id, 0)
     }
 
     _loadRightTitle = () => {
@@ -49,34 +48,84 @@ class DocMarkupDetailPage extends Component {
 
     }
 
-    _onMorePress = (navigation, event, barItem) => {
+    _onMorePress = (navigation, event, barItem,) => {
         // 菜单
         let fromView = barItem;
         fromView.measureInWindow((x, y, width, height) => {
             let showMenu = null;
             let items = [
-                { title: <Text>更多...</Text>, onPress: () => { } },
                 {
-                    title: <View><TouchableOpacity onPress={() => { Menu.hide(showMenu); this._changeOrderType('time'); }}>
-                        <Text style={{ lineHeight: 30, color: this.state.orderType !== 'time' ? '#000000' : '#00baf3' }}>文件时间</Text>
-                    </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { Menu.hide(showMenu); this._changeOrderType('name'); }} style={{}}>
-                            <Text style={{ lineHeight: 30, color: this.state.orderType !== 'name' ? '#000000' : '#00baf3' }}>文件名称</Text>
-                        </TouchableOpacity>
-                    </View>
-                }
-            ];
+                    title: <Text style={{ color: '#fff', fontSize: 14 }}>删除批注</Text>, onPress: () => {
+                        this._deleteMarkup();
+                    }
+                },
+                {
+                    title: <Text style={{ color: '#fff', fontSize: 14 }}>关闭批注</Text>, onPress: () => {
+                        this._closeMarkup();
+                    }
+                },
 
+            ];
             showMenu = Menu.show({ x, y, width, height }, items, {
                 align: 'end', showArrow: true, shadow: Platform.OS === 'ios' ? true : false,
                 popoverStyle: [{ paddingLeft: 10, paddingRight: 10 }], directionInsets: 0, alignInsets: -5, paddingCorner: 10
             });
         });
     }
+    //删除批注
+    _deleteMarkup = () => {
+        SERVICE.deleteModelMarkup(this.state.modelVersionId, this.state.fileId, this.state.markupId.id)
+            .then(data => {
+                if (data && data.success) {
+                    Toast.info('批注已删除', 1)
+                    this.props.navigation.goBack();
+                } else {
+                    Toast.info('删除批注失败', 1)
+                }
+            }).catch(err => {
+                Toast.info('删除批注失败', 1)
+            })
+    }
+    //关闭批注
+    _closeMarkup = () => {
+        SERVICE.closeModelMarkup(this.state.modelVersionId, this.state.fileId, this.state.markupId.id)
+            .then(data => {
+                if (data && data.success) {
+                    Toast.info('批注已关闭', 1)
+                } else {
+                    Toast.info('关闭批注失败', 1)
+                }
+            }).catch(err => {
+                Toast.info('关闭批注失败', 1)
+            })
+    }
+
+    //添加评论
+    _addModelMarkupComment = (content, receiverIds) => {
+        this.props.addModelMarkupComment(this.state.modelVersionId, this.state.fileId, this.state.markup.id, content, storate.loadProject(), receiverIds)
+    }
+    //显示评论输入框
+    _showCommentInputView = () => {
+        CommentInputView.show(this._addModelMarkupComment);
+    }
+
+    _onRefresh = () => {
+        if (this.props.isLoading) {
+            return;
+        }
+        this.props.getModelMarkupComments(this.props.data, this.state.modelVersionId, this.state.fileId, this.state.markup.id, 0)
+    }
+
+    _onEndReached = () => {
+        if (this.props.isLoading || this.props.hasMore == false) {
+            return;
+        }
+        this.props.getModelMarkupComments(this.props.data, this.state.modelVersionId, this.state.fileId, this.state.markup.id, this.props.offset)
+    }
 
     _renderHeader = () => {
         return (
-            <View>
+            <View style={styles.containerView}>
                 <View style={styles.infoContainer}>
                     <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
                     <View style={{ marginLeft: 10, flex: 1 }}>
@@ -101,39 +150,42 @@ class DocMarkupDetailPage extends Component {
             </View>
         )
     }
+    _renderFooter = () => {
+        return (
+            <View style={styles.listFooter}></View>
+        )
+    }
 
     _renderCommentItem = (item, index) => {
         return (
             <View key={`comment-key${index}`}>
-                <View style={styles.infoContainer}>
-                    <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
-                    <Text style={[styles.textMain, { flex: 1, marginLeft: 10 }]}>{this.state.markup.creatorName}</Text>
-                    <Text style={styles.textLight}>{this.state.markup.createTime}</Text>
+                <View style={styles.itemShadow}>
+                    <View style={styles.infoContainer}>
+                        <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
+                        <Text style={[styles.textMain, { flex: 1, marginLeft: 10 }]}>{this.state.markup.creatorName}</Text>
+                        <Text style={styles.textLight}>{this.state.markup.createTime}</Text>
+                    </View>
+                    <Text style={[styles.textMain, { margin: 15 }]}>王伟也注意一下@王伟</Text>
                 </View>
-                <Text style={[styles.textMain, { margin: 15 }]}>王伟也注意一下@王伟</Text>
             </View>
-
         )
-    }
-
-    _showCommentInputView = () => {
-        CommentInputView.show();
     }
 
     render() {
         return (
             <View style={{ backgroundColor: '#fff', width: '100%', height: '100%' }}>
-                <ScrollView
-                >
-                    <View style={styles.containerView}>
-                        {this._renderHeader()}
-                        {
-                            this.state.comments.map((item, index) => {
-                                return this._renderCommentItem(item, index)
-                            })
-                        }
-                    </View>
-                </ScrollView>
+                <FlatList
+                    data={this.props.comments}
+                    renderItem={({ item, index }) => { return this._renderCommentItem(item, index) }}
+                    onRefresh={this._onRefresh}
+                    refreshing={this.props.isLoading}
+                    onEndReached={this._onEndReached}
+                    onEndReachedThreshold={1}
+                    ListHeaderComponent={this._renderHeader()}
+                    ListFooterComponent={this._renderFooter()}
+                    showsVerticalScrollIndicator={false}
+                />
+
                 <View style={styles.commentBar}>
                     <TouchableOpacity onPress={(event) => { event.preventDefault(), this._showCommentInputView() }}>
                         <Text style={styles.commentBarText}>评论</Text>
@@ -149,19 +201,44 @@ class DocMarkupDetailPage extends Component {
 
 const styles = StyleSheet.create({
     containerView: {
-        borderRadius: 8,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
         marginTop: 10,
+        marginLeft: 20,
+        marginRight: 20,
+        paddingBottom: 10,
+        backgroundColor: '#FFF',
+        elevation: 2.5, // android 
+        shadowColor: "#333", // iOS
+        shadowOffset: { width: 1.5, height: 5 }, // iOS
+        shadowOpacity: 0.15, // iOS
+        shadowRadius: 3, // iOS
+    },
+    itemShadow: {
+        marginLeft: 20,
+        marginRight: 20,
+        backgroundColor: '#FFF',
+        elevation: 2.5, // android 
+        shadowColor: "#333", // iOS
+        shadowOffset: { width: 1.5, height: 5 }, // iOS
+        shadowOpacity: 0.15, // iOS
+        shadowRadius: 3, // iOS
+    },
+    listFooter: {
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8,
         marginBottom: 70,
         marginLeft: 20,
         marginRight: 20,
         paddingBottom: 10,
         backgroundColor: '#FFF',
         elevation: 2.5, // android 
-        shadowColor: "red", // iOS
+        shadowColor: "#333", // iOS
         shadowOffset: { width: 1.5, height: 5 }, // iOS
         shadowOpacity: 0.15, // iOS
         shadowRadius: 3, // iOS
     },
+
     infoContainer: {
         marginTop: 10,
         marginLeft: 10,
@@ -245,4 +322,20 @@ const styles = StyleSheet.create({
     },
 })
 
-export default DocMarkupDetailPage;
+
+export default connect(
+    state => ({
+        offset: state.docMarkup.comments.offset,
+        isLoading: state.docMarkup.comments.isLoading,
+        comments: state.docMarkup.comments.data,
+        hasMore: state.docMarkup.comments.hasMore,
+    }),
+    dispatch => ({
+        getModelMarkupComments: (dataArray, modelVersionId, fileId, markupId, offset, limit) => {
+            dispatch(DocMarkupAction.getModelMarkupComments(dataArray, modelVersionId, fileId, markupId, offset, limit));
+        },
+        addModelMarkupComment: (modelVersionId, fileId, markupId, content, deptId, receiverIds = []) => {
+            dispatch(DocMarkupAction.addModelMarkupComment(modelVersionId, fileId, markupId, content, deptId, receiverIds));
+        }
+    }),
+)(DocMarkupDetailPage)
