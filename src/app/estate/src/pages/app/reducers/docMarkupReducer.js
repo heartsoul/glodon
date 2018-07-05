@@ -26,6 +26,16 @@ const initialState = {
             hasMore: true
         }
         ,
+    },
+    comments: {
+        data: [],
+        offset: 0,
+        hasMore: true,
+        isLoading: false,
+    },
+    sendComments: {
+        data: {},
+        status: '',//sending success fail
     }
 }
 
@@ -52,6 +62,42 @@ export default (state = initialState, action) => {
             dataItem2.data = action.data;
             dataItem2.page = action.page;
             dataItem2.hasMore = action.hasMore;
+            return {
+                ...state,
+            }
+        case types.DOC_MARKUP_TYPE_LOADING_COMMENTS:
+            let comments = state.comments
+            comments.isLoading = true;
+            return {
+                ...state,
+            }
+        case types.DOC_MARKUP_TYPE_LOAD_COMMENTS_COMPLETE:
+            let comments2 = state.comments
+            comments2.isLoading = false;
+            comments2.data = action.data;
+            comments2.offset = action.offset;
+            comments2.hasMore = action.hasMore;
+            return {
+                ...state,
+            }
+        case types.DOC_MARKUP_TYPE_SENDING_COMMENTS:
+            let sendComments1 = state.sendComments;
+            sendComments1.status = 'sending';
+            return {
+                ...state,
+            }
+        case types.DOC_MARKUP_TYPE_SEND_COMMENTS_SUCCESS:
+            let sendComments2 = state.sendComments;
+            sendComments2.data = action.data;
+            sendComments2.status = 'success';
+            let commentsData = state.comments.data
+            commentsData.splice(0, 0, action.data)
+            return {
+                ...state,
+            }
+        case types.DOC_MARKUP_TYPE_SEND_COMMENTS_FAIL:
+            let sendComments3 = state.sendComments;
+            sendComments3.status = 'fail';
             return {
                 ...state,
             }
