@@ -6,8 +6,8 @@
 import PropTypes from 'prop-types';
 import {StyleSheet, View} from "react-native";
 import DocView from './DocView';
-
-export default class DocFileListView extends DataFileListViewBase {
+import DataListViewBase from './DataListViewBase'
+export default class DocFileListView extends DataListViewBase {
 
     static propTypes = {
         ...DataFileListViewBase,
@@ -17,7 +17,7 @@ export default class DocFileListView extends DataFileListViewBase {
         onChangeEditMode: PropTypes.func,// 编辑状态变更 (isEdit)=>{xxxxx}
         isEdit:PropTypes.bool, // 是否是编辑状态
         onMoreAction:PropTypes.bool,  // 是否需要更多...
-        userPrivilege:PropTypes.object,
+        userPrivilege:PropTypes.object, // 权限
     }
 
     constructor(props) {
@@ -89,8 +89,36 @@ export default class DocFileListView extends DataFileListViewBase {
      * 数据分隔线
      *
      */
-    _separator = () => {
+    renderSeparatorView = () => {
         return <View style={{ height: 1, backgroundColor: '#ededed',marginRight:20}} />;
+    }
+
+    /**
+     * 构建属性
+     *
+     * @memberof DocFileListView
+     */
+    buildProps = () => {
+        // dataArray: PropTypes.array.isRequired,
+        // onItemPresss: PropTypes.func,// 选择状态变更 (item,index)=>{xxxxx}
+        // onEndReached=PropTypes.func,
+        // onRefresh=PropTypes.func,
+        // refreshing=PropTypes.bool,
+        // isLoading=PropTypes.bool,
+        // error:PropTypes.object,
+        // renderItemView: PropTypes.func, // 数据展示项目
+        // renderSeparatorView: PropTypes.func, // 数据展示分隔项
+        // renderEmptyView: PropTypes.func, // 数据空页面
+        // renderFooterView: PropTypes.func, // 数据头
+        // renderHeaderView: PropTypes.func, // 数据尾
+        // renderListHeader: PropTypes.func, // 数据列表头
+        // renderListFooter: PropTypes.func, // 数据列表尾
+        let {renderItemView=this.renderItemView,
+            onItemPresss=this.onItemPresss, 
+            renderSeparatorView=this.renderSeparatorView, 
+            renderListFooter=this.renderListFooter,
+            ...others} = this.props;
+        this.props = {renderItemView, onItemPresss, ...others};
     }
 
     //返回itemView
@@ -135,68 +163,25 @@ export default class DocFileListView extends DataFileListViewBase {
     }
 
     /**
-     * 列表底部视图，防止由于工具条导致数据显示不全
+     * 外的数据列表尾部,一般是一个浮动的工具条
+     *  列表底部视图，防止由于工具条导致数据显示不全
      *
+     * @memberof DataFileListViewBase
      */
-    renderFooterView = () => {
+    renderListFooter = () => {
+        let ret = super.renderItemView();
+        if(ret) {
+            return ret;
+        }
         return <View style={{height:50,width:'100%'}} />
     }
-
-    renderEmptyView = () => {
-        return <NoDataView text='暂无数据' />
-    }
-    /**
-     * 列表
-     */
-    renderList = () => {
-        return (
-            <FlatList
-                data={this.state.dataArray}
-                renderItem={this.renderItemView}
-                ListFooterComponent={this.renderFooterView}
-                ListEmptyComponent={this.renderEmptyView}
-                ItemSeparatorComponent={this._separator}
-                onEndReached={this.props.onEndReached}
-                onRefresh={this.props.onRefreshing}
-                refreshing={this.props.refreshing}
-                onEndReachedThreshold={0.1}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={this.props.refreshing}
-                    />
-                }
-            />
-        );
-    }
-
-    renderData = () => {
-        return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
-                {this.renderList()}
-                {this.renderToolbar(!this.props.isRoot)}
-            </View>
-        );
-    }
-
-    render = () => {
-        //第一次加载等待的view
-        if (this.state.isLoading && !this.state.error) {
-            return (<LoadingView />);
-        } else if (this.state.error) {
-            //请求失败view
-            return this.renderErrorView(this.state.errorInfo);
-        }
-        //加载数据
-        return this.renderData();
+    render() {
+        this.buildProps();
+        return super.render();
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#FFFFFF',
-    },
     containerFolderView: {
         // flex: 1,
         height: 52,

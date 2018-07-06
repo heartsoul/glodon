@@ -7,23 +7,13 @@ import { BarItems, LoadingView, NoDataView, ShareManager } from "app-components"
 import React, { Component } from "react";
 import { FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
 import { Menu,TabView } from 'app-3rd/teaset';
-import { SERVER_TYPE } from "common-module"
+import { SERVER_TYPE } from "common-module";
 import DocView from './../components/DocView';
 import DocActionSheet from './../components/DocActionSheet';
+import DocEditFileDataList from './../components/DocEditFileDataList';
 
+export default class extends DocEditFileDataList {
 
-export default class extends Component {
-   
-    static navigationOptions = ({ navigation }) => {
-        const { params={} } = navigation.state;
-        const {renderTitle,renderLeft,renderRight} = params;
-        return {
-            headerTitle: renderTitle && renderTitle(),
-            headerRight: renderRight && renderRight(),
-            headerLeft: renderLeft && renderLeft(),
-        }
-    };
-    
     constructor(props) {
         super(props);
         const {params={}} = this.props.navigation.state ;

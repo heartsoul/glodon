@@ -12,16 +12,13 @@
 @property (strong, nonatomic) NSCache *memCache;
 @property (strong, nonatomic) NSString *diskCachePath;
 @property (strong, nonatomic) NSMutableArray *customPaths;
-@property (SDDispatchQueueSetterSementics, nonatomic) dispatch_queue_t ioQueue;
+@property (strong, nonatomic) dispatch_queue_t ioQueue;
 
 @end
 @implementation SDDataCache
 {
     SDImageCache *_sdCache;
     NSFileManager *_fileManager;
-}
-- (void)dealloc {
-    SDDispatchQueueRelease(_ioQueue);
 }
 +(SDDataCache*) taskDataCache {
     static dispatch_once_t onceTask;

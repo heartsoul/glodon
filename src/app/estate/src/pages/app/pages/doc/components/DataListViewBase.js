@@ -12,13 +12,20 @@ export default class DataFileListViewBase extends Component {
     static propTypes = {
         dataArray: PropTypes.array.isRequired,
         onItemPresss: PropTypes.func,// 选择状态变更 (item,index)=>{xxxxx}
-        userPrivilege:PropTypes.object,
         onEndReached=PropTypes.func,
         onRefresh=PropTypes.func,
         refreshing=PropTypes.bool,
         isLoading=PropTypes.bool,
         error:PropTypes.object,
-        renderItemView: PropTypes.func, // 数据展示
+        renderItemView: PropTypes.func.isRequired, // 数据展示项目
+        renderSeparatorView: PropTypes.func, // 数据展示分隔项
+        renderEmptyView: PropTypes.func, // 数据空页面
+        renderFooterView: PropTypes.func, // 数据头
+        renderHeaderView: PropTypes.func, // 数据尾
+        renderListHeader: PropTypes.func, // 数据列表头
+        renderListFooter: PropTypes.func, // 数据列表尾
+        renderKeyExtractor: PropTypes.func, // 数据列表唯一key生产
+        dataListStyle:PropTypes.any, // 数据列表样式
     }
 
     constructor(props) {
@@ -32,7 +39,7 @@ export default class DataFileListViewBase extends Component {
         }
     }
     
-    _keyExtractor = (item, index) => index;
+    renderKeyExtractor = (item, index) => index;
 
     componentDidMount() {
     }
@@ -47,7 +54,7 @@ export default class DataFileListViewBase extends Component {
      *
      */
     renderSeparatorView = () => {
-        return <View style={{ height: 1, backgroundColor: '#ededed',marginRight:20}} />;
+        return <View style={{ height: 1, backgroundColor: '#ededed'}} />;
     }
 
    
@@ -91,11 +98,13 @@ export default class DataFileListViewBase extends Component {
             renderFooterView=this.renderFooterView,
             renderHeaderView=null,
             renderSeparatorView=this.renderSeparatorView,
+            renderKeyExtractor=this.renderKeyExtractor,
             dataListStyle={}
         } = this.props;
         return (
             <FlatList style={[dataListStyle]}
                 data={this.state.dataArray}
+                keyExtractor={renderKeyExtractor}
                 renderItem={this.props.renderItemView}
                 ListHeaderComponent={renderHeaderView}
                 ListFooterComponent={renderFooterView}
@@ -117,7 +126,6 @@ export default class DataFileListViewBase extends Component {
     renderData = () => {
         return (
             <View style={styles.container}>
-                <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 {this.renderListHeader()}
                 {this.renderList()}
                 {this.renderListFooter()}
