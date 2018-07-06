@@ -51,6 +51,7 @@ import DocProjectTrashListView from './app/pages/doc/project/DocProjectTrashList
 import DocMarkupPage from './app/pages/doc/markup/DocMarkupPage'
 import DocMarkupDetailPage from './app/pages/doc/markup/DocMarkupDetailPage'
 import DocMarkupEditCommentPage from './app/pages/doc/markup/DocMarkupEditCommentPage'
+import DocMarkupChoosePage from './app/pages/doc/markup/DocMarkupChoosePage'
 
 export {
     LoginPage,
@@ -103,4 +104,5 @@ export {
     DocMarkupPage,
     DocMarkupDetailPage,
     DocMarkupEditCommentPage,
+    DocMarkupChoosePage,
 };
