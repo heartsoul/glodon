@@ -46,9 +46,16 @@ class ComponentInputChild extends Component {
                             onChangeText={this._changeText}
                             defaultValue={this.props.content}
                         />
-                        <View style={styles.atBox}>
-                            <Text style={styles.textLight}>@</Text>
-                        </View>
+                        <TouchableWithoutFeedback onPress={(event) => {
+                            event.preventDefault()
+                            CommentInputView.close();
+                            storage.pushNext(null, 'DocMarkupChoosePage')
+                        }}>
+                            <View style={styles.atBox}>
+                                <Text style={styles.textLight}>@</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+
                     </View>
                     <View style={styles.sendBox}>
                         <TouchableOpacity onPress={() => {

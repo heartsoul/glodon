@@ -124,6 +124,9 @@ const screens = {
   DocMarkupEditCommentPage: {
     screen: GLD.DocMarkupEditCommentPage
  },
+ DocMarkupChoosePage: {
+    screen: GLD.DocMarkupChoosePage
+ },
 };
 
 const options = () => {
