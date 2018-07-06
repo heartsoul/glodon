@@ -23,6 +23,7 @@
     "babel-runtime": "^6.26.0",
     "buffer": "^5.1.0",
     "connected-react-router": "^4.3.0",
+    "exif-js": "^2.3.0",
     "glob": "^7.1.2",
     "mpm": "^0.0.1",
     "react": "~16.3.1",
@@ -33,6 +34,7 @@
     "react-native-fs": "^2.9.12",
     "react-native-image-zoom-viewer": "^2.2.3",
     "react-native-keyboard-aware-scroll-view": "^0.4.4",
+    "react-native-section-list-get-item-layout": "^2.2.3",
     "react-native-storage": "^0.2.2",
     "react-native-web": "^0.8.4",
     "react-native-zip-archive": "~2.2.4",
@@ -45,8 +47,7 @@
     "realm": "^2.6.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
-    "teaset": "^0.5.5",
-    "exif-js": "^2.3.0"
+    "teaset": "^0.5.5"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.3",

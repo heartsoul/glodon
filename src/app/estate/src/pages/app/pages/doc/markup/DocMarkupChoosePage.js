@@ -5,16 +5,19 @@ import {
     SectionList,
     TouchableOpacity,
     StyleSheet,
-    StatusBar,
+    Platform,
     PanResponder,
 } from 'react-native';
+import sectionListGetItemLayout from 'react-native-section-list-get-item-layout'
+
+import QuickSelectBar from './QuickSelectBar';
 
 var lettersItemheight = [];//每个字母的y坐标
-let SECTIONHEIGHT = 30;
-let ROWHEIGHT = 40;
-let navigationBarHeight = 56;
+let SECTIONHEIGHT = 40;
+let ROWHEIGHT = 30;
+let navigationBarHeight = Platform.OS === 'ios' ? 44 + 20 : 56;
 let letters = ['A', 'B', 'C', 'D', 'E', 'F']
-let count = 20;
+let count = 10;
 
 class DocMarkupChoosePage extends Component {
 
@@ -42,6 +45,7 @@ class DocMarkupChoosePage extends Component {
             for (let i = 0; i < count; i++) {
                 data.push({ name: `row-${letter}-${i}`, type: letter })
             }
+            lettersItemheight.push({ letter: letter, y: 0 })
         })
 
 
@@ -51,7 +55,6 @@ class DocMarkupChoosePage extends Component {
             sections: sections,
             letters: letters,
         };
-
     }
 
     _sortData = (data) => {
@@ -72,11 +75,6 @@ class DocMarkupChoosePage extends Component {
         return sections;
     }
     scrollTo = (index) => {
-        // let position = 0;
-
-        // for (let i = 0; i < index; i++) {
-        //     position += totalheight[i]
-        // }
         this._listView.scrollToLocation({
             animated: true,
             sectionIndex: index,
@@ -87,11 +85,11 @@ class DocMarkupChoosePage extends Component {
     _getScrollToIndex = (value) => {
         let index = 0;
         let len = lettersItemheight.length;
-        if (value < lettersItemheight[0]) {
+        if (value < lettersItemheight[0].y) {
             return index;
         }
         for (let i = 0; i < len; i++) {
-            if (value > lettersItemheight[i]) {
+            if (value > lettersItemheight[i].y) {
                 index = i;
             }
         }
@@ -135,15 +133,14 @@ class DocMarkupChoosePage extends Component {
     //设置行
     _renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity
+            <View
                 key={`s-${item.type}-r-${index}`}
                 style={{ height: ROWHEIGHT, justifyContent: 'center', paddingLeft: 20, paddingRight: 30 }}
-                onPress={() => {
-                }}>
+            >
                 <View style={styles.rowdata}>
                     <Text style={styles.rowdatatext}>{item.name}</Text>
                 </View>
-            </TouchableOpacity>
+            </View>
 
         )
     }
@@ -162,6 +159,7 @@ class DocMarkupChoosePage extends Component {
     _keyExtractor = (item, index) => {
         return `s-${item.type}-r-${index}`
     };
+
     lettersLayout = (e) => {
         // console.log('lettersLayout 高度' + e.layout.height);
         // console.log('lettersLayout y坐标' + e.layout.y);
@@ -170,17 +168,20 @@ class DocMarkupChoosePage extends Component {
         // console.log('height = ' + height);
     }
 
-    oneLetterLayout = (e) => {
+    oneLetterLayout = (letter, index, e) => {
         // console.log('每个字母高度相对于父布局 y坐标' + e.layout.y);
-        if (lettersItemheight.length != this.state.letters.length) {
-            lettersItemheight.push(e.layout.y);
-        }
+        console.log(`letter y ---------- ${e.layout.y}`)
+        let letterHeight = lettersItemheight[index];
+        letterHeight.y = e.layout.y;
+        // if(lettersItemheight.length != this.state.letters.length) {
+        //     // lettersItemheight.push({ letter: letter, y: e.layout.y });
+        // }
     }
 
     renderLetter(letter, index) {
         return (
             <TouchableOpacity
-                onLayout={({ nativeEvent: e }) => this.oneLetterLayout(e)}
+                onLayout={({ nativeEvent: e }) => this.oneLetterLayout(letter, index, e)}
                 key={index} activeOpacity={0.7}
                 onPressIn={() => {
                     // this.scrollTo(index)
@@ -194,6 +195,15 @@ class DocMarkupChoosePage extends Component {
         )
     }
 
+    _getItemLayout = sectionListGetItemLayout({
+        // The height of the row with rowData at the given sectionIndex and rowIndex
+        getItemHeight: (rowData, sectionIndex, rowIndex) =>  ROWHEIGHT,
+        // These three properties are optional
+        getSeparatorHeight: () => 0, // The height of your separators
+        getSectionHeaderHeight: () => SECTIONHEIGHT, // The height of your section headers
+        getSectionFooterHeight: () => 0, // The height of your section footers
+      })
+
     render() {
         return (
             <View style={{ height: '100%' }}>
@@ -205,8 +215,9 @@ class DocMarkupChoosePage extends Component {
                     stickySectionHeadersEnabled={false}
                     refreshing={false}
                     onEndReachedThreshold={1}
-                    onScrollToIndexFailed={() => { }}
                     keyExtractor={this._keyExtractor}
+                    onScrollToIndexFailed={() => { }}
+                    getItemLayout={this._getItemLayout}
                 />
                 <View
                     ref="ref_letters"
