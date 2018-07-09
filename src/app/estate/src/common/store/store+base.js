@@ -35,6 +35,7 @@ class NativeStorage extends Storage {
     }
     // 到home页面
     gotoMainPage = (navigation,params) => {
+        console.log('1111')
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
@@ -67,66 +68,6 @@ class NativeStorage extends Storage {
             ]
         });
         navigator.dispatch(resetAction);
-    }
-   
-    // 转到页面，会替换
-    gotoMain = (navigation = null, name = "MainPage", params = {}) => {
-        let navigator = navigation;
-        if (!navigator) {
-            navigator = this.homeNavigation;
-        }
-        if (!navigator) {
-            return;
-        }
-        this.hasChoose() ? navigator.replace(name, params = {}) : navigator.replace("ChoosePage", params = {});
-    }
-    // 转到页面，replace模式
-    replaceNext = (navigation, name = "MainPage", params = {}) => {
-        let navigator = navigation;
-        if (!navigator) {
-            navigator = this.homeNavigation;
-        }
-        if (!navigator) {
-            return;
-        }
-        navigator.replace(name, params);
-    }
-    // 转到页面，push模式
-    pushNext = (navigation, name = "MainPage", params = {}) => {
-        let navigator = navigation;
-        if (!navigator) {
-            navigator = this.homeNavigation;
-        }
-        if (!navigator) {
-            return;
-        }
-       let action =  StackActions.push({
-            routeName:name,
-            params:params||{}
-        });
-        navigator.dispatch(action);
-    }
-    // 返回到上一页面
-    goBack = (navigation, params = {}) => {
-        let navigator = navigation;
-        if (!navigator) {
-            navigator = this.homeNavigation;
-        }
-        if (!navigator) {
-            return;
-        }
-        navigator.goBack(params);
-    }
-    // 返回到上一页面
-    pop = (navigation, params = 1) => {
-        let navigator = navigation;
-        if (!navigator) {
-            navigator = this.homeNavigation;
-        }
-        if (!navigator) {
-            return;
-        }
-        navigator.pop(params);
     }
 }
 // 全局变量

@@ -236,6 +236,26 @@ function resetGetStateForAction(RootStack) {
             } else {
                 action.n = null;
             }
+        } 
+        if (action.type === 'removeActions') {
+            const { fromIndex, count, params} = action;
+            action.type = StackActions.RESET;
+            let routes = [...state.routes];
+            routes.splice(fromIndex, count);
+            // Only handle reset actions that are unspecified or match this state key
+            if (action.key != null && action.key != state.key) {
+                // Deliberately use != instead of !== so we can match null with
+                // undefined on either the state or the action
+                return state;
+            }
+            routes.map((item,index)=>{
+                item.params={...item.params,deep:index+1};
+            });
+            return {
+                ...state,
+                routes:routes,
+                index: routes.length - 1,
+            };
         }
         if (Platform.OS === 'android' && action.type === NavigationActions.BACK && state.routes.length === 1) {
             let systemDate = new Date().getTime();
@@ -246,6 +266,7 @@ function resetGetStateForAction(RootStack) {
             }
 
         }
+        
         return defaultGetStateForAction(action, state);
     };
 }

@@ -90,6 +90,21 @@ export default class extends Component {
         this.onSelectPage();
     }
 
+    componentDidMount = () => {
+        this.fetchData(0);
+        // this.props.navigation.addListener(
+        //     'didFocus',
+        //     payload => {
+        //         const {params={}} = this.props.navigation.state ;
+        //     // if((params.isCopyItem || params.isEdit || params.isMoveItem) != (this.state.isCopyItem || this.state.isEdit || this.state.isMoveItem)) {
+        //         console.log('>>>>>>>>sdfsd.>>>>ds');
+        //         this.onSelectPage();
+        //     // }
+    
+        //     }
+        // );
+    }
+    
     renderToolbar = () => {
         if (this.state.isEdit) {
             // 编辑状态
@@ -214,14 +229,15 @@ export default class extends Component {
             return <BarItems.TitleBarItem text={title ? title : '项目文档'} />;
         }
         if(this.state.isCopyItem) {
-            const title = '复制到';
+            const title = '选择复制位置';
             return <BarItems.TitleBarItem text={title ? title : '项目文档'} />;
         }
         if(this.state.isMoveItem) {
-            const title = '移动到到';
+            const title = '选择移动位置';
             return <BarItems.TitleBarItem text={title ? title : '项目文档'} />;
         }
         const title = this.props.navigation.getParam('title');
+        
         return <BarItems.TitleBarItem text={title ? title : '项目文档'} />;
     }
 
@@ -244,9 +260,15 @@ export default class extends Component {
         this.setState({dataArray:this.state.dataArray}); 
         this.onSelectPage(); // 更新标题 
     }
+    updateView = (params) => {
+        this.setState({...params},()=>{
+            this.onSelectAll();
+        });
 
+    }
     _goBack = (navigation) => {
-        storage.pop(navigation,1);
+        this.state.fromNavigation && this.state.fromNavigation.updateView && this.state.fromNavigation.updateView({isCopyItem:this.state.isCopyItem,isMoveItem:this.state.isMoveItem,isEdit:this.state.isEdit});
+        storage.goBack(navigation);
     }
     renderHeaderLeftButtons = () => {
         if(this.state.isEdit) {
@@ -396,10 +418,10 @@ export default class extends Component {
         });
     }
 
-    componentDidMount() {
-        //请求数据
-        this.fetchData(0);
-    }
+    // componentDidMount() {
+    //     //请求数据
+    //     this.fetchData(0);
+    // }
 
     //加载失败view
     renderErrorView(error) {
@@ -417,8 +439,8 @@ export default class extends Component {
         let navigator = this.props.navigation;
         if(this.state.isCopyItem || this.state.isMoveItem) {
             if (item.value.folder === true) {
-                const title = navigator.getParam('title');
-                this.openChoose(title, item.value.fileId, item.value.userPrivilege, this.state.isEdit, this.state.selectedItems, this.state.isMoveItem, this.state.isCopyItem,this.state.fromDeep,this.state.fromNavigation);
+                // const title = navigator.getParam('title');
+                this.openChoose(item.value.name, item.value.fileId, item.value.userPrivilege, this.state.isEdit, this.state.selectedItems, this.state.isMoveItem, this.state.isCopyItem,this.state.fromDeep,this);
             } else {
                 // alert('处理打开文件');
                 // if (this.state.dataType === '图纸文件') {
@@ -432,7 +454,7 @@ export default class extends Component {
             return;
         }
         if (item.value.folder === true) {
-            this.openChoose(item.value.name, item.value.fileId, item.value.userPrivilege, this.state.isEdit, this.state.selectedItems, this.state.isMoveItem, this.state.isCopyItem,this.state.deep);
+            this.openChoose(item.value.name, item.value.fileId, item.value.userPrivilege, this.state.isEdit, this.state.selectedItems, this.state.isMoveItem, this.state.isCopyItem,this.state.deep,null);
         } else {
             alert('处理打开文件');
             // if (this.state.dataType === '图纸文件') {
@@ -629,9 +651,12 @@ export default class extends Component {
             fileIds.push(item.value.fileId);
         });
         SERVICE.moveDocFileBatch(this.state.containerId,fileIds,this.state.fileId).then(()=>{
-            alert('ok');
             this._onCancelEdit();
             this.fetchData(0);
+            const timer = setTimeout(() => {
+                clearTimeout(timer);
+                storage.resetActions(this.props.navigation,{isCopyItem:false,isEdit:false,isMoveItem:false},2, this.state.fromDeep);
+            }, 1000);
         }).catch(err=>{
             alert('failed');
         });
@@ -651,10 +676,12 @@ export default class extends Component {
             fileIds.push(item.value.fileId);
         });
         SERVICE.copyDocFileBatch(this.state.containerId,fileIds,this.state.fileId).then(()=>{
-            alert('ok')
             this._onCancelEdit();
             this.fetchData(0);
-            storage.pop(this.state.fromNavigation,1);
+            const timer = setTimeout(() => {
+                clearTimeout(timer);
+                storage.resetActions(this.props.navigation,{isCopyItem:false,isEdit:false,isMoveItem:false},2, this.state.fromDeep);
+            }, 1000);
         }).catch(err=>{
             alert('failed');
         });
@@ -860,7 +887,6 @@ export default class extends Component {
             </View>
         );
     }
-
     render = () => {
         //第一次加载等待的view
         if (this.state.isLoading && !this.state.error) {

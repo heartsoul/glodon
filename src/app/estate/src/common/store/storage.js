@@ -184,60 +184,9 @@ class GLDStorage extends BaseStorage {
 
     // 到登录页面
     gotoLogin = (navigation) => {
-        let navigator = navigation;
-        if (!navigator) {
-            navigator = this.homeNavigation;
-            this.homeNavigation = null
-        }
-        if (!navigator) {
-            return;
-        }
-        // this.logout();
-        this.saveLoginToken('', '0');
-        let resetAction = StackActions.reset({
-            index: 0,
-            actions: [
-                NavigationActions.navigate({ routeName: 'LoginPage' })//要跳转到的页面名字
-            ]
-        });
-        navigator.dispatch(resetAction);
+       // ...
     }
-    // 到home页面
-    gotoMainPage = (navigation,params) => {
-        console.log('1111')
-        let navigator = navigation;
-        if (!navigator) {
-            navigator = this.homeNavigation;
-        }
-        if (!navigator) {
-            return;
-        }
-        params = params || {};
-        let resetAction = StackActions.reset({
-            index: 0,
-            actions: [
-                NavigationActions.navigate({ routeName: 'MainPage',params})//要跳转到的页面名字
-            ]
-        });
-        navigator.dispatch(resetAction);
-    }
-    gotoSwitchProject = (navigation) => {
-        let navigator = navigation;
-        if (!navigator) {
-            navigator = this.homeNavigation;
-        }
-        if (!navigator) {
-            return;
-        }
-        let resetAction = StackActions.reset({
-            index: 1,
-            actions: [
-                NavigationActions.navigate({ routeName: 'TenantPage' ,params:{change:false}}),//要跳转到的页面名字
-                NavigationActions.navigate({ routeName: 'ProjectPage', params:{ tenantId: storage.loadLastTenant(), id: storage.loadTenant() } })//要跳转到的页面名字
-            ]
-        });
-        navigator.dispatch(resetAction);
-    }
+    
     // 是否选择了租户和项目
     hasChoose = () => {
         let t = this.loadTenant();
@@ -248,16 +197,13 @@ class GLDStorage extends BaseStorage {
     }
     // 转到页面，会替换
     gotoMain = (navigation = null, name = "MainPage", params = {}) => {
-        console.log('1111')
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
         }
-        console.log('222')
         if (!navigator) {
             return;
         }
-        console.log(this.hasChoose())
         this.hasChoose() ? navigator.replace(name, params = {}) : navigator.replace("ChoosePage", params = {});
     }
     // 转到页面，replace模式
@@ -280,14 +226,10 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
-       let action =  StackActions.push({
-            routeName:name,
-            params:params||{}
-        });
-        navigator.dispatch(action);
+        navigator.push(name, params);
     }
     // 返回到上一页面
-    goBack = (navigation, params = {}) => {
+    goBack = (navigation) => {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
@@ -295,10 +237,10 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
-        navigator.goBack(params);
+        navigator.goBack();
     }
     // 返回到上一页面
-    pop = (navigation, params = 1) => {
+    pop = (navigation, keyOrLevel = 1, params={}) => {
         let navigator = navigation;
         if (!navigator) {
             navigator = this.homeNavigation;
@@ -306,7 +248,27 @@ class GLDStorage extends BaseStorage {
         if (!navigator) {
             return;
         }
-        navigator.pop(params);
+        navigator.pop(keyOrLevel, params);
+    }
+    resetActions(navigation, params = {}, removeFromIndex = 0, removeCount = 0) {
+        let navigator = navigation;
+        if (!navigator) {
+            navigator = this.homeNavigation;
+        }
+        if (!navigator) {
+            return;
+        }
+
+        if(removeCount > 0) {
+            let action =  {
+               type:'removeActions',
+               fromIndex:removeFromIndex,
+               count:removeCount,
+               params:params,
+            };
+            navigator.dispatch(action);
+        }
+       
     }
     // 处理浏览器，手机返回键，这里还需要处理需要阻止返回的情形
     globalBack = (navigation, params = 1) => {
