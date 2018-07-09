@@ -2,6 +2,7 @@ import React from 'react';
 import {
     StyleSheet,
     KeyboardAvoidingView,
+    Platform,
 } from 'react-native';
 import { Overlay, } from 'app-3rd/teaset';
 import ComponentInputChild from './ComponentInputChild'
@@ -18,7 +19,7 @@ class CommentInputView extends Overlay {
                 overlayOpacity={0.7}
                 ref={v => this.overlayView = v}
             >
-                <KeyboardAvoidingView behavior='padding'>
+                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                     <ComponentInputChild
                         addModelMarkupComment={addModelMarkupComment}
                         onChangeText={(value) => { this.content = value }}
@@ -26,6 +27,8 @@ class CommentInputView extends Overlay {
                         modelInfo={modelInfo}
                     />
                 </KeyboardAvoidingView>
+
+
             </Overlay.View>
         )
     }
