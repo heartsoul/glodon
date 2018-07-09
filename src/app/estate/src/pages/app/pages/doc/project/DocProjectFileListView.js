@@ -3,15 +3,16 @@
  */
 'use strict';
 import SERVICE from 'app-api/service';
-import { BarItems, LoadingView, NoDataView, ShareManager, ActionModal } from "app-components";
+import { BarItems, LoadingView, NoDataView, ShareManager, ActionModal, ActionInputModal } from "app-components";
 import React, { Component } from "react";
 import { FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
-import { Menu, TabView } from 'app-3rd/teaset';
+import { Menu, TabView} from 'app-3rd/teaset';
+import {Toast} from 'antd-mobile'
 import { SERVER_TYPE } from "common-module"
 import DocView from './../components/DocView';
 import DocActionSheet from './../components/DocActionSheet';
 import DocEditFileDataList from './../components/DocEditFileDataList';
-
+var newFolderIndex = 1;
 export default class extends Component {
    
     static navigationOptions = ({ navigation }) => {
@@ -280,7 +281,7 @@ export default class extends Component {
         if(this.state.isCopyItem || this.state.isMoveItem) {
             return (<BarItems navigation={this.props.navigation}>
                 <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_back_white.png')} onPress={(navigation) => {this._goBack(navigation)}} />
-               {power ? <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_module_create_white.png')} onPress={(navigation) => this.doNewFolder({value:{name:'新建文件夹'}})} /> : null}
+               {power ? <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_module_create_white.png')} onPress={(navigation) => this.doNewFolder({value:{name:null}})} /> : null}
                 </BarItems>);
         } else {
             
@@ -496,6 +497,11 @@ export default class extends Component {
             return;
         }
         DocActionSheet.show(data,(actionItem)=>{
+            if(actionItem.itemKey == 'newfolder') {
+                this.doNewFolder({value:{name:null}});
+                return;
+            }
+            
             alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
         });
     }
@@ -619,7 +625,7 @@ export default class extends Component {
                 fileIds.push(item.value.fileId);
             });
             SERVICE.deleteDocFileBatch(this.state.containerId,fileIds).then(()=>{
-                alert('ok');
+                Toast.success('删除成功',1.500);
                 this._onCancelEdit();
                 this.fetchData(0);
             }).catch(err=>{
@@ -651,6 +657,7 @@ export default class extends Component {
             fileIds.push(item.value.fileId);
         });
         SERVICE.moveDocFileBatch(this.state.containerId,fileIds,this.state.fileId).then(()=>{
+            Toast.success('移动成功',1.500);
             this._onCancelEdit();
             this.fetchData(0);
             const timer = setTimeout(() => {
@@ -676,6 +683,7 @@ export default class extends Component {
             fileIds.push(item.value.fileId);
         });
         SERVICE.copyDocFileBatch(this.state.containerId,fileIds,this.state.fileId).then(()=>{
+            Toast.success('复制成功',1.500);
             this._onCancelEdit();
             this.fetchData(0);
             const timer = setTimeout(() => {
@@ -743,7 +751,7 @@ export default class extends Component {
         SERVICE.favoritesDocFileBatch(this.state.containerId,fileIds).then(()=>{
             this._onCancelEdit();
             this.fetchData(0);
-            alert('ok');
+            Toast.success('收藏成功',1.500);
         }).catch(err=>{
             alert('failed');
         });
@@ -753,8 +761,12 @@ export default class extends Component {
      * 显示重命名对话框
      *
      */
-    doRename = (item) => {
+    doRename = (item,errorMessage='') => {
        // 显示重命名对话框
+       ActionInputModal.showConfirm('重命名',null,{},{onPress:(e,textValue)=>{
+        item.value.name = textValue;
+        this.rename(item);}
+    },item.value.name,errorMessage);
     }
 
     /**
@@ -763,21 +775,39 @@ export default class extends Component {
      */
     rename = (item) => {
         SERVICE.renameDocFile(this.state.containerId,item.value.fileId,item.value.name).then(()=>{
+            Toast.success('重命名成功',1.5);
             this._onCancelEdit();
             this.fetchData(0);
-            alert('ok');
         }).catch(err=>{
-            alert('failed');
+            let msg = '重命名失败!';
+            if(err.response) {
+                let ret = err.response.json();
+                if(ret) {
+                    ret.then(data=>{
+                        if(data && data.code && data.message){
+                            msg = data.message;
+                        }
+                        this.doRename(item,msg);
+                    });
+                } else {
+                    this.doRename(item,msg);
+                }
+            } else {
+                this.doRename(item,msg);
+            }
         });
     }
-
      /**
      * 显示新建文件夹对话框
      *
      */
-    doNewFolder = (item) => {
+    doNewFolder = (item,errorMessage='') => {
+        let newName = item.value.name || `新建文件夹${newFolderIndex}`;
         // 显示新建文件夹对话框
-        
+        ActionInputModal.showConfirm('新建文件夹',null,{},{onPress:(e,textValue)=>{
+            item.value.name = textValue;
+            this.newFolder(item);}
+        },newName,errorMessage);
     }
 
     /**
@@ -786,11 +816,16 @@ export default class extends Component {
      */
     newFolder = (item) => {
         SERVICE.createDocDir(this.state.containerId,this.state.fileId,item.value.name).then(()=>{
-            alert('ok');
+            Toast.success('创建成功',1.500);
+            newFolderIndex++;
             this._onCancelEdit();
             this.fetchData(0);
         }).catch(err=>{
-            alert('failed');
+            let msg = '创建失败!';
+            if(err.docError) {
+                msg = err.docError.message;
+            }
+            this.doNewFolder(item,msg);
         });
     }
 
@@ -844,7 +879,7 @@ export default class extends Component {
         const timer = setTimeout(() => {
             clearTimeout(timer);
             this.fetchData(this.state.page);
-        }, 1500);
+        }, 1.500);
     }
     renderFooterView = () => {
         return <View style={{height:50,width:'100%'}} />

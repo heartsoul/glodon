@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { StyleSheet, Text, TouchableOpacity,View,SafeAreaView,Keyboard} from 'react-native'
+import { StyleSheet, Text, TouchableOpacity,View,SafeAreaView,Keyboard, TextInput,KeyboardAvoidingView} from 'react-native'
 import {Overlay} from 'app-3rd/teaset'
 
 
-export default class ActionModal extends Component {
-    static alertConfirm = (title, message, cancel, confirm) => {
+export default class ActionInputModal extends Component {
+    static showConfirm = (title, message, cancel, confirm,inputValue,errorMessage) => {
         if(!cancel) {
             cancel = {};
         }
@@ -24,40 +23,20 @@ export default class ActionModal extends Component {
         if(!confirm.text) {
             confirm.text = "确定" 
         }
-        // let titleElement = (<Text style={styles.style_title}>{title}</Text>);
-        // let messageElement = (<Text style={styles.style_message}>{message}</Text>);
-        // Modal.alert(titleElement, messageElement, [{ text: cancel.text,style: [styles.style_cancel, cancel.style]}
-            // ,{ text: confirm.text, style: [styles.style_confirm,confirm.style], onPress:confirm.onPress ? confirm.onPress:null}]);
-            ActionModal.showView(ActionModal.buildAlertView(title,message,[cancel,confirm]),true);
-        };
-    static alertTip = (title, message, confirm) => {
-        if(!confirm) {
-            confirm = {};
-        }
-        if(!confirm.style) {
-            confirm.style = styles.style_confirm
-        }
-        if(!confirm.text) {
-            confirm.text = "确定"
-        }
-        // let titleElement = (<Text style={styles.style_title}>{title}</Text>);
-        // let messageElement = (<Text style={styles.style_message}>{message}</Text>);
-        setTimeout(() => {
-            ActionModal.showView(ActionModal.buildAlertView(title,message,[{ text: confirm.text, style: [styles.style_confirm,confirm.style], onPress:confirm.onPress ? confirm.onPress:null}]),true);
-            // Modal.alert(titleElement, messageElement, [{ text: confirm.text, style: [styles.style_confirm,confirm.style], onPress:confirm.onPress ? confirm.onPress:null}]);
-        }, 100);
-        
+       return ActionInputModal.showView(ActionInputModal.buildInputView(title,message,[cancel,confirm],inputValue,errorMessage),true);
     };
-    static alert = (title, message, actions) => {
+    static show = (title, message, actions,inputValue,errorMessage) => {
         // let titleElement = (<Text style={styles.style_title}>{title}</Text>);
         // let messageElement = (<Text style={styles.style_message}>{message}</Text>);
         // Modal.alert(titleElement, messageElement, actions);
-        ActionModal.showView(ActionModal.buildAlertView(title,message,actions),true);
+       return  ActionInputModal.showView(ActionInputModal.buildAlertView(title,message,actions,inputValue,errorMessage),true);
     };
 
-    static buildAlertView = (title,message,actions) => {
+    static buildInputView = (title,message,actions,inputValue,errorValue) => {
         let titleView = null;
         let messageView = null;
+        let inputView = null;
+        let errorMessageView = null;
         let actionsView = null;
         let bCenter = false;
         
@@ -86,33 +65,45 @@ export default class ActionModal extends Component {
                 text:'关闭'
             }];
         }
+        let textValue = inputValue;
+        inputView = (<TextInput onChangeText={(text)=>{textValue = text;}} style={[styles.style_textInput,(errorValue&&errorValue.length) ? styles.style_textInputError : {}]} defaultValue={inputValue} /> )
+       
+        errorMessageView = (<Text style={styles.style_error}>{errorValue}</Text>)
         let count = actions.length;
         let widthP = parseInt(100 / count)+'%';
         actionsView =(<View style={styles.style_actionsView}>
                 {
                     actions.map((action,index)=>{
                        return (<TouchableOpacity key={'action_item'+index} style={[styles.style_actionView,{width:widthP}
-                       ,index==0?{borderLeftWidth:0}:null]} onPress={(e)=>{e.preventDefault(); ActionModal.close();action.onPress && action.onPress(e);}}><Text style={action.style}>{action.text}</Text></TouchableOpacity>
+                       ,index==0?{borderLeftWidth:0}:null]} onPress={(e)=>{
+                           e.preventDefault();
+                           ActionInputModal.close();
+                           action.onPress && action.onPress(e,textValue);
+                        }}><Text style={action.style}>{action.text}</Text></TouchableOpacity>
                         )
                     })
                 }
                 </View>);
         
-        return (<View style={bCenter?styles.style_alertView_center:styles.style_alertView}>
-            {titleView}
-            {messageView}
+        return (<View style={styles.style_alertView}>
+            <View style={bCenter?styles.style_contentView_center:styles.style_contentView}>
+                {titleView}
+                {messageView}
+                {inputView}
+                {errorMessageView}
+            </View>
             {actionsView}
             </View>);
     }
     static overlayViewKey = null;
     static close = () => {
-        if(ActionModal.overlayViewKey) {
-            Overlay.hide(ActionModal.overlayViewKey);
-            ActionModal.overlayViewKey = null;
+        if(ActionInputModal.overlayViewKey) {
+            Overlay.hide(ActionInputModal.overlayViewKey);
+            ActionInputModal.overlayViewKey = null;
         }
     }
     static showView = (ContentView,modal=false) =>{
-        ActionModal.close();
+        ActionInputModal.close();
         let overlayView = (
             <Overlay.View 
                 side='bottom'
@@ -121,12 +112,17 @@ export default class ActionModal extends Component {
                 overlayOpacity={0.5}
                 ref={v => this.overlayView = v}
             >
+                
+                <KeyboardAvoidingView behavior='padding'>
                 <SafeAreaView>
                     {ContentView}
                 </SafeAreaView>
+                </KeyboardAvoidingView>   
+                
             </Overlay.View>
         );
-        ActionModal.overlayViewKey =  Overlay.show(overlayView);
+        ActionInputModal.overlayViewKey =  Overlay.show(overlayView);
+        return ContentView;
     }
 
 }
@@ -142,18 +138,18 @@ const styles = StyleSheet.create({
         marginLeft: 40,
         marginRight: 40,
     },
-    style_alertView_center: {
-        minHeight:60,
-        minWidth:180,
-        backgroundColor:'white',
-        borderRadius: 6,
-        marginTop: 40,
-        marginBottom: 40,
-        marginLeft: 40,
-        marginRight: 40,
+    style_contentView_center: {
+        minHeight:88,
+        paddingLeft: 20,
+        paddingRight: 20,
         alignItems: 'center', 
         justifyContent: 'center', 
         alignContent: 'center',
+    },
+    style_contentView: {
+        minHeight:88,
+        paddingLeft: 20,
+        paddingRight: 20,
     },
     style_actionsView: {
         minHeight:44,
@@ -181,8 +177,6 @@ const styles = StyleSheet.create({
     },
     style_title: {
         paddingTop:20,
-        paddingLeft:20,
-        paddingRight:20,
         color: '#000000',
         fontSize:18,
         fontWeight:'bold',
@@ -190,16 +184,12 @@ const styles = StyleSheet.create({
     },
     style_title_center: {
         paddingTop:20,
-        paddingLeft:20,
-        paddingRight:20,
         color: '#000000',
         fontSize:16,
         marginTop: 10,
         lineHeight:20,
     },
     style_message: {
-        paddingLeft:20,
-        paddingRight:20,
         color: '#000000',
         fontSize:14,
         marginTop: 6,
@@ -225,6 +215,33 @@ const styles = StyleSheet.create({
     style_delete: {
         color: '#FF0000',
         fontSize:18,
+    },
+    style_textInput: {
+        marginTop:20,
+        paddingLeft:10,
+        paddingRight:10,
+        height: 36,
+        width:'100%',
+        color: '#000000',
+        fontSize:17,
+        borderColor:'#E9E9E9',
+        borderWidth:1,
+        borderRadius:3,
+        width:'100%',
+        maxWidth:'100%',
+        backgroundColor:'#F7F7F7'
+    },
+    style_textInputError: {
+        color: '#F55353',
+        borderColor:'#F55353',
+        backgroundColor:'#FFF3F3',
+    },
+    style_error: {
+        marginTop:5,
+        width:'100%',
+        color: '#FF0000',
+        fontSize:12,
+        minHeight:23,
     },
 });
 

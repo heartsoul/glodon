@@ -114,7 +114,7 @@ export async function getDocFileChildrens(containerId, fileId, orderByType=null,
 }
  */
 export async function createDocDir(containerId, parentId, fileName) {
-    let api = `/bimpm/doc/containers/${containerId}/ files `
+    let api = `/bimpm/doc/containers/${containerId}/files`
     let filter = '';
     if (parentId) {
         filter += `&parentId=${parentId}`
