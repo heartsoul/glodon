@@ -32,44 +32,42 @@ class ComponentInputChild extends Component {
 
     render() {
         return (
-            <TouchableWithoutFeedback onPress={() => { }}>
-                <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
-                    <View style={styles.inputBox}>
-                        <TextInput
-                            maxLength={255}
-                            style={styles.commentInput}
-                            underlineColorAndroid={"transparent"}
-                            placeholder={'写评论'}
-                            multiline={true}
-                            autoFocus={true}
-                            textAlign="left"
-                            onChangeText={this._changeText}
-                            defaultValue={this.props.content}
-                        />
-                        <TouchableWithoutFeedback onPress={(event) => {
-                            event.preventDefault()
-                            CommentInputView.close();
-                            storage.pushNext(null, 'DocMarkupChoosePage')
-                        }}>
-                            <View style={styles.atBox}>
-                                <Text style={styles.textLight}>@</Text>
-                            </View>
-                        </TouchableWithoutFeedback>
+            <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
+                <View style={styles.inputBox}>
+                    <TextInput
+                        maxLength={255}
+                        style={styles.commentInput}
+                        underlineColorAndroid={"transparent"}
+                        placeholder={'写评论'}
+                        multiline={true}
+                        autoFocus={true}
+                        textAlign="left"
+                        onChangeText={this._changeText}
+                        defaultValue={this.props.content}
+                    />
+                    <TouchableWithoutFeedback onPress={(event) => {
+                        event.preventDefault()
+                        CommentInputView.close();
+                        storage.pushNext(null, 'DocMarkupChoosePage')
+                    }}>
+                        <View style={styles.atBox}>
+                            <Text style={styles.textLight}>@</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
 
-                    </View>
-                    <View style={styles.sendBox}>
-                        <TouchableOpacity onPress={() => {
-                            storage.pushNext(null, 'DocMarkupEditCommentPage', { modelInfo: this.props.modelInfo, content: this.state.content })
-                            CommentInputView.close();
-                        }}>
-                            <Image style={styles.pinImage} source={require('app-images/icon_setting_share.png')} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={(event) => { event.preventDefault(), this._addModelMarkupComment() }}>
-                            <Text style={this.state.content && this.state.content.length > 0 ? styles.textTheme : styles.textLight}>发送</Text>
-                        </TouchableOpacity>
-                    </View>
                 </View>
-            </TouchableWithoutFeedback>
+                <View style={styles.sendBox}>
+                    <TouchableOpacity onPress={() => {
+                        storage.pushNext(null, 'DocMarkupEditCommentPage', { modelInfo: this.props.modelInfo, content: this.state.content })
+                        CommentInputView.close();
+                    }}>
+                        <Image style={styles.pinImage} source={require('app-images/icon_setting_share.png')} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={(event) => { event.preventDefault(), this._addModelMarkupComment() }}>
+                        <Text style={this.state.content && this.state.content.length > 0 ? styles.textTheme : styles.textLight}>发送</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         )
     }
 
