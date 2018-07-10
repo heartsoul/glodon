@@ -30,6 +30,11 @@ class DocMarkupDetailPage extends Component {
             markup: markup,
             modelVersionId: modelVersionId,
             fileId: fileId,
+            comments: [
+                { name: 'aa', },
+                { name: 'aa', },
+                { name: 'aa', },
+            ],
         };
         this.props.navigation.setParams({ loadRightTitle: this._loadRightTitle, })
     }
@@ -135,9 +140,8 @@ class DocMarkupDetailPage extends Component {
                     <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
                     <View style={{ marginLeft: 10, flex: 1 }}>
                         <Text style={styles.textMain}>{this.state.markup.creatorName}</Text>
-                        <Text style={styles.textLight}>{this.state.markup.createTime}</Text>
+                        <Text style={styles.textTime}>{this.state.markup.createTime}</Text>
                     </View>
-                    <Image style={styles.pinImage} source={require('app-images/icon_setting_share.png')} />
                 </View>
                 <Text style={[styles.textMain, styles.textContent]}>{this.state.markup.description}</Text>
 
@@ -146,12 +150,6 @@ class DocMarkupDetailPage extends Component {
                         <Image style={styles.thumbnail} source={require('app-images/icon_blueprint_default.png')} />
                     </View>
                 </TouchableOpacity>
-
-                <View style={styles.commentContainer}>
-                    <Text style={[styles.textMain, styles.textComment]}>评论</Text>
-                    <Image style={styles.commentCountImage} source={require('app-images/icon_setting_share.png')} />
-                    <Text style={styles.textMain}>1</Text>
-                </View>
             </View>
         )
     }
@@ -164,15 +162,21 @@ class DocMarkupDetailPage extends Component {
     _renderCommentItem = (item, index) => {
         return (
             <View key={`comment-key${index}`}>
-                <View style={styles.itemShadow}>
-                    <View style={styles.infoContainer}>
-                        <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
-                        <Text style={[styles.textMain, { flex: 1, marginLeft: 10 }]}>{this.state.markup.creatorName}</Text>
-                        <Text style={styles.textLight}>{this.state.markup.createTime}</Text>
+                <View style={styles.infoContainer}>
+                    <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
+                    <View style={{ marginLeft: 10, flex: 1 }}>
+                        <Text style={styles.textMain}>{this.state.markup.creatorName}</Text>
+                        <Text style={styles.textTime}>{this.state.markup.createTime}</Text>
                     </View>
-                    <Text style={[styles.textMain, { margin: 15 }]}>王伟也注意一下@王伟</Text>
                 </View>
+                <Text style={[styles.textMain, { margin: 24 }]}>王伟也注意一下@王伟</Text>
             </View>
+        )
+    }
+
+    _renderSeparator = () => {
+        return (
+            <View style={{ width: '100%', height: 0.5, backgroundColor: '#E9E9E9' }}></View>
         )
     }
 
@@ -180,21 +184,25 @@ class DocMarkupDetailPage extends Component {
         return (
             <View style={{ backgroundColor: '#fff', width: '100%', height: '100%' }}>
                 <FlatList
-                    data={this.props.comments}
+                    data={this.state.comments}
                     renderItem={({ item, index }) => { return this._renderCommentItem(item, index) }}
                     onRefresh={this._onRefresh}
                     refreshing={this.props.isLoading}
                     onEndReached={this._onEndReached}
                     onEndReachedThreshold={1}
+                    ItemSeparatorComponent={this._renderSeparator}
                     ListHeaderComponent={this._renderHeader()}
                     ListFooterComponent={this._renderFooter()}
                     showsVerticalScrollIndicator={false}
                 />
 
                 <View style={styles.commentBar}>
-                    <TouchableOpacity onPress={(event) => { event.preventDefault(), this._showCommentInputView() }}>
-                        <Text style={styles.commentBarText}>评论</Text>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={(event) => { event.preventDefault(); this._showCommentInputView() }}>
+                        <View style={styles.commentInput} >
+                            <Text style={[styles.textLight, { marginLeft: 10, }]}>评论</Text>
+                        </View>
                     </TouchableOpacity>
+                    <Image style={styles.atIcon} source={require('app-images/doc/icon_doc_face.png')} />
                 </View>
 
             </View>
@@ -206,16 +214,13 @@ class DocMarkupDetailPage extends Component {
 
 const styles = StyleSheet.create({
     containerView: {
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
-        marginTop: 10,
-        marginLeft: 20,
-        marginRight: 20,
+        paddingTop: 10,
+        marginBottom: 15,
         paddingBottom: 10,
         backgroundColor: '#FFF',
-        elevation: 2.5, // android 
-        shadowColor: "#333", // iOS
-        shadowOffset: { width: 1.5, height: 5 }, // iOS
+        elevation: 0.5, // android 
+        shadowColor: 'rgba(178,192,209,0.50)', // iOS
+        shadowOffset: { width: 1.5, height: 11 }, // iOS
         shadowOpacity: 0.15, // iOS
         shadowRadius: 3, // iOS
     },
@@ -230,32 +235,30 @@ const styles = StyleSheet.create({
         shadowRadius: 3, // iOS
     },
     listFooter: {
-        borderBottomLeftRadius: 8,
-        borderBottomRightRadius: 8,
         marginBottom: 70,
-        marginLeft: 20,
-        marginRight: 20,
         paddingBottom: 10,
         backgroundColor: '#FFF',
-        elevation: 2.5, // android 
-        shadowColor: "#333", // iOS
-        shadowOffset: { width: 1.5, height: 5 }, // iOS
-        shadowOpacity: 0.15, // iOS
-        shadowRadius: 3, // iOS
     },
 
     infoContainer: {
         marginTop: 10,
-        marginLeft: 10,
-        marginRight: 10,
+        marginLeft: 24,
+        marginRight: 24,
         flexDirection: 'row',
         alignItems: "center"
     },
     userAvatar: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
+        width: 30,
+        height: 30,
+        borderRadius: 15,
         resizeMode: 'cover'
+    },
+    atIcon: {
+        width: 24,
+        height: 24,
+        resizeMode: 'cover',
+        marginLeft: 10,
+        marginRight: 15,
     },
     userNameContainer: {
         marginLeft: 10,
@@ -269,17 +272,19 @@ const styles = StyleSheet.create({
         color: '#999',
         fontSize: 14
     },
-    pinImage: {
-        width: 15,
-        height: 15,
-        resizeMode: 'contain'
+    textTime: {
+        color: '#999',
+        fontSize: 12
     },
     textContent: {
-        margin: 10
+        marginLeft: 24,
+        marginRight: 24,
+        marginTop: 14,
+        marginBottom: 14,
     },
     thumbnailContainer: {
-        marginLeft: 10,
-        marginRight: 10,
+        marginLeft: 24,
+        marginRight: 24,
         marginBottom: 10,
     },
     thumbnail: {
@@ -313,17 +318,25 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         bottom: 0,
-        height: 60,
+        height: 48,
         width: '100%',
         elevation: 2.5,
-        backgroundColor: '#fff',
-        justifyContent: 'center',
-        alignItems: 'flex-end'
+        backgroundColor: '#fafafa',
+        alignItems: 'center',
+        flexDirection: 'row'
     },
     commentBarText: {
         color: '#00baf3',
         fontSize: 14,
         paddingRight: 20
+    },
+    commentInput: {
+        height: 34,
+        width: '100%',
+        marginLeft: 14,
+        backgroundColor: '#fff',
+        borderRadius: 4,
+        justifyContent: 'center'
     },
 })
 

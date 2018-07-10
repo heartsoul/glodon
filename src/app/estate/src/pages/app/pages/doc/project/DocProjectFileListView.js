@@ -220,7 +220,7 @@ export default class extends Component {
                 justifyContent: "center",}} onPress={()=>{Menu.hide(showMenu);this._changeOrderType('time');}}><Text style={{lineHeight:30,color:this.state.orderType !== 'time' ? '#FFFFFF' : '#00baf3'}}>文件时间  </Text><Image style={{width:14,height:14,resizeMode:'contain'}} source={require('app-images/doc/icon_doc_order_down_click.png')}/></TouchableOpacity>
                 <TouchableOpacity style={{flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "center",width:120}} onPress={()=>{Menu.hide(showMenu);this._changeOrderType('name');}} style={{}}><Text style={{lineHeight:30,color:this.state.orderType !== 'name' ? '#FFFFFF' : '#00baf3'}}>文件名称  </Text><Image style={{width:14,height:14,resizeMode:'contain'}} source={require('app-images/doc/icon_doc_order_down.png')}/></TouchableOpacity><Text></Text></View>}
+                justifyContent: "center",width:120}} onPress={()=>{Menu.hide(showMenu);this._changeOrderType('name');}} ><Text style={{lineHeight:30,color:this.state.orderType !== 'name' ? '#FFFFFF' : '#00baf3'}}>文件名称  </Text><Image style={{width:14,height:14,resizeMode:'contain'}} source={require('app-images/doc/icon_doc_order_down.png')}/></TouchableOpacity><Text></Text></View>}
             ];
             
             showMenu = Menu.show({ x, y, width, height }, items,{align:'end',showArrow:true,shadow:Platform.OS === 'ios' ? true : false,popoverStyle:[{paddingLeft:0,paddingRight:0}],directionInsets:0,alignInsets:-5,paddingCorner:10});
