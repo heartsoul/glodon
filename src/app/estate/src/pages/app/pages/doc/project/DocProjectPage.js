@@ -112,30 +112,29 @@ export default class DocProjectPage extends Component {
                 <TabView onChange={this.onChange} style={{ flex: 1, overflow: 'visible' }} type='projector'>
                     <TabView.Sheet
                         title={'项目文档'}
-                        icon={require('app-images/home/icon_main_main_page.png')}
-                        activeIcon={require('app-images/home/icon_main_page_selected.png')}
+                        icon={require('app-images/doc/icon_doc_maim_file.png')}
+                        activeIcon={require('app-images/doc/icon_doc_maim_file_click.png')}
                     >
                         <DocProjectFileListView isRoot={true} ref='_DocFile' navigation={this.props.navigation} />
                     </TabView.Sheet>
                     <TabView.Sheet
                         title={'传输列表'}
-                        icon={require('app-images/home/icon_main_subscribe.png')}
-                        activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
+                        icon={require('app-images/doc/icon_doc_main_trans.png')}
+                        activeIcon={require('app-images/doc/icon_doc_main_trans_click.png')}
                     >
                         <DocProjectTransListView isRoot={true} ref='_DocTrans' navigation={this.props.navigation} />
                     </TabView.Sheet>
-
                     <TabView.Sheet
                         title={'收藏列表'}
-                        icon={require('app-images/home/icon_main_message.png')}
-                        activeIcon={require('app-images/home/icon_main_message_selected.png')}
+                        icon={require('app-images/doc/icon_doc_main_fav.png')}
+                        activeIcon={require('app-images/doc/icon_doc_main_fav_click.png')}
                     >
                         <DocProjectFavListView isRoot={true} ref='_DocFav' navigation={this.props.navigation} />
                     </TabView.Sheet>
                     <TabView.Sheet
                         title={'回收站'}
-                        icon={require('app-images/home/icon_main_mine.png')}
-                        activeIcon={require('app-images/home/icon_main_mine_selected.png')}
+                        icon={require('app-images/doc/icon_doc_main_trash.png')}
+                        activeIcon={require('app-images/doc/icon_doc_main_trash_click.png')}
                     // badge={'new'}
                     >
                         <DocProjectTrashListView isRoot={true} ref='_DocTrash' navigation={this.props.navigation} />

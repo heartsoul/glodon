@@ -3,10 +3,9 @@
  */
 'use strict';
 import SERVICE from 'app-api/service';
-import { BarItems, LoadingView, NoDataView, ShareManager } from "app-components";
+import { BarItems, LoadingView, NoDataView } from "app-components";
 import React, { Component } from "react";
-import { FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
-import { Menu, TabView} from 'app-3rd/teaset';
+import { FlatList, RefreshControl, StatusBar, StyleSheet, View} from "react-native";
 import { SERVER_TYPE } from "common-module"
 import DocView from './../components/DocView';
 import DocActionSheet from './../components/DocActionSheet';
@@ -65,30 +64,7 @@ export default class extends Component {
     }
     _onSearchPress = () => {
         // 打开搜索页面。
-    }
-    _changeOrderType = (type) => {
-        if(this.state.orderType === type) {
-            return;
-        }
-        this.state.orderType = type;
-        this.fetchData(0);
     } 
-    _onMorePress = (navigation, event, barItem) => {
-        // 菜单
-
-        let fromView = barItem;
-
-        fromView.measureInWindow((x, y, width, height) => {
-            let showMenu = null;
-            let items = [
-                { title: <Text>更多...</Text>, onPress:()=>{}},
-                { title: <View><TouchableOpacity onPress={()=>{Menu.hide(showMenu);this._changeOrderType('time');}}><Text style={{lineHeight:30,color:this.state.orderType !== 'time' ? '#000000' : '#00baf3'}}>文件时间</Text></TouchableOpacity><TouchableOpacity  onPress={()=>{Menu.hide(showMenu);this._changeOrderType('name');}} style={{}}><Text style={{lineHeight:30,color:this.state.orderType !== 'name' ? '#000000' : '#00baf3'}}>文件名称</Text></TouchableOpacity></View>}
-            ];
-            
-            showMenu = Menu.show({ x, y, width, height }, items,{align:'end',showArrow:true,shadow:Platform.OS === 'ios' ? true : false,popoverStyle:[{paddingLeft:10,paddingRight:10}],directionInsets:0,alignInsets:-5,paddingCorner:10});
-        });
-    }
-    
     renderHeaderTitle = () => {
         const title = this.props.navigation.getParam('title');
         return <BarItems.TitleBarItem text={title ? title : '回收站'} />;
@@ -97,14 +73,12 @@ export default class extends Component {
         let power = false;
         return (<BarItems navigation={this.props.navigation}>
         <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_back_white.png')} onPress={(navigation) => {storage.pop(navigation,1);}} />
-       {power ? <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_module_create_white.png')} onPress={(navigation) => this.onAdd(navigation)} /> : null}
+       {power ? <BarItems.LeftBarItem navigation={this.props.navigation} text="清空" onPress={(navigation) => this.onClear(navigation)} /> : null}
         </BarItems>);
     }
     renderHeaderRightButtons = () => {
        return (<BarItems navigation={this.props.navigation}>
         <BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')} onPress={(navigation,event,barItem) => this._onSearchPress(navigation,event,barItem)} />
-
-        <BarItems.RightBarItem navigation={this.props.navigation} text="选择" onPress={(navigation,event,barItem) => this._onMorePress(navigation,event,barItem)} />
         </BarItems>);
     }
    
@@ -145,13 +119,11 @@ export default class extends Component {
     }
 
     _handleData=(data,page)=>{
-        // data = this.filterData(data);
-
                 let last = false;
 
                 let dataBlob = [];
                 if (data.length > 0) {
-                    if (page > 1) {
+                    if (page > 0) {
                         dataBlob = this.state.dataArray;
                     }
                     let i = 0;
@@ -162,8 +134,6 @@ export default class extends Component {
                         })
                         i++;
                     });
-                    // dataBlob = this.sortData(dataBlob);
-                    // alert(2);
                     this.setState({
                         //复制数据源
                         dataArray: dataBlob,
@@ -173,30 +143,13 @@ export default class extends Component {
                         hasMore: last ? false : true
                     });
                 } else {
-                    // alert(3);
                     this.setState({
                         isLoading: false,
                         refreshing: false,
                     });
                 }
-
-                // data = null;
                 dataBlob = null;
     }
-
-    //文件夹在上面
-    sortData = (data) => {
-        return data.sort((item1, item2) => {
-            if (item1.value.folder) {
-                return -1;
-            } else if (item2.value.folder) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-    }
-
     componentDidMount() {
         //请求数据
         this.fetchData(0);
@@ -204,29 +157,10 @@ export default class extends Component {
 
     //加载失败view
     renderErrorView(error) {
-        if(SERVER_TYPE === "TEST") {
-            return ( <NoDataView text={"error："+error} /> );
-        }
-        return ( <NoDataView text="加载失败" /> );
+        return ( <NoDataView text="加载失败" image={require('app-images/doc/icon_doc_empty_trash.png')} /> );
     }
     _itemClick = (item, index) => {
-        let navigator = this.props.navigation;
-        if (item.value.folder === true) {
-            storage.pushNext(navigator, "DocProjectPage", { fileId: item.value.fileId, containerId:this.state.containerId,orderType:this.state.orderType,userPrivilege:this.state.fileData.userPrivilege, dataType: this.state.dataType, pageType: this.state.pageType });
-        } else {
-            if(this.state.isEdit) {
-                // 这里需要处理编辑状态，
-                return;
-            }
-            alert('处理打开文件');
-            // if (this.state.dataType === '图纸文件') {
-            //     BimFileEntry.showBlueprintFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.name);
-            // } else {
-            //     BimFileEntry.showModelFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.buildingId, item.value.buildingName)
-            // }
-            // 进入预览页面
-
-        }
+        return;
     }
 
     _separator = () => {
@@ -241,56 +175,81 @@ export default class extends Component {
             return this.renderFileView({ item, index });
         }
     }
-    onAdd = () => {
-        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
-        const { create=false} = userPrivilege || {};
-        let data =[];
-        create && data.push(DocActionSheet.dataItemNewfolder);
-        create && data.push(DocActionSheet.dataItemTakephoto);
-        create && data.push(DocActionSheet.dataItemImage);
-        create && data.push(DocActionSheet.dataItemVideo);
 
-        if(Platform.OS != 'ios') {
-            // ios平台不支持这种方式
-            create && data.push(DocActionSheet.dataItemAll);
-        } 
-        if(data.length < 1) {
-            return;
-        }
-        DocActionSheet.show(data,(actionItem)=>{
-            alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
+    /**
+     * 清空回收站
+     */
+    doClear = () => {
+        SERVICE.clearTrashFileBatch(this.state.containerId).then(()=>{
+            this._onCancelEdit();
+            this.fetchData(0);
+            Toast.success('清空成功',1.500);
+        }).catch(err=>{
+            Toast.error('清空失败',1.500);
         });
     }
+
+    /**
+     * 彻底删除
+     * items: 数据列表
+     */
+    doDestroy = (items) => {
+        if(items.length < 1) {
+            return;
+        }
+        let fileIds = [];
+        items.map((item)=>{
+            fileIds.push(item.value.fileId);
+        });
+        SERVICE.deleteTrashFileBatch(this.state.containerId,fileIds).then(()=>{
+            this._onCancelEdit();
+            this.fetchData(0);
+            Toast.success('删除成功',1.500);
+        }).catch(err=>{
+            Toast.error('删除失败',1.500);
+        });
+    }
+    
+     /**
+     * 恢复已经删除内容
+     * items: 数据列表
+     */
+    doRecovery = (items) => {
+        if(items.length < 1) {
+            return;
+        }
+        let fileIds = [];
+        items.map((item)=>{
+            fileIds.push(item.value.fileId);
+        });
+        SERVICE.recoveryTrashFileBatch(this.state.containerId,fileIds).then(()=>{
+            this._onCancelEdit();
+            this.fetchData(0);
+            Toast.success('还原成功',1.500);
+        }).catch(err=>{
+            Toast.error('还原失败',1.500);
+        });
+    }
+
     onMore = (item, index) => {
         // 处理权限
-        const {folder,} = item.value;
         const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
         const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
         let data =[];
-        if(folder) {
-            download && data.push(DocActionSheet.dataItemDownload);
-            deleteItem && data.push(DocActionSheet.dataItemDelete);
-            create && data.push(DocActionSheet.dataItemCopyto);
-            deleteItem && data.push(DocActionSheet.dataItemMoveto);
-            view && data.push(DocActionSheet.dataItemFavorite);
-            create && data.push(DocActionSheet.dataItemRename);
-        } else {
-            download && data.push(DocActionSheet.dataItemDownload);
-            view && data.push(DocActionSheet.dataItemShare); // 目录暂时不支持分享
-            deleteItem && data.push(DocActionSheet.dataItemDelete);
-            create && data.push(DocActionSheet.dataItemCopyto);
-            deleteItem && data.push(DocActionSheet.dataItemMoveto);
-            view && data.push(DocActionSheet.dataItemFavorite);
-            create && data.push(DocActionSheet.dataItemRename);
-        }
-       
-        // ShareManager.share(this.state.containerId, item.value.fileId);
+        view && data.push(DocActionSheet.dataItemRestore);
+        deleteItem && data.push(DocActionSheet.dataItemDestroy);
+        
         if(data.length < 1) {
             return;
         }
+
         DocActionSheet.show(data,(actionItem)=>{
-            if(actionItem.itemKey === 'share') {
-                ShareManager.share(this.state.containerId, item.value.fileId);
+            if(actionItem.itemKey === 'recovery') {
+                this.doRecovery(this.state.containerId, item.value.fileId);
+                return;
+            }
+            if(actionItem.itemKey === 'destroy') {
+                this.doDestroy(this.state.containerId, item.value.fileId);
                 return;
             }
             alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
@@ -340,7 +299,7 @@ export default class extends Component {
         //设置刷新状态为正在刷新
         this.setState({
             refreshing: true,
-            page: 1,
+            page: 0,
         });
         //延时加载
         const timer = setTimeout(() => {
@@ -353,7 +312,7 @@ export default class extends Component {
         return <View style={{height:50,width:'100%'}} />
     }
     renderEmptyView = () => {
-        return <NoDataView text='暂无数据' />
+        return <NoDataView text='暂无数据' image={require('app-images/doc/icon_doc_empty_trash.png')}/>
     }
 
     /**

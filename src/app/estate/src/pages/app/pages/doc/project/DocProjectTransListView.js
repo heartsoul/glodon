@@ -179,7 +179,7 @@ export default class extends Component {
         if(SERVER_TYPE === "TEST") {
             return ( <NoDataView text={"error："+error} /> );
         }
-        return ( <NoDataView text="加载失败" /> );
+        return ( <NoDataView text="加载失败" image={require('app-images/doc/icon_doc_empty_trans.png')} /> );
     }
     _itemClick = (item, index) => {
         let navigator = this.props.navigation;
@@ -326,7 +326,7 @@ export default class extends Component {
         return <View style={{height:50,width:'100%'}} />
     }
     renderEmptyView = () => {
-        return <NoDataView text="暂无数据传输" image={NoDataView.NoDataImage} />
+        return <NoDataView text="暂无数据传输" image={require('app-images/doc/icon_doc_empty_trans.png')} />
     }
 
     /**

@@ -5,10 +5,9 @@
 import SERVICE from 'app-api/service';
 import { BarItems, LoadingView, NoDataView, ShareManager, ActionModal, ActionInputModal } from "app-components";
 import React, { Component } from "react";
-import { FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
+import {Image, FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
 import { Menu, TabView} from 'app-3rd/teaset';
 import {Toast} from 'antd-mobile'
-import { SERVER_TYPE } from "common-module"
 import DocView from './../components/DocView';
 import DocActionSheet from './../components/DocActionSheet';
 import DocEditFileDataList from './../components/DocEditFileDataList';
@@ -113,16 +112,16 @@ export default class extends Component {
                 <TabView.Sheet
                     title={'下载'}
                     type='button'
-                    icon={require('app-images/home/icon_main_main_page.png')}
-                    activeIcon={require('app-images/home/icon_main_page_selected.png')}
+                    icon={require('app-images/doc/icon_doc_bar_download.png')}
+                    activeIcon={require('app-images/doc/icon_doc_bar_download_click.png')}
                     onPress={(event) => { event.preventDefault(); this.doDownload(this.state.selectedItems) }}
                 >
                 </TabView.Sheet>
                 <TabView.Sheet
                     title={'分享'}
                     type='button'
-                    icon={require('app-images/home/icon_main_subscribe.png')}
-                    activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
+                    icon={require('app-images/doc/icon_doc_bar_share.png')}
+                    activeIcon={require('app-images/doc/icon_doc_bar_share_click.png')}
                     onPress={(event) => { event.preventDefault(); this.doShare(this.state.selectedItems) }}
                 >
                 </TabView.Sheet>
@@ -130,16 +129,15 @@ export default class extends Component {
                 <TabView.Sheet
                     title={'删除'}
                     type='button'
-                    icon={require('app-images/home/icon_main_message.png')}
-                    activeIcon={require('app-images/home/icon_main_message_selected.png')}
+                    icon={require('app-images/doc/icon_doc_bar_delete.png')}
+                    activeIcon={require('app-images/doc/icon_doc_bar_delete_click.png')}
                     onPress={(event) => { event.preventDefault(); this.doDelete(this.state.selectedItems) }}
                 >
                 </TabView.Sheet>
                 <TabView.Sheet
-                    title={'...'}
                     type='button'
-                    icon={require('app-images/home/icon_main_mine.png')}
-                    activeIcon={require('app-images/home/icon_main_mine_selected.png')}
+                    icon={require('app-images/doc/icon_doc_bar_more.png')}
+                    activeIcon={require('app-images/doc/icon_doc_bar_more_click.png')}
                     onPress={(event) => { event.preventDefault(); this.onMoreEdit() }}
                 // badge={'new'}
                 >
@@ -214,11 +212,18 @@ export default class extends Component {
         fromView.measureInWindow((x, y, width, height) => {
             let showMenu = null;
             let items = [
-                { title: <Text>选择...</Text>, onPress:this._onEditModePress},
-                { title: <View><TouchableOpacity onPress={()=>{Menu.hide(showMenu);this._changeOrderType('time');}}><Text style={{lineHeight:30,color:this.state.orderType !== 'time' ? '#000000' : '#00baf3'}}>文件时间</Text></TouchableOpacity><TouchableOpacity  onPress={()=>{Menu.hide(showMenu);this._changeOrderType('name');}} style={{}}><Text style={{lineHeight:30,color:this.state.orderType !== 'name' ? '#000000' : '#00baf3'}}>文件名称</Text></TouchableOpacity></View>}
+                { icon: <Text style={{color:'#FFFFFF'}}>选择...</Text>, onPress:this._onEditModePress},
+                // { title: '文件时间',icon:require('app-images/doc/icon_doc_order_down_click.png'), onPress:this._onEditModePress},
+                // { title: '文件名称',icon:require('app-images/doc/icon_doc_order_up.png'), onPress:this._onEditModePress},
+                { icon: <View><TouchableOpacity style={{flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",}} onPress={()=>{Menu.hide(showMenu);this._changeOrderType('time');}}><Text style={{lineHeight:30,color:this.state.orderType !== 'time' ? '#FFFFFF' : '#00baf3'}}>文件时间  </Text><Image style={{width:14,height:14,resizeMode:'contain'}} source={require('app-images/doc/icon_doc_order_down_click.png')}/></TouchableOpacity>
+                <TouchableOpacity style={{flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",width:120}} onPress={()=>{Menu.hide(showMenu);this._changeOrderType('name');}} style={{}}><Text style={{lineHeight:30,color:this.state.orderType !== 'name' ? '#FFFFFF' : '#00baf3'}}>文件名称  </Text><Image style={{width:14,height:14,resizeMode:'contain'}} source={require('app-images/doc/icon_doc_order_down.png')}/></TouchableOpacity><Text></Text></View>}
             ];
             
-            showMenu = Menu.show({ x, y, width, height }, items,{align:'end',showArrow:true,shadow:Platform.OS === 'ios' ? true : false,popoverStyle:[{paddingLeft:10,paddingRight:10,backgroundColor:'white'}],directionInsets:0,alignInsets:-5,paddingCorner:10});
+            showMenu = Menu.show({ x, y, width, height }, items,{align:'end',showArrow:true,shadow:Platform.OS === 'ios' ? true : false,popoverStyle:[{paddingLeft:0,paddingRight:0}],directionInsets:0,alignInsets:-5,paddingCorner:10});
         });
     }
     renderHeaderTitle = () => {
@@ -314,7 +319,7 @@ export default class extends Component {
         } else {
             return (<BarItems navigation={this.props.navigation}>
             <BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_search_white.png')}  onPress={(navigation,event,barItem) => this._onSearchPress(navigation,event,barItem)} />
-                <BarItems.RightBarItem navigation={this.props.navigation} textStyle={{fontSize:22,height:30,}} text="..." onPress={(navigation,event,barItem) => this._onMorePress(navigation,event,barItem)} />
+                <BarItems.RightBarItem navigation={this.props.navigation} imageSource={require('app-images/doc/icon_doc_more_white.png')} onPress={(navigation,event,barItem) => this._onMorePress(navigation,event,barItem)} />
                 </BarItems>);        
         }
        
@@ -426,10 +431,7 @@ export default class extends Component {
 
     //加载失败view
     renderErrorView(error) {
-        if(SERVER_TYPE === "TEST") {
-            return ( <NoDataView text={"error："+error} /> );
-        }
-        return ( <NoDataView text="加载失败" /> );
+        return ( <NoDataView text="加载失败" image={require('app-images/doc/icon_doc_empty_doc.png')} /> );
     }
     _itemClick = (item, index) => {
         if(this.state.isEdit) {
@@ -496,7 +498,7 @@ export default class extends Component {
         if(data.length < 1) {
             return;
         }
-        DocActionSheet.show(data,(actionItem)=>{
+        DocActionSheet.showAdd(data,(actionItem)=>{
             if(actionItem.itemKey == 'newfolder') {
                 this.doNewFolder({value:{name:null}});
                 return;
@@ -885,7 +887,7 @@ export default class extends Component {
         return <View style={{height:50,width:'100%'}} />
     }
     renderEmptyView = () => {
-        return <NoDataView text='暂无数据' />
+        return <NoDataView image={require('app-images/doc/icon_doc_empty_doc.png')} text='暂无数据' />
     }
     /**
      * 列表

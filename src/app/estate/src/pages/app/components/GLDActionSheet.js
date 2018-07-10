@@ -17,9 +17,9 @@ class GLDActionSheet extends Overlay {
 
     static overlayView = null;
 
-    static show(children) {
+    static show(children,modal=false) {
         return super.show(
-            <Overlay.View side='bottom' modal={false}
+            <Overlay.View side='bottom' modal={modal}
                 style={styles.container}
                 overlayOpacity={0.7}
                 ref={v => this.overlayView = v}

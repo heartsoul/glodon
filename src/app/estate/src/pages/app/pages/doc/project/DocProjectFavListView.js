@@ -60,16 +60,16 @@ export default class extends DocEditFileDataList {
         <TabView.Sheet
             title={'下载'}
             type='button'
-            icon={require('app-images/home/icon_main_main_page.png')}
-            activeIcon={require('app-images/home/icon_main_page_selected.png')}
+            icon={require('app-images/doc/icon_doc_bar_download.png')}
+            activeIcon={require('app-images/doc/icon_doc_bar_download_click.png')}
             onPress={(event) => { event.preventDefault(); this.doDownload(this.state.selectedItems)}}
         >
         </TabView.Sheet>
         <TabView.Sheet
             title={'分享'}
             type='button'
-            icon={require('app-images/home/icon_main_subscribe.png')}
-            activeIcon={require('app-images/home/icon_main_subscribe_selected.png')}
+            icon={require('app-images/doc/icon_doc_bar_share.png')}
+            activeIcon={require('app-images/doc/icon_doc_bar_share_click.png')}
             onPress={(event) => { event.preventDefault(); this.doShare(this.state.selectedItems)}}
         >
         </TabView.Sheet>
@@ -77,8 +77,8 @@ export default class extends DocEditFileDataList {
         <TabView.Sheet
             title={'取消收藏'}
             type='button'
-            icon={require('app-images/home/icon_main_message.png')}
-            activeIcon={require('app-images/home/icon_main_message_selected.png')}
+            icon={require('app-images/doc/icon_doc_bar_fav.png')}
+            activeIcon={require('app-images/doc/icon_doc_bar_fav_click.png')}
             onPress={(event) => { event.preventDefault(); this.doFavoriteCancel(this.state.selectedItems)}}
         >
         </TabView.Sheet>
@@ -254,10 +254,7 @@ export default class extends DocEditFileDataList {
 
     //加载失败view
     renderErrorView(error) {
-        if(SERVER_TYPE === "TEST") {
-            return ( <NoDataView text={"error："+error} /> );
-        }
-        return ( <NoDataView text="加载失败" /> );
+        return ( <NoDataView text="加载失败" image={require('app-images/doc/icon_doc_empty_fav.png')}/> );
     }
     _itemClick = (item, index) => {
         
@@ -478,7 +475,7 @@ export default class extends DocEditFileDataList {
         return <View style={{height:50,width:'100%'}} />
     }
     renderEmptyView = () => {
-        return <NoDataView text='暂无数据' />
+        return <NoDataView image={require('app-images/doc/icon_doc_empty_fav.png')} text='暂无数据' />
     }
   
     /**
