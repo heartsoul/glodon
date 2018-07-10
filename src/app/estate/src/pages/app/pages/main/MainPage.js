@@ -100,7 +100,19 @@ export default class extends Component {
         BimFileEntry.chooseQualityModelFromHome(navigator);
     }
 
-    // 文档管理
+    // 模型文档管理
+    _toDocModelChoose = () => {
+        let navigator = this.props.navigation;
+        storage.pushNext(navigator, "DocProjectPage");
+    }
+
+    // 图纸文档管理
+    _toDocDrawingChoose = () => {
+        let navigator = this.props.navigation;
+        storage.pushNext(navigator, "DocProjectPage");
+    }
+
+    // 项目文档管理
     _toDocProject= () => {
         let navigator = this.props.navigation;
         storage.pushNext(navigator, "DocProjectPage");
@@ -161,40 +173,29 @@ export default class extends Component {
 
     }
 
-    renderCarouselView = (qShow, eShow) => {
+    renderCarouselView = (qShow, eShow,dShow) => {
         let { width } = Dimensions.get("window");
-        if (qShow && eShow) {
-            return (
-                <Carousel cycle={false} startIndex={0} ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
-                <View style={styles.topImageView}>
-                <Image style={[styles.topImage, { width: 27, height: 74 }]} source={require('app-images/icon_main_page_top_quality.png')} />
-
-                        </View>
-                    <View style={styles.topImageView}>
-                    <Image style={[styles.topImage, { width: 121, height: 87 }]} source={require('app-images/icon_main_page_top_equipment.png')} />
-
-                    </View>
-                </Carousel>
-            );
-        } else if (eShow) {
-            return (
-                <Carousel ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
-                    <View style={styles.topImageView}>
-                        <Image style={[styles.topImage, { width: 121, height: 87 }]} source={require('app-images/icon_main_page_top_equipment.png')} />
-                    </View>
-                </Carousel>
-            );
-        } else if (qShow) {
-            return (
-                <Carousel ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
-                    <View style={styles.topImageView}>
-                        <Image style={[styles.topImage, { width: 27, height: 74 }]} source={require('app-images/icon_main_page_top_quality.png')} />
-                    </View>
-                </Carousel>
-            );
+        if(!(qShow || eShow || dShow)) {
+            return null;
         }
-        return null;
-
+        let qView = qShow ? (<View style={styles.topImageView}>
+            <Image style={[styles.topImage, { width: 27, height: 74 }]}
+                source={require('app-images/icon_main_page_top_quality.png')} />
+        </View>) : null;
+        let eView = eShow ? (<View style={styles.topImageView}>
+            <Image style={[styles.topImage, { width: 121, height: 87 }]} source={require('app-images/icon_main_page_top_equipment.png')} />
+            </View>) : null;
+        let dView = dShow ? (<View style={styles.topImageView}>
+            <Image style={[styles.topImage, { width: 35, height: 80 }]} source={require('app-images/icon_main_page_top_doc.png')} />
+            </View>): null;
+        
+        return (
+            <Carousel cycle={false} startIndex={0} ref={'carousel'} style={{ height: 203 }} carousel={false} scrollEnabled={false}>
+            {qView}
+            {eView}
+            {dView}
+            </Carousel>
+        );
     }
 
     //关闭离线标记
@@ -265,7 +266,8 @@ export default class extends Component {
     render() {
         let qShow = AuthorityManager.isQualityBrowser()
         let eShow = AuthorityManager.isEquipmentBrowser()
-        if (!(qShow || eShow)) {
+        let dShow = AuthorityManager.isDocProjectBrowser() || AuthorityManager.isDocModelBrowser() || AuthorityManager.isDocDrawingBrowser();
+        if (!(qShow || eShow || dShow)) {
             return <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
                 <StatusBar barStyle="light-content" translucent={false} backgroundColor="#00baf3" />
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
@@ -274,6 +276,25 @@ export default class extends Component {
             </SafeAreaView>
         }
         let { width } = Dimensions.get("window");
+        let barWidth = 0;
+        let qIndex = 0;
+        let eIndex = 1;
+        let dIndex = 2;
+        if(qShow) {
+            barWidth += 104;
+        } else {
+            eIndex--;
+            dIndex--;
+        }
+        if(eShow) {
+            barWidth += 104;
+        } else {
+            dIndex--;
+        }
+        if(dShow) {
+            barWidth += 104;
+        }
+
         return (
             <SafeAreaView style={{width:'100%',height:'100%'}}>
             <ScrollView style={{ backgroundColor: '#f8f8f8' }}>
@@ -284,31 +305,24 @@ export default class extends Component {
                 }
                 <ImageBackground style={{ height: 203, marginTop: 44, backgroundColor: '#ffffff' }} resizeMode='contain' source={require('app-images/icon_main_page_top_bg.png')}>
                     {
-                        this.renderCarouselView(qShow, eShow)
+                        this.renderCarouselView(qShow, eShow, dShow)
                     }
                 </ImageBackground>
                 </View>
-                <SegmentedView indicatorType='none' barStyle={{left:width/2-104,width:208,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 300, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
+                <SegmentedView indicatorType='none' barStyle={{left:(width - barWidth)/2,width:barWidth,height:40, alignItems: 'center', justifyContent: 'center'}} style={{ height: 300, backgroundColor: '#FFFFFF',}} onChange={(index) => { this.scrollToPage(index) }} bounces={true} type={'carousel'}>
     {
                         qShow ?
-                        <SegmentedView.Sheet title={<MainTabTitle key="item0" text="质量检查" select={this.state.activeIndex == 0} activeTitleStyle={{color:'#00baf3',fontWeight:'bold',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />}  style={{backgroundColor: '#f8f8f8'}}>
+                        <SegmentedView.Sheet title={<MainTabTitle key="item0" text="质量检查" select={this.state.activeIndex == qIndex} activeTitleStyle={{color:'#00baf3',fontWeight:'bold',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />}  style={{backgroundColor: '#f8f8f8'}}>
                         <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => {event.preventDefault();this._toDocProject(event)}} title="文档管理" />
-                                    <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => {event.preventDefault();
-                                        let navigator = this.props.navigation;
-                                        storage.pushNext(navigator, "DocMarkupPage");    
-                                    }} title="批注" />
-
-                                    <View style={styles.spliteItem} />
                                     <ModelItemView source={require('app-images/icon_main_pager_zjqd.png')} onPress={(event) => {event.preventDefault();this._loadQualityForm(event)}} title="质检清单" />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_blueprint.png')} onPress={(event) => {event.preventDefault();this._fileChoose()}} title="图纸" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_blueprint.png')} onPress={(event) => {event.preventDefault();this._fileChoose(event)}} title="图纸" />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_model.png')} onPress={(event) => {event.preventDefault();this._projectChoose()}} title="模型" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_model.png')} onPress={(event) => {event.preventDefault();this._projectChoose(event)}} title="模型" />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_module.png')} onPress={(event) => {event.preventDefault();this._checkPointChoose()}} title="质检项目" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_module.png')} onPress={(event) => {event.preventDefault();this._checkPointChoose(event)}} title="质检项目" />
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
                                 </View>
@@ -317,13 +331,36 @@ export default class extends Component {
                     }
                     {
                         eShow ?
-                        <SegmentedView.Sheet title={<MainTabTitle key="item0" text="材设进场" select={this.state.activeIndex == 1} activeTitleStyle={{color:'#00baf3',fontWeight:'bold',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />} style={{backgroundColor: '#f8f8f8'}}>
+                        <SegmentedView.Sheet title={<MainTabTitle key="item1" text="材设进场" select={this.state.activeIndex == eIndex} activeTitleStyle={{color:'#00baf3',fontWeight:'bold',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />} style={{backgroundColor: '#f8f8f8'}}>
                         <View style={styles.tabContent}>
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_csjc.png')} onPress={(event) => {event.preventDefault();this._loadEquipmentForm()}} title="材设清单" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_csjc.png')} onPress={(event) => {event.preventDefault();this._loadEquipmentForm(event)}} title="材设清单" />
                                     <View style={styles.spliteItem} />
-                                    <ModelItemView source={require('app-images/icon_main_pager_equipment_model.png')} onPress={(event) =>{event.preventDefault(); this._moduleChoose()}} title="模型预览" />
+                                    <ModelItemView source={require('app-images/icon_main_pager_equipment_model.png')} onPress={(event) =>{event.preventDefault(); this._moduleChoose(event)}} title="模型预览" />
+                                    <View style={styles.spliteItem} />
+                                    <View style={styles.spliteItem} />
+                                </View>
+                            </SegmentedView.Sheet>
+                            : null
+                    }
+                    {
+                        dShow ?
+                        <SegmentedView.Sheet title={<MainTabTitle key="item2" text="我的文档" select={this.state.activeIndex == dIndex} activeTitleStyle={{color:'#00baf3',fontWeight:'bold',fontSize:16}} titleStyle={{color:'#333333',fontSize:16}} />}  style={{backgroundColor: '#f8f8f8'}}>
+                        <View style={styles.tabContent}>
+                                    <View style={styles.spliteItem} />
+                                    
+                                    {AuthorityManager.isDocModelBrowser()?(<View style={styles.spliteItem} />):null}
+                                    {AuthorityManager.isDocModelBrowser()?(<ModelItemView source={require('app-images/icon_main_pager_doc_model.png')} onPress={(event) => {event.preventDefault();this._toDocModelChoose(event)}} title="模型" />):null}
+                                    {AuthorityManager.isDocDrawingBrowser()?(<View style={styles.spliteItem} />):null}
+                                    {AuthorityManager.isDocDrawingBrowser()?(<ModelItemView source={require('app-images/icon_main_pager_doc_blueprint.png')} onPress={(event) => {event.preventDefault();this._toDocfileChoose(event)}} title="图纸" />):null}
+                                    {AuthorityManager.isDocProjectBrowser()?(<View style={styles.spliteItem} />):null}
+                                    {AuthorityManager.isDocProjectBrowser()?(<ModelItemView source={require('app-images/icon_main_pager_doc_module.png')} onPress={(event) => {event.preventDefault();this._toDocProject(event)}} title="文档管理" />):null}
+                                    <View style={styles.spliteItem} />
+                                    <ModelItemView source={require('app-images/icon_main_pager_doc_model.png')} onPress={(event) => {event.preventDefault();
+                                        let navigator = this.props.navigation;
+                                        storage.pushNext(navigator, "DocMarkupPage");    
+                                    }} title="批注" />
                                     <View style={styles.spliteItem} />
                                     <View style={styles.spliteItem} />
                                 </View>

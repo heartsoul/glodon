@@ -149,6 +149,53 @@ export function isEquipmentBrowser(){
 }
 //---------------------------材设--------------------------------------
 
+//---------------------------项目文档 start--------------------------------------
+/**
+ * 判断是否有项目文档管理的权限
+ */
+export function isDocProjectBrowser(){
+    let rights = {actionRights:storage.loadAuthority(AuthorityConfig.Estate_Document)} ;//项目文档
+    return rights &&
+    rights.actionRights!=null && rights.actionRights.size()>0 &&
+            (
+                rights.actionRights.contains(AuthorityConfig.BrowseAll)||
+                rights.actionRights.contains(AuthorityConfig.BrowseSelf)||
+                rights.actionRights.contains(AuthorityConfig.BrowseGrant)||
+                rights.actionRights.contains(AuthorityConfig.BrowseUnit)
+            );
+}
+/**
+ * 判断是否有模型文档管理的权限
+ */
+export function isDocModelBrowser(){
+    let rights = {actionRights:storage.loadAuthority(AuthorityConfig.Estate_Model_Document)} ;//项目文档
+    return rights &&
+    rights.actionRights!=null && rights.actionRights.size()>0 &&
+            (
+                rights.actionRights.contains(AuthorityConfig.BrowseAll)||
+                rights.actionRights.contains(AuthorityConfig.BrowseSelf)||
+                rights.actionRights.contains(AuthorityConfig.BrowseGrant)||
+                rights.actionRights.contains(AuthorityConfig.BrowseUnit)
+            );
+}
+/**
+ * 判断是否有图纸文档管理的权限
+ */
+export function isDocDrawingBrowser(){
+    let rights = {actionRights:storage.loadAuthority(AuthorityConfig.Estate_Model_Drawing)} ;//项目文档
+    return rights &&
+    rights.actionRights!=null && rights.actionRights.size()>0 &&
+            (
+                rights.actionRights.contains(AuthorityConfig.BrowseAll)||
+                rights.actionRights.contains(AuthorityConfig.BrowseSelf)||
+                rights.actionRights.contains(AuthorityConfig.BrowseGrant)||
+                rights.actionRights.contains(AuthorityConfig.BrowseUnit)
+            );
+}
+
+//---------------------------项目文档  end --------------------------------------
+
+
 /**
  * 获取所有权限
  */
