@@ -359,7 +359,7 @@ export async function deleteDocFileBatch(containerId, fileIds) {
     let api = `/bimpm/doc/containers/${containerId}/files/batch`
     let params = {
         fileIds: fileIds,
-        purge: true,
+        purge: false,
     }
     let props = JSON.stringify(params);
     return requestJSON(api, {
@@ -386,9 +386,8 @@ export async function deleteDocFileBatch(containerId, fileIds) {
 export async function getTrashFiles(containerId, pageIndex) {
     let api = `/bimpm/doc/containers/${containerId}/files/trash`;
     let filter = "";
-    if (pageIndex) {
-        filter += `&pageIndex=${pageIndex}`
-    }
+    pageIndex = pageIndex || 0;
+    filter += `&pageIndex=${pageIndex}`
     return requestJSON(api + `?${filter}`, {
         method: 'GET',
     });
