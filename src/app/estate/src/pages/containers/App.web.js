@@ -127,6 +127,12 @@ const screens = {
  DocMarkupChoosePage: {
     screen: GLD.DocMarkupChoosePage
  },
+    DocMarkupChooseUserPage: {
+        screen: GLD.DocMarkupChooseUserPage
+    },
+    DocMarkupChooseDeptPage: {
+        screen: GLD.DocMarkupChooseDeptPage
+    },
 };
 
 const options = () => {

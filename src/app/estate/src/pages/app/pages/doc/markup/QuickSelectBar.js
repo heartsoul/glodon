@@ -10,26 +10,31 @@ import {
 let offsetTop = Platform.OS === 'ios' ? 44 + 20 : 56;
 var itemHeightMap = new Map();//每个字母的y坐标
 
+const ALL_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '#']
+
 class QuickSelectBar extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            letters: ALL_LETTERS,
+        }
     }
 
     scrollTo = (index) => {
-        if (this.props.scrollTo) {
-            this.props.scrollTo(this.props.letters[index], index)
+        if (this.props.scrollTo && index >= 0) {
+            this.props.scrollTo(this.state.letters[index])
         }
     }
 
     _getScrollToIndex = (value) => {
-        let index = 0;
-        let len = this.props.letters.length;
-        if (value < itemHeightMap.get(this.props.letters[0]).y) {
+        let index = -1;
+        let len = this.state.letters.length;
+        if (value < itemHeightMap.get(this.state.letters[0]).y) {
             return index;
         }
         for (let i = 0; i < len; i++) {
-            if (value > itemHeightMap.get(this.props.letters[i]).y) {
+            if (value > itemHeightMap.get(this.state.letters[i]).y) {
                 index = i;
             }
         }
@@ -42,7 +47,7 @@ class QuickSelectBar extends Component {
     _getOffsetTop = (callback) => {
         this.barRef.measureInWindow((x, y, width, height) => {
             offsetTop = y;
-            if(callback){
+            if (callback) {
                 callback();
             }
         });
@@ -59,7 +64,7 @@ class QuickSelectBar extends Component {
 
             onPanResponderGrant: (evt, gestureState) => {
                 // console.log('触摸 当响应器产生时的屏幕坐标 \n x:' + gestureState.x0 + ',y:' + gestureState.y0);
-                this._getOffsetTop(()=>{
+                this._getOffsetTop(() => {
                     let value = gestureState.y0 - offsetTop + 1;
                     let index = this._getScrollToIndex(value);
                     this.scrollTo(index);
@@ -117,10 +122,10 @@ class QuickSelectBar extends Component {
                 {...this._panGesture.panHandlers}
                 onLayout={({ nativeEvent: e }) => this.lettersLayout(e)}
             >
-                <Text ref={ref => this.barRef = ref} style={{ backgroundColor: 'black', height: 1, width: 30 }}></Text>
+                <Text ref={ref => this.barRef = ref} style={{ height: 1, width: 30 }}></Text>
                 <View style={styles.letters}>
                     {
-                        this.props.letters.map((letter, index) => {
+                        this.state.letters.map((letter, index) => {
                             return this.renderLetter(letter, index)
                         })
                     }
@@ -136,17 +141,17 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100%'
+        height: '100%',
     },
     letter: {
-        height: 30,
-        width: 30,
+        flex: 1,
+        width: 20,
         justifyContent: 'center',
-        alignItems: 'center',
     },
     letterText: {//右边list字母的样式
         textAlign: 'center',
-        fontSize: 14,
+        fontSize: 12,
+        color: '#666',
     },
 })
 

@@ -50,16 +50,15 @@ class ComponentInputChild extends Component {
                         defaultValue={this.props.content}
                     />
 
-                    <TouchableWithoutFeedback onPress={(event) => {
-                        // event.preventDefault()
-                        // CommentInputView.close();
-                        // storage.pushNext(null, 'DocMarkupChoosePage')
-                        this.refInput.addKeywords([{ keyword: '陈文杰' }, { keyword: '小明' },])
-                    }}>
-                        <View style={styles.atBox}>
-                            <Text style={styles.atText}>@</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                    <TouchableOpacity
+                        style={styles.atBox}
+                        onPress={(event) => {
+                            event.preventDefault()
+                            CommentInputView.close();
+                            storage.pushNext(null, 'DocMarkupChooseDeptPage')
+                        }}>
+                        <Text style={styles.atText}>@</Text>
+                    </TouchableOpacity>
 
                 </View>
                 <View style={styles.sendBox}>
