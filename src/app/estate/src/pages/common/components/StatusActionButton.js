@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity,View } from 'react-native'
 
 export default class StatusActionButton extends Component {
     render = () => {
-        const { text, onClick, style, disabled, color } = this.props;
+        const { text, onClick, style, disabled, color,textStyle={} } = this.props;
         let styleIn = [];
         let textColor = "#fff";
         if (style) {
@@ -21,7 +21,7 @@ export default class StatusActionButton extends Component {
                 activeOpacity={0.5}
                 disabled={disabled ? true : false}
                 onPress={onClick}>
-                <Text style={[styles.buttonText, { color: color }]}>{text}</Text>
+                <Text style={[styles.buttonText,textStyle, { color: color }]}>{text}</Text>
             </TouchableOpacity>
             )
         }
@@ -42,6 +42,8 @@ StatusActionButton.propTypes = {
     onClick: PropTypes.func,
     color: PropTypes.any.isRequired,
     disabled: PropTypes.bool,
+    textStyle:Text.propTypes.style,
+    style:View.propTypes.style
 }
 
 const styles = StyleSheet.create({

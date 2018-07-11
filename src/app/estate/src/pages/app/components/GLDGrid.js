@@ -35,9 +35,6 @@ class GLDGrid extends Component {
 
 
     }
-keyExtractor = () =>{
-
-}
     _fixData = () => {
         if (this.props.data) {
             let len = this.props.data.length;
@@ -48,7 +45,7 @@ keyExtractor = () =>{
         }
 
     }
-
+    _keyExtractor = (item, index) => item.name+'-'+index;
     _renderGrid = () => {
         this._fixData();
         return (
@@ -57,6 +54,7 @@ keyExtractor = () =>{
                     data={this.props.data}
                     renderItem={({ item, index }) => { return this.renderItem({ item, index }) }}
                     numColumns={this.props.numColumns}
+                    keyExtractor={this._keyExtractor}
                 />
             </View>
 

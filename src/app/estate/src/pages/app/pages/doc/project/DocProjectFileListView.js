@@ -3,7 +3,7 @@
  */
 'use strict';
 import SERVICE from 'app-api/service';
-import { BarItems, LoadingView, NoDataView, ShareManager, ActionModal, ActionInputModal } from "app-components";
+import { BarItems, LoadingView, NoDataView, ShareManager, ActionModal, ActionInputModal,StatusActionButton } from "app-components";
 import React, { Component } from "react";
 import {Image, FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
 import { Menu, TabView} from 'app-3rd/teaset';
@@ -147,38 +147,18 @@ export default class extends Component {
         // 复制
         if (this.state.isCopyItem) {
             // 复制状态
-            return (<TabView style={{ height: 49, bottom: 0, right: 0, left: 0, overflow: 'visible', position: 'absolute' }}>
-                <TabView.Sheet
-                    title={'取消'}
-                    type='button'
-                    onPress={(event) => { event.preventDefault(); this.onCancelCopyOrMove(); }}
-                >
-                </TabView.Sheet>
-                <TabView.Sheet
-                    title={'复制到此处'}
-                    type='button'
-                    onPress={(event) => { event.preventDefault(); this.copyto(this.state.selectedItems) }}
-                >
-                </TabView.Sheet>
-            </TabView>);
+            return (<View style={{flexDirection:'row',borderTopColor:'#E6E6E6',borderTopWidth:1, height: 49, bottom: 0, right: 0, left: 0, overflow: 'visible', position: 'absolute' }}>
+                <StatusActionButton textStyle={{fontSize:15}} text="取消" color='#666666' style={{width:'50%',height:'100%',backgroundColor:'#FFFFFF'}} onClick={(event) => { event && event.preventDefault && event.preventDefault(); this.onCancelCopyOrMove();}}/>
+                <StatusActionButton textStyle={{fontSize:15}} text="复制到此处" color='#FFFFFF' style={{width:'50%',height:'100%',backgroundColor:'#00baf3'}} onClick={(event) => { event && event.preventDefault && event.preventDefault(); this.copyto(this.state.selectedItems);}}/>
+            </View>);
         }
         // 移动
         if (this.state.isMoveItem) {
             // 移动状态
-            return (<TabView style={{ height: 49, bottom: 0, right: 0, left: 0, overflow: 'visible', position: 'absolute' }}>
-                <TabView.Sheet
-                    title={'取消'}
-                    type='button'
-                    onPress={(event) => { event.preventDefault(); this.onCancelCopyOrMove(); }}
-                >
-                </TabView.Sheet>
-                <TabView.Sheet
-                    title={'移动到此处'}
-                    type='button'
-                    onPress={(event) => { event.preventDefault(); this.moveto(this.state.selectedItems) }}
-                >
-                </TabView.Sheet>
-            </TabView>);
+            return (<View style={{flexDirection:'row',borderTopColor:'#E6E6E6',borderTopWidth:1, height: 49, bottom: 0, right: 0, left: 0, overflow: 'visible', position: 'absolute' }}>
+                <StatusActionButton textStyle={{fontSize:15}} text="取消" color='#666666' style={{width:'50%',height:'100%',backgroundColor:'#FFFFFF'}} onClick={(event) => { event && event.preventDefault && event.preventDefault(); this.onCancelCopyOrMove();}}/>
+                <StatusActionButton textStyle={{fontSize:15}} text="移动到此处" color='#FFFFFF' style={{width:'50%',height:'100%',backgroundColor:'#00baf3'}} onClick={(event) => { event && event.preventDefault && event.preventDefault(); this.moveto(this.state.selectedItems);}}/>
+            </View>);
         }
         return null;
     }
@@ -255,6 +235,9 @@ export default class extends Component {
     }
 
     _itemSelected = (selected, item, index) => {
+        if(!this.state.isEdit) {
+            return;
+        }
         item.value.selected = !selected;
         
         this.state.selectedItems = this.state.dataArray.filter(function (element, index, self) {
@@ -264,6 +247,9 @@ export default class extends Component {
         this.onSelectPage(); // 更新标题 
     }
     onSelectAll = () =>{
+        if(!this.state.isEdit) {
+            return;
+        }
         let ret = [];
         this.state.dataArray.map((item)=>{
             item.value.selected = true;
@@ -275,7 +261,7 @@ export default class extends Component {
     }
     updateView = (params) => {
         this.setState({...params},()=>{
-            this.onSelectAll();
+            this.onSelectPage(); // 更新标题 
         });
 
     }
@@ -827,7 +813,6 @@ export default class extends Component {
         SERVICE.createDocDir(this.state.containerId,this.state.fileId,item.value.name).then(()=>{
             Toast.success('创建成功',1.500);
             newFolderIndex++;
-            this._onCancelEdit();
             this.fetchData(0);
         }).catch(err=>{
             let msg = '创建失败!';
@@ -847,6 +832,9 @@ export default class extends Component {
             onMore = null;
         } else {
             onSelect = null;
+            if(this.state.isCopyItem || this.setState.isMoveItem) {
+                onMore = null;
+            }
         }
         return (
             <DocView onMore={onMore} onSelect={onSelect} selected={selected}>
@@ -864,6 +852,9 @@ export default class extends Component {
             onMore = null;
         } else {
             onSelect = null;
+            if(this.state.isCopyItem || this.setState.isMoveItem) {
+                onMore = null;
+            }
         }
         return (
             <DocView onMore={onMore} onSelect={onSelect} selected={selected}>
