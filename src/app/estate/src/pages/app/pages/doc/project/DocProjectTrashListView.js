@@ -267,7 +267,7 @@ export default class extends Component {
         const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
         let data =[];
         view && data.push(DocActionSheet.dataItemRestore);
-        view && data.push(DocActionSheet.dataItemDestroy);
+        deleteItem && data.push(DocActionSheet.dataItemDestroy);
         
         if(data.length < 1) {
             return;

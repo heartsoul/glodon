@@ -10,6 +10,7 @@ import { Menu, TabView} from 'app-3rd/teaset';
 import {Toast} from 'antd-mobile'
 import DocView from './../components/DocView';
 import DocActionSheet from './../components/DocActionSheet';
+import DocOrderMenuView,{OrderDirectionDefault,OrderTypeDefault} from './../components/DocOrderMenuView';
 import DocEditFileDataList from './../components/DocEditFileDataList';
 var newFolderIndex = 1;
 export default class extends Component {
@@ -49,7 +50,8 @@ export default class extends Component {
         let isMoveItem = params.isMoveItem || false;
         let deep = params.deep || 1;
         let fromDeep = params.fromDeep || 1;
-        let orderType = params.orderType || null;
+        let orderType = params.orderType || OrderTypeDefault;
+        let orderDirection = params.orderDirection || OrderDirectionDefault;
         let selectedItems = params.selectedItems || [];
         let fromNavigation = params.fromNavigation || null;
         let userPrivilege = params.userPrivilege || {
@@ -78,6 +80,7 @@ export default class extends Component {
             isEdit:isEdit,
             hasMore: true,
             orderType:orderType,
+            orderDirection:orderDirection,
             projectId: storage.loadProject(),
             latestVersion: storage.projectIdVersionId,
             fileId: fileId,
@@ -194,20 +197,7 @@ export default class extends Component {
             let showMenu = null;
             let items = [
                 { icon: <Text style={{ color: '#FFFFFF' }}>选择...</Text>, onPress: this._onEditModePress },
-                {
-                    icon: <View>
-                        <TouchableOpacity style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }} onPress={() => { Menu.hide(showMenu); this._changeOrderType('time'); }}><Text style={{ lineHeight: 30, color: this.state.orderType !== 'time' ? '#FFFFFF' : '#00baf3' }}>文件时间  </Text><Image style={{ width: 14, height: 14, resizeMode: 'contain' }} source={require('app-images/doc/icon_doc_order_down_click.png')} /></TouchableOpacity>
-                        <TouchableOpacity style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "center"
-                        }} onPress={() => { Menu.hide(showMenu); this._changeOrderType('name'); }}><Text style={{ lineHeight: 30, color: this.state.orderType !== 'name' ? '#FFFFFF' : '#00baf3' }}>文件名称  </Text><Image style={{ width: 14, height: 14, resizeMode: 'contain' }} source={require('app-images/doc/icon_doc_order_down.png')} /></TouchableOpacity>
-                    </View>
-                }
+                { icon: <DocOrderMenuView orderType={this.state.orderType} orderDirection={this.state.orderDirection} onChangeOrderType={(event,orderType)=>{Menu.hide(showMenu);this._changeOrderType(orderType)}} />}
             ];
 
             showMenu = Menu.show({ x, y, width, height }, items, { align: 'end', showArrow: true, shadow: Platform.OS === 'ios' ? true : false, popoverStyle: [{ paddingLeft: 0, paddingRight: 0 }], directionInsets: 0, alignInsets: -5, paddingCorner: 10 });
@@ -611,6 +601,12 @@ export default class extends Component {
      * items: 数据列表
      */
     doDelete = (items) => {
+        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
+        const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
+        if(!deleteItem) {
+            Toast.fail("没有权限", 1.500);
+            return;
+        }
         if(items.length < 1) {
             return;
         }
@@ -635,7 +631,12 @@ export default class extends Component {
      * items: 数据列表
      */
     doDownload = (items) => {
-        
+        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
+        const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
+        if(!download) {
+            Toast.fail("没有权限", 1.500);
+            return;
+        }
     }
 
 
@@ -644,6 +645,12 @@ export default class extends Component {
      * items: 数据列表
      */
     moveto = (items) => {
+        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
+        const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
+        if(!create) {
+            Toast.fail("没有权限", 1.500);
+            return;
+        }
         if(items.length < 1) {
             return;
         }
@@ -670,6 +677,12 @@ export default class extends Component {
      * items: 数据列表
      */
     copyto = (items) => {
+        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
+        const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
+        if(!create) {
+            Toast.fail("没有权限", 1.500);
+            return;
+        }
         if(items.length < 1) {
             return;
         }
@@ -700,6 +713,8 @@ export default class extends Component {
             fromNavigation: fromNavigation || this.state.fromNavigation,
             isCopyItem:isCopyItem,
             isMoveItem:isMoveItem,
+            orderDirection:this.state.orderDirection,
+            orderType:this.state.orderType,
             isEdit:isEdit,
             selectedItems:selectedItems,
              title:title, 
@@ -712,6 +727,12 @@ export default class extends Component {
      * items: 数据列表
      */
     doMoveto = (items) => {
+        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
+        const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
+        if(!deleteItem) {
+            Toast.fail("没有权限", 1.500);
+            return;
+        }
         if(items.length < 1) {
             return;
         }
@@ -757,6 +778,12 @@ export default class extends Component {
      *
      */
     doRename = (item,errorMessage='') => {
+        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
+        const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
+        if(!create) {
+            Toast.fail("没有权限", 1.500);
+            return;
+        }
        // 显示重命名对话框
        ActionInputModal.showConfirm('重命名',null,{},{onPress:(e,textValue)=>{
         item.value.name = textValue;
@@ -797,6 +824,12 @@ export default class extends Component {
      *
      */
     doNewFolder = (item,errorMessage='') => {
+        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
+        const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
+        if(!create) {
+            Toast.fail("没有权限", 1.500);
+            return;
+        }
         let newName = item.value.name || `新建文件夹${newFolderIndex}`;
         // 显示新建文件夹对话框
         ActionInputModal.showConfirm('新建文件夹',null,{},{onPress:(e,textValue)=>{
@@ -923,7 +956,11 @@ export default class extends Component {
             </View>
         );
     }
+    componentWillUnmount = () => {
+        console.log('DocProjectFileListView componentWillUnmount');
+    }
     render = () => {
+        console.log('DocProjectFileListView render');
         //第一次加载等待的view
         if (this.state.isLoading && !this.state.error) {
             return (<LoadingView />);
