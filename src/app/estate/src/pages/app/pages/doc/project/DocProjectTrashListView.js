@@ -3,10 +3,10 @@
  */
 'use strict';
 import SERVICE from 'app-api/service';
-import { BarItems, LoadingView, NoDataView } from "app-components";
+import { BarItems, LoadingView, NoDataView, ActionModal} from "app-components";
 import React, { Component } from "react";
 import { FlatList, RefreshControl, StatusBar, StyleSheet, View} from "react-native";
-import { SERVER_TYPE } from "common-module"
+import {Toast} from 'antd-mobile'
 import DocView from './../components/DocView';
 import DocActionSheet from './../components/DocActionSheet';
 
@@ -59,8 +59,17 @@ export default class extends Component {
         }
         this.onSelectPage();
     }
-    onSelectPage = () => {
+    onSelectPage = (bInnerCall=true) => {
         this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight: this.renderHeaderRightButtons });
+        if(!bInnerCall) {
+            this.fetchData(0);
+        }
+    }
+    _onCancelEdit = () =>{
+        this.state.selectedItems = [];
+        this.state.isEdit = false;
+        // this.forceUpdate();
+        // this.onSelectPage(); // 更新标题 
     }
     _onSearchPress = () => {
         // 打开搜索页面。
@@ -70,7 +79,7 @@ export default class extends Component {
         return <BarItems.TitleBarItem text={title ? title : '回收站'} />;
     }
     renderHeaderLeftButtons = () => {
-        let power = false;
+        let power = true;
         return (<BarItems navigation={this.props.navigation}>
         <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_back_white.png')} onPress={(navigation) => {storage.pop(navigation,1);}} />
        {power ? <BarItems.LeftBarItem navigation={this.props.navigation} text="清空" onPress={(navigation) => this.onClear(navigation)} /> : null}
@@ -82,7 +91,7 @@ export default class extends Component {
         </BarItems>);
     }
    
-    _keyExtractor = (item, index) => index;
+    _keyExtractor = (item, index) => item.value.id+'-'+index;
 
     fetchData = (page) => {
         SERVICE.getDocContainer(storage.loadProject()).then((responseData) => {
@@ -143,16 +152,27 @@ export default class extends Component {
                         hasMore: last ? false : true
                     });
                 } else {
-                    this.setState({
-                        isLoading: false,
-                        refreshing: false,
-                    });
+                    if(page < 1) {
+                        this.setState({
+                            dataArray: [],
+                            isLoading: false,
+                            refreshing: false,
+                            page: 0,
+                            hasMore: false
+                        });
+                    } else {
+                        this.setState({
+                            isLoading: false,
+                            refreshing: false,
+                        });
+                    }
+                    
                 }
                 dataBlob = null;
     }
     componentDidMount() {
         //请求数据
-        this.fetchData(0);
+        // this.fetchData(0);
     }
 
     //加载失败view
@@ -179,14 +199,18 @@ export default class extends Component {
     /**
      * 清空回收站
      */
-    doClear = () => {
-        SERVICE.clearTrashFileBatch(this.state.containerId).then(()=>{
-            this._onCancelEdit();
-            this.fetchData(0);
-            Toast.success('清空成功',1.500);
-        }).catch(err=>{
-            Toast.error('清空失败',1.500);
-        });
+    onClear = () => {
+        ActionModal.alertConfirm(`确定要清空回收站吗？`, '清空后将彻底删除，无法恢复！', {
+            text: '清空', style: { color: 'red', fontSize: 18 }, onPress: () => {
+                SERVICE.clearTrashFileBatch(this.state.containerId).then(() => {
+                    this._onCancelEdit();
+                    this.fetchData(0);
+                    Toast.success('清空成功', 1.500);
+                }).catch(err => {
+                    Toast.fail('清空失败', 1.500);
+                });
+            }
+        }, { text: '取消' });
     }
 
     /**
@@ -194,20 +218,26 @@ export default class extends Component {
      * items: 数据列表
      */
     doDestroy = (items) => {
-        if(items.length < 1) {
+        if (items.length < 1) {
             return;
         }
-        let fileIds = [];
-        items.map((item)=>{
-            fileIds.push(item.value.fileId);
-        });
-        SERVICE.deleteTrashFileBatch(this.state.containerId,fileIds).then(()=>{
-            this._onCancelEdit();
-            this.fetchData(0);
-            Toast.success('删除成功',1.500);
-        }).catch(err=>{
-            Toast.error('删除失败',1.500);
-        });
+
+        ActionModal.alertConfirm(`确定要彻底删除吗？`, '彻底删除后将无法恢复！', {
+            text: '删除', style: { color: 'red', fontSize: 18 }, onPress: () => {
+                let fileIds = [];
+                items.map((item) => {
+                    fileIds.push(item.value.fileId);
+                });
+                SERVICE.deleteTrashFileBatch(this.state.containerId, fileIds).then(() => {
+                    this._onCancelEdit();
+                    this.fetchData(0);
+                    Toast.success('删除成功', 1.500);
+                }).catch(err => {
+                    Toast.fail('删除失败', 1.500);
+                });
+            }
+        }, { text: '取消' });
+
     }
     
      /**
@@ -227,7 +257,7 @@ export default class extends Component {
             this.fetchData(0);
             Toast.success('还原成功',1.500);
         }).catch(err=>{
-            Toast.error('还原失败',1.500);
+            Toast.fail('还原失败',1.500);
         });
     }
 
@@ -237,7 +267,7 @@ export default class extends Component {
         const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
         let data =[];
         view && data.push(DocActionSheet.dataItemRestore);
-        deleteItem && data.push(DocActionSheet.dataItemDestroy);
+        view && data.push(DocActionSheet.dataItemDestroy);
         
         if(data.length < 1) {
             return;
@@ -245,11 +275,11 @@ export default class extends Component {
 
         DocActionSheet.show(data,(actionItem)=>{
             if(actionItem.itemKey === 'recovery') {
-                this.doRecovery(this.state.containerId, item.value.fileId);
+                this.doRecovery([item]);
                 return;
             }
             if(actionItem.itemKey === 'destroy') {
-                this.doDestroy(this.state.containerId, item.value.fileId);
+                this.doDestroy([item]);
                 return;
             }
             alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
@@ -330,6 +360,7 @@ export default class extends Component {
                 onRefresh={this._onRefreshing}
                 refreshing={this.state.refreshing}
                 onEndReachedThreshold={0.1}
+                keyExtractor={this._keyExtractor}
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.refreshing}

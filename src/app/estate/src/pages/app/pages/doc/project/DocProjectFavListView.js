@@ -6,8 +6,8 @@ import SERVICE from 'app-api/service';
 import { BarItems, LoadingView, NoDataView, ShareManager } from "app-components";
 import React, { Component } from "react";
 import { FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
-import { Menu,TabView } from 'app-3rd/teaset';
-import { SERVER_TYPE } from "common-module";
+import { TabView } from 'app-3rd/teaset';
+import {Toast} from 'antd-mobile'
 import DocView from './../components/DocView';
 import DocActionSheet from './../components/DocActionSheet';
 import DocEditFileDataList from './../components/DocEditFileDataList';
@@ -84,8 +84,11 @@ export default class extends DocEditFileDataList {
         </TabView.Sheet>
     </TabView>);
     }
-    onSelectPage = () => {
+    onSelectPage = (bInnerCall=true) => {
         this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight: this.renderHeaderRightButtons });
+        if(!bInnerCall) {
+            this.fetchData(0);
+        }
     }
     _onSearchPress = () => {
         // 打开搜索页面。
@@ -159,7 +162,7 @@ export default class extends DocEditFileDataList {
         }
     }
    
-    _keyExtractor = (item, index) => index;
+    _keyExtractor = (item, index) => item.value.id+'-'+index;
 
     fetchData = (page) => {
         SERVICE.getDocContainer(storage.loadProject()).then((responseData) => {
@@ -249,7 +252,7 @@ export default class extends DocEditFileDataList {
 
     componentDidMount() {
         //请求数据
-        this.fetchData(0);
+        // this.fetchData(0);
     }
 
     //加载失败view
@@ -493,6 +496,7 @@ export default class extends DocEditFileDataList {
                 onRefresh={this._onRefreshing}
                 refreshing={this.state.refreshing}
                 onEndReachedThreshold={0.1}
+                keyExtractor={this._keyExtractor}
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.refreshing}

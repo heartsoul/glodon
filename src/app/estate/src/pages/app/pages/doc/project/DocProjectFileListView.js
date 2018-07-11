@@ -185,8 +185,11 @@ export default class extends Component {
     onCancelCopyOrMove = () => {
         storage.pop(this.props.navigation, this.state.deep - this.state.fromDeep);
     }
-    onSelectPage = () =>{
+    onSelectPage = (bInnerCall=true) =>{
         this.props.navigation.setParams({isMoveItem:this.state.isMoveItem, isCopyItem:this.state.isCopyItem, isEdit:this.state.isEdit,renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight:this.renderHeaderRightButtons })
+        if(!bInnerCall) {
+            this.fetchData(0);
+        }
     }
     _onSearchPress = () => {
         // 打开搜索页面。
@@ -206,24 +209,28 @@ export default class extends Component {
     }
     _onMorePress = (navigation, event, barItem) => {
         // 菜单
-
         let fromView = barItem;
-
         fromView.measureInWindow((x, y, width, height) => {
             let showMenu = null;
             let items = [
-                { icon: <Text style={{color:'#FFFFFF'}}>选择...</Text>, onPress:this._onEditModePress},
-                // { title: '文件时间',icon:require('app-images/doc/icon_doc_order_down_click.png'), onPress:this._onEditModePress},
-                // { title: '文件名称',icon:require('app-images/doc/icon_doc_order_up.png'), onPress:this._onEditModePress},
-                { icon: <View><TouchableOpacity style={{flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",}} onPress={()=>{Menu.hide(showMenu);this._changeOrderType('time');}}><Text style={{lineHeight:30,color:this.state.orderType !== 'time' ? '#FFFFFF' : '#00baf3'}}>文件时间  </Text><Image style={{width:14,height:14,resizeMode:'contain'}} source={require('app-images/doc/icon_doc_order_down_click.png')}/></TouchableOpacity>
-                <TouchableOpacity style={{flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",width:120}} onPress={()=>{Menu.hide(showMenu);this._changeOrderType('name');}} ><Text style={{lineHeight:30,color:this.state.orderType !== 'name' ? '#FFFFFF' : '#00baf3'}}>文件名称  </Text><Image style={{width:14,height:14,resizeMode:'contain'}} source={require('app-images/doc/icon_doc_order_down.png')}/></TouchableOpacity><Text></Text></View>}
+                { icon: <Text style={{ color: '#FFFFFF' }}>选择...</Text>, onPress: this._onEditModePress },
+                {
+                    icon: <View>
+                        <TouchableOpacity style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }} onPress={() => { Menu.hide(showMenu); this._changeOrderType('time'); }}><Text style={{ lineHeight: 30, color: this.state.orderType !== 'time' ? '#FFFFFF' : '#00baf3' }}>文件时间  </Text><Image style={{ width: 14, height: 14, resizeMode: 'contain' }} source={require('app-images/doc/icon_doc_order_down_click.png')} /></TouchableOpacity>
+                        <TouchableOpacity style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center"
+                        }} onPress={() => { Menu.hide(showMenu); this._changeOrderType('name'); }}><Text style={{ lineHeight: 30, color: this.state.orderType !== 'name' ? '#FFFFFF' : '#00baf3' }}>文件名称  </Text><Image style={{ width: 14, height: 14, resizeMode: 'contain' }} source={require('app-images/doc/icon_doc_order_down.png')} /></TouchableOpacity>
+                    </View>
+                }
             ];
-            
-            showMenu = Menu.show({ x, y, width, height }, items,{align:'end',showArrow:true,shadow:Platform.OS === 'ios' ? true : false,popoverStyle:[{paddingLeft:0,paddingRight:0}],directionInsets:0,alignInsets:-5,paddingCorner:10});
+
+            showMenu = Menu.show({ x, y, width, height }, items, { align: 'end', showArrow: true, shadow: Platform.OS === 'ios' ? true : false, popoverStyle: [{ paddingLeft: 0, paddingRight: 0 }], directionInsets: 0, alignInsets: -5, paddingCorner: 10 });
         });
     }
     renderHeaderTitle = () => {
@@ -325,7 +332,7 @@ export default class extends Component {
        
     }
    
-    _keyExtractor = (item, index) => index;
+    _keyExtractor = (item, index) => item.value.id+'-'+index;
 
     fetchData = (page) => {
         if (this.state.fileId === '0' || this.state.fileId === 0 ) {
@@ -621,7 +628,7 @@ export default class extends Component {
         if(items.length < 1) {
             return;
         }
-        ActionModal.alertConfirm(`确认删除 ${items.length} 项数据么？`,null, {text:'删除',style:{color:'red',fontSize:18},onPress:()=>{
+        ActionModal.alertConfirm(`确定要删除所选的${items.length}项内容吗？`,'您可以在回收站找到误删的文件', {text:'删除',style:{color:'red',fontSize:18},onPress:()=>{
             let fileIds = [];
             items.map((item)=>{
                 fileIds.push(item.value.fileId);
@@ -904,6 +911,7 @@ export default class extends Component {
                 onRefresh={this._onRefreshing}
                 refreshing={this.state.refreshing}
                 onEndReachedThreshold={0.1}
+                keyExtractor={this._keyExtractor}
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.refreshing}

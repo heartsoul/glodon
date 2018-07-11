@@ -419,7 +419,7 @@ export async function deleteTrashFile(containerId, fileId) {
  * no content
  */
 export async function deleteTrashFileBatch(containerId, fileIds) {
-    let api = `/bimpm/doc/containers/${containerId}/files/trash`;
+    let api = `/bimpm/doc/containers/${containerId}/files/trash/batch`;
     let props = JSON.stringify({ fileIds: fileIds })
     return requestJSON(api, {
         method: 'DELETE',
@@ -452,7 +452,7 @@ export async function recoveryTrashFile(containerId, fileId) {
  * no content
  */
 export async function recoveryTrashFileBatch(containerId, fileIds) {
-    let api = `/bimpm/doc/containers/${containerId}/files/trash/recovery`;
+    let api = `/bimpm/doc/containers/${containerId}/files/trash/recovery/batch`;
     let props = JSON.stringify({ fileIds: fileIds })
     return requestJSON(api, {
         method: 'POST',

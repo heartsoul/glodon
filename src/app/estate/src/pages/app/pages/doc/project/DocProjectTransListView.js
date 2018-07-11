@@ -60,8 +60,11 @@ export default class extends Component {
         }
         this.onSelectPage();
     }
-    onSelectPage = () => {
+    onSelectPage = (bInnerCall=true) => {
         this.props.navigation.setParams({ renderTitle: this.renderHeaderTitle, renderLeft: this.renderHeaderLeftButtons, renderRight: this.renderHeaderRightButtons });
+        if(!bInnerCall) {
+            this.fetchData(0);
+        }
     }
     _onSearchPress = () => {
         // 打开搜索页面。
@@ -171,7 +174,7 @@ export default class extends Component {
 
     componentDidMount() {
         //请求数据
-        this.fetchData(0);
+        // this.fetchData(0);
     }
 
     //加载失败view

@@ -55,7 +55,7 @@ export default class DocProjectPage extends Component {
         };
     }
     doChangePage = (pageView) => {
-        pageView && pageView.onSelectPage && pageView.onSelectPage();
+        pageView && pageView.onSelectPage && pageView.onSelectPage(false);
     }
     onChange = (index) => {
 
