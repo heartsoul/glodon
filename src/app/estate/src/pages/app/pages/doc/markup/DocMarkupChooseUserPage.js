@@ -8,16 +8,18 @@ import {
     StyleSheet,
     TouchableWithoutFeedback,
 } from 'react-native';
+import { connect } from 'react-redux';
 import sectionListGetItemLayout from 'react-native-section-list-get-item-layout'
 import { BarItems, StatusActionButton } from 'app-components';
 import QuickSelectBar from './QuickSelectBar';
 import DocChooseUserItem from './DocChooseUserItem';
 import DocChooseUserBar from './DocChooseUserBar';
+import SERVICE from 'app-api/service'
+import { CharacterUtil } from './CharacterUtil'
+import * as DocMarkupAction from '../../../actions/docMarkupAction';
 
 let SECTIONHEIGHT = 22;
 let ROWHEIGHT = 64;
-let letters = ['A', 'B', 'D', 'E', 'G', '', 'J', 'K', 'W', 'X', 'Z', '#']
-let count = 10;
 class DocMarkupChooseUserPage extends Component {
 
     /**
@@ -27,8 +29,8 @@ class DocMarkupChooseUserPage extends Component {
 		key: groupTime
 		data: [
 			{
-				key: it-time
-				value: item
+				type: it-time
+				data: item
 			}
 		]
 
@@ -44,41 +46,66 @@ class DocMarkupChooseUserPage extends Component {
 
     constructor(props) {
         super(props);
-        let data = [];
-        letters.map((letter, index) => {
-            for (let i = 0; i < count; i++) {
-                data.push({ name: `row-${letter}-${i}`, type: letter })
-            }
-        })
-        let sections = this._sortData(data);
         this.state = {
-            data: data,
-            sections: sections,
-            letters: letters,
+            users: [],
+            sections: [],
+            letters: [],
             selectedCount: 0,
         };
     }
 
-    _sortData = (data) => {
+
+    componentDidMount() {
+        let { deptId = 0 } = this.props.navigation.state.params;
+        SERVICE.getMembersList(deptId)
+            .then(users => {
+                this._sortData(users);
+            })
+    }
+
+    _sortData = (users) => {
         let sections = [];
+        let letters = [];
         let dataMap = new Map();
-        data.map(item => {
-            let section = dataMap.get(item.type)
+        users.map(item => {
+            rowData = { data: item, }
+            rowData.type = CharacterUtil.getFirstCharacter(item.name)
+            let section = dataMap.get(rowData.type)
             if (!section) {
                 section = {
-                    key: item.type,
+                    key: rowData.type,
                     data: []
                 };
-                dataMap.set(item.type, section)
+                dataMap.set(rowData.type, section)
                 sections.push(section)
+                letters.push(rowData.type);
             }
-            section.data.push(item);
+            section.data.push(rowData);
         })
-        return sections;
+        sections.sort(this._sortSection)
+        this.setState({
+            users: users,
+            sections: sections,
+            letters: letters,
+        });
+    }
+
+    _sortSection = (l, r) => {
+        if (l.key === r.key) {
+            return 0;
+        } else if (l.key === '#') {
+            return 1;
+        } else if (r.key === '#') {
+            return -1;
+        } else if (l.key < r.key) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
 
     _scrollTo = (letter) => {
-        let index = letters.findIndex((value) => {
+        let index = this.state.letters.findIndex((value) => {
             return letter === value
         });
         if (index == -1) {
@@ -97,17 +124,19 @@ class DocMarkupChooseUserPage extends Component {
         } else {
             this.state.selectedCount--;
         }
-        this.refUserBar.selectAll(this.state.selectedCount === this.state.data.length);
+        this.refUserBar.selectAll(this.state.selectedCount === this.state.users.length);
     }
 
     _selectAll = () => {
-        let selected = this.state.data.length === this.state.selectedCount;
-        this.state.data.map(item => {
-            item.selected = !selected;
+        let selected = this.state.users.length === this.state.selectedCount;
+        this.state.sections.map(section => {
+            section.data.map(rowData => {
+                rowData.selected = !selected;
+            })
         })
         this.refUserBar.selectAll(!selected);
         this.setState({
-            selectedCount: selected ? 0 : this.state.data.length,
+            selectedCount: selected ? 0 : this.state.users.length,
         })
     }
 
@@ -145,6 +174,28 @@ class DocMarkupChooseUserPage extends Component {
         getSectionFooterHeight: () => 0, // The height of your section footers
     })
 
+    /**
+     * 确定选择
+     */
+    _complete = () => {
+        let selectedUser = [];
+        if (this.state.selectedCount == 0) {
+
+        } else if (this.state.selectedCount == this.state.users.length) {
+            selectedUser = selectedUser.concat(this.state.users);
+        } else {
+            this.state.sections.map(section => {
+                section.data.map(rowData => {
+                    if (rowData.selected) {
+                        selectedUser.push(rowData.data)
+                    }
+                })
+            })
+        }
+
+        this.props.addAtUser(selectedUser, this.props.cacheUserMap)
+        storage.pop(this.props.navigation, 2);
+    }
 
     render() {
         return (
@@ -163,13 +214,12 @@ class DocMarkupChooseUserPage extends Component {
                 />
                 <QuickSelectBar
                     style={styles.quickSelectBar}
-                    letters={letters}
                     scrollTo={this._scrollTo}
                 />
                 <DocChooseUserBar
                     ref={(ref) => { this.refUserBar = ref }}
-                    style={styles.bottomBar}
                     selectAll={this._selectAll}
+                    complete={this._complete}
                 />
             </View>
         );
@@ -222,13 +272,15 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: '#333'
     },
-    bottomBar: {
-        position: 'absolute',
-        left: 0,
-        bottom: 0,
-        height: 50,
-        width: '100%',
-    },
 })
 
-export default DocMarkupChooseUserPage;
+export default connect(
+    state => ({
+        cacheUserMap: state.docMarkup.cacheUserMap,
+    }),
+    dispatch => ({
+        addAtUser: (users, cacheUserMap) => {
+            dispatch(DocMarkupAction.addAtUser(users, cacheUserMap))
+        }
+    })
+)(DocMarkupChooseUserPage);

@@ -11,18 +11,22 @@ class HighlightTextInput extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            keywords: [],
-            inputText: '',
-            keys: [],
+            inputText: this.props.content ? this.props.content : '',
             formattedText: [],
+            keywords: this.props.keywords ? this.props.keywords : [],
         };
+    }
+    componentDidMount() {
+        if (this.state.inputText && this.state.inputText.length > 0) {
+            this.handleChangeText(this.state.inputText)
+        }
     }
 
     matchRealKeyword = () => {
         let realKeywords = [];
         this.state.keywords.map((item) => {
             let checkStr = this.state.inputText + ' ';
-            let keyword = `@${item.keyword} `;
+            let keyword = `@${item} `;
             if (checkStr.indexOf(keyword) >= 0) {
                 realKeywords.push(item);
             }
@@ -32,12 +36,12 @@ class HighlightTextInput extends Component {
     /**
      * 添加新的@人员
      */
-    addKeywords = (keywords) => {
+    addKeywords = (keyStr, keywords) => {
 
-        let keyStr = this._generageKeyStr(keywords);
+        // let keyStr = this._generageKeyStr(keywords);
 
         let inputText = this._insertToInput(keyStr);
-
+        this.state.keywords = keywords;
         this.handleChangeText(inputText);
     }
     /**
@@ -45,11 +49,8 @@ class HighlightTextInput extends Component {
      */
     _generageKeyStr = (keywords) => {
         let keyStr = '';
-        keywords.map(item => {
-            let text = `@${item.keyword} `;
-            if (!this._isInKeywordList(text)) {
-                this.state.keys.push(text);
-            }
+        keywords.map(keyword => {
+            let text = `@${keyword} `;
             keyStr += text;
         })
         return keyStr;
@@ -59,8 +60,8 @@ class HighlightTextInput extends Component {
       * 是否在@人员列表
       */
     _isInKeywordList = (keyword) => {
-        let index = this.state.keys.findIndex(function (value, index, arr) {
-            return keyword === value;
+        let index = this.state.keywords.findIndex(function (value, index, arr) {
+            return keyword === `@${value} `;
         })
         return !(index === -1);
     }
@@ -124,11 +125,12 @@ class HighlightTextInput extends Component {
         } else {
             formattedText.push(tempText);
         }
+
         this.setState({
             formattedText: formattedText,
             inputText: inputText,
         })
-
+        this.props.onChangeText(inputText)
     }
 
     render() {

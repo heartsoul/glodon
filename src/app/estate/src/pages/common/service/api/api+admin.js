@@ -19,13 +19,13 @@ import OfflineStateUtil from '../../../../common/utils/OfflineStateUtil'
  }
 */
 export async function getProfileModelRights(profileId, moduleCode) {
-    if(OfflineStateUtil.isOnLine()){
+    if (OfflineStateUtil.isOnLine()) {
         let api = `/admin/auths/admin/moduleRights/?profileId=${profileId}&moduleCode=${moduleCode}`;
         return requestJSON(api, {
             method: 'GET',
         });
     }
-    
+
 }
 
 /**
@@ -44,12 +44,12 @@ export async function getProfileModelRights(profileId, moduleCode) {
   }
  */
 export function getAppModelRights(appCode, moduleCode, deptId, tenantId = '0') {
-    
 
-    if(OfflineStateUtil.isOnLine()){
+
+    if (OfflineStateUtil.isOnLine()) {
         let headers = {};
-        if(tenantId && tenantId != '0') {
-            headers = {'X-CORAL-TENANT':''+tenantId};
+        if (tenantId && tenantId != '0') {
+            headers = { 'X-CORAL-TENANT': '' + tenantId };
         }
         let api = `/admin//auths/${appCode}/moduleRights/${moduleCode}?deptId=${deptId}`;
         return requestJSON(api, {
@@ -62,11 +62,22 @@ export function getAppModelRights(appCode, moduleCode, deptId, tenantId = '0') {
  * Android检测版本更新
  */
 export async function checkVersion() {
-    if(OfflineStateUtil.isOnLine()){
+    if (OfflineStateUtil.isOnLine()) {
         let name = "android";
         let api = `/basis/sysinfo?name=${name}`;
         return requestJSON(api, {
             method: 'GET',
         });
     }
+}
+
+/**
+ * 获取批注评论@组织下的用户
+ * @param {*} deptId 
+ */
+export async function getMembersList(deptId) {
+    let api = `/admin/depts/memberslist?deptId=${deptId}`
+    return requestJSON(api, {
+        method: 'GET',
+    });
 }

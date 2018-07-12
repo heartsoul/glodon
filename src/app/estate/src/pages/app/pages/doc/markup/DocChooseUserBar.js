@@ -34,7 +34,7 @@ class DocChooseUserBar extends Component {
                     </View>
                 </TouchableOpacity>
                 <View style={{ flex: 1 }}></View>
-                <StatusActionButton style={{ height: 28, width: 58, marginRight: 20, backgroundColor: '#00b5f2', elevation: 0 }} text='确定' color='#ffffff' onClick={() => { }} />
+                <StatusActionButton style={{ height: 28, width: 58, marginRight: 20, backgroundColor: '#00b5f2', elevation: 0 }} text='确定' color='#ffffff' onClick={() => { this.props.complete() }} />
             </View>
         );
     }
@@ -48,7 +48,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         borderTopColor: '#e6e6e6',
-        borderTopWidth: 0.5
+        borderTopWidth: 0.5,
+        left: 0,
+        bottom: 0,
+        width: '100%',
+        position: 'absolute',
     },
     checkBox: {
         width: 16,

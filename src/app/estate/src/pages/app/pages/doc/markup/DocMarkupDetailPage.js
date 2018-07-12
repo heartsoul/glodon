@@ -35,6 +35,7 @@ class DocMarkupDetailPage extends Component {
                 { name: 'aa', },
                 { name: 'aa', },
             ],
+            commentText: '',
         };
         this.props.navigation.setParams({ loadRightTitle: this._loadRightTitle, })
     }
@@ -47,6 +48,25 @@ class DocMarkupDetailPage extends Component {
         if (this.props.sendStatus != nextProps.sendStatus && nextProps.sendStatus == 'success') {
             this._onRefresh();//发送成功后刷新列表
         }
+        if (this.props.atUsers != nextProps.atUsers) {//@选人完成
+            let content = this.state.commentText;
+            if (nextProps.atUsers) {
+                nextProps.atUsers.map(user => {
+                    content += `@${user.name} `
+                })
+            }
+            setTimeout(() => {
+                if (storage.currentRouteName == 'DocMarkupDetailPage') {
+                    this.state.commentText = content;
+                    this._showCommentInputView(nextProps.cacheUserMap);
+                }
+            }, 200)
+        }
+    }
+
+
+    _onCommentChangeText = (value) => {
+        this.state.commentText = value
     }
 
     _loadRightTitle = () => {
@@ -115,8 +135,13 @@ class DocMarkupDetailPage extends Component {
         this.props.addModelMarkupComment(this.state.modelVersionId, this.state.fileId, this.state.markup.id, content, storage.loadProject(), receiverIds)
     }
     //显示评论输入框
-    _showCommentInputView = () => {
-        CommentInputView.show(this._addModelMarkupComment, { modelVersionId: this.state.modelVersionId, fileId: this.state.fileId, markupId: this.state.markup.id });
+    _showCommentInputView = (cacheUserMap) => {
+        CommentInputView.show(
+            this._addModelMarkupComment,
+            this._onCommentChangeText,
+            { modelVersionId: this.state.modelVersionId, fileId: this.state.fileId, markupId: this.state.markup.id },
+            this.state.commentText, cacheUserMap,
+        );
     }
 
     _onRefresh = () => {
@@ -197,7 +222,7 @@ class DocMarkupDetailPage extends Component {
                 />
 
                 <View style={styles.commentBar}>
-                    <TouchableOpacity style={{ flex: 1 }} onPress={(event) => { event.preventDefault(); this._showCommentInputView() }}>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={(event) => { event.preventDefault(); this._showCommentInputView(this.props.cacheUserMap) }}>
                         <View style={styles.commentInput} >
                             <Text style={[styles.textLight, { marginLeft: 10, }]}>评论</Text>
                         </View>
@@ -348,6 +373,8 @@ export default connect(
         comments: state.docMarkup.comments.data,
         hasMore: state.docMarkup.comments.hasMore,
         sendStatus: state.docMarkup.sendComments.status,
+        atUsers: state.docMarkup.atUsers,
+        cacheUserMap: state.docMarkup.cacheUserMap,
     }),
     dispatch => ({
         getModelMarkupComments: (dataArray, modelVersionId, fileId, markupId, offset, limit) => {
