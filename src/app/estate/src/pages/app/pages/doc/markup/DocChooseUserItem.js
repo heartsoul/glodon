@@ -29,7 +29,7 @@ class DocChooseUserItem extends Component {
                 >
                     <Image style={styles.checkBox} source={this.props.data.selected ? require('app-images/doc/icon_doc_checked.png') : require('app-images/icon_downloading_unselected.png')} />
                     <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
-                    <Text style={styles.nameText}>{this.props.data.name}</Text>
+                    <Text style={styles.nameText}>{this.props.data.data.name}</Text>
                 </View>
             </TouchableOpacity>
         );

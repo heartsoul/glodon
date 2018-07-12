@@ -1,4 +1,6 @@
 import * as API from "./../api/api+bimpm";
+import * as PMBASIC from "./../api/api+pmbasic";
+import * as ADMIN from "./../api/api+admin";
 
 /**
  * 获取批注列表
@@ -203,3 +205,34 @@ export async function addModelMarkupComment(modelVersionId, fileId, markupId, co
             return response.data.data;//返回新增的评论
         })
 }
+
+/**
+ * 模型批注@部门列表
+ * @param {*} projectId 
+ */
+export async function getDocmarkUpChooseDepts(projectId) {
+    return PMBASIC.getDocmarkUpChooseDepts(projectId)
+        .then((response) => {
+            let depts = [];
+            if (response && response.data) {
+                depts = response.data;
+            }
+            return depts;
+        })
+}
+
+/**
+ * 模型批注@部门列表
+ * @param {*} deptId 部门id 
+ */
+export async function getMembersList(deptId) {
+    return ADMIN.getMembersList(deptId)
+        .then((response) => {
+            let users = [];
+            if (response && response.data) {
+                users = response.data;
+            }
+            return users;
+        })
+}
+

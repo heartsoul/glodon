@@ -11,8 +11,13 @@ export const DOC_MARKUP_TYPE_SENDING_COMMENTS = 'DOC_MARKUP_TYPE_SENDING_COMMENT
 export const DOC_MARKUP_TYPE_SEND_COMMENTS_SUCCESS = 'DOC_MARKUP_TYPE_SEND_COMMENTS_SUCCESS';
 export const DOC_MARKUP_TYPE_SEND_COMMENTS_FAIL = 'DOC_MARKUP_TYPE_SEND_COMMENTS_FAIL';
 
+export const DOC_MARKUP_TYPE_ADD_AT_USER = 'DOC_MARKUP_TYPE_ADD_AT_USER';
+export const DOC_MARKUP_TYPE_RESET_AT = 'DOC_MARKUP_TYPE_RESET_AT';
+
+
 export const DOC_MARKUP_LIST_TYPES = [
     { title: "全部批注", key: "all" },
     { title: "我的批注", key: "my" },
     { title: "@我的", key: "@me" }
 ]
+

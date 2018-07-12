@@ -3,9 +3,7 @@ import {
     View,
     Text,
     Image,
-    TextInput,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     StyleSheet,
 } from 'react-native';
 import CommentInputView from './CommentInputView';
@@ -15,9 +13,24 @@ class ComponentInputChild extends Component {
 
     constructor(props) {
         super(props)
+        let content = this.props.content ? this.props.content : '';
+        let cacheUserMap = this.props.cacheUserMap ? this.props.cacheUserMap : new Map();
+
         this.state = {
-            content: '',
+            content: content,
+            cacheUserMap: cacheUserMap,
+            keywords: this._getKeywords(cacheUserMap),
         }
+    }
+
+    _getKeywords = (cacheUserMap) => {
+        let keywords = [];
+        if (cacheUserMap) {
+            for (let value of cacheUserMap.values()) {
+                keywords.push(value.name);
+            }
+        }
+        return keywords;
     }
 
     _changeText = (value) => {
@@ -27,13 +40,26 @@ class ComponentInputChild extends Component {
 
     _addModelMarkupComment = () => {
         if (this.state.content && this.state.content.length > 0) {
-            this.props.addModelMarkupComment(this.state.content);
+            let gldAccountIds = this.getAtGldAccountIds();
+            this.props.addModelMarkupComment(this.state.content, gldAccountIds);
         }
+    }
+
+    getAtGldAccountIds = () => {
+        let keywords = this.refInput.matchRealKeyword();//已选择的@name列表
+        let gldAccountIds = [];
+        keywords.map((keyword) => {
+            let user = this.state.cacheUserMap.get(keyword);
+            if (user) {
+                gldAccountIds.push(user.gldAccountId);
+            }
+        })
+        return gldAccountIds;
     }
 
     render() {
         return (
-            <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingTop: 10, paddingLeft: 12, paddingRight: 12, height: 140, }}>
+            <View style={{ flexDirection: 'row', backgroundColor: '#f9f9f9', paddingTop: 10, paddingLeft: 12, paddingRight: 12, height: 140, }}>
                 <View style={[styles.inputBox]}>
                     <View style={styles.borderBox} />
                     <HighlightTextInput
@@ -47,7 +73,8 @@ class ComponentInputChild extends Component {
                         autoFocus={true}
                         textAlign="left"
                         onChangeText={this._changeText}
-                        defaultValue={this.props.content}
+                        content={this.props.content}
+                        keywords={this.state.keywords}
                     />
 
                     <TouchableOpacity
@@ -101,7 +128,7 @@ const styles = StyleSheet.create({
     },
     borderBox: {
         height: 93,
-        borderColor: '#999',
+        borderColor: '#d9d9d9',
         borderWidth: 1,
         marginRight: 1,
         width: '100%',
@@ -139,7 +166,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingBottom: 35,
         marginLeft: 10,
-        backgroundColor: '#fff',
+        backgroundColor: '#f9f9f9',
 
     },
 })

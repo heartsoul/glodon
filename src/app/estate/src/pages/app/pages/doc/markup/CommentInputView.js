@@ -9,8 +9,7 @@ import ComponentInputChild from './ComponentInputChild'
 
 class CommentInputView extends Overlay {
     static overlayView;
-    static content;
-    static show(addModelMarkupComment, modelInfo) {
+    static show(addModelMarkupComment, onChangeText, modelInfo, content, cacheUserMap) {
         return super.show(
             <Overlay.View
                 side='bottom'
@@ -21,10 +20,12 @@ class CommentInputView extends Overlay {
             >
                 <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                     <ComponentInputChild
+                        ref={(ref) => { this.inputRef = ref }}
                         addModelMarkupComment={addModelMarkupComment}
-                        onChangeText={(value) => { this.content = value }}
-                        content={this.content}
+                        onChangeText={(value) => { onChangeText(value) }}
+                        content={content}
                         modelInfo={modelInfo}
+                        cacheUserMap={cacheUserMap}
                     />
                 </KeyboardAvoidingView>
 
@@ -33,12 +34,10 @@ class CommentInputView extends Overlay {
         )
     }
 
-    static clear() {
-        this.content = '';
-    }
 
     static close() {
         if (this.overlayView) {
+            this.inputRef = null;
             this.overlayView.close()
         }
     }

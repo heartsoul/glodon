@@ -69,6 +69,24 @@ export function addModelMarkupComment(modelVersionId, fileId, markupId, content,
             })
     }
 }
+/**
+ * 添加新的@人员
+ * @param {*} users
+ * @param {*} cacheUserMap 
+ */
+export function addAtUser(users, cacheUserMap) {
+    return dispatch => {
+        if (!cacheUserMap) {
+            cacheUserMap = new Map();
+        }
+        users.map(user => {
+            if (!cacheUserMap.get(user.name)) {
+                cacheUserMap.set(user.name, user)
+            }
+        })
+        dispatch(_addAtUser(users, cacheUserMap))
+    }
+}
 
 function _loading(listType) {
     return {
@@ -127,5 +145,19 @@ function _sendCommentsSuccess(data) {
 function _sendCommentsFAIL() {
     return {
         type: types.DOC_MARKUP_TYPE_SEND_COMMENTS_FAIL,
+    }
+}
+
+function _addAtUser(users, cacheUserMap) {
+    return {
+        type: types.DOC_MARKUP_TYPE_ADD_AT_USER,
+        atUsers: users,
+        cacheUserMap: cacheUserMap,
+    }
+}
+
+export function resetAt() {
+    return {
+        type: types.DOC_MARKUP_TYPE_RESET_AT,
     }
 }

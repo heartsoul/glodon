@@ -36,7 +36,9 @@ const initialState = {
     sendComments: {
         data: {},
         status: '',//sending success fail
-    }
+    },
+    cacheUserMap: new Map(),
+    atUsers: [],
 }
 
 export default (state = initialState, action) => {
@@ -100,6 +102,19 @@ export default (state = initialState, action) => {
             sendComments3.status = 'fail';
             return {
                 ...state,
+            }
+        case types.DOC_MARKUP_TYPE_ADD_AT_USER:
+            return {
+                ...state,
+                atUsers: action.atUsers,
+                cacheUserMap: action.cacheUserMap,
+
+            }
+        case types.DOC_MARKUP_TYPE_RESET_AT:
+            return {
+                ...state,
+                cacheUserMap: new Map(),
+                atUsers: new Map(),
             }
         default:
             return state;

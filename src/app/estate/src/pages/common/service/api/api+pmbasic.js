@@ -21,12 +21,12 @@ import OfflineManager from '../../../offline/manager/OfflineManager'
 ]
  */
 export async function getPmbasicBuildings(projectId) {
-    if(OfflineStateUtil.isOnLine()){
+    if (OfflineStateUtil.isOnLine()) {
         let api = "/pmbasic/projects/" + projectId + "/buildings";
         return requestJSON(api, {
             method: 'GET',
         });
-    }else{
+    } else {
         let bm = OfflineManager.getBasicInfoManager();
         return bm.getSpecialList();
     }
@@ -49,13 +49,13 @@ export async function getPmbasicBuildings(projectId) {
   }
 ]
  */
-export async function getPmbasicSpecialty(includeChildren=true) {
-    if(OfflineStateUtil.isOnLine()){
+export async function getPmbasicSpecialty(includeChildren = true) {
+    if (OfflineStateUtil.isOnLine()) {
         let api = "/pmbasic/specialty";
         return requestJSON(api + '?includeChildren=' + includeChildren, {
             method: 'GET',
         });
-    }else{
+    } else {
         let bm = OfflineManager.getBasicInfoManager();
         return bm.getSpecialList();
     }
@@ -86,12 +86,12 @@ export async function getPmbasicSpecialty(includeChildren=true) {
  * 
  */
 export async function getCompaniesList(projectId, deptTypeEnums) {
-    if(OfflineStateUtil.isOnLine()){
+    if (OfflineStateUtil.isOnLine()) {
         let api = `/pmbasic/projects/${projectId}/supporters`;
         return requestJSON(api + '?deptTypeEnums=' + deptTypeEnums, {
             method: 'GET',
         });
-    }else{
+    } else {
         let bm = OfflineManager.getBasicInfoManager();
         return bm.getSupporters();
     }
@@ -122,14 +122,26 @@ export async function getCompaniesList(projectId, deptTypeEnums) {
 ]
  */
 export async function getPersonList(projectId, coperationCorpId) {
-    if(OfflineStateUtil.isOnLine()){
+    if (OfflineStateUtil.isOnLine()) {
         let api = `/pmbasic/projects/${projectId}/coperationCorps/${coperationCorpId}/coperationRoles`;
         let filter = `?active=true`;
         return requestJSON(api + filter, {
             method: 'GET',
         });
-    }else{
+    } else {
         let bm = OfflineManager.getBasicInfoManager();
         return bm.fetchPersons(coperationCorpId);
     }
+}
+
+/**
+ * 模型批注@部门列表
+ * @param {*} projectId 
+ */
+export async function getDocmarkUpChooseDepts(projectId) {
+    let deptTypeEnums = `deptTypeEnums=JSDW&deptTypeEnums=SJDW&deptTypeEnums=JLDW&deptTypeEnums=SGDW`
+    let api = `/pmbasic/projects/${projectId}/supporters?${deptTypeEnums}`
+    return requestJSON(api, {
+        method: 'GET',
+    });
 }

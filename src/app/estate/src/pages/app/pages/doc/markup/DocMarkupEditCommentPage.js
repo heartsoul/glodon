@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import {
     View,
     Text,
-    TextInput,
+    TouchableOpacity,
+    KeyboardAvoidingView,
     StyleSheet,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { BarItems } from 'app-components';
 import * as DocMarkupAction from '../../../actions/docMarkupAction';
+import HighlightTextInput from './HighlightTextInput';
 
 class DocMarkupEditCommentPage extends Component {
 
@@ -24,7 +26,8 @@ class DocMarkupEditCommentPage extends Component {
             modelVersionId: modelInfo.modelVersionId,
             fileId: modelInfo.fileId,
             markupId: modelInfo.markupId,
-            content: content,
+            commentText: content,
+            keywords: this._getKeywords(this.props.cacheUserMap),
         };
         this.props.navigation.setParams({ loadLeftTitle: this._loadLeftTitle, loadRightTitle: this._loadRightTitle, })
     }
@@ -34,6 +37,27 @@ class DocMarkupEditCommentPage extends Component {
             //发送成功
             this.props.navigation.goBack();
         }
+
+        if (this.props.atUsers != nextProps.atUsers) {//@选人完成
+            let keyStr = '';
+            if (nextProps.atUsers) {
+                nextProps.atUsers.map(user => {
+                    keyStr += `@${user.name} `
+                })
+            }
+            let keywords = this._getKeywords(nextProps.cacheUserMap);
+            this.refInput.addKeywords(keyStr, keywords)
+        }
+    }
+
+    _getKeywords = (cacheUserMap) => {
+        let keywords = [];
+        if (cacheUserMap) {
+            for (let value of cacheUserMap.values()) {
+                keywords.push(value.name);
+            }
+        }
+        return keywords;
     }
 
     _loadLeftTitle = () => {
@@ -56,44 +80,74 @@ class DocMarkupEditCommentPage extends Component {
     _cancel = () => {
         this.props.navigation.goBack();
     }
-    _send = () => {
-        let receiverIds = [];
-        this.props.addModelMarkupComment(this.state.modelVersionId, this.state.fileId, this.state.markupId, 'content', storage.loadProject(), receiverIds)
-    }
-    _changeText = () => {
 
+    _send = () => {
+        if (this.state.commentText && this.state.commentText.length > 0) {
+            let gldAccountIds = this.getAtGldAccountIds();
+            this.props.addModelMarkupComment(this.state.modelVersionId, this.state.fileId, this.state.markupId,
+                this.state.commentText, storage.loadProject(), gldAccountIds)
+        }
+    }
+
+    getAtGldAccountIds = () => {
+        let keywords = this.refInput.matchRealKeyword();//已选择的@name列表
+        let gldAccountIds = [];
+        keywords.map((keyword) => {
+            let user = this.props.cacheUserMap.get(keyword);
+            if (user) {
+                gldAccountIds.push(user.gldAccountId);
+            }
+        })
+        return gldAccountIds;
+    }
+
+    _changeText = (value) => {
+        this.state.commentText = value;
     }
     render() {
         return (
-            <View style={styles.container} >
-                <TextInput
-                    maxLength={255}
-                    style={styles.commentInput}
-                    underlineColorAndroid={"transparent"}
-                    placeholder={'写评论'}
-                    multiline={true}
-                    autoFocus={true}
-                    textAlign="left"
-                    onChangeText={this._changeText}
-                    defaultValue={this.state.content}
-                />
-                <View style={styles.atBox}>
-                    <Text style={styles.textLight}>@</Text>
+            <KeyboardAvoidingView style={styles.container} >
+                <View style={{ width: '100%', height: '100%' }}>
+                    <HighlightTextInput
+                        ref={(ref) => { this.refInput = ref }}
+                        maxLength={255}
+                        style={styles.highlightBox}
+                        inputStyle={styles.commentInput}
+                        underlineColorAndroid={"transparent"}
+                        placeholder={'写评论'}
+                        multiline={true}
+                        autoFocus={true}
+                        textAlign="left"
+                        onChangeText={this._changeText}
+                        content={this.state.commentText}
+                        keywords={this.state.keywords}
+                    />
+                    <TouchableOpacity
+                        style={styles.atBox}
+                        onPress={(event) => {
+                            event.preventDefault()
+                            storage.pushNext(null, 'DocMarkupChooseDeptPage')
+                        }}>
+                        <Text style={styles.atText}>@</Text>
+                    </TouchableOpacity>
                 </View>
-            </View>
+
+            </KeyboardAvoidingView>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingLeft: 10,
-        paddingRight: 10,
         backgroundColor: '#fff'
     },
     textLight: {
         color: '#999',
         fontSize: 14
+    },
+    atText: {
+        fontSize: 24,
+        color: '#9999'
     },
     commentInput: {
         paddingTop: 2,
@@ -105,19 +159,35 @@ const styles = StyleSheet.create({
     },
     atBox: {
         width: '100%',
-        height: 35,
-        paddingTop: 5,
-        marginLeft: 20,
+        height: 37,
+        paddingLeft: 11,
         position: 'absolute',
+        borderTopWidth: 0.5,
+        borderTopColor: '#d9d9d9',
+        justifyContent: 'center',
         bottom: 0,
-        backgroundColor: '#fff',
+        backgroundColor: '#f9f9f9',
     },
-
+    highlightBox: {
+        height: '100%',
+        marginBottom: 40,
+    },
+    commentInput: {
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 10,
+        paddingBottom: 5,
+        textAlignVertical: 'top',
+        width: '100%',
+        height: '100%',
+    },
 })
 
 export default connect(
     state => ({
         sendStatus: state.docMarkup.sendComments.status,
+        atUsers: state.docMarkup.atUsers,
+        cacheUserMap: state.docMarkup.cacheUserMap,
     }),
     dispatch => ({
         addModelMarkupComment: (modelVersionId, fileId, markupId, content, deptId, receiverIds = []) => {

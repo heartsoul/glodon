@@ -8,14 +8,19 @@ import {
     StyleSheet,
 } from 'react-native';
 import { BarItems } from 'app-components';
-
+import SERVICE from 'app-api/service'
+/**
+ * 选择部门
+ */
 class DocMarkupChooseDeptPage extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
         headerTitle: <BarItems.TitleBarItem text='选择用户' />,
         headerLeft: (
             <BarItems navigation={navigation}>
-                <BarItems.LeftBarItem navigation={navigation} text="取消" onPress={(navigation) => { }} />
+                <BarItems.LeftBarItem navigation={navigation} text="取消" onPress={(navigation) => {
+                    navigation.goBack();
+                }} />
             </BarItems>
         ),
         headerRight: (<BarItems.RightBarItem imageSource={require('app-images/icon_search_white.png')}
@@ -25,29 +30,24 @@ class DocMarkupChooseDeptPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            depts: [
-                { name: '项目成员' },
-                { name: '设计供方A' },
-                { name: '设计供方B' },
-                { name: '设计供方B' },
-                { name: '设计供方B' },
-                { name: '设计供方B' },
-                { name: '设计供方B' },
-                { name: '设计供方B' },
-                { name: '设计供方B' },
-                { name: '设计供方B' },
-                { name: '设计供方B' },
-                { name: '设计供方B' },
-                { name: '设计供方B' },
-                { name: '设计供方B' },
-            ]
+            depts: []
         };
     }
+
+    componentDidMount() {
+        SERVICE.getDocmarkUpChooseDepts(storage.loadProject())
+            .then((depts) => {
+                this.setState({
+                    depts: depts,
+                })
+            })
+    }
+
 
     _renderDeptItem = (item, index) => {
         return (
             <TouchableOpacity onPress={() => {
-                storage.pushNext(null, 'DocMarkupChooseUserPage')
+                storage.pushNext(null, 'DocMarkupChooseUserPage', { deptId: item.id })
             }}>
                 <View style={styles.itemBox}>
                     <Image style={styles.deptIcon} source={require('app-images/doc/icon_doc_markup_group_a.png')} />
@@ -63,9 +63,13 @@ class DocMarkupChooseDeptPage extends Component {
         )
     }
 
+    _keyExtractor = (item, index) => {
+        return `key-dept-${index}`
+    };
+
     render() {
         return (
-            <View style={{ backgroundColor: '#fafafa' }}>
+            <View style={{ backgroundColor: '#fafafa', height: '100%' }}>
                 <FlatList
                     data={this.state.depts}
                     renderItem={({ item, index }) => { return this._renderDeptItem(item, index) }}
@@ -73,9 +77,8 @@ class DocMarkupChooseDeptPage extends Component {
                     onEndReachedThreshold={1}
                     ListHeaderComponent={this._renderHeader()}
                     showsVerticalScrollIndicator={false}
+                    keyExtractor={this._keyExtractor}
                 />
-
- 
             </View>
         );
     }
