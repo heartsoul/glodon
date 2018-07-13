@@ -717,7 +717,7 @@ export async function getShareSignedUrl(shareToken, fileId, password) {
       {
         "appKey": "string",
         "attachment": "string",
-        "createTime": "2018-06-27T03:04:15.201Z",
+        "createTime": "1531330238000",
         "creatorId": "string",
         "creatorName": "string",
         "description": "string",
@@ -961,12 +961,11 @@ export async function deleteModelMarkupComment(containerId, fileIds, markupId, c
 
 
 /**
- * 查询批注截图url
- * @param {*} containerId 
- * @param {*} fileIds 
+ * 查询批注截图url screenshotURL
+ * @param {*} modelVersionId 
+ * @param {*} fileId 
  * @param {*} markupId 
- * @param {*} commentId
- * response
+ * response  
  * {
   "code": "string",
   "data": {
@@ -996,7 +995,7 @@ export async function deleteModelMarkupComment(containerId, fileIds, markupId, c
   "message": "string"
 } 
  */
-export async function getModelMarkupScreenUrl(containerId, fileIds, markupId) {
+export async function getModelMarkupScreenUrl(modelVersionId, fileId, markupId) {
     let api = `/bimpm/modelVersions/${modelVersionId}/files/${fileId}/markups/${markupId}/screenUrl`;
     return requestJSON(api, {
         method: 'GET',

@@ -7,6 +7,9 @@ import {
     StyleSheet
 } from 'react-native';
 import PropTypes from 'prop-types';
+import API from 'app-api'
+import SERVICE from 'app-api/service'
+const screenshot = require("app-images/icon_default_image.png");
 
 class DocMarkupItemView extends Component {
 
@@ -19,8 +22,22 @@ class DocMarkupItemView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            screenshot: props.markup.screenshot ? props.markup.screenshot : screenshot,
         };
+    }
+
+    componentWillMount() {
+        if (!this.props.markup.screenshot) {
+            SERVICE.getModelMarkupScreenUrl(this.props.modelVersionId, this.props.fileId, this.props.markup.id)
+                .then(url => {
+                    if (url && url.length > 0) {
+                        this.props.markup.screenshot = { uri: url };
+                        this.setState({
+                            screenshot: { uri: url },
+                        })
+                    }
+                }).catch(err => { })
+        }
     }
 
     render() {
@@ -31,7 +48,7 @@ class DocMarkupItemView extends Component {
                         <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
                         <View style={{ marginLeft: 10, flex: 1 }}>
                             <Text style={styles.textMain}>{this.props.markup.creatorName}</Text>
-                            <Text style={styles.textTime}>{this.props.markup.createTime}</Text>
+                            <Text style={styles.textTime}>{API.formatUnixtimestamp(this.props.markup.createTime)}</Text>
                         </View>
                         <Image style={styles.pinImage} source={require('app-images/doc/icon_doc_markup_position.png')} />
                     </View>
@@ -39,16 +56,20 @@ class DocMarkupItemView extends Component {
 
                     <TouchableOpacity onPress={(event) => { event.preventDefault(); this.props.onThumbnailPress() }}>
                         <View style={styles.thumbnailContainer}>
-                            <Image style={styles.thumbnail} source={require('app-images/icon_blueprint_default.png')} />
+                            <Image style={styles.thumbnail} source={this.state.screenshot} />
                         </View>
                     </TouchableOpacity>
 
                     <View style={styles.line}></View>
                     <View style={styles.commentContainer}>
-                        <Image style={styles.commentImage} source={require('app-images/doc/icon_doc_reply.png')} />
-                        <Text style={[styles.textMain, styles.textComment]}>回复</Text>
-                        <Image style={styles.commentCountImage} source={require('app-images/doc/icon_doc_comment.png')} />
-                        <Text style={styles.textMain}>评论</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+                            <Image style={styles.commentImage} source={this.props.markup.state == 1 ? require('app-images/doc/icon_doc_markup_close.png') : require('app-images/doc/icon_doc_reply.png')} />
+                            <Text style={this.props.markup.state == 1 ? styles.textCommentDisable : styles.textComment}>{this.props.markup.state == 1 ? '批注已关闭' : '回复'}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+                            <Image style={styles.commentCountImage} source={require('app-images/doc/icon_doc_comment.png')} />
+                            <Text style={styles.textComment}>评论</Text>
+                        </View>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -107,7 +128,7 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     textContent: {
-        margin:14,
+        margin: 14,
     },
     thumbnailContainer: {
         marginLeft: 14,
@@ -127,9 +148,6 @@ const styles = StyleSheet.create({
     commentContainer: {
         height: 40,
         flexDirection: 'row',
-        alignItems: 'center',
-        paddingLeft: 50,
-        paddingRight: 50
     },
     commentImage: {
         width: 19,
@@ -138,7 +156,12 @@ const styles = StyleSheet.create({
         marginRight: 5
     },
     textComment: {
-        flex: 1,
+        fontSize: 14,
+        color: '#6f899b'
+    },
+    textCommentDisable: {
+        fontSize: 14,
+        color: '#999'
     },
     commentCountImage: {
         width: 19,

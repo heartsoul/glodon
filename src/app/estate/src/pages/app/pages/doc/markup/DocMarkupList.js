@@ -3,7 +3,6 @@ import {
     View,
     Text,
     FlatList,
-    StyleSheet,
 } from 'react-native';
 import DocMarkupItemView from './DocMarkupItemView'
 import { connect } from 'react-redux';
@@ -21,9 +20,16 @@ class DocMarkupList extends Component {
     }
 
     componentDidMount() {
-        this._fetchData(0)
+        this.fetchData(0)
     }
-    _fetchData = (page) => {
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.updateIndex != this.props.updateIndex && this.props.selected) {
+            this.fetchData(0);
+        }
+    }
+
+    fetchData = (page) => {
         this.props.fetchData(this.props.listType, this.state.modelVersionId, this.state.fileId, this.props.data, null, page);
     }
 
@@ -31,14 +37,14 @@ class DocMarkupList extends Component {
         if (this.props.isLoading) {
             return;
         }
-        this._fetchData(0)
+        this.fetchData(0)
     }
 
     _onEndReached = () => {
         if (this.props.isLoading || this.props.hasMore == false) {
             return;
         }
-        this._fetchData(this.props.page + 1)
+        this.fetchData(this.props.page + 1)
     }
 
     _emptyView = () => {
@@ -54,6 +60,8 @@ class DocMarkupList extends Component {
             <DocMarkupItemView
                 key={`markup-item-key-${index}`}
                 markup={item}
+                modelVersionId={this.state.modelVersionId}
+                fileId={this.state.fileId}
                 onItemPress={() => {
                     //进入批注详情
                     let navigator = this.props.navigation;
@@ -66,6 +74,9 @@ class DocMarkupList extends Component {
             />
         )
     }
+    _keyExtractor = (item, index) => {
+        return `markup-item-key-${index}`
+    };
 
     render() {
         return (
@@ -78,6 +89,7 @@ class DocMarkupList extends Component {
                     onEndReached={this._onEndReached}
                     onEndReachedThreshold={1}
                     ListEmptyComponent={this._emptyView}
+                    keyExtractor={this._keyExtractor}
                 />
             </View>
         );
@@ -95,6 +107,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         isLoading: stateProps.docMarkup.datas[ownProps.listType].isLoading,
         data: stateProps.docMarkup.datas[ownProps.listType].data,
         hasMore: stateProps.docMarkup.datas[ownProps.listType].hasMore,
+        updateIndex: stateProps.updateData.updateIndex,
     })
 }
 

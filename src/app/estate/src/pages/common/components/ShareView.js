@@ -121,7 +121,7 @@ class ShareView extends Component {
         let url = this.state.selected ? require('app-images/icon_downloading_selected.png') : require('app-images/icon_downloading_unselected.png');
 
         return (
-            <View style={{ width: width, paddingTop: 20, paddingBottom: 15 }}>
+            <View style={{ width: width, paddingTop: 20,}}>
                 <Text style={styles.title}>文件分享有效期</Text>
                 <View style={[styles.flexContainer, styles.checkContainer]}>
                     {
@@ -145,12 +145,16 @@ class ShareView extends Component {
                     style={{ width: "100%", }}
                     data={this.props.data}
                     horizontal={true}
-                    itemStyle={{ height: 2 * width / 9, width: 2 * width / 9 }}
+                    itemStyle={{ width: 2 * width / 9 }}
                     imageStyle={{ height: 60, width: 60 }}
+                    textStyle={{ color: '#333', fontSize: 12 }}
                     onPress={(item, index) => {
                         this._generateShareToken(item);
                     }}
                 />
+                <View style={styles.closeBar}>
+                    <TouchableOpacity onPress={() => { GLDActionSheet.close(); }}><Image source={require("app-images/doc/icon_doc_close.png")} style={styles.iconClose} /></TouchableOpacity>
+                </View>
             </View>
         );
     }
@@ -163,13 +167,13 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        color: "#000",
+        color: "#333",
         fontSize: 14,
         marginLeft: 20,
     },
     checkContainer: {
         marginLeft: 20,
-        paddingTop: 20,
+        paddingTop: 15,
     },
     checkImage: {
         width: 16,
@@ -178,21 +182,32 @@ const styles = StyleSheet.create({
     },
 
     checkText: {
-        color: "#000",
+        color: "#333",
         fontSize: 14,
         marginLeft: 10,
     },
-
-
-
     line: {
-        height: 1,
+        height: 0.5,
         width: width,
-        marginTop: 10,
+        marginTop: 20,
         marginBottom: 20,
-        backgroundColor: "#f7f7f7",
-    }
-
+        backgroundColor: "#D8D8D8",
+    },
+    closeBar: {
+        flexDirection: "row",
+        width: '100%',
+        alignItems: "center",
+        justifyContent: "center",
+        borderTopColor: '#e6e6e6',
+        borderTopWidth: 0.5,
+        height: 48,
+        marginTop: 20,
+    },
+    iconClose: {
+        width: 17,
+        height: 17,
+        alignSelf: 'center'
+    },
 })
 
 export default ShareView;
