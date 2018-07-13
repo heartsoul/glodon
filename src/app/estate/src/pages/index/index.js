@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { ActivityIndicator, View, Dimensions} from 'react-native';
-import { loadStorageData } from '../../common/store/store+base';
+import { loadStorageData } from '../../common/store/storage';
 import App from '../containers/App';
 
 export default class extends React.Component {

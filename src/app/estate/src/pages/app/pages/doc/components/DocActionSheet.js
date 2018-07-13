@@ -60,7 +60,7 @@ class DocActionSheet {
         )
         GLDActionSheet.show(docActionSheet,true)
     }
-    static show(datas=null,onPress=null,title) {
+    static show(datas=null,onPress=null,title,textAlign='flex-start') {
         let dataShow = datas || [
             dataItemDownload,
             dataItemShare,
@@ -72,7 +72,7 @@ class DocActionSheet {
         ];
         let docActionSheet = (
             <View style={[styles.container,{backgroundColor:'rgba(0,0,0,0.10)',paddingBottom:20}]} >
-                {title?<View style={styles.titleBox}>
+                {title?<View style={[styles.titleBox,{justifyContent:textAlign}]}>
                     <Text>{title}</Text>
                 </View>:null}
                 <View style={[styles.line]} />
@@ -106,11 +106,13 @@ const styles = StyleSheet.create({
     },
     titleBox: {
         flexDirection: "row",
-        width:'100%',
+        flex:1,
+        justifyContent:"center",
         alignItems: "center",
-        marginLeft: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
         paddingTop: 20,
-        paddingBottom: 10
+        paddingBottom: 20
     },
     closeBar: {
         flexDirection: "row",

@@ -269,19 +269,20 @@ export default class extends Component {
         if(this.state.isCopyItem || this.state.isMoveItem) {
             return (<BarItems navigation={this.props.navigation}>
                 <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_back_white.png')} onPress={(navigation) => {this._goBack(navigation)}} />
-               {power ? <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_module_create_white.png')} onPress={(navigation) => this.doNewFolder({value:{name:null}})} /> : null}
+               {power ? <BarItems.LeftBarItem navigation={this.props.navigation} text='新建' imageSource={require('app-images/icon_module_create_white.png')} onPress={(navigation) => this.doNewFolder({value:{name:null}})} /> : null}
                 </BarItems>);
         } else {
-            
             return (<BarItems navigation={this.props.navigation}>
             <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_back_white.png')} onPress={(navigation) => {this._goBack(navigation)}} />
            {power ? <BarItems.LeftBarItem navigation={this.props.navigation} imageSource={require('app-images/icon_module_create_white.png')} onPress={(navigation) => this.onAdd(navigation)} /> : null}
             </BarItems>);
         }
-       
     }
 
     _onCancelEdit = () =>{
+        this.state.selectedItems.map((item)=>{
+            item.value.selected = false;
+        });
         this.state.selectedItems = [];
         this.state.isEdit = false;
         this.state.isCopyItem = false;
@@ -323,15 +324,15 @@ export default class extends Component {
                     this.fetchDataInner(page, this.state.containerId, this.state.fileData, this.state.orderType);
                 });
             })
-            // .catch((error) => {
-            //     this.setState(
-            //         {
-            //             isLoading: false,
-            //             error: true,
-            //             errorInfo: error,
-            //         }
-            //     );
-            // });
+            .catch((error) => {
+                this.setState(
+                    {
+                        isLoading: false,
+                        error: true,
+                        errorInfo: error,
+                    }
+                );
+            });
         } else {
             this.fetchDataInner(page, this.state.containerId, this.state.fileData, this.state.orderType);
         }
@@ -548,7 +549,7 @@ export default class extends Component {
                 return;
             }
             alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
-        });
+        }, item.value.name);
     }
 // actions
 
@@ -581,7 +582,7 @@ export default class extends Component {
                 return;
             }
             alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
-        });
+        },`${this.state.selectedItems.length}个文件`,'center');
     }
 
     /**

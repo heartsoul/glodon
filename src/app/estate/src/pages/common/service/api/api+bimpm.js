@@ -591,10 +591,42 @@ export async function getFavoritesDocFile(containerId) {
     });
 }
 
+/**
+ * 获取上传operateCode
+ * @param {*} containerId 
+ * @param {*} parentId
+ * @param {*} fileName
+ * @param {*} size 上传文件大小
+ * @param {*} digest 上次文件信息，这里可以不传或者传MD5值，但不要传递空
+ * response
+// {
+//     "data": "28588931-4416-4975-80c1-7d9d76ca455d"
+//   }
+*/
+export async function getDocFileUploadOperateCode(containerId,parentId,fileName,size,digest='project') {
+    let api = `/bimpm/doc/containers/${containerId}/files/upload/operateCode`;
+    // {
+    //     "callbackUrl": "string",
+    //     "digest": "string",
+    //     "folderPath": "string",
+    //     "parentId": "string",
+    //     "fileName": "string",
+    //     "size": 0
+    //   }
+    // demo data: {"fileName":"baiduShare.html","parentId":"aefeslksjftrhxksjdfls1d234lxfj","digest":"project","size":"1567"}
+    let props = JSON.stringify({ parentId:parentId, fileName:fileName, size:size, digest:digest })
+    return requestJSON(api, {
+        method: 'POST',
+        body: props,
+    });
+}
+
+
 
 /**
  * 获取文档的下载地址
  * @param {*} containerId 
+ * @param {*} fileId 
  * {
   "fileId": "730351e358cd423aa1f9f0039fd3ada2",
   "name": "wode.jpg",
@@ -603,18 +635,13 @@ export async function getFavoritesDocFile(containerId) {
   "versionIndex": "1"
 }
  */
-export async function getDocFileSingedUrl(containerId) {
+export async function getDocFileSingedUrl(containerId,fileId) {
     let api = `/bimpm/doc/containers/${containerId}/files/signedURL`;
-    let filter = "";
-    if (password) {
-        filter += `&password=${password}`
-    }
+    let filter = `fileId=${fileId}`;
     return requestJSON(api + `?${filter}`, {
         method: 'GET',
     });
 }
-
-
 
 /**
  * 创建分享
@@ -972,6 +999,82 @@ export async function deleteModelMarkupComment(containerId, fileIds, markupId, c
 export async function getModelMarkupScreenUrl(containerId, fileIds, markupId) {
     let api = `/bimpm/modelVersions/${modelVersionId}/files/${fileId}/markups/${markupId}/screenUrl`;
     return requestJSON(api, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 查找文件
+ * @param {*} containerId 
+ * @param {*} name  // 文件名， 全字匹配
+ * @param {*} suffix // 后缀名， 全字匹配
+ * @param {*} path  // 路径
+ * @param {*} createTimeFrom  // 创建时间 范围开始时间
+ * @param {*} createTimeTo // 创建时间 范围结束时间
+ * @param {*} creatorId // 创建人id
+ * @param {*} creatorName  // 创建人
+ * 
+ * response
+ * [
+  {
+    "fileId": "031d576057b340f6aebe76c2c972c83c",
+    "workspaceId": "f6568b4ec8a545cc9d22bc081be2f269",
+    "name": "vfghghf",
+    "suffix": null,
+    "folder": true,
+    "length": 0,
+    "parentId": "f6568b4ec8a545cc9d22bc081be2f269",
+    "appKey": null,
+    "creatorId": "6295429827273925422",
+    "creatorName": "徐园",
+    "createTime": 1529051523000,
+    "digest": null,
+    "thumbnail": null,
+    "versionIndex": 1,
+    "filePath": null,
+    "revisionId": null,
+    "current": false,
+    "alias": null,
+    "index": null,
+    "fileParentList": null,
+    "convertStatus": null,
+    "userPrivilege": {  //没有时是null
+      "enter": true,
+      "view": true,
+      "download": true,
+      "create": true,
+      "update": true,
+      "delete": true,
+      "grant": true
+    }
+  },
+]
+ */
+export async function getDocFileSearch(containerId, name=null, suffix=null, path = null,createTimeFrom=null,createTimeTo=null,creatorId=null,creatorName=null) {
+    let api = `/bimpm/doc/containers/${containerId}/files/search`;
+    let filter = "";
+    if (name) {
+        filter += `&name=${name}`
+    }
+    if (suffix) {
+        filter += `&suffix=${suffix}`
+    }
+    if (path) {
+        filter += `&path=${path}`
+    }
+    if (createTimeFrom) {
+        filter += `&createTimeFrom=${createTimeFrom}`
+    }
+    if (createTimeTo) {
+        filter += `&createTimeTo=${createTimeTo}`
+    }
+    if (creatorId) {
+        filter += `&creatorId=${creatorId}`
+    }
+    if (creatorName) {
+        filter += `&creatorName=${creatorName}`
+    }
+    return requestJSON(api + `?${filter}`, {
         method: 'GET',
     });
 }

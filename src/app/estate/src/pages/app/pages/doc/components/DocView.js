@@ -48,9 +48,8 @@ static defaultProps = {
     let {onSelect, selected = false, onMore} = this.props;
     return (
       <View style={{marginLeft: 0, flexDirection: 'row', alignItems: 'center',justifyContent:'center', height:60}}>
-        
-        {onSelect ? <View style={{width:40, height:40,alignItems:'center',justifyContent:'center'}} ><DocCheckBoxView selected={selected} onSelect={onSelect} /> </View>: <View style={{width:20, height:40,alignItems:'center',justifyContent:'center'}} ></View>}
-      
+      {onSelect ? <View style={{width:40, height:40,alignItems:'center',justifyContent:'center'}} >
+      <DocCheckBoxView selected={selected} onSelect={onSelect} /></View>:<View style={{width:20, height:40,alignItems:'center',justifyContent:'center'}} ></View>}
         <View style={{flex:1}}>
           {this.props.children}
         </View>

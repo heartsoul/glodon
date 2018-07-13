@@ -1,9 +1,9 @@
 /**
  * 数据存储类
  */
-import Storage from './storage';
 import StackActions from './../../node_modules/app-3rd/lib/react-navigation/src/routers/StackActions'
 import NavigationActions from './../../node_modules/app-3rd/lib/react-navigation/src/NavigationActions'
+import Storage from './gld-storage';
 
 class WebStorage extends Storage {
     constructor() {

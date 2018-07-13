@@ -148,8 +148,10 @@ class SettingPage extends Component {
                     <View style={{ height: 10 }}></View>
                     <SettingItemView icon={require('app-images/icon_setting_share.png')} title='分享应用' onPress={() => this._share()} ></SettingItemView>
                     <View style={{ height: 10 }}></View>
-
-                    <CleanItemView />
+    {
+        Platform.OS === 'web' ? null : <CleanItemView />
+    }
+                    
                     <View style={styles.settingItemLine}></View>
                     {
                         Platform.OS === 'android' ? (
