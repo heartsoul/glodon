@@ -51,7 +51,6 @@ import DocProjectTrashListView from './app/pages/doc/project/DocProjectTrashList
 import DocMarkupPage from './app/pages/doc/markup/DocMarkupPage'
 import DocMarkupDetailPage from './app/pages/doc/markup/DocMarkupDetailPage'
 import DocMarkupEditCommentPage from './app/pages/doc/markup/DocMarkupEditCommentPage'
-import DocMarkupChoosePage from './app/pages/doc/markup/DocMarkupChoosePage'
 import DocMarkupChooseUserPage from './app/pages/doc/markup/DocMarkupChooseUserPage'
 import DocMarkupChooseDeptPage from './app/pages/doc/markup/DocMarkupChooseDeptPage'
 
@@ -106,7 +105,6 @@ export {
     DocMarkupPage,
     DocMarkupDetailPage,
     DocMarkupEditCommentPage,
-    DocMarkupChoosePage,
     DocMarkupChooseDeptPage,
     DocMarkupChooseUserPage,
 };

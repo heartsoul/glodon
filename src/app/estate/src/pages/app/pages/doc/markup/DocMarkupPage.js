@@ -21,13 +21,17 @@ class DocMarkupPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeIndex: 0
+            activeIndex: 0,
+            markupView: [{}, {}, {}]
         };
     }
 
     _onSegmentedBarChange = (index) => {
         if (this.state.activeIndex == index) return;
         this.setState({ activeIndex: index });
+        if(this.state.markupView[index].fetchData) {
+            this.state.markupView[index].fetchData(0);
+        }
     }
 
     render() {
@@ -64,7 +68,12 @@ class DocMarkupPage extends Component {
                                         activeTitleStyle={{ color: '#00baf3', fontSize: 14 }}
                                         titleStyle={{ color: '#6f899b', fontSize: 14 }} />}
                                 >
-                                    <DocMarkupList listType={item.key} title={item.title} />
+                                    <DocMarkupList
+                                        onRef={(ref) => { this.state.markupView[index] = ref }}
+                                        listType={item.key}
+                                        title={item.title}
+                                        selected={this.state.activeIndex == index}
+                                    />
                                 </SegmentedView.Sheet>
                             )
                         })

@@ -15,6 +15,12 @@ import SERVICE from 'app-api/service'
 import { Toast } from 'antd-mobile';
 import { connect } from 'react-redux';
 import * as DocMarkupAction from '../../../actions/docMarkupAction';
+import API from 'app-api';
+import { ActionSheet } from 'app-3rd/teaset';
+
+const screenshot = require("app-images/icon_default_image.png");
+import * as UpdateDataAction from "../../../actions/updateDataAction";
+
 
 class DocMarkupDetailPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -30,14 +36,25 @@ class DocMarkupDetailPage extends Component {
             markup: markup,
             modelVersionId: modelVersionId,
             fileId: fileId,
-            comments: [
-                { name: 'aa', },
-                { name: 'aa', },
-                { name: 'aa', },
-            ],
+            screenshot: markup.screenshot ? markup.screenshot : screenshot,
             commentText: '',
         };
         this.props.navigation.setParams({ loadRightTitle: this._loadRightTitle, })
+    }
+
+
+    componentWillMount() {
+        if (!this.state.markup.screenshot) {
+            SERVICE.getModelMarkupScreenUrl(this.props.modelVersionId, this.props.fileId, this.state.markup.id)
+                .then(url => {
+                    if (url && url.length > 0) {
+                        this.state.markup.screenshot = { uri: url };
+                        this.setState({
+                            screenshot: { uri: url },
+                        })
+                    }
+                }).catch(err => { })
+        }
     }
 
     componentDidMount() {
@@ -70,12 +87,43 @@ class DocMarkupDetailPage extends Component {
     }
 
     _loadRightTitle = () => {
-        return (
-            <BarItems navigation={this.props.navigation}>
-                <BarItems.RightBarItem navigation={this.props.navigation} textStyle={{ fontSize: 22, height: 30, }} text="..." onPress={(navigation, event, barItem) => this._onMorePress(navigation, event, barItem)} />
-            </BarItems>
-        )
+        let menuBar = <BarItems navigation={this.props.navigation}>
+            <BarItems.RightBarItem navigation={this.props.navigation} textStyle={{ fontSize: 22, height: 30, }} text="..." onPress={(navigation, event, barItem) => this._onMorePress(navigation, event, barItem)} />
+        </BarItems>
+        if (storage.loadUserInfo().accountInfo.gldAccountId == this.state.markup.creatorId) {
+            return menuBar;
+        } else {
+            return <View />
+        }
+    }
 
+    _deleteMenuItem = () => {
+        let item = {
+            icon: <View style={{ flexDirection: 'row', marginLeft: -10 }}>
+                <Image style={{ width: 18, height: 18, resizeMode: 'contain', marginRight: 12, }} source={require('app-images/doc/icon_doc_markup_delete.png')} />
+                <Text style={{ color: '#fff', fontSize: 14 }}>删除批注</Text>
+            </View>, onPress: () => {
+                this._deleteMarkup();
+            }
+        }
+        return item;
+    }
+
+    _closeMenuItem = () => {
+        if (this.state.markup.state == 1) {
+            //关闭的批注
+        }
+        let item = {
+            icon:
+                <View style={{ flexDirection: 'row', marginLeft: -10 }}>
+                    <Image style={{ width: 18, height: 18, resizeMode: 'contain', marginRight: 12, }} source={require('app-images/doc/icon_doc_reply_close.png')} />
+                    <Text style={{ color: '#fff', fontSize: 14 }}>关闭批注</Text>
+                </View>
+            , onPress: () => {
+                this._closeMarkup();
+            }
+        }
+        return item;
     }
 
     _onMorePress = (navigation, event, barItem, ) => {
@@ -84,18 +132,12 @@ class DocMarkupDetailPage extends Component {
         fromView.measureInWindow((x, y, width, height) => {
             let showMenu = null;
             let items = [
-                {
-                    title: <Text style={{ color: '#fff', fontSize: 14 }}>删除批注</Text>, onPress: () => {
-                        this._deleteMarkup();
-                    }
-                },
-                {
-                    title: <Text style={{ color: '#fff', fontSize: 14 }}>关闭批注</Text>, onPress: () => {
-                        this._closeMarkup();
-                    }
-                },
+                this._deleteMenuItem(),
 
             ];
+            if (this.state.markup.state == 0) {
+                items.push(this._closeMenuItem())
+            }
             showMenu = Menu.show({ x, y, width, height }, items, {
                 align: 'end', showArrow: true, shadow: Platform.OS === 'ios' ? true : false,
                 popoverStyle: [{ paddingLeft: 10, paddingRight: 10 }], directionInsets: 0, alignInsets: -5, paddingCorner: 10
@@ -104,24 +146,41 @@ class DocMarkupDetailPage extends Component {
     }
     //删除批注
     _deleteMarkup = () => {
-        SERVICE.deleteModelMarkup(this.state.modelVersionId, this.state.fileId, this.state.markupId.id)
-            .then(data => {
-                if (data && data.success) {
-                    Toast.info('批注已删除', 1)
-                    this.props.navigation.goBack();
-                } else {
-                    Toast.info('删除批注失败', 1)
+        let items = [
+            {
+                title: '删除', onPress: (event) => {
+                    event && event.preventDefault();
+                    SERVICE.deleteModelMarkup(this.state.modelVersionId, this.state.fileId, this.state.markup.id)
+                        .then(data => {
+                            if (data && data.success) {
+                                Toast.info('批注已删除', 1)
+                                this.props.updateData();
+                                this.props.navigation.goBack();
+                            } else {
+                                Toast.info('删除批注失败', 1)
+                            }
+                        }).catch(err => {
+                            Toast.info('删除批注失败', 1)
+                        })
                 }
-            }).catch(err => {
-                Toast.info('删除批注失败', 1)
-            })
+            },
+        ];
+        let cancelItem = { title: '取消' };
+        ActionSheet.show(items, cancelItem);
+
+
     }
     //关闭批注
     _closeMarkup = () => {
-        SERVICE.closeModelMarkup(this.state.modelVersionId, this.state.fileId, this.state.markupId.id)
+        SERVICE.closeModelMarkup(this.state.modelVersionId, this.state.fileId, this.state.markup.id)
             .then(data => {
                 if (data && data.success) {
                     Toast.info('批注已关闭', 1)
+                    this.state.markup.state = 1;
+                    this.setState({
+                        markup: this.state.markup.state,
+                    })
+                    this.props.updateData();
                 } else {
                     Toast.info('关闭批注失败', 1)
                 }
@@ -165,14 +224,14 @@ class DocMarkupDetailPage extends Component {
                     <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
                     <View style={{ marginLeft: 10, flex: 1 }}>
                         <Text style={styles.textMain}>{this.state.markup.creatorName}</Text>
-                        <Text style={styles.textTime}>{this.state.markup.createTime}</Text>
+                        <Text style={styles.textTime}>{API.formatUnixtimestamp(this.state.markup.createTime)}</Text>
                     </View>
                 </View>
                 <Text style={[styles.textMain, styles.textContent]}>{this.state.markup.description}</Text>
 
                 <TouchableOpacity onPress={(event) => { event.preventDefault(); }}>
                     <View style={styles.thumbnailContainer}>
-                        <Image style={styles.thumbnail} source={require('app-images/icon_blueprint_default.png')} />
+                        <Image style={styles.thumbnail} source={this.state.screenshot} />
                     </View>
                 </TouchableOpacity>
             </View>
@@ -190,11 +249,11 @@ class DocMarkupDetailPage extends Component {
                 <View style={styles.infoContainer}>
                     <Image style={styles.userAvatar} source={require('app-images/icon_default_boy.png')} />
                     <View style={{ marginLeft: 10, flex: 1 }}>
-                        <Text style={styles.textMain}>{this.state.markup.creatorName}</Text>
-                        <Text style={styles.textTime}>{this.state.markup.createTime}</Text>
+                        <Text style={styles.textMain}>{item.creatorName}</Text>
+                        <Text style={styles.textTime}>{API.formatUnixtimestamp(item.createTime)}</Text>
                     </View>
                 </View>
-                <Text style={[styles.textMain, { margin: 24 }]}>王伟也注意一下@王伟</Text>
+                <Text style={[styles.textMain, { margin: 24 }]}>{item.content}</Text>
             </View>
         )
     }
@@ -204,12 +263,15 @@ class DocMarkupDetailPage extends Component {
             <View style={{ width: '100%', height: 0.5, backgroundColor: '#E9E9E9' }}></View>
         )
     }
+    _keyExtractor = (item, index) => {
+        return `comment-key${index}`
+    };
 
     render() {
         return (
             <View style={{ backgroundColor: '#fff', width: '100%', height: '100%' }}>
                 <FlatList
-                    data={this.state.comments}
+                    data={this.props.comments}
                     renderItem={({ item, index }) => { return this._renderCommentItem(item, index) }}
                     onRefresh={this._onRefresh}
                     refreshing={this.props.isLoading}
@@ -219,16 +281,21 @@ class DocMarkupDetailPage extends Component {
                     ListHeaderComponent={this._renderHeader()}
                     ListFooterComponent={this._renderFooter()}
                     showsVerticalScrollIndicator={false}
+                    keyExtractor={this._keyExtractor}
                 />
-
-                <View style={styles.commentBar}>
-                    <TouchableOpacity style={{ flex: 1 }} onPress={(event) => { event.preventDefault(); this._showCommentInputView(this.props.cacheUserMap) }}>
-                        <View style={styles.commentInput} >
-                            <Text style={[styles.textLight, { marginLeft: 10, }]}>评论</Text>
+                {
+                    this.state.markup.state == 1 ? (null) : (
+                        <View style={styles.commentBar}>
+                            <TouchableOpacity style={{ flex: 1 }} onPress={(event) => { event.preventDefault(); this._showCommentInputView(this.props.cacheUserMap) }}>
+                                <View style={styles.commentInput} >
+                                    <Text style={[styles.textLight, { marginLeft: 10, }]}>评论</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <Image style={styles.atIcon} source={require('app-images/doc/icon_doc_face.png')} />
                         </View>
-                    </TouchableOpacity>
-                    <Image style={styles.atIcon} source={require('app-images/doc/icon_doc_face.png')} />
-                </View>
+                    )
+                }
+
 
             </View>
 
@@ -382,6 +449,9 @@ export default connect(
         },
         addModelMarkupComment: (modelVersionId, fileId, markupId, content, deptId, receiverIds = []) => {
             dispatch(DocMarkupAction.addModelMarkupComment(modelVersionId, fileId, markupId, content, deptId, receiverIds));
+        },
+        updateData:()=>{
+            dispatch(UpdateDataAction.updateData())
         }
     }),
 )(DocMarkupDetailPage)

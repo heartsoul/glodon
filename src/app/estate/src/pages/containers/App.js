@@ -8,7 +8,8 @@ import { Provider } from 'react-redux';
 import NetWorkUtil from './../../common/utils/NetWorkUtil';
 import * as GLD from './../pages';
 import configureStore from './../store/ConfigureStore';
-
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 const store = configureStore()
 const screens = {
@@ -20,7 +21,7 @@ const screens = {
     },
     ChoosePage: {
         screen: GLD.TenantPage,
-    },  
+    },
     MainPage: {
         screen: GLD.HomePage
     },
@@ -103,34 +104,34 @@ const screens = {
     ChangeProjectPage: {
         screen: GLD.ChangeProjectPage
     },
-    OfflineManagePage:{
-        screen:GLD.OfflineMangePage
+    OfflineManagePage: {
+        screen: GLD.OfflineMangePage
     },
-    OfflineDownloadPage:{
-        screen:GLD.OfflineDownloadPage
+    OfflineDownloadPage: {
+        screen: GLD.OfflineDownloadPage
     },
-    EquipmentConditionPage:{
-        screen:GLD.EquipmentConditionPage
+    EquipmentConditionPage: {
+        screen: GLD.EquipmentConditionPage
     },
-    EquipmentRecordPage:{
-        screen:GLD.EquipmentRecordPage
+    EquipmentRecordPage: {
+        screen: GLD.EquipmentRecordPage
     },
-    QualityConditionPage:{
-        screen:GLD.QualityConditionPage
+    QualityConditionPage: {
+        screen: GLD.QualityConditionPage
     },
-    QualityRecordPage:{
-        screen:GLD.QualityRecordPage
+    QualityRecordPage: {
+        screen: GLD.QualityRecordPage
     },
-    SharePage:{
-        screen:GLD.SharePage
+    SharePage: {
+        screen: GLD.SharePage
     },
-    OfflineAsyncPage:{
-        screen:GLD.OfflineAsyncPage
+    OfflineAsyncPage: {
+        screen: GLD.OfflineAsyncPage
     },
-    EditPhotoPage:{
+    EditPhotoPage: {
         screen: GLD.EditPhotoPage
     },
-    DocProjectPage:{
+    DocProjectPage: {
         screen: GLD.DocProjectPage
     },
     DocProjectFileListView: {
@@ -153,9 +154,6 @@ const screens = {
     },
     DocMarkupEditCommentPage: {
         screen: GLD.DocMarkupEditCommentPage
-    },
-    DocMarkupChoosePage: {
-        screen: GLD.DocMarkupChoosePage
     },
     DocMarkupChooseUserPage: {
         screen: GLD.DocMarkupChooseUserPage
@@ -182,8 +180,8 @@ const options = () => {
         headerTintColor: '#fff',
         tabBarVisible: false,
         headerTitleStyle: {
-            fontSize:17,
-            fontWeight:'bold',
+            fontSize: 17,
+            fontWeight: 'bold',
         },
         headerLeft: () => {
             return (
@@ -191,7 +189,7 @@ const options = () => {
             )
         },
         headerRight: (<View />),
-      
+
     }
 }
 // LoginPage,MainPage,BaseStorage,ChoosePage,TenantPage,ProjectPage,GuidePage,QualityMainPage
@@ -242,9 +240,9 @@ function resetGetStateForAction(RootStack) {
             } else {
                 action.n = null;
             }
-        } 
+        }
         if (action.type === 'removeActions') {
-            const { fromIndex, count, params} = action;
+            const { fromIndex, count, params } = action;
             action.type = StackActions.RESET;
             let routes = [...state.routes];
             routes.splice(fromIndex, count);
@@ -254,12 +252,12 @@ function resetGetStateForAction(RootStack) {
                 // undefined on either the state or the action
                 return state;
             }
-            routes.map((item,index)=>{
-                item.params={...item.params,deep:index+1};
+            routes.map((item, index) => {
+                item.params = { ...item.params, deep: index + 1 };
             });
             return {
                 ...state,
-                routes:routes,
+                routes: routes,
                 index: routes.length - 1,
             };
         }
@@ -272,7 +270,7 @@ function resetGetStateForAction(RootStack) {
             }
 
         }
-        
+
         return defaultGetStateForAction(action, state);
     };
 }
@@ -345,7 +343,7 @@ export default class extends React.Component {
         NetWorkUtil.registNetWorkListener(navigation);
     }
 
-  
+
 
     fireHeartBeat = () => {
         let systemDate = new Date().getTime();
@@ -364,29 +362,29 @@ export default class extends React.Component {
             });
         }
     }
-    _onNavigationStateChange = (prevState, newState, action)=>{
-       storage.currentRouteName = this._getCurrentRouteName(newState);
+    _onNavigationStateChange = (prevState, newState, action) => {
+        storage.currentRouteName = this._getCurrentRouteName(newState);
     }
     _getCurrentRouteName(navigationState) {
         if (!navigationState) {
-          return null;
+            return null;
         }
         const route = navigationState.routes[navigationState.index];
         // dive into nested navigators
         if (route.routes) {
-          return getCurrentRouteName(route);
+            return getCurrentRouteName(route);
         }
         return route.routeName;
-      }
+    }
     renderPage() {
         if (storage.isLogin()) {
             if (storage.hasChoose()) {
-                return (<Provider store={store}><RootMainStack onNavigationStateChange={this._onNavigationStateChange}/></Provider>)
+                return (<Provider store={store}><RootMainStack onNavigationStateChange={this._onNavigationStateChange} /></Provider>)
             }
             return (<Provider store={store}><RootChooseStack onNavigationStateChange={this._onNavigationStateChange} /></Provider>)
         }
         // if (storage.isGuide()) {
-        return (<Provider store={store}><RootLoginStack onNavigationStateChange={this._onNavigationStateChange}/></Provider>)
+        return (<Provider store={store}><RootLoginStack onNavigationStateChange={this._onNavigationStateChange} /></Provider>)
         // }
         // return (<Provider store={store}><RootGuideStack /></Provider>)
     }
