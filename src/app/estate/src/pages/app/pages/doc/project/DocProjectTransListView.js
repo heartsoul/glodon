@@ -3,14 +3,11 @@
  */
 'use strict';
 import SERVICE from 'app-api/service';
-import { BarItems, LoadingView, NoDataView, ShareManager } from "app-components";
+import API from 'app-api';
+import { BarItems, LoadingView, NoDataView, StatusActionButton } from "app-components";
 import React, { Component } from "react";
-import { FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
-import { Menu,TabView } from 'app-3rd/teaset';
-import { SERVER_TYPE } from "common-module"
-import DocView from './../components/DocView';
-import DocActionSheet from './../components/DocActionSheet';
-
+import { SectionList, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
+import DocTaskItemView from './../components/DocTaskItemView';
 
 export default class extends Component {
    
@@ -66,30 +63,20 @@ export default class extends Component {
             this.fetchData(0);
         }
     }
-    _onSearchPress = () => {
-        // 打开搜索页面。
-    }
-    _changeOrderType = (type) => {
-        if(this.state.orderType === type) {
-            return;
-        }
-        this.state.orderType = type;
-        this.fetchData(0);
-    } 
     _onMorePress = (navigation, event, barItem) => {
-        // 菜单
+        // // 菜单
 
-        let fromView = barItem;
+        // let fromView = barItem;
 
-        fromView.measureInWindow((x, y, width, height) => {
-            let showMenu = null;
-            let items = [
-                { title: <Text>更多...</Text>, onPress:()=>{}},
-                { title: <View><TouchableOpacity onPress={()=>{Menu.hide(showMenu);this._changeOrderType('time');}}><Text style={{lineHeight:30,color:this.state.orderType !== 'time' ? '#000000' : '#00baf3'}}>文件时间</Text></TouchableOpacity><TouchableOpacity  onPress={()=>{Menu.hide(showMenu);this._changeOrderType('name');}} style={{}}><Text style={{lineHeight:30,color:this.state.orderType !== 'name' ? '#000000' : '#00baf3'}}>文件名称</Text></TouchableOpacity></View>}
-            ];
+        // fromView.measureInWindow((x, y, width, height) => {
+        //     let showMenu = null;
+        //     let items = [
+        //         { title: <Text>更多...</Text>, onPress:()=>{}},
+        //         { title: <View><TouchableOpacity onPress={()=>{Menu.hide(showMenu);this._changeOrderType('time');}}><Text style={{lineHeight:30,color:this.state.orderType !== 'time' ? '#000000' : '#00baf3'}}>文件时间</Text></TouchableOpacity><TouchableOpacity  onPress={()=>{Menu.hide(showMenu);this._changeOrderType('name');}} style={{}}><Text style={{lineHeight:30,color:this.state.orderType !== 'name' ? '#000000' : '#00baf3'}}>文件名称</Text></TouchableOpacity></View>}
+        //     ];
             
-            showMenu = Menu.show({ x, y, width, height }, items,{align:'end',showArrow:true,shadow:Platform.OS === 'ios' ? true : false,popoverStyle:[{paddingLeft:10,paddingRight:10}],directionInsets:0,alignInsets:-5,paddingCorner:10});
-        });
+        //     showMenu = Menu.show({ x, y, width, height }, items,{align:'end',showArrow:true,shadow:Platform.OS === 'ios' ? true : false,popoverStyle:[{paddingLeft:10,paddingRight:10}],directionInsets:0,alignInsets:-5,paddingCorner:10});
+        // });
     }
     
     renderHeaderTitle = () => {
@@ -109,250 +96,166 @@ export default class extends Component {
         </BarItems>);
     }
    
-    _keyExtractor = (item, index) => index;
+    _keyExtractor = (item, index) => {return item.value.randomKey+'-'+index};
 
     fetchData = (page) => {
         this.fetchDataInner(0, this.state.containerId);      
     }
     //网络请求
     fetchDataInner = (page, containerId) => {   
-        this._handleData([],page);     
+        let data = SERVICE.FileTask.loadTaskList() || [];
+        this._handleData(data,page);     
     }
 
     _handleData=(data,page)=>{
-        // data = this.filterData(data);
-
-                let last = false;
-
-                let dataBlob = [];
-                if (data.length > 0) {
-                    if (page > 0) {
-                        dataBlob = this.state.dataArray;
-                    }
-                    let i = 0;
-                    data.forEach(item => {
-                        dataBlob.push({
-                            key: "P0" + item.fileId,
-                            value: item,
-                        })
-                        i++;
-                    });
-                    // dataBlob = this.sortData(dataBlob);
-                    // alert(2);
-                    this.setState({
-                        //复制数据源
-                        dataArray: dataBlob,
-                        isLoading: false,
-                        refreshing: false,
-                        page: page + 1,
-                        hasMore: last ? false : true
-                    });
-                } else {
-                    // alert(3);
-                    this.setState({
-                        isLoading: false,
-                        refreshing: false,
-                    });
-                }
-
-                // data = null;
-                dataBlob = null;
-    }
-
-    //文件夹在上面
-    sortData = (data) => {
-        return data.sort((item1, item2) => {
-            if (item1.value.folder) {
-                return -1;
-            } else if (item2.value.folder) {
-                return 1;
-            } else {
-                return 0;
-            }
+        let dataRunning = [];
+        let dataLogging = [];
+        let i = 0;
+        data.forEach(item => {
+            item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
+            item.index = i;
+            
+            dataRunning.push({
+                key: "" + item.randomKey,
+                value: item,
+                type:'task',
+            });
+            dataLogging.push({
+                key: "" + item.randomKey,
+                value: item,
+                type:'log',
+            });
+            i++;
         });
+        this.setState({
+            //复制数据源
+            dataArray: [{type:'task',key:'进行中 ',data:dataRunning},{type:'log',key:'已完成 ',data:dataLogging}],
+            isLoading: false,
+            refreshing: false,
+            page: 0,
+            hasMore: false
+        });    
+        i = null;
+        dataLogging = null;
+        dataRunning = null;
     }
 
     componentDidMount() {
         //请求数据
-        // this.fetchData(0);
+        this.fetchData(0);
     }
 
     //加载失败view
     renderErrorView(error) {
-        if(SERVER_TYPE === "TEST") {
-            return ( <NoDataView text={"error："+error} /> );
-        }
         return ( <NoDataView text="加载失败" image={require('app-images/doc/icon_doc_empty_trans.png')} /> );
     }
     _itemClick = (item, index) => {
-        let navigator = this.props.navigation;
-        if (item.value.folder === true) {
-            storage.pushNext(navigator, "DocProjectPage", { fileId: item.value.fileId, containerId:this.state.containerId,orderType:this.state.orderType,userPrivilege:this.state.fileData.userPrivilege, dataType: this.state.dataType, pageType: this.state.pageType });
-        } else {
-            if(this.state.isEdit) {
-                // 这里需要处理编辑状态，
-                return;
-            }
-            alert('处理打开文件');
-            // if (this.state.dataType === '图纸文件') {
-            //     BimFileEntry.showBlueprintFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.name);
-            // } else {
-            //     BimFileEntry.showModelFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.buildingId, item.value.buildingName)
-            // }
-            // 进入预览页面
+        // let navigator = this.props.navigation;
+        // if (item.value.folder === true) {
+        //     storage.pushNext(navigator, "DocProjectPage", { fileId: item.value.fileId, containerId:this.state.containerId,orderType:this.state.orderType,userPrivilege:this.state.fileData.userPrivilege, dataType: this.state.dataType, pageType: this.state.pageType });
+        // } else {
+        //     if(this.state.isEdit) {
+        //         // 这里需要处理编辑状态，
+        //         return;
+        //     }
+        //     alert('处理打开文件');
+        //     // if (this.state.dataType === '图纸文件') {
+        //     //     BimFileEntry.showBlueprintFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.name);
+        //     // } else {
+        //     //     BimFileEntry.showModelFromChoose(navigator, this.state.pageType, item.value.fileId, item.value.buildingId, item.value.buildingName)
+        //     // }
+        //     // 进入预览页面
 
-        }
+        // }
     }
 
+    onRunningAll = (bRun) => {
+        if(bRun) {
+            SERVICE.FileTask.stopTask(); 
+        } else {
+            SERVICE.FileTask.runTaskAll(); 
+        }
+        this.fetchData(0);
+    }
+    onClearAllLoging = () => {
+        // SERVICE.FileTask.clearAll(SERVICE.TAKS_ITEM_STATUS.finished); 
+        SERVICE.FileTask.clearAll(null); 
+        // SERVICE.FileTask.clearAll(SERVICE.TAKS_ITEM_STATUS.failed); 
+        this.fetchData(0);
+    }
     _separator = () => {
         return <View style={{ height: 1, backgroundColor: '#ededed',marginRight:20}} />;
     }
 
     //返回itemView
     renderItemView = ({ item, index }) => {
-        if (item.value.folder) {
-            return this.renderFolderView({ item, index });
+        if (item.type == 'task') {
+            return this.renderTaskItemView({ item, index });
         } else {
-            return this.renderFileView({ item, index });
+            return this.renderLogItemView({ item, index });
         }
     }
-    onAdd = () => {
-        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
-        const { create=false} = userPrivilege || {};
-        let data =[];
-        create && data.push(DocActionSheet.dataItemNewfolder);
-        create && data.push(DocActionSheet.dataItemTakephoto);
-        create && data.push(DocActionSheet.dataItemImage);
-        create && data.push(DocActionSheet.dataItemVideo);
-
-        if(Platform.OS != 'ios') {
-            // ios平台不支持这种方式
-            create && data.push(DocActionSheet.dataItemAll);
-        } 
-        if(data.length < 1) {
-            return;
-        }
-        DocActionSheet.show(data,(actionItem)=>{
-            alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
-        });
-    }
-    onMore = (item, index) => {
-        // 处理权限
-        const {folder,} = item.value;
-        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
-        const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
-        let data =[];
-        if(folder) {
-            download && data.push(DocActionSheet.dataItemDownload);
-            deleteItem && data.push(DocActionSheet.dataItemDelete);
-            create && data.push(DocActionSheet.dataItemCopyto);
-            deleteItem && data.push(DocActionSheet.dataItemMoveto);
-            view && data.push(DocActionSheet.dataItemFavorite);
-            create && data.push(DocActionSheet.dataItemRename);
-        } else {
-            download && data.push(DocActionSheet.dataItemDownload);
-            view && data.push(DocActionSheet.dataItemShare); // 目录暂时不支持分享
-            deleteItem && data.push(DocActionSheet.dataItemDelete);
-            create && data.push(DocActionSheet.dataItemCopyto);
-            deleteItem && data.push(DocActionSheet.dataItemMoveto);
-            view && data.push(DocActionSheet.dataItemFavorite);
-            create && data.push(DocActionSheet.dataItemRename);
-        }
-       
-        // ShareManager.share(this.state.containerId, item.value.fileId);
-        if(data.length < 1) {
-            return;
-        }
-        DocActionSheet.show(data,(actionItem)=>{
-            if(actionItem.itemKey === 'share') {
-                ShareManager.share(this.state.containerId, item.value.fileId);
-                return;
-            }
-            alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
-        });
-    }
-    renderFileView = ({ item, index }) => {
+    renderTaskItemView = ({ item, index }) => {
         let onPress = () => {this._itemClick(item, index)};
         let onMore = ()=>{this.onMore(item, index)};
-        let onSelect = (event,selected) => {this._itemSelected(selected,item, index)};
-        let {selected = false} = item.value;
-        if(this.state.isEdit) {
-            onMore = null;
-            onPress = null;
-        } else {
-            onSelect = null;
-        }
         return (
-            <DocView onMore={onMore} onSelect={onSelect} selected={selected}>
-                <DocView.DocFileItemView key={index} onPress={onPress}
-             content={item.value.name} time={item.value.createTimeShow} fileId={item.value.fileId} ext={item.value.name}/></DocView>
+            <DocTaskItemView onMore={onMore}>
+                <DocTaskItemView.TaskItemView key={index} onPress={onPress}
+             content={item.value.name} time={item.value.size} fileId={item.value.fileId} ext={item.value.name}/></DocTaskItemView>
         );
     }
 
-    renderFolderView = ({ item, index }) => {
+    renderLogItemView = ({ item, index }) => {
         let onPress = () => {this._itemClick(item, index)};
-        let onMore = ()=>{this.onMore(item, index)};
-        let onSelect = (event,selected) => {this._itemSelected(selected,item, index)};
-        let {selected = false} = item.value;
-        if(this.state.isEdit) {
-            onMore = null;
-        } else {
-            onSelect = null;
-        }
         return (
-            <DocView onMore={onMore} onSelect={onSelect} selected={selected}>
-            <DocView.DocFolderItemView key={index} onPress={onPress}
-            content={item.value.name} time={item.value.createTimeShow}/></DocView>
+            <DocTaskItemView>
+            <DocTaskItemView.LogItemView key={index} onPress={onPress}
+            content={item.value.name} time={item.value.size} ext={item.value.name}/></DocTaskItemView>
         );
     }
 
-    _onEndReached = () => {
-    }
-    _onRefreshing = () => {
-        // console.log(this.state.refreshing);
-        if (this.state.refreshing) {
-            return;
-        }
-        //设置刷新状态为正在刷新
-        this.setState({
-            refreshing: true,
-            page: 0,
-        });
-        //延时加载
-        const timer = setTimeout(() => {
-            clearTimeout(timer);
-            this.fetchData(this.state.page);
-        }, 1500);
-    }
-  
     renderFooterView = () => {
         return <View style={{height:50,width:'100%'}} />
     }
     renderEmptyView = () => {
-        return <NoDataView text="暂无数据传输" image={require('app-images/doc/icon_doc_empty_trans.png')} />
+        return <NoDataView image={require('app-images/doc/icon_doc_empty_trans.png')} text="暂无数据传输"/>
     }
-
+    renderSectionHeaderTasking = (info) => {
+        let txt = `${info.section.key} (${info.section.data.length})`;
+        let isRun = SERVICE.FileTask.isRunning();
+        return <View style={{flexDirection:'row',height:44, alignItems:'center',paddingLeft:10,paddingRight:14}}>
+        <Text style={{flex:1}}>{txt}</Text>
+        <StatusActionButton textStyle={{fontSize:14}} text={isRun?"全部暂停":"全部开始"} color='#FFFFFF' style={{width:90,borderRadius:14,height:28,backgroundColor:isRun?'#F56323':'#31C2F3'}} onClick={(event) => { event && event.preventDefault && event.preventDefault(); this.onRunningAll(bRun);}}/>
+        </View>
+    }
+    renderSectionHeaderLog = (info) => {
+        let txt = `${info.section.key} (${info.section.data.length})`;
+        return <View style={{flexDirection:'row',height:44,alignItems:'center',paddingLeft:10,paddingRight:14}}>
+        <Text style={{flex:1}}>{txt}</Text>
+        <StatusActionButton textStyle={{fontSize:14}} text="全部清空" color='#FFFFFF' style={{width:90,borderRadius:14,height:28,backgroundColor:'#31C2F3'}} onClick={(event) => { event && event.preventDefault && event.preventDefault(); this.onClearAllLoging();}}/>
+        </View>
+    }
+    renderSectionHeader = (info) => {
+        var type = info.section.type;
+        if(type == 'task') {
+            return this.renderSectionHeaderTasking(info);
+        }
+        return this.renderSectionHeaderLog(info);
+    }
     /**
      * 列表
      */
     renderList = () => {
         return (
-            <FlatList
-                data={this.state.dataArray}
+            <SectionList style={{backgroundColor:'rgba(0,0,0,0.1)'}}
+                sections={this.state.dataArray}
                 renderItem={this.renderItemView}
-                ItemSeparatorComponent={this._separator}
+                keyExtractor={this._keyExtractor}
+                renderSectionHeader={this.renderSectionHeader}
+                stickySectionHeadersEnabled={false}
                 ListFooterComponent={this.renderFooterView}
                 ListEmptyComponent={this.renderEmptyView}
-                onEndReached={this._onEndReached}
-                onRefresh={this._onRefreshing}
-                refreshing={this.state.refreshing}
-                onEndReachedThreshold={0.1}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.refreshing}
-                    />
-                }
-            />
+               />
         );
     }
 

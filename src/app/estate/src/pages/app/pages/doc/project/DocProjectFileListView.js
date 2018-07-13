@@ -641,6 +641,20 @@ export default class extends Component {
             Toast.fail("没有权限", 1.500);
             return;
         }
+        items.map((item)=>{
+            if(item.folder === true) {
+                return; // 目录暂时不处理
+            }
+           let taskItem =  new SERVICE.FileTaskItem({containerId:this.state.containerId,
+                name:item.value.name,
+                fileId:item.value.fileId,
+                type:'download'});
+            SERVICE.FileTask.addDownloadTask(taskItem);
+        })
+        SERVICE.FileTask.saveTasksList();//保存数据
+        Toast.success('已添加到下载队列',1.500);
+        // SERVICE.FileTask.runTask();
+        
     }
 
 

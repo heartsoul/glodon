@@ -159,7 +159,10 @@ export class TextInputPassword extends Component {
     <View  style={[styles.style_input_action,{width:80}]}>
     <TouchableOpacity style={[this.state.value  && this.state.value.length && this.state.focus? {} : {'display':'none'}]} onPress={this._onClearTextEntry}><Image style={styles.style_image_delete} source={icon_login_password_delete}/></TouchableOpacity>
     
-    <TouchableOpacity onPress={(event)=>{event.preventDefault(); this._onSecureTextEntry}}><Image style={styles.style_image} source={this.state.secureTextEntry ? icon_login_password_hide : icon_login_password_show}/></TouchableOpacity>
+    <TouchableOpacity onPress={(event)=>{
+      event.preventDefault(); 
+      this._onSecureTextEntry()}
+      }><Image style={styles.style_image} source={this.state.secureTextEntry ? icon_login_password_hide : icon_login_password_show}/></TouchableOpacity>
     </View>
     </View>
     )

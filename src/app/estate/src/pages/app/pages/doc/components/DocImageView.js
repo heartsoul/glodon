@@ -9,16 +9,18 @@ import {
 } from 'react-native';
 
 import API from 'app-api';
-const defaultImage = require('app-images/icon_default_blueprint.png');
-const pdfImage = require('app-images/icon_default_blueprint.png');
-const wordImage = require('app-images/icon_default_blueprint.png');
-const pptImage = require('app-images/icon_default_blueprint.png');
-const excelImage = require('app-images/icon_default_blueprint.png');
-const zipImage = require('app-images/icon_default_blueprint.png');
-const dwgImage = require('app-images/icon_downloading_blueprint.png');
-const picImage = require('app-images/icon_default_blueprint.png');
+const defaultImage = require('app-images/doc/icon_doc_file_drawing.png');
+const pdfImage = require('app-images/doc/icon_doc_file_pdf.png');
+const wordImage = require('app-images/doc/icon_doc_file_drawing.png');
+const pptImage = require('app-images/doc/icon_doc_file_drawing.png');
+const excelImage = require('app-images/doc/icon_doc_file_drawing.png');
+const zipImage = require('app-images/doc/icon_doc_file_drawing.png');
+const dwgImage = require('app-images/doc/icon_doc_file_drawing.png');
+const modelImage = require('app-images/doc/icon_doc_file_rvt.png');
+const picImage = require('app-images/doc/icon_doc_file_pic.png');
 
 const extImages = {
+'rvt':modelImage,
 'pdf':pdfImage,
 'doc':wordImage,
 'docx':wordImage,
@@ -35,7 +37,9 @@ const extImages = {
 'default':defaultImage,
 }
 function getExtImage(ext) {
-    let ret = extImages[ext] || extImages['default'] 
+    let ret1 = ext.split('.');
+    let newExt = ret1.slice(-1);
+    let ret = extImages[newExt] || extImages['default'] 
     return ret;
 }
 /**
