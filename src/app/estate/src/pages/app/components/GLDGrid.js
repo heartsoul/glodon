@@ -70,6 +70,8 @@ class GLDGrid extends Component {
                 renderItem={({ item, index }) => { return this.renderItem({ item, index }) }}
                 keyExtractor={(item,index) => (item.name + "_"+index)}
                 horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
             />
         );
     }
@@ -103,7 +105,7 @@ class GLDGrid extends Component {
                     }}>
                     <View style={[styles.card, { width: "100%" }]}>
                         <Image source={item.source} style={[this.props.imageStyle, { resizeMode: "contain" }]} />
-                        <Text style={styles.itemText} >{item.name}</Text>
+                        <Text style={[styles.itemText,this.props.textStyle]} >{item.name}</Text>
                     </View>
                 </TouchableOpacity>
 
