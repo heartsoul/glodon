@@ -73,7 +73,7 @@ class DocActionSheet {
         let docActionSheet = (
             <View style={[styles.container,{backgroundColor:'rgba(0,0,0,0.10)',paddingBottom:20}]} >
                 {title?<View style={[styles.titleBox,{justifyContent:textAlign}]}>
-                    <Text>{title}</Text>
+                    <Text style={{color:'#333333',fontSize:14,lineHeight:20}}>{title}</Text>
                 </View>:null}
                 <View style={[styles.line]} />
                 <GLDGrid
@@ -106,13 +106,13 @@ const styles = StyleSheet.create({
     },
     titleBox: {
         flexDirection: "row",
-        flex:1,
+        width:'100%',
         justifyContent:"center",
         alignItems: "center",
         paddingLeft: 20,
         paddingRight: 20,
-        paddingTop: 20,
-        paddingBottom: 20
+        paddingTop: 16,
+        paddingBottom: 13
     },
     closeBar: {
         flexDirection: "row",
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
         height: 1,
         width: "100%",
         marginBottom: 10,
-        backgroundColor: "#f7f7f7",
+        backgroundColor: "#D8D8D8",
     }
 })
 

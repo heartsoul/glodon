@@ -590,6 +590,9 @@ export default class extends Component {
      * items: 数据列表
      */
     doShare = (items) => {
+        if(items.length < 1) {
+            return;
+        }
         if(items.length !== 1) {
             alert('暂不支持批量分享');
             return;
