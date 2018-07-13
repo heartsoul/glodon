@@ -68,20 +68,31 @@ class EquipmentDetailPage extends Component {
     }
     loadRightTitle = () => {
         const equipmentInfo = this.props.equipmentInfo;
-        let power = AuthorityManager.isEquipmentCreate() && !this.state.committed;
-        const { editType, id, preEditType } = equipmentInfo;
+        let power1 = AuthorityManager.isEquipmentCreate() && !this.state.committed;
+        let power = false;
+        let { editType,id, preEditType } = equipmentInfo;
+        const { item } = this.props.navigation.state.params;
+        if (item) {
+            if (item.id) {
+                id = item.id;
+            } else if (item.value && item.value.id) {
+               id = item.value.id;
+            }
+        }
         if (!id) {
-            if (editType && editType != API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
-                power = false;
+            if (editType && editType == API.EQUIPMENT_EDIT_TYPE_CONFIRM) {
+                power = true;
             }
         } else {
             if (editType == API.EQUIPMENT_EDIT_TYPE_BASE
                 || editType == API.EQUIPMENT_EDIT_TYPE_OTHER
                 || editType == API.EQUIPMENT_EDIT_TYPE_IMAGE) {
                 power = false;
+            } else {
+                power = true;
             }
         }
-        if (power) {
+        if (power && power1) {
             OfflineStateUtil.showOfflineAlert();//在离线时增加 一次提示信息
            return <BarItems navigation={this.props.navigation}>
             <BarItems.RightBarItem text="提交" navigation={this.props.navigation}  onPress={() => this._onSubmit(equipmentInfo)} />
