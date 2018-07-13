@@ -308,10 +308,9 @@ export function toBillTypeColor(billType) {
  * @returns 
  */
 export function formatUnixtimestamp(inputTime) {
-
     var date = new Date(inputTime);
-    // console.log(inputTime);
     var y = date.getFullYear();
+    if(!y || y < 2000 ) return '';
     var m = date.getMonth() + 1;
     m = m < 10 ? ('0' + m) : m;
     var d = date.getDate();
@@ -335,8 +334,8 @@ export function formatUnixtimestamp(inputTime) {
 export function formatUnixtimestampSimple(inputTime) {
 
     var date = new Date(inputTime);
-    // console.log(inputTime);
     var y = date.getFullYear();
+    if(!y || y < 2000 ) return '';
     var m = date.getMonth() + 1;
     m = m < 10 ? ('0' + m) : m;
     var d = date.getDate();
