@@ -128,6 +128,17 @@ RCT_EXPORT_METHOD (takePhoto:(RCTResponseSenderBlock)callback) {
   }];
   return;
 }
+RCT_EXPORT_METHOD (pickerVideo:(RCTResponseSenderBlock)callback) {
+  //view可否滑动
+  UIViewController *root = RCTPresentedViewController();
+  [RNTImagesView pickerVideo:root callback:^(NSArray *files) {
+    if(!files) {
+      files = @[];
+    }
+    callback(@[files,files.count?@(YES):@(NO)]);
+  }];
+  return;
+}
 
 RCT_EXPORT_METHOD (shareAppAction:(NSDictionary*)dataDic callback:(RCTResponseSenderBlock)callback) {
   UIViewController *root = RCTPresentedViewController();

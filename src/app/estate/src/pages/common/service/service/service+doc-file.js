@@ -52,6 +52,7 @@ export function parseListData(response) {
             "fileId": "031d576057b340f6aebe76c2c972c83c",
             "name": "vfghghf",
             "folder": true,
+            "length":0,
             "parentId": "f6568b4ec8a545cc9d22bc081be2f269",
             "creatorId": "6295429827273925422",
             "creatorName": "徐园",
@@ -70,6 +71,7 @@ export function parseListData(response) {
         retItemInfo.fileId = item.fileId;
         retItemInfo.name = item.name;
         retItemInfo.folder = item.folder;
+        retItemInfo.length = item.length;
         retItemInfo.parentId = item.parentId;
         retItemInfo.creatorId = item.creatorId;
         retItemInfo.creatorName = item.creatorName;

@@ -254,6 +254,34 @@
   [navcDelegate presentViewController:vc animated:YES completion:nil];
 }
 
++ (void)pickerVideo:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback {
+  
+  SoulCameraViewControllerOrigin * vc = [[SoulCameraViewControllerOrigin alloc] init];
+  UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    vc.sourceType = sourceType;
+    vc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    NSArray *availableMedia = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];//Camera所支持的Media格式都有哪些,共有两个分别是@"public.image",@"public.movie"
+    vc.mediaTypes = [NSArray arrayWithObject:availableMedia[1]];//设置媒体类型为
+  
+  vc.delegate = vc;
+  @weakify(self);
+  [vc setDidFinishPickingVideoBlock:^(NSString * _Nonnull localIdentifier){
+    [navcDelegate dismissViewControllerAnimated:NO completion:^{
+        if (localIdentifier) {
+          PHAsset * asset = [NSMutableDictionary getPHAsset:localIdentifier];
+          @strongify(self);
+          [WaitViewUtil startLoading];
+          [self.class loadItem:asset finish:^(NSDictionary *data) {
+            [WaitViewUtil endLoading];
+            callback(@[data]);
+          }];
+        } else {
+          callback(@[]);
+        }
+      }];
+  }];
+  [navcDelegate presentViewController:vc animated:YES completion:nil];
+}
 
 + (void)imagePicker:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback {
   LPDImagePickerController *lpdImagePickerVc = [[LPDImagePickerControllerEx alloc] initWithMaxImagesCount:3 columnNumber:5 delegate:nil pushPhotoPickerVc:YES];

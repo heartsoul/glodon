@@ -15,5 +15,6 @@
 
 - (void)loadFiles:(void(^)(NSArray * files))finish;
 + (void)takePhoto:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback;
++ (void)pickerVideo:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback;
 + (void)imagePicker:(UIViewController*)navcDelegate callback:(void(^)(NSArray * files))callback;
 @end

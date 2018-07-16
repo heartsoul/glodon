@@ -7,6 +7,11 @@ var randomKey = 19830529;
 export function chooseImages(retFun, retFiles = [], maxLength = 3, multiple = false, capture = 'camera') {
 
     if (multiple || capture !== 'camera') {
+        if(capture == 'selectVideo') {
+            // 选择视频
+        } else if(capture == 'all') {
+            // 选择所有文件 // android支持
+        }
         PM.pickerImages(
             (data, bSuccess) => {
                 let itemCount = data.length;

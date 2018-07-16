@@ -199,9 +199,10 @@ export default class extends Component {
         let onPress = () => {this._itemClick(item, index)};
         let onMore = ()=>{this.onMore(item, index)};
         return (
-            <DocTaskItemView onMore={onMore}>
-                <DocTaskItemView.TaskItemView key={index} onPress={onPress}
-             content={item.value.name} time={item.value.size} fileId={item.value.fileId} ext={item.value.name}/></DocTaskItemView>
+            <DocTaskItemView onMore={onMore} data={item.value}>
+                <DocTaskItemView.DocTaskRunningItemView key={index} onPress={onPress}
+             content={item.value.name} time={item.value.size} fileId={item.value.fileId} ext={item.value.name}/>
+             </DocTaskItemView>
         );
     }
 
@@ -209,7 +210,7 @@ export default class extends Component {
         let onPress = () => {this._itemClick(item, index)};
         return (
             <DocTaskItemView>
-            <DocTaskItemView.LogItemView key={index} onPress={onPress}
+            <DocTaskItemView.DocTaskLoggingItemView key={index} onPress={onPress}
             content={item.value.name} time={item.value.size} ext={item.value.name}/></DocTaskItemView>
         );
     }
@@ -225,7 +226,7 @@ export default class extends Component {
         let isRun = SERVICE.FileTask.isRunning();
         return <View style={{flexDirection:'row',height:44, alignItems:'center',paddingLeft:10,paddingRight:14}}>
         <Text style={{flex:1}}>{txt}</Text>
-        <StatusActionButton textStyle={{fontSize:14}} text={isRun?"全部暂停":"全部开始"} color='#FFFFFF' style={{width:90,borderRadius:14,height:28,backgroundColor:isRun?'#F56323':'#31C2F3'}} onClick={(event) => { event && event.preventDefault && event.preventDefault(); this.onRunningAll(bRun);}}/>
+        <StatusActionButton textStyle={{fontSize:14}} text={isRun?"全部暂停":"全部开始"} color='#FFFFFF' style={{width:90,borderRadius:14,height:28,backgroundColor:isRun?'#F56323':'#31C2F3'}} onClick={(event) => { event && event.preventDefault && event.preventDefault(); this.onRunningAll(isRun);}}/>
         </View>
     }
     renderSectionHeaderLog = (info) => {

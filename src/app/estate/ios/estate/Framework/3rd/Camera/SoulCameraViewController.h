@@ -12,6 +12,7 @@
 @interface SoulCameraViewController : UIViewController
 @property(nonatomic,weak,nullable) id<SoulCameraViewControllerDelegate> delegate;
 @property(nonatomic,copy,nullable) void(^didFinishPickingBlock)(UIImage* _Nonnull);
+@property(nonatomic,copy,nullable) void(^didFinishPickingVideoBlock)(NSString* _Nonnull assetId);
 @property(nonatomic,copy,nullable) void (^didCancelBlock)();
 
 +(void)saveImage:(UIImage *)image finishBlock:(void(^)(NSString *localIdentifier))finishBlock;
@@ -25,6 +26,7 @@
 @interface SoulCameraViewControllerOrigin : UIImagePickerController<UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
 @property(nonatomic,copy,nullable) void(^didFinishPickingBlock)(UIImage* _Nonnull);
+@property(nonatomic,copy,nullable) void(^didFinishPickingVideoBlock)(NSString* _Nonnull assetId);
 @property(nonatomic,copy,nullable) void (^didCancelBlock)();
 @end
 

@@ -3,7 +3,7 @@
  */
 'use strict';
 import SERVICE from 'app-api/service';
-import { BarItems, LoadingView, NoDataView, ShareManager, ActionModal, ActionInputModal,StatusActionButton } from "app-components";
+import { BarItems, LoadingView, NoDataView, ShareManager, ActionModal, ActionInputModal,StatusActionButton,ImageChooserView } from "app-components";
 import React, { Component } from "react";
 import {Image, FlatList, RefreshControl, StatusBar, StyleSheet, View, Platform,TouchableOpacity,Text } from "react-native";
 import { Menu, TabView} from 'app-3rd/teaset';
@@ -487,6 +487,22 @@ export default class extends Component {
                 this.doNewFolder({value:{name:null}});
                 return;
             }
+            if(actionItem.itemKey == 'takephoto') {
+                this.doTakePhoto({value:{name:null}});
+                return;
+            }
+            if(actionItem.itemKey == 'image') {
+                this.doAddImage({value:{name:null}});
+                return;
+            }
+            if(actionItem.itemKey == 'video') {
+                this.doAddVideo({value:{name:null}});
+                return;
+            }
+            if(actionItem.itemKey == 'all') {
+                this.doAddAll({value:{name:null}});
+                return;
+            }
             
             alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
         });
@@ -584,7 +600,100 @@ export default class extends Component {
             alert(actionItem.itemKey); // 处理点击了哪个项目 因为项目数量不确定，就不能用索引来操作了，通过数据项目的可以来搞定就可以了。
         },`${this.state.selectedItems.length}个文件`,'center');
     }
+    /**
+     * 拍照
+     */
+    doTakePhoto = () => {
+       
+        ImageChooserView.takePhoto((files, success) => {
+            if (!success || files.length < 1) {
+                return;
+            }
+            if (success) {
+                this.addUploadTask(files);
+                return;
+            }
+           
+        }, 1)
+    }
 
+    /**
+     * 图片
+     */
+    doAddImage = () => {
+        
+        ImageChooserView.pickerImages((files, success) => {
+            if (!success || files.length < 1) {
+                return;
+            }
+            if (success) {
+                this.addUploadTask(files);
+                return;
+            }
+        }, 9)
+    }
+
+    /**
+     * 视频
+     */
+    doAddVideo = () => {
+        
+        ImageChooserView.pickerVideos((files, success) => {
+            if (!success || files.length < 1) {
+                return;
+            }
+            if (success) {
+                this.addUploadTask(files);
+                return;
+            }
+        }, 9)
+    }
+
+    /**
+     * 全部文件
+     */
+    doAddAll = () => {
+        
+        ImageChooserView.pickerAll((files, success) => {
+            if (!success || files.length < 1) {
+                return;
+            }
+            if (success) {
+                this.addUploadTask(files);
+                return;
+            }
+        }, 9)
+    }
+    
+    
+    /**
+     * 增加上传任务
+     * items: 数据列表 { name, size, file, filePath}
+     */
+    addUploadTask = (items) => {
+        if(items.length < 1) {
+            return;
+        }
+        const userPrivilege = this.state.fileData && this.state.fileData.userPrivilege || {};
+        const { enter=false, view=false, download=false, create=false,delete:deleteItem=false, update=false,grant=false} = userPrivilege || {};
+        if(!create) {
+            Toast.fail("没有权限", 1.500);
+            return;
+        }
+        items.map((item)=>{
+           let taskItem =  new SERVICE.FileTaskItem({containerId:this.state.containerId,
+                name:item.name,
+                size:item.length||0,
+                file:item.file,
+                filePath:item.path||0,
+                parentId:this.state.fileId,
+                fileId:null,
+                type:'upload'});
+            SERVICE.FileTask.addUploadTask(taskItem);
+        })
+        SERVICE.FileTask.saveTasksList();//保存数据
+        Toast.success('已添加到上传队列',1.500);
+    }
     /**
      * 分享数据
      * items: 数据列表
@@ -647,12 +756,14 @@ export default class extends Component {
             }
            let taskItem =  new SERVICE.FileTaskItem({containerId:this.state.containerId,
                 name:item.value.name,
+                size:item.value.length||0,
                 fileId:item.value.fileId,
                 type:'download'});
             SERVICE.FileTask.addDownloadTask(taskItem);
         })
         SERVICE.FileTask.saveTasksList();//保存数据
         Toast.success('已添加到下载队列',1.500);
+        this._onCancelEdit();
         // SERVICE.FileTask.runTask();
         
     }

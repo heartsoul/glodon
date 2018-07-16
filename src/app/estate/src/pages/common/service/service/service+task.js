@@ -10,6 +10,7 @@ export const TAKS_ITEM_STATUS = {
     stoped:4,
     finished:5,
     failed:6,
+    unknown:-1,
 };
 export const TAKS_ITEM_STATUS_TEXT = {
     pending:'下载',
@@ -20,7 +21,30 @@ export const TAKS_ITEM_STATUS_TEXT = {
     stoped:'已停止',
     finished:'完成',
     failed:'失败',
+    unknown:'未知',
 };
+export function toShowStatus(status) {
+    switch(status) {
+        case TAKS_ITEM_STATUS.pending:
+        return TAKS_ITEM_STATUS_TEXT.pending;
+        case TAKS_ITEM_STATUS.uploading:
+        return TAKS_ITEM_STATUS_TEXT.uploading;
+        case TAKS_ITEM_STATUS.downloading:
+        return TAKS_ITEM_STATUS_TEXT.downloading;
+        case TAKS_ITEM_STATUS.waiting:
+        return TAKS_ITEM_STATUS_TEXT.waiting;
+        case TAKS_ITEM_STATUS.pause:
+        return TAKS_ITEM_STATUS_TEXT.pause;
+        case TAKS_ITEM_STATUS.stoped:
+        return TAKS_ITEM_STATUS_TEXT.stoped;
+        case TAKS_ITEM_STATUS.finished:
+        return TAKS_ITEM_STATUS_TEXT.finished;
+        case TAKS_ITEM_STATUS.failed:
+        return TAKS_ITEM_STATUS_TEXT.failed;
+        default:
+        return TAKS_ITEM_STATUS_TEXT.unknown;
+    }
+}
 /**
  * 任务项目，负责存储相应的任务信息
  *
@@ -132,7 +156,8 @@ export class FileTask extends Object {
     }
     
     stopTask = () => {
-        this.isStop = YES;
+        this.isStop = true;
+        this.isRun = false;
         this.taskItems.map((item)=>{
             if((item.taskState ==  TAKS_ITEM_STATUS.uploading) 
             || (item.taskState ==  TAKS_ITEM_STATUS.downloading)) {
@@ -175,17 +200,24 @@ export class FileTask extends Object {
         }
         this.saveTasks();
     }
-    loadTasks = () => {
-       this.taskItems = [];
+    loadTasks = (taskKey) => {
+       
+       let taskItems = [];
        let jsonData = storage.getItem(this.taskKey) || []; 
-       let jsonObject = JSON.parse(jsonData);
-       if (jsonObject.map) {
-        jsonObject.map((item)=>{
-            let taskItem = new FileTaskItem(item);
-            this.addTask(taskItem,taskItem.type)
-        });
-        return this.taskItems;
-       } 
+       try {
+        let jsonObject = JSON.parse(jsonData);
+        if (jsonObject.map) {
+         jsonObject.map((item)=>{
+             let taskItem = new FileTaskItem(item);
+             taskItems.push(taskItem);
+         });
+         return taskItems;
+        } 
+       } catch (error) {
+           console.log('加载任务失败！');
+           return [];
+       }
+       
        return [];
     }
     saveTasks = () => {
@@ -195,18 +227,28 @@ export class FileTask extends Object {
         if(this.isStop){
             return null;
         } 
-        if(typeof this.taskItems !== 'array') {
+        if(!this.taskItems.map) {
             this.taskItems = [];
         }
-      return this.taskItems.filter((item)=>{
-            return item.taskState == TAKS_ITEM_STATUS.waiting;
-        }).slice(0,1);
+        let ret = null;
+        try {
+            this.taskItems.forEach(element => {
+                if(element.taskState == TAKS_ITEM_STATUS.waiting) {
+                    ret = element;
+                    throw new Error('break');
+                }
+            });
+        } catch (error) {
+            
+        }  
+        return ret;
     }
     run = () =>{
         if(this.isRun) {
             return; // 正在执行，就不用重写开始
         }
         this.isRun = true;
+        this.isStop = false;
         this.currentTask = this.nextTask();
         if(!this.currentTask) {
             this.isRun = false;
@@ -214,14 +256,22 @@ export class FileTask extends Object {
         }
         if(this.currentTask.type == 'upload') {
             this.upload();
+            return;
         }
         if(this.currentTask.type == 'download') {
             this.download();
+            return;
         }
     }
     upload = () =>{
-       
-        docUpLoadFile(this.currentTask.toJsonObject()).then((fileData)=>{
+       let uploadData = {
+           containerId:this.currentTask.containerId,
+           parentId:this.currentTask.parentId||0,
+           name:this.currentTask.name,
+           size:this.currentTask.size||0,
+           file:this.currentTask.file,
+           path:this.currentTask.filePath};
+        docUpLoadFile(uploadData).then((fileData)=>{
             // 上传完成了
             this.currentTask.taskState = TAKS_ITEM_STATUS.finished;
             this.currentTask.fileId = fileData.fileId;
@@ -241,8 +291,12 @@ export class FileTask extends Object {
         })
     }
     download = () =>{
-        
-        docDownloadFile(this.currentTask.toJsonObject()).then((fileData)=>{
+        let downloadData = {
+            containerId:this.currentTask.containerId,
+            name:this.currentTask.name,
+            size:this.currentTask.size||0,};
+            
+        docDownloadFile(downloadData).then((fileData)=>{
             // 下载完成了
             this.currentTask.taskState = TAKS_ITEM_STATUS.finished;
             this.currentTask.fileId = fileData.fileId;

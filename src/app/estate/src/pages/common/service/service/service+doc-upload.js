@@ -10,7 +10,7 @@ import {uploadFileBlob} from "./../api/api+uploadBlob";
  * @returns
  */
 export async function docUpLoadFile(fileData={containerId:'xxxx',parentId:'xxxx',name:'fileName',size:0,file:{},path:'file path'}) { 
-   return API.getDocFileUploadOperateCode(fileData.containerId,fileData.parentId,fileData.name,fileData.size).then((response)=>{
+    return API.getDocFileUploadOperateCode(fileData.containerId,fileData.parentId,fileData.name,fileData.size).then((response)=>{
         let formData = {};
         if(fileData.file) {
             formData = {name:fileData.name,file:fileData.file}

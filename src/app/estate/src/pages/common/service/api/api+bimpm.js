@@ -1077,3 +1077,28 @@ export async function getDocFileSearch(containerId, name=null, suffix=null, path
         method: 'GET',
     });
 }
+
+/**
+ * 获取文件完整路径，包括namePath和idPath
+ * @param {*} containerId 
+ * @param {*} fileId  // 文件id
+ * 
+ * response
+ * 
+ {
+  "fileIdPath": "string",
+  "fileNamePath": "string"
+ }
+ */
+export async function getDocFileMetaPath(containerId, fileId) {
+    let api = `/bimpm/doc/containers/${containerId}/files/meta/path`;
+    let filter = "fileId=${fileId}";
+   
+    return requestJSON(api + `?${filter}`, {
+        method: 'GET',
+    });
+}
+
+
+GET /doc/containers/{containerId}/files/meta/path
+

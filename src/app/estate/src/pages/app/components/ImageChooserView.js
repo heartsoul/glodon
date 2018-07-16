@@ -58,6 +58,21 @@ export default class ImageChooserView extends React.Component {
     static pickerImages=(retFun,maxLength = 3)=>{
         chooseImages(retFun,[],maxLength,true);
     }
+
+    /**
+     * 启动视频相册选择 retFun([{url,name,length,...}],success)
+     */
+    static pickerVideo=(retFun,maxLength = 3)=>{
+        chooseImages(retFun,[],maxLength,true);
+    }
+
+    /**
+     * 启动文件选择 retFun([{url,name,length,...}],success)
+     */
+    static pickerAll=(retFun,maxLength = 3)=>{
+        chooseImages(retFun,[],maxLength,true);
+    }
+
     /**
      * 获取GLDPhoto中的选中的图片信息
      * @param {*} _onLoadFile 拿到文件信息后的回调方法
