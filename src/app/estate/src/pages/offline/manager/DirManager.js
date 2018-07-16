@@ -5,6 +5,8 @@ import ModelServer from '../model/ServerModule';
  * 目录处理
  */
 export default class DirManager  {
+
+
     //创建缓存目录
       makeDirs = ()=>{
         // (Platform.OS === 'ios') ? 'unknown' : ((Platform.OS === 'android')
@@ -15,6 +17,7 @@ export default class DirManager  {
         //功能不同，位置不同
         this._createDir(this.getModelPath());
         this._createDir(this.getImagePath());
+        this._createDir(this.getDocumentPath());
     }
     
     //根目录
@@ -81,6 +84,24 @@ export default class DirManager  {
         const downloadDest = `${path}/${id}.png`;
         return downloadDest;
     }
+
+    //获取文件根目录
+    getDocumentPath =()=>{
+        let path = this.getProjectPath()+'/document';
+        return path;
+    }
+
+    //获取图片存储路径
+    getDocumentPathById = (id,name)=>{
+        const path = this.getDocumentPath();
+        if(id && name){
+            let dotIndex = name.lastIndexOf('.');
+            let suffix = name.substring(dotIndex)
+            const downloadDest = `${path}/${id}${suffix}`;
+            return downloadDest;
+        }
+        return `${path}/${id}`
+    }
      _createDir = (path)=>{
          //先判断目录是否存在  不存在则创建
          RNFS.exists(path)
@@ -101,6 +122,8 @@ export default class DirManager  {
         return RNFS.unlink(path)
             .then(() => {
                 console.log('FILE DELETED');
+
+                this.makeDirs();
             })
             // `unlink` will throw an error, if the item to unlink does not exist
             .catch((err) => {

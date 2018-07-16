@@ -1,40 +1,24 @@
-import { RNFS} from 'app-3rd';
-import { Platform,} from 'react-native';
+import { RNFS } from 'app-3rd';
+import DirManager from '../manager/DirManager';
 
-  import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive';
-  import {Buffer} from 'buffer';
-  import DirManager from '../manager/DirManager'
-  import API from 'app-api';
-  import OfflineManager from '../manager/OfflineManager';
-  import ThreadModule from '../model/ThreadModule';
 
-  import {DeviceEventEmitter} from 'app-3rd/index';
   let jobIdMap = new Map();
   export default class DownloadUtil  {
 
-
     //停止下载
-    // stopDownload(list){
-    //     if(list && list.length>0){
-    //         let projectId = storage.loadProject();
-    //         let projectVersionId = storage.getLatestVersionId(projectId);
-    //         for(let item of list){
-    //             let fileId = item.fileId;
-    //             if(jobIdMap.has(fileId)){
-    //                 RNFS.stopDownload(jobIdMap.get(fileId));
-    //                 let key = fileId+'_'+projectVersionId
-    //                 DeviceEventEmitter.emit(key, { 
-    //                     key: key,
-    //                     progress: null,
-    //                     total: 100,
-    //                     size: 10,
-    //                 });
-    //             }
-    //         }
-    //     }
-    // }
+    stopDownload(fileId){
+        if(jobIdMap.has(fileId)){
+            RNFS.stopDownload(jobIdMap.get(fileId));
+        }
+    }
 
-
+    //是否已经下载文件
+    isFileExist=(fileId,name)=>{
+        let dm = new DirManager();
+        let path = dm.getDocumentPathById(fileId,name);
+        return RNFS.exists(path);
+    }
+    
     /*下载文件*/
      download=(url,fileId,name,callback)=> {
         
@@ -74,7 +58,7 @@ import { Platform,} from 'react-native';
             //开始下载
             const ret = RNFS.downloadFile(options);
             // res = { statusCode: 200, bytesWritten: 1166005, jobId: 1 }
-            ret.promise.then(res => {
+           return ret.promise.then(res => {
                 // console.log('00000000000000000000000000000')
                 // console.log(res)
                 let progress = res.bytesWritten;

@@ -103,15 +103,15 @@ export default class extends Component {
     }
     //网络请求
     fetchDataInner = (page, containerId) => {   
-        let data = SERVICE.FileTask.loadTaskList() || [];
-        this._handleData(data,page);     
+        let taskItems = SERVICE.FileTask.loadTaskList() || [];
+        this._handleData(taskItems,page);     
     }
 
-    _handleData=(data,page)=>{
+    _handleData=(taskItems,page)=>{
         let dataRunning = [];
         let dataLogging = [];
         let i = 0;
-        data.forEach(item => {
+        taskItems.forEach(item => {
             item.showTime = "" + API.formatUnixtimestamp(item.updateTime);
             item.index = i;
             
@@ -168,7 +168,11 @@ export default class extends Component {
 
         // }
     }
-
+    onMore = (item, index) => {
+        let taskItem = item.value;
+        SERVICE.FileTask.changeState(taskItem);
+        this.fetchData(0);
+    }
     onRunningAll = (bRun) => {
         if(bRun) {
             SERVICE.FileTask.stopTask(); 

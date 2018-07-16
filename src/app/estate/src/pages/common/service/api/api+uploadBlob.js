@@ -116,6 +116,50 @@ export async function uploadFileBlob(key,fileData,operationCode,onProgress) {
     // return task;
 }
 
+export async function docUploadFileBlob(key,fileData,operationCode,onProgress) {
+    let api = "/v1/insecure/objects?operationCode=" + operationCode;
+    let formData = {};
+    if(fileData.file) {
+        formData = {name : 'uploaded_file', filename : ''+fileData.name, data: fileData.file};
+    } else {
+        path = fileData.path;
+        console.log('path:', path);
+        path = path.replace("file://",'');
+        console.log('path1:', path);
+        formData = {name : 'uploaded_file', filename : ''+fileData.name, data: RNFetchBlob.wrap(path)};
+    }
+    
+    let task = RNFetchBlob.fetch('POST', BASE_UPLOAD_URL + api, {
+        'Content-Type' : 'multipart/form-data',
+      }, [formData]);
+      
+    // DeviceEventEmitter.emit('uploadProcessStart',key,task,()=>{
+    //     task.cancel((reason)=>{
+    //         throw new Error(reason);
+    //     });
+    // });
+    // onProgress && onProgress(0,0,task,null);
+    return task.uploadProgress({ interval : 200 }, (written, total) => {
+        onProgress && onProgress(written,total,task,null);
+    }).then((response) => response.json())
+    .then((data) => {
+        //处理上传成功的数据
+        if (data && data.message && "success" == data.message) {
+            
+            let res = parseUploadData(data.data);
+            onProgress && onProgress(written,total,task,res);
+            if (res && res.name) {
+                return res;
+            }
+        } else {
+            throw new Error('上传失败：'+(data&&data.message))
+            return data;
+        }
+    })
+    // return task;
+}
+
+
 /**
  * 处理返回成功的数据
  * @param {*} data response

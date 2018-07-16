@@ -1098,7 +1098,3 @@ export async function getDocFileMetaPath(containerId, fileId) {
         method: 'GET',
     });
 }
-
-
-GET /doc/containers/{containerId}/files/meta/path
-

@@ -108,6 +108,7 @@ export class FileTask extends Object {
             this.taskItems = [];
         }
     }
+    
     static taskKey(){
         // 用户id+租户id+项目id 隔离的md5字符串
         return hex_md5(storage.getUserId()+'-'+storage.loadTenant()+'-'+storage.loadProject()+'-fileTask');
@@ -133,14 +134,17 @@ export class FileTask extends Object {
     static saveTasksList(){
         return FileTask.taskInstance().saveTasks();
     }
+    static changeState = (fileTaskItem) => {
+        return FileTask.taskInstance().changeState(fileTaskItem);
+    }
     static addUploadTask(fileTaskItem/*= FileTaskItem*/){
         return FileTask.taskInstance().addTask(fileTaskItem,'upload');
     }
     static addDownloadTask(fileTaskItem/*= FileTaskItem*/){
         return FileTask.taskInstance().addTask(fileTaskItem, 'download');
     }
-    static runTask() {
-        FileTask.taskInstance().run();
+    static runTask(fileTaskItem=null) {
+        FileTask.taskInstance().runTask(fileTaskItem);
     }
     static isRunning() {
         return FileTask.taskInstance().isRun === true;
@@ -154,7 +158,41 @@ export class FileTask extends Object {
     static clearAll(taskItemState=null) {
         FileTask.taskInstance().clearTask(taskItemState);
     }
-    
+    findTaskItem = (randomKey) => {
+        let findItem = null;
+        try {
+            this.taskItems.map((item)=>{
+                if((item.randomKey == randomKey)) {
+                    findItem = item;
+                    throw new Error('found');
+                }
+            });
+
+        } catch (error) {
+            
+        }
+        return findItem;
+        
+    }
+
+    changeState = (taskItem) => {
+        let item = this.findTaskItem(taskItem.randomKey);
+        if(!item) {
+            return;
+        }
+        if((item.taskState ==  TAKS_ITEM_STATUS.uploading) 
+            || (item.taskState ==  TAKS_ITEM_STATUS.downloading)
+            || (item.taskState ==  TAKS_ITEM_STATUS.waiting)) {
+                item.taskState = TAKS_ITEM_STATUS.stoped;
+            } else if((item.taskState ==  TAKS_ITEM_STATUS.pending)
+            || (item.taskState ==  TAKS_ITEM_STATUS.failed)
+            || (item.taskState ==  TAKS_ITEM_STATUS.stoped)
+            || (item.taskState ==  TAKS_ITEM_STATUS.pause)) {
+                item.taskState = TAKS_ITEM_STATUS.waiting;
+            } 
+            this.run(); 
+    }
+
     stopTask = () => {
         this.isStop = true;
         this.isRun = false;
@@ -170,6 +208,11 @@ export class FileTask extends Object {
     }
     // type: download/upload
     addTask = (fileTaskItem/*= FileTaskItem*/,type='download') => {
+
+        let item = this.findTaskItem(fileTaskItem.randomKey);
+        if(item) {
+            return false;
+        }
         fileTaskItem.type = type;
         if(!this.taskItems.map) {
             this.taskItems = [];
@@ -178,6 +221,7 @@ export class FileTask extends Object {
             fileTaskItem.taskState = TAKS_ITEM_STATUS.waiting;
         } 
         this.taskItems.push(fileTaskItem);
+        return true;
     }
     runTaskAll = () => {
         this.taskItems.map((item)=>{
@@ -188,6 +232,17 @@ export class FileTask extends Object {
             }
         });
         this.saveTasks();
+        this.run();
+    }
+    runTask = (taskItem=null) => {
+        if(taskItem) {
+            let item = this.findTaskItem(taskItem.randomKey);
+            if(item) {
+                item.taskState = TAKS_ITEM_STATUS.waiting;
+                taskItem.taskState = TAKS_ITEM_STATUS.waiting;
+                this.saveTasks();
+            }
+        }
         this.run();
     }
     clearTask = (taskItemState) =>{
@@ -201,9 +256,11 @@ export class FileTask extends Object {
         this.saveTasks();
     }
     loadTasks = (taskKey) => {
-       
+       if(!taskKey) {
+           taskKey = this.taskKey;
+       }
        let taskItems = [];
-       let jsonData = storage.getItem(this.taskKey) || []; 
+       let jsonData = storage.getItem(taskKey) || []; 
        try {
         let jsonObject = JSON.parse(jsonData);
         if (jsonObject.map) {
@@ -247,6 +304,7 @@ export class FileTask extends Object {
         if(this.isRun) {
             return; // 正在执行，就不用重写开始
         }
+        // DeviceEventEmitter.addListener('transProcessPercent',this.transProcess);
         this.isRun = true;
         this.isStop = false;
         this.currentTask = this.nextTask();
@@ -268,6 +326,7 @@ export class FileTask extends Object {
            containerId:this.currentTask.containerId,
            parentId:this.currentTask.parentId||0,
            name:this.currentTask.name,
+           randomKey:this.currentTask.randomKey,
            size:this.currentTask.size||0,
            file:this.currentTask.file,
            path:this.currentTask.filePath};
@@ -294,6 +353,8 @@ export class FileTask extends Object {
         let downloadData = {
             containerId:this.currentTask.containerId,
             name:this.currentTask.name,
+            fileId:this.currentTask.fileId,
+            randomKey:this.currentTask.randomKey,
             size:this.currentTask.size||0,};
             
         docDownloadFile(downloadData).then((fileData)=>{

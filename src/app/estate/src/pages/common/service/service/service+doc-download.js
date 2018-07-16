@@ -1,4 +1,6 @@
-import * as API from "./../api/api+bimpm";
+import * as API from './../api/api+bimpm';
+import {DeviceEventEmitter} from 'app-3rd'
+import {DownloadUtil} from 'app-components'
 /**
  * 获取文档的下载地址
  * @param {*} containerId 
@@ -19,8 +21,26 @@ export function getDocFileSingedUrl(containerId,fileId) {
     });
 }
 
-function download(url,processFun,finishFun) {
-    // 这里执行下载
+function download(url,fileId,randomKey) {
+    // 这里执行下载DownloadUtil
+    // 开始任务
+    DeviceEventEmitter.emit('transProcessStart',randomKey);
+    return DownloadUtil.download(url,fileId,name,(data={progress:0,
+        total:0,
+        path:null,
+        jobId:null})=>{
+            let {written=0,total=0,path=null,jobId=null} = data;
+            if(path) {
+                // 有上传路径返回了，就任务上传完成了。
+                DeviceEventEmitter.emit('finishProcessPercent',randomKey,written, total);
+            } else if(total && total <= progress){
+                // 进度完成了也任务完成了
+                DeviceEventEmitter.emit('finishProcessPercent',randomKey,written, total);
+            } else {
+                // 更新进度
+                DeviceEventEmitter.emit('transProcessPercent',randomKey,written, total, jobId);
+            }
+    });
 }
 /**
  * 下载
@@ -30,13 +50,8 @@ function download(url,processFun,finishFun) {
  * 需要信息有容器id，父目录id，文件名，文件大小，文件对象或文件的路径
  * @returns
  */
-export async function docDownloadFile(fileData={containerId:'xxxx',fileId:'xxxx'}) { 
-    return getDocFileSingedUrl(fileData.containerId,fileData.fileId).then((response)=>{
-         
-         return download(response,(written, total) => {
-             console.log(`doc uploaded:${written / total}`);  
-         },(downloadData)=>{
-            console.log(`doc download:${downloadData}`); 
-         });
+export async function docDownloadFile(fileData={containerId:'xxxx',fileId:'xxxx',randomKey:'randomKey'}) { 
+    return getDocFileSingedUrl(fileData.containerId,fileData.fileId).then((url)=>{
+         return download(url,fileData.fileId,fileData.name,fileData.randomKey);
      });
  }
